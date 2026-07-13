@@ -1,0 +1,246 @@
+# push 到 main 时：校验迁移清单 → 构建并推送镜像 → SSH 部署 → 强制重建 backend 执行 SQL 迁移 → 等待健康后重启前端
+name: Build and Deploy
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+concurrency:
+  group: deploy-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  REGISTRY: ghcr.io
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+    timeout-minutes: 180
+    permissions:
+      contents: read
+      packages: write
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Verify DB migrate manifest
+        run: bash scripts/check-migrate-manifest.sh
+
+      - name: Set up pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 9
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: pnpm
+          cache-dependency-path: frontend/pnpm-lock.yaml
+
+      - name: Build frontend (sanity)
+        working-directory: frontend
+        run: |
+          pnpm install --frozen-lockfile
+          npx vite build
+
+      - name: Set image names
+        id: images
+        run: |
+          OWNER="${{ github.repository_owner }}"
+          OWNER_LC=$(echo "$OWNER" | tr '[:upper:]' '[:lower:]')
+          echo "backend=$REGISTRY/$OWNER_LC/hospital-backend:latest" >> $GITHUB_OUTPUT
+          echo "frontend=$REGISTRY/$OWNER_LC/hospital-frontend:latest" >> $GITHUB_OUTPUT
+
+      - name: Log in to Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Build and push backend
+        uses: nick-fields/retry@v3
+        with:
+          timeout_minutes: 45
+          max_attempts: 4
+          retry_wait_seconds: 45
+          warning_on_retry: true
+          command: docker buildx build --push -t "${{ steps.images.outputs.backend }}" ./backend
+
+      - name: Build and push frontend
+        uses: nick-fields/retry@v3
+        with:
+          timeout_minutes: 45
+          max_attempts: 4
+          retry_wait_seconds: 45
+          warning_on_retry: true
+          command: docker buildx build --push -t "${{ steps.images.outputs.frontend }}" ./frontend
+
+      - name: Deploy to server
+        env:
+          SSH_HOST: ${{ secrets.SSH_HOST }}
+          SSH_USER: ${{ secrets.SSH_USER }}
+          SSH_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+          SSH_PORT: ${{ secrets.SSH_PORT || 22 }}
+          DEPLOY_PATH: ${{ secrets.DEPLOY_PATH || '/mnt/newdisk/app/Hospital' }}
+        run: |
+          mkdir -p ~/.ssh
+          printf '%s\n' "$SSH_KEY" > ~/.ssh/deploy_key
+          chmod 600 ~/.ssh/deploy_key
+          ssh-keyscan -p "${SSH_PORT}" -H "$SSH_HOST" >> ~/.ssh/known_hosts 2>/dev/null || true
+          scp -i ~/.ssh/deploy_key -o StrictHostKeyChecking=no -P "${SSH_PORT}" -r \
+            docker-compose.prod.yml \
+            deploy/nginx-hospital.conf \
+            backend \
+            "${SSH_USER}@${SSH_HOST}:${DEPLOY_PATH}/"
+
+      - name: Pull service images on server (runner SSH)
+        env:
+          IMAGE_BACKEND: ${{ steps.images.outputs.backend }}
+          IMAGE_FRONTEND: ${{ steps.images.outputs.frontend }}
+          DEPLOY_PATH: ${{ secrets.DEPLOY_PATH }}
+          GHCR_USER: ${{ secrets.GHCR_USERNAME }}
+          GHCR_TOKEN: ${{ secrets.GHCR_READ_TOKEN }}
+          GITHUB_SHA: ${{ github.sha }}
+          SSH_HOST: ${{ secrets.SSH_HOST }}
+          SSH_USER: ${{ secrets.SSH_USER }}
+          SSH_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+          SSH_PORT: ${{ secrets.SSH_PORT }}
+        run: |
+          set -e
+          PORT="${SSH_PORT:-22}"
+          DPATH="${DEPLOY_PATH:-/mnt/newdisk/app/Hospital}"
+          mkdir -p ~/.ssh
+          printf '%s\n' "$SSH_KEY" > ~/.ssh/deploy_pull_key
+          chmod 600 ~/.ssh/deploy_pull_key
+          ssh-keyscan -p "$PORT" -H "$SSH_HOST" >> ~/.ssh/known_hosts 2>/dev/null || true
+          echo "DEPLOY_STAGE=pull SHA=${GITHUB_SHA:-unknown}"
+
+          {
+            echo 'set -e'
+            echo "cd $(printf %q "$DPATH")"
+            echo "echo DEPLOY_STAGE=pull SHA=$(printf %q "${GITHUB_SHA:-unknown}")"
+            if [ -n "${GHCR_TOKEN:-}" ] && [ -n "${GHCR_USER:-}" ]; then
+              echo "echo $(printf %q "$GHCR_TOKEN") | docker login ghcr.io -u $(printf %q "$GHCR_USER") --password-stdin"
+            fi
+            echo "export IMAGE_BACKEND=$(printf %q "$IMAGE_BACKEND")"
+            echo "export IMAGE_FRONTEND=$(printf %q "$IMAGE_FRONTEND")"
+            echo "docker compose -f docker-compose.prod.yml pull"
+            echo "echo DEPLOY_STAGE=pull OK"
+          } | ssh -i ~/.ssh/deploy_pull_key \
+              -o StrictHostKeyChecking=no \
+              -o ServerAliveInterval=30 \
+              -o ServerAliveCountMax=360 \
+              -p "$PORT" \
+              "$SSH_USER@$SSH_HOST" bash -s
+
+      - name: Deploy stack on server (mysql + backend)
+        uses: appleboy/ssh-action@v1.2.5
+        env:
+          IMAGE_BACKEND: ${{ steps.images.outputs.backend }}
+          IMAGE_FRONTEND: ${{ steps.images.outputs.frontend }}
+          DEPLOY_PATH: ${{ secrets.DEPLOY_PATH }}
+          GHCR_USER: ${{ secrets.GHCR_USERNAME }}
+          GHCR_TOKEN: ${{ secrets.GHCR_READ_TOKEN }}
+          GITHUB_SHA: ${{ github.sha }}
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          port: ${{ secrets.SSH_PORT || 22 }}
+          command_timeout: 2h
+          timeout: 2m
+          envs: IMAGE_BACKEND,IMAGE_FRONTEND,DEPLOY_PATH,GHCR_USER,GHCR_TOKEN,GITHUB_SHA
+          script: |
+            set -e
+            DPATH="${DEPLOY_PATH:-/mnt/newdisk/app/Hospital}"
+            cd "$DPATH"
+            echo "DEPLOY_SCRIPT_TAG=hospital-v1 SHA=${GITHUB_SHA:-unknown}"
+
+            if [ ! -f .env ]; then
+              echo "错误: 服务器 $DPATH/.env 不存在，请先上传 .env 后再部署。"
+              exit 1
+            fi
+
+            if [ -n "$GHCR_TOKEN" ] && [ -n "$GHCR_USER" ]; then
+              echo "$GHCR_TOKEN" | docker login ghcr.io -u "$GHCR_USER" --password-stdin
+            fi
+            export IMAGE_BACKEND IMAGE_FRONTEND
+
+            docker compose -f docker-compose.prod.yml up -d mysql
+            docker compose -f docker-compose.prod.yml up -d --no-deps --force-recreate backend
+            echo "DEPLOY_STAGE=backend_container_started"
+
+      - name: Wait for backend health (runner SSH poll)
+        env:
+          SSH_HOST: ${{ secrets.SSH_HOST }}
+          SSH_USER: ${{ secrets.SSH_USER }}
+          SSH_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+          SSH_PORT: ${{ secrets.SSH_PORT }}
+          GITHUB_SHA: ${{ github.sha }}
+        run: |
+          set -e
+          PORT="${SSH_PORT:-22}"
+          mkdir -p ~/.ssh
+          printf '%s\n' "$SSH_KEY" > ~/.ssh/deploy_wait_key
+          chmod 600 ~/.ssh/deploy_wait_key
+          ssh-keyscan -p "$PORT" -H "$SSH_HOST" >> ~/.ssh/known_hosts 2>/dev/null || true
+          echo "DEPLOY_SCRIPT_TAG=hospital-wait SHA=${GITHUB_SHA:-unknown}"
+          echo "等待宿主机 127.0.0.1:8853/api/v1/base/health（最多约 600s）"
+
+          run_ssh () {
+            ssh -i ~/.ssh/deploy_wait_key -o StrictHostKeyChecking=no -p "$PORT" "$SSH_USER@$SSH_HOST" "$@"
+          }
+
+          chk='curl -sS --connect-timeout 4 -o /dev/null http://127.0.0.1:8853/api/v1/base/health'
+
+          for round in $(seq 1 60); do
+            if run_ssh "$chk"; then
+              echo "backend 健康检查通过（第 ${round} 轮）"
+              exit 0
+            fi
+            echo "[wait] 第 ${round} 轮 / 60，8853 仍不可达"
+            if [ "$((round % 3))" -eq 0 ]; then
+              echo "---- backend 最近日志 ----"
+              run_ssh "docker logs --tail 100 hospital-backend 2>&1" || true
+            fi
+            sleep 10
+          done
+
+          echo "==== 8853 在预期时间内仍不可访问 ===="
+          run_ssh "docker logs --tail 300 hospital-backend 2>&1" || true
+          exit 1
+
+      - name: Recreate frontend on server
+        uses: appleboy/ssh-action@v1.2.5
+        env:
+          IMAGE_BACKEND: ${{ steps.images.outputs.backend }}
+          IMAGE_FRONTEND: ${{ steps.images.outputs.frontend }}
+          DEPLOY_PATH: ${{ secrets.DEPLOY_PATH }}
+          GHCR_USER: ${{ secrets.GHCR_USERNAME }}
+          GHCR_TOKEN: ${{ secrets.GHCR_READ_TOKEN }}
+          GITHUB_SHA: ${{ github.sha }}
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          port: ${{ secrets.SSH_PORT || 22 }}
+          command_timeout: 45m
+          timeout: 2m
+          envs: IMAGE_BACKEND,IMAGE_FRONTEND,DEPLOY_PATH,GHCR_USER,GHCR_TOKEN,GITHUB_SHA
+          script: |
+            set -e
+            DPATH="${DEPLOY_PATH:-/mnt/newdisk/app/Hospital}"
+            cd "$DPATH"
+            echo "DEPLOY_SCRIPT_TAG=hospital-frontend SHA=${GITHUB_SHA:-unknown}"
+            if [ -n "$GHCR_TOKEN" ] && [ -n "$GHCR_USER" ]; then
+              echo "$GHCR_TOKEN" | docker login ghcr.io -u "$GHCR_USER" --password-stdin
+            fi
+            export IMAGE_BACKEND IMAGE_FRONTEND
+            docker compose -f docker-compose.prod.yml up -d --no-deps --force-recreate frontend

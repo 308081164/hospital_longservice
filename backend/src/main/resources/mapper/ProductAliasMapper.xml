@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hospital.backend.mapper.ProductAliasMapper">
+
+    <resultMap id="ProductAliasResultMap" type="com.hospital.backend.entity.ProductAlias">
+        <id property="id" column="id"/>
+        <result property="productId" column="product_id"/>
+        <result property="alias" column="alias"/>
+        <result property="matchType" column="match_type"/>
+        <result property="priority" column="priority"/>
+        <result property="isActive" column="is_active"/>
+        <result property="createdAt" column="created_at"/>
+    </resultMap>
+
+    <insert id="insert" parameterType="com.hospital.backend.entity.ProductAlias" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO product_alias (product_id, alias, match_type, priority, is_active, created_at)
+        VALUES (#{productId}, #{alias}, #{matchType}, #{priority}, #{isActive}, NOW())
+    </insert>
+
+    <delete id="deleteByProductId">
+        DELETE FROM product_alias WHERE product_id = #{productId}
+    </delete>
+
+    <delete id="deleteById">
+        DELETE FROM product_alias WHERE id = #{id}
+    </delete>
+
+    <select id="selectByProductId" resultMap="ProductAliasResultMap">
+        SELECT * FROM product_alias WHERE product_id = #{productId} ORDER BY priority ASC, id ASC
+    </select>
+
+    <select id="selectAllActive" resultMap="ProductAliasResultMap">
+        SELECT a.* FROM product_alias a
+        INNER JOIN product p ON p.id = a.product_id
+        WHERE a.is_active = 1 AND p.is_active = 1 AND p.deleted_at IS NULL
+        ORDER BY a.priority ASC, a.id ASC
+    </select>
+
+</mapper>

@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hospital.backend.mapper.CustomerMapper">
+
+    <resultMap id="CustomerResultMap" type="com.hospital.backend.entity.Customer">
+        <id property="id" column="id"/>
+        <result property="code" column="code"/>
+        <result property="canonicalName" column="canonical_name"/>
+        <result property="status" column="status"/>
+        <result property="capMode" column="cap_mode"/>
+        <result property="chargeDoubleBagWhenCapped" column="charge_double_bag_when_capped"/>
+        <result property="defaultRuleId" column="default_rule_id"/>
+        <result property="billingEnabled" column="billing_enabled"/>
+        <result property="billingPricingMode" column="billing_pricing_mode"/>
+        <result property="pathOverride" column="path_override"/>
+        <result property="notes" column="notes"/>
+        <result property="createdAt" column="created_at"/>
+        <result property="updatedAt" column="updated_at"/>
+    </resultMap>
+
+    <insert id="insert" parameterType="com.hospital.backend.entity.Customer" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO customer (code, canonical_name, status, cap_mode, charge_double_bag_when_capped,
+                              default_rule_id, billing_enabled, billing_pricing_mode, path_override, notes, created_at, updated_at)
+        VALUES (#{code}, #{canonicalName}, #{status}, #{capMode}, #{chargeDoubleBagWhenCapped},
+                #{defaultRuleId}, #{billingEnabled}, #{billingPricingMode}, #{pathOverride}, #{notes}, NOW(), NOW())
+    </insert>
+
+    <update id="updateById" parameterType="com.hospital.backend.entity.Customer">
+        UPDATE customer
+        <set>
+            <if test="code != null">code = #{code},</if>
+            <if test="canonicalName != null">canonical_name = #{canonicalName},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="capMode != null">cap_mode = #{capMode},</if>
+            <if test="chargeDoubleBagWhenCapped != null">charge_double_bag_when_capped = #{chargeDoubleBagWhenCapped},</if>
+            <if test="defaultRuleId != null">default_rule_id = #{defaultRuleId},</if>
+            <if test="billingEnabled != null">billing_enabled = #{billingEnabled},</if>
+            <if test="billingPricingMode != null">billing_pricing_mode = #{billingPricingMode},</if>
+            path_override = #{pathOverride},
+            <if test="notes != null">notes = #{notes},</if>
+            updated_at = NOW(),
+        </set>
+        WHERE id = #{id}
+    </update>
+
+    <select id="selectById" resultMap="CustomerResultMap">
+        SELECT * FROM customer WHERE id = #{id}
+    </select>
+
+    <select id="selectByCode" resultMap="CustomerResultMap">
+        SELECT * FROM customer WHERE code = #{code}
+    </select>
+
+    <select id="selectAll" resultMap="CustomerResultMap">
+        SELECT * FROM customer ORDER BY canonical_name ASC
+    </select>
+
+    <delete id="deleteById">
+        DELETE FROM customer WHERE id = #{id}
+    </delete>
+
+</mapper>

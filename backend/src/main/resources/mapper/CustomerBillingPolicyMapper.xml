@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hospital.backend.mapper.CustomerBillingPolicyMapper">
+
+    <resultMap id="CustomerBillingPolicyResultMap" type="com.hospital.backend.entity.CustomerBillingPolicy">
+        <id property="id" column="id"/>
+        <result property="customerId" column="customer_id"/>
+        <result property="policyType" column="policy_type"/>
+        <result property="name" column="name"/>
+        <result property="scope" column="scope"/>
+        <result property="params" column="params"/>
+        <result property="priority" column="priority"/>
+        <result property="isActive" column="is_active"/>
+        <result property="createdAt" column="created_at"/>
+        <result property="updatedAt" column="updated_at"/>
+    </resultMap>
+
+    <insert id="insert" parameterType="com.hospital.backend.entity.CustomerBillingPolicy" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO customer_billing_policy (customer_id, policy_type, name, scope, params, priority, is_active, created_at, updated_at)
+        VALUES (#{customerId}, #{policyType}, #{name}, #{scope}, #{params}, #{priority}, #{isActive}, NOW(), NOW())
+    </insert>
+
+    <update id="updateById" parameterType="com.hospital.backend.entity.CustomerBillingPolicy">
+        UPDATE customer_billing_policy
+        SET policy_type = #{policyType},
+            name = #{name},
+            scope = #{scope},
+            params = #{params},
+            priority = #{priority},
+            is_active = #{isActive},
+            updated_at = NOW()
+        WHERE id = #{id}
+    </update>
+
+    <delete id="deleteById">
+        DELETE FROM customer_billing_policy WHERE id = #{id}
+    </delete>
+
+    <delete id="deleteByCustomerIdAndType">
+        DELETE FROM customer_billing_policy
+        WHERE customer_id = #{customerId} AND policy_type = #{policyType}
+    </delete>
+
+    <select id="selectById" resultMap="CustomerBillingPolicyResultMap">
+        SELECT * FROM customer_billing_policy WHERE id = #{id}
+    </select>
+
+    <select id="selectByCustomerId" resultMap="CustomerBillingPolicyResultMap">
+        SELECT * FROM customer_billing_policy
+        WHERE customer_id = #{customerId}
+        ORDER BY priority ASC, id ASC
+    </select>
+
+    <select id="selectByCustomerIdAndType" resultMap="CustomerBillingPolicyResultMap">
+        SELECT * FROM customer_billing_policy
+        WHERE customer_id = #{customerId} AND policy_type = #{policyType}
+        ORDER BY priority ASC, id ASC
+    </select>
+
+</mapper>

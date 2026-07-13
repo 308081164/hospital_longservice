@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hospital.backend.mapper.RoleMapper">
+
+    <resultMap id="RoleResultMap" type="com.hospital.backend.entity.Role">
+        <id property="id" column="id"/>
+        <result property="name" column="name"/>
+        <result property="description" column="description"/>
+        <result property="createdAt" column="created_at"/>
+        <result property="updatedAt" column="updated_at"/>
+    </resultMap>
+
+    <insert id="insert" parameterType="com.hospital.backend.entity.Role" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO sys_role (name, description, created_at, updated_at)
+        VALUES (#{name}, #{description}, NOW(), NOW())
+    </insert>
+
+    <select id="selectById" resultMap="RoleResultMap">
+        SELECT * FROM sys_role WHERE id = #{id}
+    </select>
+
+    <select id="selectByName" resultMap="RoleResultMap">
+        SELECT * FROM sys_role WHERE name = #{name}
+    </select>
+
+    <select id="selectAll" resultMap="RoleResultMap">
+        SELECT * FROM sys_role
+    </select>
+
+    <select id="existsByName" resultType="boolean">
+        SELECT COUNT(*) > 0 FROM sys_role WHERE name = #{name}
+    </select>
+
+    <select id="selectAllByIds" resultMap="RoleResultMap">
+        SELECT * FROM sys_role WHERE id IN
+        <foreach collection="ids" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </select>
+
+    <insert id="insertRoleMenu">
+        INSERT INTO sys_role_menu (role_id, menu_id) VALUES (#{roleId}, #{menuId})
+    </insert>
+
+    <select id="existsRoleMenu" resultType="boolean">
+        SELECT COUNT(*) > 0 FROM sys_role_menu WHERE role_id = #{roleId} AND menu_id = #{menuId}
+    </select>
+
+    <delete id="deleteRoleMenus">
+        DELETE FROM sys_role_menu WHERE role_id = #{roleId}
+    </delete>
+
+</mapper>

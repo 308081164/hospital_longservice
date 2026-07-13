@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hospital.backend.mapper.ProductMatchRuleMapper">
+
+    <resultMap id="ProductMatchRuleResultMap" type="com.hospital.backend.entity.ProductMatchRule">
+        <id property="id" column="id"/>
+        <result property="productId" column="product_id"/>
+        <result property="variantId" column="variant_id"/>
+        <result property="matchType" column="match_type"/>
+        <result property="targetField" column="target_field"/>
+        <result property="patternValue" column="pattern_value"/>
+        <result property="matchFields" column="match_fields"/>
+        <result property="conditionsJson" column="conditions_json"/>
+        <result property="priority" column="priority"/>
+        <result property="isActive" column="is_active"/>
+        <result property="createdAt" column="created_at"/>
+        <result property="updatedAt" column="updated_at"/>
+    </resultMap>
+
+    <insert id="insert" parameterType="com.hospital.backend.entity.ProductMatchRule" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO product_match_rule
+        (product_id, variant_id, match_type, target_field, pattern_value, match_fields, conditions_json, priority, is_active, created_at, updated_at)
+        VALUES (#{productId}, #{variantId}, #{matchType}, #{targetField}, #{patternValue}, #{matchFields}, #{conditionsJson}, #{priority}, #{isActive}, NOW(), NOW())
+    </insert>
+
+    <update id="updateById" parameterType="com.hospital.backend.entity.ProductMatchRule">
+        UPDATE product_match_rule
+        <set>
+            <if test="matchType != null">match_type = #{matchType},</if>
+            <if test="targetField != null">target_field = #{targetField},</if>
+            <if test="patternValue != null">pattern_value = #{patternValue},</if>
+            <if test="matchFields != null">match_fields = #{matchFields},</if>
+            <if test="conditionsJson != null">conditions_json = #{conditionsJson},</if>
+            <if test="priority != null">priority = #{priority},</if>
+            <if test="isActive != null">is_active = #{isActive},</if>
+            updated_at = NOW(),
+        </set>
+        WHERE id = #{id}
+    </update>
+
+    <delete id="deleteByProductId">
+        DELETE FROM product_match_rule WHERE product_id = #{productId}
+    </delete>
+
+    <delete id="deleteById">
+        DELETE FROM product_match_rule WHERE id = #{id}
+    </delete>
+
+    <select id="selectByProductId" resultMap="ProductMatchRuleResultMap">
+        SELECT * FROM product_match_rule WHERE product_id = #{productId} ORDER BY priority ASC, id ASC
+    </select>
+
+    <select id="selectAllActiveWithProduct" resultMap="ProductMatchRuleResultMap">
+        SELECT r.* FROM product_match_rule r
+        INNER JOIN product p ON p.id = r.product_id
+        WHERE r.is_active = 1 AND p.is_active = 1 AND p.deleted_at IS NULL
+        ORDER BY p.priority ASC, r.priority ASC, r.id ASC
+    </select>
+
+    <select id="selectAllActiveVariantRules" resultMap="ProductMatchRuleResultMap">
+        SELECT r.* FROM product_match_rule r
+        WHERE r.is_active = 1 AND r.variant_id IS NOT NULL
+        ORDER BY r.priority ASC, r.id ASC
+    </select>
+
+</mapper>

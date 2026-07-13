@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hospital.backend.mapper.ProductMapper">
+
+    <resultMap id="ProductResultMap" type="com.hospital.backend.entity.Product">
+        <id property="id" column="id"/>
+        <result property="categoryId" column="category_id"/>
+        <result property="skuCode" column="sku_code"/>
+        <result property="name" column="name"/>
+        <result property="pricingMode" column="pricing_mode"/>
+        <result property="publicPrice" column="public_price"/>
+        <result property="originalPrice" column="original_price"/>
+        <result property="priority" column="priority"/>
+        <result property="isActive" column="is_active"/>
+        <result property="deletedAt" column="deleted_at"/>
+        <result property="createdAt" column="created_at"/>
+        <result property="updatedAt" column="updated_at"/>
+    </resultMap>
+
+    <insert id="insert" parameterType="com.hospital.backend.entity.Product" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO product (category_id, sku_code, name, pricing_mode, public_price, original_price, priority, is_active, created_at, updated_at)
+        VALUES (#{categoryId}, #{skuCode}, #{name}, #{pricingMode}, #{publicPrice}, #{originalPrice}, #{priority}, #{isActive}, NOW(), NOW())
+    </insert>
+
+    <update id="updateById" parameterType="com.hospital.backend.entity.Product">
+        UPDATE product
+        <set>
+            <if test="categoryId != null">category_id = #{categoryId},</if>
+            <if test="skuCode != null">sku_code = #{skuCode},</if>
+            <if test="name != null">name = #{name},</if>
+            <if test="pricingMode != null">pricing_mode = #{pricingMode},</if>
+            public_price = #{publicPrice},
+            original_price = #{originalPrice},
+            <if test="priority != null">priority = #{priority},</if>
+            <if test="isActive != null">is_active = #{isActive},</if>
+            <if test="deletedAt != null">deleted_at = #{deletedAt},</if>
+            updated_at = NOW(),
+        </set>
+        WHERE id = #{id}
+    </update>
+
+    <select id="selectById" resultMap="ProductResultMap">
+        SELECT * FROM product WHERE id = #{id} AND deleted_at IS NULL
+    </select>
+
+    <select id="selectAllActive" resultMap="ProductResultMap">
+        SELECT * FROM product WHERE deleted_at IS NULL AND is_active = 1 ORDER BY priority ASC, id ASC
+    </select>
+
+    <select id="selectByCategoryId" resultMap="ProductResultMap">
+        SELECT * FROM product WHERE category_id = #{categoryId} AND deleted_at IS NULL AND is_active = 1
+        ORDER BY priority ASC, id ASC
+    </select>
+
+    <select id="countByCategoryId" resultType="long">
+        SELECT COUNT(*) FROM product WHERE category_id = #{categoryId} AND deleted_at IS NULL AND is_active = 1
+    </select>
+
+    <update id="softDeleteById">
+        UPDATE product SET is_active = 0, deleted_at = NOW(), updated_at = NOW() WHERE id = #{id}
+    </update>
+
+</mapper>

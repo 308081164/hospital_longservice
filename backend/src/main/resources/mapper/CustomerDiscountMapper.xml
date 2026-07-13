@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hospital.backend.mapper.CustomerDiscountMapper">
+
+    <resultMap id="CustomerDiscountResultMap" type="com.hospital.backend.entity.CustomerDiscount">
+        <id property="id" column="id"/>
+        <result property="customerId" column="customer_id"/>
+        <result property="name" column="name"/>
+        <result property="discountRate" column="discount_rate"/>
+        <result property="applyStage" column="apply_stage"/>
+        <result property="skipWhenFixedPrice" column="skip_when_fixed_price"/>
+        <result property="categoryFilter" column="category_filter"/>
+        <result property="productKeywordFilter" column="product_keyword_filter"/>
+        <result property="effectiveFrom" column="effective_from"/>
+        <result property="effectiveTo" column="effective_to"/>
+        <result property="priority" column="priority"/>
+        <result property="isActive" column="is_active"/>
+        <result property="createdAt" column="created_at"/>
+        <result property="updatedAt" column="updated_at"/>
+    </resultMap>
+
+    <insert id="insert" parameterType="com.hospital.backend.entity.CustomerDiscount" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO customer_discount (customer_id, name, discount_rate, apply_stage, skip_when_fixed_price,
+                                       category_filter, product_keyword_filter, effective_from, effective_to,
+                                       priority, is_active, created_at, updated_at)
+        VALUES (#{customerId}, #{name}, #{discountRate}, #{applyStage}, #{skipWhenFixedPrice},
+                #{categoryFilter}, #{productKeywordFilter}, #{effectiveFrom}, #{effectiveTo},
+                #{priority}, #{isActive}, NOW(), NOW())
+    </insert>
+
+    <delete id="deleteByCustomerId">
+        DELETE FROM customer_discount WHERE customer_id = #{customerId}
+    </delete>
+
+    <select id="selectByCustomerId" resultMap="CustomerDiscountResultMap">
+        SELECT * FROM customer_discount WHERE customer_id = #{customerId} ORDER BY priority ASC, id ASC
+    </select>
+
+</mapper>

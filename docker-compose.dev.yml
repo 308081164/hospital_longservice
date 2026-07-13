@@ -1,0 +1,9 @@
+# 可选：本地开发时将 MySQL 3306 映射到宿主机，便于 DBeaver / 本地 IDE 直连。
+# 用法：docker compose -f docker-compose.yml -f docker-compose.dev.yml up -d
+#
+# 生产环境请勿使用本文件（生产 compose 不暴露 MySQL 端口）。
+
+services:
+  mysql:
+    ports:
+      - "${MYSQL_PUBLISH_PORT:-3306}:3306"

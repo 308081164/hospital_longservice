@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hospital.backend.mapper.HospitalReconciliationRowMapper">
+
+    <resultMap id="RowResultMap" type="com.hospital.backend.entity.HospitalReconciliationRow">
+        <id property="id" column="id"/>
+        <result property="jobId" column="job_id"/>
+        <result property="sheetName" column="sheet_name"/>
+        <result property="rowNumber" column="row_number"/>
+        <result property="deliveryDate" column="delivery_date"/>
+        <result property="orderNo" column="order_no"/>
+        <result property="type" column="type"/>
+        <result property="categoryNo" column="category_no"/>
+        <result property="packName" column="pack_name"/>
+        <result property="packageMaterial" column="package_material"/>
+        <result property="packCount" column="pack_count"/>
+        <result property="instrumentCount" column="instrument_count"/>
+        <result property="unitPrice" column="unit_price"/>
+        <result property="totalPrice" column="total_price"/>
+        <result property="expectedUnitPrice" column="expected_unit_price"/>
+        <result property="correctedTotalPrice" column="corrected_total_price"/>
+        <result property="difference" column="difference"/>
+        <result property="status" column="status"/>
+        <result property="pricingRule" column="pricing_rule"/>
+        <result property="matchedProductId" column="matched_product_id"/>
+        <result property="matchedVariantId" column="matched_variant_id"/>
+        <result property="pricingPath" column="pricing_path"/>
+        <result property="notesJson" column="notes_json"/>
+        <result property="matchedRuleId" column="matched_rule_id"/>
+        <result property="matchedPriceOption" column="matched_price_option"/>
+        <result property="billingNotes" column="billing_notes"/>
+        <result property="createdAt" column="created_at"/>
+    </resultMap>
+
+    <insert id="insert" parameterType="com.hospital.backend.entity.HospitalReconciliationRow" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO hospital_reconciliation_row
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="jobId != null">job_id,</if>
+            <if test="sheetName != null">sheet_name,</if>
+            <if test="rowNumber != null">`row_number`,</if>
+            <if test="deliveryDate != null">delivery_date,</if>
+            <if test="orderNo != null">order_no,</if>
+            <if test="type != null">`type`,</if>
+            <if test="categoryNo != null">category_no,</if>
+            <if test="packName != null">pack_name,</if>
+            <if test="packageMaterial != null">package_material,</if>
+            <if test="packCount != null">pack_count,</if>
+            <if test="instrumentCount != null">instrument_count,</if>
+            <if test="unitPrice != null">unit_price,</if>
+            <if test="totalPrice != null">total_price,</if>
+            <if test="expectedUnitPrice != null">expected_unit_price,</if>
+            <if test="correctedTotalPrice != null">corrected_total_price,</if>
+            <if test="difference != null">difference,</if>
+            <if test="status != null">`status`,</if>
+            <if test="pricingRule != null">pricing_rule,</if>
+            <if test="notesJson != null">notes_json,</if>
+            created_at,
+        </trim>
+        VALUES
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="jobId != null">#{jobId},</if>
+            <if test="sheetName != null">#{sheetName},</if>
+            <if test="rowNumber != null">#{rowNumber},</if>
+            <if test="deliveryDate != null">#{deliveryDate},</if>
+            <if test="orderNo != null">#{orderNo},</if>
+            <if test="type != null">#{type},</if>
+            <if test="categoryNo != null">#{categoryNo},</if>
+            <if test="packName != null">#{packName},</if>
+            <if test="packageMaterial != null">#{packageMaterial},</if>
+            <if test="packCount != null">#{packCount},</if>
+            <if test="instrumentCount != null">#{instrumentCount},</if>
+            <if test="unitPrice != null">#{unitPrice},</if>
+            <if test="totalPrice != null">#{totalPrice},</if>
+            <if test="expectedUnitPrice != null">#{expectedUnitPrice},</if>
+            <if test="correctedTotalPrice != null">#{correctedTotalPrice},</if>
+            <if test="difference != null">#{difference},</if>
+            <if test="status != null">#{status},</if>
+            <if test="pricingRule != null">#{pricingRule},</if>
+            <if test="notesJson != null">#{notesJson},</if>
+            NOW(),
+        </trim>
+    </insert>
+
+    <insert id="batchInsert">
+        INSERT INTO hospital_reconciliation_row
+            (job_id, sheet_name, `row_number`, delivery_date, order_no, `type`, category_no,
+             pack_name, package_material, pack_count, instrument_count,
+             unit_price, total_price, expected_unit_price, corrected_total_price,
+             difference, `status`, pricing_rule, matched_product_id, matched_variant_id, pricing_path,
+             notes_json, matched_rule_id, matched_price_option, billing_notes, created_at)
+        VALUES
+        <foreach collection="list" item="row" separator=",">
+            (#{row.jobId}, #{row.sheetName}, #{row.rowNumber}, #{row.deliveryDate}, #{row.orderNo},
+             #{row.type}, #{row.categoryNo}, #{row.packName}, #{row.packageMaterial},
+             #{row.packCount}, #{row.instrumentCount}, #{row.unitPrice}, #{row.totalPrice},
+             #{row.expectedUnitPrice}, #{row.correctedTotalPrice}, #{row.difference},
+             #{row.status}, #{row.pricingRule}, #{row.matchedProductId}, #{row.matchedVariantId}, #{row.pricingPath},
+             #{row.notesJson}, #{row.matchedRuleId}, #{row.matchedPriceOption}, #{row.billingNotes}, NOW())
+        </foreach>
+    </insert>
+
+    <select id="selectByJobIdOrderBySheetNameAscRowNumberAsc" resultMap="RowResultMap">
+        SELECT * FROM hospital_reconciliation_row
+        WHERE job_id = #{jobId}
+        ORDER BY sheet_name ASC, `row_number` ASC
+    </select>
+
+    <select id="selectPageByJobId" resultMap="RowResultMap">
+        SELECT * FROM hospital_reconciliation_row
+        WHERE job_id = #{jobId}
+        ORDER BY sheet_name ASC, `row_number` ASC
+        LIMIT #{size} OFFSET #{offset}
+    </select>
+
+    <delete id="deleteByJobId">
+        DELETE FROM hospital_reconciliation_row WHERE job_id = #{jobId}
+    </delete>
+
+</mapper>

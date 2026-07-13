@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hospital.backend.mapper.SysSettingMapper">
+
+    <resultMap id="SysSettingResultMap" type="com.hospital.backend.entity.SysSetting">
+        <id property="id" column="id"/>
+        <result property="settingKey" column="setting_key"/>
+        <result property="settingValue" column="setting_value"/>
+        <result property="description" column="description"/>
+        <result property="createdAt" column="created_at"/>
+        <result property="updatedAt" column="updated_at"/>
+    </resultMap>
+
+    <insert id="insert" parameterType="com.hospital.backend.entity.SysSetting" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO sys_setting (setting_key, setting_value, description, created_at, updated_at)
+        VALUES (#{settingKey}, #{settingValue}, #{description}, NOW(), NOW())
+    </insert>
+
+    <update id="updateByKey" parameterType="com.hospital.backend.entity.SysSetting">
+        UPDATE sys_setting
+        SET setting_value = #{settingValue},
+            description = #{description},
+            updated_at = NOW()
+        WHERE setting_key = #{settingKey}
+    </update>
+
+    <select id="selectByKey" resultMap="SysSettingResultMap">
+        SELECT * FROM sys_setting WHERE setting_key = #{settingKey} LIMIT 1
+    </select>
+
+    <select id="countByKey" resultType="long">
+        SELECT COUNT(*) FROM sys_setting WHERE setting_key = #{settingKey}
+    </select>
+
+</mapper>

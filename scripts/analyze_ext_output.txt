@@ -1,0 +1,50 @@
+﻿=== DEDUP KEYS ===
+distinct pack_name only: 846
+distinct stem (Bokang): 691
+distinct pack|type|material: 888
+
+=== P99 SUB-BREAKDOWN (26% bucket) ===
+  纯包名无后缀: 74148 (48.7%)
+  仅件数无编码: 56909 (37.4%)
+  其他复合: 16018 (10.5%)
+  双袋变体: 4896 (3.2%)
+  敷料子项: 192 (0.1%)
+  混合计数包: 112 (0.1%)
+
+=== PRICING_RULE PRICE DIVERSITY (rules with most distinct prices) ===
+    66 distinct prices  高温无纺布计费
+    36 distinct prices  低温无纺布阶梯计费
+    33 distinct prices  器械包(ZSD)——保留原价
+    22 distinct prices  高温纸塑袋10cm计费
+    10 distinct prices  高温纸塑袋20cm计费
+     7 distinct prices  高温纸塑袋15cm计费
+     5 distinct prices  高温纸塑袋(双)10cm计费
+     5 distinct prices  低温纸塑袋20cm阶梯计费
+     4 distinct prices  高温纸塑袋25cm计费
+     4 distinct prices  敷料包(无纺布包)——未识别规格
+
+=== 20cm PAPER PLASTIC: instrument_count vs expected_unit_price ===
+  ic= 1: [(13.0, 3879), (16.5, 3)]
+  ic= 2: [(13.0, 1681), (16.5, 772)]
+  ic= 3: [(13.0, 576), (16.5, 162)]
+  ic= 4: [(13.0, 576), (16.5, 343), (22.0, 30)]
+  ic= 5: [(13.0, 192), (27.5, 51), (16.5, 6)]
+  ic= 6: [(33.0, 3)]
+  ic= 7: [(16.5, 6), (38.5, 3)]
+  ic= 8: [(16.5, 79)]
+  ic= 9: [(16.5, 6)]
+  ic=11: [(16.5, 3)]
+  ic=17: [(16.5, 3)]
+  ic=20: [(110.0, 48)]
+
+=== 机扩针架 variants (price by needle count) ===
+  机扩针架1针4/Z1020                  n=1225 ic=[('5', 1078)] price=[(13.5, 775)]
+  机扩针架1针5/Z1020                  n= 784 ic=[('6', 637)] price=[(13.5, 480)]
+  机扩针架1针2/Z1020                  n= 490 ic=[('3', 441)] price=[(13.5, 310)]
+  机扩针架1针6/Z1020                  n= 441 ic=[('7', 343)] price=[(16.5, 261)]
+  机扩针架1针1/Z1020                  n= 441 ic=[('2', 441)] price=[(13.5, 432)]
+  机扩针架1针10/Z1020                 n=  49 ic=[('22', 49)] price=[(16.5, 30)]
+  机扩针架1针8/Z1020                  n=  49 ic=[('9', 49)] price=[(16.5, 29)]
+  机扩针架1针7/Z1020                  n=  49 ic=[('8', 49)] price=[(16.5, 29)]
+
+=== pack_name with >3 materials: 0 ===

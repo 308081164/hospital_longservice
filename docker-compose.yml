@@ -1,0 +1,110 @@
+name: hospital-reconciliation
+
+# 本地/开发：完整栈（mysql + backend + frontend），默认 build 镜像。
+# 需从 host 直连 MySQL 时：docker compose -f docker-compose.yml -f docker-compose.dev.yml up -d
+#
+# 生产拉取预构建镜像：见 docker-compose.prod.yml 与 DEPLOY.md
+
+x-logging: &default-logging
+  driver: json-file
+  options:
+    max-size: "10m"
+    max-file: "3"
+
+services:
+  mysql:
+    image: mysql:8.0
+    container_name: hospital-mysql
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DATABASE:-hospital}
+      MYSQL_USER: ${MYSQL_USER:-hospital}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+      TZ: Asia/Shanghai
+    command: --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
+    volumes:
+      - mysql-data:/var/lib/mysql
+      - ./backend/src/main/resources/schema.sql:/docker-entrypoint-initdb.d/01-schema.sql:ro
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "127.0.0.1", "-uroot", "-p${MYSQL_ROOT_PASSWORD}"]
+      interval: 10s
+      timeout: 5s
+      retries: 30
+      start_period: 30s
+    networks:
+      - hospital-net
+    logging: *default-logging
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    image: hospital-backend:latest
+    container_name: hospital-backend
+    restart: unless-stopped
+    stop_grace_period: 30s
+    depends_on:
+      mysql:
+        condition: service_healthy
+    environment:
+      SPRING_PROFILES_ACTIVE: docker
+      MYSQL_HOST: mysql
+      MYSQL_PORT: "3306"
+      MYSQL_DATABASE: ${MYSQL_DATABASE:-hospital}
+      MYSQL_USER: ${MYSQL_USER:-hospital}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+      APP_JWT_SECRET: ${APP_JWT_SECRET}
+      APP_COMPANY_BANK_ACCOUNT: ${APP_COMPANY_BANK_ACCOUNT:-}
+      APP_COMPANY_BANK_NAME: ${APP_COMPANY_BANK_NAME:-}
+      IMPORT_BOKANG_DATA: ${IMPORT_BOKANG_DATA:-0}
+      BOKANG_DATA_DIR: /app/bokang-data
+      BOKANG_MAX_PRODUCTS: ${BOKANG_MAX_PRODUCTS:-500}
+      TZ: Asia/Shanghai
+    volumes:
+      - backend-uploads:/app/uploads
+      - backend-storage:/app/storage
+      # 与仓库 db 目录一致；存在 migrate_manifest.txt 时 entrypoint 会在启动 Spring 前执行 SQL
+      - ./backend/src/main/resources/db:/app/db:ro
+      # 铂康 INSERT 转储（master data 导入源）
+      - ./铂康/建表语句:/app/bokang-data:ro
+    healthcheck:
+      test: ["CMD-SHELL", "curl -fsS http://127.0.0.1:8000/api/v1/base/health >/dev/null || exit 1"]
+      interval: 15s
+      timeout: 5s
+      retries: 10
+      start_period: 45s
+    networks:
+      - hospital-net
+    logging: *default-logging
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    image: hospital-frontend:latest
+    container_name: hospital-frontend
+    restart: unless-stopped
+    ports:
+      - "${HTTP_PORT:-1001}:80"
+    depends_on:
+      backend:
+        condition: service_healthy
+    networks:
+      - hospital-net
+    healthcheck:
+      test: ["CMD-SHELL", "wget -qO- http://127.0.0.1/ >/dev/null || exit 1"]
+      interval: 15s
+      timeout: 5s
+      retries: 10
+      start_period: 10s
+    logging: *default-logging
+
+volumes:
+  mysql-data:
+  backend-uploads:
+  backend-storage:
+
+networks:
+  hospital-net:
+    driver: bridge

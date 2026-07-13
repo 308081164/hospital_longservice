@@ -1,0 +1,221 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hospital.backend.mapper.HospitalReconciliationJobMapper">
+
+    <resultMap id="JobResultMap" type="com.hospital.backend.entity.HospitalReconciliationJob">
+        <id property="id" column="id"/>
+        <result property="hospitalName" column="hospital_name"/>
+        <result property="sourceFileName" column="source_file_name"/>
+        <result property="sourceFilePath" column="source_file_path"/>
+        <result property="sourceFileSize" column="source_file_size"/>
+        <result property="ruleId" column="rule_id"/>
+        <result property="ruleName" column="rule_name"/>
+        <result property="planName" column="plan_name"/>
+        <result property="ruleVersion" column="rule_version"/>
+        <result property="versionNo" column="version_no"/>
+        <result property="totalRows" column="total_rows"/>
+        <result property="correctedRows" column="corrected_rows"/>
+        <result property="unchangedRows" column="unchanged_rows"/>
+        <result property="warningRows" column="warning_rows"/>
+        <result property="skippedRows" column="skipped_rows"/>
+        <result property="totalDifference" column="total_difference"/>
+        <result property="reviewStatus" column="review_status"/>
+        <result property="reviewComment" column="review_comment"/>
+        <result property="operatorName" column="operator_name"/>
+        <result property="reviewerName" column="reviewer_name"/>
+        <result property="rowsJson" column="rows_json"/>
+        <result property="sourceDateRange" column="source_date_range"/>
+        <result property="sheetNames" column="sheet_names"/>
+        <result property="sheetRowCounts" column="sheet_row_counts"/>
+        <result property="sheetWarningCounts" column="sheet_warning_counts"/>
+        <result property="logisticsTripCount" column="logistics_trip_count"/>
+        <result property="logisticsFee" column="logistics_fee"/>
+        <result property="logisticsBreakdown" column="logistics_breakdown"/>
+        <result property="settlementAdjustment" column="settlement_adjustment"/>
+        <result property="monthlyBreakdown" column="monthly_breakdown"/>
+        <result property="originalTotalPrice" column="original_total_price"/>
+        <result property="correctedTotalPrice" column="corrected_total_price"/>
+        <result property="createdAt" column="created_at"/>
+        <result property="updatedAt" column="updated_at"/>
+    </resultMap>
+
+    <!-- 列表查询专用 resultMap：排除 rows_json 大字段，避免传输无用数据 -->
+    <resultMap id="JobListResultMap" type="com.hospital.backend.entity.HospitalReconciliationJob">
+        <id property="id" column="id"/>
+        <result property="hospitalName" column="hospital_name"/>
+        <result property="sourceFileName" column="source_file_name"/>
+        <result property="sourceFilePath" column="source_file_path"/>
+        <result property="sourceFileSize" column="source_file_size"/>
+        <result property="ruleId" column="rule_id"/>
+        <result property="ruleName" column="rule_name"/>
+        <result property="planName" column="plan_name"/>
+        <result property="ruleVersion" column="rule_version"/>
+        <result property="versionNo" column="version_no"/>
+        <result property="totalRows" column="total_rows"/>
+        <result property="correctedRows" column="corrected_rows"/>
+        <result property="unchangedRows" column="unchanged_rows"/>
+        <result property="warningRows" column="warning_rows"/>
+        <result property="skippedRows" column="skipped_rows"/>
+        <result property="totalDifference" column="total_difference"/>
+        <result property="reviewStatus" column="review_status"/>
+        <result property="reviewComment" column="review_comment"/>
+        <result property="operatorName" column="operator_name"/>
+        <result property="reviewerName" column="reviewer_name"/>
+        <!-- rows_json 不映射 — 列表不需要 -->
+        <result property="sourceDateRange" column="source_date_range"/>
+        <result property="sheetNames" column="sheet_names"/>
+        <result property="sheetRowCounts" column="sheet_row_counts"/>
+        <result property="sheetWarningCounts" column="sheet_warning_counts"/>
+        <result property="logisticsTripCount" column="logistics_trip_count"/>
+        <result property="logisticsFee" column="logistics_fee"/>
+        <result property="logisticsBreakdown" column="logistics_breakdown"/>
+        <result property="settlementAdjustment" column="settlement_adjustment"/>
+        <result property="monthlyBreakdown" column="monthly_breakdown"/>
+        <result property="originalTotalPrice" column="original_total_price"/>
+        <result property="correctedTotalPrice" column="corrected_total_price"/>
+        <result property="createdAt" column="created_at"/>
+        <result property="updatedAt" column="updated_at"/>
+    </resultMap>
+
+    <insert id="insert" parameterType="com.hospital.backend.entity.HospitalReconciliationJob" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO hospital_reconciliation_job
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="hospitalName != null">hospital_name,</if>
+            <if test="sourceFileName != null">source_file_name,</if>
+            <if test="sourceFilePath != null">source_file_path,</if>
+            <if test="sourceFileSize != null">source_file_size,</if>
+            <if test="ruleId != null">rule_id,</if>
+            <if test="ruleName != null">rule_name,</if>
+            <if test="planName != null">plan_name,</if>
+            <if test="ruleVersion != null">rule_version,</if>
+            <if test="versionNo != null">version_no,</if>
+            <if test="totalRows != null">total_rows,</if>
+            <if test="correctedRows != null">corrected_rows,</if>
+            <if test="unchangedRows != null">unchanged_rows,</if>
+            <if test="warningRows != null">warning_rows,</if>
+            <if test="skippedRows != null">skipped_rows,</if>
+            <if test="totalDifference != null">total_difference,</if>
+            <if test="reviewStatus != null">review_status,</if>
+            <if test="reviewComment != null">review_comment,</if>
+            <if test="operatorName != null">operator_name,</if>
+            <if test="reviewerName != null">reviewer_name,</if>
+            <if test="rowsJson != null">rows_json,</if>
+            <if test="sourceDateRange != null">source_date_range,</if>
+            <if test="sheetNames != null">sheet_names,</if>
+            <if test="sheetRowCounts != null">sheet_row_counts,</if>
+            <if test="sheetWarningCounts != null">sheet_warning_counts,</if>
+            <if test="logisticsTripCount != null">logistics_trip_count,</if>
+            <if test="logisticsFee != null">logistics_fee,</if>
+            <if test="logisticsBreakdown != null">logistics_breakdown,</if>
+            <if test="settlementAdjustment != null">settlement_adjustment,</if>
+            <if test="monthlyBreakdown != null">monthly_breakdown,</if>
+            <if test="originalTotalPrice != null">original_total_price,</if>
+            <if test="correctedTotalPrice != null">corrected_total_price,</if>
+            created_at,
+            updated_at,
+        </trim>
+        VALUES
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="hospitalName != null">#{hospitalName},</if>
+            <if test="sourceFileName != null">#{sourceFileName},</if>
+            <if test="sourceFilePath != null">#{sourceFilePath},</if>
+            <if test="sourceFileSize != null">#{sourceFileSize},</if>
+            <if test="ruleId != null">#{ruleId},</if>
+            <if test="ruleName != null">#{ruleName},</if>
+            <if test="planName != null">#{planName},</if>
+            <if test="ruleVersion != null">#{ruleVersion},</if>
+            <if test="versionNo != null">#{versionNo},</if>
+            <if test="totalRows != null">#{totalRows},</if>
+            <if test="correctedRows != null">#{correctedRows},</if>
+            <if test="unchangedRows != null">#{unchangedRows},</if>
+            <if test="warningRows != null">#{warningRows},</if>
+            <if test="skippedRows != null">#{skippedRows},</if>
+            <if test="totalDifference != null">#{totalDifference},</if>
+            <if test="reviewStatus != null">#{reviewStatus},</if>
+            <if test="reviewComment != null">#{reviewComment},</if>
+            <if test="operatorName != null">#{operatorName},</if>
+            <if test="reviewerName != null">#{reviewerName},</if>
+            <if test="rowsJson != null">#{rowsJson},</if>
+            <if test="sourceDateRange != null">#{sourceDateRange},</if>
+            <if test="sheetNames != null">#{sheetNames},</if>
+            <if test="sheetRowCounts != null">#{sheetRowCounts},</if>
+            <if test="sheetWarningCounts != null">#{sheetWarningCounts},</if>
+            <if test="logisticsTripCount != null">#{logisticsTripCount},</if>
+            <if test="logisticsFee != null">#{logisticsFee},</if>
+            <if test="logisticsBreakdown != null">#{logisticsBreakdown},</if>
+            <if test="settlementAdjustment != null">#{settlementAdjustment},</if>
+            <if test="monthlyBreakdown != null">#{monthlyBreakdown},</if>
+            <if test="originalTotalPrice != null">#{originalTotalPrice},</if>
+            <if test="correctedTotalPrice != null">#{correctedTotalPrice},</if>
+            NOW(),
+            NOW(),
+        </trim>
+    </insert>
+
+    <select id="selectById" resultMap="JobResultMap">
+        SELECT * FROM hospital_reconciliation_job WHERE id = #{id}
+    </select>
+
+    <select id="existsById" resultType="boolean">
+        SELECT COUNT(*) > 0 FROM hospital_reconciliation_job WHERE id = #{id}
+    </select>
+
+    <select id="selectByHospitalNameOrderByCreatedAtDesc" resultMap="JobListResultMap">
+        SELECT id, hospital_name, source_file_name, source_file_path, source_file_size,
+               rule_id, rule_name, plan_name, rule_version, version_no,
+               total_rows, corrected_rows, unchanged_rows, warning_rows, skipped_rows,
+               total_difference, review_status, review_comment, operator_name, reviewer_name,
+               source_date_range, sheet_names, sheet_row_counts, sheet_warning_counts,
+               logistics_trip_count, logistics_fee, logistics_breakdown,
+               settlement_adjustment, monthly_breakdown,
+               original_total_price, corrected_total_price,
+               created_at, updated_at
+        FROM hospital_reconciliation_job
+        WHERE hospital_name = #{hospitalName}
+        ORDER BY created_at DESC
+    </select>
+
+    <select id="selectAllOrderByCreatedAtDesc" resultMap="JobListResultMap">
+        SELECT id, hospital_name, source_file_name, source_file_path, source_file_size,
+               rule_id, rule_name, plan_name, rule_version, version_no,
+               total_rows, corrected_rows, unchanged_rows, warning_rows, skipped_rows,
+               total_difference, review_status, review_comment, operator_name, reviewer_name,
+               source_date_range, sheet_names, sheet_row_counts, sheet_warning_counts,
+               logistics_trip_count, logistics_fee, logistics_breakdown,
+               settlement_adjustment, monthly_breakdown,
+               original_total_price, corrected_total_price,
+               created_at, updated_at
+        FROM hospital_reconciliation_job
+        ORDER BY created_at DESC
+    </select>
+
+    <select id="selectMaxVersionNoByHospitalName" resultType="integer">
+        SELECT COALESCE(MAX(version_no), 0) FROM hospital_reconciliation_job WHERE hospital_name = #{hospitalName}
+    </select>
+
+    <select id="selectMaxVersionNoByHospitalNameAndSourceFileName" resultType="integer">
+        SELECT COALESCE(MAX(version_no), 0)
+        FROM hospital_reconciliation_job
+        WHERE hospital_name = #{hospitalName}
+          AND source_file_name = #{sourceFileName}
+    </select>
+
+    <update id="updateById" parameterType="com.hospital.backend.entity.HospitalReconciliationJob">
+        UPDATE hospital_reconciliation_job
+        <set>
+            <if test="reviewStatus != null">review_status = #{reviewStatus},</if>
+            <if test="reviewComment != null">review_comment = #{reviewComment},</if>
+            <if test="reviewerName != null">reviewer_name = #{reviewerName},</if>
+            <if test="totalRows != null">total_rows = #{totalRows},</if>
+            <if test="correctedRows != null">corrected_rows = #{correctedRows},</if>
+            <if test="unchangedRows != null">unchanged_rows = #{unchangedRows},</if>
+            <if test="warningRows != null">warning_rows = #{warningRows},</if>
+            <if test="skippedRows != null">skipped_rows = #{skippedRows},</if>
+            <if test="totalDifference != null">total_difference = #{totalDifference},</if>
+            <if test="rowsJson != null">rows_json = #{rowsJson},</if>
+            updated_at = NOW(),
+        </set>
+        WHERE id = #{id}
+    </update>
+
+</mapper>

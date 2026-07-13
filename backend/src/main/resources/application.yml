@@ -1,0 +1,53 @@
+server:
+  port: 8000
+  shutdown: graceful
+
+spring:
+  lifecycle:
+    timeout-per-shutdown-phase: 30s
+
+  profiles:
+    active: dev
+
+  jackson:
+    date-format: yyyy-MM-dd HH:mm:ss
+    time-zone: Asia/Shanghai
+
+  servlet:
+    multipart:
+      enabled: true
+      max-file-size: 50MB
+      max-request-size: 60MB
+
+app:
+  jwt:
+    secret: ${APP_JWT_SECRET}
+    access-token-expire-minutes: 240
+    refresh-token-expire-days: 7
+
+  import:
+    bokang:
+      enabled: ${IMPORT_BOKANG_DATA:false}
+      data-dir: ${BOKANG_DATA_DIR:./铂康/建表语句}
+      max-products: ${BOKANG_MAX_PRODUCTS:500}
+      skip-test-hospitals: true
+
+  upload:
+    dir: ./uploads/hospital-reconciliations
+
+  company:
+    name: 黑龙江省铂康医疗灭菌有限公司
+    bank-account: ${APP_COMPANY_BANK_ACCOUNT:}
+    bank-name: ${APP_COMPANY_BANK_NAME:}
+
+springdoc:
+  api-docs:
+    enabled: true
+  swagger-ui:
+    enabled: true
+    path: /docs
+
+mybatis:
+  mapper-locations: classpath:mapper/*.xml
+  configuration:
+    map-underscore-to-camel-case: true

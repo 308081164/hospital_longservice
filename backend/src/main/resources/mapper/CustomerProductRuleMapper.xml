@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hospital.backend.mapper.CustomerProductRuleMapper">
+
+    <resultMap id="CustomerProductRuleResultMap" type="com.hospital.backend.entity.CustomerProductRule">
+        <id property="id" column="id"/>
+        <result property="customerId" column="customer_id"/>
+        <result property="ruleType" column="rule_type"/>
+        <result property="matchMode" column="match_mode"/>
+        <result property="name" column="name"/>
+        <result property="priority" column="priority"/>
+        <result property="productId" column="product_id"/>
+        <result property="keywords" column="keywords"/>
+        <result property="excludeKeywords" column="exclude_keywords"/>
+        <result property="materials" column="materials"/>
+        <result property="temperature" column="temperature"/>
+        <result property="bagSizeEquals" column="bag_size_equals"/>
+        <result property="maxBagSizeExclusive" column="max_bag_size_exclusive"/>
+        <result property="minInstrumentCount" column="min_instrument_count"/>
+        <result property="maxInstrumentCount" column="max_instrument_count"/>
+        <result property="price" column="price"/>
+        <result property="acceptedPrices" column="accepted_prices"/>
+        <result property="fee" column="fee"/>
+        <result property="multiplier" column="multiplier"/>
+        <result property="threshold" column="threshold"/>
+        <result property="foldRatio" column="fold_ratio"/>
+        <result property="skipPackaging" column="skip_packaging"/>
+        <result property="skipDiscount" column="skip_discount"/>
+        <result property="isActive" column="is_active"/>
+        <result property="createdAt" column="created_at"/>
+        <result property="updatedAt" column="updated_at"/>
+    </resultMap>
+
+    <insert id="insert" parameterType="com.hospital.backend.entity.CustomerProductRule" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO customer_product_rule (customer_id, rule_type, match_mode, name, priority, product_id, keywords,
+                                           exclude_keywords, materials, temperature, bag_size_equals, max_bag_size_exclusive,
+                                           min_instrument_count, max_instrument_count, price, accepted_prices, fee,
+                                           multiplier, threshold, fold_ratio, skip_packaging, skip_discount, is_active,
+                                           created_at, updated_at)
+        VALUES (#{customerId}, #{ruleType}, #{matchMode}, #{name}, #{priority}, #{productId}, #{keywords},
+                #{excludeKeywords}, #{materials}, #{temperature}, #{bagSizeEquals}, #{maxBagSizeExclusive},
+                #{minInstrumentCount}, #{maxInstrumentCount}, #{price}, #{acceptedPrices}, #{fee},
+                #{multiplier}, #{threshold}, #{foldRatio}, #{skipPackaging}, #{skipDiscount}, #{isActive},
+                NOW(), NOW())
+    </insert>
+
+    <delete id="deleteByCustomerId">
+        DELETE FROM customer_product_rule WHERE customer_id = #{customerId}
+    </delete>
+
+    <select id="selectByCustomerId" resultMap="CustomerProductRuleResultMap">
+        SELECT * FROM customer_product_rule WHERE customer_id = #{customerId} ORDER BY priority ASC, id ASC
+    </select>
+
+    <select id="selectById" resultMap="CustomerProductRuleResultMap">
+        SELECT * FROM customer_product_rule WHERE id = #{id}
+    </select>
+
+    <select id="selectByCustomerIdAndProductId" resultMap="CustomerProductRuleResultMap">
+        SELECT * FROM customer_product_rule
+        WHERE customer_id = #{customerId} AND product_id = #{productId}
+        LIMIT 1
+    </select>
+
+    <update id="updateById" parameterType="com.hospital.backend.entity.CustomerProductRule">
+        UPDATE customer_product_rule
+        SET rule_type = #{ruleType},
+            match_mode = #{matchMode},
+            name = #{name},
+            priority = #{priority},
+            product_id = #{productId},
+            keywords = #{keywords},
+            exclude_keywords = #{excludeKeywords},
+            materials = #{materials},
+            temperature = #{temperature},
+            bag_size_equals = #{bagSizeEquals},
+            max_bag_size_exclusive = #{maxBagSizeExclusive},
+            min_instrument_count = #{minInstrumentCount},
+            max_instrument_count = #{maxInstrumentCount},
+            price = #{price},
+            accepted_prices = #{acceptedPrices},
+            fee = #{fee},
+            multiplier = #{multiplier},
+            threshold = #{threshold},
+            fold_ratio = #{foldRatio},
+            skip_packaging = #{skipPackaging},
+            skip_discount = #{skipDiscount},
+            is_active = #{isActive},
+            updated_at = NOW()
+        WHERE id = #{id}
+    </update>
+
+    <delete id="deleteById">
+        DELETE FROM customer_product_rule WHERE id = #{id}
+    </delete>
+
+    <select id="countByCustomerIdAndName" resultType="long">
+        SELECT COUNT(*) FROM customer_product_rule
+        WHERE customer_id = #{customerId} AND name = #{name}
+    </select>
+
+</mapper>

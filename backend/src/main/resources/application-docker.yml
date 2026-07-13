@@ -1,0 +1,34 @@
+# 生产环境配置（Docker 部署）
+server:
+  servlet:
+    encoding:
+      charset: UTF-8
+      enabled: true
+      force: true
+
+spring:
+  datasource:
+    url: jdbc:mysql://${MYSQL_HOST:mysql}:${MYSQL_PORT:3306}/${MYSQL_DATABASE:hospital}?rewriteBatchedStatements=true&characterEncoding=UTF-8&connectionCollation=utf8mb4_unicode_ci&serverTimezone=Asia/Shanghai
+    username: ${MYSQL_USER:hospital}
+    password: ${MYSQL_PASSWORD}
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+app:
+  upload:
+    dir: ./uploads/hospital-reconciliations
+  storage:
+    dir: ./storage/hospital-reconciliations
+  template:
+    bill: 测试表格/账单_标准模板.xlsx
+    settlement: 测试表格/结款函.xlsx
+
+logging:
+  level:
+    com.hospital: INFO
+    org.springframework.security: WARN
+
+springdoc:
+  api-docs:
+    enabled: false
+  swagger-ui:
+    enabled: false

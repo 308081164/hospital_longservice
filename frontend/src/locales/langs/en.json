@@ -1,0 +1,628 @@
+{
+  "httpMsg": {
+    "unauthorized": "Unauthorized access, please login again",
+    "forbidden": "Access to this resource is forbidden",
+    "notFound": "The requested resource does not exist",
+    "methodNotAllowed": "Request method not allowed",
+    "requestTimeout": "Request timeout, please try again later",
+    "internalServerError": "Internal server error, please try again later",
+    "badGateway": "Bad gateway error, please try again later",
+    "serviceUnavailable": "Service temporarily unavailable, please try again later",
+    "gatewayTimeout": "Gateway timeout, please try again later",
+    "requestCancelled": "Request cancelled",
+    "networkError": "Network connection error, please check your connection",
+    "requestFailed": "Request failed",
+    "requestConfigError": "Request configuration error"
+  },
+  "topBar": {
+    "search": {
+      "title": "Search"
+    },
+    "user": {
+      "userCenter": "User center",
+      "docs": "Document",
+      "github": "Github",
+      "lockScreen": "Lock screen",
+      "logout": "Log out"
+    },
+    "guide": {
+      "title": "Click here to view",
+      "theme": "Theme style",
+      "menu": "Open top menu",
+      "description": "More configurations"
+    }
+  },
+  "common": {
+    "tips": "Prompt",
+    "cancel": "Cancel",
+    "confirm": "Confirm",
+    "logOutTips": "Do you want to log out?"
+  },
+  "search": {
+    "placeholder": "Search page",
+    "historyTitle": "Search history",
+    "switchKeydown": "Navigate",
+    "selectKeydown": "Select",
+    "exitKeydown": "Close"
+  },
+  "setting": {
+    "menuType": {
+      "title": "Menu Layout",
+      "list": ["Vertical", "Horizontal", "Mixed", "Dual"]
+    },
+    "theme": {
+      "title": "Theme Style",
+      "list": ["Light", "Dark", "System"]
+    },
+    "menu": {
+      "title": "Menu Style"
+    },
+    "color": {
+      "title": "Theme Color"
+    },
+    "box": {
+      "title": "Box Style",
+      "list": ["Border", "Shadow"]
+    },
+    "container": {
+      "title": "Container Width",
+      "list": ["Full", "Boxed"]
+    },
+    "basics": {
+      "title": "Basic Config",
+      "list": {
+        "multiTab": "Show work tab",
+        "accordion": "Sidebar opens accordion",
+        "collapseSidebar": "Show sidebar button",
+        "reloadPage": "Show reload page button",
+        "fastEnter": "Show fast enter",
+        "breadcrumb": "Show crumb navigation",
+        "language": "Show multilingual selection",
+        "progressBar": "Show top progress bar",
+        "weakMode": "Color Weakness Mode",
+        "watermark": "Global watermark",
+        "menuWidth": "Menu width",
+        "tabStyle": "Tab style",
+        "pageTransition": "Page animation",
+        "borderRadius": "Custom radius"
+      }
+    },
+    "tabStyle": {
+      "default": "Default",
+      "card": "Card",
+      "google": "Chrome"
+    },
+    "transition": {
+      "list": {
+        "none": "None",
+        "fade": "Fade",
+        "slideLeft": "Slide Left",
+        "slideBottom": "Slide Bottom",
+        "slideTop": "Slide Top"
+      }
+    },
+    "actions": {
+      "resetConfig": "Reset Config",
+      "copyConfig": "Copy Config",
+      "copySuccess": "Configuration copied to clipboard, paste it into src/config/setting.ts file",
+      "copyFailed": "Copy failed, please try again",
+      "resetFailed": "Reset failed, please refresh the page and try again"
+    }
+  },
+  "notice": {
+    "title": "Notice",
+    "btnRead": "Mark as read",
+    "bar": ["Notice", "Message", "Todo"],
+    "text": ["No"],
+    "viewAll": "View all"
+  },
+  "worktab": {
+    "btn": {
+      "refresh": "Refresh",
+      "fixed": "Fixed",
+      "unfixed": "Unfixed",
+      "closeLeft": "Close left",
+      "closeRight": "Close right",
+      "closeOther": "Close other",
+      "closeAll": "Close all"
+    }
+  },
+  "login": {
+    "leftView": {
+      "title": "A backend system of beauty and efficiency",
+      "subTitle": "A sleek and practical interface for a great user experience"
+    },
+    "title": "Welcome back",
+    "subTitle": "Please enter your account and password to login",
+    "roles": {
+      "super": "Super Admin",
+      "admin": "Admin",
+      "user": "User"
+    },
+    "placeholder": {
+      "username": "Please enter your account",
+      "password": "Please enter your password",
+      "slider": "Please slide to verify"
+    },
+    "sliderText": "Please slide to verify",
+    "sliderSuccessText": "Verification successful",
+    "rememberPwd": "Remember password",
+    "forgetPwd": "Forgot password",
+    "btnText": "Login",
+    "noAccount": "No account yet?",
+    "register": "Register",
+    "success": {
+      "title": "Login successful",
+      "message": "Welcome back"
+    }
+  },
+  "forgetPassword": {
+    "title": "Forgot password?",
+    "contactAdmin": "Please contact the admin to reset your password",
+    "adminPath": "Admin path: System → User Management → Reset Password",
+    "backBtnText": "Back to Login"
+  },
+  "register": {
+    "title": "Create account",
+    "subTitle": "Welcome to join us, please fill in the following information to complete the registration",
+    "placeholder": {
+      "username": "Please enter your account",
+      "email": "Please enter your email",
+      "password": "Please enter your password",
+      "confirmPassword": "Please enter your password again"
+    },
+    "rule": {
+      "confirmPasswordRequired": "Please enter your password again",
+      "passwordMismatch": "The two passwords are inconsistent!",
+      "usernameLength": "The length is 3 to 20 characters",
+      "passwordLength": "The password length cannot be less than 8 digits",
+      "emailFormat": "Please enter a valid email format"
+    },
+    "submitBtnText": "Register",
+    "hasAccount": "Already have an account?",
+    "toLogin": "To login"
+  },
+  "lockScreen": {
+    "pwdError": "Password error",
+    "lock": {
+      "inputPlaceholder": "Please input lock screen password",
+      "btnText": "Lock"
+    },
+    "unlock": {
+      "inputPlaceholder": "Please input unlock password",
+      "btnText": "Unlock",
+      "backBtnText": "Back to login"
+    }
+  },
+  "greeting": {
+    "dawn": "Good morning!",
+    "morning": "Good morning!",
+    "afternoon": "Good afternoon!",
+    "evening": "Good evening!"
+  },
+  "exceptionPage": {
+    "gohome": "Go Home",
+    "403": "Sorry, you do not have permission to access this page",
+    "404": "Sorry, the page you are trying to access does not exist",
+    "500": "Sorry, there was an error on the server"
+  },
+  "menus": {
+    "login": {
+      "title": "Login"
+    },
+    "register": {
+      "title": "Register"
+    },
+    "forgetPassword": {
+      "title": "Forget Password"
+    },
+    "outside": {
+      "title": "Outside"
+    },
+    "dashboard": {
+      "title": "Dashboard",
+      "console": "Console",
+      "analysis": "Analysis",
+      "ecommerce": "Ecommerce"
+    },
+    "widgets": {
+      "title": "Components",
+      "icon": "Icon",
+      "imageCrop": "Image Crop",
+      "excel": "Excel Import Export",
+      "video": "Video Player",
+      "countTo": "Count To",
+      "wangEditor": "Wang Editor",
+      "watermark": "Watermark",
+      "contextMenu": "Context Menu",
+      "qrcode": "QR Code",
+      "drag": "Drag",
+      "textScroll": "Text Scroll",
+      "fireworks": "Fireworks",
+      "elementUI": "Component Overview"
+    },
+    "template": {
+      "title": "Template Center",
+      "chat": "Chat",
+      "cards": "Cards",
+      "banners": "Banners",
+      "charts": "Charts",
+      "map": "Map",
+      "calendar": "Calendar",
+      "pricing": "Pricing"
+    },
+    "article": {
+      "title": "Article",
+      "articleList": "Article List",
+      "articleDetail": "Article Detail",
+      "comment": "Comment",
+      "articlePublish": "Article Publish"
+    },
+    "result": {
+      "title": "Result Page",
+      "success": "Success",
+      "fail": "Fail"
+    },
+    "exception": {
+      "title": "Exception",
+      "forbidden": "403",
+      "notFound": "404",
+      "serverError": "500"
+    },
+    "examples": {
+      "title": "Feature Examples",
+      "tabs": "Tabs",
+      "tablesBasic": "Basic Tables",
+      "tables": "Advanced Tables",
+      "tablesTree": "Tree Table Layout",
+      "forms": "Forms",
+      "searchBar": "Search Form",
+      "socketChat": "Socket Connection",
+      "permission": {
+        "title": "Frontend Permission",
+        "switchRole": "Toggle Auth",
+        "buttonAuth": "Button Authority",
+        "pageVisibility": "Super Admin Visibility"
+      }
+    },
+    "safeguard": {
+      "title": "Safeguard",
+      "server": "Server"
+    },
+    "hospital": {
+      "title": "Track System",
+      "reconciliation": "Hospital Excel Reconciliation",
+      "pricingRules": "Hospital Pricing Rules",
+      "versionManagement": "Reconciliation History"
+    },
+    "settings": {
+      "title": "Settings",
+      "appearance": "Appearance",
+      "pricingRules": "Pricing Rules",
+      "versionManagement": "Reconciliation History"
+    },
+    "masterData": {
+      "title": "Master Data",
+      "customers": "Customers",
+      "customerForm": {
+        "billingEnabled": "Enable special billing",
+        "billingEnabledHint": "When off, customer product rules are not merged at reconciliation",
+        "discountTemperature": "Temperature scope",
+        "discountTemperatureAny": "All (ANY)",
+        "discountTemperatureHt": "High temp (HT)",
+        "discountTemperatureLt": "Low temp (LT)",
+        "globalDiscountExistsWarning": "A global discount (All/ANY) already exists. Remove the existing global discount rule before adding another.",
+        "logisticsTitle": "Logistics fee",
+        "logisticsFeePerTrip": "Fee per trip",
+        "logisticsFeePerTripPlaceholder": "Leave empty to use global rule",
+        "logisticsFeePerTripHint": "Overrides global logistics unit price (per trip)",
+        "billingPricingMode": "Pricing mode",
+        "billingPricingModeHint": "Controls whether unmatched rows fall back to the hospital HT/LT tier pricing table.",
+        "billingPricingModeStandard": "Standard (HT/LT tiers)",
+        "billingPricingModeStandardDesc": "Customer special rules first; otherwise hospital HT/LT tier pricing and dressing rules apply.",
+        "billingPricingModeSpecialOnly": "Special rules only",
+        "billingPricingModeSpecialOnlyDesc": "Only customer special rules, dressing rules, and path overrides; no HT/LT tiers when unmatched (manual review).",
+        "billingPricingModeHybrid": "Hybrid",
+        "billingPricingModeHybridDesc": "Currently same as standard: special rules first, then tier pricing when unmatched.",
+        "pathOverrideTitle": "Path override",
+        "pathOverrideDesc": "For customers that must deviate from the hospital HT/LT tier table. Often used with “Special rules only” to force how individual job rows are priced.",
+        "disableLowTemp": "Disable low-temp tiers",
+        "disableLowTempHint": "Price low-temp rows on the HT path",
+        "disableLowTempDesc": "When on, low-temp sterilization jobs skip LT tiers and use HT pricing. Example: Daowai People’s Hospital bills all jobs at HT unit price.",
+        "forceHighTempUnitPrice": "Fixed HT unit price (per item)",
+        "forceHighTempUnitPricePlaceholder": "Leave empty for tier pricing",
+        "forceHighTempUnitPriceDesc": "Sets a fixed HT unit price (per item), overriding tier breakpoints. Leave empty to keep tier pricing.",
+        "monthlySettlementTitle": "Monthly settlement",
+        "monthlySettlementDesc": "At the job (sterilization batch) level, sum this customer’s monthly sterilization fees first, then apply minimum charge and monthly cap. Each can be configured independently; leave empty or 0 to disable.",
+        "monthlyMinCharge": "Minimum charge",
+        "monthlyMinChargeDesc": "Floor: if the monthly sterilization total is below this amount, bill at this amount.",
+        "monthlyMinChargeHint": "Top-up only when total is below the floor",
+        "monthlyMaxCap": "Monthly cap",
+        "monthlyMaxCapDesc": "Cap: if the monthly sterilization total exceeds this amount, bill at the cap. Example: Victoria Hospital monthly cap ¥8,000.",
+        "monthlyMaxCapHint": "Cap applies only when total exceeds the limit",
+        "monthlySettlementHint": "Applied to sterilization total after row pricing"
+      },
+      "customerFilters": {
+        "keyword": "Keyword",
+        "keywordPlaceholder": "Code / canonical name",
+        "status": "Status",
+        "statusAll": "All",
+        "statusActive": "Active",
+        "statusInactive": "Inactive",
+        "capMode": "Cap Mode",
+        "capModeAll": "All",
+        "capModeStandard": "Standard cap",
+        "capModeNone": "No cap",
+        "productRules": "Product Rules",
+        "productRulesAll": "All",
+        "productRulesYes": "Has rules",
+        "productRulesNo": "No rules",
+        "noResults": "No matching customers"
+      },
+      "productCategories": "Product Categories",
+      "products": "Products",
+      "productFilters": {
+        "keyword": "Keyword",
+        "keywordPlaceholder": "Product name / SKU",
+        "category": "Category",
+        "categoryAll": "All",
+        "pricingPath": "Pricing Path",
+        "pricingPathAll": "All",
+        "pricingPathInherit": "Inherit category",
+        "status": "Status",
+        "statusAll": "All",
+        "statusActive": "Active",
+        "statusInactive": "Inactive",
+        "noResults": "No matching products"
+      },
+      "product": {
+        "publicPrice": "Public Price",
+        "originalPrice": "Original Price"
+      },
+      "pricingMode": {
+        "inheritCategory": "Inherit category default",
+        "standard": "Small item pricing",
+        "dressingCotton": "Dressing (paper-plastic + cotton)",
+        "dressingNonwoven": "Dressing (non-woven)",
+        "fixed": "Fixed price",
+        "legacyPerPiece": "Per-piece (legacy)",
+        "smallItem": "Small item pricing",
+        "dressing": "Dressing pricing",
+        "fixedPrice": "Fixed price",
+        "multiplier": "Independent multiplier",
+        "highTemp": "High-temperature pricing",
+        "lowTemp": "Low-temperature pricing",
+        "htPaperPlastic": "HT paper-plastic pricing",
+        "ltPaperPlastic": "LT paper-plastic pricing",
+        "htNonWoven": "HT non-woven pricing",
+        "ltNonWoven": "LT non-woven pricing"
+      },
+      "customerProductRules": {
+        "title": "Special Billing Rules",
+        "add": "Add Rule",
+        "product": "Product / Keyword",
+        "productPlaceholder": "Search product (optional)",
+        "optional": "optional",
+        "ruleType": "Rule Type",
+        "fixedPrice": "Fixed Price",
+        "pricePerInstrument": "Per Instrument",
+        "multiplier": "Multiplier",
+        "foldRule": "Fold Rule",
+        "extraFee": "Extra Fee",
+        "matchSummary": "Match Conditions",
+        "matchConditions": "Scene Match Conditions",
+        "matchConditionsHint": "Filter by material, bag size, instrument count; fold/fee rules may use keywords only",
+        "pricingParams": "Pricing Parameters",
+        "pricingParamsHint": "Aligned with general specialRules semantics",
+        "priceYuan": "Unit Price (CNY)",
+        "multiplierLabel": "Price Multiplier",
+        "foldThreshold": "Fold Threshold (pcs)",
+        "foldThresholdHint": "Apply fold ratio above this count",
+        "foldRatio": "Fold Divisor",
+        "foldRatioHint": "Above threshold, billable count = ceil(instrumentCount / divisor); e.g. 5 means 5 pcs count as 1",
+        "extraFeeAmount": "Extra Fee (CNY)",
+        "excludeKeywords": "Exclude Keywords",
+        "excludeKeywordsHint": "Rule is skipped if any exclude keyword matches, e.g. hollow nail",
+        "matchMode": "Price Match Mode",
+        "matchModeFirst": "Single price (first)",
+        "matchModeAnyPrice": "Any accepted price (any_price)",
+        "acceptedPrices": "Accepted Prices (CNY)",
+        "acceptedPricesHint": "Row passes if unit price matches any candidate; at least 2 required",
+        "addPrice": "Add Price",
+        "removePrice": "Remove",
+        "valueAnyPrice": "Multi-price {prices} CNY",
+        "keywords": "Match Keywords",
+        "keywordsHint": "Product or scene keywords, comma-separated",
+        "materials": "Material Keywords",
+        "materialsHint": "e.g. non-woven, paper-plastic; all must match",
+        "temperature": "Temperature",
+        "temperatureHint": "HT/LT from row type; ANY matches both",
+        "temperatureAny": "Any (ANY)",
+        "temperatureHt": "High temp (HT)",
+        "temperatureLt": "Low temp (LT)",
+        "bagSizeEquals": "Bag Size Equals (cm)",
+        "bagSizeLess": "Bag Size Less Than (cm)",
+        "minInstrument": "Min Instruments",
+        "maxInstrument": "Max Instruments",
+        "settlementBehavior": "Settlement Behavior",
+        "settlementBehaviorHint": "How packaging fee and discount apply when matched",
+        "skipPackaging": "Skip Packaging Fee",
+        "skipDiscount": "Skip Hospital Discount",
+        "isActive": "Active",
+        "paramValue": "Value",
+        "status": "Status",
+        "active": "Active",
+        "inactive": "Inactive",
+        "actions": "Actions",
+        "delete": "Delete",
+        "ruleCount": "{count} rule(s)",
+        "dialogCreate": "Add Special Billing Rule",
+        "dialogEdit": "Edit Special Billing Rule",
+        "multiplierSuffix": "x",
+        "empty": "No special billing rules yet. Click Add Rule to create one.",
+        "edit": "Edit",
+        "save": "Save",
+        "deleteConfirm": "Delete this special billing rule?",
+        "valueFixed": "{price} CNY",
+        "valueMultiplier": "{rate}x",
+        "valueFold": "Over {threshold} pcs × {ratio}",
+        "valueExtraFee": "+{fee} CNY"
+      }
+    },
+    "help": {
+      "title": "Help Center",
+      "document": "Document"
+    }
+  },
+  "table": {
+    "form": {
+      "reset": "Reset",
+      "submit": "Submit"
+    },
+    "searchBar": {
+      "reset": "Reset",
+      "search": "Search",
+      "expand": "Expand",
+      "collapse": "Collapse",
+      "searchInputPlaceholder": "Please enter",
+      "searchSelectPlaceholder": "Please select"
+    },
+    "selection": "Select",
+    "sizeOptions": {
+      "small": "Compact",
+      "default": "Default",
+      "large": "Loose"
+    },
+    "column": {
+      "selection": "Select",
+      "expand": "Expand",
+      "index": "Index"
+    },
+    "zebra": "Zebra",
+    "border": "Border",
+    "headerBackground": "Header BG"
+  },
+  "reconciliation": {
+    "upload": {
+      "title": "Excel Reconciliation",
+      "subtitle": "Upload delivery sheets for automatic header detection and pricing review",
+      "ruleLoading": "Loading rules...",
+      "dropHint": "Drag or click to upload Excel",
+      "dropNote": "Supports .xls / .xlsx, multiple files",
+      "empty": "Upload Excel files to see recognition results and review preview here",
+      "sheetSummary": "{sheets} sheets · {rows} detail rows detected",
+      "parsing": "Parsing...",
+      "remove": "Remove"
+    },
+    "history": {
+      "title": "History & Review",
+      "subtitle": "Each save records the uploaded file, version number, and review status.",
+      "refresh": "Refresh History",
+      "loading": "Loading history...",
+      "empty": "No reconciliation history saved yet.",
+      "noMatch": "No forms match the current filters.",
+      "loadFailed": "Failed to load history",
+      "unnamedHospital": "Unnamed Hospital",
+      "versionCount": "{count} versions",
+      "file": "File",
+      "operator": "Operator",
+      "reviewer": "Reviewer",
+      "rule": "Rule",
+      "filters": {
+        "keywordPlaceholder": "Hospital / file name",
+        "reviewStatus": "Review Status",
+        "operatorPlaceholder": "Operator",
+        "dateStart": "Start Date",
+        "dateEnd": "End Date",
+        "search": "Search",
+        "reset": "Reset"
+      },
+      "reviewStatus": {
+        "pending": "Pending",
+        "approved": "Approved",
+        "rejected": "Rejected"
+      },
+      "reviewConclusion": {
+        "label": "Review Conclusion",
+        "approve": "Approve",
+        "reject": "Reject"
+      },
+      "stats": {
+        "totalRows": "Total Rows",
+        "correctedRows": "Corrected",
+        "warningRows": "Review",
+        "difference": "Pending Review Diff"
+      },
+      "actions": {
+        "detail": "View Details",
+        "review": "Review",
+        "export": "Export"
+      },
+      "export": {
+        "bill": "Export Bill",
+        "settlement": "Export Settlement Letter",
+        "departmentSummary": "Export Department Summary"
+      },
+      "pagination": {
+        "total": "{count} forms in total",
+        "size6": "6 / page",
+        "size9": "9 / page",
+        "size12": "12 / page"
+      }
+    },
+    "detail": {
+      "batchFixConfirmTitle": "Confirm Batch Correction",
+      "batchFixConfirmMessage": "Batch correction will recalculate prices using the current billing rules. Rules may be outdated; reviewing line by line is recommended before saving. Continue?",
+      "batchFixConfirmButton": "I understand, proceed",
+      "batchFixCancelButton": "Cancel",
+      "saveNoChange": "No changes detected; no new version created",
+      "saveSuccess": "Saved as V{version}",
+      "saveFailed": "Save failed",
+      "batchFixFailed": "Batch correction failed",
+      "pendingReviewDifference": "Pending Review Diff",
+      "billingNotes": "Billing Notes",
+      "multiPriceHit": "Multi-price match at {price} CNY"
+    }
+  },
+  "versionManagement": {
+    "list": {
+      "empty": "No data.",
+      "sheetCount": "{count} departments",
+      "versionCount": "{count} versions",
+      "totalFiles": "{count} files in total",
+      "versionOption": "V{version} · {time}"
+    },
+    "detail": {
+      "title": "Reconciliation Version Details",
+      "loading": "Loading details...",
+      "loadingRows": "Loading line items...",
+      "lineItems": "Bill / Reconciliation Items",
+      "lineItemsEmpty": "No line items found.",
+      "rowTotal": "{total} rows in total",
+      "sheetFilter": "Department: {sheet}",
+      "pendingReviewDifference": "Pending Review Diff",
+      "columns": {
+        "rowNumber": "Row #",
+        "sheetName": "Sheet",
+        "deliveryDate": "Delivery Date",
+        "type": "Type",
+        "packName": "Pack Name",
+        "packageMaterial": "Material",
+        "instrumentCount": "Instruments",
+        "packCount": "Packs",
+        "unitPrice": "Orig. Unit Price",
+        "expectedUnitPrice": "Rule Unit Price",
+        "totalPrice": "Orig. Total",
+        "correctedTotalPrice": "Corrected Total",
+        "difference": "Difference",
+        "status": "Status"
+      },
+      "status": {
+        "corrected": "Corrected",
+        "unchanged": "Unchanged",
+        "skipped": "Skipped",
+        "warning": "Manual Review"
+      }
+    }
+  }
+}

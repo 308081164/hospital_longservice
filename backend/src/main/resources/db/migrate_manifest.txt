@@ -1,0 +1,7 @@
+# 增量 SQL 迁移清单（按顺序，一行一个文件名，相对本目录）。
+# 约定：schema_*migration*.sql 须列入此文件；CI 会通过 scripts/check-migrate-manifest.sh 校验。
+schema_001_migration_product_master.sql
+schema_002_migration_customer_master.sql
+schema_003_migration_sys_setting.sql
+schema_004_migration_product_price.sql
+schema_005_migration_product_variant.sql

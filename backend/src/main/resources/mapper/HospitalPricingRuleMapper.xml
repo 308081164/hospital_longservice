@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hospital.backend.mapper.HospitalPricingRuleMapper">
+
+    <resultMap id="PricingRuleResultMap" type="com.hospital.backend.entity.HospitalPricingRule">
+        <id property="id" column="id"/>
+        <result property="name" column="name"/>
+        <result property="version" column="version"/>
+        <result property="hospitalName" column="hospital_name"/>
+        <result property="planName" column="plan_name"/>
+        <result property="description" column="description"/>
+        <result property="isActive" column="is_active"/>
+        <result property="rulesJson" column="rules_json"/>
+        <result property="createdAt" column="created_at"/>
+        <result property="updatedAt" column="updated_at"/>
+    </resultMap>
+
+    <insert id="insert" parameterType="com.hospital.backend.entity.HospitalPricingRule" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO hospital_pricing_rule
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="name != null">name,</if>
+            <if test="version != null">version,</if>
+            <if test="hospitalName != null">hospital_name,</if>
+            <if test="planName != null">plan_name,</if>
+            <if test="description != null">description,</if>
+            <if test="isActive != null">is_active,</if>
+            <if test="rulesJson != null">rules_json,</if>
+            created_at,
+            updated_at,
+        </trim>
+        VALUES
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="name != null">#{name},</if>
+            <if test="version != null">#{version},</if>
+            <if test="hospitalName != null">#{hospitalName},</if>
+            <if test="planName != null">#{planName},</if>
+            <if test="description != null">#{description},</if>
+            <if test="isActive != null">#{isActive},</if>
+            <if test="rulesJson != null">#{rulesJson},</if>
+            NOW(),
+            NOW(),
+        </trim>
+    </insert>
+
+    <update id="updateById" parameterType="com.hospital.backend.entity.HospitalPricingRule">
+        UPDATE hospital_pricing_rule
+        <set>
+            <if test="name != null">name = #{name},</if>
+            <if test="version != null">version = #{version},</if>
+            <if test="hospitalName != null">hospital_name = #{hospitalName},</if>
+            <if test="planName != null">plan_name = #{planName},</if>
+            <if test="description != null">description = #{description},</if>
+            <if test="isActive != null">is_active = #{isActive},</if>
+            <if test="rulesJson != null">rules_json = #{rulesJson},</if>
+            updated_at = NOW(),
+        </set>
+        WHERE id = #{id}
+    </update>
+
+    <select id="selectById" resultMap="PricingRuleResultMap">
+        SELECT * FROM hospital_pricing_rule WHERE id = #{id}
+    </select>
+
+    <delete id="deleteById">
+        DELETE FROM hospital_pricing_rule WHERE id = #{id}
+    </delete>
+
+    <select id="existsById" resultType="boolean">
+        SELECT COUNT(*) > 0 FROM hospital_pricing_rule WHERE id = #{id}
+    </select>
+
+    <select id="selectByIsActiveTrue" resultMap="PricingRuleResultMap">
+        SELECT * FROM hospital_pricing_rule WHERE is_active = true LIMIT 1
+    </select>
+
+    <select id="selectByHospitalNameOrderByUpdatedAtDesc" resultMap="PricingRuleResultMap">
+        SELECT * FROM hospital_pricing_rule WHERE hospital_name = #{hospitalName} ORDER BY updated_at DESC
+    </select>
+
+    <select id="selectByIsActiveTrueAndHospitalName" resultMap="PricingRuleResultMap">
+        SELECT * FROM hospital_pricing_rule WHERE is_active = true AND hospital_name = #{hospitalName} LIMIT 1
+    </select>
+
+    <select id="selectByNameContainingOrderByIsActiveDescUpdatedAtDesc" resultMap="PricingRuleResultMap">
+        SELECT * FROM hospital_pricing_rule WHERE name LIKE CONCAT('%', #{keyword}, '%') ORDER BY is_active DESC, updated_at DESC
+    </select>
+
+    <select id="selectByPlanNameOrderByUpdatedAtDesc" resultMap="PricingRuleResultMap">
+        SELECT * FROM hospital_pricing_rule WHERE plan_name = #{planName} ORDER BY updated_at DESC
+    </select>
+
+    <select id="selectByMultiFieldContainingOrderByIsActiveDescUpdatedAtDesc" resultMap="PricingRuleResultMap">
+        SELECT * FROM hospital_pricing_rule
+        WHERE name LIKE CONCAT('%', #{keyword}, '%')
+           OR hospital_name LIKE CONCAT('%', #{keyword}, '%')
+           OR plan_name LIKE CONCAT('%', #{keyword}, '%')
+        ORDER BY is_active DESC, updated_at DESC
+    </select>
+
+    <select id="selectAll" resultMap="PricingRuleResultMap">
+        SELECT * FROM hospital_pricing_rule
+    </select>
+
+    <select id="selectAllOrderByUpdatedAtDesc" resultMap="PricingRuleResultMap">
+        SELECT * FROM hospital_pricing_rule ORDER BY updated_at DESC
+    </select>
+
+</mapper>

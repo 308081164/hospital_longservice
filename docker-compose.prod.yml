@@ -1,0 +1,116 @@
+# 生产环境：仅拉取预构建镜像，不在服务器上 build。
+# 使用前在服务器 .env 或 export 中设置（未来 CI 会自动注入）：
+#   IMAGE_BACKEND=ghcr.io/<owner>/hospital-backend:latest
+#   IMAGE_FRONTEND=ghcr.io/<owner>/hospital-frontend:latest
+#
+# ========== 数据库增量更新（与 AutoAttend 一致，供未来 CI 使用）==========
+# 1) 在 backend/src/main/resources/db/ 新增 SQL，并维护 migrate_manifest.txt
+# 2) push main 后 CI：scp backend/ 与 compose 到服务器 → docker compose pull → force-recreate backend
+# 3) backend 容器启动：docker-entrypoint.sh 等待 MySQL → 按清单执行 SQL → 启动 Spring Boot
+#    Java SchemaMigrationRunner 仍保留，用于列级幂等迁移。
+# 下方挂载 ./backend/src/main/resources/db -> /app/db，保证线上执行的是本次部署同步下来的清单。
+#
+# 典型生产命令：
+#   docker compose -f docker-compose.prod.yml pull
+#   docker compose -f docker-compose.prod.yml up -d mysql
+#   docker compose -f docker-compose.prod.yml up -d --no-deps --force-recreate backend
+#   docker compose -f docker-compose.prod.yml up -d --no-deps --force-recreate frontend
+
+name: hospital-reconciliation
+
+x-logging: &default-logging
+  driver: json-file
+  options:
+    max-size: "10m"
+    max-file: "3"
+
+services:
+  mysql:
+    image: mysql:8.0
+    container_name: hospital-mysql
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DATABASE:-hospital}
+      MYSQL_USER: ${MYSQL_USER:-hospital}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+      TZ: Asia/Shanghai
+    command: --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
+    # 不映射 3306 到主机，避免与宿主机已有 MySQL 冲突；backend 通过 Docker 网络访问 mysql:3306
+    # 若需从主机连接：docker exec -it hospital-mysql mysql -u root -p
+    volumes:
+      - mysql-data:/var/lib/mysql
+      - ./backend/src/main/resources/schema.sql:/docker-entrypoint-initdb.d/01-schema.sql:ro
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "127.0.0.1", "-uroot", "-p${MYSQL_ROOT_PASSWORD}"]
+      interval: 10s
+      timeout: 5s
+      retries: 30
+      start_period: 30s
+    networks:
+      - hospital-net
+    logging: *default-logging
+
+  backend:
+    image: ${IMAGE_BACKEND:-ghcr.io/please-set/hospital-backend:latest}
+    container_name: hospital-backend
+    restart: unless-stopped
+    stop_grace_period: 30s
+    ports:
+      - "${BACKEND_PUBLISH_PORT:-8853}:8000"
+    depends_on:
+      mysql:
+        condition: service_healthy
+    environment:
+      SPRING_PROFILES_ACTIVE: docker
+      MYSQL_HOST: mysql
+      MYSQL_PORT: "3306"
+      MYSQL_DATABASE: ${MYSQL_DATABASE:-hospital}
+      MYSQL_USER: ${MYSQL_USER:-hospital}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+      APP_JWT_SECRET: ${APP_JWT_SECRET}
+      APP_COMPANY_BANK_ACCOUNT: ${APP_COMPANY_BANK_ACCOUNT:-}
+      APP_COMPANY_BANK_NAME: ${APP_COMPANY_BANK_NAME:-}
+      TZ: Asia/Shanghai
+    volumes:
+      - backend-uploads:/app/uploads
+      - backend-storage:/app/storage
+      - ./backend/src/main/resources/db:/app/db:ro
+    healthcheck:
+      test: ["CMD-SHELL", "curl -fsS http://127.0.0.1:8000/api/v1/base/health >/dev/null || exit 1"]
+      interval: 15s
+      timeout: 5s
+      retries: 40
+      start_period: 120s
+    networks:
+      - hospital-net
+    logging: *default-logging
+
+  frontend:
+    image: ${IMAGE_FRONTEND:-ghcr.io/please-set/hospital-frontend:latest}
+    container_name: hospital-frontend
+    restart: unless-stopped
+    ports:
+      - "${HTTP_PORT:-8854}:80"
+    depends_on:
+      # 生产/CI 使用 service_started，避免 backend 健康检查慢导致 compose 长时间 Waiting
+      backend:
+        condition: service_started
+    networks:
+      - hospital-net
+    healthcheck:
+      test: ["CMD-SHELL", "wget -qO- http://127.0.0.1/ >/dev/null || exit 1"]
+      interval: 15s
+      timeout: 5s
+      retries: 10
+      start_period: 10s
+    logging: *default-logging
+
+volumes:
+  mysql-data:
+  backend-uploads:
+  backend-storage:
+
+networks:
+  hospital-net:
+    driver: bridge

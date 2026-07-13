@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hospital.backend.mapper.ProductCategoryMapper">
+
+    <resultMap id="ProductCategoryResultMap" type="com.hospital.backend.entity.ProductCategory">
+        <id property="id" column="id"/>
+        <result property="code" column="code"/>
+        <result property="name" column="name"/>
+        <result property="parentId" column="parent_id"/>
+        <result property="pricingPath" column="pricing_path"/>
+        <result property="sortOrder" column="sort_order"/>
+        <result property="isActive" column="is_active"/>
+        <result property="deletedAt" column="deleted_at"/>
+        <result property="createdAt" column="created_at"/>
+        <result property="updatedAt" column="updated_at"/>
+    </resultMap>
+
+    <insert id="insert" parameterType="com.hospital.backend.entity.ProductCategory" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO product_category (code, name, parent_id, pricing_path, sort_order, is_active, created_at, updated_at)
+        VALUES (#{code}, #{name}, #{parentId}, #{pricingPath}, #{sortOrder}, #{isActive}, NOW(), NOW())
+    </insert>
+
+    <update id="updateById" parameterType="com.hospital.backend.entity.ProductCategory">
+        UPDATE product_category
+        <set>
+            <if test="code != null">code = #{code},</if>
+            <if test="name != null">name = #{name},</if>
+            <if test="parentId != null">parent_id = #{parentId},</if>
+            <if test="pricingPath != null">pricing_path = #{pricingPath},</if>
+            <if test="sortOrder != null">sort_order = #{sortOrder},</if>
+            <if test="isActive != null">is_active = #{isActive},</if>
+            <if test="deletedAt != null">deleted_at = #{deletedAt},</if>
+            updated_at = NOW(),
+        </set>
+        WHERE id = #{id}
+    </update>
+
+    <select id="selectById" resultMap="ProductCategoryResultMap">
+        SELECT * FROM product_category WHERE id = #{id} AND deleted_at IS NULL
+    </select>
+
+    <select id="selectByCode" resultMap="ProductCategoryResultMap">
+        SELECT * FROM product_category WHERE code = #{code} AND deleted_at IS NULL LIMIT 1
+    </select>
+
+    <select id="selectAllActive" resultMap="ProductCategoryResultMap">
+        SELECT * FROM product_category WHERE deleted_at IS NULL AND is_active = 1 ORDER BY sort_order ASC, id ASC
+    </select>
+
+    <select id="selectByParentId" resultMap="ProductCategoryResultMap">
+        SELECT * FROM product_category WHERE parent_id = #{parentId} AND deleted_at IS NULL AND is_active = 1
+    </select>
+
+    <select id="countActiveChildren" resultType="long">
+        SELECT COUNT(*) FROM product_category WHERE parent_id = #{parentId} AND deleted_at IS NULL AND is_active = 1
+    </select>
+
+    <select id="countProductsByCategoryId" resultType="long">
+        SELECT COUNT(*) FROM product WHERE category_id = #{categoryId} AND deleted_at IS NULL AND is_active = 1
+    </select>
+
+    <select id="existsByCode" resultType="boolean">
+        SELECT COUNT(*) > 0 FROM product_category WHERE code = #{code} AND deleted_at IS NULL
+    </select>
+
+    <select id="existsByCodeExcludingId" resultType="boolean">
+        SELECT COUNT(*) > 0 FROM product_category WHERE code = #{code} AND id != #{id} AND deleted_at IS NULL
+    </select>
+
+</mapper>

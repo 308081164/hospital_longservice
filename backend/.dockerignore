@@ -1,0 +1,14 @@
+target/
+uploads/
+storage/
+logs/
+*.log
+.idea/
+.vscode/
+*.iml
+.DS_Store
+.git/
+.gitignore
+image/
+!测试表格/
+!测试表格/**

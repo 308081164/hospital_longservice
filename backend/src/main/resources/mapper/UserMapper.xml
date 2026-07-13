@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hospital.backend.mapper.UserMapper">
+
+    <resultMap id="UserResultMap" type="com.hospital.backend.entity.User">
+        <id property="id" column="id"/>
+        <result property="username" column="username"/>
+
+        <result property="email" column="email"/>
+        <result property="password" column="password"/>
+        <result property="isActive" column="is_active"/>
+        <result property="isSuperuser" column="is_superuser"/>
+        <result property="createdAt" column="created_at"/>
+        <result property="updatedAt" column="updated_at"/>
+    </resultMap>
+
+    <insert id="insert" parameterType="com.hospital.backend.entity.User" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO sys_user
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="username != null">username,</if>
+            <if test="email != null">email,</if>
+            <if test="password != null">password,</if>
+            <if test="isActive != null">is_active,</if>
+            <if test="isSuperuser != null">is_superuser,</if>
+            created_at,
+            updated_at,
+        </trim>
+        VALUES
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="username != null">#{username},</if>
+            <if test="email != null">#{email},</if>
+            <if test="password != null">#{password},</if>
+            <if test="isActive != null">#{isActive},</if>
+            <if test="isSuperuser != null">#{isSuperuser},</if>
+            NOW(),
+            NOW(),
+        </trim>
+    </insert>
+
+    <select id="selectById" resultMap="UserResultMap">
+        SELECT * FROM sys_user WHERE id = #{id}
+    </select>
+
+    <select id="selectByUsername" resultMap="UserResultMap">
+        SELECT * FROM sys_user WHERE username = #{username}
+    </select>
+
+    <select id="selectAll" resultMap="UserResultMap">
+        SELECT * FROM sys_user
+    </select>
+
+    <select id="existsByUsername" resultType="boolean">
+        SELECT COUNT(*) > 0 FROM sys_user WHERE username = #{username}
+    </select>
+
+    <select id="existsByEmail" resultType="boolean">
+        SELECT COUNT(*) > 0 FROM sys_user WHERE email = #{email}
+    </select>
+
+    <insert id="insertUserRole">
+        INSERT INTO sys_user_role (user_id, role_id) VALUES (#{userId}, #{roleId})
+    </insert>
+
+    <delete id="deleteUserRoles">
+        DELETE FROM sys_user_role WHERE user_id = #{userId}
+    </delete>
+
+    <select id="count" resultType="long">
+        SELECT COUNT(*) FROM sys_user
+    </select>
+
+    <update id="updateById" parameterType="com.hospital.backend.entity.User">
+        UPDATE sys_user
+        <set>
+            <if test="username != null">username = #{username},</if>
+            <if test="email != null">email = #{email},</if>
+            <if test="password != null">password = #{password},</if>
+            <if test="isActive != null">is_active = #{isActive},</if>
+            <if test="isSuperuser != null">is_superuser = #{isSuperuser},</if>
+            updated_at = NOW(),
+        </set>
+        WHERE id = #{id}
+    </update>
+
+</mapper>

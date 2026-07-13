@@ -1,0 +1,628 @@
+{
+  "httpMsg": {
+    "unauthorized": "未授权访问，请重新登录",
+    "forbidden": "禁止访问该资源",
+    "notFound": "请求的资源不存在",
+    "methodNotAllowed": "请求方法不允许",
+    "requestTimeout": "请求超时，请稍后重试",
+    "internalServerError": "服务器内部错误，请稍后重试",
+    "badGateway": "网关错误，请稍后重试",
+    "serviceUnavailable": "服务暂时不可用，请稍后重试",
+    "gatewayTimeout": "网关超时，请稍后重试",
+    "requestCancelled": "请求已取消",
+    "networkError": "网络连接异常，请检查网络连接",
+    "requestFailed": "请求失败",
+    "requestConfigError": "请求配置错误"
+  },
+  "topBar": {
+    "search": {
+      "title": "搜索"
+    },
+    "user": {
+      "userCenter": "个人中心",
+      "docs": "使用文档",
+      "github": "Github",
+      "lockScreen": "锁定屏幕",
+      "logout": "退出登录"
+    },
+    "guide": {
+      "title": "点击这里查看",
+      "theme": "主题风格",
+      "menu": "开启顶栏菜单",
+      "description": "等更多配置"
+    }
+  },
+  "common": {
+    "tips": "提示",
+    "cancel": "取消",
+    "confirm": "确定",
+    "logOutTips": "您是否要退出登录?"
+  },
+  "search": {
+    "placeholder": "搜索页面",
+    "historyTitle": "搜索历史",
+    "switchKeydown": "切换",
+    "selectKeydown": "选择",
+    "exitKeydown": "关闭"
+  },
+  "setting": {
+    "menuType": {
+      "title": "菜单布局",
+      "list": ["垂直", "水平", "混合", "双列"]
+    },
+    "theme": {
+      "title": "主题风格",
+      "list": ["浅色", "深色", "系统"]
+    },
+    "menu": {
+      "title": "菜单风格"
+    },
+    "color": {
+      "title": "系统主题色"
+    },
+    "box": {
+      "title": "盒子样式",
+      "list": ["边框", "阴影"]
+    },
+    "container": {
+      "title": "容器宽度",
+      "list": ["铺满", "定宽"]
+    },
+    "basics": {
+      "title": "基础配置",
+      "list": {
+        "multiTab": "开启多标签栏",
+        "accordion": "侧边栏开启手风琴模式",
+        "collapseSidebar": "显示折叠侧边栏按钮",
+        "fastEnter": "显示快速入口",
+        "reloadPage": "显示重载页面按钮",
+        "breadcrumb": "显示全局面包屑导航",
+        "language": "显示多语言选择",
+        "progressBar": "显示顶部进度条",
+        "weakMode": "色弱模式",
+        "watermark": "全局水印",
+        "menuWidth": "菜单宽度",
+        "tabStyle": "标签页风格",
+        "pageTransition": "页面切换动画",
+        "borderRadius": "自定义圆角"
+      }
+    },
+    "tabStyle": {
+      "default": "默认",
+      "card": "卡片",
+      "google": "谷歌"
+    },
+    "transition": {
+      "list": {
+        "none": "无动画",
+        "fade": "淡入淡出",
+        "slideLeft": "左侧滑入",
+        "slideBottom": "下方滑入",
+        "slideTop": "上方滑入"
+      }
+    },
+    "actions": {
+      "resetConfig": "重置配置",
+      "copyConfig": "复制配置",
+      "copySuccess": "配置已复制到剪贴板，可粘贴到 src/config/setting.ts 文件中",
+      "copyFailed": "复制失败，请重试",
+      "resetFailed": "重置失败，请刷新页面后重试"
+    }
+  },
+  "notice": {
+    "title": "通知",
+    "btnRead": "标为已读",
+    "bar": ["通知", "消息", "代办"],
+    "text": ["暂无"],
+    "viewAll": "查看全部"
+  },
+  "worktab": {
+    "btn": {
+      "refresh": "刷新",
+      "fixed": "固定",
+      "unfixed": "取消固定",
+      "closeLeft": "关闭左侧",
+      "closeRight": "关闭右侧",
+      "closeOther": "关闭其他",
+      "closeAll": "关闭全部"
+    }
+  },
+  "login": {
+    "leftView": {
+      "title": "铂康医疗账单系统",
+      "subTitle": "美观实用的界面，经过视觉优化，确保卓越的用户体验"
+    },
+    "title": "欢迎回来",
+    "subTitle": "输入您的账号和密码登录",
+    "roles": {
+      "super": "超级管理员",
+      "admin": "管理员",
+      "user": "普通用户"
+    },
+    "placeholder": {
+      "username": "请输入账号",
+      "password": "请输入密码",
+      "slider": "请拖动滑块完成验证"
+    },
+    "sliderText": "按住滑块拖动",
+    "sliderSuccessText": "验证成功",
+    "rememberPwd": "记住密码",
+    "forgetPwd": "忘记密码",
+    "btnText": "登录",
+    "noAccount": "还没有账号？",
+    "register": "注册",
+    "success": {
+      "title": "登录成功",
+      "message": "欢迎回来"
+    }
+  },
+  "forgetPassword": {
+    "title": "忘记密码？",
+    "contactAdmin": "请联系管理员重置密码",
+    "adminPath": "管理员路径：系统管理 → 用户管理 → 重置密码",
+    "backBtnText": "返回登录"
+  },
+  "register": {
+    "title": "创建账号",
+    "subTitle": "欢迎加入我们，请填写以下信息完成注册",
+    "placeholder": {
+      "username": "请输入账号",
+      "email": "请输入邮箱",
+      "password": "请输入密码",
+      "confirmPassword": "请再次输入密码"
+    },
+    "rule": {
+      "confirmPasswordRequired": "请再次输入密码",
+      "passwordMismatch": "两次输入密码不一致!",
+      "usernameLength": "长度在 3 到 20 个字符",
+      "passwordLength": "密码长度不能小于8位",
+      "emailFormat": "请输入正确的邮箱格式"
+    },
+    "submitBtnText": "注册",
+    "hasAccount": "已有账号？",
+    "toLogin": "去登录"
+  },
+  "lockScreen": {
+    "pwdError": "密码错误",
+    "lock": {
+      "inputPlaceholder": "请输入锁屏密码",
+      "btnText": "锁定"
+    },
+    "unlock": {
+      "inputPlaceholder": "请输入解锁密码",
+      "btnText": "解锁",
+      "backBtnText": "返回登录"
+    }
+  },
+  "greeting": {
+    "dawn": "凌晨了！",
+    "morning": "上午好！",
+    "afternoon": "下午好！",
+    "evening": "晚上好！"
+  },
+  "exceptionPage": {
+    "gohome": "返回首页",
+    "403": "抱歉，您无权访问该页面",
+    "404": "抱歉，您访问的页面不存在",
+    "500": "抱歉，服务器出错了"
+  },
+  "menus": {
+    "login": {
+      "title": "登录"
+    },
+    "register": {
+      "title": "注册"
+    },
+    "forgetPassword": {
+      "title": "忘记密码"
+    },
+    "outside": {
+      "title": "内嵌页面"
+    },
+    "dashboard": {
+      "title": "仪表盘",
+      "console": "工作台",
+      "analysis": "分析页",
+      "ecommerce": "电子商务"
+    },
+    "widgets": {
+      "title": "组件中心",
+      "icon": "图标",
+      "imageCrop": "图像裁剪",
+      "excel": "Excel 导入导出",
+      "video": "视频播放器",
+      "countTo": "数字滚动",
+      "wangEditor": "富文本编辑器",
+      "watermark": "水印",
+      "contextMenu": "右键菜单",
+      "qrcode": "二维码",
+      "drag": "拖拽",
+      "textScroll": "文字滚动",
+      "fireworks": "礼花",
+      "elementUI": "组件总览"
+    },
+    "template": {
+      "title": "模板中心",
+      "chat": "聊天",
+      "cards": "卡片",
+      "banners": "横幅",
+      "charts": "图表",
+      "map": "地图",
+      "calendar": "日历",
+      "pricing": "定价"
+    },
+    "article": {
+      "title": "文章管理",
+      "articleList": "文章列表",
+      "articleDetail": "文章详情",
+      "comment": "留言管理",
+      "articlePublish": "文章发布"
+    },
+    "result": {
+      "title": "结果页面",
+      "success": "成功页",
+      "fail": "失败页"
+    },
+    "exception": {
+      "title": "异常页面",
+      "forbidden": "403",
+      "notFound": "404",
+      "serverError": "500"
+    },
+    "examples": {
+      "title": "功能示例",
+      "tabs": "标签页",
+      "tablesBasic": "基础表格",
+      "tables": "高级表格",
+      "tablesTree": "左右布局表格",
+      "forms": "表单",
+      "searchBar": "搜索表单",
+      "socketChat": "Socket 连接",
+      "permission": {
+        "title": "前端权限",
+        "switchRole": "切换权限",
+        "buttonAuth": "按钮权限演示",
+        "pageVisibility": "超级管理员可见"
+      }
+    },
+    "safeguard": {
+      "title": "运维管理",
+      "server": "服务器管理"
+    },
+    "hospital": {
+      "title": "追踪系统",
+      "reconciliation": "医院 Excel 校对",
+      "pricingRules": "医院计费规则",
+      "versionManagement": "校对版本记录"
+    },
+    "settings": {
+      "title": "设置",
+      "appearance": "界面偏好",
+      "pricingRules": "计价规则",
+      "versionManagement": "校对版本记录"
+    },
+    "masterData": {
+      "title": "主数据",
+      "customers": "客户管理",
+      "customerForm": {
+        "billingEnabled": "启用特色账单",
+        "billingEnabledHint": "关闭后不对账时合并该客户的特色规则",
+        "discountTemperature": "温度范围",
+        "discountTemperatureAny": "全部 (ANY)",
+        "discountTemperatureHt": "高温 (HT)",
+        "discountTemperatureLt": "低温 (LT)",
+        "globalDiscountExistsWarning": "已有全局折扣选项，请先删除旧的全局折扣规则条目后再添加",
+        "logisticsTitle": "物流费配置",
+        "logisticsFeePerTrip": "单次物流费",
+        "logisticsFeePerTripPlaceholder": "留空则使用通用方案",
+        "logisticsFeePerTripHint": "覆盖通用计价方案中的物流单价（元/趟）",
+        "billingPricingMode": "计价模式",
+        "billingPricingModeHint": "决定未命中本客户特色规则时，是否继续走医院通用高温/低温阶梯计价表。",
+        "billingPricingModeStandard": "标准（高/低温阶梯）",
+        "billingPricingModeStandardDesc": "优先本客户特色规则；未命中时按医院通用高温/低温阶梯表计价，敷料包等通用规则照常生效。",
+        "billingPricingModeSpecialOnly": "仅特色规则",
+        "billingPricingModeSpecialOnlyDesc": "只按本客户特色规则、敷料包规则及下方「路径覆盖」计价；未命中时不走高温/低温阶梯表，需人工复核。",
+        "billingPricingModeHybrid": "混合",
+        "billingPricingModeHybridDesc": "当前与标准模式相同：优先特色规则，未命中时走通用阶梯表。",
+        "pathOverrideTitle": "路径覆盖",
+        "pathOverrideDesc": "适用于需偏离医院通用高温/低温阶梯计价的客户。常在「仅特色规则」计价模式下配合使用，用于强制调整单条任务的计价路径。",
+        "disableLowTemp": "禁用低温阶梯",
+        "disableLowTempHint": "低温行按高温路径计价",
+        "disableLowTempDesc": "开启后，低温灭菌任务不再走低温阶梯，统一按高温路径计价。例：道外人民医院所有任务均按高温单价结算。",
+        "forceHighTempUnitPrice": "高温固定单价（元/件）",
+        "forceHighTempUnitPricePlaceholder": "留空则使用阶梯价",
+        "forceHighTempUnitPriceDesc": "为高温路径指定固定单价（元/件），覆盖阶梯表中按件数分档的价格。留空则仍使用阶梯价。",
+        "monthlySettlementTitle": "月度结算",
+        "monthlySettlementDesc": "在任务（灭菌批次）级别，先汇总本客户当月所有任务的灭菌费合计，再应用最低消费与月封顶调整。两项均可单独配置，留空或填 0 表示不启用。",
+        "monthlyMinCharge": "最低消费（元）",
+        "monthlyMinChargeDesc": "低消：若当月灭菌费合计低于此金额，按此金额收取。",
+        "monthlyMinChargeHint": "仅当合计低于低消时补足差额",
+        "monthlyMaxCap": "月封顶（元）",
+        "monthlyMaxCapDesc": "封顶：若当月灭菌费合计超过此金额，按封顶金额收取。例：维多利亚医院月封顶 8000 元。",
+        "monthlyMaxCapHint": "仅当合计超过封顶时按封顶结算",
+        "monthlySettlementHint": "任务灭菌费合计后应用低消/封顶调整"
+      },
+      "customerFilters": {
+        "keyword": "关键词",
+        "keywordPlaceholder": "编码 / 规范名称",
+        "status": "状态",
+        "statusAll": "全部",
+        "statusActive": "启用",
+        "statusInactive": "停用",
+        "capMode": "封顶模式",
+        "capModeAll": "全部",
+        "capModeStandard": "标准封顶",
+        "capModeNone": "不封顶",
+        "productRules": "商品策略",
+        "productRulesAll": "全部",
+        "productRulesYes": "有独立策略",
+        "productRulesNo": "无独立策略",
+        "noResults": "暂无匹配客户"
+      },
+      "productCategories": "产品分类",
+      "products": "产品管理",
+      "productFilters": {
+        "keyword": "关键词",
+        "keywordPlaceholder": "产品名称 / SKU",
+        "category": "分类",
+        "categoryAll": "全部",
+        "pricingPath": "计价路径",
+        "pricingPathAll": "全部",
+        "pricingPathInherit": "继承分类",
+        "status": "状态",
+        "statusAll": "全部",
+        "statusActive": "启用",
+        "statusInactive": "停用",
+        "noResults": "暂无匹配产品"
+      },
+      "product": {
+        "publicPrice": "公开价格",
+        "originalPrice": "原价"
+      },
+      "pricingMode": {
+        "inheritCategory": "继承分类默认",
+        "standard": "小件计价",
+        "dressingCotton": "敷料计价（纸塑袋+棉球）",
+        "dressingNonwoven": "敷料计价（无纺布）",
+        "fixed": "固定价格",
+        "legacyPerPiece": "按件计价",
+        "smallItem": "小件计价",
+        "dressing": "敷料计价",
+        "fixedPrice": "固定价格",
+        "multiplier": "独立倍率",
+        "highTemp": "高温计价",
+        "lowTemp": "低温计价",
+        "htPaperPlastic": "高温纸塑袋计价",
+        "ltPaperPlastic": "低温纸塑袋计价",
+        "htNonWoven": "高温无纺布计价",
+        "ltNonWoven": "低温无纺布计价"
+      },
+      "customerProductRules": {
+        "title": "特色账单规则",
+        "add": "添加策略",
+        "product": "商品/关键词",
+        "productPlaceholder": "搜索并选择商品（可选）",
+        "optional": "可选",
+        "ruleType": "规则类型",
+        "fixedPrice": "固定价格",
+        "pricePerInstrument": "按件计价",
+        "multiplier": "独立倍率",
+        "foldRule": "件数折算",
+        "extraFee": "场景加收",
+        "matchSummary": "匹配条件",
+        "matchConditions": "场景匹配条件",
+        "matchConditionsHint": "细化到包装材料、袋型、件数区间；折算/加收规则可仅填关键词",
+        "pricingParams": "计价参数",
+        "pricingParamsHint": "与通用规则 specialRules 语义一致",
+        "priceYuan": "单价（元）",
+        "multiplierLabel": "价格倍率",
+        "foldThreshold": "折算阈值（件）",
+        "foldThresholdHint": "超过该件数后按折算比例计费",
+        "foldRatio": "折算除数",
+        "foldRatioHint": "超出阈值后按「器械数 ÷ 除数」向上取整计费，如除数 5 表示 5 件折算为 1 件",
+        "extraFeeAmount": "加收金额（元）",
+        "excludeKeywords": "排除关键词",
+        "excludeKeywordsHint": "命中任一排除词则不匹配本规则，如：空心钉",
+        "matchMode": "报价匹配模式",
+        "matchModeFirst": "单一报价（first）",
+        "matchModeAnyPrice": "多报价任一通过（any_price）",
+        "acceptedPrices": "候选报价（元）",
+        "acceptedPricesHint": "账单价与任一候选价一致即视为通过，至少填写 2 个",
+        "addPrice": "添加报价",
+        "removePrice": "移除",
+        "valueAnyPrice": "多报价 {prices} 元",
+        "keywords": "匹配关键词",
+        "keywordsHint": "商品名或场景关键词，逗号分隔",
+        "materials": "包装材料关键词",
+        "materialsHint": "如：无纺布、纸塑袋；须同时命中",
+        "temperature": "温度条件",
+        "temperatureHint": "按行类型判定高温(HT)/低温(LT)，ANY 表示不限",
+        "temperatureAny": "不限 (ANY)",
+        "temperatureHt": "高温 (HT)",
+        "temperatureLt": "低温 (LT)",
+        "bagSizeEquals": "袋型等于(cm)",
+        "bagSizeLess": "袋型小于(cm)",
+        "minInstrument": "最小件数",
+        "maxInstrument": "最大件数",
+        "settlementBehavior": "结算行为",
+        "settlementBehaviorHint": "命中后如何处理包装费与折扣",
+        "skipPackaging": "跳过包装加收",
+        "skipDiscount": "跳过医院折扣",
+        "isActive": "启用策略",
+        "paramValue": "参数",
+        "status": "状态",
+        "active": "启用",
+        "inactive": "停用",
+        "actions": "操作",
+        "delete": "删除",
+        "ruleCount": "共 {count} 条规则",
+        "dialogCreate": "添加特色账单规则",
+        "dialogEdit": "编辑特色账单规则",
+        "multiplierSuffix": "倍",
+        "empty": "暂无特色账单规则，点击「添加策略」创建",
+        "edit": "编辑",
+        "save": "保存",
+        "deleteConfirm": "确定删除该条特色账单规则？",
+        "valueFixed": "{price} 元",
+        "valueMultiplier": "{rate} 倍",
+        "valueFold": "超 {threshold} 件 × {ratio}",
+        "valueExtraFee": "+{fee} 元"
+      }
+    },
+    "help": {
+      "title": "帮助中心",
+      "document": "官方文档"
+    }
+  },
+  "table": {
+    "form": {
+      "reset": "重置",
+      "submit": "提交"
+    },
+    "searchBar": {
+      "reset": "重置",
+      "search": "查询",
+      "expand": "展开",
+      "collapse": "收起",
+      "searchInputPlaceholder": "请输入",
+      "searchSelectPlaceholder": "请选择"
+    },
+    "selection": "选择",
+    "sizeOptions": {
+      "small": "紧凑",
+      "default": "默认",
+      "large": "宽松"
+    },
+    "column": {
+      "selection": "勾选",
+      "expand": "展开",
+      "index": "序号"
+    },
+    "zebra": "斑马纹",
+    "border": "边框",
+    "headerBackground": "表头背景"
+  },
+  "reconciliation": {
+    "upload": {
+      "title": "Excel 对账",
+      "subtitle": "上传发货表，自动识别表头与明细行并校对计价",
+      "ruleLoading": "正在加载规则...",
+      "dropHint": "拖拽或点击上传 Excel",
+      "dropNote": "支持 .xls / .xlsx，可多文件",
+      "empty": "上传 Excel 后，将在此展示识别结果与校对预览",
+      "sheetSummary": "{sheets} 个工作表 · 识别 {rows} 行明细",
+      "parsing": "正在解析...",
+      "remove": "移除"
+    },
+    "history": {
+      "title": "历史版本与审核",
+      "subtitle": "保存后会记录上传文件、版本号、审核状态。",
+      "refresh": "刷新历史",
+      "loading": "正在加载历史...",
+      "empty": "还没有保存过校对历史。",
+      "noMatch": "没有符合筛选条件的表单。",
+      "loadFailed": "加载历史失败",
+      "unnamedHospital": "未命名医院",
+      "versionCount": "共 {count} 个版本",
+      "file": "文件",
+      "operator": "操作人",
+      "reviewer": "审核人",
+      "rule": "规则",
+      "filters": {
+        "keywordPlaceholder": "医院名称 / 文件名",
+        "reviewStatus": "审核状态",
+        "operatorPlaceholder": "操作人",
+        "dateStart": "开始日期",
+        "dateEnd": "结束日期",
+        "search": "查询",
+        "reset": "重置"
+      },
+      "reviewStatus": {
+        "pending": "待审核",
+        "approved": "已通过",
+        "rejected": "已驳回"
+      },
+      "reviewConclusion": {
+        "label": "审核结论",
+        "approve": "通过",
+        "reject": "驳回"
+      },
+      "stats": {
+        "totalRows": "总行",
+        "correctedRows": "已修正",
+        "warningRows": "复核",
+        "difference": "待复核差额"
+      },
+      "actions": {
+        "detail": "查看详情",
+        "review": "审核",
+        "export": "导出"
+      },
+      "export": {
+        "bill": "导出账单",
+        "settlement": "导出结款函",
+        "departmentSummary": "导出分科室价格汇总"
+      },
+      "pagination": {
+        "total": "共 {count} 个表单",
+        "size6": "6 条/页",
+        "size9": "9 条/页",
+        "size12": "12 条/页"
+      }
+    },
+    "detail": {
+      "batchFixConfirmTitle": "确认一键修正",
+      "batchFixConfirmMessage": "一键修正将基于系统当前计费规则自动重算价格。规则可能已过时，建议逐条核对后再保存。是否继续？",
+      "batchFixConfirmButton": "我已知悉，请执行",
+      "batchFixCancelButton": "取消",
+      "saveNoChange": "内容无变化，未创建新版本",
+      "saveSuccess": "已保存为 V{version}",
+      "saveFailed": "保存失败",
+      "batchFixFailed": "一键修正失败",
+      "pendingReviewDifference": "待复核差额",
+      "billingNotes": "计费说明",
+      "multiPriceHit": "多报价命中 {price} 元"
+    }
+  },
+  "versionManagement": {
+    "list": {
+      "empty": "暂无数据。",
+      "sheetCount": "共 {count} 个科室",
+      "versionCount": "共 {count} 个版本",
+      "totalFiles": "共 {count} 个文件",
+      "versionOption": "V{version} · {time}"
+    },
+    "detail": {
+      "title": "校对版本详情",
+      "loading": "正在加载详情...",
+      "loadingRows": "正在加载条目...",
+      "lineItems": "账单/对账条目",
+      "lineItemsEmpty": "暂无条目数据。",
+      "rowTotal": "共 {total} 行",
+      "sheetFilter": "当前科室：{sheet}",
+      "pendingReviewDifference": "待复核差额",
+      "columns": {
+        "rowNumber": "行号",
+        "sheetName": "工作表",
+        "deliveryDate": "发货日期",
+        "type": "类型",
+        "packName": "包名",
+        "packageMaterial": "包装材料",
+        "instrumentCount": "器械数",
+        "packCount": "包数",
+        "unitPrice": "原单价",
+        "expectedUnitPrice": "规则单价",
+        "totalPrice": "原总价",
+        "correctedTotalPrice": "修正总价",
+        "difference": "差额",
+        "status": "修正状态"
+      },
+      "status": {
+        "corrected": "已修正",
+        "unchanged": "无需修改",
+        "skipped": "已跳过",
+        "warning": "人工复核"
+      }
+    }
+  }
+}

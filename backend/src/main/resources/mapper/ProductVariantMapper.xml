@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hospital.backend.mapper.ProductVariantMapper">
+
+    <resultMap id="ProductVariantResultMap" type="com.hospital.backend.entity.ProductVariant">
+        <id property="id" column="id"/>
+        <result property="productId" column="product_id"/>
+        <result property="skuCode" column="sku_code"/>
+        <result property="specFingerprint" column="spec_fingerprint"/>
+        <result property="packName" column="pack_name"/>
+        <result property="type" column="type"/>
+        <result property="packageMaterial" column="package_material"/>
+        <result property="categoryNo" column="category_no"/>
+        <result property="familyNameParsed" column="family_name_parsed"/>
+        <result property="specSuffix" column="spec_suffix"/>
+        <result property="instrumentCountHint" column="instrument_count_hint"/>
+        <result property="orderNoPattern" column="order_no_pattern"/>
+        <result property="bagMaterialClass" column="bag_material_class"/>
+        <result property="bagTempClass" column="bag_temp_class"/>
+        <result property="bagWidthMm" column="bag_width_mm"/>
+        <result property="bagHeightMm" column="bag_height_mm"/>
+        <result property="bagSizeLabel" column="bag_size_label"/>
+        <result property="displayName" column="display_name"/>
+        <result property="publicPrice" column="public_price"/>
+        <result property="originalPrice" column="original_price"/>
+        <result property="priceSampleCount" column="price_sample_count"/>
+        <result property="occurrenceCount" column="occurrence_count"/>
+        <result property="isActive" column="is_active"/>
+        <result property="deletedAt" column="deleted_at"/>
+        <result property="createdAt" column="created_at"/>
+        <result property="updatedAt" column="updated_at"/>
+    </resultMap>
+
+    <insert id="insert" parameterType="com.hospital.backend.entity.ProductVariant" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO product_variant (
+            product_id, sku_code, spec_fingerprint, pack_name, type, package_material, category_no,
+            family_name_parsed, spec_suffix, instrument_count_hint, order_no_pattern,
+            bag_material_class, bag_temp_class, bag_width_mm, bag_height_mm, bag_size_label,
+            display_name, public_price, original_price, price_sample_count, occurrence_count,
+            is_active, created_at, updated_at
+        ) VALUES (
+            #{productId}, #{skuCode}, #{specFingerprint}, #{packName}, #{type}, #{packageMaterial}, #{categoryNo},
+            #{familyNameParsed}, #{specSuffix}, #{instrumentCountHint}, #{orderNoPattern},
+            #{bagMaterialClass}, #{bagTempClass}, #{bagWidthMm}, #{bagHeightMm}, #{bagSizeLabel},
+            #{displayName}, #{publicPrice}, #{originalPrice}, #{priceSampleCount}, #{occurrenceCount},
+            #{isActive}, NOW(), NOW()
+        )
+    </insert>
+
+    <update id="updateById" parameterType="com.hospital.backend.entity.ProductVariant">
+        UPDATE product_variant
+        <set>
+            <if test="productId != null">product_id = #{productId},</if>
+            <if test="skuCode != null">sku_code = #{skuCode},</if>
+            <if test="packName != null">pack_name = #{packName},</if>
+            <if test="type != null">type = #{type},</if>
+            <if test="packageMaterial != null">package_material = #{packageMaterial},</if>
+            <if test="categoryNo != null">category_no = #{categoryNo},</if>
+            <if test="familyNameParsed != null">family_name_parsed = #{familyNameParsed},</if>
+            <if test="specSuffix != null">spec_suffix = #{specSuffix},</if>
+            <if test="instrumentCountHint != null">instrument_count_hint = #{instrumentCountHint},</if>
+            <if test="orderNoPattern != null">order_no_pattern = #{orderNoPattern},</if>
+            <if test="bagMaterialClass != null">bag_material_class = #{bagMaterialClass},</if>
+            <if test="bagTempClass != null">bag_temp_class = #{bagTempClass},</if>
+            <if test="bagWidthMm != null">bag_width_mm = #{bagWidthMm},</if>
+            <if test="bagHeightMm != null">bag_height_mm = #{bagHeightMm},</if>
+            <if test="bagSizeLabel != null">bag_size_label = #{bagSizeLabel},</if>
+            <if test="displayName != null">display_name = #{displayName},</if>
+            public_price = #{publicPrice},
+            original_price = #{originalPrice},
+            <if test="priceSampleCount != null">price_sample_count = #{priceSampleCount},</if>
+            <if test="occurrenceCount != null">occurrence_count = #{occurrenceCount},</if>
+            <if test="isActive != null">is_active = #{isActive},</if>
+            updated_at = NOW(),
+        </set>
+        WHERE id = #{id}
+    </update>
+
+    <insert id="upsert" parameterType="com.hospital.backend.entity.ProductVariant" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO product_variant (
+            product_id, sku_code, spec_fingerprint, pack_name, type, package_material, category_no,
+            family_name_parsed, spec_suffix, instrument_count_hint, order_no_pattern,
+            bag_material_class, bag_temp_class, bag_width_mm, bag_height_mm, bag_size_label,
+            display_name, public_price, original_price, price_sample_count, occurrence_count,
+            is_active, created_at, updated_at
+        ) VALUES (
+            #{productId}, #{skuCode}, #{specFingerprint}, #{packName}, #{type}, #{packageMaterial}, #{categoryNo},
+            #{familyNameParsed}, #{specSuffix}, #{instrumentCountHint}, #{orderNoPattern},
+            #{bagMaterialClass}, #{bagTempClass}, #{bagWidthMm}, #{bagHeightMm}, #{bagSizeLabel},
+            #{displayName}, #{publicPrice}, #{originalPrice}, #{priceSampleCount}, #{occurrenceCount},
+            #{isActive}, NOW(), NOW()
+        )
+        ON DUPLICATE KEY UPDATE
+            product_id = VALUES(product_id),
+            pack_name = VALUES(pack_name),
+            type = VALUES(type),
+            package_material = VALUES(package_material),
+            category_no = VALUES(category_no),
+            family_name_parsed = VALUES(family_name_parsed),
+            spec_suffix = VALUES(spec_suffix),
+            instrument_count_hint = VALUES(instrument_count_hint),
+            order_no_pattern = VALUES(order_no_pattern),
+            bag_material_class = VALUES(bag_material_class),
+            bag_temp_class = VALUES(bag_temp_class),
+            bag_width_mm = VALUES(bag_width_mm),
+            bag_height_mm = VALUES(bag_height_mm),
+            bag_size_label = VALUES(bag_size_label),
+            display_name = VALUES(display_name),
+            public_price = VALUES(public_price),
+            original_price = VALUES(original_price),
+            price_sample_count = VALUES(price_sample_count),
+            occurrence_count = VALUES(occurrence_count),
+            is_active = VALUES(is_active),
+            updated_at = NOW()
+    </insert>
+
+    <select id="selectById" resultMap="ProductVariantResultMap">
+        SELECT * FROM product_variant WHERE id = #{id} AND deleted_at IS NULL
+    </select>
+
+    <select id="selectBySpecFingerprint" resultMap="ProductVariantResultMap">
+        SELECT * FROM product_variant WHERE spec_fingerprint = #{specFingerprint} AND deleted_at IS NULL LIMIT 1
+    </select>
+
+    <select id="selectByProductId" resultMap="ProductVariantResultMap">
+        SELECT * FROM product_variant
+        WHERE product_id = #{productId} AND deleted_at IS NULL AND is_active = 1
+        ORDER BY occurrence_count DESC, id ASC
+    </select>
+
+    <select id="selectAllActive" resultMap="ProductVariantResultMap">
+        SELECT * FROM product_variant WHERE deleted_at IS NULL AND is_active = 1 ORDER BY id ASC
+    </select>
+
+    <select id="countAll" resultType="long">
+        SELECT COUNT(*) FROM product_variant WHERE deleted_at IS NULL
+    </select>
+
+</mapper>
