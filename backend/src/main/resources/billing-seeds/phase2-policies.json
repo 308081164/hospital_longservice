@@ -1,0 +1,65 @@
+{
+  "version": "1",
+  "description": "Phase 2 策略种子：维多利亚 / 呼兰红十字 / 悦美芳华",
+  "profiles": [
+    {
+      "code": "VICTORIA",
+      "name": "黑龙江维多利亚妇产医院",
+      "billingEnabled": true,
+      "billingPricingMode": "standard",
+      "aliases": ["维多利亚", "黑龙江维多利亚妇产医院"],
+      "policies": [
+        {
+          "policyType": "DISCOUNT",
+          "name": "高温5折",
+          "scope": {"temperature": "HT"},
+          "params": {"rate": 0.5, "skipWhenFixedPrice": true},
+          "priority": 10
+        },
+        {
+          "policyType": "DISCOUNT",
+          "name": "低温7折",
+          "scope": {"temperature": "LT"},
+          "params": {"rate": 0.7, "skipWhenFixedPrice": true},
+          "priority": 20
+        },
+        {
+          "policyType": "MONTHLY_SETTLEMENT",
+          "name": "低消8000封顶",
+          "params": {"minCharge": 8000, "maxCap": 8000},
+          "priority": 30
+        }
+      ]
+    },
+    {
+      "code": "HULAN-HSZ",
+      "name": "呼兰区红十字医院",
+      "billingEnabled": true,
+      "billingPricingMode": "standard",
+      "aliases": ["呼兰红十字", "呼兰区红十字医院"],
+      "policies": [
+        {
+          "policyType": "MONTHLY_SETTLEMENT",
+          "name": "低消1500",
+          "params": {"minCharge": 1500},
+          "priority": 10
+        }
+      ]
+    },
+    {
+      "code": "YUEMEI-FH",
+      "name": "悦美芳华医疗门诊医院",
+      "billingEnabled": true,
+      "billingPricingMode": "standard",
+      "aliases": ["悦美芳华", "悦美芳华医疗门诊医院"],
+      "policies": [
+        {
+          "policyType": "MONTHLY_SETTLEMENT",
+          "name": "低消1000",
+          "params": {"minCharge": 1000},
+          "priority": 10
+        }
+      ]
+    }
+  ]
+}

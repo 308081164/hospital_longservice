@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hospital.backend.mapper.BillingRuleChangeLogMapper">
+
+    <resultMap id="BillingRuleChangeLogResultMap" type="com.hospital.backend.entity.BillingRuleChangeLog">
+        <id property="id" column="id"/>
+        <result property="customerId" column="customer_id"/>
+        <result property="ruleGroupId" column="rule_group_id"/>
+        <result property="productRuleId" column="product_rule_id"/>
+        <result property="changeType" column="change_type"/>
+        <result property="entityType" column="entity_type"/>
+        <result property="beforeSnapshot" column="before_snapshot"/>
+        <result property="afterSnapshot" column="after_snapshot"/>
+        <result property="operatorName" column="operator_name"/>
+        <result property="changeSummary" column="change_summary"/>
+        <result property="createdAt" column="created_at"/>
+    </resultMap>
+
+    <insert id="insert" parameterType="com.hospital.backend.entity.BillingRuleChangeLog" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO billing_rule_change_log (customer_id, rule_group_id, product_rule_id, change_type, entity_type,
+                                             before_snapshot, after_snapshot, operator_name, change_summary, created_at)
+        VALUES (#{customerId}, #{ruleGroupId}, #{productRuleId}, #{changeType}, #{entityType},
+                #{beforeSnapshot}, #{afterSnapshot}, #{operatorName}, #{changeSummary}, NOW())
+    </insert>
+
+    <select id="selectByCustomerId" resultMap="BillingRuleChangeLogResultMap">
+        SELECT * FROM billing_rule_change_log
+        WHERE customer_id = #{customerId}
+        ORDER BY created_at DESC
+        LIMIT #{limit}
+    </select>
+
+</mapper>

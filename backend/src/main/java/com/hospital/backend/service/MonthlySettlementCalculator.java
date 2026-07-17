@@ -3,12 +3,15 @@ package com.hospital.backend.service;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.hospital.backend.common.JsonUtils;
 
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
 /**
  * 按任务灭菌费合计应用客户 MONTHLY_SETTLEMENT 策略（低消 minCharge / 封顶 maxCap）。
+ * P4-11：excludeCategories[] 不计入低消基数。
  */
 public final class MonthlySettlementCalculator {
 
@@ -22,11 +25,19 @@ public final class MonthlySettlementCalculator {
             Double minCharge,
             Double maxCap,
             Long policyId,
-            String policyName
+            String policyName,
+            double excludedTotal
     ) {
     }
 
     public static Optional<Result> compute(JsonNode compiledRules, double sterilizeTotal) {
+        return compute(compiledRules, sterilizeTotal, List.of());
+    }
+
+    public static Optional<Result> compute(
+            JsonNode compiledRules,
+            double sterilizeTotal,
+            List<Map<String, Object>> rows) {
         JsonNode policy = findMonthlyPolicy(compiledRules);
         if (policy == null) {
             return Optional.empty();
@@ -38,8 +49,12 @@ public final class MonthlySettlementCalculator {
             return Optional.empty();
         }
 
+        List<String> excludeCategories = parseExcludeCategories(policy);
+        double excludedTotal = sumExcludedRows(rows, excludeCategories);
+        double baseForMin = round2(sterilizeTotal - excludedTotal);
+
         double raw = round2(sterilizeTotal);
-        double adjusted = raw;
+        double adjusted = baseForMin;
         if (minCharge != null && adjusted < minCharge) {
             adjusted = minCharge;
         }
@@ -58,7 +73,8 @@ public final class MonthlySettlementCalculator {
                 minCharge,
                 maxCap,
                 policyId,
-                policyName
+                policyName,
+                excludedTotal
         ));
     }
 
@@ -77,11 +93,61 @@ public final class MonthlySettlementCalculator {
         if (result.maxCap() != null) {
             breakdown.put("maxCap", result.maxCap());
         }
+        if (result.excludedTotal() > 0) {
+            breakdown.put("excludedTotal", result.excludedTotal());
+        }
         if (result.policyId() != null) {
             breakdown.put("policyId", result.policyId());
         }
         breakdown.put("policyName", result.policyName());
         return breakdown;
+    }
+
+    private static double sumExcludedRows(List<Map<String, Object>> rows, List<String> excludeCategories) {
+        if (rows == null || rows.isEmpty() || excludeCategories.isEmpty()) {
+            return 0;
+        }
+        double sum = 0;
+        for (Map<String, Object> row : rows) {
+            if (matchesExcludeCategory(row, excludeCategories)) {
+                Object total = row.get("correctedTotalPrice");
+                if (total == null) {
+                    total = row.get("totalPrice");
+                }
+                if (total instanceof Number n) {
+                    sum += n.doubleValue();
+                }
+            }
+        }
+        return round2(sum);
+    }
+
+    private static boolean matchesExcludeCategory(Map<String, Object> row, List<String> excludeCategories) {
+        String packName = str(row, "packName");
+        String categoryNo = str(row, "categoryNo");
+        String type = str(row, "type");
+        String combined = packName + categoryNo + type;
+        for (String cat : excludeCategories) {
+            if (cat != null && !cat.isBlank() && combined.contains(cat.trim())) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private static List<String> parseExcludeCategories(JsonNode policy) {
+        List<String> categories = new ArrayList<>();
+        JsonNode node = policy.path("params").path("excludeCategories");
+        if (!node.isArray()) {
+            return categories;
+        }
+        node.forEach(n -> categories.add(n.asText()));
+        return categories;
+    }
+
+    private static String str(Map<String, Object> row, String key) {
+        Object v = row.get(key);
+        return v == null ? "" : String.valueOf(v);
     }
 
     private static JsonNode findMonthlyPolicy(JsonNode compiledRules) {

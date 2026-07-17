@@ -1,6 +1,7 @@
 package com.hospital.backend.controller;
 
 import com.hospital.backend.common.Result;
+import com.hospital.backend.dto.request.export.ExportV2Request;
 import com.hospital.backend.dto.request.hospital.CreateExportLogRequest;
 import com.hospital.backend.dto.request.hospital.HospitalBillTemplateExportRequest;
 import com.hospital.backend.dto.request.hospital.HospitalSettlementTemplateExportRequest;
@@ -8,7 +9,12 @@ import com.hospital.backend.dto.request.hospital.ReconciliationReviewRequest;
 import com.hospital.backend.dto.response.hospital.ReconciliationExportLogResponse;
 import com.hospital.backend.dto.response.hospital.ReconciliationJobResponse;
 import com.hospital.backend.dto.response.hospital.TemplateRefResponse;
+import com.hospital.backend.dto.response.export.ExportPreviewResponse;
+import com.hospital.backend.dto.response.export.ExportValidationResponse;
+import com.hospital.backend.export.ExportEngineService;
+import com.hospital.backend.service.DailySplitService;
 import com.hospital.backend.service.HospitalReconciliationService;
+import com.hospital.backend.service.InstrumentAuditReportService;
 import com.hospital.backend.service.ReconciliationUnmatchedService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -26,6 +32,9 @@ public class HospitalReconciliationController {
 
     private final HospitalReconciliationService hospitalReconciliationService;
     private final ReconciliationUnmatchedService reconciliationUnmatchedService;
+    private final ExportEngineService exportEngineService;
+    private final InstrumentAuditReportService instrumentAuditReportService;
+    private final DailySplitService dailySplitService;
 
     @GetMapping("/hospital-reconciliations/{jobId}/unmatched-products")
     public Result<Map<String, Object>> listUnmatchedProducts(@PathVariable Long jobId) {
@@ -69,6 +78,7 @@ public class HospitalReconciliationController {
     }
 
     @PatchMapping("/hospital-reconciliations/{jobId}/review")
+    @org.springframework.security.access.prepost.PreAuthorize("hasAnyRole('SUPER','R_BILLING_REVIEWER')")
     public Result<ReconciliationJobResponse> reviewReconciliation(
             @PathVariable Long jobId,
             @Valid @RequestBody ReconciliationReviewRequest request) {
@@ -80,6 +90,13 @@ public class HospitalReconciliationController {
             @PathVariable Long jobId,
             @RequestBody List<Map<String, Object>> updatedRows) {
         return hospitalReconciliationService.updateRows(jobId, updatedRows);
+    }
+
+    @PatchMapping("/hospital-reconciliations/{jobId}/rows/urgent")
+    public Result<ReconciliationJobResponse> updateRowsUrgent(
+            @PathVariable Long jobId,
+            @Valid @RequestBody com.hospital.backend.dto.request.hospital.UpdateRowsUrgentRequest request) {
+        return hospitalReconciliationService.updateRowsUrgent(jobId, request);
     }
 
     @PostMapping("/hospital-reconciliations/{jobId}/reprice")
@@ -148,4 +165,50 @@ public class HospitalReconciliationController {
             @RequestBody HospitalSettlementTemplateExportRequest request) {
         return hospitalReconciliationService.printTemplateSettlement(request);
     }
+
+    /** Export Engine v2 — strategy-based export from persisted job rows */
+    @PostMapping("/hospital-reconciliations/{jobId}/export-v2")
+    public ResponseEntity<byte[]> exportV2(
+            @PathVariable Long jobId,
+            @RequestBody(required = false) ExportV2Request request) {
+        if (request == null) {
+            request = new ExportV2Request();
+        }
+        return exportEngineService.exportV2(jobId, request);
+    }
+
+    @GetMapping("/hospital-reconciliations/{jobId}/export-preview")
+    public Result<ExportPreviewResponse> previewExport(
+            @PathVariable Long jobId,
+            @RequestParam(defaultValue = "bill") String exportType,
+            @RequestParam(required = false) Long templateId) {
+        return Result.success(exportEngineService.previewExport(jobId, exportType, templateId));
+    }
+
+    @GetMapping("/hospital-reconciliations/{jobId}/export-validation")
+    public Result<ExportValidationResponse> validateExport(@PathVariable Long jobId) {
+        return Result.success(exportEngineService.validateBeforeExport(jobId));
+    }
+
+    @GetMapping("/hospital-reconciliations/{jobId}/logistics-allocation")
+    public Result<com.hospital.backend.dto.response.logistics.LogisticsAllocationPreviewResponse> getLogisticsAllocation(
+            @PathVariable Long jobId) {
+        return hospitalReconciliationService.getLogisticsAllocationPreview(jobId);
+    }
+
+    @PostMapping("/hospital-reconciliations/{jobId}/export-logistics-allocation")
+    public ResponseEntity<byte[]> exportLogisticsAllocation(@PathVariable Long jobId) {
+        return hospitalReconciliationService.exportLogisticsAllocation(jobId);
+    }
+
+    @GetMapping("/hospital-reconciliations/{jobId}/export-instrument-audit")
+    public Result<Map<String, Object>> exportInstrumentAudit(@PathVariable Long jobId) {
+        return instrumentAuditReportService.buildAuditReport(jobId);
+    }
+
+    @PostMapping("/hospital-reconciliations/{jobId}/split-daily")
+    public Result<Map<String, Object>> splitDaily(@PathVariable Long jobId) {
+        return dailySplitService.splitJobByDate(jobId);
+    }
+
 }

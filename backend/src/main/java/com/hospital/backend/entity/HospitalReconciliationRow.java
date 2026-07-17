@@ -84,5 +84,8 @@ public class HospitalReconciliationRow {
     @JsonProperty("billing_notes")
     private String billingNotes;
 
+    @JsonProperty("is_urgent")
+    private Boolean isUrgent = false;
+
     private LocalDateTime createdAt;
 }

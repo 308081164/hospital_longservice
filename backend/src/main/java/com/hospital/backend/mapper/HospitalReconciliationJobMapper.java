@@ -23,4 +23,7 @@ public interface HospitalReconciliationJobMapper {
     Integer selectMaxVersionNoByHospitalNameAndSourceFileName(String hospitalName, String sourceFileName);
 
     void updateById(HospitalReconciliationJob job);
+
+    void updateAllocationResult(@org.apache.ibatis.annotations.Param("id") Long id,
+                                @org.apache.ibatis.annotations.Param("allocationResult") String allocationResult);
 }

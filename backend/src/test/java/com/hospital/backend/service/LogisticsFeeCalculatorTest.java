@@ -7,6 +7,7 @@ import com.hospital.backend.common.JsonUtils;
 import com.hospital.backend.entity.Customer;
 import com.hospital.backend.entity.CustomerBillingPolicy;
 import com.hospital.backend.mapper.CustomerBillingPolicyMapper;
+import com.hospital.backend.mapper.CustomerBillingRuleGroupMapper;
 import com.hospital.backend.mapper.CustomerDiscountMapper;
 import com.hospital.backend.mapper.CustomerProductRuleMapper;
 import com.hospital.backend.mapper.ProductMapper;
@@ -45,6 +46,8 @@ class LogisticsFeeCalculatorTest {
     private ProductMatchRuleMapper productMatchRuleMapper;
     @Mock
     private RuleSchemaValidator ruleSchemaValidator;
+    @Mock
+    private CustomerBillingRuleGroupMapper ruleGroupMapper;
 
     @InjectMocks
     private PricingRuleCompiler compiler;

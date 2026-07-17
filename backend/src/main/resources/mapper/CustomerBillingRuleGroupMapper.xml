@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hospital.backend.mapper.CustomerBillingRuleGroupMapper">
+
+    <resultMap id="CustomerBillingRuleGroupResultMap" type="com.hospital.backend.entity.CustomerBillingRuleGroup">
+        <id property="id" column="id"/>
+        <result property="customerId" column="customer_id"/>
+        <result property="groupCode" column="group_code"/>
+        <result property="groupName" column="group_name"/>
+        <result property="rulesJson" column="rules_json"/>
+        <result property="priority" column="priority"/>
+        <result property="isActive" column="is_active"/>
+        <result property="createdAt" column="created_at"/>
+        <result property="updatedAt" column="updated_at"/>
+    </resultMap>
+
+    <insert id="insert" parameterType="com.hospital.backend.entity.CustomerBillingRuleGroup" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO customer_billing_rule_group (customer_id, group_code, group_name, rules_json, priority, is_active, created_at, updated_at)
+        VALUES (#{customerId}, #{groupCode}, #{groupName}, #{rulesJson}, #{priority}, #{isActive}, NOW(), NOW())
+    </insert>
+
+    <update id="updateById" parameterType="com.hospital.backend.entity.CustomerBillingRuleGroup">
+        UPDATE customer_billing_rule_group
+        SET group_name = #{groupName},
+            rules_json = #{rulesJson},
+            priority = #{priority},
+            is_active = #{isActive},
+            updated_at = NOW()
+        WHERE id = #{id}
+    </update>
+
+    <select id="selectById" resultMap="CustomerBillingRuleGroupResultMap">
+        SELECT * FROM customer_billing_rule_group WHERE id = #{id}
+    </select>
+
+    <select id="selectByCustomerIdAndCode" resultMap="CustomerBillingRuleGroupResultMap">
+        SELECT * FROM customer_billing_rule_group
+        WHERE customer_id = #{customerId} AND group_code = #{groupCode}
+        LIMIT 1
+    </select>
+
+    <select id="selectByCustomerId" resultMap="CustomerBillingRuleGroupResultMap">
+        SELECT * FROM customer_billing_rule_group
+        WHERE customer_id = #{customerId}
+        ORDER BY priority ASC, id ASC
+    </select>
+
+    <delete id="deleteByCustomerId">
+        DELETE FROM customer_billing_rule_group WHERE customer_id = #{customerId}
+    </delete>
+
+</mapper>

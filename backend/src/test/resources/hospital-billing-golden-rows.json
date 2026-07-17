@@ -1,0 +1,1933 @@
+{
+  "version" : "phase0-v2",
+  "description" : "Phase 0 golden rows — >=20 hospitals x >=5 rows regression skeleton",
+  "hospitalCount" : 20,
+  "caseCount" : 104,
+  "cases" : [ {
+    "id" : "dongbei-nongda-per-instrument-jieya",
+    "description" : "东北农业大学医院：洁牙机尖按件固定价",
+    "input" : {
+      "type" : "额外包(纸塑袋)",
+      "packName" : "洁牙机尖-4/Z7526",
+      "packageMaterial" : "高温纸塑袋75*200",
+      "instrumentCount" : 4,
+      "packCount" : 1,
+      "unitPrice" : 22.0,
+      "totalPrice" : 22.0,
+      "hospitalName" : "东北农业大学医院"
+    },
+    "expected" : {
+      "expectedUnitPrice" : 22.0,
+      "correctedTotalPrice" : 22.0,
+      "status" : "unchanged"
+    }
+  }, {
+    "id" : "dongbei-nongda-ht-1",
+    "description" : "东北农业大学医院：高温标准1件",
+    "input" : {
+      "type" : "额外包(纸塑袋)",
+      "packName" : "普通器械-1/Z7526",
+      "packageMaterial" : "高温纸塑袋20cm",
+      "instrumentCount" : 1,
+      "packCount" : 1,
+      "unitPrice" : 0.0,
+      "totalPrice" : 0.0,
+      "hospitalName" : "东北农业大学医院"
+    },
+    "expected" : {
+      "expectedUnitPrice" : 13.0,
+      "correctedTotalPrice" : 13.0,
+      "status" : "warning"
+    }
+  }, {
+    "id" : "dongbei-nongda-ht-2",
+    "description" : "东北农业大学医院：高温标准2件",
+    "input" : {
+      "type" : "额外包(纸塑袋)",
+      "packName" : "普通器械-2/Z7526",
+      "packageMaterial" : "高温纸塑袋20cm",
+      "instrumentCount" : 2,
+      "packCount" : 1,
+      "unitPrice" : 0.0,
+      "totalPrice" : 0.0,
+      "hospitalName" : "东北农业大学医院"
+    },
+    "expected" : {
+      "expectedUnitPrice" : 16.5,
+      "correctedTotalPrice" : 16.5,
+      "status" : "warning"
+    }
+  }, {
+    "id" : "dongbei-nongda-ht-3",
+    "description" : "东北农业大学医院：高温标准3件",
+    "input" : {
+      "type" : "额外包(纸塑袋)",
+      "packName" : "普通器械-3/Z7526",
+      "packageMaterial" : "高温纸塑袋20cm",
+      "instrumentCount" : 3,
+      "packCount" : 1,
+      "unitPrice" : 0.0,
+      "totalPrice" : 0.0,
+      "hospitalName" : "东北农业大学医院"
+    },
+    "expected" : {
+      "expectedUnitPrice" : 16.5,
+      "correctedTotalPrice" : 16.5,
+      "status" : "warning"
+    }
+  }, {
+    "id" : "dongbei-nongda-ht-4",
+    "description" : "东北农业大学医院：高温标准4件",
+    "input" : {
+      "type" : "额外包(纸塑袋)",
+      "packName" : "普通器械-4/Z7526",
+      "packageMaterial" : "高温纸塑袋20cm",
+      "instrumentCount" : 4,
+      "packCount" : 1,
+      "unitPrice" : 0.0,
+      "totalPrice" : 0.0,
+      "hospitalName" : "东北农业大学医院"
+    },
+    "expected" : {
+      "expectedUnitPrice" : 22.0,
+      "correctedTotalPrice" : 22.0,
+      "status" : "warning"
+    }
+  }, {
+    "id" : "hangtian-fenghua-per-instrument-spoon",
+    "description" : "哈尔滨航天风华医院：挖勺按件计价",
+    "input" : {
+      "type" : "额外包(纸塑袋)",
+      "packName" : "挖勺-2/z7530",
+      "packageMaterial" : "高温纸塑袋75*300",
+      "instrumentCount" : 8,
+      "packCount" : 4,
+      "unitPrice" : 13.5,
+      "totalPrice" : 54.0,
+      "hospitalName" : "哈尔滨航天风华医院"
+    },
+    "expected" : {
+      "expectedUnitPrice" : 11.0,
+      "correctedTotalPrice" : 44.0,
+      "status" : "warning"
+    }
+  }, {
+    "id" : "hangtian-fenghua-ht-1",
+    "description" : "哈尔滨航天风华医院：高温标准1件",
+    "input" : {
+      "type" : "额外包(纸塑袋)",
+      "packName" : "普通器械-1/Z7526",
+      "packageMaterial" : "高温纸塑袋20cm",
+      "instrumentCount" : 1,
+      "packCount" : 1,
+      "unitPrice" : 0.0,
+      "totalPrice" : 0.0,
+      "hospitalName" : "哈尔滨航天风华医院"
+    },
+    "expected" : {
+      "expectedUnitPrice" : 13.0,
+      "correctedTotalPrice" : 13.0,
+      "status" : "warning"
+    }
+  }, {
+    "id" : "hangtian-fenghua-ht-2",
+    "description" : "哈尔滨航天风华医院：高温标准2件",
+    "input" : {
+      "type" : "额外包(纸塑袋)",
+      "packName" : "普通器械-2/Z7526",
+      "packageMaterial" : "高温纸塑袋20cm",
+      "instrumentCount" : 2,
+      "packCount" : 1,
+      "unitPrice" : 0.0,
+      "totalPrice" : 0.0,
+      "hospitalName" : "哈尔滨航天风华医院"
+    },
+    "expected" : {
+      "expectedUnitPrice" : 16.5,
+      "correctedTotalPrice" : 16.5,
+      "status" : "warning"
+    }
+  }, {
+    "id" : "hangtian-fenghua-ht-3",
+    "description" : "哈尔滨航天风华医院：高温标准3件",
+    "input" : {
+      "type" : "额外包(纸塑袋)",
+      "packName" : "普通器械-3/Z7526",
+      "packageMaterial" : "高温纸塑袋20cm",
+      "instrumentCount" : 3,
+      "packCount" : 1,
+      "unitPrice" : 0.0,
+      "totalPrice" : 0.0,
+      "hospitalName" : "哈尔滨航天风华医院"
+    },
+    "expected" : {
+      "expectedUnitPrice" : 16.5,
+      "correctedTotalPrice" : 16.5,
+      "status" : "warning"
+    }
+  }, {
+    "id" : "hangtian-fenghua-ht-4",
+    "description" : "哈尔滨航天风华医院：高温标准4件",
+    "input" : {
+      "type" : "额外包(纸塑袋)",
+      "packName" : "普通器械-4/Z7526",
+      "packageMaterial" : "高温纸塑袋20cm",
+      "instrumentCount" : 4,
+      "packCount" : 1,
+      "unitPrice" : 0.0,
+      "totalPrice" : 0.0,
+      "hospitalName" : "哈尔滨航天风华医院"
+    },
+    "expected" : {
+      "expectedUnitPrice" : 22.0,
+      "correctedTotalPrice" : 22.0,
+      "status" : "warning"
+    }
+  }, {
+    "id" : "songdian-fold-jikuozhen",
+    "description" : "哈尔滨道外区松电慢性病专科门诊部：机扩针FOLD折算",
+    "input" : {
+      "type" : "额外包(纸塑袋)",
+      "packName" : "机扩针-20/Z7520",
+      "packageMaterial" : "高温纸塑袋75*200",
+      "instrumentCount" : 20,
+      "packCount" : 1,
+      "unitPrice" : 22.0,
+      "totalPrice" : 22.0,
+      "hospitalName" : "哈尔滨道外区松电慢性病专科门诊部"
+    },
+    "expected" : {
+      "expectedUnitPrice" : 22.0,
+      "correctedTotalPrice" : 22.0,
+      "status" : "unchanged",
+      "notesContains" : [ "机扩针" ]
+    }
+  }, {
+    "id" : "songdian-ht-1",
+    "description" : "哈尔滨道外区松电慢性病专科门诊部：高温标准1件",
+    "input" : {
+      "type" : "额外包(纸塑袋)",
+      "packName" : "普通器械-1/Z7526",
+      "packageMaterial" : "高温纸塑袋20cm",
+      "instrumentCount" : 1,
+      "packCount" : 1,
+      "unitPrice" : 0.0,
+      "totalPrice" : 0.0,
+      "hospitalName" : "哈尔滨道外区松电慢性病专科门诊部"
+    },
+    "expected" : {
+      "expectedUnitPrice" : 13.0,
+      "correctedTotalPrice" : 13.0,
+      "status" : "warning"
+    }
+  }, {
+    "id" : "songdian-ht-2",
+    "description" : "哈尔滨道外区松电慢性病专科门诊部：高温标准2件",
+    "input" : {
+      "type" : "额外包(纸塑袋)",
+      "packName" : "普通器械-2/Z7526",
+      "packageMaterial" : "高温纸塑袋20cm",
+      "instrumentCount" : 2,
+      "packCount" : 1,
+      "unitPrice" : 0.0,
+      "totalPrice" : 0.0,
+      "hospitalName" : "哈尔滨道外区松电慢性病专科门诊部"
+    },
+    "expected" : {
+      "expectedUnitPrice" : 16.5,
+      "correctedTotalPrice" : 16.5,
+      "status" : "warning"
+    }
+  }, {
+    "id" : "songdian-ht-3",
+    "description" : "哈尔滨道外区松电慢性病专科门诊部：高温标准3件",
+    "input" : {
+      "type" : "额外包(纸塑袋)",
+      "packName" : "普通器械-3/Z7526",
+      "packageMaterial" : "高温纸塑袋20cm",
+      "instrumentCount" : 3,
+      "packCount" : 1,
+      "unitPrice" : 0.0,
+      "totalPrice" : 0.0,
+      "hospitalName" : "哈尔滨道外区松电慢性病专科门诊部"
+    },
+    "expected" : {
+      "expectedUnitPrice" : 16.5,
+      "correctedTotalPrice" : 16.5,
+      "status" : "warning"
+    }
+  }, {
+    "id" : "songdian-ht-4",
+    "description" : "哈尔滨道外区松电慢性病专科门诊部：高温标准4件",
+    "input" : {
+      "type" : "额外包(纸塑袋)",
+      "packName" : "普通器械-4/Z7526",
+      "packageMaterial" : "高温纸塑袋20cm",
+      "instrumentCount" : 4,
+      "packCount" : 1,
+      "unitPrice" : 0.0,
+      "totalPrice" : 0.0,
+      "hospitalName" : "哈尔滨道外区松电慢性病专科门诊部"
+    },
+    "expected" : {
+      "expectedUnitPrice" : 22.0,
+      "correctedTotalPrice" : 22.0,
+      "status" : "warning"
+    }
+  }, {
+    "id" : "hl-zgh-extra-fee-lens",
+    "description" : "黑龙江总工会医院：镜头低温阶梯+加收",
+    "input" : {
+      "type" : "单包装包(老肯低温)",
+      "packName" : "30°镜头，镜鞘-2（带转换帽）/Z2060",
+      "packageMaterial" : "低温纸塑袋200*600",
+      "instrumentCount" : 4,
+      "packCount" : 2,
+      "unitPrice" : 52.0,
+      "totalPrice" : 104.0,
+      "hospitalName" : "黑龙江总工会医院"
+    },
+    "expected" : {
+      "expectedUnitPrice" : 52.0,
+      "correctedTotalPrice" : 104.0,
+      "status" : "unchanged",
+      "notesContains" : [ "镜头" ]
+    }
+  }, {
+    "id" : "hl-zgh-ht-1",
+    "description" : "黑龙江总工会医院：高温标准1件",
+    "input" : {
+      "type" : "额外包(纸塑袋)",
+      "packName" : "普通器械-1/Z7526",
+      "packageMaterial" : "高温纸塑袋20cm",
+      "instrumentCount" : 1,
+      "packCount" : 1,
+      "unitPrice" : 0.0,
+      "totalPrice" : 0.0,
+      "hospitalName" : "黑龙江总工会医院"
+    },
+    "expected" : {
+      "expectedUnitPrice" : 13.0,
+      "correctedTotalPrice" : 13.0,
+      "status" : "warning"
+    }
+  }, {
+    "id" : "hl-zgh-ht-2",
+    "description" : "黑龙江总工会医院：高温标准2件",
+    "input" : {
+      "type" : "额外包(纸塑袋)",
+      "packName" : "普通器械-2/Z7526",
+      "packageMaterial" : "高温纸塑袋20cm",
+      "instrumentCount" : 2,
+      "packCount" : 1,
+      "unitPrice" : 0.0,
+      "totalPrice" : 0.0,
+      "hospitalName" : "黑龙江总工会医院"
+    },
+    "expected" : {
+      "expectedUnitPrice" : 16.5,
+      "correctedTotalPrice" : 16.5,
+      "status" : "warning"
+    }
+  }, {
+    "id" : "hl-zgh-ht-3",
+    "description" : "黑龙江总工会医院：高温标准3件",
+    "input" : {
+      "type" : "额外包(纸塑袋)",
+      "packName" : "普通器械-3/Z7526",
+      "packageMaterial" : "高温纸塑袋20cm",
+      "instrumentCount" : 3,
+      "packCount" : 1,
+      "unitPrice" : 0.0,
+      "totalPrice" : 0.0,
+      "hospitalName" : "黑龙江总工会医院"
+    },
+    "expected" : {
+      "expectedUnitPrice" : 16.5,
+      "correctedTotalPrice" : 16.5,
+      "status" : "warning"
+    }
+  }, {
+    "id" : "hl-zgh-ht-4",
+    "description" : "黑龙江总工会医院：高温标准4件",
+    "input" : {
+      "type" : "额外包(纸塑袋)",
+      "packName" : "普通器械-4/Z7526",
+      "packageMaterial" : "高温纸塑袋20cm",
+      "instrumentCount" : 4,
+      "packCount" : 1,
+      "unitPrice" : 0.0,
+      "totalPrice" : 0.0,
+      "hospitalName" : "黑龙江总工会医院"
+    },
+    "expected" : {
+      "expectedUnitPrice" : 22.0,
+      "correctedTotalPrice" : 22.0,
+      "status" : "warning"
+    }
+  }, {
+    "id" : "er-ng-fixed-xiaqiang",
+    "description" : "黑龙江省第二医院（南岗区）：小腔包固定价",
+    "input" : {
+      "type" : "额外包(纸塑袋)",
+      "packName" : "小腔包/Z7526",
+      "packageMaterial" : "高温纸塑袋20cm",
+      "instrumentCount" : 1,
+      "packCount" : 1,
+      "unitPrice" : 49.7,
+      "totalPrice" : 49.7,
+      "hospitalName" : "黑龙江省第二医院（南岗区）"
+    },
+    "expected" : {
+      "expectedUnitPrice" : 49.7,
+      "correctedTotalPrice" : 49.7,
+      "status" : "unchanged"
+    }
+  }, {
+    "id" : "er-ng-fixed-ruanjing",
+    "description" : "黑龙江省第二医院（南岗区）：软镜固定价",
+    "input" : {
+      "type" : "额外包(纸塑袋)",
+      "packName" : "软镜/Z7526",
+      "packageMaterial" : "高温纸塑袋20cm",
+      "instrumentCount" : 1,
+      "packCount" : 1,
+      "unitPrice" : 210.0,
+      "totalPrice" : 210.0,
+      "hospitalName" : "黑龙江省第二医院（南岗区）"
+    },
+    "expected" : {
+      "expectedUnitPrice" : 210.0,
+      "correctedTotalPrice" : 210.0,
+      "status" : "unchanged"
+    }
+  }, {
+    "id" : "er-ng-fixed-ding",
+    "description" : "黑龙江省第二医院（南岗区）：钉固定价",
+    "input" : {
+      "type" : "额外包(纸塑袋)",
+      "packName" : "xx钉/Z7526",
+      "packageMaterial" : "高温纸塑袋20cm",
+      "instrumentCount" : 1,
+      "packCount" : 1,
+      "unitPrice" : 140.0,
+      "totalPrice" : 140.0,
+      "hospitalName" : "黑龙江省第二医院（南岗区）"
+    },
+    "expected" : {
+      "expectedUnitPrice" : 140.0,
+      "correctedTotalPrice" : 140.0,
+      "status" : "unchanged"
+    }
+  }, {
+    "id" : "er-ng-fixed-hollow",
+    "description" : "黑龙江省第二医院（南岗区）：3.6空心钉固定价",
+    "input" : {
+      "type" : "额外包(纸塑袋)",
+      "packName" : "3.6空心钉-2",
+      "packageMaterial" : "高温纸塑袋20cm",
+      "instrumentCount" : 1,
+      "packCount" : 1,
+      "unitPrice" : 13.3,
+      "totalPrice" : 13.3,
+      "hospitalName" : "黑龙江省第二医院（南岗区）"
+    },
+    "expected" : {
+      "expectedUnitPrice" : 13.3,
+      "correctedTotalPrice" : 13.3,
+      "status" : "unchanged"
+    }
+  }, {
+    "id" : "er-ng-ht-4",
+    "description" : "黑龙江省第二医院（南岗区）：高温标准4件",
+    "input" : {
+      "type" : "额外包(纸塑袋)",
+      "packName" : "普通器械-4/Z7526",
+      "packageMaterial" : "高温纸塑袋20cm",
+      "instrumentCount" : 4,
+      "packCount" : 1,
+      "unitPrice" : 0.0,
+      "totalPrice" : 0.0,
+      "hospitalName" : "黑龙江省第二医院（南岗区）"
+    },
+    "expected" : {
+      "expectedUnitPrice" : 22.0,
+      "correctedTotalPrice" : 22.0,
+      "status" : "warning"
+    }
+  }, {
+    "id" : "er-sb-fixed-xiaqiang",
+    "description" : "黑龙江省第二医院（松北区）：小腔包固定价",
+    "input" : {
+      "type" : "额外包(纸塑袋)",
+      "packName" : "小腔包/Z7526",
+      "packageMaterial" : "高温纸塑袋20cm",
+      "instrumentCount" : 1,
+      "packCount" : 1,
+      "unitPrice" : 53.55,
+      "totalPrice" : 53.55,
+      "hospitalName" : "黑龙江省第二医院（松北区）"
+    },
+    "expected" : {
+      "expectedUnitPrice" : 53.55,
+      "correctedTotalPrice" : 53.55,
+      "status" : "unchanged"
+    }
+  }, {
+    "id" : "er-sb-fixed-ding",
+    "description" : "黑龙江省第二医院（松北区）：钉固定价",
+    "input" : {
+      "type" : "额外包(纸塑袋)",
+      "packName" : "xx钉/Z7526",
+      "packageMaterial" : "高温纸塑袋20cm",
+      "instrumentCount" : 1,
+      "packCount" : 1,
+      "unitPrice" : 35.0,
+      "totalPrice" : 35.0,
+      "hospitalName" : "黑龙江省第二医院（松北区）"
+    },
+    "expected" : {
+      "expectedUnitPrice" : 35.0,
+      "correctedTotalPrice" : 35.0,
+      "status" : "unchanged"
+    }
+  }, {
+    "id" : "er-sb-ht-1",
+    "description" : "黑龙江省第二医院（松北区）：高温标准1件",
+    "input" : {
+      "type" : "额外包(纸塑袋)",
+      "packName" : "普通器械-1/Z7526",
+      "packageMaterial" : "高温纸塑袋20cm",
+      "instrumentCount" : 1,
+      "packCount" : 1,
+      "unitPrice" : 0.0,
+      "totalPrice" : 0.0,
+      "hospitalName" : "黑龙江省第二医院（松北区）"
+    },
+    "expected" : {
+      "expectedUnitPrice" : 13.0,
+      "correctedTotalPrice" : 13.0,
+      "status" : "warning"
+    }
+  }, {
+    "id" : "er-sb-ht-2",
+    "description" : "黑龙江省第二医院（松北区）：高温标准2件",
+    "input" : {
+      "type" : "额外包(纸塑袋)",
+      "packName" : "普通器械-2/Z7526",
+      "packageMaterial" : "高温纸塑袋20cm",
+      "instrumentCount" : 2,
+      "packCount" : 1,
+      "unitPrice" : 0.0,
+      "totalPrice" : 0.0,
+      "hospitalName" : "黑龙江省第二医院（松北区）"
+    },
+    "expected" : {
+      "expectedUnitPrice" : 16.5,
+      "correctedTotalPrice" : 16.5,
+      "status" : "warning"
+    }
+  }, {
+    "id" : "er-sb-ht-3",
+    "description" : "黑龙江省第二医院（松北区）：高温标准3件",
+    "input" : {
+      "type" : "额外包(纸塑袋)",
+      "packName" : "普通器械-3/Z7526",
+      "packageMaterial" : "高温纸塑袋20cm",
+      "instrumentCount" : 3,
+      "packCount" : 1,
+      "unitPrice" : 0.0,
+      "totalPrice" : 0.0,
+      "hospitalName" : "黑龙江省第二医院（松北区）"
+    },
+    "expected" : {
+      "expectedUnitPrice" : 16.5,
+      "correctedTotalPrice" : 16.5,
+      "status" : "warning"
+    }
+  }, {
+    "id" : "std-01-ht-1",
+    "description" : "呼兰区第一人民医院：高温标准1件",
+    "input" : {
+      "type" : "额外包(纸塑袋)",
+      "packName" : "普通器械-1/Z7526",
+      "packageMaterial" : "高温纸塑袋20cm",
+      "instrumentCount" : 1,
+      "packCount" : 1,
+      "unitPrice" : 0.0,
+      "totalPrice" : 0.0,
+      "hospitalName" : "呼兰区第一人民医院"
+    },
+    "expected" : {
+      "expectedUnitPrice" : 13.0,
+      "correctedTotalPrice" : 13.0,
+      "status" : "warning"
+    }
+  }, {
+    "id" : "std-01-ht-2",
+    "description" : "呼兰区第一人民医院：高温标准2件",
+    "input" : {
+      "type" : "额外包(纸塑袋)",
+      "packName" : "普通器械-2/Z7526",
+      "packageMaterial" : "高温纸塑袋20cm",
+      "instrumentCount" : 2,
+      "packCount" : 1,
+      "unitPrice" : 0.0,
+      "totalPrice" : 0.0,
+      "hospitalName" : "呼兰区第一人民医院"
+    },
+    "expected" : {
+      "expectedUnitPrice" : 16.5,
+      "correctedTotalPrice" : 16.5,
+      "status" : "warning"
+    }
+  }, {
+    "id" : "std-01-ht-3",
+    "description" : "呼兰区第一人民医院：高温标准3件",
+    "input" : {
+      "type" : "额外包(纸塑袋)",
+      "packName" : "普通器械-3/Z7526",
+      "packageMaterial" : "高温纸塑袋20cm",
+      "instrumentCount" : 3,
+      "packCount" : 1,
+      "unitPrice" : 0.0,
+      "totalPrice" : 0.0,
+      "hospitalName" : "呼兰区第一人民医院"
+    },
+    "expected" : {
+      "expectedUnitPrice" : 16.5,
+      "correctedTotalPrice" : 16.5,
+      "status" : "warning"
+    }
+  }, {
+    "id" : "std-01-ht-4",
+    "description" : "呼兰区第一人民医院：高温标准4件",
+    "input" : {
+      "type" : "额外包(纸塑袋)",
+      "packName" : "普通器械-4/Z7526",
+      "packageMaterial" : "高温纸塑袋20cm",
+      "instrumentCount" : 4,
+      "packCount" : 1,
+      "unitPrice" : 0.0,
+      "totalPrice" : 0.0,
+      "hospitalName" : "呼兰区第一人民医院"
+    },
+    "expected" : {
+      "expectedUnitPrice" : 22.0,
+      "correctedTotalPrice" : 22.0,
+      "status" : "warning"
+    }
+  }, {
+    "id" : "std-01-ht-8",
+    "description" : "呼兰区第一人民医院：高温标准8件",
+    "input" : {
+      "type" : "额外包(纸塑袋)",
+      "packName" : "普通器械-8/Z7526",
+      "packageMaterial" : "高温纸塑袋20cm",
+      "instrumentCount" : 8,
+      "packCount" : 1,
+      "unitPrice" : 0.0,
+      "totalPrice" : 0.0,
+      "hospitalName" : "呼兰区第一人民医院"
+    },
+    "expected" : {
+      "expectedUnitPrice" : 44.0,
+      "correctedTotalPrice" : 44.0,
+      "status" : "warning"
+    }
+  }, {
+    "id" : "std-02-ht-1",
+    "description" : "显著医生集团中西医结合门诊：高温标准1件",
+    "input" : {
+      "type" : "额外包(纸塑袋)",
+      "packName" : "普通器械-1/Z7526",
+      "packageMaterial" : "高温纸塑袋20cm",
+      "instrumentCount" : 1,
+      "packCount" : 1,
+      "unitPrice" : 0.0,
+      "totalPrice" : 0.0,
+      "hospitalName" : "显著医生集团中西医结合门诊"
+    },
+    "expected" : {
+      "expectedUnitPrice" : 13.0,
+      "correctedTotalPrice" : 13.0,
+      "status" : "warning"
+    }
+  }, {
+    "id" : "std-02-ht-2",
+    "description" : "显著医生集团中西医结合门诊：高温标准2件",
+    "input" : {
+      "type" : "额外包(纸塑袋)",
+      "packName" : "普通器械-2/Z7526",
+      "packageMaterial" : "高温纸塑袋20cm",
+      "instrumentCount" : 2,
+      "packCount" : 1,
+      "unitPrice" : 0.0,
+      "totalPrice" : 0.0,
+      "hospitalName" : "显著医生集团中西医结合门诊"
+    },
+    "expected" : {
+      "expectedUnitPrice" : 16.5,
+      "correctedTotalPrice" : 16.5,
+      "status" : "warning"
+    }
+  }, {
+    "id" : "std-02-ht-3",
+    "description" : "显著医生集团中西医结合门诊：高温标准3件",
+    "input" : {
+      "type" : "额外包(纸塑袋)",
+      "packName" : "普通器械-3/Z7526",
+      "packageMaterial" : "高温纸塑袋20cm",
+      "instrumentCount" : 3,
+      "packCount" : 1,
+      "unitPrice" : 0.0,
+      "totalPrice" : 0.0,
+      "hospitalName" : "显著医生集团中西医结合门诊"
+    },
+    "expected" : {
+      "expectedUnitPrice" : 16.5,
+      "correctedTotalPrice" : 16.5,
+      "status" : "warning"
+    }
+  }, {
+    "id" : "std-02-ht-4",
+    "description" : "显著医生集团中西医结合门诊：高温标准4件",
+    "input" : {
+      "type" : "额外包(纸塑袋)",
+      "packName" : "普通器械-4/Z7526",
+      "packageMaterial" : "高温纸塑袋20cm",
+      "instrumentCount" : 4,
+      "packCount" : 1,
+      "unitPrice" : 0.0,
+      "totalPrice" : 0.0,
+      "hospitalName" : "显著医生集团中西医结合门诊"
+    },
+    "expected" : {
+      "expectedUnitPrice" : 22.0,
+      "correctedTotalPrice" : 22.0,
+      "status" : "warning"
+    }
+  }, {
+    "id" : "std-02-ht-8",
+    "description" : "显著医生集团中西医结合门诊：高温标准8件",
+    "input" : {
+      "type" : "额外包(纸塑袋)",
+      "packName" : "普通器械-8/Z7526",
+      "packageMaterial" : "高温纸塑袋20cm",
+      "instrumentCount" : 8,
+      "packCount" : 1,
+      "unitPrice" : 0.0,
+      "totalPrice" : 0.0,
+      "hospitalName" : "显著医生集团中西医结合门诊"
+    },
+    "expected" : {
+      "expectedUnitPrice" : 44.0,
+      "correctedTotalPrice" : 44.0,
+      "status" : "warning"
+    }
+  }, {
+    "id" : "std-03-ht-1",
+    "description" : "哈尔滨美涵美医疗美容有限公司：高温标准1件",
+    "input" : {
+      "type" : "额外包(纸塑袋)",
+      "packName" : "普通器械-1/Z7526",
+      "packageMaterial" : "高温纸塑袋20cm",
+      "instrumentCount" : 1,
+      "packCount" : 1,
+      "unitPrice" : 0.0,
+      "totalPrice" : 0.0,
+      "hospitalName" : "哈尔滨美涵美医疗美容有限公司"
+    },
+    "expected" : {
+      "expectedUnitPrice" : 13.0,
+      "correctedTotalPrice" : 13.0,
+      "status" : "warning"
+    }
+  }, {
+    "id" : "std-03-ht-2",
+    "description" : "哈尔滨美涵美医疗美容有限公司：高温标准2件",
+    "input" : {
+      "type" : "额外包(纸塑袋)",
+      "packName" : "普通器械-2/Z7526",
+      "packageMaterial" : "高温纸塑袋20cm",
+      "instrumentCount" : 2,
+      "packCount" : 1,
+      "unitPrice" : 0.0,
+      "totalPrice" : 0.0,
+      "hospitalName" : "哈尔滨美涵美医疗美容有限公司"
+    },
+    "expected" : {
+      "expectedUnitPrice" : 16.5,
+      "correctedTotalPrice" : 16.5,
+      "status" : "warning"
+    }
+  }, {
+    "id" : "std-03-ht-3",
+    "description" : "哈尔滨美涵美医疗美容有限公司：高温标准3件",
+    "input" : {
+      "type" : "额外包(纸塑袋)",
+      "packName" : "普通器械-3/Z7526",
+      "packageMaterial" : "高温纸塑袋20cm",
+      "instrumentCount" : 3,
+      "packCount" : 1,
+      "unitPrice" : 0.0,
+      "totalPrice" : 0.0,
+      "hospitalName" : "哈尔滨美涵美医疗美容有限公司"
+    },
+    "expected" : {
+      "expectedUnitPrice" : 16.5,
+      "correctedTotalPrice" : 16.5,
+      "status" : "warning"
+    }
+  }, {
+    "id" : "std-03-ht-4",
+    "description" : "哈尔滨美涵美医疗美容有限公司：高温标准4件",
+    "input" : {
+      "type" : "额外包(纸塑袋)",
+      "packName" : "普通器械-4/Z7526",
+      "packageMaterial" : "高温纸塑袋20cm",
+      "instrumentCount" : 4,
+      "packCount" : 1,
+      "unitPrice" : 0.0,
+      "totalPrice" : 0.0,
+      "hospitalName" : "哈尔滨美涵美医疗美容有限公司"
+    },
+    "expected" : {
+      "expectedUnitPrice" : 22.0,
+      "correctedTotalPrice" : 22.0,
+      "status" : "warning"
+    }
+  }, {
+    "id" : "std-03-ht-8",
+    "description" : "哈尔滨美涵美医疗美容有限公司：高温标准8件",
+    "input" : {
+      "type" : "额外包(纸塑袋)",
+      "packName" : "普通器械-8/Z7526",
+      "packageMaterial" : "高温纸塑袋20cm",
+      "instrumentCount" : 8,
+      "packCount" : 1,
+      "unitPrice" : 0.0,
+      "totalPrice" : 0.0,
+      "hospitalName" : "哈尔滨美涵美医疗美容有限公司"
+    },
+    "expected" : {
+      "expectedUnitPrice" : 44.0,
+      "correctedTotalPrice" : 44.0,
+      "status" : "warning"
+    }
+  }, {
+    "id" : "std-04-ht-1",
+    "description" : "黑龙江省海员总医院（松北）：高温标准1件",
+    "input" : {
+      "type" : "额外包(纸塑袋)",
+      "packName" : "普通器械-1/Z7526",
+      "packageMaterial" : "高温纸塑袋20cm",
+      "instrumentCount" : 1,
+      "packCount" : 1,
+      "unitPrice" : 0.0,
+      "totalPrice" : 0.0,
+      "hospitalName" : "黑龙江省海员总医院（松北）"
+    },
+    "expected" : {
+      "expectedUnitPrice" : 13.0,
+      "correctedTotalPrice" : 13.0,
+      "status" : "warning"
+    }
+  }, {
+    "id" : "std-04-ht-2",
+    "description" : "黑龙江省海员总医院（松北）：高温标准2件",
+    "input" : {
+      "type" : "额外包(纸塑袋)",
+      "packName" : "普通器械-2/Z7526",
+      "packageMaterial" : "高温纸塑袋20cm",
+      "instrumentCount" : 2,
+      "packCount" : 1,
+      "unitPrice" : 0.0,
+      "totalPrice" : 0.0,
+      "hospitalName" : "黑龙江省海员总医院（松北）"
+    },
+    "expected" : {
+      "expectedUnitPrice" : 16.5,
+      "correctedTotalPrice" : 16.5,
+      "status" : "warning"
+    }
+  }, {
+    "id" : "std-04-ht-3",
+    "description" : "黑龙江省海员总医院（松北）：高温标准3件",
+    "input" : {
+      "type" : "额外包(纸塑袋)",
+      "packName" : "普通器械-3/Z7526",
+      "packageMaterial" : "高温纸塑袋20cm",
+      "instrumentCount" : 3,
+      "packCount" : 1,
+      "unitPrice" : 0.0,
+      "totalPrice" : 0.0,
+      "hospitalName" : "黑龙江省海员总医院（松北）"
+    },
+    "expected" : {
+      "expectedUnitPrice" : 16.5,
+      "correctedTotalPrice" : 16.5,
+      "status" : "warning"
+    }
+  }, {
+    "id" : "std-04-ht-4",
+    "description" : "黑龙江省海员总医院（松北）：高温标准4件",
+    "input" : {
+      "type" : "额外包(纸塑袋)",
+      "packName" : "普通器械-4/Z7526",
+      "packageMaterial" : "高温纸塑袋20cm",
+      "instrumentCount" : 4,
+      "packCount" : 1,
+      "unitPrice" : 0.0,
+      "totalPrice" : 0.0,
+      "hospitalName" : "黑龙江省海员总医院（松北）"
+    },
+    "expected" : {
+      "expectedUnitPrice" : 22.0,
+      "correctedTotalPrice" : 22.0,
+      "status" : "warning"
+    }
+  }, {
+    "id" : "std-04-ht-8",
+    "description" : "黑龙江省海员总医院（松北）：高温标准8件",
+    "input" : {
+      "type" : "额外包(纸塑袋)",
+      "packName" : "普通器械-8/Z7526",
+      "packageMaterial" : "高温纸塑袋20cm",
+      "instrumentCount" : 8,
+      "packCount" : 1,
+      "unitPrice" : 0.0,
+      "totalPrice" : 0.0,
+      "hospitalName" : "黑龙江省海员总医院（松北）"
+    },
+    "expected" : {
+      "expectedUnitPrice" : 44.0,
+      "correctedTotalPrice" : 44.0,
+      "status" : "warning"
+    }
+  }, {
+    "id" : "std-05-ht-1",
+    "description" : "黑龙江省中医药大学附属第四医院：高温标准1件",
+    "input" : {
+      "type" : "额外包(纸塑袋)",
+      "packName" : "普通器械-1/Z7526",
+      "packageMaterial" : "高温纸塑袋20cm",
+      "instrumentCount" : 1,
+      "packCount" : 1,
+      "unitPrice" : 0.0,
+      "totalPrice" : 0.0,
+      "hospitalName" : "黑龙江省中医药大学附属第四医院"
+    },
+    "expected" : {
+      "expectedUnitPrice" : 13.0,
+      "correctedTotalPrice" : 13.0,
+      "status" : "warning"
+    }
+  }, {
+    "id" : "std-05-ht-2",
+    "description" : "黑龙江省中医药大学附属第四医院：高温标准2件",
+    "input" : {
+      "type" : "额外包(纸塑袋)",
+      "packName" : "普通器械-2/Z7526",
+      "packageMaterial" : "高温纸塑袋20cm",
+      "instrumentCount" : 2,
+      "packCount" : 1,
+      "unitPrice" : 0.0,
+      "totalPrice" : 0.0,
+      "hospitalName" : "黑龙江省中医药大学附属第四医院"
+    },
+    "expected" : {
+      "expectedUnitPrice" : 16.5,
+      "correctedTotalPrice" : 16.5,
+      "status" : "warning"
+    }
+  }, {
+    "id" : "std-05-ht-3",
+    "description" : "黑龙江省中医药大学附属第四医院：高温标准3件",
+    "input" : {
+      "type" : "额外包(纸塑袋)",
+      "packName" : "普通器械-3/Z7526",
+      "packageMaterial" : "高温纸塑袋20cm",
+      "instrumentCount" : 3,
+      "packCount" : 1,
+      "unitPrice" : 0.0,
+      "totalPrice" : 0.0,
+      "hospitalName" : "黑龙江省中医药大学附属第四医院"
+    },
+    "expected" : {
+      "expectedUnitPrice" : 16.5,
+      "correctedTotalPrice" : 16.5,
+      "status" : "warning"
+    }
+  }, {
+    "id" : "std-05-ht-4",
+    "description" : "黑龙江省中医药大学附属第四医院：高温标准4件",
+    "input" : {
+      "type" : "额外包(纸塑袋)",
+      "packName" : "普通器械-4/Z7526",
+      "packageMaterial" : "高温纸塑袋20cm",
+      "instrumentCount" : 4,
+      "packCount" : 1,
+      "unitPrice" : 0.0,
+      "totalPrice" : 0.0,
+      "hospitalName" : "黑龙江省中医药大学附属第四医院"
+    },
+    "expected" : {
+      "expectedUnitPrice" : 22.0,
+      "correctedTotalPrice" : 22.0,
+      "status" : "warning"
+    }
+  }, {
+    "id" : "std-05-ht-8",
+    "description" : "黑龙江省中医药大学附属第四医院：高温标准8件",
+    "input" : {
+      "type" : "额外包(纸塑袋)",
+      "packName" : "普通器械-8/Z7526",
+      "packageMaterial" : "高温纸塑袋20cm",
+      "instrumentCount" : 8,
+      "packCount" : 1,
+      "unitPrice" : 0.0,
+      "totalPrice" : 0.0,
+      "hospitalName" : "黑龙江省中医药大学附属第四医院"
+    },
+    "expected" : {
+      "expectedUnitPrice" : 44.0,
+      "correctedTotalPrice" : 44.0,
+      "status" : "warning"
+    }
+  }, {
+    "id" : "std-06-ht-1",
+    "description" : "哈尔滨市道里区妇幼保健院：高温标准1件",
+    "input" : {
+      "type" : "额外包(纸塑袋)",
+      "packName" : "普通器械-1/Z7526",
+      "packageMaterial" : "高温纸塑袋20cm",
+      "instrumentCount" : 1,
+      "packCount" : 1,
+      "unitPrice" : 0.0,
+      "totalPrice" : 0.0,
+      "hospitalName" : "哈尔滨市道里区妇幼保健院"
+    },
+    "expected" : {
+      "expectedUnitPrice" : 13.0,
+      "correctedTotalPrice" : 13.0,
+      "status" : "warning"
+    }
+  }, {
+    "id" : "std-06-ht-2",
+    "description" : "哈尔滨市道里区妇幼保健院：高温标准2件",
+    "input" : {
+      "type" : "额外包(纸塑袋)",
+      "packName" : "普通器械-2/Z7526",
+      "packageMaterial" : "高温纸塑袋20cm",
+      "instrumentCount" : 2,
+      "packCount" : 1,
+      "unitPrice" : 0.0,
+      "totalPrice" : 0.0,
+      "hospitalName" : "哈尔滨市道里区妇幼保健院"
+    },
+    "expected" : {
+      "expectedUnitPrice" : 16.5,
+      "correctedTotalPrice" : 16.5,
+      "status" : "warning"
+    }
+  }, {
+    "id" : "std-06-ht-3",
+    "description" : "哈尔滨市道里区妇幼保健院：高温标准3件",
+    "input" : {
+      "type" : "额外包(纸塑袋)",
+      "packName" : "普通器械-3/Z7526",
+      "packageMaterial" : "高温纸塑袋20cm",
+      "instrumentCount" : 3,
+      "packCount" : 1,
+      "unitPrice" : 0.0,
+      "totalPrice" : 0.0,
+      "hospitalName" : "哈尔滨市道里区妇幼保健院"
+    },
+    "expected" : {
+      "expectedUnitPrice" : 16.5,
+      "correctedTotalPrice" : 16.5,
+      "status" : "warning"
+    }
+  }, {
+    "id" : "std-06-ht-4",
+    "description" : "哈尔滨市道里区妇幼保健院：高温标准4件",
+    "input" : {
+      "type" : "额外包(纸塑袋)",
+      "packName" : "普通器械-4/Z7526",
+      "packageMaterial" : "高温纸塑袋20cm",
+      "instrumentCount" : 4,
+      "packCount" : 1,
+      "unitPrice" : 0.0,
+      "totalPrice" : 0.0,
+      "hospitalName" : "哈尔滨市道里区妇幼保健院"
+    },
+    "expected" : {
+      "expectedUnitPrice" : 22.0,
+      "correctedTotalPrice" : 22.0,
+      "status" : "warning"
+    }
+  }, {
+    "id" : "std-06-ht-8",
+    "description" : "哈尔滨市道里区妇幼保健院：高温标准8件",
+    "input" : {
+      "type" : "额外包(纸塑袋)",
+      "packName" : "普通器械-8/Z7526",
+      "packageMaterial" : "高温纸塑袋20cm",
+      "instrumentCount" : 8,
+      "packCount" : 1,
+      "unitPrice" : 0.0,
+      "totalPrice" : 0.0,
+      "hospitalName" : "哈尔滨市道里区妇幼保健院"
+    },
+    "expected" : {
+      "expectedUnitPrice" : 44.0,
+      "correctedTotalPrice" : 44.0,
+      "status" : "warning"
+    }
+  }, {
+    "id" : "std-07-ht-1",
+    "description" : "黑龙江省妇幼保健院（人口）：高温标准1件",
+    "input" : {
+      "type" : "额外包(纸塑袋)",
+      "packName" : "普通器械-1/Z7526",
+      "packageMaterial" : "高温纸塑袋20cm",
+      "instrumentCount" : 1,
+      "packCount" : 1,
+      "unitPrice" : 0.0,
+      "totalPrice" : 0.0,
+      "hospitalName" : "黑龙江省妇幼保健院（人口）"
+    },
+    "expected" : {
+      "expectedUnitPrice" : 13.0,
+      "correctedTotalPrice" : 13.0,
+      "status" : "warning"
+    }
+  }, {
+    "id" : "std-07-ht-2",
+    "description" : "黑龙江省妇幼保健院（人口）：高温标准2件",
+    "input" : {
+      "type" : "额外包(纸塑袋)",
+      "packName" : "普通器械-2/Z7526",
+      "packageMaterial" : "高温纸塑袋20cm",
+      "instrumentCount" : 2,
+      "packCount" : 1,
+      "unitPrice" : 0.0,
+      "totalPrice" : 0.0,
+      "hospitalName" : "黑龙江省妇幼保健院（人口）"
+    },
+    "expected" : {
+      "expectedUnitPrice" : 16.5,
+      "correctedTotalPrice" : 16.5,
+      "status" : "warning"
+    }
+  }, {
+    "id" : "std-07-ht-3",
+    "description" : "黑龙江省妇幼保健院（人口）：高温标准3件",
+    "input" : {
+      "type" : "额外包(纸塑袋)",
+      "packName" : "普通器械-3/Z7526",
+      "packageMaterial" : "高温纸塑袋20cm",
+      "instrumentCount" : 3,
+      "packCount" : 1,
+      "unitPrice" : 0.0,
+      "totalPrice" : 0.0,
+      "hospitalName" : "黑龙江省妇幼保健院（人口）"
+    },
+    "expected" : {
+      "expectedUnitPrice" : 16.5,
+      "correctedTotalPrice" : 16.5,
+      "status" : "warning"
+    }
+  }, {
+    "id" : "std-07-ht-4",
+    "description" : "黑龙江省妇幼保健院（人口）：高温标准4件",
+    "input" : {
+      "type" : "额外包(纸塑袋)",
+      "packName" : "普通器械-4/Z7526",
+      "packageMaterial" : "高温纸塑袋20cm",
+      "instrumentCount" : 4,
+      "packCount" : 1,
+      "unitPrice" : 0.0,
+      "totalPrice" : 0.0,
+      "hospitalName" : "黑龙江省妇幼保健院（人口）"
+    },
+    "expected" : {
+      "expectedUnitPrice" : 22.0,
+      "correctedTotalPrice" : 22.0,
+      "status" : "warning"
+    }
+  }, {
+    "id" : "std-07-ht-8",
+    "description" : "黑龙江省妇幼保健院（人口）：高温标准8件",
+    "input" : {
+      "type" : "额外包(纸塑袋)",
+      "packName" : "普通器械-8/Z7526",
+      "packageMaterial" : "高温纸塑袋20cm",
+      "instrumentCount" : 8,
+      "packCount" : 1,
+      "unitPrice" : 0.0,
+      "totalPrice" : 0.0,
+      "hospitalName" : "黑龙江省妇幼保健院（人口）"
+    },
+    "expected" : {
+      "expectedUnitPrice" : 44.0,
+      "correctedTotalPrice" : 44.0,
+      "status" : "warning"
+    }
+  }, {
+    "id" : "std-08-ht-1",
+    "description" : "哈尔滨市道外区人民医院：高温标准1件",
+    "input" : {
+      "type" : "额外包(纸塑袋)",
+      "packName" : "普通器械-1/Z7526",
+      "packageMaterial" : "高温纸塑袋20cm",
+      "instrumentCount" : 1,
+      "packCount" : 1,
+      "unitPrice" : 0.0,
+      "totalPrice" : 0.0,
+      "hospitalName" : "哈尔滨市道外区人民医院"
+    },
+    "expected" : {
+      "expectedUnitPrice" : 13.0,
+      "correctedTotalPrice" : 13.0,
+      "status" : "warning"
+    }
+  }, {
+    "id" : "std-08-ht-2",
+    "description" : "哈尔滨市道外区人民医院：高温标准2件",
+    "input" : {
+      "type" : "额外包(纸塑袋)",
+      "packName" : "普通器械-2/Z7526",
+      "packageMaterial" : "高温纸塑袋20cm",
+      "instrumentCount" : 2,
+      "packCount" : 1,
+      "unitPrice" : 0.0,
+      "totalPrice" : 0.0,
+      "hospitalName" : "哈尔滨市道外区人民医院"
+    },
+    "expected" : {
+      "expectedUnitPrice" : 16.5,
+      "correctedTotalPrice" : 16.5,
+      "status" : "warning"
+    }
+  }, {
+    "id" : "std-08-ht-3",
+    "description" : "哈尔滨市道外区人民医院：高温标准3件",
+    "input" : {
+      "type" : "额外包(纸塑袋)",
+      "packName" : "普通器械-3/Z7526",
+      "packageMaterial" : "高温纸塑袋20cm",
+      "instrumentCount" : 3,
+      "packCount" : 1,
+      "unitPrice" : 0.0,
+      "totalPrice" : 0.0,
+      "hospitalName" : "哈尔滨市道外区人民医院"
+    },
+    "expected" : {
+      "expectedUnitPrice" : 16.5,
+      "correctedTotalPrice" : 16.5,
+      "status" : "warning"
+    }
+  }, {
+    "id" : "std-08-ht-4",
+    "description" : "哈尔滨市道外区人民医院：高温标准4件",
+    "input" : {
+      "type" : "额外包(纸塑袋)",
+      "packName" : "普通器械-4/Z7526",
+      "packageMaterial" : "高温纸塑袋20cm",
+      "instrumentCount" : 4,
+      "packCount" : 1,
+      "unitPrice" : 0.0,
+      "totalPrice" : 0.0,
+      "hospitalName" : "哈尔滨市道外区人民医院"
+    },
+    "expected" : {
+      "expectedUnitPrice" : 22.0,
+      "correctedTotalPrice" : 22.0,
+      "status" : "warning"
+    }
+  }, {
+    "id" : "std-08-ht-8",
+    "description" : "哈尔滨市道外区人民医院：高温标准8件",
+    "input" : {
+      "type" : "额外包(纸塑袋)",
+      "packName" : "普通器械-8/Z7526",
+      "packageMaterial" : "高温纸塑袋20cm",
+      "instrumentCount" : 8,
+      "packCount" : 1,
+      "unitPrice" : 0.0,
+      "totalPrice" : 0.0,
+      "hospitalName" : "哈尔滨市道外区人民医院"
+    },
+    "expected" : {
+      "expectedUnitPrice" : 44.0,
+      "correctedTotalPrice" : 44.0,
+      "status" : "warning"
+    }
+  }, {
+    "id" : "std-09-ht-1",
+    "description" : "黑龙江维多利亚妇产医院：高温标准1件",
+    "input" : {
+      "type" : "额外包(纸塑袋)",
+      "packName" : "普通器械-1/Z7526",
+      "packageMaterial" : "高温纸塑袋20cm",
+      "instrumentCount" : 1,
+      "packCount" : 1,
+      "unitPrice" : 0.0,
+      "totalPrice" : 0.0,
+      "hospitalName" : "黑龙江维多利亚妇产医院"
+    },
+    "expected" : {
+      "expectedUnitPrice" : 13.0,
+      "correctedTotalPrice" : 13.0,
+      "status" : "warning"
+    }
+  }, {
+    "id" : "std-09-ht-2",
+    "description" : "黑龙江维多利亚妇产医院：高温标准2件",
+    "input" : {
+      "type" : "额外包(纸塑袋)",
+      "packName" : "普通器械-2/Z7526",
+      "packageMaterial" : "高温纸塑袋20cm",
+      "instrumentCount" : 2,
+      "packCount" : 1,
+      "unitPrice" : 0.0,
+      "totalPrice" : 0.0,
+      "hospitalName" : "黑龙江维多利亚妇产医院"
+    },
+    "expected" : {
+      "expectedUnitPrice" : 16.5,
+      "correctedTotalPrice" : 16.5,
+      "status" : "warning"
+    }
+  }, {
+    "id" : "std-09-ht-3",
+    "description" : "黑龙江维多利亚妇产医院：高温标准3件",
+    "input" : {
+      "type" : "额外包(纸塑袋)",
+      "packName" : "普通器械-3/Z7526",
+      "packageMaterial" : "高温纸塑袋20cm",
+      "instrumentCount" : 3,
+      "packCount" : 1,
+      "unitPrice" : 0.0,
+      "totalPrice" : 0.0,
+      "hospitalName" : "黑龙江维多利亚妇产医院"
+    },
+    "expected" : {
+      "expectedUnitPrice" : 16.5,
+      "correctedTotalPrice" : 16.5,
+      "status" : "warning"
+    }
+  }, {
+    "id" : "std-09-ht-4",
+    "description" : "黑龙江维多利亚妇产医院：高温标准4件",
+    "input" : {
+      "type" : "额外包(纸塑袋)",
+      "packName" : "普通器械-4/Z7526",
+      "packageMaterial" : "高温纸塑袋20cm",
+      "instrumentCount" : 4,
+      "packCount" : 1,
+      "unitPrice" : 0.0,
+      "totalPrice" : 0.0,
+      "hospitalName" : "黑龙江维多利亚妇产医院"
+    },
+    "expected" : {
+      "expectedUnitPrice" : 22.0,
+      "correctedTotalPrice" : 22.0,
+      "status" : "warning"
+    }
+  }, {
+    "id" : "std-09-ht-8",
+    "description" : "黑龙江维多利亚妇产医院：高温标准8件",
+    "input" : {
+      "type" : "额外包(纸塑袋)",
+      "packName" : "普通器械-8/Z7526",
+      "packageMaterial" : "高温纸塑袋20cm",
+      "instrumentCount" : 8,
+      "packCount" : 1,
+      "unitPrice" : 0.0,
+      "totalPrice" : 0.0,
+      "hospitalName" : "黑龙江维多利亚妇产医院"
+    },
+    "expected" : {
+      "expectedUnitPrice" : 44.0,
+      "correctedTotalPrice" : 44.0,
+      "status" : "warning"
+    }
+  }, {
+    "id" : "std-10-ht-1",
+    "description" : "哈尔滨市红十字妇产医院：高温标准1件",
+    "input" : {
+      "type" : "额外包(纸塑袋)",
+      "packName" : "普通器械-1/Z7526",
+      "packageMaterial" : "高温纸塑袋20cm",
+      "instrumentCount" : 1,
+      "packCount" : 1,
+      "unitPrice" : 0.0,
+      "totalPrice" : 0.0,
+      "hospitalName" : "哈尔滨市红十字妇产医院"
+    },
+    "expected" : {
+      "expectedUnitPrice" : 13.0,
+      "correctedTotalPrice" : 13.0,
+      "status" : "warning"
+    }
+  }, {
+    "id" : "std-10-ht-2",
+    "description" : "哈尔滨市红十字妇产医院：高温标准2件",
+    "input" : {
+      "type" : "额外包(纸塑袋)",
+      "packName" : "普通器械-2/Z7526",
+      "packageMaterial" : "高温纸塑袋20cm",
+      "instrumentCount" : 2,
+      "packCount" : 1,
+      "unitPrice" : 0.0,
+      "totalPrice" : 0.0,
+      "hospitalName" : "哈尔滨市红十字妇产医院"
+    },
+    "expected" : {
+      "expectedUnitPrice" : 16.5,
+      "correctedTotalPrice" : 16.5,
+      "status" : "warning"
+    }
+  }, {
+    "id" : "std-10-ht-3",
+    "description" : "哈尔滨市红十字妇产医院：高温标准3件",
+    "input" : {
+      "type" : "额外包(纸塑袋)",
+      "packName" : "普通器械-3/Z7526",
+      "packageMaterial" : "高温纸塑袋20cm",
+      "instrumentCount" : 3,
+      "packCount" : 1,
+      "unitPrice" : 0.0,
+      "totalPrice" : 0.0,
+      "hospitalName" : "哈尔滨市红十字妇产医院"
+    },
+    "expected" : {
+      "expectedUnitPrice" : 16.5,
+      "correctedTotalPrice" : 16.5,
+      "status" : "warning"
+    }
+  }, {
+    "id" : "std-10-ht-4",
+    "description" : "哈尔滨市红十字妇产医院：高温标准4件",
+    "input" : {
+      "type" : "额外包(纸塑袋)",
+      "packName" : "普通器械-4/Z7526",
+      "packageMaterial" : "高温纸塑袋20cm",
+      "instrumentCount" : 4,
+      "packCount" : 1,
+      "unitPrice" : 0.0,
+      "totalPrice" : 0.0,
+      "hospitalName" : "哈尔滨市红十字妇产医院"
+    },
+    "expected" : {
+      "expectedUnitPrice" : 22.0,
+      "correctedTotalPrice" : 22.0,
+      "status" : "warning"
+    }
+  }, {
+    "id" : "std-10-ht-8",
+    "description" : "哈尔滨市红十字妇产医院：高温标准8件",
+    "input" : {
+      "type" : "额外包(纸塑袋)",
+      "packName" : "普通器械-8/Z7526",
+      "packageMaterial" : "高温纸塑袋20cm",
+      "instrumentCount" : 8,
+      "packCount" : 1,
+      "unitPrice" : 0.0,
+      "totalPrice" : 0.0,
+      "hospitalName" : "哈尔滨市红十字妇产医院"
+    },
+    "expected" : {
+      "expectedUnitPrice" : 44.0,
+      "correctedTotalPrice" : 44.0,
+      "status" : "warning"
+    }
+  }, {
+    "id" : "std-11-ht-1",
+    "description" : "黑龙江中医药大学附属第三医院：高温标准1件",
+    "input" : {
+      "type" : "额外包(纸塑袋)",
+      "packName" : "普通器械-1/Z7526",
+      "packageMaterial" : "高温纸塑袋20cm",
+      "instrumentCount" : 1,
+      "packCount" : 1,
+      "unitPrice" : 0.0,
+      "totalPrice" : 0.0,
+      "hospitalName" : "黑龙江中医药大学附属第三医院"
+    },
+    "expected" : {
+      "expectedUnitPrice" : 13.0,
+      "correctedTotalPrice" : 13.0,
+      "status" : "warning"
+    }
+  }, {
+    "id" : "std-11-ht-2",
+    "description" : "黑龙江中医药大学附属第三医院：高温标准2件",
+    "input" : {
+      "type" : "额外包(纸塑袋)",
+      "packName" : "普通器械-2/Z7526",
+      "packageMaterial" : "高温纸塑袋20cm",
+      "instrumentCount" : 2,
+      "packCount" : 1,
+      "unitPrice" : 0.0,
+      "totalPrice" : 0.0,
+      "hospitalName" : "黑龙江中医药大学附属第三医院"
+    },
+    "expected" : {
+      "expectedUnitPrice" : 16.5,
+      "correctedTotalPrice" : 16.5,
+      "status" : "warning"
+    }
+  }, {
+    "id" : "std-11-ht-3",
+    "description" : "黑龙江中医药大学附属第三医院：高温标准3件",
+    "input" : {
+      "type" : "额外包(纸塑袋)",
+      "packName" : "普通器械-3/Z7526",
+      "packageMaterial" : "高温纸塑袋20cm",
+      "instrumentCount" : 3,
+      "packCount" : 1,
+      "unitPrice" : 0.0,
+      "totalPrice" : 0.0,
+      "hospitalName" : "黑龙江中医药大学附属第三医院"
+    },
+    "expected" : {
+      "expectedUnitPrice" : 16.5,
+      "correctedTotalPrice" : 16.5,
+      "status" : "warning"
+    }
+  }, {
+    "id" : "std-11-ht-4",
+    "description" : "黑龙江中医药大学附属第三医院：高温标准4件",
+    "input" : {
+      "type" : "额外包(纸塑袋)",
+      "packName" : "普通器械-4/Z7526",
+      "packageMaterial" : "高温纸塑袋20cm",
+      "instrumentCount" : 4,
+      "packCount" : 1,
+      "unitPrice" : 0.0,
+      "totalPrice" : 0.0,
+      "hospitalName" : "黑龙江中医药大学附属第三医院"
+    },
+    "expected" : {
+      "expectedUnitPrice" : 22.0,
+      "correctedTotalPrice" : 22.0,
+      "status" : "warning"
+    }
+  }, {
+    "id" : "std-11-ht-8",
+    "description" : "黑龙江中医药大学附属第三医院：高温标准8件",
+    "input" : {
+      "type" : "额外包(纸塑袋)",
+      "packName" : "普通器械-8/Z7526",
+      "packageMaterial" : "高温纸塑袋20cm",
+      "instrumentCount" : 8,
+      "packCount" : 1,
+      "unitPrice" : 0.0,
+      "totalPrice" : 0.0,
+      "hospitalName" : "黑龙江中医药大学附属第三医院"
+    },
+    "expected" : {
+      "expectedUnitPrice" : 44.0,
+      "correctedTotalPrice" : 44.0,
+      "status" : "warning"
+    }
+  }, {
+    "id" : "std-12-ht-1",
+    "description" : "哈尔滨冰城医疗美容医院：高温标准1件",
+    "input" : {
+      "type" : "额外包(纸塑袋)",
+      "packName" : "普通器械-1/Z7526",
+      "packageMaterial" : "高温纸塑袋20cm",
+      "instrumentCount" : 1,
+      "packCount" : 1,
+      "unitPrice" : 0.0,
+      "totalPrice" : 0.0,
+      "hospitalName" : "哈尔滨冰城医疗美容医院"
+    },
+    "expected" : {
+      "expectedUnitPrice" : 13.0,
+      "correctedTotalPrice" : 13.0,
+      "status" : "warning"
+    }
+  }, {
+    "id" : "std-12-ht-2",
+    "description" : "哈尔滨冰城医疗美容医院：高温标准2件",
+    "input" : {
+      "type" : "额外包(纸塑袋)",
+      "packName" : "普通器械-2/Z7526",
+      "packageMaterial" : "高温纸塑袋20cm",
+      "instrumentCount" : 2,
+      "packCount" : 1,
+      "unitPrice" : 0.0,
+      "totalPrice" : 0.0,
+      "hospitalName" : "哈尔滨冰城医疗美容医院"
+    },
+    "expected" : {
+      "expectedUnitPrice" : 16.5,
+      "correctedTotalPrice" : 16.5,
+      "status" : "warning"
+    }
+  }, {
+    "id" : "std-12-ht-3",
+    "description" : "哈尔滨冰城医疗美容医院：高温标准3件",
+    "input" : {
+      "type" : "额外包(纸塑袋)",
+      "packName" : "普通器械-3/Z7526",
+      "packageMaterial" : "高温纸塑袋20cm",
+      "instrumentCount" : 3,
+      "packCount" : 1,
+      "unitPrice" : 0.0,
+      "totalPrice" : 0.0,
+      "hospitalName" : "哈尔滨冰城医疗美容医院"
+    },
+    "expected" : {
+      "expectedUnitPrice" : 16.5,
+      "correctedTotalPrice" : 16.5,
+      "status" : "warning"
+    }
+  }, {
+    "id" : "std-12-ht-4",
+    "description" : "哈尔滨冰城医疗美容医院：高温标准4件",
+    "input" : {
+      "type" : "额外包(纸塑袋)",
+      "packName" : "普通器械-4/Z7526",
+      "packageMaterial" : "高温纸塑袋20cm",
+      "instrumentCount" : 4,
+      "packCount" : 1,
+      "unitPrice" : 0.0,
+      "totalPrice" : 0.0,
+      "hospitalName" : "哈尔滨冰城医疗美容医院"
+    },
+    "expected" : {
+      "expectedUnitPrice" : 22.0,
+      "correctedTotalPrice" : 22.0,
+      "status" : "warning"
+    }
+  }, {
+    "id" : "std-12-ht-8",
+    "description" : "哈尔滨冰城医疗美容医院：高温标准8件",
+    "input" : {
+      "type" : "额外包(纸塑袋)",
+      "packName" : "普通器械-8/Z7526",
+      "packageMaterial" : "高温纸塑袋20cm",
+      "instrumentCount" : 8,
+      "packCount" : 1,
+      "unitPrice" : 0.0,
+      "totalPrice" : 0.0,
+      "hospitalName" : "哈尔滨冰城医疗美容医院"
+    },
+    "expected" : {
+      "expectedUnitPrice" : 44.0,
+      "correctedTotalPrice" : 44.0,
+      "status" : "warning"
+    }
+  }, {
+    "id" : "std-13-ht-1",
+    "description" : "五常市人民医院：高温标准1件",
+    "input" : {
+      "type" : "额外包(纸塑袋)",
+      "packName" : "普通器械-1/Z7526",
+      "packageMaterial" : "高温纸塑袋20cm",
+      "instrumentCount" : 1,
+      "packCount" : 1,
+      "unitPrice" : 0.0,
+      "totalPrice" : 0.0,
+      "hospitalName" : "五常市人民医院"
+    },
+    "expected" : {
+      "expectedUnitPrice" : 13.0,
+      "correctedTotalPrice" : 13.0,
+      "status" : "warning"
+    }
+  }, {
+    "id" : "std-13-ht-2",
+    "description" : "五常市人民医院：高温标准2件",
+    "input" : {
+      "type" : "额外包(纸塑袋)",
+      "packName" : "普通器械-2/Z7526",
+      "packageMaterial" : "高温纸塑袋20cm",
+      "instrumentCount" : 2,
+      "packCount" : 1,
+      "unitPrice" : 0.0,
+      "totalPrice" : 0.0,
+      "hospitalName" : "五常市人民医院"
+    },
+    "expected" : {
+      "expectedUnitPrice" : 16.5,
+      "correctedTotalPrice" : 16.5,
+      "status" : "warning"
+    }
+  }, {
+    "id" : "std-13-ht-3",
+    "description" : "五常市人民医院：高温标准3件",
+    "input" : {
+      "type" : "额外包(纸塑袋)",
+      "packName" : "普通器械-3/Z7526",
+      "packageMaterial" : "高温纸塑袋20cm",
+      "instrumentCount" : 3,
+      "packCount" : 1,
+      "unitPrice" : 0.0,
+      "totalPrice" : 0.0,
+      "hospitalName" : "五常市人民医院"
+    },
+    "expected" : {
+      "expectedUnitPrice" : 16.5,
+      "correctedTotalPrice" : 16.5,
+      "status" : "warning"
+    }
+  }, {
+    "id" : "std-13-ht-4",
+    "description" : "五常市人民医院：高温标准4件",
+    "input" : {
+      "type" : "额外包(纸塑袋)",
+      "packName" : "普通器械-4/Z7526",
+      "packageMaterial" : "高温纸塑袋20cm",
+      "instrumentCount" : 4,
+      "packCount" : 1,
+      "unitPrice" : 0.0,
+      "totalPrice" : 0.0,
+      "hospitalName" : "五常市人民医院"
+    },
+    "expected" : {
+      "expectedUnitPrice" : 22.0,
+      "correctedTotalPrice" : 22.0,
+      "status" : "warning"
+    }
+  }, {
+    "id" : "std-13-ht-8",
+    "description" : "五常市人民医院：高温标准8件",
+    "input" : {
+      "type" : "额外包(纸塑袋)",
+      "packName" : "普通器械-8/Z7526",
+      "packageMaterial" : "高温纸塑袋20cm",
+      "instrumentCount" : 8,
+      "packCount" : 1,
+      "unitPrice" : 0.0,
+      "totalPrice" : 0.0,
+      "hospitalName" : "五常市人民医院"
+    },
+    "expected" : {
+      "expectedUnitPrice" : 44.0,
+      "correctedTotalPrice" : 44.0,
+      "status" : "warning"
+    }
+  }, {
+    "id" : "std-14-ht-1",
+    "description" : "予美医疗整形医院：高温标准1件",
+    "input" : {
+      "type" : "额外包(纸塑袋)",
+      "packName" : "普通器械-1/Z7526",
+      "packageMaterial" : "高温纸塑袋20cm",
+      "instrumentCount" : 1,
+      "packCount" : 1,
+      "unitPrice" : 0.0,
+      "totalPrice" : 0.0,
+      "hospitalName" : "予美医疗整形医院"
+    },
+    "expected" : {
+      "expectedUnitPrice" : 13.0,
+      "correctedTotalPrice" : 13.0,
+      "status" : "warning"
+    }
+  }, {
+    "id" : "std-14-ht-2",
+    "description" : "予美医疗整形医院：高温标准2件",
+    "input" : {
+      "type" : "额外包(纸塑袋)",
+      "packName" : "普通器械-2/Z7526",
+      "packageMaterial" : "高温纸塑袋20cm",
+      "instrumentCount" : 2,
+      "packCount" : 1,
+      "unitPrice" : 0.0,
+      "totalPrice" : 0.0,
+      "hospitalName" : "予美医疗整形医院"
+    },
+    "expected" : {
+      "expectedUnitPrice" : 16.5,
+      "correctedTotalPrice" : 16.5,
+      "status" : "warning"
+    }
+  }, {
+    "id" : "std-14-ht-3",
+    "description" : "予美医疗整形医院：高温标准3件",
+    "input" : {
+      "type" : "额外包(纸塑袋)",
+      "packName" : "普通器械-3/Z7526",
+      "packageMaterial" : "高温纸塑袋20cm",
+      "instrumentCount" : 3,
+      "packCount" : 1,
+      "unitPrice" : 0.0,
+      "totalPrice" : 0.0,
+      "hospitalName" : "予美医疗整形医院"
+    },
+    "expected" : {
+      "expectedUnitPrice" : 16.5,
+      "correctedTotalPrice" : 16.5,
+      "status" : "warning"
+    }
+  }, {
+    "id" : "std-14-ht-4",
+    "description" : "予美医疗整形医院：高温标准4件",
+    "input" : {
+      "type" : "额外包(纸塑袋)",
+      "packName" : "普通器械-4/Z7526",
+      "packageMaterial" : "高温纸塑袋20cm",
+      "instrumentCount" : 4,
+      "packCount" : 1,
+      "unitPrice" : 0.0,
+      "totalPrice" : 0.0,
+      "hospitalName" : "予美医疗整形医院"
+    },
+    "expected" : {
+      "expectedUnitPrice" : 22.0,
+      "correctedTotalPrice" : 22.0,
+      "status" : "warning"
+    }
+  }, {
+    "id" : "std-14-ht-8",
+    "description" : "予美医疗整形医院：高温标准8件",
+    "input" : {
+      "type" : "额外包(纸塑袋)",
+      "packName" : "普通器械-8/Z7526",
+      "packageMaterial" : "高温纸塑袋20cm",
+      "instrumentCount" : 8,
+      "packCount" : 1,
+      "unitPrice" : 0.0,
+      "totalPrice" : 0.0,
+      "hospitalName" : "予美医疗整形医院"
+    },
+    "expected" : {
+      "expectedUnitPrice" : 44.0,
+      "correctedTotalPrice" : 44.0,
+      "status" : "warning"
+    }
+  }, {
+    "id" : "exclude-keywords-hollow-nail-skipped",
+    "description" : "excludeKeywords：空心钉不匹配「xx钉」",
+    "input" : {
+      "type" : "额外包(纸塑袋)",
+      "packName" : "3.6空心钉-2",
+      "packageMaterial" : "高温纸塑袋75*200",
+      "instrumentCount" : 2,
+      "packCount" : 1,
+      "unitPrice" : 19.0,
+      "totalPrice" : 19.0,
+      "hospitalName" : "省二院"
+    },
+    "expected" : {
+      "expectedUnitPrice" : 13.5,
+      "correctedTotalPrice" : 13.5,
+      "status" : "warning",
+      "notesNotContains" : [ "xx钉" ]
+    },
+    "rulesOverlay" : {
+      "fixedPrices" : [ {
+        "name" : "xx钉",
+        "price" : 200.0,
+        "skipPackaging" : true,
+        "hospitals" : [ "省二院" ],
+        "keywords" : [ "钉" ],
+        "excludeKeywords" : [ "空心钉" ]
+      } ]
+    }
+  }, {
+    "id" : "any-price-lower-tier",
+    "description" : "matchMode=any_price：较低候选价",
+    "input" : {
+      "type" : "额外包(纸塑袋)",
+      "packName" : "小腔包A",
+      "packageMaterial" : "高温纸塑袋75*200",
+      "instrumentCount" : 1,
+      "packCount" : 1,
+      "unitPrice" : 71.0,
+      "totalPrice" : 71.0,
+      "hospitalName" : "省二院"
+    },
+    "expected" : {
+      "expectedUnitPrice" : 71.0,
+      "correctedTotalPrice" : 71.0,
+      "status" : "unchanged",
+      "matchedRuleId" : 100,
+      "matchedPriceOption" : 71.0,
+      "notesContains" : [ "多报价" ],
+      "billingNotes" : {
+        "type" : "any_price_match",
+        "matchedRuleId" : 100,
+        "matched_rule_id" : 100,
+        "ruleName" : "小腔包",
+        "candidatePrices" : [ 71.0, 76.5 ],
+        "candidates" : [ 71.0, 76.5 ],
+        "billUnitPrice" : 71.0,
+        "matchedPrice" : 71.0,
+        "matchedPriceOption" : 71.0
+      }
+    },
+    "rulesOverlay" : {
+      "fixedPrices" : [ {
+        "ruleId" : 100,
+        "name" : "小腔包",
+        "price" : 71.0,
+        "matchMode" : "any_price",
+        "skipPackaging" : true,
+        "hospitals" : [ "省二院" ],
+        "keywords" : [ "小腔包" ],
+        "acceptedPrices" : [ 71.0, 76.5 ]
+      } ]
+    }
+  }, {
+    "id" : "path-override-daowai",
+    "description" : "pathOverride：道外人民",
+    "input" : {
+      "type" : "单包装包(老肯低温)",
+      "packName" : "普通器械-4/Z7526",
+      "packageMaterial" : "低温纸塑袋200*600",
+      "instrumentCount" : 4,
+      "packCount" : 1,
+      "unitPrice" : 12.0,
+      "totalPrice" : 12.0,
+      "hospitalName" : "道外人民"
+    },
+    "expected" : {
+      "expectedUnitPrice" : 12.0,
+      "correctedTotalPrice" : 12.0,
+      "status" : "unchanged",
+      "notesContains" : [ "路径覆盖" ]
+    },
+    "rulesOverlay" : {
+      "billingProfile" : {
+        "pathOverride" : {
+          "disableLowTemp" : true,
+          "forceHighTempUnitPrice" : 3.0
+        }
+      }
+    }
+  }, {
+    "id" : "special-only-unmatched",
+    "description" : "special_only 未命中特色规则",
+    "input" : {
+      "type" : "额外包(纸塑袋)",
+      "packName" : "普通器械-4/Z7526",
+      "packageMaterial" : "高温纸塑袋20cm",
+      "instrumentCount" : 4,
+      "packCount" : 1,
+      "unitPrice" : 22.0,
+      "totalPrice" : 22.0,
+      "hospitalName" : "某院"
+    },
+    "expected" : {
+      "expectedUnitPrice" : 22.0,
+      "correctedTotalPrice" : 22.0,
+      "status" : "unchanged",
+      "notesContains" : [ "仅特色规则" ]
+    },
+    "rulesOverlay" : {
+      "billingProfile" : {
+        "pricingMode" : "special_only"
+      }
+    }
+  } ]
+}

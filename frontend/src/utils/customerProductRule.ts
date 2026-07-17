@@ -49,6 +49,8 @@ export interface CustomerProductRuleDraft {
   maxBagSizeExclusive?: number
   minInstrumentCount?: number
   maxInstrumentCount?: number
+  originalUnitPrice?: number
+  departments: string[]
   skipPackaging: boolean
   skipDiscount: boolean
   priority: number
@@ -70,6 +72,7 @@ export function createEmptyProductRuleDraft(
     keywords: [],
     excludeKeywords: [],
     materials: [],
+    departments: [],
     skipPackaging: false,
     skipDiscount: false,
     priority: CUSTOMER_PRODUCT_RULE_DEFAULT_PRIORITY,
@@ -102,6 +105,9 @@ export function ruleFromRecord(rule: Api.MasterData.CustomerProductRule): Custom
     maxBagSizeExclusive: rule.maxBagSizeExclusive ?? rule.max_bag_size_exclusive,
     minInstrumentCount: rule.minInstrumentCount ?? rule.min_instrument_count,
     maxInstrumentCount: rule.maxInstrumentCount ?? rule.max_instrument_count,
+    originalUnitPrice: (rule as { originalUnitPrice?: number; original_unit_price?: number }).originalUnitPrice
+      ?? (rule as { original_unit_price?: number }).original_unit_price,
+    departments: parseDepartmentsFromRule(rule),
     skipPackaging: rule.skipPackaging ?? rule.skip_packaging ?? false,
     skipDiscount: rule.skipDiscount ?? rule.skip_discount ?? false,
     priority: rule.priority ?? CUSTOMER_PRODUCT_RULE_DEFAULT_PRIORITY,
@@ -227,6 +233,11 @@ export function resolveProductRuleSaveName(
   return sanitizeLegacyRuleName(draftName) ?? undefined
 }
 
+function normalizeOptionalPositiveInt(value?: number | null): number | undefined {
+  if (value == null || value <= 0) return undefined
+  return value
+}
+
 export function draftToProductRule(
   draft: CustomerProductRuleDraft,
   productName?: string,
@@ -254,10 +265,10 @@ export function draftToProductRule(
     excludeKeywords: draft.excludeKeywords.length ? [...draft.excludeKeywords] : undefined,
     materials: draft.materials.length ? [...draft.materials] : undefined,
     temperature: draft.temperature || undefined,
-    bagSizeEquals: draft.bagSizeEquals,
-    maxBagSizeExclusive: draft.maxBagSizeExclusive,
-    minInstrumentCount: draft.minInstrumentCount,
-    maxInstrumentCount: draft.maxInstrumentCount,
+    bagSizeEquals: normalizeOptionalPositiveInt(draft.bagSizeEquals),
+    maxBagSizeExclusive: normalizeOptionalPositiveInt(draft.maxBagSizeExclusive),
+    minInstrumentCount: normalizeOptionalPositiveInt(draft.minInstrumentCount),
+    maxInstrumentCount: normalizeOptionalPositiveInt(draft.maxInstrumentCount),
     skipPackaging: draft.skipPackaging,
     skipDiscount: draft.skipDiscount,
     priority: CUSTOMER_PRODUCT_RULE_DEFAULT_PRIORITY,
@@ -287,10 +298,12 @@ export function draftToSavePayload(
     excludeKeywords: draft.excludeKeywords,
     materials: draft.materials,
     temperature: draft.temperature || undefined,
-    bagSizeEquals: draft.bagSizeEquals,
-    maxBagSizeExclusive: draft.maxBagSizeExclusive,
-    minInstrumentCount: draft.minInstrumentCount,
-    maxInstrumentCount: draft.maxInstrumentCount,
+    bagSizeEquals: normalizeOptionalPositiveInt(draft.bagSizeEquals),
+    maxBagSizeExclusive: normalizeOptionalPositiveInt(draft.maxBagSizeExclusive),
+    minInstrumentCount: normalizeOptionalPositiveInt(draft.minInstrumentCount),
+    maxInstrumentCount: normalizeOptionalPositiveInt(draft.maxInstrumentCount),
+    originalUnitPrice: draft.originalUnitPrice,
+    departments: draft.departments?.length ? [...draft.departments] : undefined,
     skipPackaging: isSettlementRule(draft.ruleType) ? false : draft.skipPackaging,
     skipDiscount: isSettlementRule(draft.ruleType) ? false : draft.skipDiscount,
     priority: CUSTOMER_PRODUCT_RULE_DEFAULT_PRIORITY,
@@ -414,4 +427,24 @@ function normalizeTemperature(value?: string | null): BillingTemperatureScope | 
   const upper = value.trim().toUpperCase()
   if (upper === 'HT' || upper === 'LT' || upper === 'ANY') return upper
   return ''
+}
+
+function parseDepartmentsFromRule(rule: Api.MasterData.CustomerProductRule): string[] {
+  const raw = (rule as { departments?: string[] }).departments
+  if (raw?.length) return [...raw]
+  const conditions = (rule as { conditionsJson?: string; conditions_json?: string }).conditionsJson
+    ?? (rule as { conditions_json?: string }).conditions_json
+  if (!conditions) return []
+  try {
+    const parsed = JSON.parse(conditions) as Array<{ field?: string; value?: string | string[] }>
+    for (const cond of parsed) {
+      if (cond.field === 'department') {
+        if (Array.isArray(cond.value)) return cond.value.map(String)
+        if (typeof cond.value === 'string') return [cond.value]
+      }
+    }
+  } catch {
+    return []
+  }
+  return []
 }

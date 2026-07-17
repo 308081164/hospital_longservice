@@ -83,6 +83,12 @@ public class ReconciliationJobResponse {
     /** 月度结算明细 */
     private Map<String, Object> monthlyBreakdown;
 
+    /** 加急费明细 */
+    private Map<String, Object> urgentBreakdown;
+
+    /** 设备抵扣明细 */
+    private Map<String, Object> deductionBreakdown;
+
     /** 全部行原始总价汇总 */
     private Double originalTotalPrice;
 

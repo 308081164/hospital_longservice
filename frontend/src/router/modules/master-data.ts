@@ -22,6 +22,16 @@ export const masterDataRoutes: AppRouteRecord[] = [
         }
       },
       {
+        path: 'customers/:customerId/dept-physician',
+        name: 'MasterDataCustomerDeptPhysician',
+        component: '/billing-config/dept-physician',
+        meta: {
+          title: 'menus.billingConfig.deptPhysician',
+          isHide: true,
+          keepAlive: true
+        }
+      },
+      {
         path: 'product-categories',
         name: 'MasterDataProductCategories',
         component: '/master-data/product-categories',

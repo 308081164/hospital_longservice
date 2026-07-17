@@ -29,6 +29,7 @@
         <result property="matchedRuleId" column="matched_rule_id"/>
         <result property="matchedPriceOption" column="matched_price_option"/>
         <result property="billingNotes" column="billing_notes"/>
+        <result property="isUrgent" column="is_urgent"/>
         <result property="createdAt" column="created_at"/>
     </resultMap>
 
@@ -87,7 +88,7 @@
              pack_name, package_material, pack_count, instrument_count,
              unit_price, total_price, expected_unit_price, corrected_total_price,
              difference, `status`, pricing_rule, matched_product_id, matched_variant_id, pricing_path,
-             notes_json, matched_rule_id, matched_price_option, billing_notes, created_at)
+             notes_json, matched_rule_id, matched_price_option, billing_notes, is_urgent, created_at)
         VALUES
         <foreach collection="list" item="row" separator=",">
             (#{row.jobId}, #{row.sheetName}, #{row.rowNumber}, #{row.deliveryDate}, #{row.orderNo},
@@ -95,7 +96,8 @@
              #{row.packCount}, #{row.instrumentCount}, #{row.unitPrice}, #{row.totalPrice},
              #{row.expectedUnitPrice}, #{row.correctedTotalPrice}, #{row.difference},
              #{row.status}, #{row.pricingRule}, #{row.matchedProductId}, #{row.matchedVariantId}, #{row.pricingPath},
-             #{row.notesJson}, #{row.matchedRuleId}, #{row.matchedPriceOption}, #{row.billingNotes}, NOW())
+             #{row.notesJson}, #{row.matchedRuleId}, #{row.matchedPriceOption}, #{row.billingNotes},
+             #{row.isUrgent, jdbcType=TINYINT}, NOW())
         </foreach>
     </insert>
 

@@ -10,11 +10,29 @@
       当前未加载到后端医院规则，已禁止按本地默认规则计算。请先检查规则接口或确认已启用规则。
     </ElAlert>
 
+    <ElCollapse class="mb-4">
+      <ElCollapseItem :title="t('reconciliation.regression.title')" name="int03">
+        <p class="text-xs text-gray-600 leading-relaxed">{{
+          t('reconciliation.regression.desc')
+        }}</p>
+        <ul class="mt-2 text-xs list-disc pl-4 space-y-1 text-gray-600">
+          <li>{{ t('reconciliation.regression.check1') }}</li>
+          <li>{{ t('reconciliation.regression.check2') }}</li>
+          <li>{{ t('reconciliation.regression.check3') }}</li>
+        </ul>
+      </ElCollapseItem>
+    </ElCollapse>
+
     <div class="grid grid-cols-1 gap-6">
       <ElCard shadow="never" class="reconciliation-workspace">
         <div class="mb-3 flex flex-wrap items-center justify-between gap-3">
           <div>
-            <h3 class="text-base font-semibold text-gray-800">{{ t('reconciliation.upload.title') }}</h3>
+            <div class="flex items-center gap-2">
+              <h3 class="text-base font-semibold text-gray-800">{{
+                t('reconciliation.upload.title')
+              }}</h3>
+              <BillingRoleBadge />
+            </div>
             <p class="mt-0.5 text-sm text-gray-500">{{ t('reconciliation.upload.subtitle') }}</p>
           </div>
           <span v-if="isRuleLoading" class="text-xs text-gray-400">
@@ -32,7 +50,12 @@
           class="compact-upload w-full"
         >
           <div class="flex flex-wrap items-center justify-center gap-x-3 gap-y-1 px-4 py-2.5">
-            <svg viewBox="0 0 24 24" class="h-4 w-4 shrink-0 text-gray-500" fill="none" stroke="currentColor">
+            <svg
+              viewBox="0 0 24 24"
+              class="h-4 w-4 shrink-0 text-gray-500"
+              fill="none"
+              stroke="currentColor"
+            >
               <path
                 d="M12 16V4m0 0-4 4m4-4 4 4M5 16v1a3 3 0 0 0 3 3h8a3 3 0 0 0 3-3v-1"
                 stroke-width="1.8"
@@ -59,7 +82,9 @@
           :class="{ 'entry-section-first': entryIndex === 0 }"
         >
           <div class="mb-3 flex flex-wrap items-center gap-2">
-            <span class="max-w-md truncate text-sm font-medium text-gray-800">{{ entry.file.name }}</span>
+            <span class="max-w-md truncate text-sm font-medium text-gray-800">{{
+              entry.file.name
+            }}</span>
             <EntryStatusBadge :status="entry.status" />
             <ElTooltip
               v-if="entry.workbook"
@@ -78,10 +103,12 @@
             </ElTooltip>
             <span class="min-w-0 flex-1 text-xs text-gray-500">
               <template v-if="entry.workbook">
-                {{ t('reconciliation.upload.sheetSummary', {
-                  sheets: entry.workbook.sheetNames.length,
-                  rows: entry.workbook.rows.length
-                }) }}
+                {{
+                  t('reconciliation.upload.sheetSummary', {
+                    sheets: entry.workbook.sheetNames.length,
+                    rows: entry.workbook.rows.length
+                  })
+                }}
               </template>
               <template v-else-if="entry.status === 'error'">
                 <span class="text-red-500">{{ entry.errorMessage }}</span>
@@ -209,19 +236,26 @@
                   type="danger"
                   plain
                   style="min-width: 120px"
-                  :disabled="entrySummary(entry).warning === 0 && entrySummary(entry).corrected === 0"
+                  :disabled="
+                    entrySummary(entry).warning === 0 && entrySummary(entry).corrected === 0
+                  "
                   @click="handleExportAnomalies(entry)"
                 >
                   导出异常
                 </ElButton>
-                <span v-if="entry.onlyShowAbnormal && !entry.anomalyLoading" class="text-xs text-orange-500"
+                <span
+                  v-if="entry.onlyShowAbnormal && !entry.anomalyLoading"
+                  class="text-xs text-orange-500"
                   >当前仅显示异常行（全局筛选，共 {{ entry.displayTotal }} 条）</span
                 >
                 <span v-if="entry.anomalyLoading" class="text-xs text-blue-500"
                   >正在加载全量数据，请稍候...</span
                 >
               </div>
-              <div class="overflow-x-auto" :style="{ maxHeight: entry.onlyShowAbnormal ? '70vh' : '500px', overflowY: 'auto' }">
+              <div
+                class="overflow-x-auto"
+                :style="{ maxHeight: entry.onlyShowAbnormal ? '70vh' : '500px', overflowY: 'auto' }"
+              >
                 <div
                   v-if="entry.anomalyLoading"
                   class="flex items-center justify-center py-12 text-sm text-blue-500"
@@ -325,6 +359,20 @@
                         formatSignedNumber(row.difference)
                       }}</template>
                     </ElTableColumn>
+                    <ElTableColumn type="expand" width="42" :label="t('table.column.expand')">
+                      <template #default="{ row }">
+                        <ReconciliationBillingDetail
+                          v-if="hasRowBillingDetail(row)"
+                          :row="rowAsRecord(row)"
+                          expanded
+                        />
+                      </template>
+                    </ElTableColumn>
+                    <ElTableColumn :label="t('reconciliation.detail.billingNotes')" min-width="160">
+                      <template #default="{ row }">
+                        <ReconciliationBillingDetail :row="rowAsRecord(row)" />
+                      </template>
+                    </ElTableColumn>
                     <ElTableColumn label="状态" width="90" sortable prop="status">
                       <template #default="{ row }">
                         <ElTag :type="statusTagType(row.status)" size="small" effect="plain">
@@ -337,8 +385,11 @@
               </div>
               <div class="mt-3 flex items-center justify-between">
                 <span class="text-xs text-gray-400"
-                  >{{ entry.onlyShowAbnormal ? '异常模式' : '当前显示' }} {{ entryDisplayRows(entry).length }} 行{{
-                    entry.onlyShowAbnormal ? '' : `，共 ${entry.displayTotal || entrySummary(entry).total} 行`
+                  >{{ entry.onlyShowAbnormal ? '异常模式' : '当前显示' }}
+                  {{ entryDisplayRows(entry).length }} 行{{
+                    entry.onlyShowAbnormal
+                      ? ''
+                      : `，共 ${entry.displayTotal || entrySummary(entry).total} 行`
                   }}</span
                 >
                 <ElPagination
@@ -360,7 +411,9 @@
       <ElCard shadow="never">
         <div class="mb-4 flex items-start justify-between gap-3">
           <div>
-            <h3 class="text-base font-semibold text-gray-800">{{ t('reconciliation.history.title') }}</h3>
+            <h3 class="text-base font-semibold text-gray-800">{{
+              t('reconciliation.history.title')
+            }}</h3>
             <p class="mt-1 text-sm text-gray-500">{{ t('reconciliation.history.subtitle') }}</p>
           </div>
           <ElButton size="small" :loading="isHistoryLoading" @click="loadHistory()">
@@ -449,12 +502,20 @@
               <div class="flex items-start justify-between gap-2">
                 <div class="min-w-0 flex-1">
                   <div class="flex flex-wrap items-center gap-2">
-                    <span class="truncate text-sm font-semibold text-gray-800">{{ group.hospitalName }}</span>
-                    <ElTag :type="reviewTagType(group.item.reviewStatus)" size="small" effect="plain">
+                    <span class="truncate text-sm font-semibold text-gray-800">{{
+                      group.hospitalName
+                    }}</span>
+                    <ElTag
+                      :type="reviewTagType(group.item.reviewStatus)"
+                      size="small"
+                      effect="plain"
+                    >
                       {{ reviewLabelMap[group.item.reviewStatus] ?? group.item.reviewStatus }}
                     </ElTag>
                     <span v-if="group.versions.length > 1" class="text-xs text-gray-400">
-                      {{ t('reconciliation.history.versionCount', { count: group.versions.length }) }}
+                      {{
+                        t('reconciliation.history.versionCount', { count: group.versions.length })
+                      }}
                     </span>
                   </div>
                   <div class="mt-1 truncate text-xs font-medium text-gray-600">
@@ -479,7 +540,11 @@
                     V{{ group.item.versionNo }} · {{ formatDateTime(group.item.createdAt) }}
                   </div>
                   <div class="mt-2 flex flex-wrap gap-x-3 text-xs text-gray-500 leading-relaxed">
-                    <span>{{ t('reconciliation.history.operator') }}：{{ group.item.operatorName }}</span>
+                    <span
+                      >{{ t('reconciliation.history.operator') }}：{{
+                        group.item.operatorName
+                      }}</span
+                    >
                     <span v-if="group.item.reviewerName">
                       {{ t('reconciliation.history.reviewer') }}：{{ group.item.reviewerName }}
                     </span>
@@ -492,9 +557,18 @@
               </div>
 
               <div class="mt-3 flex flex-wrap gap-3 text-xs text-gray-500">
-                <span>{{ t('reconciliation.history.stats.totalRows') }} {{ group.item.totalRows }}</span>
-                <span>{{ t('reconciliation.history.stats.correctedRows') }} {{ group.item.correctedRows }}</span>
-                <span>{{ t('reconciliation.history.stats.warningRows') }} {{ group.item.warningRows }}</span>
+                <span
+                  >{{ t('reconciliation.history.stats.totalRows') }}
+                  {{ group.item.totalRows }}</span
+                >
+                <span
+                  >{{ t('reconciliation.history.stats.correctedRows') }}
+                  {{ group.item.correctedRows }}</span
+                >
+                <span
+                  >{{ t('reconciliation.history.stats.warningRows') }}
+                  {{ group.item.warningRows }}</span
+                >
                 <span>
                   {{ t('reconciliation.history.stats.difference') }}
                   {{ formatSignedNumber(group.item.totalDifference) }}
@@ -508,15 +582,15 @@
                 <ElButton
                   size="small"
                   type="primary"
-                  :disabled="group.item.reviewStatus !== 'pending'"
+                  :disabled="group.item.reviewStatus !== 'pending' || !canReviewReconciliation"
                   @click="openReview(group.item)"
                 >
                   {{ t('reconciliation.history.actions.review') }}
                 </ElButton>
                 <ElDropdown
-                  v-if="group.item.reviewStatus === 'approved'"
+                  v-if="group.item.reviewStatus === 'approved' && canExport"
                   size="small"
-                  @command="(cmd: string) => handleHistoryExport(group.item, cmd)"
+                  @command="(cmd: string) => openExportWizard(group.item, cmd)"
                 >
                   <ElButton size="small" type="success">
                     {{ t('reconciliation.history.actions.export') }}
@@ -541,10 +615,18 @@
           </div>
           <div class="mt-4 flex flex-wrap items-center justify-between gap-3">
             <span class="text-sm text-gray-500">
-              {{ t('reconciliation.history.pagination.total', { count: filteredHistoryGroups.length }) }}
+              {{
+                t('reconciliation.history.pagination.total', {
+                  count: filteredHistoryGroups.length
+                })
+              }}
             </span>
             <div class="flex items-center gap-3">
-              <ElSelect v-model="historyFilterPageSize" class="w-28" @change="historyFilterPage = 1">
+              <ElSelect
+                v-model="historyFilterPageSize"
+                class="w-28"
+                @change="historyFilterPage = 1"
+              >
                 <ElOption :value="6" :label="t('reconciliation.history.pagination.size6')" />
                 <ElOption :value="9" :label="t('reconciliation.history.pagination.size9')" />
                 <ElOption :value="12" :label="t('reconciliation.history.pagination.size12')" />
@@ -563,11 +645,147 @@
       </ElCard>
     </div>
   </div>
+  <ReconciliationExportWizard
+    v-model="exportWizardVisible"
+    :job-id="exportWizardJob?.id"
+    :hospital-name="exportWizardJob?.hospitalName"
+    :initial-export-type="exportWizardInitialType"
+    :monthly-breakdown="exportWizardJob?.monthlyBreakdown ?? null"
+    :logistics-fee="exportWizardJob?.logisticsFee ?? null"
+    :settlement-adjustment="exportWizardJob?.settlementAdjustment ?? null"
+    @exported="handleWizardExported"
+  />
   <ElDialog v-model="detailVisible" title="校对详情" width="90%" top="3vh" class="max-h-[90vh]">
     <template v-if="detailLoading">
       <div class="py-10 text-center text-sm text-gray-400">正在加载详情...</div>
     </template>
     <template v-else-if="detailData">
+      <div
+        v-if="hasSettlementSummary"
+        class="mb-4 rounded-lg border border-primary/20 bg-primary/5 p-4"
+      >
+        <div class="mb-2 text-sm font-semibold text-gray-800">
+          {{ t('reconciliation.settlementSummary.title') }}
+        </div>
+        <div class="grid grid-cols-2 gap-3 text-sm md:grid-cols-4 lg:grid-cols-6">
+          <div v-if="detailData.monthlyBreakdown?.rawSterilizeTotal != null">
+            <span class="text-gray-500"
+              >{{ t('reconciliation.settlementSummary.sterilizeTotal') }}：</span
+            >
+            <span class="font-medium">{{
+              formatNumber(detailData.monthlyBreakdown.rawSterilizeTotal)
+            }}</span>
+          </div>
+          <div v-if="detailData.logisticsFee != null && detailData.logisticsFee > 0">
+            <span class="text-gray-500"
+              >{{ t('reconciliation.settlementSummary.logisticsFee') }}：</span
+            >
+            <span class="font-medium">{{ formatNumber(detailData.logisticsFee) }}</span>
+            <span
+              v-if="detailData.logisticsBreakdown?.tripCount != null"
+              class="ml-1 text-xs text-gray-400"
+            >
+              ({{ detailData.logisticsBreakdown.tripCount }}
+              {{ t('reconciliation.settlementSummary.tripCount') }})
+            </span>
+          </div>
+          <div v-if="detailData.monthlyBreakdown?.minCharge != null">
+            <span class="text-gray-500"
+              >{{ t('reconciliation.settlementSummary.minCharge') }}：</span
+            >
+            <span class="font-medium">{{
+              formatNumber(detailData.monthlyBreakdown.minCharge)
+            }}</span>
+          </div>
+          <div v-if="detailData.monthlyBreakdown?.maxCap != null">
+            <span class="text-gray-500">{{ t('reconciliation.settlementSummary.maxCap') }}：</span>
+            <span class="font-medium">{{ formatNumber(detailData.monthlyBreakdown.maxCap) }}</span>
+          </div>
+          <div
+            v-if="detailData.settlementAdjustment != null && detailData.settlementAdjustment !== 0"
+          >
+            <span class="text-gray-500"
+              >{{ t('reconciliation.settlementSummary.adjustment') }}：</span
+            >
+            <span class="font-medium text-primary">{{
+              formatSignedNumber(detailData.settlementAdjustment)
+            }}</span>
+          </div>
+          <div v-if="detailData.monthlyBreakdown?.adjustedTotal != null">
+            <span class="text-gray-500"
+              >{{ t('reconciliation.settlementSummary.adjustedTotal') }}：</span
+            >
+            <span class="font-medium">{{
+              formatNumber(detailData.monthlyBreakdown.adjustedTotal)
+            }}</span>
+          </div>
+          <div v-if="detailData.urgentBreakdown?.urgentRowCount">
+            <span class="text-gray-500"
+              >{{ t('reconciliation.settlementSummary.urgentRows') }}：</span
+            >
+            <span class="font-medium">{{ detailData.urgentBreakdown.urgentRowCount }}</span>
+            <span
+              v-if="detailData.urgentBreakdown.adjustedSurcharge != null"
+              class="ml-1 text-xs text-gray-400"
+            >
+              (+{{ formatNumber(detailData.urgentBreakdown.adjustedSurcharge) }})
+            </span>
+          </div>
+          <div v-if="detailData.deductionBreakdown?.deductionAmount">
+            <span class="text-gray-500"
+              >{{ t('reconciliation.settlementSummary.deduction') }}：</span
+            >
+            <span class="font-medium">{{
+              formatSignedNumber(detailData.deductionBreakdown.deductionAmount)
+            }}</span>
+          </div>
+        </div>
+      </div>
+      <div
+        v-if="detailLogisticsAllocation?.deptAllocations?.length"
+        class="mb-4 rounded-lg border border-amber-200 bg-amber-50/60 p-4"
+      >
+        <div class="mb-2 flex items-center justify-between gap-2">
+          <span class="text-sm font-semibold text-gray-800">
+            {{ t('reconciliation.logisticsAllocation.title') }}
+          </span>
+          <span class="text-xs text-gray-500">
+            {{ t('reconciliation.logisticsAllocation.total') }}：
+            {{ formatNumber(detailLogisticsAllocation.totalLogisticsFee) }}
+          </span>
+        </div>
+        <ElTable :data="detailLogisticsAllocation.deptAllocations" size="small" border stripe>
+          <ElTableColumn
+            prop="department"
+            :label="t('reconciliation.logisticsAllocation.department')"
+            min-width="140"
+          />
+          <ElTableColumn
+            prop="sterilizeTotal"
+            :label="t('reconciliation.logisticsAllocation.sterilizeTotal')"
+            width="120"
+            align="right"
+          >
+            <template #default="{ row }">{{ formatNumber(row.sterilizeTotal) }}</template>
+          </ElTableColumn>
+          <ElTableColumn
+            prop="ratio"
+            :label="t('reconciliation.logisticsAllocation.ratio')"
+            width="100"
+            align="right"
+          >
+            <template #default="{ row }">{{ ((row.ratio ?? 0) * 100).toFixed(2) }}%</template>
+          </ElTableColumn>
+          <ElTableColumn
+            prop="allocatedFee"
+            :label="t('reconciliation.logisticsAllocation.allocatedFee')"
+            width="120"
+            align="right"
+          >
+            <template #default="{ row }">{{ formatNumber(row.allocatedFee) }}</template>
+          </ElTableColumn>
+        </ElTable>
+      </div>
       <div class="mb-4 flex flex-wrap items-center justify-between gap-2">
         <div class="grid grid-cols-2 gap-4 rounded-lg bg-gray-50 p-4 text-sm md:grid-cols-4 flex-1">
           <div>
@@ -602,17 +820,26 @@
             <span class="font-medium text-warning">{{ detailData.warningRows }}</span>
           </div>
           <div>
-            <span class="text-gray-500">{{ t('reconciliation.detail.pendingReviewDifference') }}：</span>
+            <span class="text-gray-500"
+              >{{ t('reconciliation.detail.pendingReviewDifference') }}：</span
+            >
             <span
               class="font-medium"
               :class="(detailData.totalDifference ?? 0) >= 0 ? 'text-success' : 'text-danger'"
               >{{ formatSignedNumber(detailData.totalDifference) }}</span
             >
           </div>
-          <div v-if="detailData.settlementAdjustment != null && detailData.settlementAdjustment !== 0">
+          <div
+            v-if="detailData.settlementAdjustment != null && detailData.settlementAdjustment !== 0"
+          >
             <span class="text-gray-500">月度调整：</span>
-            <span class="font-medium text-primary">{{ formatSignedNumber(detailData.settlementAdjustment) }}</span>
-            <span v-if="detailData.monthlyBreakdown?.adjustedTotal != null" class="text-xs text-gray-400 ml-1">
+            <span class="font-medium text-primary">{{
+              formatSignedNumber(detailData.settlementAdjustment)
+            }}</span>
+            <span
+              v-if="detailData.monthlyBreakdown?.adjustedTotal != null"
+              class="text-xs text-gray-400 ml-1"
+            >
               （结算 {{ formatNumber(detailData.monthlyBreakdown.adjustedTotal) }}）
             </span>
           </div>
@@ -625,7 +852,38 @@
           <ElButton
             type="warning"
             size="small"
-            :disabled="!activeRule || isFixingDetailRows || detailData.reviewStatus !== 'pending'"
+            :disabled="
+              detailSelectedRows.length === 0 ||
+              detailData.reviewStatus !== 'pending' ||
+              isMarkingUrgent ||
+              !canEditReconciliationRows
+            "
+            :loading="isMarkingUrgent"
+            @click="handleMarkUrgent(true)"
+          >
+            {{ t('reconciliation.detail.markUrgent') }}
+          </ElButton>
+          <ElButton
+            size="small"
+            :disabled="
+              detailSelectedRows.length === 0 ||
+              detailData.reviewStatus !== 'pending' ||
+              isMarkingUrgent ||
+              !canEditReconciliationRows
+            "
+            @click="handleMarkUrgent(false)"
+          >
+            {{ t('reconciliation.detail.unmarkUrgent') }}
+          </ElButton>
+          <ElButton
+            type="warning"
+            size="small"
+            :disabled="
+              !activeRule ||
+              isFixingDetailRows ||
+              detailData.reviewStatus !== 'pending' ||
+              !canEditReconciliationRows
+            "
             :loading="isFixingDetailRows"
             @click="handleFixDetailRows"
           >
@@ -634,7 +892,11 @@
           <ElButton
             type="primary"
             size="small"
-            :disabled="isSavingDetailRows || detailData.reviewStatus !== 'pending'"
+            :disabled="
+              isSavingDetailRows ||
+              detailData.reviewStatus !== 'pending' ||
+              !canEditReconciliationRows
+            "
             :loading="isSavingDetailRows"
             @click="handleSaveDetailRows"
           >
@@ -642,8 +904,51 @@
           </ElButton>
         </div>
       </div>
+      <UatHelperPanel
+        v-if="detailData?.reviewStatus === 'approved'"
+        :hospital-name="detailData?.hospitalName"
+        :job-id="detailData?.id"
+      />
+      <ReconciliationAllocationPanel
+        :allocation="detailAllocation"
+        :running="isRunningAllocation"
+        :exporting="isExportingOrchestrated"
+        :can-operate="canEditReconciliationRows"
+        :can-export="canExport"
+        @run-allocation="handleRunAllocation"
+        @export-orchestrated="handleExportOrchestrated"
+      />
+      <ElTabs v-model="detailRowTab" class="mb-3">
+        <ElTabPane :label="t('reconciliation.detail.tabRegular')" name="regular" />
+        <ElTabPane
+          :label="t('reconciliation.detail.tabExternal', { count: detailExternalRows.length })"
+          name="external"
+        />
+      </ElTabs>
 
       <ElTable
+        v-if="detailRowTab === 'external'"
+        :data="detailExternalRows"
+        border
+        stripe
+        size="small"
+        max-height="500"
+      >
+        <ElTableColumn prop="department" label="科室" min-width="100" />
+        <ElTableColumn prop="categoryNo" label="包类别号" min-width="120" />
+        <ElTableColumn prop="packName" label="包名" min-width="160" show-overflow-tooltip />
+        <ElTableColumn prop="usageDate" label="使用日期" width="110" />
+        <ElTableColumn prop="packCount" label="包数" width="70" align="right" />
+        <ElTableColumn label="单价" width="90" align="right">
+          <template #default="{ row }">{{ formatNumber(row.unitPrice) }}</template>
+        </ElTableColumn>
+        <ElTableColumn label="合计" width="90" align="right">
+          <template #default="{ row }">{{ formatNumber(row.totalAmount) }}</template>
+        </ElTableColumn>
+      </ElTable>
+
+      <ElTable
+        v-show="detailRowTab === 'regular'"
         :data="detailPaginatedRows"
         border
         stripe
@@ -652,12 +957,28 @@
         max-height="500"
         :default-sort="{ prop: 'rowNumber', order: 'ascending' }"
         :row-class-name="detailRowClassName"
+        @selection-change="onDetailSelectionChange"
       >
+        <ElTableColumn type="selection" width="42" :selectable="detailRowSelectable" />
         <ElTableColumn prop="rowNumber" label="行号" width="65" sortable />
         <ElTableColumn prop="sheetName" label="工作表" min-width="80" />
         <ElTableColumn prop="deliveryDate" label="发货日期" width="110" />
         <ElTableColumn prop="type" label="类型" min-width="90" />
         <ElTableColumn prop="packName" label="包名" min-width="140" show-overflow-tooltip />
+        <ElTableColumn label="建议科室" min-width="120">
+          <template #default="{ row }">
+            <span
+              v-if="detailRosterHintMap.get(row.rowNumber as number)"
+              class="text-primary text-xs"
+            >
+              {{ detailRosterHintMap.get(row.rowNumber as number)?.suggestedDepartment }}
+              <span class="text-gray-400">
+                ({{ detailRosterHintMap.get(row.rowNumber as number)?.matchedDoctor }})
+              </span>
+            </span>
+            <span v-else class="text-gray-300 text-xs">—</span>
+          </template>
+        </ElTableColumn>
         <ElTableColumn prop="packageMaterial" label="包装材料" min-width="110" />
         <ElTableColumn prop="instrumentCount" label="器械数" width="70" align="right" />
         <ElTableColumn prop="packCount" label="包数" width="60" align="right" />
@@ -701,12 +1022,17 @@
             <span v-else>{{ formatSignedNumber(row['difference'] as number | null) }}</span>
           </template>
         </ElTableColumn>
-        <ElTableColumn :label="t('reconciliation.detail.billingNotes')" min-width="180" show-overflow-tooltip>
+        <ElTableColumn type="expand" width="42" :label="t('table.column.expand')">
           <template #default="{ row }">
-            <span v-if="formatRowBillingNote(row)" class="text-primary text-xs">
-              {{ formatRowBillingNote(row) }}
-            </span>
-            <span v-else-if="rowNotesPreview(row)" class="text-gray-500 text-xs">{{ rowNotesPreview(row) }}</span>
+            <ReconciliationBillingDetail v-if="hasRowBillingDetail(row)" :row="row" expanded />
+          </template>
+        </ElTableColumn>
+        <ElTableColumn :label="t('reconciliation.detail.billingNotes')" min-width="180">
+          <template #default="{ row }">
+            <span v-if="row['isUrgent']" class="mr-1 text-xs text-warning">{{
+              t('reconciliation.detail.urgentTag')
+            }}</span>
+            <ReconciliationBillingDetail :row="row" />
           </template>
         </ElTableColumn>
         <ElTableColumn label="状态" width="110">
@@ -794,10 +1120,7 @@
             >
               <ElRadio value="approved" class="review-conclusion-radio">
                 <span class="review-conclusion-label">
-                  <ElIcon
-                    v-if="reviewForm.status === 'approved'"
-                    class="review-conclusion-check"
-                  >
+                  <ElIcon v-if="reviewForm.status === 'approved'" class="review-conclusion-check">
                     <Select />
                   </ElIcon>
                   {{ t('reconciliation.history.reviewConclusion.approve') }}
@@ -811,10 +1134,7 @@
             >
               <ElRadio value="rejected" class="review-conclusion-radio">
                 <span class="review-conclusion-label">
-                  <ElIcon
-                    v-if="reviewForm.status === 'rejected'"
-                    class="review-conclusion-check"
-                  >
+                  <ElIcon v-if="reviewForm.status === 'rejected'" class="review-conclusion-check">
                     <Select />
                   </ElIcon>
                   {{ t('reconciliation.history.reviewConclusion.reject') }}
@@ -859,7 +1179,9 @@
       class="mb-4"
     />
     <div v-else class="space-y-3">
-      <p class="text-sm text-gray-500">共 {{ unmatchedItems.length }} 项未在产品库命中，可快捷录入建档。</p>
+      <p class="text-sm text-gray-500"
+        >共 {{ unmatchedItems.length }} 项未在产品库命中，可快捷录入建档。</p
+      >
       <div
         v-for="(item, idx) in unmatchedItems"
         :key="idx"
@@ -935,6 +1257,9 @@
     status: 'corrected' | 'unchanged' | 'skipped' | 'warning'
     pricingRule: string
     notes: string[]
+    matchedRuleId?: number | null
+    matchedPriceOption?: number | null
+    billingNotes?: Record<string, unknown> | null
   }
 
   function findRowText(rows: unknown[][], keyword: string): string {
@@ -965,14 +1290,7 @@
     return ''
   }
 
-  type EntryStatus =
-    | 'pending'
-    | 'parsing'
-    | 'parsed'
-    | 'processing'
-    | 'saving'
-    | 'saved'
-    | 'error'
+  type EntryStatus = 'pending' | 'parsing' | 'parsed' | 'processing' | 'saving' | 'saved' | 'error'
 
   interface UploadEntry {
     id: string
@@ -1070,35 +1388,6 @@
     if (value > 0) return `+${abs}`
     if (value < 0) return `-${abs}`
     return abs
-  }
-
-  function formatRowBillingNote(row: Record<string, unknown>): string {
-    const matchedPrice = row.matchedPriceOption ?? row.matched_price_option
-    if (matchedPrice != null && typeof matchedPrice === 'number') {
-      return t('reconciliation.detail.multiPriceHit', { price: formatNumber(matchedPrice) })
-    }
-    const billingNotes = row.billingNotes ?? row.billing_notes
-    if (billingNotes && typeof billingNotes === 'object') {
-      const notes = billingNotes as Record<string, unknown>
-      if (notes.type === 'any_price_match' && notes.matchedPrice != null) {
-        return t('reconciliation.detail.multiPriceHit', {
-          price: formatNumber(Number(notes.matchedPrice)),
-        })
-      }
-    }
-    const noteList = row.notes
-    if (Array.isArray(noteList)) {
-      const hit = noteList.find((n) => typeof n === 'string' && n.includes('多报价命中'))
-      if (typeof hit === 'string') return hit
-    }
-    return ''
-  }
-
-  function rowNotesPreview(row: Record<string, unknown>): string {
-    const noteList = row.notes
-    if (!Array.isArray(noteList) || noteList.length === 0) return ''
-    const first = noteList.find((n) => typeof n === 'string' && n.trim())
-    return typeof first === 'string' ? first : ''
   }
 
   function getCell(row: unknown[], headerMap: Map<string, number>, headerName: string): unknown {
@@ -1425,6 +1714,8 @@
     return defaultTemplate
   }
 
+  /** @deprecated 结款函改由后端 ExportEngine v2 生成；保留供参考 */
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars -- legacy client-side builder
   function buildSettlementLetterData(
     rows: ProcessedRow[],
     rules: Api.Hospital.PricingRules,
@@ -1459,9 +1750,9 @@
     const breakdownFeePerTrip = logisticsBreakdown?.feePerTrip
     if (logisticsTripCount != null && logisticsTripCount > 0) {
       logisticsTrips = logisticsTripCount
-      finalLogisticsFee = logisticsFee ?? roundCurrency(
-        logisticsTrips * (breakdownFeePerTrip ?? rules.logistics.feePerTrip)
-      )
+      finalLogisticsFee =
+        logisticsFee ??
+        roundCurrency(logisticsTrips * (breakdownFeePerTrip ?? rules.logistics.feePerTrip))
     } else {
       const logisticsEntries = validRows
         .map((row) => {
@@ -1474,8 +1765,8 @@
             date: normalizedDate,
             adjusted: Boolean(
               rawDateTime &&
-                hasExplicitTimeComponent(row.deliveryDateRaw) &&
-                rawDateTime.getHours() < rules.logistics.dayBoundaryHour
+              hasExplicitTimeComponent(row.deliveryDateRaw) &&
+              rawDateTime.getHours() < rules.logistics.dayBoundaryHour
             )
           }
         })
@@ -1626,16 +1917,41 @@
     createHospitalReconciliationExportLog,
     getReconciliationDetail,
     updateHospitalReconciliationRows,
+    updateReconciliationRowsUrgent,
     getReconciliationRows,
     getUnmatchedProducts,
     type UnmatchedProductItem
   } from '@/api/hospital/reconciliationsApi'
+  import {
+    exportOrchestratedWorkbook,
+    getJobAllocationResult,
+    getJobRosterHints,
+    runJobAllocation,
+    type AllocationResult,
+    type RosterMatchHint
+  } from '@/api/billing-config/allocationApi'
+  import {
+    listJobExternalInstruments,
+    type ExternalInstrumentRecord
+  } from '@/api/billing-config/externalInstrumentsApi'
+  import {
+    getLogisticsAllocationPreview,
+    type LogisticsAllocationPreview
+  } from '@/api/billing-config/logisticsApi'
   import { quickOnboardProduct } from '@/api/master-data/productsApi'
   import { buildReconciliationVersionGroupKey } from '@/utils/reconciliationVersionGroup'
+  import ReconciliationBillingDetail from '@/components/business/reconciliation/ReconciliationBillingDetail.vue'
+  import ReconciliationExportWizard from '@/components/business/reconciliation/ReconciliationExportWizard.vue'
+  import ReconciliationAllocationPanel from '@/components/business/reconciliation/ReconciliationAllocationPanel.vue'
+  import UatHelperPanel from '@/components/business/reconciliation/UatHelperPanel.vue'
+  import BillingRoleBadge from '@/components/business/BillingRoleBadge.vue'
+  import { useBillingPermission } from '@/composables/useBillingPermission'
+  import { extractRowBillingFields, hasBillingDetail } from '@/utils/reconciliationBillingNotes'
 
   defineOptions({ name: 'HospitalReconciliation' })
 
   const { t } = useI18n()
+  const { canEditReconciliationRows, canReviewReconciliation, canExport } = useBillingPermission()
 
   interface HistoryGroup {
     key: string
@@ -1657,6 +1973,43 @@
     operator: '',
     dateRange: null
   })
+
+  function rowAsRecord(row: ProcessedRow): Record<string, unknown> {
+    return row as unknown as Record<string, unknown>
+  }
+
+  function hasRowBillingDetail(row: ProcessedRow | Record<string, unknown>): boolean {
+    return hasBillingDetail(row as Record<string, unknown>)
+  }
+
+  function mapApiRowToProcessedRow(row: Record<string, unknown>): ProcessedRow {
+    const billingFields = extractRowBillingFields(row)
+    return {
+      sheetName: row['sheetName'] as string,
+      rowNumber: row['rowNumber'] as number,
+      deliveryDateRaw: null,
+      deliveryDate: row['deliveryDate'] as string,
+      orderNo: row['orderNo'] as string,
+      type: row['type'] as string,
+      categoryNo: (row['categoryNo'] as string) ?? '',
+      packName: row['packName'] as string,
+      packageMaterial: row['packageMaterial'] as string,
+      packCount: (row['packCount'] as number) ?? 0,
+      instrumentCount: (row['instrumentCount'] as number) ?? 0,
+      unitPrice: row['unitPrice'] as number | null,
+      totalPrice: row['totalPrice'] as number | null,
+      original: {},
+      expectedUnitPrice: row['expectedUnitPrice'] as number | null,
+      correctedTotalPrice: row['correctedTotalPrice'] as number | null,
+      difference: row['difference'] as number | null,
+      status: (row['status'] as ProcessedRow['status']) ?? 'unchanged',
+      pricingRule: (row['pricingRule'] as string) ?? '',
+      notes: (row['notes'] as string[]) ?? [],
+      matchedRuleId: billingFields.matchedRuleId,
+      matchedPriceOption: billingFields.matchedPriceOption,
+      billingNotes: billingFields.billingNotes
+    }
+  }
 
   const statusLabels: Record<string, string> = {
     corrected: '已修正',
@@ -1768,7 +2121,8 @@
         )
         return {
           key,
-          hospitalName: sorted[0].hospitalName?.trim() || t('reconciliation.history.unnamedHospital'),
+          hospitalName:
+            sorted[0].hospitalName?.trim() || t('reconciliation.history.unnamedHospital'),
           sourceFileName: sorted[0].sourceFileName?.trim() || '(未命名)',
           versions: sorted
         }
@@ -1853,9 +2207,7 @@
       keyword: historySearchDraft.value.keyword,
       reviewStatus: historySearchDraft.value.reviewStatus,
       operator: historySearchDraft.value.operator,
-      dateRange: historySearchDraft.value.dateRange
-        ? [...historySearchDraft.value.dateRange]
-        : null
+      dateRange: historySearchDraft.value.dateRange ? [...historySearchDraft.value.dateRange] : null
     }
     historyFilterPage.value = 1
   }
@@ -1884,13 +2236,46 @@
   const detailPaginatedRows = computed(() => {
     return detailRowsCache.value.get(detailPage.value) ?? []
   })
+  const detailRosterHintMap = computed(() => {
+    const map = new Map<number, RosterMatchHint>()
+    for (const hint of detailRosterHints.value) {
+      if (hint.rowNumber != null) {
+        map.set(hint.rowNumber, hint)
+      }
+    }
+    return map
+  })
+  const hasSettlementSummary = computed(() => {
+    const job = detailData.value
+    if (!job) return false
+    return Boolean(
+      job.monthlyBreakdown ||
+      job.urgentBreakdown?.urgentRowCount ||
+      job.deductionBreakdown?.deductionAmount ||
+      (job.logisticsFee != null && job.logisticsFee > 0) ||
+      (job.settlementAdjustment != null && job.settlementAdjustment !== 0)
+    )
+  })
+  const detailSelectedRows = ref<Record<string, unknown>[]>([])
+  const isMarkingUrgent = ref(false)
   const isFixingDetailRows = ref(false)
   const isSavingDetailRows = ref(false)
+  const detailRowTab = ref<'regular' | 'external'>('regular')
+  const detailExternalRows = ref<ExternalInstrumentRecord[]>([])
+  const detailRosterHints = ref<RosterMatchHint[]>([])
+  const detailAllocation = ref<AllocationResult | null>(null)
+  const detailLogisticsAllocation = ref<LogisticsAllocationPreview | null>(null)
+  const isRunningAllocation = ref(false)
+  const isExportingOrchestrated = ref(false)
 
   const reviewVisible = ref(false)
   const reviewTarget = ref<Api.Hospital.ReconciliationJob | null>(null)
   const reviewForm = ref({ status: 'approved', comment: '' })
   const isReviewing = ref(false)
+
+  const exportWizardVisible = ref(false)
+  const exportWizardJob = ref<Api.Hospital.ReconciliationJob | null>(null)
+  const exportWizardInitialType = ref<'bill' | 'settlement' | 'dept_summary'>('bill')
 
   const unmatchedDrawerVisible = ref(false)
   const unmatchedLoading = ref(false)
@@ -2138,31 +2523,7 @@
     try {
       const result = await getReconciliationRows(entry.savedJobId, page, entry.displayPageSize)
       const rows = (result.rows ?? []) as unknown as Record<string, unknown>[]
-      entry.processedRows = rows.map(
-        (row) =>
-          ({
-            sheetName: row['sheetName'] as string,
-            rowNumber: row['rowNumber'] as number,
-            deliveryDateRaw: null,
-            deliveryDate: row['deliveryDate'] as string,
-            orderNo: row['orderNo'] as string,
-            type: row['type'] as string,
-            categoryNo: (row['categoryNo'] as string) ?? '',
-            packName: row['packName'] as string,
-            packageMaterial: row['packageMaterial'] as string,
-            packCount: (row['packCount'] as number) ?? 0,
-            instrumentCount: (row['instrumentCount'] as number) ?? 0,
-            unitPrice: row['unitPrice'] as number | null,
-            totalPrice: row['totalPrice'] as number | null,
-            original: {},
-            expectedUnitPrice: row['expectedUnitPrice'] as number | null,
-            correctedTotalPrice: row['correctedTotalPrice'] as number | null,
-            difference: row['difference'] as number | null,
-            status: (row['status'] as string) ?? 'unchanged',
-            pricingRule: row['pricingRule'] as string,
-            notes: row['notes'] as string[]
-          }) as ProcessedRow
-      )
+      entry.processedRows = rows.map((row) => mapApiRowToProcessedRow(row))
       entry.displayTotal = result.total
       entry.displayPage = page
     } catch {
@@ -2206,7 +2567,7 @@
         packName: item.pack_name,
         type: item.type,
         packageMaterial: item.package_material,
-        categoryCode: item.suggested_category_code,
+        categoryCode: item.suggested_category_code
       })
       ElMessage.success(`已建档：${item.suggested_family || item.pack_name}`)
       if (unmatchedJobId.value) {
@@ -2249,31 +2610,7 @@
       // 用 requestAnimationFrame 延迟同步处理，避免阻塞 UI
       await new Promise<void>((resolve) => {
         requestAnimationFrame(() => {
-          const processed = allRows.map(
-            (row) =>
-              ({
-                sheetName: row['sheetName'] as string,
-                rowNumber: row['rowNumber'] as number,
-                deliveryDateRaw: null,
-                deliveryDate: row['deliveryDate'] as string,
-                orderNo: row['orderNo'] as string,
-                type: row['type'] as string,
-                categoryNo: (row['categoryNo'] as string) ?? '',
-                packName: row['packName'] as string,
-                packageMaterial: row['packageMaterial'] as string,
-                packCount: (row['packCount'] as number) ?? 0,
-                instrumentCount: (row['instrumentCount'] as number) ?? 0,
-                unitPrice: row['unitPrice'] as number | null,
-                totalPrice: row['totalPrice'] as number | null,
-                original: {} as Record<string, unknown>,
-                expectedUnitPrice: row['expectedUnitPrice'] as number | null,
-                correctedTotalPrice: row['correctedTotalPrice'] as number | null,
-                difference: row['difference'] as number | null,
-                status: (row['status'] as string) ?? 'unchanged',
-                pricingRule: row['pricingRule'] as string,
-                notes: row['notes'] as string[]
-              }) as ProcessedRow
-          )
+          const processed = allRows.map((row) => mapApiRowToProcessedRow(row))
           entry.allAnomalyRows = processed.filter((row) => row.status !== 'unchanged')
           entry.displayTotal = entry.allAnomalyRows.length
           entry.anomalyLoading = false
@@ -2361,16 +2698,79 @@
     detailRowsCache.value = new Map()
     detailRowsTotal.value = 0
     detailPage.value = 1
+    detailRowTab.value = 'regular'
+    detailExternalRows.value = []
+    detailRosterHints.value = []
+    detailAllocation.value = null
+    detailLogisticsAllocation.value = null
     try {
       const data = await getReconciliationDetail(item.id)
       detailData.value = data
-      // 服务端分页加载第一页行数据
       await loadDetailPage(1)
+      await loadDetailL3Context(item.id)
+      await loadDetailLogisticsAllocation(item.id)
     } catch (error) {
       ElMessage.error(error instanceof Error ? error.message : '加载详情失败')
       detailVisible.value = false
     } finally {
       detailLoading.value = false
+    }
+  }
+
+  async function loadDetailL3Context(jobId: number) {
+    try {
+      detailRosterHints.value = await getJobRosterHints(jobId)
+    } catch {
+      detailRosterHints.value = []
+    }
+    try {
+      detailExternalRows.value = await listJobExternalInstruments(jobId)
+    } catch {
+      detailExternalRows.value = []
+    }
+    try {
+      detailAllocation.value = await getJobAllocationResult(jobId)
+    } catch {
+      detailAllocation.value = null
+    }
+  }
+
+  async function loadDetailLogisticsAllocation(jobId: number) {
+    try {
+      detailLogisticsAllocation.value = await getLogisticsAllocationPreview(jobId)
+    } catch {
+      detailLogisticsAllocation.value = null
+    }
+  }
+
+  async function handleRunAllocation() {
+    if (!detailData.value) return
+    isRunningAllocation.value = true
+    try {
+      detailAllocation.value = await runJobAllocation(detailData.value.id)
+      ElMessage.success(detailAllocation.value.balanceMessage ?? '科室分配完成')
+    } catch (e) {
+      ElMessage.error(e instanceof Error ? e.message : '分配失败')
+    } finally {
+      isRunningAllocation.value = false
+    }
+  }
+
+  async function handleExportOrchestrated() {
+    if (!detailData.value) return
+    isExportingOrchestrated.value = true
+    try {
+      const blob = await exportOrchestratedWorkbook(detailData.value.id)
+      const url = URL.createObjectURL(blob)
+      const a = document.createElement('a')
+      a.href = url
+      a.download = `${detailData.value.hospitalName}_L3导出.xlsx`
+      a.click()
+      URL.revokeObjectURL(url)
+    } catch (e) {
+      ElMessage.error(e instanceof Error ? e.message : '导出失败')
+    } finally {
+      isExportingOrchestrated.value = false
     }
   }
 
@@ -2421,11 +2821,56 @@
     return diff !== null && diff !== undefined && diff !== 0
   }
 
-  /** 详情表格行样式 */
   function detailRowClassName({ row }: { row: Record<string, unknown> }): string {
+    const classes: string[] = []
+    if (row['isUrgent']) classes.push('detail-row-urgent')
     const diff = row['difference'] as number | null | undefined
-    if (diff === null || diff === undefined) return ''
-    return diff !== 0 ? 'detail-row-diff' : 'detail-row-ok'
+    if (diff === null || diff === undefined) return classes.join(' ')
+    classes.push(diff !== 0 ? 'detail-row-diff' : 'detail-row-ok')
+    return classes.join(' ')
+  }
+
+  function detailRowSelectable(row: Record<string, unknown>) {
+    return detailData.value?.reviewStatus === 'pending'
+  }
+
+  function onDetailSelectionChange(rows: Record<string, unknown>[]) {
+    detailSelectedRows.value = rows
+  }
+
+  async function handleMarkUrgent(isUrgent: boolean) {
+    if (!detailData.value || detailSelectedRows.value.length === 0) return
+    isMarkingUrgent.value = true
+    try {
+      const rowIds = detailSelectedRows.value
+        .map((row) => row['id'] as number | undefined)
+        .filter((id): id is number => id != null)
+      const rows = detailSelectedRows.value.map((row) => ({
+        sheetName: String(row['sheetName'] ?? ''),
+        rowNumber: Number(row['rowNumber'] ?? 0)
+      }))
+      const updated = await updateReconciliationRowsUrgent(detailData.value.id, {
+        isUrgent,
+        rowIds: rowIds.length > 0 ? rowIds : undefined,
+        rows: rowIds.length > 0 ? undefined : rows
+      })
+      detailData.value = { ...detailData.value, ...updated }
+      detailRowsCache.value = new Map()
+      detailPage.value = 1
+      detailSelectedRows.value = []
+      await loadDetailPage(1)
+      ElMessage.success(
+        isUrgent
+          ? t('reconciliation.detail.markUrgentSuccess')
+          : t('reconciliation.detail.unmarkUrgentSuccess')
+      )
+    } catch (error) {
+      ElMessage.error(
+        error instanceof Error ? error.message : t('reconciliation.detail.markUrgentFailed')
+      )
+    } finally {
+      isMarkingUrgent.value = false
+    }
   }
 
   /** 获取全部行数据（按需加载所有未缓存页，返回扁平数组） */
@@ -2532,7 +2977,9 @@
         `一键修正完成，共 ${result.summary.total} 行已重新计算（${changedCount} 行有差异），请确认后点击「保存修改」`
       )
     } catch (error) {
-      ElMessage.error(error instanceof Error ? error.message : t('reconciliation.detail.batchFixFailed'))
+      ElMessage.error(
+        error instanceof Error ? error.message : t('reconciliation.detail.batchFixFailed')
+      )
     } finally {
       isFixingDetailRows.value = false
     }
@@ -2548,7 +2995,8 @@
     isSavingDetailRows.value = true
     try {
       const updated = await updateHospitalReconciliationRows(detailData.value.id, allRows)
-      const versionUpgraded = updated.id !== previousJobId || updated.versionNo !== previousVersionNo
+      const versionUpgraded =
+        updated.id !== previousJobId || updated.versionNo !== previousVersionNo
 
       detailData.value = { ...detailData.value, ...updated }
       detailRowsCache.value = new Map()
@@ -2567,7 +3015,9 @@
         ElMessage.info(t('reconciliation.detail.saveNoChange'))
       }
     } catch (error) {
-      ElMessage.error(error instanceof Error ? error.message : t('reconciliation.detail.saveFailed'))
+      ElMessage.error(
+        error instanceof Error ? error.message : t('reconciliation.detail.saveFailed')
+      )
     } finally {
       isSavingDetailRows.value = false
     }
@@ -2605,68 +3055,16 @@
     }
   }
 
-  const handleHistoryExport = async (item: Api.Hospital.ReconciliationJob, type: string) => {
-    try {
-      if (type === 'bill') {
-        // 账单导出：后端直接从 DB 加载行数据，前端只传 jobId
-        const hospitalName = item.hospitalName
-        const blob = await downloadBlob('/api/hospital-reconciliations/export-template-bill', {
-          hospitalName,
-          templateId: item.id
-        })
-        const fileName = buildExportFileName('账单_', hospitalName)
-        triggerDownload(blob, fileName)
-        await logExportFromJob(item.id, 'bill', fileName)
-      } else if (type === 'settlement') {
-        // 结款函导出：需要前端规则引擎计算费用明细
-        const allRows = await fetchAllRowsForExport(item.id)
-        if (allRows.length === 0) {
-          ElMessage.warning('该版本没有可导出的数据')
-          return
-        }
-        if (!effectiveRules.value) {
-          ElMessage.warning('计费规则尚未加载，请稍后重试')
-          return
-        }
-        const hospitalName = item.hospitalName
-        const rows = allRows
-        const settlement = buildSettlementLetterData(
-          rows as ProcessedRow[],
-          effectiveRules.value,
-          hospitalName,
-          [],
-          item.sourceFileName,
-          item.logisticsTripCount,
-          item.logisticsFee,
-          item.logisticsBreakdown
-        )
-        const matchedTemplate = resolveSettlementTemplate(
-          effectiveRules.value!,
-          hospitalName,
-          [],
-          item.sourceFileName
-        )
-        const payload = { ...settlement, templateId: String(item.id) }
-        const blob = await downloadBlob(
-          '/api/hospital-reconciliations/export-template-settlement',
-          payload
-        )
-        const fileName = buildExportFileName('结款函_', hospitalName)
-        triggerDownload(blob, fileName)
-        await logExportFromJob(item.id, 'settlement', fileName)
-      } else if (type === 'departmentSummary') {
-        const hospitalName = item.hospitalName
-        const blob = await downloadBlob(
-          `/api/hospital-reconciliations/${item.id}/export-department-summary`,
-          {}
-        )
-        const fileName = buildExportFileName('分科室汇总_', hospitalName)
-        triggerDownload(blob, fileName)
-        await logExportFromJob(item.id, 'department_summary', fileName)
-      }
-    } catch (error) {
-      ElMessage.error(error instanceof Error ? error.message : '导出失败')
-    }
+  const openExportWizard = (item: Api.Hospital.ReconciliationJob, type: string) => {
+    exportWizardJob.value = item
+    exportWizardInitialType.value =
+      type === 'settlement' ? 'settlement' : type === 'departmentSummary' ? 'dept_summary' : 'bill'
+    exportWizardVisible.value = true
+  }
+
+  async function handleWizardExported(payload: { exportType: string; fileName: string }) {
+    if (!exportWizardJob.value) return
+    await logExportFromJob(exportWizardJob.value.id, payload.exportType, payload.fileName)
   }
 
   /** 导出/全量筛选前从分页接口加载全部行数据（限制并发，避免阻塞 UI） */
@@ -2717,7 +3115,9 @@
       isHistoryLoading.value = true
       historyItems.value = await listHospitalReconciliations(nextHospitalName)
     } catch (error) {
-      ElMessage.error(error instanceof Error ? error.message : t('reconciliation.history.loadFailed'))
+      ElMessage.error(
+        error instanceof Error ? error.message : t('reconciliation.history.loadFailed')
+      )
     } finally {
       isHistoryLoading.value = false
     }

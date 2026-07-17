@@ -5,6 +5,7 @@ import com.hospital.backend.dto.request.hospital.CreateExportLogRequest;
 import com.hospital.backend.dto.request.hospital.HospitalBillTemplateExportRequest;
 import com.hospital.backend.dto.request.hospital.HospitalSettlementTemplateExportRequest;
 import com.hospital.backend.dto.request.hospital.ReconciliationReviewRequest;
+import com.hospital.backend.dto.response.logistics.LogisticsAllocationPreviewResponse;
 import com.hospital.backend.dto.response.hospital.ReconciliationExportLogResponse;
 import com.hospital.backend.dto.response.hospital.ReconciliationJobResponse;
 import com.hospital.backend.dto.response.hospital.TemplateRefResponse;
@@ -34,6 +35,10 @@ public interface HospitalReconciliationService {
 
     Result<ReconciliationJobResponse> updateRows(Long jobId, List<Map<String, Object>> updatedRows);
 
+    Result<ReconciliationJobResponse> updateRowsUrgent(
+            Long jobId,
+            com.hospital.backend.dto.request.hospital.UpdateRowsUrgentRequest request);
+
     Result<Map<String, Object>> reprice(Long jobId);
 
     Result<ReconciliationExportLogResponse> createExportLog(Long jobId, CreateExportLogRequest request);
@@ -57,4 +62,10 @@ public interface HospitalReconciliationService {
     ResponseEntity<String> printTemplateBill(HospitalBillTemplateExportRequest request);
 
     ResponseEntity<String> printTemplateSettlement(HospitalSettlementTemplateExportRequest request);
+
+    Result<LogisticsAllocationPreviewResponse> getLogisticsAllocationPreview(Long jobId);
+
+    ResponseEntity<byte[]> exportLogisticsAllocation(Long jobId);
+
+    Result<Map<String, Object>> importExternalInstruments(Long jobId, MultipartFile file);
 }

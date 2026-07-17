@@ -1,0 +1,46 @@
+{
+  "version": "1",
+  "description": "Phase 7 Batch-D：市五院 + 二门诊 L3 全量配置",
+  "profiles": [
+    {
+      "code": "HRB-WY",
+      "name": "哈尔滨市第五医院",
+      "billingEnabled": true,
+      "billingPricingMode": "hybrid",
+      "aliases": ["市五院", "哈尔滨市第五医院"],
+      "notes": "allocationConfig: 默认费用调整关键词 电钻/肖/啸；BC-03 待业务扩展确认",
+      "policies": [
+        {
+          "policyType": "LOGISTICS",
+          "name": "物流50元按科室比例分摊",
+          "params": {"feePerTrip": 50, "allocateByDeptRatio": true},
+          "priority": 10
+        }
+      ]
+    },
+    {
+      "code": "HRB-WY-EM",
+      "name": "哈尔滨市第五医院（二门诊）",
+      "billingEnabled": true,
+      "billingPricingMode": "hybrid",
+      "aliases": ["市五院二门诊", "二门诊"],
+      "policies": []
+    }
+  ],
+  "customerGroups": [
+    {
+      "name": "市五院结款合并组",
+      "groupType": "settlement_merge",
+      "memberCodes": ["HRB-WY", "HRB-WY-EM"],
+      "config": {
+        "allocationConfig": {
+          "operatingRoomSheetPatterns": ["手术室"],
+          "adjustmentKeywords": ["电钻", "肖", "啸"],
+          "lowTempKeywords": ["低温等离子", "老肯低温", "EO", "ETO", "低温"],
+          "departmentPrefixRules": {"骨四": "骨四科", "补一": "补一科"}
+        },
+        "externalInstrumentCategoryPattern": "^[A-Z0-9]{4,12}$"
+      }
+    }
+  ]
+}

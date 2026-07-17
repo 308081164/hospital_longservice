@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hospital.backend.mapper.LogisticsCardMapper">
+
+    <resultMap id="LogisticsCardResultMap" type="com.hospital.backend.entity.LogisticsCard">
+        <id property="id" column="id"/>
+        <result property="customerId" column="customer_id"/>
+        <result property="name" column="name"/>
+        <result property="balance" column="balance"/>
+        <result property="initialBalance" column="initial_balance"/>
+        <result property="isActive" column="is_active"/>
+        <result property="createdAt" column="created_at"/>
+        <result property="updatedAt" column="updated_at"/>
+    </resultMap>
+
+    <insert id="insert" parameterType="com.hospital.backend.entity.LogisticsCard" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO logistics_card (customer_id, name, balance, initial_balance, is_active, created_at, updated_at)
+        VALUES (#{customerId}, #{name}, #{balance}, #{initialBalance}, #{isActive}, NOW(), NOW())
+    </insert>
+
+    <update id="updateById" parameterType="com.hospital.backend.entity.LogisticsCard">
+        UPDATE logistics_card
+        <set>
+            <if test="name != null">name = #{name},</if>
+            <if test="balance != null">balance = #{balance},</if>
+            <if test="initialBalance != null">initial_balance = #{initialBalance},</if>
+            <if test="isActive != null">is_active = #{isActive},</if>
+            updated_at = NOW(),
+        </set>
+        WHERE id = #{id}
+    </update>
+
+    <select id="selectById" resultMap="LogisticsCardResultMap">
+        SELECT * FROM logistics_card WHERE id = #{id}
+    </select>
+
+    <select id="selectAll" resultMap="LogisticsCardResultMap">
+        SELECT * FROM logistics_card
+        <where>
+            <if test="customerId != null">AND customer_id = #{customerId}</if>
+        </where>
+        ORDER BY customer_id ASC, id ASC
+    </select>
+
+    <select id="selectActiveByCustomerId" resultMap="LogisticsCardResultMap">
+        SELECT * FROM logistics_card
+        WHERE customer_id = #{customerId} AND is_active = 1
+        ORDER BY id ASC
+        LIMIT 1
+    </select>
+
+    <delete id="deleteById">
+        DELETE FROM logistics_card WHERE id = #{id}
+    </delete>
+
+</mapper>

@@ -5,12 +5,17 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.MethodSource;
 
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Stream;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -502,14 +507,97 @@ class PricingEngineTest {
                 "省二院", "额外包(纸塑袋)", "小腔包A", "高温纸塑袋75*200",
                 1, 1, 71, 71));
         assertThat(lower.status).isEqualTo("unchanged");
+        assertThat(lower.matchedRuleId).isEqualTo(100L);
         assertThat(lower.matchedPriceOption).isEqualTo(71.0);
         assertThat(lower.notes).anyMatch(n -> n.contains("多报价命中"));
+        assertThat(lower.billingNotes).isNotNull();
+        assertThat(lower.billingNotes.get("type")).isEqualTo("any_price_match");
+        assertThat(lower.billingNotes.get("matchedRuleId")).isEqualTo(100L);
+        assertThat(lower.billingNotes.get("matched_rule_id")).isEqualTo(100L);
+        assertThat(lower.billingNotes.get("matchedPrice")).isEqualTo(71.0);
+        assertThat(lower.billingNotes.get("candidatePrices")).isEqualTo(List.of(71.0, 76.5));
+        assertThat(lower.billingNotes.get("candidates")).isEqualTo(List.of(71.0, 76.5));
 
         PricingEngine.ProcessedResult upper = engine.processRow(row(
                 "省二院", "额外包(纸塑袋)", "小腔包B", "高温纸塑袋75*200",
                 1, 1, 76.5, 76.5));
         assertThat(upper.status).isEqualTo("unchanged");
         assertThat(upper.matchedPriceOption).isEqualTo(76.5);
+        assertThat(upper.billingNotes.get("type")).isEqualTo("any_price_match");
+        assertThat(upper.billingNotes.get("matchedPriceOption")).isEqualTo(76.5);
+    }
+
+    @Test
+    void anyPriceMismatchPopulatesCandidatePrices() {
+        ObjectNode rules = (ObjectNode) defaultRules();
+        ObjectNode specialRules = (ObjectNode) rules.path("specialRules");
+        ArrayNode fixedPrices = specialRules.withArray("fixedPrices");
+        ObjectNode cavityRule = fixedPrices.addObject();
+        cavityRule.put("ruleId", 101L);
+        cavityRule.put("name", "小腔包");
+        cavityRule.put("price", 71.0);
+        cavityRule.put("matchMode", "any_price");
+        cavityRule.put("skipPackaging", true);
+        cavityRule.putArray("hospitals").add("省二院");
+        cavityRule.putArray("keywords").add("小腔包");
+        cavityRule.putArray("acceptedPrices").add(71.0).add(76.5);
+
+        PricingEngine engine = new PricingEngine(rules);
+        PricingEngine.ProcessedResult mismatch = engine.processRow(row(
+                "省二院", "额外包(纸塑袋)", "小腔包C", "高温纸塑袋75*200",
+                1, 1, 80, 80));
+
+        assertThat(mismatch.status).isEqualTo("warning");
+        assertThat(mismatch.matchedRuleId).isEqualTo(101L);
+        assertThat(mismatch.matchedPriceOption).isNull();
+        assertThat(mismatch.notes).anyMatch(n -> n.contains("多报价未命中"));
+        assertThat(mismatch.billingNotes).isNotNull();
+        assertThat(mismatch.billingNotes.get("type")).isEqualTo("any_price_mismatch");
+        assertThat(mismatch.billingNotes.get("candidatePrices")).isEqualTo(List.of(71.0, 76.5));
+        assertThat(mismatch.billingNotes.get("billUnitPrice")).isEqualTo(80.0);
+        assertThat(mismatch.billingNotes.get("matchedPrice")).isNull();
+    }
+
+    @Test
+    void anyPriceMatchIncludesDiscountChainWhenDiscountApplied() {
+        ObjectNode rules = (ObjectNode) defaultRules();
+        ObjectNode specialRules = (ObjectNode) rules.path("specialRules");
+        specialRules.set("fixedPrices", MAPPER.createArrayNode());
+        ArrayNode fixedPrices = specialRules.withArray("fixedPrices");
+        ObjectNode cavityRule = fixedPrices.addObject();
+        cavityRule.put("ruleId", 102L);
+        cavityRule.put("name", "小腔包");
+        cavityRule.put("price", 100.0);
+        cavityRule.put("matchMode", "any_price");
+        cavityRule.put("skipPackaging", true);
+        cavityRule.putArray("hospitals").add("省二院");
+        cavityRule.putArray("keywords").add("小腔包");
+        cavityRule.putArray("acceptedPrices").add(100.0).add(110.0);
+
+        ArrayNode billingPolicies = rules.putArray("billingPolicies");
+        ObjectNode discountPolicy = billingPolicies.addObject();
+        discountPolicy.put("policyType", "DISCOUNT");
+        discountPolicy.put("name", "高温5折");
+        discountPolicy.put("priority", 10);
+        ObjectNode scope = discountPolicy.putObject("scope");
+        scope.put("temperature", "HT");
+        ObjectNode params = discountPolicy.putObject("params");
+        params.put("rate", 0.5);
+        params.put("skipWhenFixedPrice", false);
+
+        PricingEngine engine = new PricingEngine(rules);
+        PricingEngine.ProcessedResult result = engine.processRow(row(
+                "省二院", "额外包(纸塑袋)", "小腔包D", "高温纸塑袋75*200",
+                1, 1, 100, 100));
+
+        assertThat(result.status).isEqualTo("unchanged");
+        assertThat(result.billingNotes).isNotNull();
+        assertThat(result.billingNotes.get("type")).isEqualTo("any_price_match");
+        assertThat(result.billingNotes.get("discountChain")).isInstanceOf(List.class);
+        @SuppressWarnings("unchecked")
+        List<Map<String, Object>> chain = (List<Map<String, Object>>) result.billingNotes.get("discountChain");
+        assertThat(chain).isNotEmpty();
+        assertThat(chain.get(0).get("label")).asString().contains("5折");
     }
 
     @Test
@@ -588,7 +676,7 @@ class PricingEngineTest {
                 "高温纸塑袋20cm",
                 4, 1, 11, 11));
         assertThat(htResult.expectedUnitPrice).isEqualTo(11.0);
-        assertThat(htResult.notes).anyMatch(n -> n.contains("0.5"));
+        assertThat(htResult.notes).anyMatch(n -> n.contains("5折") || n.contains("0.5"));
 
         PricingEngine.ProcessedResult ltResult = engine.processRow(row(
                 "维多利亚医院",
@@ -597,7 +685,7 @@ class PricingEngineTest {
                 "低温纸塑袋200*600",
                 1, 1, 19.6, 19.6));
         assertThat(ltResult.expectedUnitPrice).isEqualTo(19.6);
-        assertThat(ltResult.notes).anyMatch(n -> n.contains("0.7"));
+        assertThat(ltResult.notes).anyMatch(n -> n.contains("7折") || n.contains("0.7"));
     }
 
     @Test
@@ -656,5 +744,134 @@ class PricingEngineTest {
 
         assertThat(result.pricingRule).contains("special_only");
         assertThat(result.notes).anyMatch(n -> n.contains("仅特色规则"));
+    }
+
+    @ParameterizedTest(name = "golden row: {0}")
+    @MethodSource("goldenRowCases")
+    void goldenRowsRegression(String caseId, JsonNode caseNode) {
+        JsonNode rules = buildRulesForGoldenCase(caseNode);
+        PricingEngine caseEngine = new PricingEngine(rules);
+        Map<String, Object> input = goldenRowInput(caseNode.path("input"));
+        PricingEngine.ProcessedResult result = caseEngine.processRow(input);
+
+        JsonNode expected = caseNode.path("expected");
+        if (expected.has("expectedUnitPrice")) {
+            assertThat(result.expectedUnitPrice).isEqualTo(expected.path("expectedUnitPrice").asDouble());
+        }
+        if (expected.has("correctedTotalPrice")) {
+            assertThat(result.correctedTotalPrice).isEqualTo(expected.path("correctedTotalPrice").asDouble());
+        }
+        if (expected.has("status")) {
+            assertThat(result.status).isEqualTo(expected.path("status").asText());
+        }
+        if (expected.has("matchedPriceOption") && !expected.path("matchedPriceOption").isNull()) {
+            assertThat(result.matchedPriceOption).isEqualTo(expected.path("matchedPriceOption").asDouble());
+        }
+        if (expected.has("matchedRuleId") && !expected.path("matchedRuleId").isNull()) {
+            assertThat(result.matchedRuleId).isEqualTo(expected.path("matchedRuleId").asLong());
+        }
+        assertGoldenBillingNotes(result.billingNotes, expected.path("billingNotes"));
+        assertGoldenNotes(result.notes, expected.path("notesContains"), true);
+        assertGoldenNotes(result.notes, expected.path("notesNotContains"), false);
+    }
+
+    static Stream<org.junit.jupiter.params.provider.Arguments> goldenRowCases() throws Exception {
+        InputStream stream = PricingEngineTest.class.getResourceAsStream("/hospital-billing-golden-rows.json");
+        assertThat(stream).as("hospital-billing-golden-rows.json").isNotNull();
+        JsonNode root = MAPPER.readTree(stream);
+        Iterator<JsonNode> cases = root.path("cases").elements();
+        List<org.junit.jupiter.params.provider.Arguments> args = new ArrayList<>();
+        while (cases.hasNext()) {
+            JsonNode caseNode = cases.next();
+            args.add(org.junit.jupiter.params.provider.Arguments.of(
+                    caseNode.path("id").asText("unnamed"), caseNode));
+        }
+        return args.stream();
+    }
+
+    private static JsonNode buildRulesForGoldenCase(JsonNode caseNode) {
+        ObjectNode rules = (ObjectNode) defaultRules().deepCopy();
+        JsonNode overlay = caseNode.path("rulesOverlay");
+        if (overlay.isMissingNode() || overlay.isEmpty()) {
+            return rules;
+        }
+        ObjectNode specialRules = (ObjectNode) rules.path("specialRules");
+        mergeGoldenArrayOverlay(specialRules, "fixedPrices", overlay.path("fixedPrices"));
+        mergeGoldenArrayOverlay(specialRules, "foldRules", overlay.path("foldRules"));
+        mergeGoldenArrayOverlay(specialRules, "extraFees", overlay.path("extraFees"));
+        mergeGoldenArrayOverlay(specialRules, "priceMultipliers", overlay.path("priceMultipliers"));
+        if (overlay.has("billingPolicies")) {
+            rules.set("billingPolicies", overlay.path("billingPolicies").deepCopy());
+        }
+        if (overlay.has("billingProfile")) {
+            rules.set("billingProfile", overlay.path("billingProfile").deepCopy());
+        }
+        return rules;
+    }
+
+    private static void mergeGoldenArrayOverlay(ObjectNode specialRules, String field, JsonNode additions) {
+        if (!additions.isArray() || additions.isEmpty()) {
+            return;
+        }
+        ArrayNode target = specialRules.withArray(field);
+        additions.forEach(target::add);
+    }
+
+    private static Map<String, Object> goldenRowInput(JsonNode input) {
+        Map<String, Object> row = new HashMap<>();
+        input.fields().forEachRemaining(entry -> {
+            JsonNode value = entry.getValue();
+            if (value.isInt()) {
+                row.put(entry.getKey(), value.asInt());
+            } else if (value.isFloatingPointNumber()) {
+                row.put(entry.getKey(), value.asDouble());
+            } else {
+                row.put(entry.getKey(), value.asText());
+            }
+        });
+        return row;
+    }
+
+    private static void assertGoldenBillingNotes(Map<String, Object> billingNotes, JsonNode expected) {
+        if (expected.isMissingNode() || expected.isEmpty()) {
+            return;
+        }
+        assertThat(billingNotes).isNotNull();
+        if (expected.has("type")) {
+            assertThat(billingNotes.get("type")).isEqualTo(expected.path("type").asText());
+        }
+        if (expected.has("matchedRuleId") && !expected.path("matchedRuleId").isNull()) {
+            assertThat(billingNotes.get("matchedRuleId")).isEqualTo(expected.path("matchedRuleId").asLong());
+        }
+        if (expected.has("matchedPrice") && !expected.path("matchedPrice").isNull()) {
+            assertThat(billingNotes.get("matchedPrice")).isEqualTo(expected.path("matchedPrice").asDouble());
+        }
+        if (expected.has("candidatePrices")) {
+            assertThat(billingNotes.get("candidatePrices")).isEqualTo(
+                    parseGoldenPriceList(expected.path("candidatePrices")));
+        }
+    }
+
+    private static List<Double> parseGoldenPriceList(JsonNode array) {
+        List<Double> prices = new ArrayList<>();
+        if (!array.isArray()) {
+            return prices;
+        }
+        array.forEach(node -> prices.add(node.asDouble()));
+        return prices;
+    }
+
+    private static void assertGoldenNotes(List<String> notes, JsonNode fragments, boolean shouldContain) {
+        if (!fragments.isArray() || fragments.isEmpty()) {
+            return;
+        }
+        for (JsonNode fragment : fragments) {
+            String text = fragment.asText();
+            if (shouldContain) {
+                assertThat(notes).anyMatch(note -> note.contains(text));
+            } else {
+                assertThat(notes).noneMatch(note -> note.contains(text));
+            }
+        }
     }
 }

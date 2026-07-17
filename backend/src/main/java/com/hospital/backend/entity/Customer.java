@@ -27,5 +27,8 @@ public class Customer extends BaseEntity {
     /** JSON: { "disableLowTemp": true, "forceHighTempUnitPrice": 3 } */
     private String pathOverride;
 
+    /** JSON: { "原包名": "导出包名" } — FR-M1-09 */
+    private String exportNameMapping;
+
     private String notes;
 }

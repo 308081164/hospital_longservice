@@ -33,8 +33,11 @@
         <result property="logisticsBreakdown" column="logistics_breakdown"/>
         <result property="settlementAdjustment" column="settlement_adjustment"/>
         <result property="monthlyBreakdown" column="monthly_breakdown"/>
+        <result property="urgentBreakdown" column="urgent_breakdown"/>
+        <result property="deductionBreakdown" column="deduction_breakdown"/>
         <result property="originalTotalPrice" column="original_total_price"/>
         <result property="correctedTotalPrice" column="corrected_total_price"/>
+        <result property="allocationResult" column="allocation_result"/>
         <result property="createdAt" column="created_at"/>
         <result property="updatedAt" column="updated_at"/>
     </resultMap>
@@ -71,8 +74,11 @@
         <result property="logisticsBreakdown" column="logistics_breakdown"/>
         <result property="settlementAdjustment" column="settlement_adjustment"/>
         <result property="monthlyBreakdown" column="monthly_breakdown"/>
+        <result property="urgentBreakdown" column="urgent_breakdown"/>
+        <result property="deductionBreakdown" column="deduction_breakdown"/>
         <result property="originalTotalPrice" column="original_total_price"/>
         <result property="correctedTotalPrice" column="corrected_total_price"/>
+        <result property="allocationResult" column="allocation_result"/>
         <result property="createdAt" column="created_at"/>
         <result property="updatedAt" column="updated_at"/>
     </resultMap>
@@ -109,6 +115,8 @@
             <if test="logisticsBreakdown != null">logistics_breakdown,</if>
             <if test="settlementAdjustment != null">settlement_adjustment,</if>
             <if test="monthlyBreakdown != null">monthly_breakdown,</if>
+            <if test="urgentBreakdown != null">urgent_breakdown,</if>
+            <if test="deductionBreakdown != null">deduction_breakdown,</if>
             <if test="originalTotalPrice != null">original_total_price,</if>
             <if test="correctedTotalPrice != null">corrected_total_price,</if>
             created_at,
@@ -145,6 +153,8 @@
             <if test="logisticsBreakdown != null">#{logisticsBreakdown},</if>
             <if test="settlementAdjustment != null">#{settlementAdjustment},</if>
             <if test="monthlyBreakdown != null">#{monthlyBreakdown},</if>
+            <if test="urgentBreakdown != null">#{urgentBreakdown},</if>
+            <if test="deductionBreakdown != null">#{deductionBreakdown},</if>
             <if test="originalTotalPrice != null">#{originalTotalPrice},</if>
             <if test="correctedTotalPrice != null">#{correctedTotalPrice},</if>
             NOW(),
@@ -167,7 +177,7 @@
                total_difference, review_status, review_comment, operator_name, reviewer_name,
                source_date_range, sheet_names, sheet_row_counts, sheet_warning_counts,
                logistics_trip_count, logistics_fee, logistics_breakdown,
-               settlement_adjustment, monthly_breakdown,
+               settlement_adjustment, monthly_breakdown, urgent_breakdown, deduction_breakdown,
                original_total_price, corrected_total_price,
                created_at, updated_at
         FROM hospital_reconciliation_job
@@ -182,7 +192,7 @@
                total_difference, review_status, review_comment, operator_name, reviewer_name,
                source_date_range, sheet_names, sheet_row_counts, sheet_warning_counts,
                logistics_trip_count, logistics_fee, logistics_breakdown,
-               settlement_adjustment, monthly_breakdown,
+               settlement_adjustment, monthly_breakdown, urgent_breakdown, deduction_breakdown,
                original_total_price, corrected_total_price,
                created_at, updated_at
         FROM hospital_reconciliation_job
@@ -215,6 +225,13 @@
             <if test="rowsJson != null">rows_json = #{rowsJson},</if>
             updated_at = NOW(),
         </set>
+        WHERE id = #{id}
+    </update>
+
+    <update id="updateAllocationResult">
+        UPDATE hospital_reconciliation_job
+        SET allocation_result = #{allocationResult},
+            updated_at = NOW()
         WHERE id = #{id}
     </update>
 

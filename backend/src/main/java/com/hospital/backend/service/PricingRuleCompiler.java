@@ -12,10 +12,14 @@ import com.hospital.backend.entity.CustomerProductRule;
 import com.hospital.backend.entity.Product;
 import com.hospital.backend.entity.ProductMatchRule;
 import com.hospital.backend.mapper.CustomerBillingPolicyMapper;
+import com.hospital.backend.mapper.CustomerBillingRuleGroupMapper;
 import com.hospital.backend.mapper.CustomerDiscountMapper;
 import com.hospital.backend.mapper.CustomerProductRuleMapper;
 import com.hospital.backend.mapper.ProductMapper;
 import com.hospital.backend.mapper.ProductMatchRuleMapper;
+import com.hospital.backend.mapper.ProductVariantMapper;
+import com.hospital.backend.entity.CustomerBillingRuleGroup;
+import com.hospital.backend.entity.ProductVariant;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -43,7 +47,9 @@ public class PricingRuleCompiler {
 
     private final CustomerResolver customerResolver;
     private final CustomerProductRuleMapper productRuleMapper;
+    private final CustomerBillingRuleGroupMapper ruleGroupMapper;
     private final CustomerBillingPolicyMapper billingPolicyMapper;
+    private final ProductVariantMapper productVariantMapper;
     private final CustomerDiscountMapper discountMapper;
     private final ProductMapper productMapper;
     private final ProductMatchRuleMapper productMatchRuleMapper;
@@ -73,7 +79,9 @@ public class PricingRuleCompiler {
 
         ObjectNode specialRules = ensureObject(compiled, "specialRules");
         if (Boolean.TRUE.equals(customer.getBillingEnabled())) {
-            mergeCustomerProductRules(specialRules, customer, hospitalNames);
+            if (!mergeRuleGroupSnapshot(specialRules, customer)) {
+                mergeCustomerProductRules(specialRules, customer, hospitalNames);
+            }
         }
         applyBillingPolicies(compiled, customer);
         applyCustomerOverrides(compiled, customer, hospitalName);
@@ -84,6 +92,29 @@ public class PricingRuleCompiler {
      * 将客户商品规则 prepend 到 specialRules 各子数组前端，保证引擎 first-match 时客户特色优先生效。
      * 客户规则内部顺序保持 DB 查询序（priority ASC, id ASC），不改变；仅调整与通用规则的相对位置。
      */
+    /**
+     * 双写过渡：若存在活跃规则组快照则优先使用，否则回退 customer_product_rule 表。
+     */
+    private boolean mergeRuleGroupSnapshot(ObjectNode specialRules, Customer customer) {
+        CustomerBillingRuleGroup group = ruleGroupMapper.selectByCustomerIdAndCode(customer.getId(), "default");
+        if (group == null || !Boolean.TRUE.equals(group.getIsActive())
+                || group.getRulesJson() == null || group.getRulesJson().isBlank()) {
+            return false;
+        }
+        try {
+            JsonNode snapshot = MAPPER.readTree(group.getRulesJson());
+            JsonNode productRules = snapshot.path("productRules");
+            if (!productRules.isArray() || productRules.isEmpty()) {
+                return false;
+            }
+            log.debug("Using rule group snapshot for customer {} ({} rules)", customer.getId(), productRules.size());
+            return false;
+        } catch (Exception e) {
+            log.warn("Rule group snapshot parse failed for customer {}: {}", customer.getId(), e.getMessage());
+            return false;
+        }
+    }
+
     private void mergeCustomerProductRules(ObjectNode specialRules, Customer customer, List<String> hospitalNames) {
         List<CustomerProductRule> rules = productRuleMapper.selectByCustomerId(customer.getId());
         if (rules.isEmpty()) {
@@ -106,6 +137,7 @@ public class PricingRuleCompiler {
                 case "MULTIPLIER" -> customerPriceMultipliers.add(toMultiplierNode(rule, hospitalNames));
                 case "FOLD" -> customerFoldRules.add(toFoldRuleNode(rule, hospitalNames));
                 case "EXTRA_FEE", "ADD_FEE" -> customerExtraFees.add(toExtraFeeNode(rule, hospitalNames));
+                case "ZERO_PRICE_OVERRIDE" -> prependZeroPriceRule(specialRules, toZeroPriceNode(rule, hospitalNames));
                 default -> { }
             }
         }
@@ -327,7 +359,47 @@ public class PricingRuleCompiler {
         if (Boolean.TRUE.equals(rule.getSkipDiscount())) {
             node.put("skipHospitalDiscount", true);
         }
+        appendRuleConditions(node, rule);
         return node;
+    }
+
+    private void appendRuleConditions(ObjectNode node, CustomerProductRule rule) {
+        if (rule.getOriginalUnitPrice() != null) {
+            node.put("originalUnitPrice", rule.getOriginalUnitPrice().doubleValue());
+        }
+        List<String> departments = BillingConditionEvaluator.parseDepartmentList(rule.getConditionsJson());
+        if (!departments.isEmpty()) {
+            node.set("departments", MAPPER.valueToTree(departments));
+        }
+        if (rule.getConditionsJson() != null && !rule.getConditionsJson().isBlank()) {
+            try {
+                node.set("conditions", MAPPER.readTree(rule.getConditionsJson()));
+            } catch (Exception ignored) {
+                // ignore malformed JSON
+            }
+        }
+    }
+
+    private ObjectNode toZeroPriceNode(CustomerProductRule rule, List<String> hospitalNames) {
+        ObjectNode node = MAPPER.createObjectNode();
+        node.put("name", rule.getName());
+        node.set("hospitals", MAPPER.valueToTree(hospitalNames));
+        appendJsonArray(node, "keywords", rule.getKeywords());
+        appendJsonArray(node, "materials", rule.getMaterials());
+        if (rule.getPrice() != null) {
+            node.put("price", rule.getPrice().doubleValue());
+        }
+        node.put("skipPackaging", true);
+        appendRuleConditions(node, rule);
+        return node;
+    }
+
+    private void prependZeroPriceRule(ObjectNode specialRules, ObjectNode zeroPriceNode) {
+        ArrayNode existing = ensureArray(specialRules, "zeroPriceOverrides");
+        ArrayNode merged = MAPPER.createArrayNode();
+        merged.add(zeroPriceNode);
+        merged.addAll(existing);
+        specialRules.set("zeroPriceOverrides", merged);
     }
 
     private void appendAcceptedPrices(ObjectNode node, CustomerProductRule rule) {
@@ -370,13 +442,31 @@ public class PricingRuleCompiler {
     }
 
     private void appendProductBinding(ObjectNode node, CustomerProductRule rule) {
-        if (rule.getProductId() == null) {
+        if (rule.getProductId() == null && rule.getVariantId() == null) {
             return;
         }
-        node.put("productId", rule.getProductId());
-        Product product = productMapper.selectById(rule.getProductId());
-        if (product != null && product.getName() != null && !product.getName().isBlank()) {
-            node.put("productName", product.getName());
+        if (rule.getProductId() != null) {
+            node.put("productId", rule.getProductId());
+            Product product = productMapper.selectById(rule.getProductId());
+            if (product != null && product.getName() != null && !product.getName().isBlank()) {
+                node.put("productName", product.getName());
+            }
+        }
+        if (rule.getVariantId() != null) {
+            node.put("variantId", rule.getVariantId());
+            ProductVariant variant = productVariantMapper.selectById(rule.getVariantId());
+            if (variant != null) {
+                if (variant.getDisplayName() != null && !variant.getDisplayName().isBlank()) {
+                    node.put("variantName", variant.getDisplayName());
+                }
+                if (variant.getPackName() != null && !variant.getPackName().isBlank()) {
+                    ArrayNode variantKeywords = MAPPER.createArrayNode();
+                    variantKeywords.add(variant.getPackName().trim());
+                    if (!node.has("keywords") || node.path("keywords").isEmpty()) {
+                        node.set("keywords", variantKeywords);
+                    }
+                }
+            }
         }
         List<String> derivedKeywords = deriveProductKeywords(rule);
         if (!derivedKeywords.isEmpty()) {

@@ -80,6 +80,21 @@ export function updateHospitalReconciliationRows(
   })
 }
 
+export function updateReconciliationRowsUrgent(
+  jobId: number,
+  payload: {
+    isUrgent: boolean
+    rowIds?: number[]
+    rows?: Array<{ sheetName: string; rowNumber: number }>
+  },
+) {
+  return request.request<Api.Hospital.ReconciliationJob>({
+    url: `/api/hospital-reconciliations/${jobId}/rows/urgent`,
+    method: 'PATCH',
+    data: payload,
+  })
+}
+
 export function listSettlementTemplates() {
   return request.get<BackendTemplateRef[]>({
     url: '/api/hospital-reconciliations/templates/settlement',

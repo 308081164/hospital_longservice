@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hospital.backend.mapper.ExternalInstrumentMapper">
+
+    <resultMap id="ExternalInstrumentResultMap" type="com.hospital.backend.entity.ExternalInstrument">
+        <id property="id" column="id"/>
+        <result property="customerId" column="customer_id"/>
+        <result property="reconciliationJobId" column="reconciliation_job_id"/>
+        <result property="categoryNo" column="category_no"/>
+        <result property="packName" column="pack_name"/>
+        <result property="department" column="department"/>
+        <result property="packageMaterial" column="package_material"/>
+        <result property="patientName" column="patient_name"/>
+        <result property="usageDate" column="usage_date"/>
+        <result property="packCount" column="pack_count"/>
+        <result property="instrumentCount" column="instrument_count"/>
+        <result property="unitPrice" column="unit_price"/>
+        <result property="totalAmount" column="total_amount"/>
+        <result property="notes" column="notes"/>
+        <result property="isActive" column="is_active"/>
+        <result property="createdAt" column="created_at"/>
+        <result property="updatedAt" column="updated_at"/>
+    </resultMap>
+
+    <insert id="insert" parameterType="com.hospital.backend.entity.ExternalInstrument" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO external_instrument (
+            customer_id, reconciliation_job_id, category_no, pack_name, department,
+            package_material, patient_name, usage_date, pack_count, instrument_count,
+            unit_price, total_amount, notes, is_active, created_at, updated_at
+        ) VALUES (
+            #{customerId}, #{reconciliationJobId}, #{categoryNo}, #{packName}, #{department},
+            #{packageMaterial}, #{patientName}, #{usageDate}, #{packCount}, #{instrumentCount},
+            #{unitPrice}, #{totalAmount}, #{notes}, #{isActive}, NOW(), NOW()
+        )
+    </insert>
+
+    <update id="updateById" parameterType="com.hospital.backend.entity.ExternalInstrument">
+        UPDATE external_instrument
+        SET category_no = #{categoryNo},
+            pack_name = #{packName},
+            department = #{department},
+            package_material = #{packageMaterial},
+            patient_name = #{patientName},
+            usage_date = #{usageDate},
+            pack_count = #{packCount},
+            instrument_count = #{instrumentCount},
+            unit_price = #{unitPrice},
+            total_amount = #{totalAmount},
+            notes = #{notes},
+            is_active = #{isActive},
+            updated_at = NOW()
+        WHERE id = #{id}
+    </update>
+
+    <delete id="deleteById">
+        DELETE FROM external_instrument WHERE id = #{id}
+    </delete>
+
+    <select id="selectById" resultMap="ExternalInstrumentResultMap">
+        SELECT * FROM external_instrument WHERE id = #{id}
+    </select>
+
+    <select id="selectCatalogByCustomerId" resultMap="ExternalInstrumentResultMap">
+        SELECT * FROM external_instrument
+        WHERE customer_id = #{customerId}
+          AND reconciliation_job_id IS NULL
+          AND is_active = 1
+        ORDER BY category_no ASC, pack_name ASC
+    </select>
+
+    <select id="selectByJobId" resultMap="ExternalInstrumentResultMap">
+        SELECT * FROM external_instrument
+        WHERE reconciliation_job_id = #{jobId}
+        ORDER BY department ASC, usage_date ASC, category_no ASC
+    </select>
+
+    <select id="selectByCustomerAndCategoryNo" resultMap="ExternalInstrumentResultMap">
+        SELECT * FROM external_instrument
+        WHERE customer_id = #{customerId}
+          AND category_no = #{categoryNo}
+          AND reconciliation_job_id IS NULL
+          AND is_active = 1
+        ORDER BY id DESC
+        LIMIT 1
+    </select>
+
+</mapper>

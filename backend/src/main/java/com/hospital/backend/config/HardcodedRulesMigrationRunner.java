@@ -23,6 +23,7 @@ import java.util.List;
 public class HardcodedRulesMigrationRunner implements CommandLineRunner {
 
     private static final String MIGRATION_MARKER = "hardcoded_rules_migrated_v1";
+    private static final String ERYY_PHASE1_MARKER = "ereryy_phase1_seeded_v1";
 
     private final SysSettingMapper sysSettingMapper;
     private final HospitalPricingRuleMapper pricingRuleMapper;
@@ -30,6 +31,7 @@ public class HardcodedRulesMigrationRunner implements CommandLineRunner {
     private final CustomerAliasMapper customerAliasMapper;
     private final CustomerDiscountMapper customerDiscountMapper;
     private final CustomerProductRuleMapper customerProductRuleMapper;
+    private final CustomerBillingPolicyMapper billingPolicyMapper;
 
     @Override
     public void run(String... args) {
@@ -37,6 +39,7 @@ public class HardcodedRulesMigrationRunner implements CommandLineRunner {
         seedDefaultPricingRuleTemplate();
         seedMissingCustomers();
         seedEngineProductRules();
+        seedEreryyPhase1Profile();
         markMigrationComplete();
     }
 
@@ -243,6 +246,91 @@ public class HardcodedRulesMigrationRunner implements CommandLineRunner {
         rule.setIsActive(true);
         customerProductRuleMapper.insert(rule);
         log.info("Migrated extra fee: {} → {}", customerCode, name);
+    }
+
+    private void seedEreryyPhase1Profile() {
+        if (sysSettingMapper.countByKey(ERYY_PHASE1_MARKER) > 0) {
+            return;
+        }
+        ensureEreryyCampusProfile("ERYY-NG", "省二南岗");
+        ensureEreryyCampusProfile("ERYY-SB", "省二松北");
+        SysSetting marker = new SysSetting();
+        marker.setSettingKey(ERYY_PHASE1_MARKER);
+        marker.setSettingValue("true");
+        marker.setDescription("省二院 Phase1 计费档案与多报价规则种子");
+        sysSettingMapper.insert(marker);
+        log.info("Seeded ERYY Phase1 billing profile (南岗/松北)");
+    }
+
+    private void ensureEreryyCampusProfile(String customerCode, String campusLabel) {
+        Customer customer = customerMapper.selectByCode(customerCode);
+        if (customer == null) {
+            log.warn("Customer {} not found, skip ERYY Phase1 seed", customerCode);
+            return;
+        }
+        if (!Boolean.TRUE.equals(customer.getBillingEnabled())
+                || !"hybrid".equalsIgnoreCase(customer.getBillingPricingMode())) {
+            customer.setBillingEnabled(true);
+            customer.setBillingPricingMode("hybrid");
+            customerMapper.updateById(customer);
+            log.info("Enabled hybrid billing for {}", customerCode);
+        }
+        ensureLogisticsPolicy(customer.getId(), campusLabel + "物流", "80.5");
+        if ("ERYY-NG".equals(customerCode)) {
+            ensureAnyPriceRule(customer.getId(), "南岗小腔包多报价", 5,
+                    List.of("小腔包"), List.of(), bd("49.7"), "[49.7,53.55]");
+            ensureAnyPriceRule(customer.getId(), "南岗钉多报价", 6,
+                    List.of("钉"), List.of("空心钉"), bd("140"), "[140,35]");
+            ensureAnyPriceRule(customer.getId(), "南岗3.6空心钉工具包多报价", 7,
+                    List.of("3.6空心钉工具包"), List.of(), bd("205.45"), "[205.45,190.05]");
+        } else {
+            ensureAnyPriceRule(customer.getId(), "松北小腔包多报价", 5,
+                    List.of("小腔包"), List.of(), bd("53.55"), "[53.55,49.7]");
+            ensureAnyPriceRule(customer.getId(), "松北钉多报价", 6,
+                    List.of("钉"), List.of("空心钉"), bd("35"), "[35,140]");
+            ensureAnyPriceRule(customer.getId(), "松北3.6空心钉工具包多报价", 7,
+                    List.of("3.6空心钉工具包"), List.of(), bd("190.05"), "[190.05,205.45]");
+        }
+    }
+
+    private void ensureLogisticsPolicy(Long customerId, String name, String feePerTrip) {
+        List<CustomerBillingPolicy> existing = billingPolicyMapper.selectByCustomerIdAndType(customerId, "LOGISTICS");
+        if (existing != null && !existing.isEmpty()) {
+            return;
+        }
+        CustomerBillingPolicy policy = new CustomerBillingPolicy();
+        policy.setCustomerId(customerId);
+        policy.setPolicyType("LOGISTICS");
+        policy.setName(name);
+        policy.setParams("{\"feePerTrip\":" + feePerTrip + "}");
+        policy.setPriority(10);
+        policy.setIsActive(true);
+        billingPolicyMapper.insert(policy);
+        log.info("Seeded logistics policy {} for customer {}", name, customerId);
+    }
+
+    private void ensureAnyPriceRule(Long customerId, String name, int priority,
+                                    List<String> keywords, List<String> excludeKeywords,
+                                    BigDecimal primaryPrice, String acceptedPricesJson) {
+        if (customerProductRuleMapper.countByCustomerIdAndName(customerId, name) > 0) {
+            return;
+        }
+        CustomerProductRule rule = new CustomerProductRule();
+        rule.setCustomerId(customerId);
+        rule.setRuleType("FIXED_PRICE");
+        rule.setMatchMode("any_price");
+        rule.setName(name);
+        rule.setPriority(priority);
+        rule.setPrice(primaryPrice);
+        rule.setAcceptedPrices(acceptedPricesJson);
+        rule.setKeywords(keywords != null && !keywords.isEmpty() ? JsonUtils.toJson(keywords) : null);
+        rule.setExcludeKeywords(excludeKeywords != null && !excludeKeywords.isEmpty()
+                ? JsonUtils.toJson(excludeKeywords) : null);
+        rule.setSkipPackaging(true);
+        rule.setSkipDiscount(true);
+        rule.setIsActive(true);
+        customerProductRuleMapper.insert(rule);
+        log.info("Seeded any_price rule {} for customer {}", name, customerId);
     }
 
     private void ensureCustomer(String code, String name, Long defaultRuleId, String capMode,

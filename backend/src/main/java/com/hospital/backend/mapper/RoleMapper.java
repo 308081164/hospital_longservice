@@ -21,6 +21,8 @@ public interface RoleMapper {
 
     List<Role> selectAllByIds(@Param("ids") List<Long> ids);
 
+    List<Role> selectByUserId(@Param("userId") Long userId);
+
     void insertRoleMenu(@Param("roleId") Long roleId, @Param("menuId") Long menuId);
 
     boolean existsRoleMenu(@Param("roleId") Long roleId, @Param("menuId") Long menuId);

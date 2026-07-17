@@ -21,6 +21,7 @@ public class SchemaMigrationRunner implements CommandLineRunner {
         migratePricingRuleRevisionTable();
         migrateReconciliationJobTable();
         migrateReconciliationRowTable();
+        migrateReconciliationJobUrgentColumns();
         migrateExportLogTable();
         migrateProductMasterTables();
         migrateProductVariantTable();
@@ -31,8 +32,200 @@ public class SchemaMigrationRunner implements CommandLineRunner {
         migrateBillingProfileColumns();
         migrateCustomerBillingPolicyTable();
         migrateCustomerProductRuleTemperatureColumn();
+        migrateExportTemplateTable();
+        migrateRuleGroupTables();
+        migratePhase7L3Tables();
+        migrateLogisticsTables();
+        migrateDeptPhysicianTables();
         migrateSysSettingTable();
         seedInstrumentPackCategory();
+    }
+
+    private void migratePhase7L3Tables() {
+        createTableIfMissing("roster_entry", """
+                CREATE TABLE roster_entry (
+                    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+                    customer_id BIGINT NOT NULL,
+                    doctor_name VARCHAR(120) NOT NULL COMMENT '医生姓名',
+                    department VARCHAR(120) NOT NULL COMMENT '归属科室',
+                    surgical_room VARCHAR(120) NULL COMMENT '手术室标识',
+                    notes VARCHAR(500) NULL,
+                    is_active TINYINT(1) NOT NULL DEFAULT 1,
+                    created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+                    updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+                    UNIQUE KEY uk_roster_customer_doctor (customer_id, doctor_name),
+                    INDEX idx_roster_customer_dept (customer_id, department, is_active)
+                ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4
+                """);
+        createTableIfMissing("external_instrument", """
+                CREATE TABLE external_instrument (
+                    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+                    customer_id BIGINT NOT NULL,
+                    reconciliation_job_id BIGINT NULL COMMENT 'NULL=目录价，非空=账期明细',
+                    category_no VARCHAR(120) NOT NULL COMMENT '包类别号',
+                    pack_name VARCHAR(300) NOT NULL,
+                    department VARCHAR(120) NULL,
+                    package_material VARCHAR(120) NULL,
+                    patient_name VARCHAR(120) NULL,
+                    usage_date DATE NULL,
+                    pack_count INT NOT NULL DEFAULT 1,
+                    instrument_count INT NOT NULL DEFAULT 0,
+                    unit_price DECIMAL(12,2) NOT NULL,
+                    total_amount DECIMAL(12,2) NULL,
+                    notes TEXT NULL,
+                    is_active TINYINT(1) NOT NULL DEFAULT 1,
+                    created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+                    updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+                    INDEX idx_ext_inst_customer (customer_id, is_active),
+                    INDEX idx_ext_inst_job (reconciliation_job_id),
+                    INDEX idx_ext_inst_category (customer_id, category_no)
+                ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4
+                """);
+        addColumnIfMissing("hospital_reconciliation_job", "allocation_result",
+                "allocation_result JSON NULL COMMENT '科室借调/费用调整分配结果'");
+    }
+
+    private void migrateLogisticsTables() {
+        createTableIfMissing("logistics_import", """
+                CREATE TABLE logistics_import (
+                    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+                    customer_id BIGINT NOT NULL,
+                    job_id BIGINT NULL,
+                    billing_month VARCHAR(7) NULL,
+                    trip_date DATE NOT NULL,
+                    route VARCHAR(200) NULL,
+                    trip_count INT NOT NULL DEFAULT 1,
+                    fee_amount DECIMAL(12,2) NULL,
+                    notes VARCHAR(500) NULL,
+                    created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+                    updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+                    INDEX idx_li_customer_month (customer_id, billing_month),
+                    INDEX idx_li_job (job_id),
+                    INDEX idx_li_trip_date (trip_date)
+                ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4
+                """);
+        createTableIfMissing("logistics_card", """
+                CREATE TABLE logistics_card (
+                    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+                    customer_id BIGINT NOT NULL,
+                    name VARCHAR(120) NOT NULL DEFAULT '默认物流卡',
+                    balance DECIMAL(12,2) NOT NULL DEFAULT 0,
+                    initial_balance DECIMAL(12,2) NOT NULL DEFAULT 0,
+                    is_active TINYINT(1) NOT NULL DEFAULT 1,
+                    created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+                    updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+                    INDEX idx_lc_customer (customer_id, is_active)
+                ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4
+                """);
+        createTableIfMissing("logistics_card_transaction", """
+                CREATE TABLE logistics_card_transaction (
+                    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+                    card_id BIGINT NOT NULL,
+                    transaction_type VARCHAR(20) NOT NULL,
+                    amount DECIMAL(12,2) NOT NULL,
+                    balance_after DECIMAL(12,2) NOT NULL,
+                    job_id BIGINT NULL,
+                    remark VARCHAR(500) NULL,
+                    created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+                    INDEX idx_lct_card (card_id),
+                    INDEX idx_lct_job (job_id)
+                ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4
+                """);
+        createTableIfMissing("customer_group", """
+                CREATE TABLE customer_group (
+                    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+                    name VARCHAR(120) NOT NULL,
+                    group_type VARCHAR(40) NOT NULL DEFAULT 'settlement_merge',
+                    config JSON NULL,
+                    is_active TINYINT(1) NOT NULL DEFAULT 1,
+                    created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+                    updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+                    INDEX idx_cg_type (group_type, is_active)
+                ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4
+                """);
+        createTableIfMissing("customer_group_member", """
+                CREATE TABLE customer_group_member (
+                    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+                    group_id BIGINT NOT NULL,
+                    customer_id BIGINT NOT NULL,
+                    share_ratio DECIMAL(8,4) NULL,
+                    created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+                    UNIQUE INDEX idx_cgm_group_customer (group_id, customer_id),
+                    INDEX idx_cgm_customer (customer_id)
+                ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4
+                """);
+    }
+
+    private void migrateDeptPhysicianTables() {
+        createTableIfMissing("department_entry", """
+                CREATE TABLE department_entry (
+                    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+                    customer_id BIGINT NOT NULL,
+                    department_name VARCHAR(120) NOT NULL COMMENT '科室名称',
+                    code VARCHAR(60) NULL COMMENT '科室编码',
+                    notes VARCHAR(500) NULL,
+                    usage_count INT NOT NULL DEFAULT 0 COMMENT '使用统计占位',
+                    is_active TINYINT(1) NOT NULL DEFAULT 1,
+                    created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+                    updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+                    UNIQUE KEY uk_dept_customer_name (customer_id, department_name),
+                    INDEX idx_dept_customer_active (customer_id, is_active)
+                ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4
+                """);
+        createTableIfMissing("physician_entry", """
+                CREATE TABLE physician_entry (
+                    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+                    customer_id BIGINT NOT NULL,
+                    physician_name VARCHAR(120) NOT NULL COMMENT '医生姓名',
+                    department_entry_id BIGINT NULL COMMENT '关联科室主数据',
+                    department_name VARCHAR(120) NULL COMMENT '科室名称冗余',
+                    code VARCHAR(60) NULL COMMENT '医生编码',
+                    notes VARCHAR(500) NULL,
+                    usage_count INT NOT NULL DEFAULT 0 COMMENT '使用统计占位',
+                    is_active TINYINT(1) NOT NULL DEFAULT 1,
+                    created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+                    updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+                    UNIQUE KEY uk_physician_customer_name (customer_id, physician_name),
+                    INDEX idx_physician_customer_dept (customer_id, department_entry_id, is_active)
+                ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4
+                """);
+    }
+
+    private void migrateRuleGroupTables() {
+        createTableIfMissing("customer_billing_rule_group", """
+                CREATE TABLE customer_billing_rule_group (
+                    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+                    customer_id BIGINT NOT NULL,
+                    group_code VARCHAR(60) NOT NULL DEFAULT 'default',
+                    group_name VARCHAR(120) NOT NULL DEFAULT '默认规则组',
+                    rules_json LONGTEXT NULL COMMENT '规则快照 JSON',
+                    priority INT NOT NULL DEFAULT 100,
+                    is_active TINYINT(1) NOT NULL DEFAULT 1,
+                    created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+                    updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+                    UNIQUE KEY uk_cbrg_customer_code (customer_id, group_code),
+                    INDEX idx_cbrg_customer (customer_id, is_active)
+                ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4
+                """);
+        createTableIfMissing("billing_rule_change_log", """
+                CREATE TABLE billing_rule_change_log (
+                    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+                    customer_id BIGINT NOT NULL,
+                    rule_group_id BIGINT NULL,
+                    product_rule_id BIGINT NULL,
+                    change_type VARCHAR(30) NOT NULL,
+                    entity_type VARCHAR(30) NOT NULL DEFAULT 'PRODUCT_RULE',
+                    before_snapshot JSON NULL,
+                    after_snapshot JSON NULL,
+                    operator_name VARCHAR(120) NULL,
+                    change_summary VARCHAR(500) NULL,
+                    created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+                    INDEX idx_brcl_customer (customer_id, created_at),
+                    INDEX idx_brcl_group (rule_group_id)
+                ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4
+                """);
+        addColumnIfMissing("customer_product_rule", "rule_group_id",
+                "rule_group_id BIGINT NULL COMMENT '所属规则组' AFTER customer_id");
     }
 
     private void migrateBillingProfileColumns() {
@@ -44,6 +237,10 @@ public class SchemaMigrationRunner implements CommandLineRunner {
                 "accepted_prices JSON NULL COMMENT '多报价候选' AFTER price");
         addColumnIfMissing("customer_product_rule", "match_mode",
                 "match_mode VARCHAR(20) NOT NULL DEFAULT 'first' AFTER rule_type");
+        addColumnIfMissing("customer_product_rule", "original_unit_price",
+                "original_unit_price DECIMAL(12,4) NULL COMMENT '原价匹配条件' AFTER price");
+        addColumnIfMissing("customer_product_rule", "conditions_json",
+                "conditions_json JSON NULL COMMENT '扩展条件如科室' AFTER materials");
         addColumnIfMissing("hospital_reconciliation_row", "matched_rule_id",
                 "matched_rule_id BIGINT NULL COMMENT '命中特色规则ID'");
         addColumnIfMissing("hospital_reconciliation_row", "matched_price_option",
@@ -54,6 +251,8 @@ public class SchemaMigrationRunner implements CommandLineRunner {
                 "billing_pricing_mode VARCHAR(20) NOT NULL DEFAULT 'standard' COMMENT 'standard/special_only/hybrid' AFTER billing_enabled");
         addColumnIfMissing("customer", "path_override",
                 "path_override JSON NULL COMMENT '路径覆盖 disableLowTemp/forceHighTempUnitPrice' AFTER billing_pricing_mode");
+        addColumnIfMissing("customer", "export_name_mapping",
+                "export_name_mapping JSON NULL COMMENT '导出名称替换 FR-M1-09' AFTER path_override");
         seedBillingEnabledForExistingCustomers();
     }
 
@@ -97,6 +296,136 @@ public class SchemaMigrationRunner implements CommandLineRunner {
     private void migrateCustomerProductRuleTemperatureColumn() {
         addColumnIfMissing("customer_product_rule", "temperature",
                 "temperature VARCHAR(10) NULL COMMENT 'HT/LT/ANY 温度条件' AFTER materials");
+    }
+
+    private void migrateExportTemplateTable() {
+        createTableIfMissing("export_template", """
+                CREATE TABLE export_template (
+                    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+                    customer_id BIGINT NULL COMMENT 'NULL=global default',
+                    template_type VARCHAR(40) NOT NULL COMMENT 'bill|settlement|dept_summary|price_summary|instrument_audit|daily',
+                    name VARCHAR(120) NOT NULL,
+                    storage_path VARCHAR(500) NOT NULL DEFAULT '',
+                    column_mapping JSON NULL,
+                    sheet_config JSON NULL,
+                    is_active TINYINT(1) NOT NULL DEFAULT 1,
+                    created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+                    updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+                    INDEX idx_export_template_customer (customer_id, template_type, is_active),
+                    INDEX idx_export_template_type (template_type, is_active)
+                ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4
+                """);
+        seedDefaultExportTemplates();
+        seedBatchExportTemplates();
+    }
+
+    private void seedBatchExportTemplates() {
+        if (!tableExists("export_template")) {
+            return;
+        }
+        seedTemplateIfMissing("bill", "呼兰一院账单骨架", """
+                {"keepColumns":["发货日期","单号","类型","包类别号","包名","包数","单价","总价"]}
+                """, """
+                {"strategyKey":"standard_bill","customerCode":"HULAN_FIRST"}
+                """);
+        seedTemplateIfMissing("bill", "冰城医美账单骨架", """
+                {"removeColumns":["备注","差额"]}
+                """, """
+                {"strategyKey":"standard_bill","customerCode":"BINGCHENG_YIMEI"}
+                """);
+        seedTemplateIfMissing("settlement", "工程大学结款函独立折扣", """
+                {"settlementDiscountRows":true}
+                """, """
+                {"strategyKey":"standard_settlement","customerCode":"GONGCHENG_UNIV"}
+                """);
+        seedTemplateIfMissing("settlement", "九院结款函独立折扣", """
+                {"settlementDiscountRows":true}
+                """, """
+                {"strategyKey":"standard_settlement","customerCode":"JIUYUAN"}
+                """);
+        seedTemplateIfMissing("settlement", "东大肛肠结款函独立折扣", """
+                {"settlementDiscountRows":true}
+                """, """
+                {"strategyKey":"standard_settlement","customerCode":"DONGDA"}
+                """);
+        seedTemplateIfMissing("settlement", "先锋路结款函独立折扣", """
+                {"settlementDiscountRows":true}
+                """, """
+                {"strategyKey":"standard_settlement","customerCode":"XIANFENGLU"}
+                """);
+        seedTemplateIfMissing("bill", "国药汽轮机账单", """
+                {"keepColumns":["发货日期","单号","类型","包类别号","包名","器械数","包数","单价","总价"]}
+                """, """
+                {"strategyKey":"guoyao_bill","customerCode":"GUOYAO_MAIN"}
+                """);
+        seedTemplateIfMissing("daily", "远东日结导出骨架", """
+                {"columns":["日期","包数","把数","灭菌费","物流费","合计"]}
+                """, """
+                {"strategyKey":"daily_split","customerCode":"YUANDONG-XN"}
+                """);
+        seedTemplateIfMissing("dept_summary", "市五院分科室汇总骨架", """
+                {"columns":["科室","类型","行数","包数","把数","毛额","调整额","净额"]}
+                """, """
+                {"strategyKey":"standard_dept_summary","customerCode":"HRB-WY"}
+                """);
+        seedTemplateIfMissing("instrument_audit", "中医三院把数表骨架", """
+                {"columns":["科室","包名","把数","包数"]}
+                """, """
+                {"strategyKey":"instrument_audit","customerCode":"ZY3-DIANLI"}
+                """);
+    }
+
+    private void seedTemplateIfMissing(String templateType, String name, String columnMapping, String sheetConfig) {
+        Integer exists = jdbcTemplate.queryForObject(
+                "SELECT COUNT(*) FROM export_template WHERE customer_id IS NULL AND template_type = ? AND name = ?",
+                Integer.class,
+                templateType,
+                name);
+        if (exists != null && exists > 0) {
+            return;
+        }
+        jdbcTemplate.update(
+                "INSERT INTO export_template (customer_id, template_type, name, storage_path, column_mapping, sheet_config, is_active) "
+                        + "VALUES (NULL, ?, ?, '', ?, ?, 1)",
+                templateType,
+                name,
+                columnMapping.trim(),
+                sheetConfig.trim());
+    }
+
+    private void seedDefaultExportTemplates() {
+        if (!tableExists("export_template")) {
+            return;
+        }
+        Integer count = jdbcTemplate.queryForObject("SELECT COUNT(*) FROM export_template", Integer.class);
+        if (count != null && count > 0) {
+            return;
+        }
+        jdbcTemplate.update("""
+                INSERT INTO export_template (customer_id, template_type, name, storage_path, column_mapping, sheet_config, is_active)
+                VALUES (NULL, 'bill', '系统默认账单', '',
+                        '{}',
+                        '{"strategyKey":"standard_bill"}', 1)
+                """);
+        jdbcTemplate.update("""
+                INSERT INTO export_template (customer_id, template_type, name, storage_path, column_mapping, sheet_config, is_active)
+                VALUES (NULL, 'settlement', '系统默认结款函', '',
+                        '{}',
+                        '{"strategyKey":"standard_settlement"}', 1)
+                """);
+        jdbcTemplate.update("""
+                INSERT INTO export_template (customer_id, template_type, name, storage_path, column_mapping, sheet_config, is_active)
+                VALUES (NULL, 'bill', '省二南岗账单骨架', '',
+                        '{"keepColumns":["发货日期","单号","类型","包类别号","包名","器械数","包数","单价","总价"]}',
+                        '{"strategyKey":"sheng_er_bill","customerCode":"SHENG_ER_NANGANG"}', 1)
+                """);
+        jdbcTemplate.update("""
+                INSERT INTO export_template (customer_id, template_type, name, storage_path, column_mapping, sheet_config, is_active)
+                VALUES (NULL, 'bill', '道外人民账单骨架', '',
+                        '{"removeColumns":["器械数","备注","差额"]}',
+                        '{"strategyKey":"daowai_bill","customerCode":"DAOWAI"}', 1)
+                """);
+        log.info("Seeded default export_template rows");
     }
 
     private void seedBillingEnabledForExistingCustomers() {
@@ -440,7 +769,16 @@ public class SchemaMigrationRunner implements CommandLineRunner {
                 "matched_variant_id BIGINT NULL COMMENT '匹配变体ID'");
         addColumnIfMissing("hospital_reconciliation_row", "pricing_path",
                 "pricing_path VARCHAR(40) NULL COMMENT '产品计价路径'");
+        addColumnIfMissing("hospital_reconciliation_row", "is_urgent",
+                "is_urgent TINYINT(1) NOT NULL DEFAULT 0 COMMENT '加急标记'");
         addColumnIfMissing("hospital_reconciliation_row", "created_at", "created_at DATETIME DEFAULT CURRENT_TIMESTAMP");
+    }
+
+    private void migrateReconciliationJobUrgentColumns() {
+        addColumnIfMissing("hospital_reconciliation_job", "urgent_breakdown",
+                "urgent_breakdown JSON NULL COMMENT '加急费明细'");
+        addColumnIfMissing("hospital_reconciliation_job", "deduction_breakdown",
+                "deduction_breakdown JSON NULL COMMENT '设备抵扣明细'");
     }
 
     private void migrateExportLogTable() {

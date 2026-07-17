@@ -438,6 +438,23 @@ declare namespace Api {
         policyId?: number
         policyName?: string
       }
+      /** 加急费明细 */
+      urgentBreakdown?: {
+        urgentBaseTotal?: number
+        urgentRowCount?: number
+        nominalSurcharge?: number
+        adjustedSurcharge?: number
+        urgentTripCount?: number
+        nominalUrgentLogisticsTotal?: number
+        adjustedUrgentLogisticsTotal?: number
+        policyName?: string
+      }
+      /** 设备抵扣明细 */
+      deductionBreakdown?: {
+        monthlyAmount?: number
+        deductionAmount?: number
+        policyName?: string
+      }
     }
   }
 
@@ -687,8 +704,8 @@ declare namespace Api {
       id: number
       customer_id?: number
       customerId?: number
-      policy_type?: 'DISCOUNT' | 'LOGISTICS' | 'MONTHLY_SETTLEMENT'
-      policyType?: 'DISCOUNT' | 'LOGISTICS' | 'MONTHLY_SETTLEMENT'
+      policy_type?: 'DISCOUNT' | 'LOGISTICS' | 'MONTHLY_SETTLEMENT' | 'URGENT' | 'DEDUCTION'
+      policyType?: 'DISCOUNT' | 'LOGISTICS' | 'MONTHLY_SETTLEMENT' | 'URGENT' | 'DEDUCTION'
       name?: string
       temperature?: 'HT' | 'LT' | 'ANY'
       rate?: number
@@ -696,24 +713,69 @@ declare namespace Api {
       skipWhenFixedPrice?: boolean
       fee_per_trip?: number
       feePerTrip?: number
+      trip_source?: 'delivery_date' | 'import'
+      tripSource?: 'delivery_date' | 'import'
+      allocation_mode?: 'none' | 'dept_ratio' | 'equal' | 'proportional' | 'single_owner' | 'cross_hospital_merge'
+      allocationMode?: 'none' | 'dept_ratio' | 'equal' | 'proportional' | 'single_owner' | 'cross_hospital_merge'
+      billing_weekdays?: number[]
+      billingWeekdays?: number[]
+      exclude_departments?: string[]
+      excludeDepartments?: string[]
+      card_deduction_enabled?: boolean
+      cardDeductionEnabled?: boolean
+      card_deduct_mode?: 'auto' | 'none'
+      cardDeductMode?: 'auto' | 'none'
+      card_monthly_cap?: number
+      cardMonthlyCap?: number
+      logistics_merge_group_id?: number
+      logisticsMergeGroupId?: number
+      merge_same_day?: boolean
+      mergeSameDay?: boolean
+      single_owner_customer_id?: number
+      singleOwnerCustomerId?: number
       min_charge?: number
       minCharge?: number
       max_cap?: number
       maxCap?: number
+      base_multiplier?: number
+      baseMultiplier?: number
+      adjusted_multiplier?: number
+      adjustedMultiplier?: number
+      urgent_logistics_fee_per_trip?: number
+      urgentLogisticsFeePerTrip?: number
+      urgent_logistics_discount_rate?: number
+      urgentLogisticsDiscountRate?: number
+      monthly_amount?: number
+      monthlyAmount?: number
       priority?: number
       is_active?: boolean
       isActive?: boolean
     }
 
     interface SaveCustomerBillingPolicyPayload {
-      policyType: 'DISCOUNT' | 'LOGISTICS' | 'MONTHLY_SETTLEMENT'
+      policyType: 'DISCOUNT' | 'LOGISTICS' | 'MONTHLY_SETTLEMENT' | 'URGENT' | 'DEDUCTION'
       name?: string
       temperature?: 'HT' | 'LT' | 'ANY'
       rate?: number
       skipWhenFixedPrice?: boolean
       feePerTrip?: number
+      tripSource?: 'delivery_date' | 'import'
+      allocationMode?: 'none' | 'dept_ratio' | 'equal' | 'proportional' | 'single_owner' | 'cross_hospital_merge'
+      billingWeekdays?: number[]
+      excludeDepartments?: string[]
+      cardDeductionEnabled?: boolean
+      cardDeductMode?: 'auto' | 'none'
+      cardMonthlyCap?: number
+      logisticsMergeGroupId?: number
+      mergeSameDay?: boolean
+      singleOwnerCustomerId?: number
       minCharge?: number
       maxCap?: number
+      baseMultiplier?: number
+      adjustedMultiplier?: number
+      urgentLogisticsFeePerTrip?: number
+      urgentLogisticsDiscountRate?: number
+      monthlyAmount?: number
       priority?: number
       isActive?: boolean
     }
@@ -736,12 +798,18 @@ declare namespace Api {
       billingPricingMode?: 'standard' | 'special_only' | 'hybrid'
       path_override?: CustomerPathOverride
       pathOverride?: CustomerPathOverride
+      export_name_mapping?: string
+      exportNameMapping?: string
       default_rule_id?: number | null
       notes?: string
       aliases?: CustomerAlias[]
       discounts?: CustomerDiscount[]
       product_rules?: CustomerProductRule[]
       alias_count?: number
+      department_count?: number
+      departmentCount?: number
+      physician_count?: number
+      physicianCount?: number
       created_at?: string
       updated_at?: string
     }
@@ -755,11 +823,37 @@ declare namespace Api {
       billingEnabled?: boolean
       billingPricingMode?: 'standard' | 'special_only' | 'hybrid'
       pathOverride?: CustomerPathOverride
+      exportNameMapping?: string
       defaultRuleId?: number | null
       notes?: string
       aliases?: CustomerAlias[]
       discounts?: CustomerDiscount[]
       productRules?: CustomerProductRule[]
+    }
+  }
+
+  namespace Billing {
+    interface RuleSimulateResult {
+      expected_unit_price?: number
+      corrected_total_price?: number
+      difference?: number
+      status?: string
+      pricing_rule?: string
+      matched_rule_id?: number
+      matched_price_option?: number
+      notes?: string[]
+      policy_traces?: string[]
+      match_chain?: Record<string, unknown>[]
+    }
+
+    interface RuleChangeLogEntry {
+      id: number
+      customer_id: number
+      change_type: string
+      entity_type: string
+      change_summary?: string
+      operator_name?: string
+      created_at?: string
     }
   }
 }

@@ -60,5 +60,11 @@ public class SaveCustomerProductRuleRequest {
 
     private Boolean skipDiscount;
 
+    /** 原价匹配条件 */
+    private BigDecimal originalUnitPrice;
+
+    /** 科室条件 JSON */
+    private List<String> departments;
+
     private Boolean isActive;
 }

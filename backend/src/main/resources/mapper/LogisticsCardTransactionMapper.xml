@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hospital.backend.mapper.LogisticsCardTransactionMapper">
+
+    <resultMap id="LogisticsCardTransactionResultMap" type="com.hospital.backend.entity.LogisticsCardTransaction">
+        <id property="id" column="id"/>
+        <result property="cardId" column="card_id"/>
+        <result property="transactionType" column="transaction_type"/>
+        <result property="amount" column="amount"/>
+        <result property="balanceAfter" column="balance_after"/>
+        <result property="jobId" column="job_id"/>
+        <result property="remark" column="remark"/>
+        <result property="createdAt" column="created_at"/>
+    </resultMap>
+
+    <insert id="insert" parameterType="com.hospital.backend.entity.LogisticsCardTransaction" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO logistics_card_transaction (card_id, transaction_type, amount, balance_after, job_id, remark, created_at)
+        VALUES (#{cardId}, #{transactionType}, #{amount}, #{balanceAfter}, #{jobId}, #{remark}, NOW())
+    </insert>
+
+    <select id="selectByCardId" resultMap="LogisticsCardTransactionResultMap">
+        SELECT * FROM logistics_card_transaction WHERE card_id = #{cardId} ORDER BY id DESC
+    </select>
+
+</mapper>

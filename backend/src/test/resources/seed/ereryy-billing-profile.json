@@ -1,0 +1,32 @@
+{
+  "version": "phase1-v1",
+  "description": "黑龙江省第二医院（南岗/松北）Phase 1 特色账单种子配置备份",
+  "customers": [
+    {
+      "code": "ERYY-NG",
+      "canonicalName": "黑龙江省第二医院（南岗区）",
+      "billingEnabled": true,
+      "billingPricingMode": "hybrid",
+      "discounts": [{ "name": "省二院 0.7 折扣", "rate": 0.7 }],
+      "logisticsPolicies": [{ "name": "省二南岗物流", "feePerTrip": 80.5 }],
+      "anyPriceRules": [
+        { "name": "南岗小腔包多报价", "keywords": ["小腔包"], "acceptedPrices": [49.7, 53.55] },
+        { "name": "南岗钉多报价", "keywords": ["钉"], "excludeKeywords": ["空心钉"], "acceptedPrices": [140, 35] },
+        { "name": "南岗3.6空心钉工具包多报价", "keywords": ["3.6空心钉工具包"], "acceptedPrices": [205.45, 190.05] }
+      ]
+    },
+    {
+      "code": "ERYY-SB",
+      "canonicalName": "黑龙江省第二医院（松北区）",
+      "billingEnabled": true,
+      "billingPricingMode": "hybrid",
+      "discounts": [{ "name": "省二院 0.7 折扣", "rate": 0.7 }],
+      "logisticsPolicies": [{ "name": "省二松北物流", "feePerTrip": 80.5 }],
+      "anyPriceRules": [
+        { "name": "松北小腔包多报价", "keywords": ["小腔包"], "acceptedPrices": [53.55, 49.7] },
+        { "name": "松北钉多报价", "keywords": ["钉"], "excludeKeywords": ["空心钉"], "acceptedPrices": [35, 140] },
+        { "name": "松北3.6空心钉工具包多报价", "keywords": ["3.6空心钉工具包"], "acceptedPrices": [190.05, 205.45] }
+      ]
+    }
+  ]
+}

@@ -9,6 +9,7 @@ import com.hospital.backend.dto.response.customer.CustomerResponse;
 import com.hospital.backend.entity.*;
 import com.hospital.backend.mapper.*;
 import com.hospital.backend.service.CustomerService;
+import com.hospital.backend.service.BillingRuleGroupSyncService;
 import com.hospital.backend.util.ProductRuleNameUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -33,9 +34,17 @@ public class CustomerServiceImpl implements CustomerService {
     private final CustomerBillingPolicyMapper billingPolicyMapper;
     private final CustomerProductRuleMapper productRuleMapper;
     private final ProductMapper productMapper;
+    private final BillingRuleGroupSyncService billingRuleGroupSyncService;
+    private final DepartmentEntryMapper departmentEntryMapper;
+    private final PhysicianEntryMapper physicianEntryMapper;
 
     private static final Set<String> PRICING_RULE_TYPES = Set.of(
             "FIXED_PRICE", "PRICE_PER_INSTRUMENT", "MULTIPLIER", "FOLD", "EXTRA_FEE", "ADD_FEE");
+
+    private static final Set<String> PRODUCT_BOUND_RULE_TYPES = Set.of(
+            "FIXED_PRICE", "PRICE_PER_INSTRUMENT", "MULTIPLIER");
+
+    private static final Set<String> SETTLEMENT_RULE_TYPES = Set.of("FOLD", "EXTRA_FEE", "ADD_FEE");
 
     private static final Set<String> TEMPERATURE_SCOPES = Set.of("HT", "LT", "ANY");
 
@@ -236,6 +245,7 @@ public class CustomerServiceImpl implements CustomerService {
         customer.setBillingEnabled(request.getBillingEnabled() != null ? request.getBillingEnabled() : false);
         customer.setBillingPricingMode(normalizeBillingPricingMode(request.getBillingPricingMode()));
         customer.setPathOverride(buildPathOverrideJson(request.getPathOverride()));
+        customer.setExportNameMapping(normalizeExportNameMapping(request.getExportNameMapping()));
         customer.setNotes(request.getNotes());
     }
 
@@ -313,9 +323,7 @@ public class CustomerServiceImpl implements CustomerService {
                 continue;
             }
             if (PRICING_RULE_TYPES.contains(dto.getRuleType())) {
-                boolean requiresProduct = Set.of("FIXED_PRICE", "PRICE_PER_INSTRUMENT", "MULTIPLIER")
-                        .contains(dto.getRuleType());
-                if (requiresProduct && dto.getProductId() == null) {
+                if (requiresProductBinding(dto.getRuleType()) && dto.getProductId() == null) {
                     continue;
                 }
                 SaveCustomerProductRuleRequest request = new SaveCustomerProductRuleRequest();
@@ -377,6 +385,7 @@ public class CustomerServiceImpl implements CustomerService {
             rule.setIsActive(dto.getIsActive() != null ? dto.getIsActive() : true);
             productRuleMapper.insert(rule);
         }
+        billingRuleGroupSyncService.syncDefaultGroupFromProductRules(customerId, null);
     }
 
     private String validateProductRuleRequest(SaveCustomerProductRuleRequest request, Long excludeRuleId) {
@@ -384,8 +393,7 @@ public class CustomerServiceImpl implements CustomerService {
         if (!PRICING_RULE_TYPES.contains(ruleType)) {
             return "不支持的规则类型: " + ruleType;
         }
-        boolean requiresProduct = Set.of("FIXED_PRICE", "PRICE_PER_INSTRUMENT", "MULTIPLIER").contains(ruleType);
-        if (requiresProduct) {
+        if (requiresProductBinding(ruleType)) {
             if (request.getProductId() == null) {
                 return "商品不能为空";
             }
@@ -397,7 +405,11 @@ public class CustomerServiceImpl implements CustomerService {
         }
         boolean hasKeywords = request.getKeywords() != null
                 && request.getKeywords().stream().anyMatch(k -> k != null && !k.isBlank());
-        if (!requiresProduct && request.getProductId() == null && !hasKeywords) {
+        boolean hasName = request.getName() != null && !request.getName().isBlank();
+        if (!requiresProductBinding(ruleType)
+                && request.getProductId() == null
+                && !hasKeywords
+                && !(SETTLEMENT_RULE_TYPES.contains(ruleType) && hasName)) {
             return "请绑定商品或填写匹配关键词";
         }
         if ("FIXED_PRICE".equals(ruleType) || "PRICE_PER_INSTRUMENT".equals(ruleType)) {
@@ -433,6 +445,10 @@ public class CustomerServiceImpl implements CustomerService {
             return keywordConflict;
         }
         return null;
+    }
+
+    private static boolean requiresProductBinding(String ruleType) {
+        return PRODUCT_BOUND_RULE_TYPES.contains(ruleType);
     }
 
     private CustomerProductRule buildProductRuleEntity(Long customerId, SaveCustomerProductRuleRequest request) {
@@ -624,11 +640,14 @@ public class CustomerServiceImpl implements CustomerService {
                 .billingEnabled(customer.getBillingEnabled())
                 .billingPricingMode(customer.getBillingPricingMode())
                 .pathOverride(parsePathOverrideDto(customer.getPathOverride()))
+                .exportNameMapping(customer.getExportNameMapping())
                 .notes(customer.getNotes())
                 .aliases(aliases)
                 .discounts(discounts)
                 .productRules(productRules)
                 .aliasCount(aliases.size())
+                .departmentCount(departmentEntryMapper.countActiveByCustomerId(customer.getId()))
+                .physicianCount(physicianEntryMapper.countActiveByCustomerId(customer.getId()))
                 .createdAt(customer.getCreatedAt())
                 .updatedAt(customer.getUpdatedAt())
                 .build();
@@ -791,7 +810,7 @@ public class CustomerServiceImpl implements CustomerService {
         dto.setName(policy.getName());
         dto.setPriority(policy.getPriority());
         dto.setIsActive(policy.getIsActive());
-        dto.setApplyStage("after_base");
+        dto.setApplyStage(readPolicyApplyStage(policy.getParams()));
         dto.setTemperature(readPolicyTemperature(policy.getScope()));
         Map<String, Object> params = readPolicyParams(policy.getParams());
         Object rate = params.get("rate");
@@ -825,7 +844,22 @@ public class CustomerServiceImpl implements CustomerService {
         if (maxCapValue instanceof Number number) {
             maxCap = BigDecimal.valueOf(number.doubleValue());
         }
+        BigDecimal baseMultiplier = readBigDecimalParam(params, "baseMultiplier");
+        BigDecimal adjustedMultiplier = readBigDecimalParam(params, "adjustedMultiplier");
+        BigDecimal urgentLogisticsFeePerTrip = readBigDecimalParam(params, "urgentLogisticsFeePerTrip");
+        BigDecimal urgentLogisticsDiscountRate = readBigDecimalParam(params, "urgentLogisticsDiscountRate");
+        BigDecimal monthlyAmount = readBigDecimalParam(params, "monthlyAmount");
         Object skipWhenFixedPrice = params.get("skipWhenFixedPrice");
+        String tripSource = params.get("tripSource") != null ? params.get("tripSource").toString() : null;
+        String allocationMode = params.get("allocationMode") != null ? params.get("allocationMode").toString() : null;
+        java.util.List<Integer> billingWeekdays = readIntegerListParam(params.get("billingWeekdays"));
+        java.util.List<String> excludeDepartments = readStringListParam(params.get("excludeDepartments"));
+        Boolean cardDeductionEnabled = readBooleanParam(params, "cardDeductionEnabled");
+        String cardDeductMode = params.get("cardDeductMode") != null ? params.get("cardDeductMode").toString() : null;
+        BigDecimal cardMonthlyCap = readBigDecimalParam(params, "cardMonthlyCap");
+        Long logisticsMergeGroupId = readLongParam(params, "logisticsMergeGroupId");
+        Boolean mergeSameDay = readBooleanParam(params, "mergeSameDay");
+        Long singleOwnerCustomerId = readLongParam(params, "singleOwnerCustomerId");
         return CustomerBillingPolicyResponse.builder()
                 .id(policy.getId())
                 .customerId(policy.getCustomerId())
@@ -835,8 +869,24 @@ public class CustomerServiceImpl implements CustomerService {
                 .rate(rate)
                 .skipWhenFixedPrice(skipWhenFixedPrice instanceof Boolean bool ? bool : null)
                 .feePerTrip(feePerTrip)
+                .tripSource(tripSource)
+                .allocationMode(allocationMode)
+                .billingWeekdays(billingWeekdays)
+                .excludeDepartments(excludeDepartments)
+                .cardDeductionEnabled(cardDeductionEnabled)
+                .cardDeductMode(cardDeductMode)
+                .cardMonthlyCap(cardMonthlyCap)
+                .logisticsMergeGroupId(logisticsMergeGroupId)
+                .mergeSameDay(mergeSameDay)
+                .singleOwnerCustomerId(singleOwnerCustomerId)
                 .minCharge(minCharge)
                 .maxCap(maxCap)
+                .applyStage(readPolicyApplyStage(policy.getParams()))
+                .baseMultiplier(baseMultiplier)
+                .adjustedMultiplier(adjustedMultiplier)
+                .urgentLogisticsFeePerTrip(urgentLogisticsFeePerTrip)
+                .urgentLogisticsDiscountRate(urgentLogisticsDiscountRate)
+                .monthlyAmount(monthlyAmount)
                 .priority(policy.getPriority())
                 .isActive(policy.getIsActive())
                 .createdAt(policy.getCreatedAt())
@@ -886,6 +936,19 @@ public class CustomerServiceImpl implements CustomerService {
             if (hasMin && hasMax && request.getMinCharge().compareTo(request.getMaxCap()) > 0) {
                 return "最低消费不能大于封顶金额";
             }
+        } else if ("URGENT".equals(policyType)) {
+            if (request.getBaseMultiplier() != null
+                    && request.getBaseMultiplier().compareTo(BigDecimal.ZERO) <= 0) {
+                return "加急倍率必须大于 0";
+            }
+            if (request.getAdjustedMultiplier() != null
+                    && request.getAdjustedMultiplier().compareTo(BigDecimal.ZERO) <= 0) {
+                return "减免后加急倍率必须大于 0";
+            }
+        } else if ("DEDUCTION".equals(policyType)) {
+            if (request.getMonthlyAmount() == null || request.getMonthlyAmount().compareTo(BigDecimal.ZERO) <= 0) {
+                return "设备抵扣金额必须大于 0";
+            }
         } else {
             return "不支持的策略类型: " + policyType;
         }
@@ -906,14 +969,64 @@ public class CustomerServiceImpl implements CustomerService {
             params.put("rate", request.getRate());
             params.put("skipWhenFixedPrice",
                     request.getSkipWhenFixedPrice() != null ? request.getSkipWhenFixedPrice() : true);
+            if (request.getApplyStage() != null && !request.getApplyStage().isBlank()) {
+                params.put("applyStage", request.getApplyStage().trim().toLowerCase());
+            }
         } else if ("LOGISTICS".equalsIgnoreCase(request.getPolicyType())) {
             params.put("feePerTrip", request.getFeePerTrip());
+            if (request.getTripSource() != null && !request.getTripSource().isBlank()) {
+                params.put("tripSource", request.getTripSource().trim().toLowerCase());
+            }
+            if (request.getAllocationMode() != null && !request.getAllocationMode().isBlank()) {
+                params.put("allocationMode", request.getAllocationMode().trim().toLowerCase());
+            }
+            if (request.getBillingWeekdays() != null && !request.getBillingWeekdays().isEmpty()) {
+                params.put("billingWeekdays", request.getBillingWeekdays());
+            }
+            if (request.getExcludeDepartments() != null && !request.getExcludeDepartments().isEmpty()) {
+                params.put("excludeDepartments", request.getExcludeDepartments());
+            }
+            if (request.getCardDeductionEnabled() != null) {
+                params.put("cardDeductionEnabled", request.getCardDeductionEnabled());
+            }
+            if (request.getCardDeductMode() != null && !request.getCardDeductMode().isBlank()) {
+                params.put("cardDeductMode", request.getCardDeductMode().trim().toLowerCase());
+            }
+            if (request.getCardMonthlyCap() != null) {
+                params.put("cardMonthlyCap", request.getCardMonthlyCap());
+            }
+            if (request.getLogisticsMergeGroupId() != null) {
+                params.put("logisticsMergeGroupId", request.getLogisticsMergeGroupId());
+            }
+            if (request.getMergeSameDay() != null) {
+                params.put("mergeSameDay", request.getMergeSameDay());
+            }
+            if (request.getSingleOwnerCustomerId() != null) {
+                params.put("singleOwnerCustomerId", request.getSingleOwnerCustomerId());
+            }
         } else if ("MONTHLY_SETTLEMENT".equalsIgnoreCase(request.getPolicyType())) {
             if (request.getMinCharge() != null) {
                 params.put("minCharge", request.getMinCharge());
             }
             if (request.getMaxCap() != null) {
                 params.put("maxCap", request.getMaxCap());
+            }
+        } else if ("URGENT".equalsIgnoreCase(request.getPolicyType())) {
+            if (request.getBaseMultiplier() != null) {
+                params.put("baseMultiplier", request.getBaseMultiplier());
+            }
+            if (request.getAdjustedMultiplier() != null) {
+                params.put("adjustedMultiplier", request.getAdjustedMultiplier());
+            }
+            if (request.getUrgentLogisticsFeePerTrip() != null) {
+                params.put("urgentLogisticsFeePerTrip", request.getUrgentLogisticsFeePerTrip());
+            }
+            if (request.getUrgentLogisticsDiscountRate() != null) {
+                params.put("urgentLogisticsDiscountRate", request.getUrgentLogisticsDiscountRate());
+            }
+        } else if ("DEDUCTION".equalsIgnoreCase(request.getPolicyType())) {
+            if (request.getMonthlyAmount() != null) {
+                params.put("monthlyAmount", request.getMonthlyAmount());
             }
         }
         return JsonUtils.toJson(params);
@@ -947,6 +1060,25 @@ public class CustomerServiceImpl implements CustomerService {
         return JsonUtils.toJson(json);
     }
 
+    private String normalizeExportNameMapping(String raw) {
+        if (raw == null || raw.isBlank()) {
+            return null;
+        }
+        String trimmed = raw.trim();
+        if ("{}".equals(trimmed)) {
+            return null;
+        }
+        try {
+            Map<String, Object> parsed = readPolicyParams(trimmed);
+            if (parsed == null || parsed.isEmpty()) {
+                return null;
+            }
+            return JsonUtils.toJson(parsed);
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
     private CustomerPathOverrideDto parsePathOverrideDto(String pathOverrideJson) {
         if (pathOverrideJson == null || pathOverrideJson.isBlank()) {
             return null;
@@ -967,6 +1099,58 @@ public class CustomerServiceImpl implements CustomerService {
         return dto;
     }
 
+    private BigDecimal readBigDecimalParam(Map<String, Object> params, String key) {
+        Object value = params.get(key);
+        if (value instanceof Number number) {
+            return BigDecimal.valueOf(number.doubleValue());
+        }
+        return null;
+    }
+
+    private Boolean readBooleanParam(Map<String, Object> params, String key) {
+        Object value = params.get(key);
+        if (value instanceof Boolean bool) {
+            return bool;
+        }
+        return null;
+    }
+
+    private Long readLongParam(Map<String, Object> params, String key) {
+        Object value = params.get(key);
+        if (value instanceof Number number) {
+            return number.longValue();
+        }
+        return null;
+    }
+
+    @SuppressWarnings("unchecked")
+    private java.util.List<Integer> readIntegerListParam(Object raw) {
+        if (!(raw instanceof java.util.List<?> list)) {
+            return null;
+        }
+        java.util.List<Integer> result = new java.util.ArrayList<>();
+        for (Object item : list) {
+            if (item instanceof Number number) {
+                result.add(number.intValue());
+            }
+        }
+        return result.isEmpty() ? null : result;
+    }
+
+    @SuppressWarnings("unchecked")
+    private java.util.List<String> readStringListParam(Object raw) {
+        if (!(raw instanceof java.util.List<?> list)) {
+            return null;
+        }
+        java.util.List<String> result = new java.util.ArrayList<>();
+        for (Object item : list) {
+            if (item != null) {
+                result.add(item.toString());
+            }
+        }
+        return result.isEmpty() ? null : result;
+    }
+
     @SuppressWarnings("unchecked")
     private Map<String, Object> readPolicyParams(String paramsJson) {
         if (paramsJson == null || paramsJson.isBlank()) {
@@ -980,6 +1164,12 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     @SuppressWarnings("unchecked")
+    private String readPolicyApplyStage(String paramsJson) {
+        Map<String, Object> params = readPolicyParams(paramsJson);
+        Object stage = params.get("applyStage");
+        return stage != null ? String.valueOf(stage) : "bill_detail";
+    }
+
     private String readPolicyTemperature(String scopeJson) {
         if (scopeJson == null || scopeJson.isBlank()) {
             return "ANY";

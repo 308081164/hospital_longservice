@@ -168,25 +168,45 @@
         </ElSelect>
         <p class="customer-product-rule-form__hint">{{ $t('menus.masterData.customerProductRules.temperatureHint') }}</p>
       </div>
-      <RuleFieldGrid :columns="4" class="mt-4">
-        <RuleNumberField
-          v-model="draft.bagSizeEquals"
-          :label="$t('menus.masterData.customerProductRules.bagSizeEquals')"
-          kind="integer"
-          :min="0"
-          :step="1"
-        />
-        <RuleNumberField
-          v-model="draft.maxBagSizeExclusive"
-          :label="$t('menus.masterData.customerProductRules.bagSizeLess')"
-          kind="integer"
-          :min="1"
-          :step="1"
-        />
+      <div class="customer-product-rule-form__bag-size-block mt-4">
+        <div class="customer-product-rule-form__bag-size-header">
+          <div>
+            <label class="customer-product-rule-form__label">
+              {{ $t('menus.masterData.customerProductRules.bagSizeConstraint') }}
+            </label>
+            <p class="customer-product-rule-form__hint">
+              {{ $t('menus.masterData.customerProductRules.bagSizeSectionHint') }}
+            </p>
+          </div>
+          <ElSwitch v-model="bagSizeConstraintEnabled" @change="handleBagSizeConstraintChange" />
+        </div>
+        <RuleFieldGrid v-if="bagSizeConstraintEnabled" :columns="2" class="mt-3">
+          <RuleNumberField
+            v-model="draft.bagSizeEquals"
+            :label="$t('menus.masterData.customerProductRules.bagSizeEquals')"
+            :tooltip="$t('menus.masterData.customerProductRules.bagSizeEqualsTooltip')"
+            kind="integer"
+            optional
+            :min="1"
+            :step="1"
+          />
+          <RuleNumberField
+            v-model="draft.maxBagSizeExclusive"
+            :label="$t('menus.masterData.customerProductRules.bagSizeLess')"
+            :tooltip="$t('menus.masterData.customerProductRules.bagSizeLessTooltip')"
+            kind="integer"
+            optional
+            :min="1"
+            :step="1"
+          />
+        </RuleFieldGrid>
+      </div>
+      <RuleFieldGrid :columns="2" class="mt-4">
         <RuleNumberField
           v-model="draft.minInstrumentCount"
           :label="$t('menus.masterData.customerProductRules.minInstrument')"
           kind="integer"
+          optional
           :min="1"
           :step="1"
         />
@@ -194,10 +214,34 @@
           v-model="draft.maxInstrumentCount"
           :label="$t('menus.masterData.customerProductRules.maxInstrument')"
           kind="integer"
+          optional
           :min="1"
           :step="1"
         />
+        <RuleNumberField
+          v-model="draft.originalUnitPrice"
+          :label="$t('menus.masterData.customerProductRules.originalUnitPrice')"
+          kind="decimal"
+          optional
+          :min="0.01"
+          :step="0.5"
+          :precision="2"
+        />
+        <div class="customer-product-rule-form__field">
+          <label class="customer-product-rule-form__label">
+            {{ $t('menus.masterData.customerProductRules.department') }}
+          </label>
+          <ElInput
+            v-model="departmentText"
+            :placeholder="$t('menus.masterData.customerProductRules.departmentPlaceholder')"
+          />
+          <p class="customer-product-rule-form__hint">{{ $t('menus.masterData.customerProductRules.departmentHint') }}</p>
+        </div>
       </RuleFieldGrid>
+      <div v-if="draft.ruleType === 'FOLD' && foldSplitPreview.length" class="customer-product-rule-form__fold-preview mt-4">
+        <label class="customer-product-rule-form__label">{{ $t('menus.masterData.customerProductRules.foldSplitPreview') }}</label>
+        <p class="customer-product-rule-form__hint">{{ foldSplitPreview.join(' + ') }}</p>
+      </div>
     </RuleSectionBlock>
 
     <RuleSectionBlock
@@ -223,7 +267,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue'
+import { computed, ref, watch } from 'vue'
 import RuleFieldGrid from '@/components/business/pricing-rules/RuleFieldGrid.vue'
 import RuleSectionBlock from '@/components/business/pricing-rules/RuleSectionBlock.vue'
 import RuleNumberField from '@/components/business/pricing-rules/RuleNumberField.vue'
@@ -249,6 +293,23 @@ const props = defineProps<{
 
 const productRequired = computed(() => isProductRequired(props.draft.ruleType))
 const showSettlementOptions = computed(() => !isSettlementRule(props.draft.ruleType))
+
+const bagSizeConstraintEnabled = ref(false)
+
+watch(
+  () => [props.draft.bagSizeEquals, props.draft.maxBagSizeExclusive],
+  ([equals, lessThan]) => {
+    bagSizeConstraintEnabled.value = equals != null || lessThan != null
+  },
+  { immediate: true },
+)
+
+function handleBagSizeConstraintChange(enabled: boolean) {
+  if (!enabled) {
+    props.draft.bagSizeEquals = undefined
+    props.draft.maxBagSizeExclusive = undefined
+  }
+}
 
 const displayProducts = computed(() => {
   if (!props.lockProduct || props.draft.productId == null) {
@@ -298,6 +359,39 @@ function addAcceptedPrice() {
 function removeAcceptedPrice(idx: number) {
   props.draft.acceptedPrices.splice(idx, 1)
 }
+
+const departmentText = computed({
+  get: () => (props.draft.departments ?? []).join('、'),
+  set: (value: string) => {
+    props.draft.departments = value
+      .split(/[,，、]/)
+      .map((s) => s.trim())
+      .filter(Boolean)
+  },
+})
+
+const foldSplitPreview = computed(() => {
+  if (props.draft.ruleType !== 'FOLD') return [] as string[]
+  const ratio = Math.max(1, Math.round(props.draft.foldRatio ?? 5))
+  const sampleCount = 82
+  const segments: string[] = []
+  let remaining = sampleCount
+  while (remaining > 0) {
+    if (remaining % ratio === 0 || remaining <= (props.draft.threshold ?? 5)) {
+      segments.push(String(remaining))
+      break
+    }
+    if (remaining > ratio) {
+      const chunk = Math.floor(remaining / ratio) * ratio
+      segments.push(String(chunk))
+      remaining -= chunk
+    } else {
+      segments.push(String(remaining))
+      break
+    }
+  }
+  return segments
+})
 </script>
 
 <style scoped>
@@ -326,6 +420,25 @@ function removeAcceptedPrice(idx: number) {
 .accepted-prices__input {
   width: 160px;
 }
+.customer-product-rule-form__bag-size-block {
+  padding: 12px 14px;
+  border: 1px dashed var(--el-border-color-lighter);
+  border-radius: 8px;
+  background: var(--el-fill-color-blank);
+}
+
+.customer-product-rule-form__bag-size-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.customer-product-rule-form__bag-size-header .customer-product-rule-form__hint {
+  margin-top: 4px;
+  line-height: 1.5;
+}
+
 .customer-product-rule-form__field {
   display: flex;
   flex-direction: column;

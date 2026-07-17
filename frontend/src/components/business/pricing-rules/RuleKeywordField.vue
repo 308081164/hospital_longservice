@@ -7,11 +7,13 @@
       </ElTooltip>
     </div>
     <ElInput
-      :model-value="displayValue"
+      :model-value="textValue"
       :placeholder="placeholder"
       type="textarea"
       :autosize="autosizeConfig"
       :class="{ 'rule-keyword-field__textarea--large': size === 'large' }"
+      @focus="focused = true"
+      @blur="handleBlur"
       @input="onInput"
     />
     <p v-if="hint" class="rule-keyword-field__hint">
@@ -22,7 +24,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue'
+import { computed, ref, watch } from 'vue'
 
 defineOptions({ name: 'RuleKeywordField' })
 
@@ -55,16 +57,45 @@ const emit = defineEmits<{
   change: [value: string[]]
 }>()
 
-const displayValue = computed(() => props.modelValue.join(', '))
+const focused = ref(false)
+const textValue = ref('')
 
-function onInput(val: string | number) {
-  const keywords = String(val)
+function formatKeywords(keywords: string[]): string {
+  return keywords.join(', ')
+}
+
+function parseKeywords(raw: string): string[] {
+  return String(raw)
     .replace(/，/g, ',')
     .split(',')
     .map((s) => s.trim())
     .filter(Boolean)
+}
+
+function emitKeywords(keywords: string[]) {
   emit('update:modelValue', keywords)
   emit('change', keywords)
+}
+
+watch(
+  () => props.modelValue,
+  (keywords) => {
+    if (focused.value) return
+    textValue.value = formatKeywords(keywords)
+  },
+  { immediate: true, deep: true },
+)
+
+function onInput(val: string | number) {
+  textValue.value = String(val)
+  emitKeywords(parseKeywords(textValue.value))
+}
+
+function handleBlur() {
+  focused.value = false
+  const keywords = parseKeywords(textValue.value)
+  textValue.value = formatKeywords(keywords)
+  emitKeywords(keywords)
 }
 </script>
 

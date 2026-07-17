@@ -1,5 +1,8 @@
 # 从本地 Docker MySQL 导出 hospital 数据库（在 Windows PowerShell 中执行）
 # 前提：本地 docker compose 已启动，容器名 hospital-mysql
+#
+# 注意：不要用 PowerShell 管道写 mysqldump（会破坏 UTF-8 多字节字符，导致导入报错 Unknown command '\"'）。
+# 本脚本在容器内写临时文件，再用 docker cp 拷出，保持原始字节流。
 
 $ErrorActionPreference = "Stop"
 $ProjectRoot = Split-Path -Parent $PSScriptRoot
@@ -23,8 +26,9 @@ if (-not $rootPwd) {
 
 $outFile = Join-Path $PSScriptRoot ("hospital-migration-{0:yyyyMMdd}.sql" -f (Get-Date))
 $container = "hospital-mysql"
+$remoteDump = "/tmp/hospital-migration.sql"
 
-Write-Host "正在从 $container 导出到 $outFile ..."
+Write-Host "Exporting from $container to $outFile ..."
 
 docker exec $container mysqldump `
     -u root "-p$rootPwd" `
@@ -32,8 +36,15 @@ docker exec $container mysqldump `
     --routines `
     --triggers `
     --databases hospital `
-    | Out-File -FilePath $outFile -Encoding utf8
+    --result-file=$remoteDump
+
+if ($LASTEXITCODE -ne 0) {
+    Write-Error "mysqldump failed with exit code $LASTEXITCODE"
+}
+
+docker cp "${container}:${remoteDump}" $outFile
+docker exec $container rm -f $remoteDump
 
 $size = (Get-Item $outFile).Length
-Write-Host "导出完成，文件大小: $([math]::Round($size/1MB, 2)) MB"
-Write-Host "请将 $outFile 上传到服务器 /mnt/newdisk/app/Hospital/ 目录"
+Write-Host "Done. Size: $([math]::Round($size/1MB, 2)) MB"
+Write-Host "Upload to server: /mnt/newdisk/app/Hospital/$(Split-Path $outFile -Leaf)"

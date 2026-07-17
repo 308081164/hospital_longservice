@@ -1,0 +1,19 @@
+{
+  "description": "Batch-A export diff manifest example",
+  "pairs": [
+    {
+      "label": "省二南岗 MAT-02",
+      "expected": "golden/省二南岗-账单-期望.xlsx",
+      "actual": "exports/省二南岗-账单-实际.xlsx",
+      "tolerance": 0.01,
+      "sheet": 0
+    },
+    {
+      "label": "呼兰一院 MAT-02",
+      "expected": "golden/呼兰一院-账单-期望.xlsx",
+      "actual": "exports/呼兰一院-账单-实际.xlsx",
+      "tolerance": 0.01,
+      "sheet": 0
+    }
+  ]
+}

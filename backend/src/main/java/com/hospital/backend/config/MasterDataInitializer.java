@@ -57,6 +57,8 @@ public class MasterDataInitializer implements CommandLineRunner {
                 "ri:folder-settings-line", "/master-data/product-categories", true, null);
         ensureMenu("menu", "menus.masterData.products", "products", 3, masterDataCatalog.getId(),
                 "ri:product-hunt-line", "/master-data/products", true, null);
+        ensureHiddenMenu("menus.billingConfig.deptPhysician", "customers/:customerId/dept-physician", 4,
+                masterDataCatalog.getId(), "ri:hospital-line", "/billing-config/dept-physician");
 
         Menu settingsCatalog = ensureMenu("catalog", "menus.settings.title", "/settings", 3, 0L,
                 "ri:settings-3-line", "Layout", true, "/settings/pricing-rules");
@@ -124,6 +126,56 @@ public class MasterDataInitializer implements CommandLineRunner {
         if (!roleMapper.existsRoleMenu(roleId, menuId)) {
             roleMapper.insertRoleMenu(roleId, menuId);
         }
+    }
+
+    private void ensureHiddenMenu(String name, String path, int order, Long parentId,
+                                  String icon, String component) {
+        Menu existing = menuMapper.selectByPath(path);
+        if (existing != null) {
+            boolean changed = false;
+            if (!Boolean.TRUE.equals(existing.getIsHidden())) {
+                existing.setIsHidden(true);
+                changed = true;
+            }
+            if (!Objects.equals(existing.getName(), name)) {
+                existing.setName(name);
+                changed = true;
+            }
+            if (!Objects.equals(existing.getComponent(), component)) {
+                existing.setComponent(component);
+                changed = true;
+            }
+            if (!Objects.equals(existing.getParentId(), parentId)) {
+                existing.setParentId(parentId);
+                changed = true;
+            }
+            if (!Objects.equals(existing.getOrder(), order)) {
+                existing.setOrder(order);
+                changed = true;
+            }
+            if (!Objects.equals(existing.getIcon(), icon)) {
+                existing.setIcon(icon);
+                changed = true;
+            }
+            if (changed) {
+                menuMapper.update(existing);
+                log.info("Updated hidden menu: {} ({})", name, path);
+            }
+            return;
+        }
+
+        Menu menu = new Menu();
+        menu.setMenuType("menu");
+        menu.setName(name);
+        menu.setPath(path);
+        menu.setOrder(order);
+        menu.setParentId(parentId);
+        menu.setIcon(icon);
+        menu.setComponent(component);
+        menu.setKeepalive(true);
+        menu.setIsHidden(true);
+        menuMapper.insert(menu);
+        log.info("Created hidden menu: {} ({})", name, path);
     }
 
     private Menu ensureMenu(String menuType, String name, String path, int order,

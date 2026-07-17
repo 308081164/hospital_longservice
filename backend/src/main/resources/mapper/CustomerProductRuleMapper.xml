@@ -10,6 +10,7 @@
         <result property="name" column="name"/>
         <result property="priority" column="priority"/>
         <result property="productId" column="product_id"/>
+        <result property="variantId" column="variant_id"/>
         <result property="keywords" column="keywords"/>
         <result property="excludeKeywords" column="exclude_keywords"/>
         <result property="materials" column="materials"/>
@@ -32,12 +33,12 @@
     </resultMap>
 
     <insert id="insert" parameterType="com.hospital.backend.entity.CustomerProductRule" useGeneratedKeys="true" keyProperty="id">
-        INSERT INTO customer_product_rule (customer_id, rule_type, match_mode, name, priority, product_id, keywords,
+        INSERT INTO customer_product_rule (customer_id, rule_type, match_mode, name, priority, product_id, variant_id, keywords,
                                            exclude_keywords, materials, temperature, bag_size_equals, max_bag_size_exclusive,
                                            min_instrument_count, max_instrument_count, price, accepted_prices, fee,
                                            multiplier, threshold, fold_ratio, skip_packaging, skip_discount, is_active,
                                            created_at, updated_at)
-        VALUES (#{customerId}, #{ruleType}, #{matchMode}, #{name}, #{priority}, #{productId}, #{keywords},
+        VALUES (#{customerId}, #{ruleType}, #{matchMode}, #{name}, #{priority}, #{productId}, #{variantId}, #{keywords},
                 #{excludeKeywords}, #{materials}, #{temperature}, #{bagSizeEquals}, #{maxBagSizeExclusive},
                 #{minInstrumentCount}, #{maxInstrumentCount}, #{price}, #{acceptedPrices}, #{fee},
                 #{multiplier}, #{threshold}, #{foldRatio}, #{skipPackaging}, #{skipDiscount}, #{isActive},
@@ -69,6 +70,7 @@
             name = #{name},
             priority = #{priority},
             product_id = #{productId},
+            variant_id = #{variantId},
             keywords = #{keywords},
             exclude_keywords = #{excludeKeywords},
             materials = #{materials},

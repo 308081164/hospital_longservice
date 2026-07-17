@@ -1,4 +1,5 @@
 import { AppRouteRecord } from '@/types/router'
+import { billingConfigRoutes } from './billing-config'
 import { exceptionRoutes } from './exception'
 import { hospitalRoutes } from './hospital'
 import { masterDataRoutes } from './master-data'
@@ -9,6 +10,7 @@ import { settingsRoutes } from './settings'
  */
 export const routeModules: AppRouteRecord[] = [
   ...masterDataRoutes,
+  ...billingConfigRoutes,
   ...hospitalRoutes,
   ...settingsRoutes,
   exceptionRoutes,

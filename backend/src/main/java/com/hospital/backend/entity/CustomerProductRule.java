@@ -55,6 +55,12 @@ public class CustomerProductRule {
 
     private BigDecimal foldRatio;
 
+    /** 原价匹配条件（FR-M3-15） */
+    private BigDecimal originalUnitPrice;
+
+    /** JSON: [{ "field": "department", "value": ["手术室"] }] */
+    private String conditionsJson;
+
     private Boolean skipPackaging = false;
 
     private Boolean skipDiscount = false;

@@ -1,0 +1,207 @@
+{
+  "version": "1",
+  "description": "Phase 1 Batch-A 补充：红十字妇产 / 九州妇科 / 呼兰一院",
+  "profiles": [
+    {
+      "code": "HULAN-RM",
+      "name": "呼兰区第一人民医院",
+      "billingEnabled": true,
+      "billingPricingMode": "hybrid",
+      "aliases": ["呼兰一院", "呼兰区第一人民医院", "哈尔滨市呼兰区第一人民医院"],
+      "discounts": [{"name": "呼兰7折", "rate": 0.7}],
+      "policies": []
+    },
+    {
+      "code": "HRB-HSZ",
+      "name": "哈尔滨市红十字妇产医院",
+      "billingEnabled": true,
+      "billingPricingMode": "hybrid",
+      "aliases": ["红十字妇产", "哈尔滨市红十字妇产医院"],
+      "productRules": [
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "低温1件22元",
+          "priority": 10,
+          "price": 22,
+          "keywords": [],
+          "temperature": "LT",
+          "bagSizeEquals": 1,
+          "skipPackaging": true,
+          "skipDiscount": true
+        },
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "湿化瓶2件22元",
+          "priority": 20,
+          "price": 22,
+          "keywords": ["湿化瓶"],
+          "bagSizeEquals": 2,
+          "skipPackaging": true,
+          "skipDiscount": true
+        },
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "纤维喉镜300",
+          "priority": 30,
+          "price": 300,
+          "keywords": ["纤维喉镜", "气管镜", "软管"],
+          "skipPackaging": true,
+          "skipDiscount": true
+        },
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "T型管25",
+          "priority": 40,
+          "price": 25,
+          "keywords": ["T型管"],
+          "skipPackaging": true,
+          "skipDiscount": true
+        }
+      ]
+    },
+    {
+      "code": "JIUZHOU-FK",
+      "name": "黑龙江九洲妇科医院",
+      "billingEnabled": true,
+      "billingPricingMode": "standard",
+      "aliases": ["九州妇科", "黑龙江九洲妇科医院"],
+      "policies": [
+        {
+          "policyType": "DISCOUNT",
+          "name": "高温5折",
+          "scope": {"temperature": "HT"},
+          "params": {"rate": 0.5, "skipWhenFixedPrice": true},
+          "priority": 10
+        },
+        {
+          "policyType": "DISCOUNT",
+          "name": "低温7折",
+          "scope": {"temperature": "LT"},
+          "params": {"rate": 0.7, "skipWhenFixedPrice": true},
+          "priority": 20
+        }
+      ],
+      "productRules": [
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "方盘5.5",
+          "priority": 10,
+          "price": 5.5,
+          "keywords": ["方盘"],
+          "skipPackaging": true,
+          "skipDiscount": true
+        }
+      ]
+    },
+    {
+      "code": "BINGCHENG-YM",
+      "name": "哈尔滨冰城医疗美容医院",
+      "billingEnabled": true,
+      "billingPricingMode": "hybrid",
+      "aliases": ["冰城医美", "哈尔滨冰城医疗美容医院"],
+      "productRules": [
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "整形包54.5",
+          "priority": 10,
+          "price": 54.5,
+          "keywords": ["整形包", "脂充包"],
+          "skipPackaging": true,
+          "skipDiscount": true
+        },
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "环钻27.5",
+          "priority": 20,
+          "price": 27.5,
+          "keywords": ["环钻"],
+          "skipPackaging": true,
+          "skipDiscount": true
+        }
+      ]
+    },
+    {
+      "code": "XINFA-HSZ",
+      "name": "新发红十字医院",
+      "billingEnabled": true,
+      "billingPricingMode": "hybrid",
+      "aliases": ["新发红十字", "新发红十字医院"],
+      "policies": [
+        {
+          "policyType": "URGENT",
+          "name": "加急125%减免后102.5%",
+          "params": {"urgentRate": 1.25, "reducedRate": 1.025},
+          "priority": 10
+        },
+        {
+          "policyType": "DEDUCTION",
+          "name": "设备抵扣3270",
+          "params": {"monthlyDeduction": 3270},
+          "priority": 20
+        }
+      ],
+      "productRules": [
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "穿刺器帽22",
+          "priority": 10,
+          "price": 22,
+          "keywords": ["穿刺器帽"],
+          "skipPackaging": true,
+          "skipDiscount": true
+        }
+      ]
+    },
+    {
+      "code": "ZY3-DIANLI",
+      "name": "黑龙江省中医药大学附属第三医院（电力）",
+      "billingEnabled": true,
+      "billingPricingMode": "hybrid",
+      "aliases": ["中医三院电力", "电力院区"],
+      "policies": [
+        {
+          "policyType": "DISCOUNT",
+          "name": "结款函7折",
+          "params": {"rate": 0.7, "applyStage": "settlement_only", "skipWhenFixedPrice": true},
+          "priority": 10
+        }
+      ],
+      "productRules": [
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "小件盒25",
+          "priority": 10,
+          "price": 25,
+          "keywords": ["小件盒"],
+          "skipPackaging": true,
+          "skipDiscount": true
+        },
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "等离子镜36",
+          "priority": 20,
+          "price": 36,
+          "keywords": ["等离子镜"],
+          "temperature": "LT",
+          "skipPackaging": true,
+          "skipDiscount": true
+        }
+      ]
+    },
+    {
+      "code": "YUANDONG-XN",
+      "name": "黑龙江省远东心脑血管医院",
+      "billingEnabled": true,
+      "billingPricingMode": "standard",
+      "aliases": ["远东", "远东心脑血管"],
+      "policies": [
+        {
+          "policyType": "DISCOUNT",
+          "name": "结款函9折",
+          "params": {"rate": 0.9, "applyStage": "settlement_only", "skipWhenFixedPrice": true},
+          "priority": 10
+        }
+      ]
+    }
+  ]
+}

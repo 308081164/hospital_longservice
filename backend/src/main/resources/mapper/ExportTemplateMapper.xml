@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hospital.backend.mapper.ExportTemplateMapper">
+
+    <resultMap id="ExportTemplateResultMap" type="com.hospital.backend.entity.ExportTemplate">
+        <id property="id" column="id"/>
+        <result property="customerId" column="customer_id"/>
+        <result property="templateType" column="template_type"/>
+        <result property="name" column="name"/>
+        <result property="storagePath" column="storage_path"/>
+        <result property="columnMapping" column="column_mapping"/>
+        <result property="sheetConfig" column="sheet_config"/>
+        <result property="isActive" column="is_active"/>
+        <result property="createdAt" column="created_at"/>
+        <result property="updatedAt" column="updated_at"/>
+    </resultMap>
+
+    <insert id="insert" parameterType="com.hospital.backend.entity.ExportTemplate" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO export_template (customer_id, template_type, name, storage_path, column_mapping, sheet_config, is_active, created_at, updated_at)
+        VALUES (#{customerId}, #{templateType}, #{name}, #{storagePath}, #{columnMapping}, #{sheetConfig}, #{isActive}, NOW(), NOW())
+    </insert>
+
+    <update id="updateById" parameterType="com.hospital.backend.entity.ExportTemplate">
+        UPDATE export_template
+        <set>
+            <if test="customerId != null">customer_id = #{customerId},</if>
+            <if test="templateType != null">template_type = #{templateType},</if>
+            <if test="name != null">name = #{name},</if>
+            <if test="storagePath != null">storage_path = #{storagePath},</if>
+            column_mapping = #{columnMapping},
+            sheet_config = #{sheetConfig},
+            <if test="isActive != null">is_active = #{isActive},</if>
+            updated_at = NOW(),
+        </set>
+        WHERE id = #{id}
+    </update>
+
+    <select id="selectById" resultMap="ExportTemplateResultMap">
+        SELECT * FROM export_template WHERE id = #{id}
+    </select>
+
+    <select id="selectByCustomerAndType" resultMap="ExportTemplateResultMap">
+        SELECT * FROM export_template
+        WHERE customer_id = #{customerId}
+          AND template_type = #{templateType}
+          AND is_active = 1
+        ORDER BY id DESC
+    </select>
+
+    <select id="selectGlobalByType" resultMap="ExportTemplateResultMap">
+        SELECT * FROM export_template
+        WHERE customer_id IS NULL
+          AND template_type = #{templateType}
+          AND is_active = 1
+        ORDER BY id ASC
+    </select>
+
+    <select id="selectAll" resultMap="ExportTemplateResultMap">
+        SELECT * FROM export_template
+        <where>
+            <if test="customerId != null">AND customer_id = #{customerId}</if>
+            <if test="templateType != null and templateType != ''">AND template_type = #{templateType}</if>
+        </where>
+        ORDER BY customer_id IS NULL DESC, template_type ASC, name ASC
+    </select>
+
+    <delete id="deleteById">
+        DELETE FROM export_template WHERE id = #{id}
+    </delete>
+
+</mapper>

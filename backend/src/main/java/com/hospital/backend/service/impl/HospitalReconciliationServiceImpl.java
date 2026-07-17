@@ -5,11 +5,23 @@ import com.hospital.backend.common.JsonUtils;
 import com.hospital.backend.common.Result;
 import com.hospital.backend.service.PricingEngine;
 import com.hospital.backend.service.PricingRuleCompiler;
+import com.hospital.backend.service.RowSplitter;
+import com.hospital.backend.service.CustomerResolver;
 import com.hospital.backend.service.LogisticsFeeCalculator;
+import com.hospital.backend.service.LogisticsPipelineService;
 import com.hospital.backend.service.MonthlySettlementCalculator;
+import com.hospital.backend.dto.response.logistics.LogisticsAllocationPreviewResponse;
+import com.hospital.backend.service.LogisticsAllocationService;
+import com.hospital.backend.export.SheetOrchestrator;
+import com.hospital.backend.service.UrgentFeeCalculator;
+import com.hospital.backend.service.DeductionCalculator;
 import com.hospital.backend.service.ProductMatchService;
+import com.hospital.backend.service.LogisticsImportService;
+import com.hospital.backend.service.ExternalInstrumentService;
 import com.hospital.backend.service.HospitalReconciliationService;
 import com.hospital.backend.service.ReconciliationVersionGroup;
+import com.hospital.backend.export.ExportEngineService;
+import com.hospital.backend.export.ReconciliationLegacyExportBridge;
 import com.hospital.backend.dto.request.hospital.*;
 import com.hospital.backend.dto.response.hospital.ReconciliationExportLogResponse;
 import com.hospital.backend.dto.response.hospital.ReconciliationJobResponse;
@@ -37,6 +49,7 @@ import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -156,7 +169,7 @@ import java.util.stream.Collectors;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class HospitalReconciliationServiceImpl implements HospitalReconciliationService {
+public class HospitalReconciliationServiceImpl implements HospitalReconciliationService, ReconciliationLegacyExportBridge {
 
     /** 核对任务主表 Mapper（一条任务对应一次 Excel 上传核对） */
     private final HospitalReconciliationJobMapper jobMapper;
@@ -173,6 +186,20 @@ public class HospitalReconciliationServiceImpl implements HospitalReconciliation
     private final PricingRuleCompiler pricingRuleCompiler;
 
     private final ProductMatchService productMatchService;
+
+    private final CustomerResolver customerResolver;
+
+    private final LogisticsPipelineService logisticsPipelineService;
+
+    private final LogisticsImportService logisticsImportService;
+
+    private final ExternalInstrumentService externalInstrumentService;
+
+    private final SheetOrchestrator sheetOrchestrator;
+
+    @Lazy
+    @org.springframework.beans.factory.annotation.Autowired
+    private ExportEngineService exportEngineService;
 
     /** 数值格式样式缓存：避免为每个单元格重复创建 0.00 格式的 CellStyle */
     private final Map<String, CellStyle> numericStyleCache = new java.util.concurrent.ConcurrentHashMap<>();
@@ -259,15 +286,172 @@ public class HospitalReconciliationServiceImpl implements HospitalReconciliation
         }
         try {
             JsonNode compiled = pricingRuleCompiler.compile(baseRules, hospitalName);
-            LogisticsFeeCalculator.compute(compiled, rows).ifPresent(result -> {
-                job.setLogisticsTripCount(result.tripCount());
-                job.setLogisticsFee(result.totalFee());
-                job.setLogisticsBreakdown(LogisticsFeeCalculator.toBreakdownJson(result));
-            });
+            Long customerId = customerResolver.resolveByName(hospitalName).map(c -> c.getId()).orElse(null);
+            String billingMonth = resolveBillingMonth(job);
+            Map<String, Object> breakdown = logisticsPipelineService.buildBreakdownForJob(
+                    customerId, job.getId(), billingMonth, compiled, rows, true);
+            if (!breakdown.isEmpty()) {
+                Object tripCount = breakdown.get("tripCount");
+                Object total = breakdown.getOrDefault("payableFee", breakdown.get("total"));
+                if (tripCount instanceof Number number) {
+                    job.setLogisticsTripCount(number.intValue());
+                }
+                if (total instanceof Number feeNumber) {
+                    job.setLogisticsFee(feeNumber.doubleValue());
+                }
+                job.setLogisticsBreakdown(logisticsPipelineService.toBreakdownJson(breakdown));
+            } else {
+                LogisticsFeeCalculator.compute(compiled, rows).ifPresent(result -> {
+                    job.setLogisticsTripCount(result.tripCount());
+                    job.setLogisticsFee(result.totalFee());
+                    job.setLogisticsBreakdown(LogisticsFeeCalculator.toBreakdownJson(result));
+                });
+            }
             applyMonthlySettlementToJob(job, compiled);
+            applyUrgentAndDeductionToJob(job, compiled, rows);
         } catch (Exception e) {
             log.warn("物流费计算失败: {}", e.getMessage());
         }
+    }
+
+    private String resolveBillingMonth(HospitalReconciliationJob job) {
+        if (job.getSourceDateRange() != null && job.getSourceDateRange().length() >= 7) {
+            String prefix = job.getSourceDateRange().substring(0, 7);
+            if (prefix.matches("\\d{4}-\\d{2}")) {
+                return prefix;
+            }
+        }
+        if (job.getCreatedAt() != null) {
+            return job.getCreatedAt().format(java.time.format.DateTimeFormatter.ofPattern("yyyy-MM"));
+        }
+        return null;
+    }
+
+    private void finalizeJobLogistics(
+            HospitalReconciliationJob job,
+            JsonNode baseRules,
+            String hospitalName,
+            List<Map<String, Object>> rows) {
+        if (job.getId() == null || baseRules == null || hospitalName == null || hospitalName.isBlank()) {
+            return;
+        }
+        Long customerId = customerResolver.resolveByName(hospitalName).map(c -> c.getId()).orElse(null);
+        if (customerId != null) {
+            logisticsImportService.linkImportsToJob(customerId, resolveBillingMonth(job), job.getId());
+        }
+        applyLogisticsToJob(job, baseRules, hospitalName, rows);
+        jobMapper.updateById(job);
+    }
+
+    @Override
+    public Result<LogisticsAllocationPreviewResponse> getLogisticsAllocationPreview(Long jobId) {
+        HospitalReconciliationJob job = jobMapper.selectById(jobId);
+        if (job == null) {
+            return Result.fail(404, "Reconciliation job not found");
+        }
+        try {
+            JsonNode baseRules = loadRulesForJob(job);
+            if (baseRules == null) {
+                return Result.fail(400, "无法加载计价规则");
+            }
+            JsonNode compiled = pricingRuleCompiler.compile(baseRules, job.getHospitalName());
+            List<Map<String, Object>> rows = loadAllRowsForJob(job);
+            Long customerId = customerResolver.resolveByName(job.getHospitalName())
+                    .map(c -> c.getId()).orElse(null);
+            Map<String, Object> breakdown = logisticsPipelineService.buildBreakdownForJob(
+                    customerId, jobId, resolveBillingMonth(job), compiled, rows, false);
+            double totalFee = job.getLogisticsFee() != null
+                    ? job.getLogisticsFee()
+                    : breakdown.get("total") instanceof Number n ? n.doubleValue() : 0;
+            LogisticsAllocationService.AllocationResult allocation =
+                    logisticsPipelineService.previewDeptAllocation(compiled, rows, totalFee);
+            return Result.success(LogisticsAllocationPreviewResponse.builder()
+                    .jobId(jobId)
+                    .totalLogisticsFee(totalFee)
+                    .allocationSum(allocation.allocatedSum())
+                    .deptAllocations(LogisticsAllocationService.toBreakdownList(allocation))
+                    .logisticsBreakdown(breakdown)
+                    .build());
+        } catch (Exception e) {
+            log.warn("物流分摊预览失败 jobId={}: {}", jobId, e.getMessage());
+            return Result.fail(500, "物流分摊预览失败: " + e.getMessage());
+        }
+    }
+
+    @Override
+    public ResponseEntity<byte[]> exportLogisticsAllocation(Long jobId) {
+        Result<LogisticsAllocationPreviewResponse> preview = getLogisticsAllocationPreview(jobId);
+        if (preview.getCode() != 200 || preview.getData() == null) {
+            return ResponseEntity.badRequest().build();
+        }
+        try {
+            HospitalReconciliationJob job = jobMapper.selectById(jobId);
+            byte[] content = sheetOrchestrator.buildLogisticsAllocationWorkbook(
+                    job != null ? job.getHospitalName() : null,
+                    preview.getData().getDeptAllocations());
+            String filename = (job != null ? safeName(job.getHospitalName()) : "hospital")
+                    + "_物流分摊_" + LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmmss"))
+                    + ".xlsx";
+            return ResponseEntity.ok()
+                    .header(HttpHeaders.CONTENT_DISPOSITION, buildContentDisposition(asciiDownloadName(filename)))
+                    .contentType(MediaType.parseMediaType(
+                            "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"))
+                    .body(content);
+        } catch (Exception e) {
+            log.error("导出物流分摊失败 jobId={}: {}", jobId, e.getMessage(), e);
+            return ResponseEntity.internalServerError().build();
+        }
+    }
+
+    private JsonNode loadRulesForJob(HospitalReconciliationJob job) {
+        if (job.getRuleId() == null) {
+            return null;
+        }
+        HospitalPricingRule rule = pricingRuleMapper.selectById(job.getRuleId());
+        if (rule == null || rule.getRulesJson() == null || rule.getRulesJson().isBlank()) {
+            return null;
+        }
+        try {
+            return JsonUtils.getObjectMapper().readTree(rule.getRulesJson());
+        } catch (Exception e) {
+            log.warn("解析计价规则失败 jobId={}: {}", job.getId(), e.getMessage());
+            return null;
+        }
+    }
+
+    private List<Map<String, Object>> loadAllRowsForJob(HospitalReconciliationJob job) {
+        if (job.getRowsJson() != null && !job.getRowsJson().isBlank()) {
+            List<?> parsed = JsonUtils.parseToList(job.getRowsJson(), Map.class);
+            if (parsed != null) {
+                List<Map<String, Object>> rows = new ArrayList<>();
+                for (Object item : parsed) {
+                    if (item instanceof Map<?, ?> map) {
+                        rows.add(castRowMap(map));
+                    }
+                }
+                return rows;
+            }
+        }
+        return rowMapper.selectByJobIdOrderBySheetNameAscRowNumberAsc(job.getId()).stream()
+                .map(this::rowEntityToMap)
+                .toList();
+    }
+
+    @SuppressWarnings("unchecked")
+    private static Map<String, Object> castRowMap(Map<?, ?> map) {
+        return (Map<String, Object>) map;
+    }
+
+    private void applyUrgentAndDeductionToJob(
+            HospitalReconciliationJob job,
+            JsonNode compiledRules,
+            List<Map<String, Object>> rows) {
+        UrgentFeeCalculator.compute(compiledRules, rows).ifPresentOrElse(
+                result -> job.setUrgentBreakdown(UrgentFeeCalculator.toBreakdownJson(result)),
+                () -> job.setUrgentBreakdown(null));
+        DeductionCalculator.compute(compiledRules).ifPresentOrElse(
+                result -> job.setDeductionBreakdown(DeductionCalculator.toBreakdownJson(result)),
+                () -> job.setDeductionBreakdown(null));
     }
 
     private void applyMonthlySettlementToJob(HospitalReconciliationJob job, JsonNode compiledRules) {
@@ -645,16 +829,22 @@ public class HospitalReconciliationServiceImpl implements HospitalReconciliation
                     ? hospitalNameParam
                     : (firstSheetHospitalName.isEmpty() ? "未命名医院" : firstSheetHospitalName);
 
-            // 4. 逐行处理
-            PricingEngine engine = buildPricingEngine(rulesJson, hospitalName);
+            // 4. 逐行处理（含 FOLD 拆行）
+            JsonNode compiledRules = pricingRuleCompiler.compile(rulesJson, hospitalName);
+            PricingEngine engine = new PricingEngine(compiledRules);
+            engine.enableStructuredProductMatch(productMatchService);
+            List<Map<String, Object>> rowsToPrice = new ArrayList<>();
+            for (Map<String, Object> row : allRows) {
+                row.put("hospitalName", hospitalName);
+                rowsToPrice.addAll(RowSplitter.expandRow(row, compiledRules));
+            }
             List<Map<String, Object>> processedRows = new ArrayList<>();
             int corrected = 0, unchanged = 0, warning = 0, skipped = 0;
             double totalDiff = 0.0;
             double originalTotal = 0.0;
             double correctedTotal = 0.0;
 
-            for (Map<String, Object> row : allRows) {
-                row.put("hospitalName", hospitalName);
+            for (Map<String, Object> row : rowsToPrice) {
                 enrichProductMatch(row);
                 PricingEngine.ProcessedResult pr = engine.processRow(row);
                 row.put("expectedUnitPrice", pr.expectedUnitPrice);
@@ -713,12 +903,11 @@ public class HospitalReconciliationServiceImpl implements HospitalReconciliation
             job.setOperatorName(operatorName);
             job.setSourceDateRange(dateRangeText);
 
-            // 8. 计算物流费：客户 LOGISTICS 策略优先于全局 logistics.feePerTrip
-            applyLogisticsToJob(job, rulesJson, hospitalName, allRows);
-
+            // 8. 保存任务后关联物流导入并计算物流费
             job.setRowsJson(JsonUtils.toJson(processedRows));
             computeSheetStats(job, processedRows);
             jobMapper.insert(job);
+            finalizeJobLogistics(job, rulesJson, hospitalName, allRows);
 
             // 9. 保存行明细
             saveReconciliationRows(job.getId(), processedRows);
@@ -729,6 +918,20 @@ public class HospitalReconciliationServiceImpl implements HospitalReconciliation
             log.error("导入核对失败: {}", e.getMessage(), e);
             return Result.fail(500, "导入核对失败: " + e.getMessage());
         }
+    }
+
+    @Override
+    public Result<Map<String, Object>> importExternalInstruments(Long jobId, MultipartFile file) {
+        if (file == null || file.isEmpty()) {
+            return Result.fail(400, "请上传外来器械 Excel 文件");
+        }
+        var importResult = externalInstrumentService.importJobExcel(jobId, file);
+        if (importResult.getCode() != 200) {
+            return Result.fail(importResult.getCode(), importResult.getMsg());
+        }
+        return Result.success(Map.of(
+                "jobId", jobId,
+                "importedCount", importResult.getData() != null ? importResult.getData() : 0));
     }
 
     // ---- Excel 读取辅助方法 ----
@@ -899,6 +1102,7 @@ public class HospitalReconciliationServiceImpl implements HospitalReconciliation
 
     private Map<String, Object> rowEntityToMap(HospitalReconciliationRow r) {
         Map<String, Object> m = new LinkedHashMap<>();
+        m.put("id", r.getId());
         m.put("sheetName", r.getSheetName());
         m.put("rowNumber", r.getRowNumber());
         m.put("deliveryDate", r.getDeliveryDate());
@@ -919,6 +1123,7 @@ public class HospitalReconciliationServiceImpl implements HospitalReconciliation
         m.put("notes", JsonUtils.parseToList(r.getNotesJson(), String.class));
         m.put("matchedRuleId", r.getMatchedRuleId());
         m.put("matchedPriceOption", r.getMatchedPriceOption());
+        m.put("isUrgent", Boolean.TRUE.equals(r.getIsUrgent()));
         if (r.getBillingNotes() != null && !r.getBillingNotes().isBlank()) {
             try {
                 m.put("billingNotes", JsonUtils.getObjectMapper().readValue(r.getBillingNotes(), Map.class));
@@ -1028,6 +1233,71 @@ public class HospitalReconciliationServiceImpl implements HospitalReconciliation
 
         HospitalReconciliationJob savedJob = createNewVersionFromJob(job, updatedRows);
         return Result.success(buildJobResponse(savedJob, false));
+    }
+
+    /**
+     * 批量标记/取消加急行。
+     *
+     * PATCH /api/hospital-reconciliations/{jobId}/rows/urgent
+     */
+    @Transactional
+    public Result<ReconciliationJobResponse> updateRowsUrgent(
+            Long jobId,
+            com.hospital.backend.dto.request.hospital.UpdateRowsUrgentRequest request) {
+        HospitalReconciliationJob job = jobMapper.selectById(jobId);
+        if (job == null) {
+            return Result.fail(404, "核对任务不存在");
+        }
+        if (!"pending".equals(job.getReviewStatus())) {
+            return Result.fail(400, "该版本已审核，不可修改");
+        }
+        if (request.getIsUrgent() == null) {
+            return Result.fail(400, "isUrgent 不能为空");
+        }
+
+        List<HospitalReconciliationRow> existingEntities =
+                rowMapper.selectByJobIdOrderBySheetNameAscRowNumberAsc(jobId);
+        if (existingEntities.isEmpty()) {
+            return Result.fail(400, "任务无明细行");
+        }
+
+        boolean matchedAny = false;
+        for (HospitalReconciliationRow row : existingEntities) {
+            if (!matchesUrgentTarget(row, request)) {
+                continue;
+            }
+            row.setIsUrgent(request.getIsUrgent());
+            matchedAny = true;
+        }
+        if (!matchedAny) {
+            return Result.fail(400, "未匹配到任何行");
+        }
+
+        List<Map<String, Object>> updatedRows = existingEntities.stream()
+                .map(this::rowEntityToMap)
+                .collect(Collectors.toList());
+        HospitalReconciliationJob savedJob = createNewVersionFromJob(job, updatedRows);
+        return Result.success(buildJobResponse(savedJob, false));
+    }
+
+    private boolean matchesUrgentTarget(
+            HospitalReconciliationRow row,
+            com.hospital.backend.dto.request.hospital.UpdateRowsUrgentRequest request) {
+        if (request.getRowIds() != null && !request.getRowIds().isEmpty()) {
+            return row.getId() != null && request.getRowIds().contains(row.getId());
+        }
+        if (request.getRows() == null || request.getRows().isEmpty()) {
+            return false;
+        }
+        for (com.hospital.backend.dto.request.hospital.UpdateRowsUrgentRequest.RowRef ref : request.getRows()) {
+            if (ref.getSheetName() != null
+                    && ref.getSheetName().equals(row.getSheetName())
+                    && ref.getRowNumber() != null
+                    && ref.getRowNumber().equals(row.getRowNumber())) {
+                return true;
+            }
+        }
+        return false;
     }
 
     /**
@@ -1283,29 +1553,7 @@ public class HospitalReconciliationServiceImpl implements HospitalReconciliation
      */
     public ResponseEntity<byte[]> exportTemplateBill(
             HospitalBillTemplateExportRequest request) {
-        try {
-            // 生成账单 Excel 字节数组（优先使用模板）
-            byte[] content = generateBillExportBytes(request);
-
-            // 后处理：确保 D8 使用方案名称、列宽正确（直接操作最终字节，不依赖内部流程）
-            content = postProcessBillExport(content, request.getTemplateId());
-
-            // 构造下载文件名：hospitalName_yyyyMMddHHmmss.xlsx
-            String filename = asciiDownloadName(
-                    safeName(request.getHospitalName() != null ? request.getHospitalName() : "hospital")
-                    + "_" + LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmmss"))
-                    + ".xlsx");
-
-            // 返回二进制文件流附件
-            return ResponseEntity.ok()
-                    .header(HttpHeaders.CONTENT_DISPOSITION, buildContentDisposition(filename))
-                    .contentType(MediaType.parseMediaType(
-                            "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"))
-                    .body(content);
-        } catch (Exception e) {
-            log.error("导出账单失败: {}", e.getMessage(), e);
-            return ResponseEntity.internalServerError().build();
-        }
+        return exportEngineService.exportBill(request);
     }
 
     /**
@@ -1327,29 +1575,7 @@ public class HospitalReconciliationServiceImpl implements HospitalReconciliation
      */
     public ResponseEntity<byte[]> exportTemplateSettlement(
             HospitalSettlementTemplateExportRequest request) {
-        try {
-            // 服务端重新计算大写金额，不依赖前端传入的值
-            if (request.getTotalAmount() != null) {
-                request.setUppercaseTotal(amountToChineseUpper(request.getTotalAmount()));
-            }
-            // 生成结款函 Excel 字节数组
-            byte[] content = generateSettlementExportBytes(request);
-
-            // 构造下载文件名：hospitalName_settlement_yyyyMMddHHmmss.xlsx
-            String filename = asciiDownloadName(
-                    safeName(request.getHospitalName() != null ? request.getHospitalName() : "hospital")
-                    + "_settlement_" + LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmmss"))
-                    + ".xlsx");
-
-            return ResponseEntity.ok()
-                    .header(HttpHeaders.CONTENT_DISPOSITION, buildContentDisposition(filename))
-                    .contentType(MediaType.parseMediaType(
-                            "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"))
-                    .body(content);
-        } catch (Exception e) {
-            log.error("导出版本结款函失败: {}", e.getMessage(), e);
-            return ResponseEntity.internalServerError().build();
-        }
+        return exportEngineService.exportSettlement(request);
     }
 
     // ========================================================================
@@ -2126,6 +2352,8 @@ public class HospitalReconciliationServiceImpl implements HospitalReconciliation
         response.setLogisticsBreakdown(parseLogisticsBreakdown(job.getLogisticsBreakdown()));
         response.setSettlementAdjustment(job.getSettlementAdjustment());
         response.setMonthlyBreakdown(parseMonthlyBreakdown(job.getMonthlyBreakdown()));
+        response.setUrgentBreakdown(parseMonthlyBreakdown(job.getUrgentBreakdown()));
+        response.setDeductionBreakdown(parseMonthlyBreakdown(job.getDeductionBreakdown()));
         return response;
     }
 
@@ -2276,6 +2504,18 @@ public class HospitalReconciliationServiceImpl implements HospitalReconciliation
         newJob.setRowsJson(JsonUtils.toJson(updatedRows));
         applySummaryFromRows(newJob, updatedRows);
         computeSheetStats(newJob, updatedRows);
+        if (source.getRuleId() != null) {
+            HospitalPricingRule ruleEntity = pricingRuleMapper.selectById(source.getRuleId());
+            if (ruleEntity != null) {
+                try {
+                    JsonNode rulesJson = JsonUtils.getObjectMapper().readTree(ruleEntity.getRulesJson());
+                    recomputeJobPriceTotals(newJob, updatedRows);
+                    applyLogisticsToJob(newJob, rulesJson, hospitalName, updatedRows);
+                } catch (Exception e) {
+                    log.warn("结算策略重算失败: {}", e.getMessage());
+                }
+            }
+        }
         jobMapper.insert(newJob);
         saveReconciliationRows(newJob.getId(), updatedRows);
         return newJob;
@@ -2369,7 +2609,8 @@ public class HospitalReconciliationServiceImpl implements HospitalReconciliation
      * @return Excel 文件字节数组
      * @throws IOException 文件读取或工作簿写入异常
      */
-    private byte[] generateBillExportBytes(HospitalBillTemplateExportRequest request) throws IOException {
+    @Override
+    public byte[] generateBillExportBytes(HospitalBillTemplateExportRequest request) throws IOException {
         // ===== 自动加载：如前端未传 rows/metas，则从数据库按 jobId 查询 =====
         if (request.getTemplateId() != null) {
             Long jobId = Long.parseLong(request.getTemplateId());
@@ -2671,7 +2912,8 @@ public class HospitalReconciliationServiceImpl implements HospitalReconciliation
      * 1. D8 优先使用原始导入文件第9行 D 列的值，若为空则回退到方案名称
      * 2. K 列（总价）收窄宽度
      */
-    private byte[] postProcessBillExport(byte[] content, String templateId) {
+    @Override
+    public byte[] postProcessBillExport(byte[] content, String templateId) {
         if (templateId == null || templateId.isBlank()) return content;
         try {
             Long jobId = Long.parseLong(templateId);
@@ -3759,7 +4001,12 @@ public class HospitalReconciliationServiceImpl implements HospitalReconciliation
      * @return Excel 文件字节数组
      * @throws IOException 文件读写异常
      */
-    private byte[] generateSettlementExportBytes(HospitalSettlementTemplateExportRequest request) throws IOException {
+    @Override
+    public byte[] generateSettlementExportBytes(HospitalSettlementTemplateExportRequest request) throws IOException {
+        if (request.getTotalAmount() != null
+                && (request.getUppercaseTotal() == null || request.getUppercaseTotal().isBlank())) {
+            request.setUppercaseTotal(amountToChineseUpper(request.getTotalAmount()));
+        }
         // 从任务中提取方案名称和结算月份（优先取文件名中的月份）
         String planName = null;
         int year = 0, month = 0;
@@ -5115,6 +5362,11 @@ public class HospitalReconciliationServiceImpl implements HospitalReconciliation
                 billingNotes = rowData.get("billing_notes");
             }
             row.setBillingNotes(billingNotes != null ? JsonUtils.toJson(billingNotes) : null);
+            Object isUrgent = rowData.get("isUrgent");
+            if (isUrgent == null) {
+                isUrgent = rowData.get("is_urgent");
+            }
+            row.setIsUrgent(parseBooleanFlag(isUrgent));
             entities.add(row);
         }
 
@@ -5501,6 +5753,15 @@ public class HospitalReconciliationServiceImpl implements HospitalReconciliation
         return result.isEmpty() ? "hospital" : result;
     }
 
+    @Override
+    public ResponseEntity<byte[]> buildExcelDownloadResponse(byte[] content, String filename) {
+        return ResponseEntity.ok()
+                .header(HttpHeaders.CONTENT_DISPOSITION, buildContentDisposition(filename))
+                .contentType(MediaType.parseMediaType(
+                        "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"))
+                .body(content);
+    }
+
     /**
      * 构建 HTTP Content-Disposition 响应头
      *
@@ -5689,6 +5950,19 @@ public class HospitalReconciliationServiceImpl implements HospitalReconciliation
      * @param defaultValue 值为 null 时的默认值
      * @return 字符串值
      */
+    private boolean parseBooleanFlag(Object value) {
+        if (value instanceof Boolean bool) {
+            return bool;
+        }
+        if (value instanceof Number number) {
+            return number.intValue() != 0;
+        }
+        if (value instanceof String str) {
+            return "true".equalsIgnoreCase(str) || "1".equals(str);
+        }
+        return false;
+    }
+
     private String valueToString(Object value, String defaultValue) {
         if (value == null) return defaultValue;
         return String.valueOf(value);

@@ -25,6 +25,7 @@
         :max="max"
         :step="step ?? 1"
         :precision="precision"
+        :clearable="optional"
         class="rule-number-field__input"
         controls-position="right"
         @update:model-value="emitValue"
@@ -50,14 +51,17 @@ const props = withDefaults(defineProps<{
   step?: number
   precision?: number
   quickSteps?: number[]
+  /** 允许留空；清空时不写入 0，而是 undefined */
+  optional?: boolean
 }>(), {
-  modelValue: 0,
+  modelValue: undefined,
   kind: 'price',
   min: 0,
   max: undefined,
   step: 0.5,
   precision: 2,
   quickSteps: () => [0.5, 1, 5],
+  optional: false,
 })
 
 const emit = defineEmits<{
@@ -65,13 +69,20 @@ const emit = defineEmits<{
   change: [value: number]
 }>()
 
-function emitValue(val: number | undefined) {
-  const v = val ?? 0
-  emit('update:modelValue', v)
+function emitValue(val: number | undefined | null) {
+  if (props.optional && (val == null || Number.isNaN(val))) {
+    emit('update:modelValue', undefined)
+    return
+  }
+  emit('update:modelValue', val ?? (props.optional ? undefined : 0))
 }
 
-function emitChange(val: number | undefined) {
-  const v = val ?? props.modelValue ?? 0
+function emitChange(val: number | undefined | null) {
+  if (props.optional && (val == null || Number.isNaN(val))) {
+    emit('change', undefined)
+    return
+  }
+  const v = val ?? (props.optional ? undefined : (props.modelValue ?? 0))
   emit('change', v)
 }
 </script>

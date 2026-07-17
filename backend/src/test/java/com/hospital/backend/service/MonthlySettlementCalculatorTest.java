@@ -5,6 +5,8 @@ import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.junit.jupiter.api.Test;
 
+import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -42,6 +44,31 @@ class MonthlySettlementCalculatorTest {
     void returnsEmptyWhenNoMonthlyPolicyConfigured() {
         ObjectNode rules = MAPPER.createObjectNode();
         assertThat(MonthlySettlementCalculator.compute(rules, 5000)).isEmpty();
+    }
+
+    @Test
+    void excludesCategoriesFromMinChargeBase() throws Exception {
+        ObjectNode rules = rulesWithMonthlyPolicy(8000.0, null);
+        ArrayNode exclude = rules.path("billingPolicies").get(0).path("params").withArray("excludeCategories");
+        exclude.add("外科包");
+
+        List<Map<String, Object>> rows = List.of(
+                row("外科包", 2000.0),
+                row("普通包", 6500.0)
+        );
+        Optional<MonthlySettlementCalculator.Result> result =
+                MonthlySettlementCalculator.compute(rules, 8500, rows);
+
+        assertThat(result).isPresent();
+        assertThat(result.get().excludedTotal()).isEqualTo(2000.0);
+        assertThat(result.get().adjustedTotal()).isEqualTo(8000.0);
+    }
+
+    private static Map<String, Object> row(String packName, double total) {
+        Map<String, Object> row = new java.util.LinkedHashMap<>();
+        row.put("packName", packName);
+        row.put("correctedTotalPrice", total);
+        return row;
     }
 
     private static ObjectNode rulesWithMonthlyPolicy(Double minCharge, Double maxCap) {

@@ -1,0 +1,204 @@
+{
+  "version": "1",
+  "description": "Phase 5 Batch-C：呼兰中医 / 祖研三院 / 太平 / 仁胜 / 国药物流卡",
+  "profiles": [
+    {
+      "code": "HULAN-TCM",
+      "name": "呼兰中医院",
+      "billingEnabled": true,
+      "billingPricingMode": "hybrid",
+      "aliases": ["呼兰中医", "呼兰中医院", "哈尔滨市呼兰区中医医院"],
+      "policies": [
+        {
+          "policyType": "LOGISTICS",
+          "name": "物流185元/次",
+          "params": {"feePerTrip": 185},
+          "priority": 10
+        },
+        {
+          "policyType": "MONTHLY_SETTLEMENT",
+          "name": "低消10000",
+          "params": {
+            "minCharge": 10000,
+            "excludeCategories": ["备包", "手术室备包"]
+          },
+          "priority": 20
+        }
+      ],
+      "productRules": [
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "外科包固定价",
+          "priority": 10,
+          "price": 249.5,
+          "keywords": ["外科包"],
+          "skipPackaging": true,
+          "skipDiscount": true
+        },
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "阑尾包固定价",
+          "priority": 20,
+          "price": 288,
+          "keywords": ["阑尾包"],
+          "skipPackaging": true,
+          "skipDiscount": true
+        }
+      ]
+    },
+    {
+      "code": "ZUYAN-NG",
+      "name": "祖研-黑龙江省中医医院（南岗院区）",
+      "billingEnabled": true,
+      "billingPricingMode": "hybrid",
+      "aliases": ["祖研南岗", "黑龙江省中医医院南岗"],
+      "policies": [
+        {
+          "policyType": "LOGISTICS",
+          "name": "南岗135物流50",
+          "params": {"feePerTrip": 50, "billingWeekdays": [1, 3, 5]},
+          "priority": 10
+        }
+      ],
+      "productRules": [
+        {
+          "ruleType": "FOLD",
+          "name": "排针10盘算1件",
+          "priority": 10,
+          "keywords": ["排针"],
+          "threshold": 10,
+          "foldRatio": 5.5
+        }
+      ]
+    },
+    {
+      "code": "ZUYAN-SF",
+      "name": "祖研-黑龙江省中医医院（三辅院区）",
+      "billingEnabled": true,
+      "billingPricingMode": "hybrid",
+      "aliases": ["祖研三辅", "三辅院区"],
+      "policies": [
+        {
+          "policyType": "LOGISTICS",
+          "name": "三辅物流50跨院合并",
+          "params": {"feePerTrip": 50, "mergeSameDayCrossCustomer": true},
+          "priority": 10
+        }
+      ]
+    },
+    {
+      "code": "ZUYAN-XA",
+      "name": "祖研-黑龙江省中医医院（香安院区）",
+      "billingEnabled": true,
+      "billingPricingMode": "hybrid",
+      "aliases": ["祖研香安", "香安院区"],
+      "policies": [
+        {
+          "policyType": "LOGISTICS",
+          "name": "香安物流50跨院合并",
+          "params": {"feePerTrip": 50, "mergeSameDayCrossCustomer": true},
+          "priority": 10
+        }
+      ],
+      "productRules": [
+        {
+          "ruleType": "FOLD",
+          "name": "排针10盘算1件",
+          "priority": 10,
+          "keywords": ["排针"],
+          "threshold": 10,
+          "foldRatio": 5.5
+        }
+      ]
+    },
+    {
+      "code": "TAIPING-RM",
+      "name": "太平人民医院",
+      "billingEnabled": true,
+      "billingPricingMode": "hybrid",
+      "aliases": ["太平人民", "太平人民医院"],
+      "policies": [
+        {
+          "policyType": "DISCOUNT",
+          "name": "太平导出阶段折扣",
+          "params": {
+            "applyStage": "export_only",
+            "pieceTierDiscounts": [
+              {"minPieces": 1, "maxPieces": 1, "rate": 1.0},
+              {"minPieces": 2, "maxPieces": 2, "rate": 0.75},
+              {"minPieces": 3, "maxPieces": 3, "rate": 0.891, "originalUnitPriceEquals": 16.5},
+              {"minPieces": 4, "maxPieces": 999, "rate": 0.75}
+            ]
+          },
+          "priority": 10
+        },
+        {
+          "policyType": "LOGISTICS",
+          "name": "不收物流费",
+          "params": {"feePerTrip": 0},
+          "priority": 20
+        }
+      ]
+    },
+    {
+      "code": "RENSHENG",
+      "name": "哈尔滨仁胜医院",
+      "billingEnabled": true,
+      "billingPricingMode": "standard",
+      "aliases": ["仁胜", "哈尔滨仁胜医院"],
+      "policies": [
+        {
+          "policyType": "LOGISTICS",
+          "name": "物流卡抵扣",
+          "params": {"useLogisticsCard": true},
+          "priority": 10
+        }
+      ]
+    },
+    {
+      "code": "GUOYAO-MAIN",
+      "name": "国药总医院主院区",
+      "billingEnabled": true,
+      "billingPricingMode": "hybrid",
+      "aliases": ["汽轮机", "国药主院区", "哈尔滨汽轮机医院", "国药总医院主院区"],
+      "exportNameMapping": {"哈尔滨汽轮机医院": "国药总医院主院区", "电机厂医院": "国药总医院第二院区"},
+      "policies": [
+        {
+          "policyType": "LOGISTICS",
+          "name": "物流卡抵扣",
+          "params": {"useLogisticsCard": true},
+          "priority": 10
+        }
+      ],
+      "productRules": [
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "10mm30度镜固定价",
+          "priority": 10,
+          "price": 28,
+          "keywords": ["30度镜", "10mm"],
+          "temperature": "HT",
+          "skipPackaging": true,
+          "skipDiscount": true
+        },
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "驱血带固定价",
+          "priority": 20,
+          "price": 13,
+          "keywords": ["驱血带"],
+          "skipPackaging": true,
+          "skipDiscount": true
+        }
+      ]
+    }
+  ],
+  "customerGroups": [
+    {
+      "name": "祖研三院物流同日合并",
+      "groupType": "logistics_merge",
+      "memberCodes": ["ZUYAN-NG", "ZUYAN-SF", "ZUYAN-XA"],
+      "config": {"splitFeeWhenBothShip": true, "feePerTrip": 50}
+    }
+  ]
+}

@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hospital.backend.mapper.DepartmentEntryMapper">
+
+    <resultMap id="DepartmentEntryResultMap" type="com.hospital.backend.entity.DepartmentEntry">
+        <id property="id" column="id"/>
+        <result property="customerId" column="customer_id"/>
+        <result property="departmentName" column="department_name"/>
+        <result property="code" column="code"/>
+        <result property="notes" column="notes"/>
+        <result property="usageCount" column="usage_count"/>
+        <result property="isActive" column="is_active"/>
+        <result property="createdAt" column="created_at"/>
+        <result property="updatedAt" column="updated_at"/>
+    </resultMap>
+
+    <insert id="insert" parameterType="com.hospital.backend.entity.DepartmentEntry" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO department_entry (customer_id, department_name, code, notes, usage_count, is_active, created_at, updated_at)
+        VALUES (#{customerId}, #{departmentName}, #{code}, #{notes}, #{usageCount}, #{isActive}, NOW(), NOW())
+    </insert>
+
+    <update id="updateById" parameterType="com.hospital.backend.entity.DepartmentEntry">
+        UPDATE department_entry
+        SET department_name = #{departmentName},
+            code = #{code},
+            notes = #{notes},
+            is_active = #{isActive},
+            updated_at = NOW()
+        WHERE id = #{id}
+    </update>
+
+    <delete id="deleteById">
+        DELETE FROM department_entry WHERE id = #{id}
+    </delete>
+
+    <select id="selectById" resultMap="DepartmentEntryResultMap">
+        SELECT * FROM department_entry WHERE id = #{id}
+    </select>
+
+    <select id="selectByCustomerId" resultMap="DepartmentEntryResultMap">
+        SELECT * FROM department_entry
+        WHERE customer_id = #{customerId}
+        ORDER BY department_name
+    </select>
+
+    <select id="countActiveByCustomerId" resultType="int">
+        SELECT COUNT(*) FROM department_entry
+        WHERE customer_id = #{customerId} AND is_active = 1
+    </select>
+</mapper>

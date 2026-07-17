@@ -1,0 +1,57 @@
+{
+  "version": "1",
+  "description": "Phase 7 Batch-E：省医院 / 市二院 / 国药 / 中医大二院 复杂导出配置",
+  "profiles": [
+    {
+      "code": "SHENG-YY-NG",
+      "name": "黑龙江省医院（南岗院区）",
+      "billingEnabled": true,
+      "billingPricingMode": "hybrid",
+      "aliases": ["省医院南岗", "黑龙江省医院南岗"]
+    },
+    {
+      "code": "SHENG-YY-XF",
+      "name": "黑龙江省医院（香坊院区）",
+      "billingEnabled": true,
+      "billingPricingMode": "hybrid",
+      "aliases": ["省医院香坊", "黑龙江省医院香坊"]
+    },
+    {
+      "code": "HRB-2ND",
+      "name": "哈尔滨市第二医院",
+      "billingEnabled": true,
+      "billingPricingMode": "hybrid",
+      "aliases": ["市二院", "哈尔滨市第二医院"]
+    },
+    {
+      "code": "GUOYAO-2",
+      "name": "国药总医院第二院区",
+      "billingEnabled": true,
+      "billingPricingMode": "hybrid",
+      "aliases": ["电机厂", "国药第二院区"],
+      "exportNameMapping": {"电机厂医院": "国药总医院第二院区"}
+    },
+    {
+      "code": "GUOYAO-3",
+      "name": "国药总医院第三院区",
+      "billingEnabled": true,
+      "billingPricingMode": "hybrid",
+      "aliases": ["锅炉厂", "国药第三院区"],
+      "exportNameMapping": {"哈尔滨锅炉厂医院": "国药总医院第三院区"}
+    },
+    {
+      "code": "ZYY-D2-NG",
+      "name": "黑龙江中医药大学附属第二医院（南岗）",
+      "billingEnabled": true,
+      "billingPricingMode": "hybrid",
+      "aliases": ["中医大二院南岗"]
+    },
+    {
+      "code": "ZYY-D2-HN",
+      "name": "黑龙江中医药大学附属第二医院（哈南分院）",
+      "billingEnabled": true,
+      "billingPricingMode": "hybrid",
+      "aliases": ["中医大二院哈南"]
+    }
+  ]
+}

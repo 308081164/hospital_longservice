@@ -80,6 +80,16 @@ public class DataInitializer implements CommandLineRunner {
         }
         log.info("默认用户初始密码: {}", defaultPassword);
 
+        String adminPassword = AdminUserInitializer.ADMIN_PASSWORD;
+        User admin = new User();
+        admin.setUsername(AdminUserInitializer.ADMIN_USERNAME);
+        admin.setEmail("admin@hospital.com");
+        admin.setPassword(passwordEncoder.encode(adminPassword));
+        admin.setIsActive(true);
+        admin.setIsSuperuser(true);
+        userMapper.insert(admin);
+        log.info("  超级管理员 {} 已创建，初始密码: {}", AdminUserInitializer.ADMIN_USERNAME, adminPassword);
+
         log.info("数据初始化完成！");
     }
 

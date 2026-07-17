@@ -9,16 +9,20 @@ import com.hospital.backend.entity.Customer;
 import com.hospital.backend.entity.CustomerBillingPolicy;
 import com.hospital.backend.entity.CustomerProductRule;
 import com.hospital.backend.mapper.CustomerBillingPolicyMapper;
+import com.hospital.backend.mapper.CustomerBillingRuleGroupMapper;
 import com.hospital.backend.mapper.CustomerDiscountMapper;
 import com.hospital.backend.mapper.CustomerProductRuleMapper;
 import com.hospital.backend.mapper.ProductMapper;
 import com.hospital.backend.mapper.ProductMatchRuleMapper;
+import com.hospital.backend.mapper.ProductVariantMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.mockito.junit.jupiter.MockitoSettings;
+import org.mockito.quality.Strictness;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -30,6 +34,7 @@ import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
+@MockitoSettings(strictness = Strictness.LENIENT)
 class PricingRuleCompilerIntegrationTest {
 
     private static final ObjectMapper MAPPER = JsonUtils.getObjectMapper();
@@ -43,6 +48,10 @@ class PricingRuleCompilerIntegrationTest {
     @Mock
     private CustomerBillingPolicyMapper billingPolicyMapper;
     @Mock
+    private CustomerBillingRuleGroupMapper ruleGroupMapper;
+    @Mock
+    private ProductVariantMapper productVariantMapper;
+    @Mock
     private ProductMapper productMapper;
     @Mock
     private ProductMatchRuleMapper productMatchRuleMapper;
@@ -55,6 +64,8 @@ class PricingRuleCompilerIntegrationTest {
     @BeforeEach
     void stubBillingPoliciesEmpty() {
         when(billingPolicyMapper.selectByCustomerId(anyLong())).thenReturn(List.of());
+        when(ruleGroupMapper.selectByCustomerIdAndCode(anyLong(), org.mockito.ArgumentMatchers.anyString()))
+                .thenReturn(null);
     }
 
     @Test
@@ -364,7 +375,7 @@ class PricingRuleCompilerIntegrationTest {
                 "unitPrice", 11,
                 "totalPrice", 11
         ));
-        assertThat(htResult.notes).anyMatch(note -> note.contains("0.5"));
+        assertThat(htResult.notes).anyMatch(note -> note.contains("5折") || note.contains("0.5"));
 
         PricingEngine.ProcessedResult ltResult = engine.processRow(Map.of(
                 "hospitalName", "维多利亚医院",
@@ -376,7 +387,7 @@ class PricingRuleCompilerIntegrationTest {
                 "unitPrice", 19.6,
                 "totalPrice", 19.6
         ));
-        assertThat(ltResult.notes).anyMatch(note -> note.contains("0.7"));
+        assertThat(ltResult.notes).anyMatch(note -> note.contains("7折") || note.contains("0.7"));
     }
 
     @Test
@@ -458,5 +469,151 @@ class PricingRuleCompilerIntegrationTest {
         JsonNode compiled = compiler.compile(MAPPER.valueToTree(DefaultPricingTemplate.buildRulesMap()), "维多利亚");
         assertThat(compiled.path("billingPolicies").get(0).path("policyType").asText()).isEqualTo("MONTHLY_SETTLEMENT");
         assertThat(compiled.path("billingPolicies").get(0).path("params").path("minCharge").asDouble()).isEqualTo(8000.0);
+    }
+
+    @Test
+    void billingDisabledSkipsCustomerRulesInEngine() throws Exception {
+        when(ruleSchemaValidator.validateJsonNode(org.mockito.ArgumentMatchers.any(JsonNode.class)))
+                .thenReturn(RuleSchemaValidator.ValidationResult.ok());
+
+        Customer customer = new Customer();
+        customer.setId(11L);
+        customer.setCanonicalName("关闭特色引擎医院");
+        customer.setBillingEnabled(false);
+        when(customerResolver.resolveByName("关闭特色引擎医院")).thenReturn(Optional.of(customer));
+        when(customerResolver.hospitalNamesForCustomer(customer)).thenReturn(List.of("关闭特色引擎医院"));
+        when(discountMapper.selectByCustomerId(11L)).thenReturn(List.of());
+
+        CustomerProductRule fixed = new CustomerProductRule();
+        fixed.setIsActive(true);
+        fixed.setRuleType("FIXED_PRICE");
+        fixed.setName("不应生效");
+        fixed.setKeywords("[\"空心钉\"]");
+        fixed.setPrice(BigDecimal.valueOf(99));
+        when(productRuleMapper.selectByCustomerId(11L)).thenReturn(List.of(fixed));
+
+        JsonNode compiled = compiler.compile(MAPPER.valueToTree(DefaultPricingTemplate.buildRulesMap()), "关闭特色引擎医院");
+        assertThat(compiled.path("billingProfile").path("enabled").asBoolean()).isFalse();
+        assertThat(compiled.path("specialRules").path("fixedPrices")).isEmpty();
+
+        PricingEngine engine = new PricingEngine(compiled);
+        PricingEngine.ProcessedResult result = engine.processRow(Map.of(
+                "hospitalName", "关闭特色引擎医院",
+                "type", "额外包(纸塑袋)",
+                "packName", "3.6空心钉-2",
+                "packageMaterial", "高温纸塑袋75*200",
+                "instrumentCount", 2,
+                "packCount", 1,
+                "unitPrice", 99,
+                "totalPrice", 99
+        ));
+        assertThat(result.notes).noneMatch(note -> note.contains("不应生效"));
+    }
+
+    @Test
+    void compilesExcludeKeywordsAndAppliesInEngine() throws Exception {
+        when(ruleSchemaValidator.validateJsonNode(org.mockito.ArgumentMatchers.any(JsonNode.class)))
+                .thenReturn(RuleSchemaValidator.ValidationResult.ok());
+
+        Customer customer = new Customer();
+        customer.setId(12L);
+        customer.setCanonicalName("省二院");
+        customer.setBillingEnabled(true);
+        when(customerResolver.resolveByName("省二院")).thenReturn(Optional.of(customer));
+        when(customerResolver.hospitalNamesForCustomer(customer)).thenReturn(List.of("省二院"));
+        when(discountMapper.selectByCustomerId(12L)).thenReturn(List.of());
+
+        CustomerProductRule nailRule = new CustomerProductRule();
+        nailRule.setId(120L);
+        nailRule.setIsActive(true);
+        nailRule.setRuleType("FIXED_PRICE");
+        nailRule.setName("xx钉");
+        nailRule.setKeywords("[\"钉\"]");
+        nailRule.setExcludeKeywords("[\"空心钉\"]");
+        nailRule.setPrice(BigDecimal.valueOf(200));
+        nailRule.setSkipPackaging(true);
+        when(productRuleMapper.selectByCustomerId(12L)).thenReturn(List.of(nailRule));
+
+        JsonNode compiled = compiler.compile(MAPPER.valueToTree(DefaultPricingTemplate.buildRulesMap()), "省二院");
+        JsonNode compiledRule = compiled.path("specialRules").path("fixedPrices").get(0);
+        assertThat(compiledRule.path("excludeKeywords").get(0).asText()).isEqualTo("空心钉");
+
+        PricingEngine engine = new PricingEngine(compiled);
+        PricingEngine.ProcessedResult hollow = engine.processRow(Map.of(
+                "hospitalName", "省二院",
+                "type", "额外包(纸塑袋)",
+                "packName", "3.6空心钉-2",
+                "packageMaterial", "高温纸塑袋75*200",
+                "instrumentCount", 2,
+                "packCount", 1,
+                "unitPrice", 19,
+                "totalPrice", 19
+        ));
+        assertThat(hollow.notes).noneMatch(note -> note.contains("xx钉"));
+    }
+
+    @Test
+    void compilesSpecialOnlyModeAndAppliesInEngine() throws Exception {
+        when(ruleSchemaValidator.validateJsonNode(org.mockito.ArgumentMatchers.any(JsonNode.class)))
+                .thenReturn(RuleSchemaValidator.ValidationResult.ok());
+
+        Customer customer = new Customer();
+        customer.setId(13L);
+        customer.setCanonicalName("仅特色医院");
+        customer.setBillingEnabled(true);
+        customer.setBillingPricingMode("special_only");
+        when(customerResolver.resolveByName("仅特色医院")).thenReturn(Optional.of(customer));
+        when(customerResolver.hospitalNamesForCustomer(customer)).thenReturn(List.of("仅特色医院"));
+        when(billingPolicyMapper.selectByCustomerId(13L)).thenReturn(List.of());
+        when(discountMapper.selectByCustomerId(13L)).thenReturn(List.of());
+        when(productRuleMapper.selectByCustomerId(13L)).thenReturn(List.of());
+
+        JsonNode compiled = compiler.compile(MAPPER.valueToTree(DefaultPricingTemplate.buildRulesMap()), "仅特色医院");
+        assertThat(compiled.path("billingProfile").path("pricingMode").asText()).isEqualTo("special_only");
+
+        PricingEngine engine = new PricingEngine(compiled);
+        PricingEngine.ProcessedResult result = engine.processRow(Map.of(
+                "hospitalName", "仅特色医院",
+                "type", "额外包(纸塑袋)",
+                "packName", "普通器械-4/Z7526",
+                "packageMaterial", "高温纸塑袋20cm",
+                "instrumentCount", 4,
+                "packCount", 1,
+                "unitPrice", 22,
+                "totalPrice", 22
+        ));
+        assertThat(result.pricingRule).contains("special_only");
+    }
+
+    @Test
+    void compilesPathOverrideAndAppliesInEngine() throws Exception {
+        when(ruleSchemaValidator.validateJsonNode(org.mockito.ArgumentMatchers.any(JsonNode.class)))
+                .thenReturn(RuleSchemaValidator.ValidationResult.ok());
+
+        Customer customer = new Customer();
+        customer.setId(14L);
+        customer.setCanonicalName("道外人民");
+        customer.setBillingEnabled(true);
+        customer.setPathOverride("{\"disableLowTemp\":true,\"forceHighTempUnitPrice\":3}");
+        when(customerResolver.resolveByName("道外人民")).thenReturn(Optional.of(customer));
+        when(customerResolver.hospitalNamesForCustomer(customer)).thenReturn(List.of("道外人民"));
+        when(billingPolicyMapper.selectByCustomerId(14L)).thenReturn(List.of());
+        when(discountMapper.selectByCustomerId(14L)).thenReturn(List.of());
+        when(productRuleMapper.selectByCustomerId(14L)).thenReturn(List.of());
+
+        JsonNode compiled = compiler.compile(MAPPER.valueToTree(DefaultPricingTemplate.buildRulesMap()), "道外人民");
+        PricingEngine engine = new PricingEngine(compiled);
+        PricingEngine.ProcessedResult result = engine.processRow(Map.of(
+                "hospitalName", "道外人民",
+                "type", "单包装包(老肯低温)",
+                "packName", "普通器械-4/Z7526",
+                "packageMaterial", "低温纸塑袋200*600",
+                "instrumentCount", 4,
+                "packCount", 1,
+                "unitPrice", 12,
+                "totalPrice", 12
+        ));
+        assertThat(result.expectedUnitPrice).isEqualTo(12.0);
+        assertThat(result.notes).anyMatch(note -> note.contains("路径覆盖"));
     }
 }

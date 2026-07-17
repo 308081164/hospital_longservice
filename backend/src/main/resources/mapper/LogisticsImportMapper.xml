@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hospital.backend.mapper.LogisticsImportMapper">
+
+    <resultMap id="LogisticsImportResultMap" type="com.hospital.backend.entity.LogisticsImport">
+        <id property="id" column="id"/>
+        <result property="customerId" column="customer_id"/>
+        <result property="jobId" column="job_id"/>
+        <result property="billingMonth" column="billing_month"/>
+        <result property="tripDate" column="trip_date"/>
+        <result property="route" column="route"/>
+        <result property="tripCount" column="trip_count"/>
+        <result property="feeAmount" column="fee_amount"/>
+        <result property="notes" column="notes"/>
+        <result property="createdAt" column="created_at"/>
+        <result property="updatedAt" column="updated_at"/>
+    </resultMap>
+
+    <insert id="insert" parameterType="com.hospital.backend.entity.LogisticsImport" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO logistics_import (customer_id, job_id, billing_month, trip_date, route, trip_count, fee_amount, notes, created_at, updated_at)
+        VALUES (#{customerId}, #{jobId}, #{billingMonth}, #{tripDate}, #{route}, #{tripCount}, #{feeAmount}, #{notes}, NOW(), NOW())
+    </insert>
+
+    <update id="updateById" parameterType="com.hospital.backend.entity.LogisticsImport">
+        UPDATE logistics_import
+        <set>
+            <if test="jobId != null">job_id = #{jobId},</if>
+            <if test="billingMonth != null">billing_month = #{billingMonth},</if>
+            <if test="tripDate != null">trip_date = #{tripDate},</if>
+            <if test="route != null">route = #{route},</if>
+            <if test="tripCount != null">trip_count = #{tripCount},</if>
+            fee_amount = #{feeAmount},
+            notes = #{notes},
+            updated_at = NOW(),
+        </set>
+        WHERE id = #{id}
+    </update>
+
+    <select id="selectById" resultMap="LogisticsImportResultMap">
+        SELECT * FROM logistics_import WHERE id = #{id}
+    </select>
+
+    <select id="selectByCustomerId" resultMap="LogisticsImportResultMap">
+        SELECT * FROM logistics_import WHERE customer_id = #{customerId} ORDER BY trip_date DESC, id DESC
+    </select>
+
+    <select id="selectByCustomerAndMonth" resultMap="LogisticsImportResultMap">
+        SELECT * FROM logistics_import
+        WHERE customer_id = #{customerId}
+          AND billing_month = #{billingMonth}
+        ORDER BY trip_date ASC, id ASC
+    </select>
+
+    <select id="selectByJobId" resultMap="LogisticsImportResultMap">
+        SELECT * FROM logistics_import WHERE job_id = #{jobId} ORDER BY trip_date ASC
+    </select>
+
+    <update id="linkJobByCustomerAndMonth">
+        UPDATE logistics_import
+        SET job_id = #{jobId}, updated_at = NOW()
+        WHERE customer_id = #{customerId}
+          AND billing_month = #{billingMonth}
+          AND (job_id IS NULL OR job_id = #{jobId})
+    </update>
+
+    <delete id="deleteById">
+        DELETE FROM logistics_import WHERE id = #{id}
+    </delete>
+
+</mapper>

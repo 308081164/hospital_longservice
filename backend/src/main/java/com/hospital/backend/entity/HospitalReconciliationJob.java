@@ -95,9 +95,18 @@ public class HospitalReconciliationJob extends BaseEntity {
     @JsonProperty("monthly_breakdown")
     private String monthlyBreakdown;
 
+    @JsonProperty("urgent_breakdown")
+    private String urgentBreakdown;
+
+    @JsonProperty("deduction_breakdown")
+    private String deductionBreakdown;
+
     @JsonProperty("original_total_price")
     private Double originalTotalPrice = 0.0;
 
     @JsonProperty("corrected_total_price")
     private Double correctedTotalPrice = 0.0;
+
+    @JsonProperty("allocation_result")
+    private String allocationResult;
 }

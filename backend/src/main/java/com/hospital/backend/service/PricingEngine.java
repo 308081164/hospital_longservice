@@ -76,6 +76,7 @@ public class PricingEngine {
         // 低温类型判定：类型含"低温"、"ETO"、"EO"均为低温处理
         JsonNode billingProfile = rules.path("billingProfile");
         JsonNode pathOverride = billingProfile.path("pathOverride");
+        SpecialPriceResult zeroPriceOverride = resolveZeroPriceOverride(row, pathOverride, unitPrice);
         boolean disableLowTemp = pathOverride.path("disableLowTemp").asBoolean(false);
         double forceHighTempPerItem = pathOverride.path("forceHighTempUnitPrice").asDouble(Double.NaN);
         String pricingMode = billingProfile.path("pricingMode").asText("standard");
@@ -93,6 +94,7 @@ public class PricingEngine {
         // Structured product match hook (feature-flagged, parallel path for future PricingEngine integration)
         java.util.Optional<ProductMatchResolver.StructuredProductMatch> structuredMatch = java.util.Optional.empty();
         Long matchedProductId = null;
+        Long matchedVariantId = longOrNull(row, "matchedVariantId", "matched_variant_id");
         if (structuredProductMatchEnabled && productMatchResolver != null) {
             structuredMatch = productMatchResolver.resolve(row);
             if (structuredMatch.isPresent()) {
@@ -132,7 +134,9 @@ public class PricingEngine {
                 || type.contains("ETO") || type.contains("EO"));
         boolean isDouble = packName.contains("双");
         int zBagSize = isDouble ? extractSizeAfterDouble(packName) : 0;
-        SpecialPriceResult preMatchedSpecialPrice = findSpecialFixedPrice(row, bagSize, effectiveCount, matchedProductId);
+        SpecialPriceResult preMatchedSpecialPrice = zeroPriceOverride != null
+                ? zeroPriceOverride
+                : findSpecialFixedPrice(row, bagSize, effectiveCount, matchedProductId, matchedVariantId);
         if (preMatchedSpecialPrice == null) {
             preMatchedSpecialPrice = resolveProductPublicPrice(structuredMatch);
         }
@@ -215,7 +219,7 @@ public class PricingEngine {
         boolean skipHospitalDiscount = false;
         SpecialPriceResult specialPrice = preMatchedSpecialPrice != null
                 ? preMatchedSpecialPrice
-                : findSpecialFixedPrice(row, bagSize, effectiveCount, matchedProductId);
+                : findSpecialFixedPrice(row, bagSize, effectiveCount, matchedProductId, matchedVariantId);
 
         // ---- 特殊类型优先处理 ----
         if (specialPrice != null) {
@@ -317,7 +321,7 @@ public class PricingEngine {
 
         if (specialPrice == null && expectedUnitPrice != null) {
             MultiplierResult multiplierResult = findCustomerMultiplier(
-                    row, bagSize, effectiveCount, matchedProductId);
+                    row, bagSize, effectiveCount, matchedProductId, matchedVariantId);
             if (multiplierResult != null) {
                 double baseUnitPrice = expectedUnitPrice;
                 expectedUnitPrice = round(baseUnitPrice * multiplierResult.multiplier);
@@ -345,14 +349,17 @@ public class PricingEngine {
             }
             if (pkg.warning) requiresReview = true;
         }
-        // 客户级折扣（billingPolicies 分温策略，兼容 customerOverrides）
-        AppliedDiscount appliedDiscount = applyScopedDiscounts(
-                type, packName, packageMaterial, hospitalName, expectedUnitPrice,
-                skipHospitalDiscount, specialPrice != null);
-        if (appliedDiscount != null) {
-            expectedUnitPrice = appliedDiscount.price;
-            pricingRule = pricingRule + appliedDiscount.ruleSuffix;
-            notes.add(appliedDiscount.note);
+        // 客户级折扣（billingPolicies 分温策略，兼容 customerOverrides；跳过 export_only / settlement_only）
+        int billingPieces = Math.max(1, effectiveCount);
+        if (expectedUnitPrice != null && !skipHospitalDiscount) {
+            BillingPolicyApplier.BillDetailDiscount appliedDiscount = BillingPolicyApplier.applyBillDetailDiscounts(
+                    rules, type, packName, packageMaterial, hospitalName,
+                    expectedUnitPrice, billingPieces, skipHospitalDiscount, specialPrice != null);
+            if (appliedDiscount != null) {
+                expectedUnitPrice = appliedDiscount.price();
+                pricingRule = pricingRule + appliedDiscount.ruleSuffix();
+                notes.add(appliedDiscount.note());
+            }
         }
 
         // 校正总价
@@ -375,14 +382,19 @@ public class PricingEngine {
 
         // 最终状态判定：有差额的行统一标为 warning（人工复核），用户点"一键修正"后才变为 corrected
         boolean anyPriceAccepted = false;
-        if (specialPrice != null && specialPrice.anyPriceMode && unitPrice != null) {
-            Double matchedOption = findMatchingAcceptedPrice(unitPrice, specialPrice.acceptedPrices);
-            if (matchedOption != null) {
-                anyPriceAccepted = true;
-                specialPrice.matchedPriceOption = matchedOption;
-                String candidates = formatPriceList(specialPrice.acceptedPrices);
-                notes.add("多报价命中：规则「" + specialPrice.ruleName + "」/ 报价 "
-                        + fmt(matchedOption) + " 元（候选：" + candidates + "）");
+        if (specialPrice != null && specialPrice.anyPriceMode) {
+            String candidates = formatPriceList(specialPrice.acceptedPrices);
+            if (unitPrice != null) {
+                Double matchedOption = findMatchingAcceptedPrice(unitPrice, specialPrice.acceptedPrices);
+                if (matchedOption != null) {
+                    anyPriceAccepted = true;
+                    specialPrice.matchedPriceOption = matchedOption;
+                    notes.add("多报价命中：规则「" + specialPrice.ruleName + "」/ 报价 "
+                            + fmt(matchedOption) + " 元（候选：" + candidates + "）");
+                } else {
+                    notes.add("多报价未命中：规则「" + specialPrice.ruleName + "」/ 账单价 "
+                            + fmt(unitPrice) + " 元不在候选报价（" + candidates + "）内");
+                }
             }
         }
 
@@ -408,15 +420,69 @@ public class PricingEngine {
         if (specialPrice != null) {
             result.matchedRuleId = specialPrice.ruleId;
             result.matchedPriceOption = specialPrice.matchedPriceOption;
-            if (anyPriceAccepted) {
-                result.billingNotes = new LinkedHashMap<>();
-                result.billingNotes.put("type", "any_price_match");
-                result.billingNotes.put("ruleName", specialPrice.ruleName);
-                result.billingNotes.put("matchedPrice", specialPrice.matchedPriceOption);
-                result.billingNotes.put("candidates", specialPrice.acceptedPrices);
+            if (specialPrice.anyPriceMode) {
+                result.billingNotes = buildAnyPriceBillingNotes(
+                        specialPrice, anyPriceAccepted, unitPrice, notes);
             }
         }
         return result;
+    }
+
+    private Map<String, Object> buildAnyPriceBillingNotes(
+            SpecialPriceResult specialPrice,
+            boolean anyPriceAccepted,
+            Double unitPrice,
+            List<String> notes) {
+        Map<String, Object> billingNotes = new LinkedHashMap<>();
+        billingNotes.put("type", anyPriceAccepted ? "any_price_match" : "any_price_mismatch");
+        if (specialPrice.ruleId != null) {
+            billingNotes.put("matchedRuleId", specialPrice.ruleId);
+            billingNotes.put("matched_rule_id", specialPrice.ruleId);
+        }
+        billingNotes.put("ruleName", specialPrice.ruleName);
+        billingNotes.put("candidatePrices", specialPrice.acceptedPrices);
+        billingNotes.put("candidates", specialPrice.acceptedPrices);
+        if (unitPrice != null) {
+            billingNotes.put("billUnitPrice", unitPrice);
+        }
+        if (anyPriceAccepted && specialPrice.matchedPriceOption != null) {
+            billingNotes.put("matchedPrice", specialPrice.matchedPriceOption);
+            billingNotes.put("matchedPriceOption", specialPrice.matchedPriceOption);
+        }
+        List<Map<String, Object>> discountChain = buildDiscountChain(notes);
+        if (!discountChain.isEmpty()) {
+            billingNotes.put("discountChain", discountChain);
+        }
+        return billingNotes;
+    }
+
+    private List<Map<String, Object>> buildDiscountChain(List<String> notes) {
+        List<Map<String, Object>> chain = new ArrayList<>();
+        for (String note : notes) {
+            if (!isDiscountNote(note)) {
+                continue;
+            }
+            Map<String, Object> step = new LinkedHashMap<>();
+            String label = note.length() > 48 ? note.substring(0, 48) + "…" : note;
+            step.put("label", label);
+            if (note.length() > 48) {
+                step.put("detail", note);
+            }
+            chain.add(step);
+        }
+        return chain;
+    }
+
+    private boolean isDiscountNote(String note) {
+        if (note == null || note.contains("多报价命中")) {
+            return false;
+        }
+        return (note.contains("命中") && (note.contains("折扣") || note.contains("折")))
+                || note.contains("×")
+                || note.contains("→")
+                || note.contains("倍计费")
+                || note.contains("包装收费")
+                || note.contains("倍率");
     }
 
     private String formatPriceList(List<Double> prices) {
@@ -467,14 +533,16 @@ public class PricingEngine {
     }
 
     private SpecialPriceResult findSpecialFixedPrice(
-            Map<String, Object> row, int bagSize, int effectiveCount, Long matchedProductId) {
+            Map<String, Object> row, int bagSize, int effectiveCount,
+            Long matchedProductId, Long matchedVariantId) {
         String combined = combinedText(row);
         String hospitalName = str(row, "hospitalName");
         JsonNode fixedPrices = rules.path("specialRules").path("fixedPrices");
         if (fixedPrices.isArray()) {
             for (JsonNode rule : fixedPrices) {
                 SpecialPriceResult matched = matchFixedPriceRule(
-                        rule, combined, hospitalName, bagSize, effectiveCount, matchedProductId);
+                        rule, row, combined, hospitalName, bagSize, effectiveCount,
+                        matchedProductId, matchedVariantId);
                 if (matched != null) return matched;
             }
         }
@@ -503,26 +571,13 @@ public class PricingEngine {
     }
 
     private SpecialPriceResult matchFixedPriceRule(
-            JsonNode rule, String combined, String hospitalName, int bagSize, int effectiveCount,
-            Long matchedProductId) {
-        if (!hospitalMatches(rule, hospitalName)) return null;
-        JsonNode excludeKeywords = rule.path("excludeKeywords");
-        if (excludeKeywords.isArray() && excludeKeywords.size() > 0 && matchesKeywords(combined, excludeKeywords)) {
+            JsonNode rule, Map<String, Object> row, String combined, String hospitalName,
+            int bagSize, int effectiveCount, Long matchedProductId, Long matchedVariantId) {
+        BillingConditionEvaluator.RowContext ctx = BillingConditionEvaluator.RowContext.fromRow(
+                row, bagSize, effectiveCount, matchedProductId, matchedVariantId);
+        if (!BillingConditionEvaluator.matchesRule(rule, ctx)) {
             return null;
         }
-        boolean productMatched = matchedProductId != null
-                && rule.has("productId")
-                && rule.path("productId").asLong() == matchedProductId;
-        if (!productMatched && !matchesRuleKeywords(combined, rule.path("keywords"))) return null;
-        JsonNode materials = rule.path("materials");
-        if (materials.isArray() && materials.size() > 0 && !matchesKeywords(combined, materials)) return null;
-        if (!bagSizeMatches(rule, bagSize)) return null;
-        if (!temperatureScopeMatches(rule.path("temperature").asText("ANY"), resolveRowTemperature(combined))) {
-            return null;
-        }
-        int minCount = rule.path("minInstrumentCount").asInt(Integer.MIN_VALUE);
-        int maxCount = rule.path("maxInstrumentCount").asInt(Integer.MAX_VALUE);
-        if (effectiveCount < minCount || effectiveCount > maxCount) return null;
 
         SpecialPriceResult result = new SpecialPriceResult();
         String matchMode = rule.path("matchMode").asText("first");
@@ -564,7 +619,8 @@ public class PricingEngine {
     }
 
     private MultiplierResult findCustomerMultiplier(
-            Map<String, Object> row, int bagSize, int effectiveCount, Long matchedProductId) {
+            Map<String, Object> row, int bagSize, int effectiveCount,
+            Long matchedProductId, Long matchedVariantId) {
         String combined = combinedText(row);
         String hospitalName = str(row, "hospitalName");
         JsonNode multipliers = rules.path("specialRules").path("priceMultipliers");
@@ -573,7 +629,8 @@ public class PricingEngine {
         }
         for (JsonNode rule : multipliers) {
             MultiplierResult matched = matchMultiplierRule(
-                    rule, combined, hospitalName, bagSize, effectiveCount, matchedProductId);
+                    rule, row, combined, hospitalName, bagSize, effectiveCount,
+                    matchedProductId, matchedVariantId);
             if (matched != null) {
                 return matched;
             }
@@ -582,17 +639,13 @@ public class PricingEngine {
     }
 
     private MultiplierResult matchMultiplierRule(
-            JsonNode rule, String combined, String hospitalName, int bagSize, int effectiveCount,
-            Long matchedProductId) {
-        if (!hospitalMatches(rule, hospitalName)) return null;
-        boolean productMatched = matchedProductId != null
-                && rule.has("productId")
-                && rule.path("productId").asLong() == matchedProductId;
-        if (!productMatched && !matchesRuleKeywords(combined, rule.path("keywords"))) return null;
-        if (!bagSizeMatches(rule, bagSize)) return null;
-        int minCount = rule.path("minInstrumentCount").asInt(Integer.MIN_VALUE);
-        int maxCount = rule.path("maxInstrumentCount").asInt(Integer.MAX_VALUE);
-        if (effectiveCount < minCount || effectiveCount > maxCount) return null;
+            JsonNode rule, Map<String, Object> row, String combined, String hospitalName,
+            int bagSize, int effectiveCount, Long matchedProductId, Long matchedVariantId) {
+        BillingConditionEvaluator.RowContext ctx = BillingConditionEvaluator.RowContext.fromRow(
+                row, bagSize, effectiveCount, matchedProductId, matchedVariantId);
+        if (!BillingConditionEvaluator.matchesRule(rule, ctx)) {
+            return null;
+        }
 
         double multiplier = rule.path("multiplier").asDouble(Double.NaN);
         if (Double.isNaN(multiplier) || multiplier <= 0) return null;
@@ -631,6 +684,75 @@ public class PricingEngine {
         if (Double.isNaN(result.fee)) return null;
         result.ruleName = rule.path("name").asText("特殊加收");
         result.note = result.ruleName + "，加收 " + fmt(result.fee) + " 元。";
+        return result;
+    }
+
+    /**
+     * 0 元导入覆盖：pathOverride.zeroPriceMode=packaging_type 时按包装/包名规则计价（武警总队）。
+     */
+    private SpecialPriceResult resolveZeroPriceOverride(
+            Map<String, Object> row, JsonNode pathOverride, Double unitPrice) {
+        if (pathOverride == null || pathOverride.isMissingNode()) {
+            return null;
+        }
+        String zeroPriceMode = pathOverride.path("zeroPriceMode").asText("");
+        if (zeroPriceMode.isBlank()) {
+            return null;
+        }
+        if (unitPrice != null && Math.abs(unitPrice) > 0.001) {
+            return null;
+        }
+        String combined = combinedText(row);
+        JsonNode zeroRules = rules.path("specialRules").path("zeroPriceOverrides");
+        if (zeroRules.isArray()) {
+            for (JsonNode rule : zeroRules) {
+                if (!BillingConditionEvaluator.matchesRule(rule,
+                        BillingConditionEvaluator.RowContext.fromRow(row, 0, 1, null, null))) {
+                    continue;
+                }
+                double price = rule.path("price").asDouble(Double.NaN);
+                if (Double.isNaN(price)) {
+                    continue;
+                }
+                SpecialPriceResult result = new SpecialPriceResult();
+                result.price = price;
+                result.ruleName = rule.path("name").asText("0元覆盖价");
+                result.skipPackaging = rule.path("skipPackaging").asBoolean(true);
+                result.skipHospitalDiscount = rule.path("skipHospitalDiscount").asBoolean(false);
+                result.note = result.ruleName + "，0 元导入按规则单价 " + fmt(price) + " 元。";
+                return result;
+            }
+        }
+        if ("packaging_type".equalsIgnoreCase(zeroPriceMode)) {
+            return resolvePackagingTypeZeroPrice(row, combined);
+        }
+        return null;
+    }
+
+    private SpecialPriceResult resolvePackagingTypeZeroPrice(Map<String, Object> row, String combined) {
+        String packageMaterial = str(row, "packageMaterial");
+        String packName = str(row, "packName");
+        Double price = null;
+        String label = null;
+        if (packageMaterial.contains("无纺布")) {
+            price = 20.0;
+            label = "无纺布";
+        } else if (packageMaterial.contains("纸塑袋")) {
+            price = 8.0;
+            label = "纸塑袋";
+        } else if (packName.contains("过氧化氢") || combined.contains("过氧化氢")) {
+            price = 35.0;
+            label = "过氧化氢";
+        }
+        if (price == null) {
+            return null;
+        }
+        SpecialPriceResult result = new SpecialPriceResult();
+        result.price = price;
+        result.ruleName = "0元覆盖（" + label + "）";
+        result.skipPackaging = true;
+        result.skipHospitalDiscount = false;
+        result.note = "0 元导入，按" + label + "规则单价 " + fmt(price) + " 元。";
         return result;
     }
 
@@ -1377,6 +1499,26 @@ public class PricingEngine {
                 if (s.isEmpty()) return null;
                 return Double.parseDouble(s);
             } catch (Exception e) { return null; }
+        }
+        return null;
+    }
+
+    private static Long longOrNull(Map<String, Object> map, String... keys) {
+        for (String key : keys) {
+            Object val = map.get(key);
+            if (val == null) {
+                continue;
+            }
+            if (val instanceof Number n) {
+                return n.longValue();
+            }
+            if (val instanceof String s && !s.isBlank()) {
+                try {
+                    return Long.parseLong(s.trim());
+                } catch (NumberFormatException ignored) {
+                    // try next key
+                }
+            }
         }
         return null;
     }

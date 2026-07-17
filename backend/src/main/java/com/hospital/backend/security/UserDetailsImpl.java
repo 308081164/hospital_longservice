@@ -1,13 +1,15 @@
 package com.hospital.backend.security;
 
 import com.hospital.backend.entity.User;
+import com.hospital.backend.entity.Role;
 import lombok.Getter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
+import java.util.List;
 
 /**
  * Spring Security 用户详情实现类
@@ -53,8 +55,21 @@ public class UserDetailsImpl implements UserDetails {
         this.email = user.getEmail();
         this.isSuperuser = user.getIsSuperuser();
         this.isActive = user.getIsActive();
-        this.authorities = Collections.singletonList(
-                new SimpleGrantedAuthority(user.getIsSuperuser() ? "ROLE_SUPER" : "ROLE_USER"));
+        List<GrantedAuthority> auths = new ArrayList<>();
+        if (Boolean.TRUE.equals(user.getIsSuperuser())) {
+            auths.add(new SimpleGrantedAuthority("ROLE_SUPER"));
+        }
+        if (user.getRoles() != null) {
+            for (Role role : user.getRoles()) {
+                if (role != null && role.getName() != null) {
+                    auths.add(new SimpleGrantedAuthority("ROLE_" + role.getName()));
+                }
+            }
+        }
+        if (auths.isEmpty()) {
+            auths.add(new SimpleGrantedAuthority("ROLE_USER"));
+        }
+        this.authorities = auths;
     }
 
     @Override

@@ -42,6 +42,9 @@ public class CustomerResponse {
     @JsonProperty("path_override")
     private CustomerPathOverrideDto pathOverride;
 
+    @JsonProperty("export_name_mapping")
+    private String exportNameMapping;
+
     private String notes;
 
     private List<CustomerAliasDto> aliases;
@@ -53,6 +56,12 @@ public class CustomerResponse {
 
     @JsonProperty("alias_count")
     private Integer aliasCount;
+
+    @JsonProperty("department_count")
+    private Integer departmentCount;
+
+    @JsonProperty("physician_count")
+    private Integer physicianCount;
 
     @JsonProperty("created_at")
     private LocalDateTime createdAt;
