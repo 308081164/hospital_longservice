@@ -19,7 +19,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
@@ -55,11 +54,20 @@ class CustomerServiceImplTest {
     @Mock
     private PhysicianEntryMapper physicianEntryMapper;
 
-    @InjectMocks
     private CustomerServiceImpl customerService;
 
     @BeforeEach
     void setUp() {
+        customerService = new CustomerServiceImpl(
+                customerMapper,
+                aliasMapper,
+                discountMapper,
+                billingPolicyMapper,
+                productRuleMapper,
+                productMapper,
+                billingRuleGroupSyncService,
+                departmentEntryMapper,
+                physicianEntryMapper);
         when(departmentEntryMapper.countActiveByCustomerId(anyLong())).thenReturn(0);
         when(physicianEntryMapper.countActiveByCustomerId(anyLong())).thenReturn(0);
     }
