@@ -75,8 +75,11 @@ public class SaveCustomerBillingPolicyRequest {
     /** LOGISTICS: when allocationMode=single_owner, all group logistics attributed here */
     private Long singleOwnerCustomerId;
 
-    /** bill_detail / settlement_only / export_only */
+    /** bill_detail / settlement_only / export_only（兼容单值） */
     private String applyStage;
+
+    /** 折扣生效范围，可多选 */
+    private List<String> applyStages;
 
     private Integer priority;
 

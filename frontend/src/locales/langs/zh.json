@@ -362,6 +362,7 @@
       "customerForm": {
         "billingEnabled": "启用特色账单",
         "billingEnabledHint": "关闭后不对账时合并该客户的特色规则",
+        "billingDisabledConfigHint": "启用后可配置计费策略、科室医师、导出模板、计价模式、商品规则等特色账单内容。",
         "discountTemperature": "温度范围",
         "discountTemperatureAny": "全部 (ANY)",
         "discountTemperatureHt": "高温 (HT)",
@@ -420,6 +421,11 @@
         "disabled": "停用",
         "skipWhenFixedPrice": "固定价规则跳过折扣",
         "skipFixedPriceHint": "固定价行不参与此折扣",
+        "applyStage": "折扣范围",
+        "applyStagePlaceholder": "请选择折扣生效范围",
+        "applyStageBillDetail": "账单明细",
+        "applyStageSettlementOnly": "结款函",
+        "applyStageExportOnly": "导出",
         "addDiscount": "添加折扣策略",
         "removePolicy": "删除",
         "minChargeShort": "低消",
@@ -514,7 +520,8 @@
         "productRulesAll": "全部",
         "productRulesYes": "有独立策略",
         "productRulesNo": "无独立策略",
-        "noResults": "暂无匹配客户"
+        "noResults": "暂无匹配客户",
+        "totalCount": "共 {count} 条"
       },
       "productCategories": "产品分类",
       "products": "产品管理",

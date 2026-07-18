@@ -597,6 +597,9 @@ declare namespace Api {
       discountRate?: number
       temperature?: 'HT' | 'LT' | 'ANY'
       applyStage?: string
+      apply_stage?: string
+      applyStages?: string[]
+      apply_stages?: string[]
       skipWhenFixedPrice?: boolean
       priority?: number
       isActive?: boolean

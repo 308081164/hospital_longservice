@@ -89,16 +89,6 @@
                   />
                 </div>
               </div>
-              <div class="billing-policy-panel__field">
-                <label>{{ $t('menus.masterData.customerBillingPolicy.priority') }}</label>
-                <ElInputNumber
-                  v-model="disc.priority"
-                  :min="1"
-                  :max="999"
-                  :step="10"
-                  class="w-full"
-                />
-              </div>
               <div class="billing-policy-panel__field billing-policy-panel__field--full">
                 <ElSwitch
                   :model-value="isDiscountLongTermEffective(disc)"
@@ -136,11 +126,30 @@
               </div>
               <div class="billing-policy-panel__field billing-policy-panel__field--full">
                 <label>{{ $t('menus.masterData.customerBillingPolicy.applyStage') }}</label>
-                <ElSelect v-model="disc.applyStage" class="w-full">
-                  <ElOption label="账单明细" value="bill_detail" />
-                  <ElOption label="仅结款函" value="settlement_only" />
-                  <ElOption label="仅导出" value="export_only" />
+                <ElSelect
+                  v-model="disc.applyStages"
+                  multiple
+                  collapse-tags
+                  collapse-tags-tooltip
+                  class="w-full"
+                  :placeholder="$t('menus.masterData.customerBillingPolicy.applyStagePlaceholder')"
+                >
+                  <ElOption
+                    :label="$t('menus.masterData.customerBillingPolicy.applyStageBillDetail')"
+                    value="bill_detail"
+                  />
+                  <ElOption
+                    :label="$t('menus.masterData.customerBillingPolicy.applyStageSettlementOnly')"
+                    value="settlement_only"
+                  />
+                  <ElOption
+                    :label="$t('menus.masterData.customerBillingPolicy.applyStageExportOnly')"
+                    value="export_only"
+                  />
                 </ElSelect>
+                <span v-if="disc.applyStages?.length" class="billing-policy-panel__hint">
+                  {{ formatDiscountApplyStages(disc.applyStages, t) }}
+                </span>
               </div>
             </div>
             <div class="billing-policy-panel__card-actions">
@@ -180,19 +189,12 @@
                   :min="0"
                   :step="0.5"
                   :precision="2"
-                  :placeholder="$t('menus.masterData.customerForm.logisticsFeePerTripPlaceholder')"
-                  class="w-full"
+                  controls-position="right"
+                  class="w-full billing-policy-panel__input-number"
                 />
-              </div>
-              <div class="billing-policy-panel__field">
-                <label>{{ $t('menus.masterData.customerBillingPolicy.priority') }}</label>
-                <ElInputNumber
-                  v-model="state.logisticsPriority"
-                  :min="1"
-                  :max="999"
-                  :step="10"
-                  class="w-full"
-                />
+                <span class="billing-policy-panel__hint">
+                  {{ $t('menus.masterData.customerForm.logisticsFeePerTripPlaceholder') }}
+                </span>
               </div>
               <div class="billing-policy-panel__field">
                 <label>{{ $t('menus.masterData.customerBillingPolicy.tripSource') }}</label>
@@ -354,16 +356,6 @@
                   {{ $t('menus.masterData.customerForm.monthlyMaxCapHint') }}
                 </span>
               </div>
-              <div class="billing-policy-panel__field">
-                <label>{{ $t('menus.masterData.customerBillingPolicy.priority') }}</label>
-                <ElInputNumber
-                  v-model="state.monthlyPriority"
-                  :min="1"
-                  :max="999"
-                  :step="10"
-                  class="w-full"
-                />
-              </div>
             </div>
           </div>
         </ElTabPane>
@@ -433,16 +425,6 @@
                   class="w-full"
                 />
               </div>
-              <div class="billing-policy-panel__field">
-                <label>{{ $t('menus.masterData.customerBillingPolicy.priority') }}</label>
-                <ElInputNumber
-                  v-model="state.urgentPriority"
-                  :min="1"
-                  :max="999"
-                  :step="10"
-                  class="w-full"
-                />
-              </div>
             </div>
           </div>
         </ElTabPane>
@@ -480,16 +462,6 @@
                 <span class="billing-policy-panel__hint">
                   {{ $t('menus.masterData.customerBillingPolicy.deductionHint') }}
                 </span>
-              </div>
-              <div class="billing-policy-panel__field">
-                <label>{{ $t('menus.masterData.customerBillingPolicy.priority') }}</label>
-                <ElInputNumber
-                  v-model="state.deductionPriority"
-                  :min="1"
-                  :max="999"
-                  :step="10"
-                  class="w-full"
-                />
               </div>
             </div>
           </div>
@@ -541,6 +513,7 @@
   import {
     buildSettlementPreviewLines,
     createDefaultDiscount,
+    formatDiscountApplyStages,
     formatDiscountRate,
     formatLogisticsAllocationSummary,
     formatPolicySummary,
@@ -811,6 +784,10 @@
   .billing-policy-panel__field label {
     font-size: 13px;
     color: var(--el-text-color-regular);
+  }
+
+  .billing-policy-panel__input-number :deep(.el-input__inner) {
+    text-align: left;
   }
 
   .billing-policy-panel__hint {

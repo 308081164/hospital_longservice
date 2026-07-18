@@ -316,29 +316,29 @@ public class MasterDataInitializer implements CommandLineRunner {
         ensureCustomer("HRB-HIT", "哈尔滨工业大学医院", 58L, null, false,
                 List.of(alias("哈尔滨工业大学", "bokang_job"), alias("哈工程", "bokang_job")),
                 List.of(), List.of());
-        ensureCustomer("HRB-XK", "哈尔滨市胸科医院", 57L, null, false,
+        ensureCustomer("HRB-XK", "哈尔滨市胸科医院", 57L, null, false, true,
                 List.of(), List.of(), List.of());
-        ensureCustomer("NEAU-YY", "东北农业大学医院", 36L, null, false,
+        ensureCustomer("NEAU-YY", "东北农业大学医院", 36L, null, false, true,
                 List.of(alias("东北农业大学", "bokang_job")),
                 List.of(), List.of());
-        ensureCustomer("HRB-SD-MB", "哈尔滨道外区松电慢性病专科门诊部", 37L, null, false,
+        ensureCustomer("HRB-SD-MB", "哈尔滨道外区松电慢性病专科门诊部", 37L, null, false, true,
                 List.of(alias("松电慢性病专科门诊部", "bokang_job")),
                 List.of(), List.of());
-        ensureCustomer("HRB-AM", "哈尔滨奥美医疗美容整形医院", 55L, null, false,
+        ensureCustomer("HRB-AM", "哈尔滨奥美医疗美容整形医院", 55L, null, false, true,
                 List.of(alias("奥美", "bokang_job")),
                 List.of(), List.of());
-        ensureCustomer("HRB-ASM", "嫒尚美医疗美容诊所", 34L, null, false,
+        ensureCustomer("HRB-ASM", "嫒尚美医疗美容诊所", 34L, null, false, true,
                 List.of(), List.of(), List.of());
-        ensureCustomer("HRB-BY", "北一医院", 60L, null, false,
+        ensureCustomer("HRB-BY", "北一医院", 60L, null, false, true,
                 List.of(alias("北一", "bokang_job")),
                 List.of(), List.of());
-        ensureCustomer("HRB-CY", "春语医疗美容医院", 61L, null, false,
+        ensureCustomer("HRB-CY", "春语医疗美容医院", 61L, null, false, true,
                 List.of(alias("春雨", "bokang_job")),
                 List.of(), List.of());
-        ensureCustomer("HRB-BNXS", "哈尔滨百年夏氏中医门诊部", 59L, null, false,
+        ensureCustomer("HRB-BNXS", "哈尔滨百年夏氏中医门诊部", 59L, null, false, true,
                 List.of(alias("百年夏氏", "bokang_job")),
                 List.of(), List.of());
-        ensureCustomer("HRB-CJ", "哈尔滨长健医院", 8L, null, false,
+        ensureCustomer("HRB-CJ", "哈尔滨长健医院", 8L, null, false, true,
                 List.of(), List.of(), List.of());
 
         ensureCustomer("ERYY-NG", "黑龙江省第二医院（南岗区）", null, null, false,
@@ -353,16 +353,16 @@ public class MasterDataInitializer implements CommandLineRunner {
                 List.of(alias("呼兰区第一人民医院", "engine")),
                 List.of(discount("呼兰 0.7 折扣", new BigDecimal("0.7000"))),
                 List.of());
-        ensureCustomer("WCSRMYY", "五常市人民医院", null, "none", false,
+        ensureCustomer("WCSRMYY", "五常市人民医院", null, "none", false, true,
                 List.of(alias("五常市人民医院", "engine")),
                 List.of(), List.of());
-        ensureCustomer("YMYXZX", "予美医疗整形医院", null, null, true,
+        ensureCustomer("YMYXZX", "予美医疗整形医院", null, null, true, true,
                 List.of(alias("予美医疗整形医院", "engine")),
                 List.of(), List.of());
-        ensureCustomer("HY-HYY", "黑龙江省海员总医院（松北）", null, null, false,
+        ensureCustomer("HY-HYY", "黑龙江省海员总医院（松北）", null, null, false, true,
                 List.of(alias("黑龙江省海员总医院（松北）", "engine")),
                 List.of(), List.of());
-        ensureCustomer("ZYY-DSFY", "黑龙江省中医药大学附属第四医院", null, null, false,
+        ensureCustomer("ZYY-DSFY", "黑龙江省中医药大学附属第四医院", null, null, false, true,
                 List.of(alias("黑龙江省中医药大学附属第四医院", "engine")),
                 List.of(), List.of());
 
@@ -374,21 +374,31 @@ public class MasterDataInitializer implements CommandLineRunner {
                                 List<AliasSeed> aliases,
                                 List<DiscountSeed> discounts,
                                 List<ProductRuleSeed> productRules) {
+        ensureCustomer(code, name, defaultRuleId, capMode, chargeDoubleBag, false,
+                aliases, discounts, productRules);
+    }
+
+    private void ensureCustomer(String code, String name, Long defaultRuleId, String capMode,
+                                boolean chargeDoubleBag, boolean inactive,
+                                List<AliasSeed> aliases,
+                                List<DiscountSeed> discounts,
+                                List<ProductRuleSeed> productRules) {
         if (customerMapper.selectByCode(code) != null) {
             return;
         }
-        insertCustomer(code, name, defaultRuleId, capMode, chargeDoubleBag, aliases, discounts, productRules);
+        insertCustomer(code, name, defaultRuleId, capMode, chargeDoubleBag, inactive,
+                aliases, discounts, productRules);
     }
 
     private void insertCustomer(String code, String name, Long defaultRuleId, String capMode,
-                                boolean chargeDoubleBag,
+                                boolean chargeDoubleBag, boolean inactive,
                                 List<AliasSeed> aliases,
                                 List<DiscountSeed> discounts,
                                 List<ProductRuleSeed> productRules) {
         Customer customer = new Customer();
         customer.setCode(code);
         customer.setCanonicalName(name);
-        customer.setStatus("active");
+        customer.setStatus(inactive ? "inactive" : "active");
         customer.setDefaultRuleId(defaultRuleId);
         customer.setCapMode(capMode);
         customer.setChargeDoubleBagWhenCapped(chargeDoubleBag);

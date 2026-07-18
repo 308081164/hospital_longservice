@@ -280,8 +280,8 @@ public class CustomerServiceImpl implements CustomerService {
             discount.setCustomerId(customerId);
             discount.setName(dto.getName() != null ? dto.getName() : "默认折扣");
             discount.setDiscountRate(dto.getDiscountRate());
-            discount.setApplyStage(dto.getApplyStage() != null ? dto.getApplyStage() : "after_base");
-            discount.setSkipWhenFixedPrice(dto.getSkipWhenFixedPrice() != null ? dto.getSkipWhenFixedPrice() : true);
+            discount.setApplyStage(resolveLegacyApplyStage(dto));
+            discount.setSkipWhenFixedPrice(dto.getSkipWhenFixedPrice() != null ? dto.getSkipWhenFixedPrice() : false);
             discount.setPriority(dto.getPriority() != null ? dto.getPriority() : 100);
             discount.setIsActive(dto.getIsActive() != null ? dto.getIsActive() : true);
             discount.setEffectiveFrom(dto.getEffectiveFrom());
@@ -306,7 +306,8 @@ public class CustomerServiceImpl implements CustomerService {
             policyRequest.setTemperature(normalizeTemperature(dto.getTemperature()));
             policyRequest.setRate(dto.getDiscountRate());
             policyRequest.setSkipWhenFixedPrice(
-                    dto.getSkipWhenFixedPrice() != null ? dto.getSkipWhenFixedPrice() : true);
+                    dto.getSkipWhenFixedPrice() != null ? dto.getSkipWhenFixedPrice() : false);
+            applyDiscountStagesToPolicyRequest(policyRequest, dto);
             policyRequest.setPriority(dto.getPriority() != null ? dto.getPriority() : 100);
             policyRequest.setIsActive(dto.getIsActive() != null ? dto.getIsActive() : true);
             CustomerBillingPolicy policy = buildBillingPolicyEntity(customerId, policyRequest);
@@ -670,6 +671,7 @@ public class CustomerServiceImpl implements CustomerService {
         dto.setName(discount.getName());
         dto.setDiscountRate(discount.getDiscountRate());
         dto.setApplyStage(discount.getApplyStage());
+        dto.setApplyStages(readApplyStagesFromLegacyStage(discount.getApplyStage()));
         dto.setSkipWhenFixedPrice(discount.getSkipWhenFixedPrice());
         dto.setPriority(discount.getPriority());
         dto.setIsActive(discount.getIsActive());
@@ -811,6 +813,7 @@ public class CustomerServiceImpl implements CustomerService {
         dto.setPriority(policy.getPriority());
         dto.setIsActive(policy.getIsActive());
         dto.setApplyStage(readPolicyApplyStage(policy.getParams()));
+        dto.setApplyStages(readPolicyApplyStages(policy.getParams()));
         dto.setTemperature(readPolicyTemperature(policy.getScope()));
         Map<String, Object> params = readPolicyParams(policy.getParams());
         Object rate = params.get("rate");
@@ -818,7 +821,7 @@ public class CustomerServiceImpl implements CustomerService {
             dto.setDiscountRate(BigDecimal.valueOf(number.doubleValue()));
         }
         Object skipWhenFixedPrice = params.get("skipWhenFixedPrice");
-        dto.setSkipWhenFixedPrice(skipWhenFixedPrice instanceof Boolean bool ? bool : true);
+        dto.setSkipWhenFixedPrice(skipWhenFixedPrice instanceof Boolean bool ? bool : false);
         return dto;
     }
 
@@ -968,10 +971,8 @@ public class CustomerServiceImpl implements CustomerService {
         if ("DISCOUNT".equalsIgnoreCase(request.getPolicyType())) {
             params.put("rate", request.getRate());
             params.put("skipWhenFixedPrice",
-                    request.getSkipWhenFixedPrice() != null ? request.getSkipWhenFixedPrice() : true);
-            if (request.getApplyStage() != null && !request.getApplyStage().isBlank()) {
-                params.put("applyStage", request.getApplyStage().trim().toLowerCase());
-            }
+                    request.getSkipWhenFixedPrice() != null ? request.getSkipWhenFixedPrice() : false);
+            writeDiscountApplyStages(params, request.getApplyStages(), request.getApplyStage());
         } else if ("LOGISTICS".equalsIgnoreCase(request.getPolicyType())) {
             params.put("feePerTrip", request.getFeePerTrip());
             if (request.getTripSource() != null && !request.getTripSource().isBlank()) {
@@ -1165,9 +1166,87 @@ public class CustomerServiceImpl implements CustomerService {
 
     @SuppressWarnings("unchecked")
     private String readPolicyApplyStage(String paramsJson) {
+        List<String> stages = readPolicyApplyStages(paramsJson);
+        return stages.isEmpty() ? "bill_detail" : stages.get(0);
+    }
+
+    @SuppressWarnings("unchecked")
+    private List<String> readPolicyApplyStages(String paramsJson) {
         Map<String, Object> params = readPolicyParams(paramsJson);
+        Object stages = params.get("applyStages");
+        if (stages instanceof List<?> list && !list.isEmpty()) {
+            return list.stream()
+                    .map(String::valueOf)
+                    .map(String::trim)
+                    .map(String::toLowerCase)
+                    .filter(s -> !s.isBlank())
+                    .distinct()
+                    .toList();
+        }
         Object stage = params.get("applyStage");
-        return stage != null ? String.valueOf(stage) : "bill_detail";
+        if (stage != null && !String.valueOf(stage).isBlank()) {
+            return List.of(String.valueOf(stage).trim().toLowerCase());
+        }
+        return List.of("bill_detail");
+    }
+
+    private List<String> readApplyStagesFromLegacyStage(String applyStage) {
+        if (applyStage == null || applyStage.isBlank()) {
+            return List.of("bill_detail");
+        }
+        return List.of(applyStage.trim().toLowerCase());
+    }
+
+    private String resolveLegacyApplyStage(CustomerDiscountDto dto) {
+        if (dto.getApplyStages() != null && !dto.getApplyStages().isEmpty()) {
+            return dto.getApplyStages().get(0);
+        }
+        return dto.getApplyStage() != null ? dto.getApplyStage() : "after_base";
+    }
+
+    private void applyDiscountStagesToPolicyRequest(
+            SaveCustomerBillingPolicyRequest policyRequest, CustomerDiscountDto dto) {
+        if (dto.getApplyStages() != null && !dto.getApplyStages().isEmpty()) {
+            policyRequest.setApplyStages(dto.getApplyStages());
+            policyRequest.setApplyStage(dto.getApplyStages().get(0));
+            return;
+        }
+        if (dto.getApplyStage() != null && !dto.getApplyStage().isBlank()) {
+            policyRequest.setApplyStage(dto.getApplyStage().trim().toLowerCase());
+        }
+    }
+
+    private void writeDiscountApplyStages(
+            Map<String, Object> params, List<String> applyStages, String applyStage) {
+        List<String> normalized = normalizeApplyStages(applyStages, applyStage);
+        if (normalized.isEmpty()) {
+            return;
+        }
+        params.put("applyStages", normalized);
+        if (normalized.size() == 1) {
+            params.put("applyStage", normalized.get(0));
+        }
+    }
+
+    private List<String> normalizeApplyStages(List<String> applyStages, String applyStage) {
+        List<String> source;
+        if (applyStages != null && !applyStages.isEmpty()) {
+            source = applyStages;
+        } else if (applyStage != null && !applyStage.isBlank()) {
+            source = List.of(applyStage);
+        } else {
+            return List.of();
+        }
+        return source.stream()
+                .map(String::valueOf)
+                .map(String::trim)
+                .map(String::toLowerCase)
+                .map(stage -> "after_base".equals(stage) ? "bill_detail" : stage)
+                .filter(stage -> "bill_detail".equals(stage)
+                        || "settlement_only".equals(stage)
+                        || "export_only".equals(stage))
+                .distinct()
+                .toList();
     }
 
     private String readPolicyTemperature(String scopeJson) {

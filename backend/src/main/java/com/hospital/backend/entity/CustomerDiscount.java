@@ -21,7 +21,7 @@ public class CustomerDiscount {
 
     private String applyStage = "after_base";
 
-    private Boolean skipWhenFixedPrice = true;
+    private Boolean skipWhenFixedPrice = false;
 
     private String categoryFilter;
 

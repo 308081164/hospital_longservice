@@ -59,6 +59,34 @@ class BillingPolicyApplierTest {
         assertThat(twoPieces.price()).isEqualTo(15.0);
     }
 
+    @Test
+    void multiApplyStagesMatchBillDetailAndSettlement() throws Exception {
+        ObjectNode rules = mapper.createObjectNode();
+        ArrayNode policies = rules.putArray("billingPolicies");
+        ObjectNode policy = policies.addObject();
+        policy.put("policyType", "DISCOUNT");
+        policy.put("name", "多范围折扣");
+        policy.putObject("scope").put("temperature", "ANY");
+        ObjectNode params = policy.putObject("params");
+        ArrayNode stages = params.putArray("applyStages");
+        stages.add("bill_detail");
+        stages.add("settlement_only");
+        params.put("rate", 0.8);
+        params.put("skipWhenFixedPrice", false);
+
+        BillingPolicyApplier.BillDetailDiscount billDetail = BillingPolicyApplier.applyBillDetailDiscounts(
+                rules, "器械包", "测试", "纸塑袋", "测试医院", 100.0, 1, false, false);
+        BillingPolicyApplier.BillDetailDiscount settlement = BillingPolicyApplier.applySettlementDiscount(
+                rules, "", "", "", "测试医院", 1000.0);
+
+        assertThat(billDetail).isNotNull();
+        assertThat(billDetail.price()).isEqualTo(80.0);
+        assertThat(settlement).isNotNull();
+        assertThat(settlement.price()).isEqualTo(800.0);
+        assertThat(BillingPolicyApplier.findPoliciesByStage(rules, "DISCOUNT", BillingPolicyApplier.STAGE_EXPORT_ONLY))
+                .isEmpty();
+    }
+
     private ObjectNode rulesWithDiscount(String applyStage, double rate, String temperature) {
         ObjectNode rules = mapper.createObjectNode();
         ArrayNode policies = rules.putArray("billingPolicies");

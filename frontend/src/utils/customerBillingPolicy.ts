@@ -12,12 +12,23 @@ import {
   type LogisticsAllocationConfig
 } from '@/utils/logisticsAllocationConfig'
 
+export const BILLING_POLICY_DEFAULT_PRIORITY = 100
+
+export const BILLING_DISCOUNT_APPLY_STAGES = [
+  'bill_detail',
+  'settlement_only',
+  'export_only'
+] as const
+
+export type BillingDiscountApplyStage = (typeof BILLING_DISCOUNT_APPLY_STAGES)[number]
+
 export type BillingPolicyTab =
   'discount' | 'logistics' | 'monthly' | 'urgent' | 'deduction' | 'settlement'
 
 /** Panel-only field; stripped before API save */
 export type PanelCustomerDiscount = Api.MasterData.CustomerDiscount & {
   longTermEffective?: boolean
+  applyStages?: BillingDiscountApplyStage[]
 }
 
 export interface BillingPolicyPanelState {
@@ -131,11 +142,61 @@ export function setDiscountLongTermEffective(
   }
 }
 
+export function parseDiscountApplyStages(
+  discount: Pick<
+    Api.MasterData.CustomerDiscount,
+    'applyStages' | 'applyStage' | 'apply_stages' | 'apply_stage'
+  >
+): BillingDiscountApplyStage[] {
+  const fromList = discount.applyStages ?? discount.apply_stages
+  if (Array.isArray(fromList) && fromList.length > 0) {
+    return normalizeDiscountApplyStages(fromList)
+  }
+  const stage = discount.applyStage ?? discount.apply_stage
+  if (stage) {
+    return normalizeDiscountApplyStages([stage])
+  }
+  return ['bill_detail']
+}
+
+export function normalizeDiscountApplyStages(
+  stages: Array<string | null | undefined>
+): BillingDiscountApplyStage[] {
+  const normalized = stages
+    .map((stage) => (stage ?? '').trim().toLowerCase())
+    .map((stage) => (stage === 'after_base' ? 'bill_detail' : stage))
+    .filter((stage): stage is BillingDiscountApplyStage =>
+      (BILLING_DISCOUNT_APPLY_STAGES as readonly string[]).includes(stage)
+    )
+  return normalized.length > 0 ? [...new Set(normalized)] : ['bill_detail']
+}
+
+export function formatDiscountApplyStages(
+  stages: BillingDiscountApplyStage[] | undefined,
+  t: ComposerTranslation
+): string {
+  const values = stages?.length ? stages : ['bill_detail']
+  return values
+    .map((stage) => {
+      if (stage === 'bill_detail') {
+        return t('menus.masterData.customerBillingPolicy.applyStageBillDetail')
+      }
+      if (stage === 'settlement_only') {
+        return t('menus.masterData.customerBillingPolicy.applyStageSettlementOnly')
+      }
+      return t('menus.masterData.customerBillingPolicy.applyStageExportOnly')
+    })
+    .join('、')
+}
+
 export function enrichDiscountForPanel(
   discount: Api.MasterData.CustomerDiscount
 ): PanelCustomerDiscount {
+  const applyStages = parseDiscountApplyStages(discount)
   return {
     ...discount,
+    applyStages,
+    applyStage: applyStages[0],
     longTermEffective: isDiscountLongTermEffective(discount)
   }
 }
@@ -145,6 +206,10 @@ export function normalizeDiscountForSave(
 ): Api.MasterData.CustomerDiscount {
   const result: Api.MasterData.CustomerDiscount = { ...discount }
   delete (result as PanelCustomerDiscount).longTermEffective
+  result.priority = BILLING_POLICY_DEFAULT_PRIORITY
+  const applyStages = normalizeDiscountApplyStages(discount.applyStages ?? [])
+  result.applyStages = applyStages
+  result.applyStage = applyStages[0]
   if (isDiscountLongTermEffective(discount)) {
     result.effectiveFrom = undefined
     result.effectiveTo = undefined
@@ -283,9 +348,12 @@ export function buildSettlementPreviewLines(
         key: `discount-${idx}`,
         label: d.name || t('menus.masterData.customerBillingPolicy.settlementDiscount'),
         value: `${formatTemperatureLabel(d.temperature, t)} · ${formatDiscountRate(d.discountRate)}`,
-        hint: d.skipWhenFixedPrice
-          ? t('menus.masterData.customerBillingPolicy.skipFixedPriceHint')
-          : undefined
+        hint: [
+          formatDiscountApplyStages(parseDiscountApplyStages(d), t),
+          d.skipWhenFixedPrice ? t('menus.masterData.customerBillingPolicy.skipFixedPriceHint') : null
+        ]
+          .filter(Boolean)
+          .join(' · ') || undefined
       })
     })
   }
@@ -449,9 +517,10 @@ export function createDefaultDiscount(): PanelCustomerDiscount {
     name: '默认折扣',
     discountRate: 0.7,
     temperature: 'ANY',
+    applyStages: ['bill_detail'],
     applyStage: 'bill_detail',
-    skipWhenFixedPrice: true,
-    priority: 100,
+    skipWhenFixedPrice: false,
+    priority: BILLING_POLICY_DEFAULT_PRIORITY,
     isActive: true,
     longTermEffective: true
   }

@@ -1,0 +1,155 @@
+# 手动触发：备份生产 MySQL → 清空 Docker 卷 → 拉最新镜像 → 空库种子重建 → 验证
+# ⚠️ 会删除 mysql-data、backend-uploads、backend-storage 全部卷数据
+name: Reset Production Database
+
+on:
+  workflow_dispatch:
+    inputs:
+      confirm:
+        description: "输入 RESET 以确认清空生产数据库卷（不可撤销）"
+        required: true
+        type: string
+      skip_build:
+        description: "跳过构建镜像（仅当 main 刚部署过且镜像已是最新时使用）"
+        required: false
+        type: boolean
+        default: false
+
+concurrency:
+  group: deploy-db-reset
+  cancel-in-progress: false
+
+env:
+  REGISTRY: ghcr.io
+
+jobs:
+  reset-database:
+    runs-on: ubuntu-latest
+    timeout-minutes: 180
+    permissions:
+      contents: read
+      packages: write
+
+    steps:
+      - name: Confirm destructive action
+        run: |
+          if [ "${{ github.event.inputs.confirm }}" != "RESET" ]; then
+            echo "错误: 必须在 confirm 输入框中输入 RESET 才能执行" >&2
+            exit 1
+          fi
+          echo "确认通过，将执行生产库空卷重建"
+
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Verify DB migrate manifest
+        run: bash scripts/check-migrate-manifest.sh
+
+      - name: Set image names
+        id: images
+        run: |
+          OWNER="${{ github.repository_owner }}"
+          OWNER_LC=$(echo "$OWNER" | tr '[:upper:]' '[:lower:]')
+          echo "backend=$REGISTRY/$OWNER_LC/hospital-backend:latest" >> $GITHUB_OUTPUT
+          echo "frontend=$REGISTRY/$OWNER_LC/hospital-frontend:latest" >> $GITHUB_OUTPUT
+
+      - name: Set up JDK 17
+        if: ${{ github.event.inputs.skip_build != 'true' }}
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "17"
+          cache: maven
+
+      - name: Run backend unit tests (golden rows + pricing)
+        if: ${{ github.event.inputs.skip_build != 'true' }}
+        working-directory: backend
+        run: mvn -q test -Dtest=PricingEngineTest#goldenRowsRegression,PricingRuleCompilerIntegrationTest,CustomerServiceImplTest
+
+      - name: Log in to Container Registry
+        if: ${{ github.event.inputs.skip_build != 'true' }}
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Set up Docker Buildx
+        if: ${{ github.event.inputs.skip_build != 'true' }}
+        uses: docker/setup-buildx-action@v3
+
+      - name: Build and push backend
+        if: ${{ github.event.inputs.skip_build != 'true' }}
+        uses: nick-fields/retry@v3
+        with:
+          timeout_minutes: 45
+          max_attempts: 4
+          retry_wait_seconds: 45
+          warning_on_retry: true
+          command: docker buildx build --push -t "${{ steps.images.outputs.backend }}" ./backend
+
+      - name: Build and push frontend
+        if: ${{ github.event.inputs.skip_build != 'true' }}
+        uses: nick-fields/retry@v3
+        with:
+          timeout_minutes: 45
+          max_attempts: 4
+          retry_wait_seconds: 45
+          warning_on_retry: true
+          command: docker buildx build --push -t "${{ steps.images.outputs.frontend }}" ./frontend
+
+      - name: Sync compose and db manifest to server
+        env:
+          SSH_HOST: ${{ secrets.SSH_HOST }}
+          SSH_USER: ${{ secrets.SSH_USER }}
+          SSH_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+          SSH_PORT: ${{ secrets.SSH_PORT || 22 }}
+          DEPLOY_PATH: ${{ secrets.DEPLOY_PATH || '/mnt/newdisk/app/Hospital' }}
+        run: |
+          mkdir -p ~/.ssh
+          printf '%s\n' "$SSH_KEY" > ~/.ssh/deploy_key
+          chmod 600 ~/.ssh/deploy_key
+          ssh-keyscan -p "${SSH_PORT}" -H "$SSH_HOST" >> ~/.ssh/known_hosts 2>/dev/null || true
+          scp -i ~/.ssh/deploy_key -o StrictHostKeyChecking=no -P "${SSH_PORT}" -r \
+            docker-compose.prod.yml \
+            deploy/reset-database-on-server.sh \
+            deploy/nginx-hospital.conf \
+            backend \
+            "${SSH_USER}@${SSH_HOST}:${DEPLOY_PATH}/"
+
+      - name: Reset database on server (backup → down -v → up -d → verify)
+        uses: appleboy/ssh-action@v1.2.5
+        env:
+          IMAGE_BACKEND: ${{ steps.images.outputs.backend }}
+          IMAGE_FRONTEND: ${{ steps.images.outputs.frontend }}
+          DEPLOY_PATH: ${{ secrets.DEPLOY_PATH }}
+          GHCR_USER: ${{ secrets.GHCR_USERNAME }}
+          GHCR_TOKEN: ${{ secrets.GHCR_READ_TOKEN }}
+          GITHUB_SHA: ${{ github.sha }}
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          port: ${{ secrets.SSH_PORT || 22 }}
+          command_timeout: 2h
+          timeout: 2m
+          envs: IMAGE_BACKEND,IMAGE_FRONTEND,DEPLOY_PATH,GHCR_USER,GHCR_TOKEN,GITHUB_SHA
+          script: |
+            set -e
+            DPATH="${DEPLOY_PATH:-/mnt/newdisk/app/Hospital}"
+            cd "$DPATH"
+            echo "DEPLOY_DB_RESET SHA=${GITHUB_SHA:-unknown}"
+
+            if [ ! -f .env ]; then
+              echo "错误: 服务器 $DPATH/.env 不存在" >&2
+              exit 1
+            fi
+
+            chmod +x deploy/reset-database-on-server.sh
+
+            if [ -n "$GHCR_TOKEN" ] && [ -n "$GHCR_USER" ]; then
+              echo "$GHCR_TOKEN" | docker login ghcr.io -u "$GHCR_USER" --password-stdin
+            fi
+            export IMAGE_BACKEND IMAGE_FRONTEND
+
+            bash deploy/reset-database-on-server.sh

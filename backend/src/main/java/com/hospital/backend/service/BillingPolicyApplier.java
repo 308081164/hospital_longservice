@@ -251,8 +251,21 @@ public final class BillingPolicyApplier {
     }
 
     static boolean stageMatches(JsonNode policy, String targetStage) {
-        String applyStage = policy.path("params").path("applyStage").asText(STAGE_BILL_DETAIL);
-        if (applyStage.isBlank()) {
+        JsonNode params = policy.path("params");
+        JsonNode stagesNode = params.path("applyStages");
+        if (stagesNode.isArray() && !stagesNode.isEmpty()) {
+            for (JsonNode stageNode : stagesNode) {
+                if (stageMatchesSingle(stageNode.asText(""), targetStage)) {
+                    return true;
+                }
+            }
+            return false;
+        }
+        return stageMatchesSingle(params.path("applyStage").asText(STAGE_BILL_DETAIL), targetStage);
+    }
+
+    private static boolean stageMatchesSingle(String applyStage, String targetStage) {
+        if (applyStage == null || applyStage.isBlank()) {
             applyStage = STAGE_BILL_DETAIL;
         }
         return applyStage.equalsIgnoreCase(targetStage)

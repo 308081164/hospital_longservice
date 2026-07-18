@@ -350,6 +350,7 @@
       "customerForm": {
         "billingEnabled": "Enable special billing",
         "billingEnabledHint": "When off, customer product rules are not merged at reconciliation",
+        "billingDisabledConfigHint": "Turn on to configure billing policies, dept/physician, export templates, pricing mode, and product rules.",
         "discountTemperature": "Temperature scope",
         "discountTemperatureAny": "All (ANY)",
         "discountTemperatureHt": "High temp (HT)",
@@ -408,6 +409,11 @@
         "disabled": "Off",
         "skipWhenFixedPrice": "Skip discount on fixed-price rules",
         "skipFixedPriceHint": "Fixed-price rows skip this discount",
+        "applyStage": "Discount scope",
+        "applyStagePlaceholder": "Select where this discount applies",
+        "applyStageBillDetail": "Bill detail",
+        "applyStageSettlementOnly": "Settlement letter",
+        "applyStageExportOnly": "Export",
         "addDiscount": "Add discount policy",
         "removePolicy": "Remove",
         "minChargeShort": "Min",
@@ -502,7 +508,8 @@
         "productRulesAll": "All",
         "productRulesYes": "Has rules",
         "productRulesNo": "No rules",
-        "noResults": "No matching customers"
+        "noResults": "No matching customers",
+        "totalCount": "{count} total"
       },
       "productCategories": "Product Categories",
       "products": "Products",

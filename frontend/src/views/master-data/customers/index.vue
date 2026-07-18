@@ -65,10 +65,20 @@
             $t('table.searchBar.search')
           }}</ElButton>
           <ElButton @click="resetFilters">{{ $t('table.searchBar.reset') }}</ElButton>
+          <span class="ml-3 text-sm text-gray-500">{{
+            $t('menus.masterData.customerFilters.totalCount', { count: filteredCustomers.length })
+          }}</span>
         </ElFormItem>
       </ElForm>
 
       <ElTable v-loading="loading" :data="filteredCustomers" stripe border>
+        <ElTableColumn
+          type="index"
+          :label="$t('table.column.index')"
+          width="64"
+          align="center"
+          fixed
+        />
         <ElTableColumn prop="code" label="编码" width="120" />
         <ElTableColumn
           prop="canonical_name"
@@ -166,6 +176,15 @@
           }}</span>
         </ElFormItem>
         <BillingRegressionHint :billing-enabled="form.billingEnabled" />
+        <ElAlert
+          v-if="!form.billingEnabled"
+          type="info"
+          :closable="false"
+          show-icon
+          class="mb-4"
+        >
+          {{ $t('menus.masterData.customerForm.billingDisabledConfigHint') }}
+        </ElAlert>
         <ElFormItem label="备注">
           <ElInput v-model="form.notes" type="textarea" :rows="2" />
         </ElFormItem>
@@ -181,6 +200,7 @@
         </div>
         <ElButton class="mb-4" @click="addAlias">添加别名</ElButton>
 
+        <template v-if="form.billingEnabled">
         <CustomerBillingPolicyPanel
           :state="billingPolicyState"
           :read-only="isReadOnlyConfig"
@@ -404,6 +424,7 @@
             </ul>
           </ElAlert>
         </div>
+        </template>
       </ElForm>
       <template #footer>
         <ElButton @click="drawerVisible = false">取消</ElButton>
@@ -449,6 +470,7 @@
   import { validateRuleConflicts } from '@/api/billing/billingRulesApi'
   import {
     applyBillingPoliciesToState,
+    BILLING_POLICY_DEFAULT_PRIORITY,
     createEmptyBillingPolicyState,
     enrichDiscountForPanel,
     formatPolicySummary,
@@ -620,7 +642,12 @@
         return filterForm.hasProductRules === 'yes' ? has : !has
       })
     }
-    return data
+    return [...data].sort((a, b) => {
+      const statusRank = (status?: string) => ((status ?? 'active') === 'active' ? 0 : 1)
+      const byStatus = statusRank(a.status) - statusRank(b.status)
+      if (byStatus !== 0) return byStatus
+      return (a.code ?? '').localeCompare(b.code ?? '', 'zh-CN')
+    })
   })
 
   function handleSearch() {
@@ -642,6 +669,13 @@
     editingRuleIdx.value = null
     Object.assign(ruleDialogDraft, createEmptyProductRuleDraft())
   }
+
+  watch(
+    () => form.billingEnabled,
+    (enabled) => {
+      if (!enabled) resetRuleDialog()
+    }
+  )
 
   function resetForm() {
     advancedCollapseActive.value = []
@@ -932,7 +966,7 @@
       name: '月度结算',
       minCharge: hasMin ? billingPolicyState.monthlyMinCharge : undefined,
       maxCap: hasMax ? billingPolicyState.monthlyMaxCap : undefined,
-      priority: billingPolicyState.monthlyPriority ?? 100,
+      priority: BILLING_POLICY_DEFAULT_PRIORITY,
       isActive: true
     }
     if (billingPolicyState.monthlyPolicyId) {
@@ -959,7 +993,7 @@
       adjustedMultiplier: billingPolicyState.urgentAdjustedMultiplier ?? 1.025,
       urgentLogisticsFeePerTrip: billingPolicyState.urgentLogisticsFeePerTrip ?? 150,
       urgentLogisticsDiscountRate: billingPolicyState.urgentLogisticsDiscountRate ?? 0.9,
-      priority: billingPolicyState.urgentPriority ?? 100,
+      priority: BILLING_POLICY_DEFAULT_PRIORITY,
       isActive: true
     }
     if (billingPolicyState.urgentPolicyId) {
@@ -984,7 +1018,7 @@
       policyType: 'DEDUCTION',
       name: '设备抵扣',
       monthlyAmount: amount,
-      priority: billingPolicyState.deductionPriority ?? 100,
+      priority: BILLING_POLICY_DEFAULT_PRIORITY,
       isActive: true
     }
     if (billingPolicyState.deductionPolicyId) {
@@ -1065,7 +1099,7 @@
       logisticsMergeGroupId: billingPolicyState.logisticsMergeGroupId,
       mergeSameDay: billingPolicyState.logisticsMergeSameDay,
       singleOwnerCustomerId: billingPolicyState.logisticsSingleOwnerCustomerId,
-      priority: billingPolicyState.logisticsPriority ?? 100,
+      priority: BILLING_POLICY_DEFAULT_PRIORITY,
       isActive: true
     }
     if (billingPolicyState.logisticsPolicyId) {
@@ -1125,7 +1159,6 @@
       enrichDiscountForPanel({
         ...d,
         temperature: d.temperature ?? 'ANY',
-        priority: d.priority ?? 100,
         isActive: d.isActive ?? true
       })
     )
@@ -1169,37 +1202,41 @@
       }
       if (editingId.value) {
         await updateCustomer(editingId.value, payload)
-        await syncLogisticsPolicy(editingId.value)
-        await syncMonthlyPolicy(editingId.value)
-        await syncUrgentPolicy(editingId.value)
-        await syncDeductionPolicy(editingId.value)
+        if (form.billingEnabled) {
+          await syncLogisticsPolicy(editingId.value)
+          await syncMonthlyPolicy(editingId.value)
+          await syncUrgentPolicy(editingId.value)
+          await syncDeductionPolicy(editingId.value)
+        }
         ElMessage.success('客户已更新')
       } else {
         const created = await createCustomer(payload)
-        if (
-          billingPolicyState.logisticsActive !== false &&
-          billingPolicyState.logisticsFeePerTrip != null &&
-          billingPolicyState.logisticsFeePerTrip > 0
-        ) {
-          await syncLogisticsPolicy(created.id)
-        }
-        if (
-          billingPolicyState.monthlyActive !== false &&
-          ((billingPolicyState.monthlyMinCharge != null &&
-            billingPolicyState.monthlyMinCharge > 0) ||
-            (billingPolicyState.monthlyMaxCap != null && billingPolicyState.monthlyMaxCap > 0))
-        ) {
-          await syncMonthlyPolicy(created.id)
-        }
-        if (billingPolicyState.urgentActive !== false) {
-          await syncUrgentPolicy(created.id)
-        }
-        if (
-          billingPolicyState.deductionActive !== false &&
-          billingPolicyState.deductionMonthlyAmount != null &&
-          billingPolicyState.deductionMonthlyAmount > 0
-        ) {
-          await syncDeductionPolicy(created.id)
+        if (form.billingEnabled) {
+          if (
+            billingPolicyState.logisticsActive !== false &&
+            billingPolicyState.logisticsFeePerTrip != null &&
+            billingPolicyState.logisticsFeePerTrip > 0
+          ) {
+            await syncLogisticsPolicy(created.id)
+          }
+          if (
+            billingPolicyState.monthlyActive !== false &&
+            ((billingPolicyState.monthlyMinCharge != null &&
+              billingPolicyState.monthlyMinCharge > 0) ||
+              (billingPolicyState.monthlyMaxCap != null && billingPolicyState.monthlyMaxCap > 0))
+          ) {
+            await syncMonthlyPolicy(created.id)
+          }
+          if (billingPolicyState.urgentActive !== false) {
+            await syncUrgentPolicy(created.id)
+          }
+          if (
+            billingPolicyState.deductionActive !== false &&
+            billingPolicyState.deductionMonthlyAmount != null &&
+            billingPolicyState.deductionMonthlyAmount > 0
+          ) {
+            await syncDeductionPolicy(created.id)
+          }
         }
         ElMessage.success('客户已创建')
       }

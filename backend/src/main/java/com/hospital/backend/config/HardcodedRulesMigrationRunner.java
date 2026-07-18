@@ -81,23 +81,23 @@ public class HardcodedRulesMigrationRunner implements CommandLineRunner {
     }
 
     private void seedMissingCustomers() {
-        ensureCustomer("HRB-HTFH", "哈尔滨航天风华医院", null, null, false,
+        ensureCustomer("HRB-HTFH", "哈尔滨航天风华医院", null, null, false, true,
                 List.of(alias("哈尔滨航天风华医院", "engine")),
                 List.of(), List.of());
-        ensureCustomer("HRB-MHM", "哈尔滨美涵美医疗美容有限公司", null, null, false,
+        ensureCustomer("HRB-MHM", "哈尔滨美涵美医疗美容有限公司", null, null, false, true,
                 List.of(alias("哈尔滨美涵美医疗美容有限公司", "engine")),
                 List.of(), List.of());
-        ensureCustomer("HRB-DLFB", "哈尔滨市道里区妇幼保健院", null, null, false,
+        ensureCustomer("HRB-DLFB", "哈尔滨市道里区妇幼保健院", null, null, false, true,
                 List.of(alias("哈尔滨市道里区妇幼保健院", "engine")),
                 List.of(), List.of());
-        ensureCustomer("HLFB-SF", "黑龙江省妇幼保健院（人口）", null, null, false,
+        ensureCustomer("HLFB-SF", "黑龙江省妇幼保健院（人口）", null, null, false, true,
                 List.of(alias("黑龙江省妇幼保健院（人口）", "engine"),
                         alias("黑龙江省妇幼保健院(人口)", "engine")),
                 List.of(), List.of());
-        ensureCustomer("HL-ZGH", "黑龙江总工会医院", null, null, false,
+        ensureCustomer("HL-ZGH", "黑龙江总工会医院", null, null, false, true,
                 List.of(alias("黑龙江总工会医院", "engine")),
                 List.of(), List.of());
-        ensureCustomer("ZXYSJT", "显著医生集团中西医结合门诊", null, "none", false,
+        ensureCustomer("ZXYSJT", "显著医生集团中西医结合门诊", null, "none", false, true,
                 List.of(alias("显著医生集团中西医结合门诊", "engine")),
                 List.of(), List.of());
     }
@@ -334,7 +334,7 @@ public class HardcodedRulesMigrationRunner implements CommandLineRunner {
     }
 
     private void ensureCustomer(String code, String name, Long defaultRuleId, String capMode,
-                                boolean chargeDoubleBag, List<AliasSeed> aliases,
+                                boolean chargeDoubleBag, boolean inactive, List<AliasSeed> aliases,
                                 List<DiscountSeed> discounts, List<ProductRuleSeed> productRules) {
         if (customerMapper.selectByCode(code) != null) {
             return;
@@ -342,7 +342,7 @@ public class HardcodedRulesMigrationRunner implements CommandLineRunner {
         Customer customer = new Customer();
         customer.setCode(code);
         customer.setCanonicalName(name);
-        customer.setStatus("active");
+        customer.setStatus(inactive ? "inactive" : "active");
         customer.setDefaultRuleId(defaultRuleId);
         customer.setCapMode(capMode);
         customer.setChargeDoubleBagWhenCapped(chargeDoubleBag);

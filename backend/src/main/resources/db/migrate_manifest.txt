@@ -5,3 +5,7 @@ schema_002_migration_customer_master.sql
 schema_003_migration_sys_setting.sql
 schema_004_migration_product_price.sql
 schema_005_migration_product_variant.sql
+schema_006_migration_export_template.sql
+schema_007_migration_logistics.sql
+schema_007_migration_rule_group.sql
+schema_008_migration_dept_physician.sql

@@ -5,6 +5,7 @@ import lombok.Setter;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.List;
 
 @Getter
 @Setter
@@ -20,6 +21,9 @@ public class CustomerDiscountDto {
     private BigDecimal discountRate;
 
     private String applyStage;
+
+    /** bill_detail / settlement_only / export_only，多选时写入 policy.params.applyStages */
+    private List<String> applyStages;
 
     private Boolean skipWhenFixedPrice;
 

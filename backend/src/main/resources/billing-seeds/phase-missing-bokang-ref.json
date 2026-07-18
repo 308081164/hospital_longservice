@@ -1,0 +1,84 @@
+{
+  "version": "1",
+  "description": "铂康参考文件夹（42 院）中 billing-seeds 未覆盖的 13 家医院：仅创建客户，默认不启用特色账单",
+  "profiles": [
+    {
+      "code": "SANJING-SB",
+      "name": "三精肾病医院",
+      "billingEnabled": false,
+      "aliases": ["三精肾病医院"]
+    },
+    {
+      "code": "NG-XFX-SQ",
+      "name": "南岗区先锋路社区卫生服务中心",
+      "billingEnabled": false,
+      "aliases": ["南岗区先锋路社区卫生服务中心", "先锋路社区卫生服务中心"]
+    },
+    {
+      "code": "NG-FUCHAN",
+      "name": "南岗区妇产医院",
+      "billingEnabled": false,
+      "aliases": ["南岗区妇产医院"]
+    },
+    {
+      "code": "HRB-HX-EYE",
+      "name": "哈尔滨华夏眼科医院",
+      "billingEnabled": false,
+      "aliases": ["哈尔滨华夏眼科医院", "华夏眼科医院"]
+    },
+    {
+      "code": "HRB-NGJY",
+      "name": "哈尔滨市南岗区人民医院（九院）",
+      "billingEnabled": false,
+      "aliases": ["哈尔滨市南岗区人民医院（九院）", "南岗区人民医院（九院）", "九院"]
+    },
+    {
+      "code": "HRB-GUSHANG",
+      "name": "哈尔滨市骨伤科医院",
+      "billingEnabled": false,
+      "aliases": ["哈尔滨市骨伤科医院", "骨伤科医院"]
+    },
+    {
+      "code": "AL-YY",
+      "name": "奥兰医院",
+      "billingEnabled": false,
+      "aliases": ["奥兰医院"]
+    },
+    {
+      "code": "WJ-HLJ-ZD",
+      "name": "武警黑龙江省总队医院",
+      "billingEnabled": false,
+      "aliases": ["武警黑龙江省总队医院", "武警总队医院"]
+    },
+    {
+      "code": "DAOWAI-RM",
+      "name": "道外区人民医院",
+      "billingEnabled": false,
+      "aliases": ["道外区人民医院"]
+    },
+    {
+      "code": "XF-ZYY",
+      "name": "香坊中医院",
+      "billingEnabled": false,
+      "aliases": ["香坊中医院"]
+    },
+    {
+      "code": "DD-DC",
+      "name": "黑龙江东大肛肠",
+      "billingEnabled": false,
+      "aliases": ["黑龙江东大肛肠", "东大肛肠"]
+    },
+    {
+      "code": "ZYY-D1",
+      "name": "黑龙江中医药大学附属第一医院",
+      "billingEnabled": false,
+      "aliases": ["黑龙江中医药大学附属第一医院", "中医药大学附属第一医院"]
+    },
+    {
+      "code": "SHKF-YY",
+      "name": "黑龙江省社会康复医院",
+      "billingEnabled": false,
+      "aliases": ["黑龙江省社会康复医院", "社会康复医院"]
+    }
+  ]
+}

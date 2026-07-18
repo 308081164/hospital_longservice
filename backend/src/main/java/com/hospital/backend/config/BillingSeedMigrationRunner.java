@@ -30,7 +30,8 @@ public class BillingSeedMigrationRunner implements CommandLineRunner {
             "billing-seeds/phase2-policies.json",
             "billing-seeds/phase5-batch-c.json",
             "billing-seeds/phase7-batch-d.json",
-            "billing-seeds/phase7-batch-e.json"
+            "billing-seeds/phase7-batch-e.json",
+            "billing-seeds/phase-missing-bokang-ref.json"
     );
 
     private final SysSettingMapper sysSettingMapper;
@@ -249,7 +250,7 @@ public class BillingSeedMigrationRunner implements CommandLineRunner {
             }
             rule.setSkipPackaging(bool(ruleNode, "skipPackaging", false));
             rule.setSkipDiscount(bool(ruleNode, "skipDiscount", false));
-            rule.setMatchMode(text(ruleNode, "matchMode"));
+            rule.setMatchMode(text(ruleNode, "matchMode", "first"));
             if (ruleNode.has("acceptedPrices")) {
                 rule.setAcceptedPrices(ruleNode.get("acceptedPrices").toString());
             }
