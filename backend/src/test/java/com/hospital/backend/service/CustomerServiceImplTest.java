@@ -11,8 +11,11 @@ import com.hospital.backend.mapper.CustomerBillingPolicyMapper;
 import com.hospital.backend.mapper.CustomerDiscountMapper;
 import com.hospital.backend.mapper.CustomerMapper;
 import com.hospital.backend.mapper.CustomerProductRuleMapper;
+import com.hospital.backend.mapper.DepartmentEntryMapper;
+import com.hospital.backend.mapper.PhysicianEntryMapper;
 import com.hospital.backend.mapper.ProductMapper;
 import com.hospital.backend.service.impl.CustomerServiceImpl;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
@@ -25,6 +28,7 @@ import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -46,9 +50,19 @@ class CustomerServiceImplTest {
     private ProductMapper productMapper;
     @Mock
     private BillingRuleGroupSyncService billingRuleGroupSyncService;
+    @Mock
+    private DepartmentEntryMapper departmentEntryMapper;
+    @Mock
+    private PhysicianEntryMapper physicianEntryMapper;
 
     @InjectMocks
     private CustomerServiceImpl customerService;
+
+    @BeforeEach
+    void setUp() {
+        when(departmentEntryMapper.countActiveByCustomerId(anyLong())).thenReturn(0);
+        when(physicianEntryMapper.countActiveByCustomerId(anyLong())).thenReturn(0);
+    }
 
     @Test
     void updateCustomerPersistsFoldRuleWithoutProductId() {
