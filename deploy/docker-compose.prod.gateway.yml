@@ -1,0 +1,14 @@
+# 可选 overlay：backend 无法直连 mysql:3306（No route to host）时，经 Docker 网桥网关回连宿主机映射端口。
+#
+# 用法（服务器）：
+#   GW=$(docker network inspect hospital-reconciliation_hospital-net -f '{{range .IPAM.Config}}{{.Gateway}}{{end}}')
+#   在 .env 中设置：
+#     MYSQL_HOST=<上一步 GW，通常 172.20.0.1>
+#     MYSQL_PORT=3307
+#     MYSQL_PUBLISH_PORT=3307
+#   docker compose -f docker-compose.prod.yml -f deploy/docker-compose.prod.gateway.yml up -d --pull never
+
+services:
+  mysql:
+    ports:
+      - "${MYSQL_PUBLISH_PORT:-3307}:3306"

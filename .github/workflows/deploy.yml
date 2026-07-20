@@ -108,6 +108,7 @@ jobs:
           scp -i ~/.ssh/deploy_key -o StrictHostKeyChecking=no -P "${SSH_PORT}" -r \
             docker-compose.prod.yml \
             deploy/nginx-hospital.conf \
+            deploy/nginx-frontend-shared-net.conf \
             backend \
             "${SSH_USER}@${SSH_HOST}:${DEPLOY_PATH}/"
 
@@ -183,8 +184,20 @@ jobs:
               echo "$GHCR_TOKEN" | docker login ghcr.io -u "$GHCR_USER" --password-stdin
             fi
             export IMAGE_BACKEND IMAGE_FRONTEND
+            set -a && source .env && set +a
 
-            docker compose -f docker-compose.prod.yml up -d mysql
+            # 共享网络栈：先停 frontend 释放 8854，再重建 mysql → backend → frontend
+            docker compose -f docker-compose.prod.yml stop frontend 2>/dev/null || true
+            docker compose -f docker-compose.prod.yml rm -f frontend 2>/dev/null || true
+            docker compose -f docker-compose.prod.yml up -d --force-recreate mysql
+            echo "DEPLOY_STAGE=mysql_container_started"
+            for i in $(seq 1 30); do
+              if docker compose -f docker-compose.prod.yml ps mysql | grep -q '(healthy)'; then
+                echo "mysql healthy（第 ${i} 轮）"
+                break
+              fi
+              sleep 2
+            done
             docker compose -f docker-compose.prod.yml up -d --no-deps --force-recreate backend
             echo "DEPLOY_STAGE=backend_container_started"
 

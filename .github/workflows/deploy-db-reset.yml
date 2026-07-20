@@ -114,6 +114,7 @@ jobs:
             docker-compose.prod.yml \
             deploy/reset-database-on-server.sh \
             deploy/nginx-hospital.conf \
+            deploy/nginx-frontend-shared-net.conf \
             backend \
             "${SSH_USER}@${SSH_HOST}:${DEPLOY_PATH}/"
 
