@@ -105,12 +105,22 @@ jobs:
           printf '%s\n' "$SSH_KEY" > ~/.ssh/deploy_key
           chmod 600 ~/.ssh/deploy_key
           ssh-keyscan -p "${SSH_PORT}" -H "$SSH_HOST" >> ~/.ssh/known_hosts 2>/dev/null || true
-          scp -i ~/.ssh/deploy_key -o StrictHostKeyChecking=no -P "${SSH_PORT}" -r \
+          ssh -i ~/.ssh/deploy_key -o StrictHostKeyChecking=no -p "${SSH_PORT}" \
+            "${SSH_USER}@${SSH_HOST}" \
+            "mkdir -p '${DEPLOY_PATH}/deploy' && \
+             if [ -d '${DEPLOY_PATH}/deploy/nginx-frontend-shared-net.conf' ]; then \
+               rm -rf '${DEPLOY_PATH}/deploy/nginx-frontend-shared-net.conf'; \
+             fi"
+          scp -i ~/.ssh/deploy_key -o StrictHostKeyChecking=no -P "${SSH_PORT}" \
             docker-compose.prod.yml \
-            deploy/nginx-hospital.conf \
-            deploy/nginx-frontend-shared-net.conf \
+            "${SSH_USER}@${SSH_HOST}:${DEPLOY_PATH}/"
+          scp -i ~/.ssh/deploy_key -o StrictHostKeyChecking=no -P "${SSH_PORT}" -r \
             backend \
             "${SSH_USER}@${SSH_HOST}:${DEPLOY_PATH}/"
+          scp -i ~/.ssh/deploy_key -o StrictHostKeyChecking=no -P "${SSH_PORT}" \
+            deploy/nginx-hospital.conf \
+            deploy/nginx-frontend-shared-net.conf \
+            "${SSH_USER}@${SSH_HOST}:${DEPLOY_PATH}/deploy/"
 
       - name: Pull service images on server (runner SSH)
         env:
@@ -267,4 +277,9 @@ jobs:
               echo "$GHCR_TOKEN" | docker login ghcr.io -u "$GHCR_USER" --password-stdin
             fi
             export IMAGE_BACKEND IMAGE_FRONTEND
+            if [ ! -f deploy/nginx-frontend-shared-net.conf ]; then
+              echo "错误: deploy/nginx-frontend-shared-net.conf 不存在（SCP 路径错误或未同步）"
+              ls -la deploy/ 2>/dev/null || true
+              exit 1
+            fi
             docker compose -f docker-compose.prod.yml up -d --no-deps --force-recreate frontend
