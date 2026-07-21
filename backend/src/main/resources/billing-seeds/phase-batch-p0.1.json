@@ -1,0 +1,39 @@
+{
+  "version": "1",
+  "description": "P0.1 收窄：hybrid/standard→special_only、零差异院关闭 billing、关键词/exclude 收窄",
+  "customerUpdates": [
+    {"code": "HRB-2ND", "billingPricingMode": "special_only"},
+    {"code": "ZY3-DIANLI", "billingPricingMode": "special_only"},
+    {"code": "GUOYAO-MAIN", "billingPricingMode": "special_only"},
+    {"code": "ZUYAN-SF", "billingPricingMode": "special_only"},
+    {"code": "ZYY-D2-NG", "billingPricingMode": "special_only"},
+    {"code": "WJ-HLJ-ZD", "billingPricingMode": "special_only"},
+    {"code": "HULAN-TCM", "billingPricingMode": "special_only", "billingEnabled": false},
+    {"code": "BINGCHENG-YM", "billingPricingMode": "special_only"},
+    {"code": "NG-FUCHAN", "billingPricingMode": "special_only", "billingEnabled": false},
+    {"code": "SHKF-YY", "billingPricingMode": "special_only", "billingEnabled": false},
+    {"code": "VICTORIA", "billingPricingMode": "standard", "billingEnabled": false},
+    {"code": "JIUZHOU-FK", "billingPricingMode": "standard", "billingEnabled": false},
+    {"code": "HULAN-HSZ", "billingPricingMode": "special_only", "billingEnabled": false},
+    {"code": "TAIPING-RM", "billingEnabled": false, "billingPricingMode": "special_only"}
+  ],
+  "deactivateBillingPolicies": ["VICTORIA", "JIUZHOU-FK", "TAIPING-RM", "NG-FUCHAN", "SHKF-YY", "HULAN-HSZ", "HULAN-TCM"],
+  "ruleUpdates": [
+    {
+      "code": "SHENG-YY-XF",
+      "ruleName": "校正价180.0",
+      "removeKeywords": ["胸腔镜-"],
+      "addKeywords": ["胸腔镜-23件", "胸腔镜-21", "胸腔镜-32件"]
+    },
+    {
+      "code": "ZYY-D2-NG",
+      "ruleName": "校正价30.0",
+      "addExcludeKeywords": ["大衣-无纺布"]
+    },
+    {
+      "code": "BINGCHENG-YM",
+      "ruleName": "整形包54.5",
+      "addExcludeKeywords": ["整形手术包"]
+    }
+  ]
+}

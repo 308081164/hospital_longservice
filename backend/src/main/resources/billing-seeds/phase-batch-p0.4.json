@@ -1,0 +1,43 @@
+{
+  "version": "1",
+  "description": "P0.4 L9-L61 补充院：零差异关 billing、省二/红十字 special_only、工程大学口腔规则",
+  "customerUpdates": [
+    {"code": "ERYY-NG", "billingPricingMode": "special_only", "billingEnabled": false},
+    {"code": "ERYY-SB", "billingPricingMode": "special_only", "billingEnabled": false},
+    {"code": "HULAN-RM", "billingPricingMode": "special_only", "billingEnabled": false},
+    {"code": "HRB-HSZ", "billingPricingMode": "special_only", "billingEnabled": false},
+    {"code": "HRB-HIT", "billingPricingMode": "special_only", "billingEnabled": false}
+  ],
+  "deactivateBillingPolicies": ["ERYY-NG", "ERYY-SB", "HULAN-RM", "HRB-HSZ", "HRB-HIT"],
+  "customerAliases": [
+    {"code": "ERYY-NG", "alias": "黑龙江省第二医院（南岗院区）", "matchType": "exact"},
+    {"code": "ERYY-SB", "alias": "黑龙江省第二医院（松北院区）", "matchType": "exact"},
+    {"code": "HRB-HIT", "alias": "哈尔滨(工程)大学医院", "matchType": "exact"},
+    {"code": "HRB-HIT", "alias": "哈尔滨工程大学医院", "matchType": "exact"},
+    {"code": "HULAN-RM", "alias": "哈尔滨市呼兰区第一人民医院", "matchType": "exact"},
+    {"code": "HRB-HSZ", "alias": "哈尔滨市红十字妇产医院", "matchType": "exact"}
+  ],
+  "newRules": [
+    {
+      "code": "HRB-HIT",
+      "ruleType": "FIXED_PRICE",
+      "name": "口腔针类5.5",
+      "priority": 10,
+      "price": 5.5,
+      "keywords": ["洁牙尖", "成型片", "根管针", "根管锉", "车针", "探针", "球钻", "机扩针", "镍钛锉"],
+      "skipPackaging": true,
+      "skipDiscount": true
+    },
+    {
+      "code": "HRB-HIT",
+      "ruleType": "FOLD",
+      "name": "口腔小件5件计1",
+      "priority": 20,
+      "keywords": ["洁牙尖", "成型片"],
+      "threshold": 5,
+      "foldRatio": 5,
+      "skipPackaging": true,
+      "skipDiscount": true
+    }
+  ]
+}

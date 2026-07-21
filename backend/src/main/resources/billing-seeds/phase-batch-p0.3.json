@@ -1,0 +1,18 @@
+{
+  "version": "1",
+  "description": "P0.3 祖研三辅针线包多报价收窄（避免敷料包默认定价误报）",
+  "newRules": [
+    {
+      "code": "ZUYAN-SF",
+      "ruleType": "FIXED_PRICE",
+      "name": "针线包现价",
+      "priority": 5,
+      "price": 2.5,
+      "keywords": ["针线包"],
+      "matchMode": "any_price",
+      "acceptedPrices": [2.5, 25],
+      "skipPackaging": true,
+      "skipDiscount": true
+    }
+  ]
+}

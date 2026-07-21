@@ -75,6 +75,16 @@ public class PricingEngine {
 
         // 低温类型判定：类型含"低温"、"ETO"、"EO"均为低温处理
         JsonNode billingProfile = rules.path("billingProfile");
+        if (billingProfile.has("enabled") && !billingProfile.path("enabled").asBoolean(true)) {
+            ProcessedResult disabled = new ProcessedResult();
+            disabled.expectedUnitPrice = unitPrice;
+            disabled.correctedTotalPrice = totalPrice;
+            disabled.difference = 0.0;
+            disabled.status = "unchanged";
+            disabled.pricingRule = "特色账单已关闭";
+            disabled.notes = List.of("客户未启用特色账单，保留原始价格。");
+            return disabled;
+        }
         JsonNode pathOverride = billingProfile.path("pathOverride");
         SpecialPriceResult zeroPriceOverride = resolveZeroPriceOverride(row, pathOverride, unitPrice);
         boolean disableLowTemp = pathOverride.path("disableLowTemp").asBoolean(false);

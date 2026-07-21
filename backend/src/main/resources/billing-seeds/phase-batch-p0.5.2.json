@@ -1,0 +1,75 @@
+{
+  "version": "1",
+  "description": "P0.5.2 L9 收窄：松北钉/手术衣/取钉包、工程大学口腔拆分",
+  "ruleUpdates": [
+    {
+      "code": "ERYY-SB",
+      "ruleName": "松北钉多报价",
+      "addExcludeKeywords": ["成人头钉", "咬钉剪", "补钉", "指骨", "拉力钉", "髓内钉", "固定钉", "锁定钉", "取钉包", "儿童头钉", "头钉-"],
+      "setAcceptedPrices": [35, 140]
+    },
+    {
+      "code": "ERYY-SB",
+      "ruleName": "手术衣无纺布现价",
+      "setAcceptedPrices": [26.6, 28, 38, 40, 24.5]
+    },
+    {
+      "code": "HRB-HIT",
+      "ruleName": "口腔针类5.5",
+      "setKeywords": ["洁牙尖", "成型片"],
+      "setMatchMode": "any_price",
+      "setAcceptedPrices": [5.5, 8, 13.5, 16.5]
+    },
+    {
+      "code": "HRB-HIT",
+      "ruleName": "克氏针5.5",
+      "setKeywords": ["克氏针-3/z7534"],
+      "setMatchMode": "first",
+      "setAcceptedPrices": []
+    }
+  ],
+  "newRules": [
+    {
+      "code": "HRB-HIT",
+      "ruleType": "FIXED_PRICE",
+      "name": "车针多报价",
+      "priority": 9,
+      "price": 13.5,
+      "keywords": ["车针"],
+      "matchMode": "any_price",
+      "acceptedPrices": [8, 13.5, 16.5],
+      "skipPackaging": true,
+      "skipDiscount": true
+    },
+    {
+      "code": "ERYY-SB",
+      "ruleType": "FIXED_PRICE",
+      "name": "取钉包多报价",
+      "priority": 5,
+      "price": 207.9,
+      "keywords": ["取钉包"],
+      "matchMode": "any_price",
+      "acceptedPrices": [207.9],
+      "skipPackaging": true,
+      "skipDiscount": true
+    },
+    {
+      "code": "ERYY-SB",
+      "ruleType": "FIXED_PRICE",
+      "name": "儿童头钉现价",
+      "priority": 5,
+      "price": 15.4,
+      "keywords": ["儿童头钉"],
+      "matchMode": "any_price",
+      "acceptedPrices": [15.4],
+      "skipPackaging": true,
+      "skipDiscount": true
+    }
+  ],
+  "deactivateRules": [
+    {"code": "ERYY-SB", "ruleName": "黑龙江省第二医院（松北区）手术衣无纺布固定单价"},
+    {"code": "ERYY-SB", "ruleName": "黑龙江省第二医院（松北区）手术衣纸塑袋固定单价"},
+    {"code": "ERYY-SB", "ruleName": "黑龙江省第二医院（松北区）钉固定单价"},
+    {"code": "ERYY-SB", "ruleName": "黑龙江省第二医院（松北区）7.3空心钉固定单价"}
+  ]
+}

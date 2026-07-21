@@ -160,10 +160,14 @@ public final class BillingConditionEvaluator {
             String packName = str(row, "packName");
             String packageMaterial = str(row, "packageMaterial");
             String combined = type + " " + packName + " " + packageMaterial;
+            String department = str(row, "department");
+            if (department.isBlank()) {
+                department = str(row, "sheetName");
+            }
             return new RowContext(
                     type, packName, packageMaterial,
                     str(row, "hospitalName"),
-                    str(row, "department"),
+                    department,
                     doubleOrNull(row, "unitPrice"),
                     bagSize, effectiveCount, matchedProductId, matchedVariantId, combined);
         }

@@ -432,13 +432,23 @@ public class SchemaMigrationRunner implements CommandLineRunner {
         if (!tableExists("customer") || !columnExists("customer", "billing_enabled")) {
             return;
         }
-        if (!tableExists("customer_product_rule")) {
+        if (!tableExists("customer_product_rule") || !tableExists("sys_setting")) {
+            return;
+        }
+        Integer marker = jdbcTemplate.queryForObject(
+                "SELECT COUNT(*) FROM sys_setting WHERE setting_key='billing_auto_enable_product_rules_v1'",
+                Integer.class);
+        if (marker != null && marker > 0) {
             return;
         }
         jdbcTemplate.update(
                 "UPDATE customer c SET billing_enabled = 1 "
                         + "WHERE billing_enabled = 0 AND EXISTS ("
                         + "SELECT 1 FROM customer_product_rule r WHERE r.customer_id = c.id)");
+        jdbcTemplate.update(
+                "INSERT INTO sys_setting (setting_key, setting_value, description) "
+                        + "VALUES ('billing_auto_enable_product_rules_v1', 'true', "
+                        + "'一次性：有 product_rule 的客户默认开启 billing')");
     }
 
     private void migrateSysSettingTable() {

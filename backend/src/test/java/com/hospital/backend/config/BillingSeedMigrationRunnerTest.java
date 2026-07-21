@@ -34,7 +34,8 @@ class BillingSeedMigrationRunnerTest {
                 "billing-seeds/phase2-policies.json",
                 "billing-seeds/phase5-batch-c.json",
                 "billing-seeds/phase7-batch-d.json",
-                "billing-seeds/phase7-batch-e.json")) {
+                "billing-seeds/phase7-batch-e.json",
+                "billing-seeds/phase-zyy-d1-fuyi.json")) {
             assertThat(new ClassPathResource(file).exists())
                     .as("seed file %s", file)
                     .isTrue();

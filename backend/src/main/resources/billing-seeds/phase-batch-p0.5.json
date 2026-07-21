@@ -1,0 +1,11 @@
+{
+  "version": "1",
+  "description": "P0.5 L9-L61 补充院：开启特色 billing（special_only）用于逐月验收",
+  "customerUpdates": [
+    {"code": "ERYY-NG", "billingPricingMode": "special_only", "billingEnabled": true},
+    {"code": "ERYY-SB", "billingPricingMode": "special_only", "billingEnabled": true},
+    {"code": "HULAN-RM", "billingPricingMode": "special_only", "billingEnabled": true},
+    {"code": "HRB-HSZ", "billingPricingMode": "special_only", "billingEnabled": true},
+    {"code": "HRB-HIT", "billingPricingMode": "special_only", "billingEnabled": true}
+  ]
+}

@@ -1,0 +1,60 @@
+{
+  "version": "1",
+  "description": "P0.5.1 L9 收窄：工程大学探针误匹配、克氏针多报价；省二手术衣/钉 exclude",
+  "ruleUpdates": [
+    {
+      "code": "HRB-HIT",
+      "ruleName": "口腔针类5.5",
+      "removeKeywords": ["探针"],
+      "addExcludeKeywords": ["泪道探针", "探针包"]
+    },
+    {
+      "code": "ERYY-SB",
+      "ruleName": "黑龙江省第二医院（松北区）钉固定单价",
+      "addExcludeKeywords": ["头钉", "拉力钉", "空心钉", "髓内钉", "固定钉"]
+    },
+    {
+      "code": "ERYY-NG",
+      "ruleName": "黑龙江省第二医院（南岗区）钉固定单价",
+      "addExcludeKeywords": ["头钉", "拉力钉", "空心钉", "髓内钉", "固定钉"]
+    }
+  ],
+  "newRules": [
+    {
+      "code": "HRB-HIT",
+      "ruleType": "FIXED_PRICE",
+      "name": "克氏针5.5",
+      "priority": 8,
+      "price": 5.5,
+      "keywords": ["克氏针"],
+      "skipPackaging": true,
+      "skipDiscount": true
+    },
+    {
+      "code": "ERYY-SB",
+      "ruleType": "FIXED_PRICE",
+      "name": "手术衣无纺布现价",
+      "priority": 4,
+      "price": 26.6,
+      "keywords": ["手术衣"],
+      "matchMode": "any_price",
+      "acceptedPrices": [26.6, 28, 38, 40],
+      "materials": ["无纺布"],
+      "skipPackaging": true,
+      "skipDiscount": true
+    },
+    {
+      "code": "ERYY-SB",
+      "ruleType": "FIXED_PRICE",
+      "name": "手术衣纸塑袋现价",
+      "priority": 4,
+      "price": 28,
+      "keywords": ["手术衣"],
+      "matchMode": "any_price",
+      "acceptedPrices": [28, 40],
+      "materials": ["纸塑袋"],
+      "skipPackaging": true,
+      "skipDiscount": true
+    }
+  ]
+}

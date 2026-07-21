@@ -1,0 +1,37 @@
+{
+  "version": "1",
+  "description": "P0.2 省医院南岗/香坊：手术包限科室 + W9050纺织多报价",
+  "ruleUpdates": [
+    {
+      "code": "SHENG-YY-NG",
+      "ruleName": "校正价22.01",
+      "conditionsJson": "[{\"field\":\"department\",\"value\":[\"美容整形外科\",\"皮肤门诊\"]}]"
+    }
+  ],
+  "newRules": [
+    {
+      "code": "SHENG-YY-NG",
+      "ruleType": "FIXED_PRICE",
+      "name": "W9050纺织现价",
+      "priority": 5,
+      "price": 18.0,
+      "keywords": ["床单/W9050", "刷手服/W9050", "敷布包/W9050", "敷料/W9050", "手术衣-1件/W9050"],
+      "matchMode": "any_price",
+      "acceptedPrices": [15, 18, 30],
+      "skipPackaging": true,
+      "skipDiscount": true
+    },
+    {
+      "code": "SHENG-YY-XF",
+      "ruleType": "FIXED_PRICE",
+      "name": "W9050纺织现价",
+      "priority": 5,
+      "price": 18.0,
+      "keywords": ["床单/W9050", "刷手服/W9050", "敷布包/W9050", "敷料/W9050", "手术衣-1件/W9050"],
+      "matchMode": "any_price",
+      "acceptedPrices": [15, 18, 30],
+      "skipPackaging": true,
+      "skipDiscount": true
+    }
+  ]
+}

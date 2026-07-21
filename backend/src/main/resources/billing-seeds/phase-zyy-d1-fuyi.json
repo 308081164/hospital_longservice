@@ -1,0 +1,391 @@
+{
+  "version": "2",
+  "description": "黑龙江中医药大学附属第一医院（ZYY-D1）特色账单 — P0 校对规则修正（2026-07-21）",
+  "profiles": [
+    {
+      "code": "ZYY-D1",
+      "name": "黑龙江中医药大学附属第一医院",
+      "billingEnabled": true,
+      "billingPricingMode": "special_only",
+      "aliases": [
+        "黑龙江中医药大学附属第一医院",
+        "中医药大学附属第一医院",
+        "中医附一",
+        "附一"
+      ],
+      "notes": "P0：停用宽泛「无纺布」关键词；补球内注药/保温杯/特器/冲洗头橄榄头等精确规则。洗涤费独立导出。",
+      "policies": [
+        {
+          "policyType": "LOGISTICS",
+          "name": "物流2.5元/公里×18公里",
+          "params": {"feePerTrip": 45},
+          "priority": 10
+        },
+        {
+          "policyType": "URGENT",
+          "name": "加急125%无减免",
+          "params": {
+            "baseMultiplier": 1.25,
+            "adjustedMultiplier": 1.25,
+            "urgentLogisticsFeePerTrip": 150,
+            "urgentLogisticsDiscountRate": 1.0
+          },
+          "priority": 20
+        }
+      ],
+      "productRules": [
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "30°腹腔镜组合价",
+          "priority": 5,
+          "price": 30.38,
+          "keywords": ["30°腹腔镜", "30度腹腔镜"],
+          "skipPackaging": true,
+          "skipDiscount": true
+        },
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "王树人特器w12050",
+          "priority": 8,
+          "price": 328,
+          "keywords": ["王树人特器-26"],
+          "skipPackaging": true,
+          "skipDiscount": true
+        },
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "张景欣特器w12050",
+          "priority": 8,
+          "price": 132,
+          "keywords": ["张景欣特器"],
+          "skipPackaging": true,
+          "skipDiscount": true
+        },
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "换药包120布组合价",
+          "priority": 10,
+          "price": 21.99,
+          "keywords": ["换药包(120布)", "换药包120"],
+          "skipPackaging": true,
+          "skipDiscount": true
+        },
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "辅料包整包价",
+          "priority": 11,
+          "price": 28,
+          "keywords": ["辅料包"],
+          "skipPackaging": true,
+          "skipDiscount": true
+        },
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "孔巾包整包价",
+          "priority": 11,
+          "price": 28,
+          "keywords": ["孔巾包"],
+          "skipPackaging": true,
+          "skipDiscount": true
+        },
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "腔镜包整包价",
+          "priority": 11,
+          "price": 28,
+          "keywords": ["腔镜包"],
+          "excludeKeywords": ["腹腔镜"],
+          "skipPackaging": true,
+          "skipDiscount": true
+        },
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "球内注药3件最低把价",
+          "priority": 12,
+          "price": 13.2,
+          "keywords": ["球内注药"],
+          "skipPackaging": true,
+          "skipDiscount": true
+        },
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "冲洗头-120固定价",
+          "priority": 13,
+          "price": 310.4,
+          "keywords": ["冲洗头-120"],
+          "skipPackaging": true,
+          "skipDiscount": true
+        },
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "冲洗头-79固定价",
+          "priority": 13,
+          "price": 220,
+          "keywords": ["冲洗头-79"],
+          "skipPackaging": true,
+          "skipDiscount": true
+        },
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "冲洗头-82固定价",
+          "priority": 13,
+          "price": 237.6,
+          "keywords": ["冲洗头-82"],
+          "skipPackaging": true,
+          "skipDiscount": true
+        },
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "橄榄头-102固定价",
+          "priority": 13,
+          "price": 257.6,
+          "keywords": ["橄榄头-102"],
+          "skipPackaging": true,
+          "skipDiscount": true
+        },
+        {
+          "ruleType": "FOLD",
+          "name": "橄榄头5件算1件",
+          "priority": 15,
+          "keywords": ["橄榄头"],
+          "threshold": 5,
+          "foldRatio": 1,
+          "skipPackaging": true,
+          "skipDiscount": true
+        },
+        {
+          "ruleType": "FOLD",
+          "name": "冲洗头5件算1件",
+          "priority": 16,
+          "keywords": ["冲洗头"],
+          "threshold": 5,
+          "foldRatio": 1,
+          "skipPackaging": true,
+          "skipDiscount": true
+        },
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "低温器械保护盒",
+          "priority": 20,
+          "price": 8,
+          "keywords": ["低温器械保护盒", "保护盒"],
+          "skipPackaging": true,
+          "skipDiscount": true
+        },
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "低温套5件",
+          "priority": 30,
+          "price": 70.33,
+          "keywords": ["低温灭菌（套）5件", "低温灭菌(套)5件"],
+          "skipPackaging": true,
+          "skipDiscount": true
+        },
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "低温套10件",
+          "priority": 31,
+          "price": 131.87,
+          "keywords": ["低温灭菌（套）10件", "低温灭菌 (套)10件"],
+          "skipPackaging": true,
+          "skipDiscount": true
+        },
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "低温套20件",
+          "priority": 32,
+          "price": 239.76,
+          "keywords": ["低温灭菌（套）20件", "低温灭菌 (套)20件"],
+          "skipPackaging": true,
+          "skipDiscount": true
+        },
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "保温杯-1Z2044",
+          "priority": 39,
+          "price": 17.58,
+          "keywords": ["保温杯-1Z2044"],
+          "skipPackaging": true,
+          "skipDiscount": true
+        },
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "低温袋10cm",
+          "priority": 40,
+          "price": 17.58,
+          "keywords": ["低温灭菌 10cm"],
+          "skipPackaging": true,
+          "skipDiscount": true
+        },
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "低温袋15cm",
+          "priority": 41,
+          "price": 19.98,
+          "keywords": ["低温灭菌 15cm", "膀胱取石钳"],
+          "skipPackaging": true,
+          "skipDiscount": true
+        },
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "低温袋20cm",
+          "priority": 42,
+          "price": 22.38,
+          "keywords": ["低温灭菌 20cm"],
+          "skipPackaging": true,
+          "skipDiscount": true
+        },
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "低温袋25cm",
+          "priority": 43,
+          "price": 23.98,
+          "keywords": ["低温灭菌 25cm"],
+          "skipPackaging": true,
+          "skipDiscount": true
+        },
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "低温袋30cm",
+          "priority": 44,
+          "price": 27.97,
+          "keywords": ["低温灭菌 30cm"],
+          "skipPackaging": true,
+          "skipDiscount": true
+        },
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "纸塑袋10cm单把",
+          "priority": 50,
+          "price": 6.39,
+          "keywords": ["纸塑袋 10cm", "纸塑袋10cm"],
+          "bagSizeEquals": 1,
+          "skipPackaging": true,
+          "skipDiscount": true
+        },
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "纸塑袋15cm单把",
+          "priority": 51,
+          "price": 8.79,
+          "keywords": ["纸塑袋 15cm", "纸塑袋15cm"],
+          "bagSizeEquals": 1,
+          "skipPackaging": true,
+          "skipDiscount": true
+        },
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "纸塑袋20cm单把",
+          "priority": 52,
+          "price": 10.39,
+          "keywords": ["纸塑袋20cm", "纸塑袋 20cm"],
+          "bagSizeEquals": 1,
+          "skipPackaging": true,
+          "skipDiscount": true
+        },
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "纸塑袋25cm单把",
+          "priority": 53,
+          "price": 12.79,
+          "keywords": ["纸塑袋 25cm", "纸塑袋25cm"],
+          "bagSizeEquals": 1,
+          "skipPackaging": true,
+          "skipDiscount": true
+        },
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "纸塑袋15cm两件套",
+          "priority": 54,
+          "price": 13.19,
+          "keywords": ["纸塑袋 15cm", "纸塑袋15cm"],
+          "bagSizeEquals": 2,
+          "skipPackaging": true,
+          "skipDiscount": true
+        },
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "纸塑袋10cm两件套",
+          "priority": 55,
+          "price": 10.79,
+          "keywords": ["纸塑袋 10cm", "纸塑袋10cm"],
+          "bagSizeEquals": 2,
+          "skipPackaging": true,
+          "skipDiscount": true
+        },
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "敷料20x20",
+          "priority": 70,
+          "price": 3.2,
+          "keywords": ["20cm*20cm", "20×20"],
+          "skipPackaging": true,
+          "skipDiscount": true
+        },
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "敷料大20x20x15",
+          "priority": 71,
+          "price": 2,
+          "keywords": ["大 （20cm*20cm*15cm）", "20cm*20cm*15cm"],
+          "skipPackaging": true,
+          "skipDiscount": true
+        },
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "敷料大30x30x50",
+          "priority": 72,
+          "price": 27.97,
+          "keywords": ["敷料大（30cm*30cm*50cm）"],
+          "skipPackaging": true,
+          "skipDiscount": true
+        },
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "敷料小20x20x15",
+          "priority": 73,
+          "price": 19.98,
+          "keywords": ["敷料小（20cm*20cm*15cm）"],
+          "skipPackaging": true,
+          "skipDiscount": true
+        },
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "敷料中20x20x30",
+          "priority": 74,
+          "price": 23.98,
+          "keywords": ["敷料中（20cm*20cm*30cm）"],
+          "skipPackaging": true,
+          "skipDiscount": true
+        },
+        {
+          "ruleType": "PRICE_PER_INSTRUMENT",
+          "name": "外来器械4.4每件",
+          "priority": 80,
+          "price": 4.4,
+          "keywords": ["外来"],
+          "skipPackaging": true,
+          "skipDiscount": true
+        },
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "外来钉盒40",
+          "priority": 81,
+          "price": 40,
+          "keywords": ["钉盒"],
+          "skipPackaging": true,
+          "skipDiscount": true
+        },
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "外来生物监测120",
+          "priority": 82,
+          "price": 120,
+          "keywords": ["生物监测"],
+          "skipPackaging": true,
+          "skipDiscount": true
+        }
+      ]
+    }
+  ]
+}

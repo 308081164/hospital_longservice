@@ -97,7 +97,7 @@
       "code": "BINGCHENG-YM",
       "name": "哈尔滨冰城医疗美容医院",
       "billingEnabled": true,
-      "billingPricingMode": "hybrid",
+      "billingPricingMode": "special_only",
       "aliases": ["冰城医美", "哈尔滨冰城医疗美容医院"],
       "productRules": [
         {
@@ -106,6 +106,7 @@
           "priority": 10,
           "price": 54.5,
           "keywords": ["整形包", "脂充包"],
+          "excludeKeywords": ["整形手术包"],
           "skipPackaging": true,
           "skipDiscount": true
         },
