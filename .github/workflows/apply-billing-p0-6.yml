@@ -1,0 +1,55 @@
+# 手动触发：在生产服务器重新应用 P0.6 billing 开关（36 院启用，其余停用）
+name: Apply Billing P0.6 on Production
+
+on:
+  workflow_dispatch:
+
+concurrency:
+  group: apply-billing-p0-6
+  cancel-in-progress: false
+
+jobs:
+  apply:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Sync deploy scripts to server
+        env:
+          SSH_HOST: ${{ secrets.SSH_HOST }}
+          SSH_USER: ${{ secrets.SSH_USER }}
+          SSH_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+          SSH_PORT: ${{ secrets.SSH_PORT || 22 }}
+          DEPLOY_PATH: ${{ secrets.DEPLOY_PATH || '/mnt/newdisk/app/Hospital' }}
+        run: |
+          mkdir -p ~/.ssh
+          printf '%s\n' "$SSH_KEY" > ~/.ssh/deploy_key
+          chmod 600 ~/.ssh/deploy_key
+          PORT="${SSH_PORT:-22}"
+          ssh-keyscan -p "$PORT" -H "$SSH_HOST" >> ~/.ssh/known_hosts 2>/dev/null || true
+          ssh -i ~/.ssh/deploy_key -o StrictHostKeyChecking=no -p "$PORT" \
+            "${SSH_USER}@${SSH_HOST}" "mkdir -p '${DEPLOY_PATH}/deploy'"
+          scp -i ~/.ssh/deploy_key -o StrictHostKeyChecking=no -P "$PORT" \
+            deploy/verify-billing-on-server.sh \
+            deploy/reapply-billing-p0-6-on-server.sh \
+            "${SSH_USER}@${SSH_HOST}:${DEPLOY_PATH}/deploy/"
+          scp -i ~/.ssh/deploy_key -o StrictHostKeyChecking=no -P "$PORT" \
+            backend/src/main/resources/billing-seeds/phase-batch-p0.6.json \
+            "${SSH_USER}@${SSH_HOST}:${DEPLOY_PATH}/backend/src/main/resources/billing-seeds/"
+
+      - name: Reapply P0.6 and verify
+        uses: appleboy/ssh-action@v1.2.5
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          port: ${{ secrets.SSH_PORT || 22 }}
+          command_timeout: 20m
+          script: |
+            set -e
+            DPATH="${{ secrets.DEPLOY_PATH || '/mnt/newdisk/app/Hospital' }}"
+            cd "$DPATH"
+            chmod +x deploy/verify-billing-on-server.sh deploy/reapply-billing-p0-6-on-server.sh
+            bash deploy/reapply-billing-p0-6-on-server.sh

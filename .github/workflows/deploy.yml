@@ -120,6 +120,8 @@ jobs:
           scp -i ~/.ssh/deploy_key -o StrictHostKeyChecking=no -P "${SSH_PORT}" \
             deploy/nginx-hospital.conf \
             deploy/nginx-frontend-shared-net.conf \
+            deploy/verify-billing-on-server.sh \
+            deploy/reapply-billing-p0-6-on-server.sh \
             "${SSH_USER}@${SSH_HOST}:${DEPLOY_PATH}/deploy/"
 
       - name: Pull service images on server (runner SSH)
@@ -193,8 +195,11 @@ jobs:
             if [ -n "$GHCR_TOKEN" ] && [ -n "$GHCR_USER" ]; then
               echo "$GHCR_TOKEN" | docker login ghcr.io -u "$GHCR_USER" --password-stdin
             fi
-            export IMAGE_BACKEND IMAGE_FRONTEND
+            CI_IMAGE_BACKEND="${IMAGE_BACKEND}"
+            CI_IMAGE_FRONTEND="${IMAGE_FRONTEND}"
             set -a && source .env && set +a
+            export IMAGE_BACKEND="${CI_IMAGE_BACKEND}"
+            export IMAGE_FRONTEND="${CI_IMAGE_FRONTEND}"
 
             # 共享网络栈：先停 frontend 释放 8854，再重建 mysql → backend → frontend
             docker compose -f docker-compose.prod.yml stop frontend 2>/dev/null || true
@@ -276,10 +281,37 @@ jobs:
             if [ -n "$GHCR_TOKEN" ] && [ -n "$GHCR_USER" ]; then
               echo "$GHCR_TOKEN" | docker login ghcr.io -u "$GHCR_USER" --password-stdin
             fi
-            export IMAGE_BACKEND IMAGE_FRONTEND
+            CI_IMAGE_BACKEND="${IMAGE_BACKEND}"
+            CI_IMAGE_FRONTEND="${IMAGE_FRONTEND}"
+            set -a && source .env && set +a
+            export IMAGE_BACKEND="${CI_IMAGE_BACKEND}"
+            export IMAGE_FRONTEND="${CI_IMAGE_FRONTEND}"
             if [ ! -f deploy/nginx-frontend-shared-net.conf ]; then
               echo "错误: deploy/nginx-frontend-shared-net.conf 不存在（SCP 路径错误或未同步）"
               ls -la deploy/ 2>/dev/null || true
               exit 1
             fi
             docker compose -f docker-compose.prod.yml up -d --no-deps --force-recreate frontend
+
+      - name: Verify billing seeds on server
+        uses: appleboy/ssh-action@v1.2.5
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          port: ${{ secrets.SSH_PORT || 22 }}
+          command_timeout: 10m
+          script: |
+            set -e
+            DPATH="${{ secrets.DEPLOY_PATH || '/mnt/newdisk/app/Hospital' }}"
+            cd "$DPATH"
+            chmod +x deploy/verify-billing-on-server.sh 2>/dev/null || true
+            if [ -f deploy/verify-billing-on-server.sh ]; then
+              bash deploy/verify-billing-on-server.sh || {
+                echo "==== billing 校验未通过，backend 最近日志（P0.6） ===="
+                docker logs hospital-backend 2>&1 | grep -E 'P0\.6|billing_seed|Billing seed' | tail -40 || true
+                exit 1
+              }
+            else
+              echo "跳过 billing 校验（脚本未同步）"
+            fi
