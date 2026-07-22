@@ -20,38 +20,8 @@ if [ ! -f "$SQL_FILE" ]; then
   exit 1
 fi
 
-echo "==> 确保 MySQL 容器运行: ${CONTAINER}"
-docker compose -f docker-compose.prod.yml up -d mysql
-for i in $(seq 1 30); do
-  if docker exec "$CONTAINER" mysqladmin ping -h 127.0.0.1 -uroot -p"${MYSQL_ROOT_PASSWORD}" --silent 2>/dev/null; then
-    break
-  fi
-  sleep 2
-  if [ "$i" -eq 30 ]; then
-    echo "错误: MySQL 未就绪" >&2
-    exit 1
-  fi
-done
-
 echo "==> 导入 P0.6 SQL"
-docker cp "$SQL_FILE" "${CONTAINER}:/tmp/p0-6-billing-toggle.sql"
-docker exec -i "$CONTAINER" mysql -uroot -p"${MYSQL_ROOT_PASSWORD}" --default-character-set=utf8mb4 hospital \
-  < "$SQL_FILE"
-
-echo "==> 导入后统计"
-docker exec "$CONTAINER" mysql -uroot -p"${MYSQL_ROOT_PASSWORD}" --default-character-set=utf8mb4 -N hospital -e \
-  "SELECT CONCAT('billing_enabled=1: ', COUNT(*)) FROM customer WHERE billing_enabled=1;"
-
-docker exec "$CONTAINER" mysql -uroot -p"${MYSQL_ROOT_PASSWORD}" --default-character-set=utf8mb4 hospital -e \
-  "SELECT c.code, c.billing_enabled FROM customer c
-   WHERE c.code IN (
-     'ZYY-D1','ZY3-DIANLI','GUOYAO-MAIN','GUOYAO-2','GUOYAO-3','HRB-2ND','HRB-WY','HRB-WY-EM',
-     'XINFA-HSZ','SHENG-YY-NG','SHENG-YY-XF','ZUYAN-NG','ZUYAN-SF','ZUYAN-XA','NG-FUCHAN','SHKF-YY',
-     'DAOWAI-RM','TAIPING-RM','SANJING-SB','VICTORIA','JIUZHOU-FK','HULAN-HSZ','HULAN-TCM',
-     'ZYY-D2-NG','ZYY-D2-HN','RENSHENG','HRB-HX-EYE','BINGCHENG-YM','XF-ZYY','WJ-HLJ-ZD','YUEMEI-FH',
-     'ERYY-NG','ERYY-SB','HULAN-RM','HRB-HSZ','HRB-HIT'
-   )
-   ORDER BY c.code;" || true
+bash deploy/apply-p0-6-billing-sql.sh
 
 echo "==> 重启 backend"
 docker compose -f docker-compose.prod.yml up -d --no-deps --force-recreate backend
@@ -66,4 +36,6 @@ for i in $(seq 1 40); do
 done
 
 echo "==> 校验"
+sleep 5
 bash deploy/verify-billing-on-server.sh
+bash deploy/verify-billing-api-on-server.sh

@@ -86,10 +86,20 @@
           min-width="200"
           show-overflow-tooltip
         />
-        <ElTableColumn prop="status" label="状态" width="90" align="center">
+        <ElTableColumn prop="status" label="档案状态" width="90" align="center">
           <template #default="{ row }">
             <ElTag :type="row.status === 'active' ? 'success' : 'info'" size="small">
               {{ row.status === 'active' ? '启用' : '停用' }}
+            </ElTag>
+          </template>
+        </ElTableColumn>
+        <ElTableColumn label="特色账单" width="100" align="center">
+          <template #default="{ row }">
+            <ElTag
+              :type="row.billing_enabled || row.billingEnabled ? 'warning' : 'info'"
+              size="small"
+            >
+              {{ row.billing_enabled || row.billingEnabled ? '已启用' : '未启用' }}
             </ElTag>
           </template>
         </ElTableColumn>
