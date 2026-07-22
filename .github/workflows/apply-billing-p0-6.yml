@@ -3,6 +3,13 @@ name: Apply Billing P0.6 on Production
 
 on:
   workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - deploy/sql/p0-6-billing-toggle.sql
+      - deploy/reapply-billing-p0-6-on-server.sh
+      - deploy/verify-billing-on-server.sh
+      - .github/workflows/apply-billing-p0-6.yml
 
 concurrency:
   group: apply-billing-p0-6
@@ -16,7 +23,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Sync deploy scripts to server
+      - name: Sync deploy assets to server
         env:
           SSH_HOST: ${{ secrets.SSH_HOST }}
           SSH_USER: ${{ secrets.SSH_USER }}
@@ -24,20 +31,23 @@ jobs:
           SSH_PORT: ${{ secrets.SSH_PORT || 22 }}
           DEPLOY_PATH: ${{ secrets.DEPLOY_PATH || '/mnt/newdisk/app/Hospital' }}
         run: |
+          set -e
           mkdir -p ~/.ssh
           printf '%s\n' "$SSH_KEY" > ~/.ssh/deploy_key
           chmod 600 ~/.ssh/deploy_key
           PORT="${SSH_PORT:-22}"
+          DPATH="${DEPLOY_PATH:-/mnt/newdisk/app/Hospital}"
           ssh-keyscan -p "$PORT" -H "$SSH_HOST" >> ~/.ssh/known_hosts 2>/dev/null || true
           ssh -i ~/.ssh/deploy_key -o StrictHostKeyChecking=no -p "$PORT" \
-            "${SSH_USER}@${SSH_HOST}" "mkdir -p '${DEPLOY_PATH}/deploy'"
+            "${SSH_USER}@${SSH_HOST}" \
+            "mkdir -p '${DPATH}/deploy/sql' '${DPATH}/deploy'"
           scp -i ~/.ssh/deploy_key -o StrictHostKeyChecking=no -P "$PORT" \
             deploy/verify-billing-on-server.sh \
             deploy/reapply-billing-p0-6-on-server.sh \
-            "${SSH_USER}@${SSH_HOST}:${DEPLOY_PATH}/deploy/"
+            "${SSH_USER}@${SSH_HOST}:${DPATH}/deploy/"
           scp -i ~/.ssh/deploy_key -o StrictHostKeyChecking=no -P "$PORT" \
-            backend/src/main/resources/billing-seeds/phase-batch-p0.6.json \
-            "${SSH_USER}@${SSH_HOST}:${DEPLOY_PATH}/backend/src/main/resources/billing-seeds/"
+            deploy/sql/p0-6-billing-toggle.sql \
+            "${SSH_USER}@${SSH_HOST}:${DPATH}/deploy/sql/"
 
       - name: Reapply P0.6 and verify
         uses: appleboy/ssh-action@v1.2.5
