@@ -38,4 +38,3 @@ done
 echo "==> 校验"
 sleep 5
 bash deploy/verify-billing-on-server.sh
-bash deploy/verify-billing-api-on-server.sh

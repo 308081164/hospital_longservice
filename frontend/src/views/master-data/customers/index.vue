@@ -60,6 +60,18 @@
             <ElOption :label="$t('menus.masterData.customerFilters.productRulesNo')" value="no" />
           </ElSelect>
         </ElFormItem>
+        <ElFormItem label="特色账单">
+          <ElSelect
+            v-model="filterForm.billingEnabled"
+            clearable
+            placeholder="全部"
+            style="width: 120px"
+            @change="handleSearch"
+          >
+            <ElOption label="已启用" value="yes" />
+            <ElOption label="未启用" value="no" />
+          </ElSelect>
+        </ElFormItem>
         <ElFormItem>
           <ElButton type="primary" @click="handleSearch">{{
             $t('table.searchBar.search')
@@ -68,6 +80,9 @@
           <span class="ml-3 text-sm text-gray-500">{{
             $t('menus.masterData.customerFilters.totalCount', { count: filteredCustomers.length })
           }}</span>
+          <span class="ml-2 text-sm text-amber-700">
+            特色账单已启用 {{ billingEnabledCount }} / {{ customers.length }}
+          </span>
         </ElFormItem>
       </ElForm>
 
@@ -547,7 +562,8 @@
     keyword: '',
     status: '' as '' | 'active' | 'inactive',
     capMode: '' as '' | 'standard' | 'none',
-    hasProductRules: '' as '' | 'yes' | 'no'
+    hasProductRules: '' as '' | 'yes' | 'no',
+    billingEnabled: '' as '' | 'yes' | 'no'
   })
   const products = ref<Api.MasterData.ProductRecord[]>([])
   const productsLoading = ref(false)
@@ -632,6 +648,14 @@
     return count > 0 ? `${count} 条` : null
   }
 
+  function isBillingEnabled(row: Api.MasterData.CustomerRecord) {
+    return !!(row.billing_enabled ?? row.billingEnabled)
+  }
+
+  const billingEnabledCount = computed(
+    () => customers.value.filter((c) => isBillingEnabled(c)).length
+  )
+
   const filteredCustomers = computed(() => {
     let data = customers.value
     const kw = appliedKeyword.value.trim().toLowerCase()
@@ -652,6 +676,12 @@
         return filterForm.hasProductRules === 'yes' ? has : !has
       })
     }
+    if (filterForm.billingEnabled) {
+      data = data.filter((c) => {
+        const on = isBillingEnabled(c)
+        return filterForm.billingEnabled === 'yes' ? on : !on
+      })
+    }
     return [...data].sort((a, b) => {
       const statusRank = (status?: string) => ((status ?? 'active') === 'active' ? 0 : 1)
       const byStatus = statusRank(a.status) - statusRank(b.status)
@@ -669,6 +699,7 @@
     filterForm.status = ''
     filterForm.capMode = ''
     filterForm.hasProductRules = ''
+    filterForm.billingEnabled = ''
     appliedKeyword.value = ''
   }
 

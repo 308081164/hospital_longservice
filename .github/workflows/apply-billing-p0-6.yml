@@ -8,7 +8,9 @@ on:
     paths:
       - deploy/sql/p0-6-billing-toggle.sql
       - deploy/reapply-billing-p0-6-on-server.sh
-      - deploy/verify-billing-on-server.sh
+      - deploy/apply-p0-6-billing-sql.sh
+      - deploy/mysql-hospital-cli.sh
+      - deploy/verify-billing-api-on-server.sh
       - .github/workflows/apply-billing-p0-6.yml
 
 concurrency:

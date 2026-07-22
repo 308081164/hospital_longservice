@@ -62,8 +62,9 @@ services:
         condition: service_healthy
     environment:
       SPRING_PROFILES_ACTIVE: docker
-      MYSQL_HOST: ${MYSQL_HOST:-127.0.0.1}
-      MYSQL_PORT: ${MYSQL_PORT:-3306}
+      # 与 mysql 共享网络栈时必须连本机 3306；勿用 .env 的 172.20.0.1:3307（会连到宿主机另一实例，导致 P0.6 SQL 与 API 不一致）
+      MYSQL_HOST: "127.0.0.1"
+      MYSQL_PORT: "3306"
       MYSQL_DATABASE: ${MYSQL_DATABASE:-hospital}
       MYSQL_USER: ${MYSQL_USER:-hospital}
       MYSQL_PASSWORD: ${MYSQL_PASSWORD}

@@ -125,6 +125,7 @@ jobs:
             deploy/verify-billing-on-server.sh \
             deploy/reapply-billing-p0-6-on-server.sh \
             deploy/apply-p0-6-billing-sql.sh \
+            deploy/mysql-hospital-cli.sh \
             deploy/verify-billing-api-on-server.sh \
             "${SSH_USER}@${SSH_HOST}:${DEPLOY_PATH}/deploy/"
           scp -i ~/.ssh/deploy_key -o StrictHostKeyChecking=no -P "${SSH_PORT}" \
@@ -325,7 +326,11 @@ jobs:
               exit 1
             fi
             chmod +x deploy/verify-billing-on-server.sh deploy/reapply-billing-p0-6-on-server.sh \
-              deploy/apply-p0-6-billing-sql.sh deploy/verify-billing-api-on-server.sh 2>/dev/null || true
+              deploy/apply-p0-6-billing-sql.sh deploy/verify-billing-api-on-server.sh \
+              deploy/mysql-hospital-cli.sh 2>/dev/null || true
+            echo "==> backend 连库诊断"
+            bash deploy/mysql-hospital-cli.sh --print-target || true
+            docker inspect hospital-backend --format '{{range .Config.Env}}{{println .}}{{end}}' 2>/dev/null | grep '^MYSQL_' || true
             bash deploy/reapply-billing-p0-6-on-server.sh || {
               echo "==== reapply 失败，backend 日志 ===="
               docker logs hospital-backend 2>&1 | tail -80 || true
