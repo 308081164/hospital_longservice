@@ -10,8 +10,10 @@ on:
       - deploy/reapply-billing-p0-6-on-server.sh
       - deploy/apply-p0-6-billing-sql.sh
       - deploy/mysql-hospital-cli.sh
+      - deploy/verify-billing-on-server.sh
       - deploy/verify-billing-api-on-server.sh
       - .github/workflows/apply-billing-p0-6.yml
+      - .github/workflows/deploy.yml
 
 concurrency:
   group: apply-billing-p0-6
@@ -46,6 +48,9 @@ jobs:
           scp -i ~/.ssh/deploy_key -o StrictHostKeyChecking=no -P "$PORT" \
             deploy/verify-billing-on-server.sh \
             deploy/reapply-billing-p0-6-on-server.sh \
+            deploy/apply-p0-6-billing-sql.sh \
+            deploy/mysql-hospital-cli.sh \
+            deploy/verify-billing-api-on-server.sh \
             "${SSH_USER}@${SSH_HOST}:${DPATH}/deploy/"
           scp -i ~/.ssh/deploy_key -o StrictHostKeyChecking=no -P "$PORT" \
             deploy/sql/p0-6-billing-toggle.sql \
@@ -63,5 +68,7 @@ jobs:
             set -e
             DPATH="${{ secrets.DEPLOY_PATH || '/mnt/newdisk/app/Hospital' }}"
             cd "$DPATH"
-            chmod +x deploy/verify-billing-on-server.sh deploy/reapply-billing-p0-6-on-server.sh
+            chmod +x deploy/verify-billing-on-server.sh deploy/reapply-billing-p0-6-on-server.sh \
+              deploy/apply-p0-6-billing-sql.sh deploy/mysql-hospital-cli.sh \
+              deploy/verify-billing-api-on-server.sh
             bash deploy/reapply-billing-p0-6-on-server.sh
