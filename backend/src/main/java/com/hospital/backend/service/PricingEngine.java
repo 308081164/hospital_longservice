@@ -151,7 +151,7 @@ public class PricingEngine {
                 ? zeroPriceOverride
                 : findSpecialFixedPrice(row, bagSize, effectiveCount, matchedProductId, matchedVariantId);
         if (preMatchedSpecialPrice == null) {
-            preMatchedSpecialPrice = resolveProductPublicPrice(structuredMatch);
+            preMatchedSpecialPrice = resolveProductPublicPrice(structuredMatch, unitPrice);
         }
 
         // 甲方测试中补充的小件折算规则，例如：机扩针/镍钛锉 5 件算 1 件。
@@ -550,28 +550,59 @@ public class PricingEngine {
             Long matchedProductId, Long matchedVariantId) {
         String combined = combinedText(row);
         String hospitalName = str(row, "hospitalName");
+        Double unitPrice = doubleOrNull(row, "unitPrice");
         JsonNode fixedPrices = rules.path("specialRules").path("fixedPrices");
-        if (fixedPrices.isArray()) {
-            for (JsonNode rule : fixedPrices) {
-                SpecialPriceResult matched = matchFixedPriceRule(
-                        rule, row, combined, hospitalName, bagSize, effectiveCount,
-                        matchedProductId, matchedVariantId);
-                if (matched != null) return matched;
+        if (!fixedPrices.isArray()) {
+            return null;
+        }
+        SpecialPriceResult firstMatch = null;
+        SpecialPriceResult unitPriceMatch = null;
+        SpecialPriceResult anyPriceAcceptedMatch = null;
+        for (JsonNode rule : fixedPrices) {
+            SpecialPriceResult matched = matchFixedPriceRule(
+                    rule, row, combined, hospitalName, bagSize, effectiveCount,
+                    matchedProductId, matchedVariantId);
+            if (matched == null) {
+                continue;
+            }
+            if (firstMatch == null) {
+                firstMatch = matched;
+            }
+            if (unitPrice == null) {
+                continue;
+            }
+            if (matched.anyPriceMode) {
+                if (findMatchingAcceptedPrice(unitPrice, matched.acceptedPrices) != null) {
+                    anyPriceAcceptedMatch = matched;
+                }
+            } else if (Math.abs(matched.price - unitPrice) <= 0.001) {
+                unitPriceMatch = matched;
             }
         }
-        return null;
+        if (anyPriceAcceptedMatch != null) {
+            return anyPriceAcceptedMatch;
+        }
+        if (unitPriceMatch != null) {
+            return unitPriceMatch;
+        }
+        return firstMatch;
     }
 
     /**
      * 无客户专属固定价规则时，使用产品主数据 public_price 作为默认单价（计价路径 fixed）。
      */
     private SpecialPriceResult resolveProductPublicPrice(
-            java.util.Optional<ProductMatchResolver.StructuredProductMatch> structuredMatch) {
+            java.util.Optional<ProductMatchResolver.StructuredProductMatch> structuredMatch,
+            Double unitPrice) {
         if (structuredMatch.isEmpty()) {
             return null;
         }
         ProductMatchResolver.StructuredProductMatch match = structuredMatch.get();
         if (match.publicPrice() == null || !"fixed".equals(match.pricingPath())) {
+            return null;
+        }
+        if (unitPrice != null
+                && Math.abs(match.publicPrice().doubleValue() - unitPrice) > 0.001) {
             return null;
         }
         SpecialPriceResult result = new SpecialPriceResult();

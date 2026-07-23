@@ -916,6 +916,76 @@ class PricingEngineTest {
     }
 
     @Test
+    void duplicateFixedPriceRulesSelectByBillUnitPrice() {
+        ObjectNode rules = (ObjectNode) defaultRules();
+        ObjectNode specialRules = (ObjectNode) rules.path("specialRules");
+        ArrayNode fixedPrices = specialRules.withArray("fixedPrices");
+        ObjectNode lower = fixedPrices.addObject();
+        lower.put("ruleId", 200L);
+        lower.put("name", "刮勺探针4-低价");
+        lower.put("price", 8.0);
+        lower.putArray("hospitals").add("附二南岗");
+        lower.putArray("keywords").add("刮勺探针4");
+        lower.put("skipPackaging", true);
+
+        ObjectNode higher = fixedPrices.addObject();
+        higher.put("ruleId", 201L);
+        higher.put("name", "刮勺探针4-高价");
+        higher.put("price", 22.0);
+        higher.putArray("hospitals").add("附二南岗");
+        higher.putArray("keywords").add("刮勺探针4");
+        higher.put("skipPackaging", true);
+
+        PricingEngine engine = new PricingEngine(rules);
+
+        PricingEngine.ProcessedResult atLower = engine.processRow(row(
+                "附二南岗", "额外包(纸塑袋)", "刮勺探针4", "高温纸塑袋75*200",
+                1, 1, 8, 8));
+        assertThat(atLower.status).isEqualTo("unchanged");
+        assertThat(atLower.matchedRuleId).isEqualTo(200L);
+
+        PricingEngine.ProcessedResult atHigher = engine.processRow(row(
+                "附二南岗", "额外包(纸塑袋)", "刮勺探针4", "高温纸塑袋75*200",
+                1, 1, 22, 22));
+        assertThat(atHigher.status).isEqualTo("unchanged");
+        assertThat(atHigher.matchedRuleId).isEqualTo(201L);
+    }
+
+    @Test
+    void anyPriceRulePreferredWhenListedAfterSinglePriceRule() {
+        ObjectNode rules = (ObjectNode) defaultRules();
+        ObjectNode specialRules = (ObjectNode) rules.path("specialRules");
+        ArrayNode fixedPrices = specialRules.withArray("fixedPrices");
+        ObjectNode single = fixedPrices.addObject();
+        single.put("ruleId", 210L);
+        single.put("name", "弯针-2默认");
+        single.put("price", 8.0);
+        single.putArray("hospitals").add("附二南岗");
+        single.putArray("keywords").add("弯针-2");
+        single.put("skipPackaging", true);
+
+        ObjectNode multi = fixedPrices.addObject();
+        multi.put("ruleId", 211L);
+        multi.put("name", "弯针-2多报价");
+        multi.put("price", 8.0);
+        multi.put("matchMode", "any_price");
+        multi.putArray("hospitals").add("附二南岗");
+        multi.putArray("keywords").add("弯针-2");
+        multi.putArray("acceptedPrices").add(8.0).add(13.5);
+        multi.put("skipPackaging", true);
+
+        PricingEngine engine = new PricingEngine(rules);
+        PricingEngine.ProcessedResult upper = engine.processRow(row(
+                "附二南岗", "额外包(纸塑袋)", "弯针-2", "高温纸塑袋75*200",
+                1, 1, 13.5, 13.5));
+
+        assertThat(upper.status).isEqualTo("unchanged");
+        assertThat(upper.matchedRuleId).isEqualTo(211L);
+        assertThat(upper.matchedPriceOption).isEqualTo(13.5);
+        assertThat(upper.billingNotes.get("type")).isEqualTo("any_price_match");
+    }
+
+    @Test
     void anyPriceMatchIncludesDiscountChainWhenDiscountApplied() {
         ObjectNode rules = (ObjectNode) defaultRules();
         ObjectNode specialRules = (ObjectNode) rules.path("specialRules");
