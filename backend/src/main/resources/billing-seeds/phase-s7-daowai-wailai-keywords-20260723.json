@@ -1,0 +1,16 @@
+{
+  "version": "1",
+  "description": "道外 S7 外来器械 FIXED_PRICE 关键词修正：完整短语「外来器械（钉盒）」「外来器械（骨电钻）」，避免裸「钉盒/骨电钻」误命中；规则仍为备案，待 M12 外来器械能力",
+  "ruleUpdates": [
+    {
+      "code": "DAOWAI-RM",
+      "ruleName": "PDF外来器械钉盒37.5",
+      "setKeywords": ["外来器械（钉盒）"]
+    },
+    {
+      "code": "DAOWAI-RM",
+      "ruleName": "PDF外来器械骨电钻12.5",
+      "setKeywords": ["外来器械（骨电钻）"]
+    }
+  ]
+}

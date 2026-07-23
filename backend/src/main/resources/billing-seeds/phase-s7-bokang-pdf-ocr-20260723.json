@@ -1,0 +1,57 @@
+{
+  "version": "1",
+  "description": "S7 铂康特殊价格单 OCR：道外/三精 PDF 附表「外来器械高温灭菌」固定价；南岗妇产/呼兰/附一/省医院/太平已与既有种子或标准价表对齐（见各院 测试用例/…/参考/特殊价格单/README.md）",
+  "newRules": [
+    {
+      "code": "DAOWAI-RM",
+      "ruleType": "FIXED_PRICE",
+      "name": "PDF外来器械骨电钻12.5",
+      "priority": 40,
+      "price": 12.5,
+      "keywords": ["外来器械（骨电钻）"],
+      "skipPackaging": true,
+      "skipDiscount": true
+    },
+    {
+      "code": "DAOWAI-RM",
+      "ruleType": "FIXED_PRICE",
+      "name": "PDF外来器械钉盒37.5",
+      "priority": 41,
+      "price": 37.5,
+      "keywords": ["外来器械（钉盒）"],
+      "skipPackaging": true,
+      "skipDiscount": true
+    },
+    {
+      "code": "SANJING-SB",
+      "ruleType": "FIXED_PRICE",
+      "name": "PDF外来器械4.4",
+      "priority": 40,
+      "price": 4.4,
+      "keywords": ["外来器械"],
+      "excludeKeywords": ["钉盒", "骨电钻", "植入物"],
+      "skipPackaging": true,
+      "skipDiscount": true
+    },
+    {
+      "code": "SANJING-SB",
+      "ruleType": "FIXED_PRICE",
+      "name": "PDF外来器械钉盒40",
+      "priority": 41,
+      "price": 40,
+      "keywords": ["外来器械（钉盒）"],
+      "skipPackaging": true,
+      "skipDiscount": true
+    },
+    {
+      "code": "SANJING-SB",
+      "ruleType": "FIXED_PRICE",
+      "name": "PDF外来器械骨电钻13.2",
+      "priority": 42,
+      "price": 13.2,
+      "keywords": ["外来器械（骨电钻）"],
+      "skipPackaging": true,
+      "skipDiscount": true
+    }
+  ]
+}

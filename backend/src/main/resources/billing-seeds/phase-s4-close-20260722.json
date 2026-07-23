@@ -1,0 +1,16 @@
+{
+  "version": "1",
+  "description": "S4 收口：省二南岗挖勺按件 3.85（与处理后 golden 一致）",
+  "newRules": [
+    {
+      "code": "ERYY-NG",
+      "ruleType": "PRICE_PER_INSTRUMENT",
+      "name": "省二南岗挖勺每件3.85元",
+      "priority": 15,
+      "price": 3.85,
+      "keywords": ["挖勺"],
+      "skipPackaging": true,
+      "skipDiscount": false
+    }
+  ]
+}

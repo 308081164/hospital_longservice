@@ -9,6 +9,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.core.annotation.Order;
 import org.springframework.core.io.ClassPathResource;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
@@ -44,11 +45,44 @@ public class BillingSeedMigrationRunner implements CommandLineRunner {
             new IncrementalSeed("billing_seed_batch_p0_5_v1", "billing-seeds/phase-batch-p0.5.json"),
             new IncrementalSeed("billing_seed_batch_p0_5_1_v1", "billing-seeds/phase-batch-p0.5.1.json"),
             new IncrementalSeed("billing_seed_batch_p0_5_2_v1", "billing-seeds/phase-batch-p0.5.2.json"),
-            new IncrementalSeed("billing_seed_batch_p0_6_v1", "billing-seeds/phase-batch-p0.6.json")
+            new IncrementalSeed("billing_seed_batch_p0_6_v1", "billing-seeds/phase-batch-p0.6.json"),
+            new IncrementalSeed("billing_seed_zyy_d1_p0_2_v1", "billing-seeds/phase-zyy-d1-p0-2-price-align.json"),
+            new IncrementalSeed("billing_seed_bokang_20260722_v1", "billing-seeds/phase-bokang-20260722-hit-heu-clarify.json"),
+            new IncrementalSeed("billing_seed_s3_pdf_20260722_v1", "billing-seeds/phase-s3-pdf-align-20260722.json"),
+            new IncrementalSeed("billing_seed_s4_fix_20260722_v1", "billing-seeds/phase-s4-fix-20260722.json"),
+            new IncrementalSeed("billing_seed_s4_fix_part2_20260722_v1", "billing-seeds/phase-s4-fix-part2-20260722.json"),
+            new IncrementalSeed("billing_seed_s4_fix_part3_20260722_v1", "billing-seeds/phase-s4-fix-part3-20260722.json"),
+            new IncrementalSeed("billing_seed_s4_fix_part4_20260722_v1", "billing-seeds/phase-s4-fix-part4-20260722.json"),
+            new IncrementalSeed("billing_seed_s4_fix_part5_20260722_v1", "billing-seeds/phase-s4-fix-part5-20260722.json"),
+            new IncrementalSeed("billing_seed_s4_close_20260722_v1", "billing-seeds/phase-s4-close-20260722.json"),
+            new IncrementalSeed("billing_seed_hulan_heu_hit_20260722_v2", "billing-seeds/phase-hulan-heu-hit-20260722.json"),
+            new IncrementalSeed("billing_seed_user_20260722_v1", "billing-seeds/phase-user-20260722-er-hulan.json"),
+            new IncrementalSeed("billing_seed_zyy_d1_standard_pricing_20260723_v1",
+                    "billing-seeds/phase-zyy-d1-standard-pricing-20260723.json"),
+            new IncrementalSeed("billing_seed_hrb_hx_eye_20260723_v1",
+                    "billing-seeds/phase-hrb-hx-eye-20260723.json"),
+            new IncrementalSeed("billing_seed_ng_fuchan_gongqiangjing_20260723_v1",
+                    "billing-seeds/phase-ng-fuchan-gongqiangjing-20260723.json"),
+            new IncrementalSeed("billing_seed_ng_fuchan_fixed_price_20260723_v2",
+                    "billing-seeds/phase-ng-fuchan-gongqiangjing-20260723.json"),
+            new IncrementalSeed("billing_seed_ng_fuchan_pdf_ocr_20260723_v1",
+                    "billing-seeds/phase-ng-fuchan-pdf-ocr-20260723.json"),
+            new IncrementalSeed("billing_seed_ng_fuchan_kuobang_wanpan_20260723_v1",
+                    "billing-seeds/phase-ng-fuchan-kuobang-wanpan-20260723.json"),
+            new IncrementalSeed("billing_seed_hrb_bc_med_beauty_20260723_v1",
+                    "billing-seeds/phase-hrb-bc-med-beauty-20260723.json"),
+            new IncrementalSeed("billing_seed_s7_bokang_pdf_ocr_20260723_v1",
+                    "billing-seeds/phase-s7-bokang-pdf-ocr-20260723.json"),
+            new IncrementalSeed("billing_seed_s7_daowai_wailai_keywords_20260723_v1",
+                    "billing-seeds/phase-s7-daowai-wailai-keywords-20260723.json"),
+            new IncrementalSeed("billing_seed_s7_sanjing_hulan_wailai_keywords_20260723_v1",
+                    "billing-seeds/phase-s7-sanjing-hulan-wailai-keywords-20260723.json")
     );
 
     private static final String ZYY_D1_P0_MARKER = "billing_seed_zyy_d1_p0_v2";
     private static final String ZYY_D1_P0_1_MARKER = "billing_seed_zyy_d1_p0_1_v3";
+    /** apply_batch_p0_to_db.py 未用 utf8mb4 产生的乱码规则副本（与 Java P0 种子重复） */
+    private static final String P0_MOJIBAKE_DUP_MARKER = "billing_seed_fix_p0_mojibake_dup_20260723_v1";
 
     private record IncrementalSeed(String markerKey, String classpathFile) {}
 
@@ -60,6 +94,7 @@ public class BillingSeedMigrationRunner implements CommandLineRunner {
     private final CustomerBillingPolicyMapper billingPolicyMapper;
     private final CustomerGroupMapper customerGroupMapper;
     private final CustomerGroupMemberMapper customerGroupMemberMapper;
+    private final JdbcTemplate jdbcTemplate;
 
     @Override
     public void run(String... args) {
@@ -74,6 +109,7 @@ public class BillingSeedMigrationRunner implements CommandLineRunner {
             if (sysSettingMapper.countByKey(incremental.markerKey()) > 0) {
                 continue;
             }
+            boolean applied = true;
             if ("billing-seeds/phase-batch-p0.1.json".equals(incremental.classpathFile())) {
                 applyBatchP0_1SeedFile(incremental.classpathFile());
             } else if ("billing-seeds/phase-batch-p0.4.json".equals(incremental.classpathFile())
@@ -81,16 +117,44 @@ public class BillingSeedMigrationRunner implements CommandLineRunner {
                 applyBatchP0_4SeedFile(incremental.classpathFile());
             } else if ("billing-seeds/phase-batch-p0.6.json".equals(incremental.classpathFile())) {
                 applyBatchP0_6SeedFile(incremental.classpathFile());
+            } else if ("billing-seeds/phase-bokang-20260722-hit-heu-clarify.json".equals(incremental.classpathFile())) {
+                applyBokang20260722SeedFile(incremental.classpathFile());
+            } else if ("billing-seeds/phase-zyy-d1-standard-pricing-20260723.json".equals(incremental.classpathFile())) {
+                applied = applyCustomerStandardPricingSeedFile(incremental.classpathFile());
             } else if ("billing-seeds/phase-batch-p0.2.json".equals(incremental.classpathFile())
                     || "billing-seeds/phase-batch-p0.3.json".equals(incremental.classpathFile())
                     || "billing-seeds/phase-batch-p0.5.1.json".equals(incremental.classpathFile())
-                    || "billing-seeds/phase-batch-p0.5.2.json".equals(incremental.classpathFile())) {
+                    || "billing-seeds/phase-batch-p0.5.2.json".equals(incremental.classpathFile())
+                    || "billing-seeds/phase-s4-fix-20260722.json".equals(incremental.classpathFile())
+                    || "billing-seeds/phase-s4-fix-part2-20260722.json".equals(incremental.classpathFile())
+                    || "billing-seeds/phase-s4-fix-part3-20260722.json".equals(incremental.classpathFile())
+                    || "billing-seeds/phase-s4-fix-part4-20260722.json".equals(incremental.classpathFile())
+                    || "billing-seeds/phase-s4-fix-part5-20260722.json".equals(incremental.classpathFile())
+                    || "billing-seeds/phase-s4-close-20260722.json".equals(incremental.classpathFile())
+                    || "billing-seeds/phase-user-20260722-er-hulan.json".equals(incremental.classpathFile())
+                    || "billing-seeds/phase-hrb-hx-eye-20260723.json".equals(incremental.classpathFile())
+                    || "billing-seeds/phase-ng-fuchan-gongqiangjing-20260723.json".equals(incremental.classpathFile())
+                    || "billing-seeds/phase-ng-fuchan-pdf-ocr-20260723.json".equals(incremental.classpathFile())
+                    || "billing-seeds/phase-ng-fuchan-kuobang-wanpan-20260723.json".equals(incremental.classpathFile())
+                    || "billing-seeds/phase-hrb-bc-med-beauty-20260723.json".equals(incremental.classpathFile())
+                    || "billing-seeds/phase-s7-bokang-pdf-ocr-20260723.json".equals(incremental.classpathFile())
+                    || "billing-seeds/phase-s7-daowai-wailai-keywords-20260723.json".equals(incremental.classpathFile())) {
                 applyBatchPatchSeedFile(incremental.classpathFile());
             } else {
-                loadSeedClasspathFile(incremental.classpathFile());
+                applied = loadSeedClasspathFile(incremental.classpathFile());
+            }
+            if (!applied) {
+                log.warn("Incremental billing seed NOT marked (apply failed): {}", incremental.classpathFile());
+                continue;
             }
             insertMarker(incremental.markerKey(), "Incremental billing seed: " + incremental.classpathFile());
             log.info("Incremental billing seed applied: {}", incremental.classpathFile());
+        }
+        if (sysSettingMapper.countByKey(P0_MOJIBAKE_DUP_MARKER) == 0) {
+            int deleted = deleteP0ScriptMojibakeDuplicateRules();
+            insertMarker(P0_MOJIBAKE_DUP_MARKER,
+                    "Remove duplicate customer_product_rule rows from apply_batch_p0_to_db.py latin1 import");
+            log.info("P0 mojibake duplicate cleanup: deleted {} rules", deleted);
         }
         if (sysSettingMapper.countByKey(ZYY_D1_P0_MARKER) == 0) {
             applyZyyD1P0RuleFixes();
@@ -104,19 +168,21 @@ public class BillingSeedMigrationRunner implements CommandLineRunner {
         }
     }
 
-    private void loadSeedClasspathFile(String file) {
+    private boolean loadSeedClasspathFile(String file) {
         try {
             ClassPathResource resource = new ClassPathResource(file);
             if (!resource.exists()) {
                 log.warn("Billing seed file missing: {}", file);
-                return;
+                return false;
             }
             JsonNode root = JsonUtils.getObjectMapper().readTree(resource.getInputStream());
             seedProfiles(root.path("profiles"));
             seedCustomerGroups(root.path("customerGroups"));
             log.info("Loaded billing seed: {}", file);
+            return true;
         } catch (Exception e) {
             log.error("Failed to load billing seed {}: {}", file, e.getMessage(), e);
+            return false;
         }
     }
 
@@ -329,6 +395,79 @@ public class BillingSeedMigrationRunner implements CommandLineRunner {
         }
     }
 
+    /** 铂康 2026-07-22：工程大学客户、结款折扣与客户备注 */
+    private void applyBokang20260722SeedFile(String file) {
+        try {
+            ClassPathResource resource = new ClassPathResource(file);
+            if (!resource.exists()) {
+                log.warn("Bokang clarify seed missing: {}", file);
+                return;
+            }
+            JsonNode root = JsonUtils.getObjectMapper().readTree(resource.getInputStream());
+            seedProfiles(root.path("profiles"));
+            for (JsonNode upd : root.path("customerUpdates")) {
+                String code = text(upd, "code");
+                if (code == null || !upd.hasNonNull("notes")) {
+                    continue;
+                }
+                Customer customer = customerMapper.selectByCode(code);
+                if (customer == null) {
+                    log.warn("Bokang notes skipped: {} not found", code);
+                    continue;
+                }
+                customer.setNotes(text(upd, "notes"));
+                customerMapper.updateById(customer);
+                log.info("Bokang notes updated for {}", code);
+            }
+            log.info("Applied Bokang clarify seed: {}", file);
+        } catch (Exception e) {
+            log.error("Failed to apply Bokang clarify seed {}: {}", file, e.getMessage(), e);
+        }
+    }
+
+    /** 客户标准灭菌价覆盖 + 计价模式（如附一 hybrid + standardPricingOverride） */
+    private boolean applyCustomerStandardPricingSeedFile(String file) {
+        try {
+            ClassPathResource resource = new ClassPathResource(file);
+            if (!resource.exists()) {
+                log.warn("Standard pricing seed file missing: {}", file);
+                return false;
+            }
+            JsonNode root = JsonUtils.getObjectMapper().readTree(resource.getInputStream());
+            int updated = 0;
+            for (JsonNode upd : root.path("customerUpdates")) {
+                String code = text(upd, "code");
+                if (code == null) {
+                    continue;
+                }
+                Customer customer = customerMapper.selectByCode(code);
+                if (customer == null) {
+                    log.warn("Standard pricing seed skipped: {} not found", code);
+                    continue;
+                }
+                if (upd.has("billingPricingMode")) {
+                    customer.setBillingPricingMode(text(upd, "billingPricingMode"));
+                }
+                if (upd.has("standardPricingOverride")) {
+                    customer.setStandardPricingOverride(upd.get("standardPricingOverride").toString());
+                }
+                customerMapper.updateById(customer);
+                updated++;
+                log.info("Standard pricing seed updated customer {}: mode={} hasOverride={}",
+                        code, customer.getBillingPricingMode(),
+                        customer.getStandardPricingOverride() != null);
+            }
+            if (updated == 0) {
+                log.warn("Standard pricing seed applied no rows: {}", file);
+                return false;
+            }
+            return true;
+        } catch (Exception e) {
+            log.error("Failed to apply standard pricing seed {}: {}", file, e.getMessage(), e);
+            return false;
+        }
+    }
+
     /** P0.2+ 补丁种子：规则更新 / 新增 / 停用 */
     private void applyBatchPatchSeedFile(String file) {
         try {
@@ -393,6 +532,18 @@ public class BillingSeedMigrationRunner implements CommandLineRunner {
                     rule.setAcceptedPrices(patch.get("setAcceptedPrices").toString());
                     changed = true;
                 }
+                if (patch.has("setPrice")) {
+                    rule.setPrice(new BigDecimal(patch.get("setPrice").asText()));
+                    changed = true;
+                }
+                if (patch.has("setName")) {
+                    rule.setName(text(patch, "setName"));
+                    changed = true;
+                }
+                if (patch.has("setSkipDiscount")) {
+                    rule.setSkipDiscount(bool(patch, "setSkipDiscount", false));
+                    changed = true;
+                }
                 if (changed) {
                     customerProductRuleMapper.updateById(rule);
                     log.info("Batch patch updated rule {}/{}", code, ruleName);
@@ -419,6 +570,52 @@ public class BillingSeedMigrationRunner implements CommandLineRunner {
                     continue;
                 }
                 deactivateProductRule(customer.getId(), ruleName);
+            }
+            for (JsonNode discNode : root.path("discountUpdates")) {
+                String code = text(discNode, "code");
+                String name = text(discNode, "name");
+                Customer customer = customerMapper.selectByCode(code);
+                if (customer == null || name == null) {
+                    continue;
+                }
+                CustomerDiscount existing = customerDiscountMapper.selectByCustomerId(customer.getId()).stream()
+                        .filter(d -> name.equals(d.getName()))
+                        .findFirst()
+                        .orElse(null);
+                if (existing == null && bool(discNode, "insertIfMissing", false)) {
+                    CustomerDiscount discount = new CustomerDiscount();
+                    discount.setCustomerId(customer.getId());
+                    discount.setName(name);
+                    discount.setDiscountRate(decimal(discNode, "rate"));
+                    discount.setApplyStage(text(discNode, "applyStage", "after_base"));
+                    discount.setSkipWhenFixedPrice(bool(discNode, "skipWhenFixedPrice", true));
+                    discount.setPriority(intVal(discNode, "priority", 100));
+                    discount.setIsActive(true);
+                    customerDiscountMapper.insert(discount);
+                    log.info("Batch patch inserted discount {}/{}", code, name);
+                    continue;
+                }
+                if (existing == null) {
+                    log.warn("Batch patch discount skipped (missing): {}/{}", code, name);
+                    continue;
+                }
+                boolean changed = false;
+                if (discNode.has("rate")) {
+                    existing.setDiscountRate(decimal(discNode, "rate"));
+                    changed = true;
+                }
+                if (discNode.has("skipWhenFixedPrice")) {
+                    existing.setSkipWhenFixedPrice(bool(discNode, "skipWhenFixedPrice", true));
+                    changed = true;
+                }
+                if (discNode.has("applyStage")) {
+                    existing.setApplyStage(text(discNode, "applyStage", existing.getApplyStage()));
+                    changed = true;
+                }
+                if (changed) {
+                    customerDiscountMapper.updateById(existing);
+                    log.info("Batch patch updated discount {}/{}", code, name);
+                }
             }
             log.info("Applied batch patch seed: {}", file);
         } catch (Exception e) {
@@ -532,6 +729,10 @@ public class BillingSeedMigrationRunner implements CommandLineRunner {
             if (alias == null || alias.isBlank() || existingAliases.contains(alias)) {
                 continue;
             }
+            if (isAliasOwnedElsewhere(alias, customerId)) {
+                log.debug("Skip alias seed (already bound): {} → customer {}", alias, customerId);
+                continue;
+            }
             CustomerAlias entity = new CustomerAlias();
             entity.setCustomerId(customerId);
             entity.setAlias(alias);
@@ -543,6 +744,12 @@ public class BillingSeedMigrationRunner implements CommandLineRunner {
         }
     }
 
+    /** uk_customer_alias 全局唯一：含 inactive 行，插入前需查全表 */
+    private boolean isAliasOwnedElsewhere(String alias, Long customerId) {
+        CustomerAlias row = customerAliasMapper.selectByAlias(alias);
+        return row != null && !row.getCustomerId().equals(customerId);
+    }
+
     private void ensureCustomerAliasExact(Long customerId, String alias, String matchType,
                                           String source, int priority) {
         if (alias == null || alias.isBlank()) {
@@ -551,6 +758,10 @@ public class BillingSeedMigrationRunner implements CommandLineRunner {
         boolean exists = customerAliasMapper.selectByCustomerId(customerId).stream()
                 .anyMatch(a -> alias.equals(a.getAlias()));
         if (exists) {
+            return;
+        }
+        if (isAliasOwnedElsewhere(alias, customerId)) {
+            log.debug("Skip exact alias (already bound elsewhere): {}", alias);
             return;
         }
         CustomerAlias entity = new CustomerAlias();
@@ -576,8 +787,8 @@ public class BillingSeedMigrationRunner implements CommandLineRunner {
             discount.setCustomerId(customerId);
             discount.setName(name);
             discount.setDiscountRate(decimal(discountNode, "rate"));
-            discount.setApplyStage("after_base");
-            discount.setSkipWhenFixedPrice(true);
+            discount.setApplyStage(text(discountNode, "applyStage", "after_base"));
+            discount.setSkipWhenFixedPrice(bool(discountNode, "skipWhenFixedPrice", true));
             discount.setPriority(intVal(discountNode, "priority", 100));
             discount.setIsActive(true);
             customerDiscountMapper.insert(discount);
@@ -716,6 +927,24 @@ public class BillingSeedMigrationRunner implements CommandLineRunner {
                 .orElse(null);
     }
 
+    /**
+     * {@code scripts/apply_batch_p0_to_db.py} 早期未指定 {@code --default-character-set=utf8mb4}，
+     * 中文被双重 UTF-8 编码（规则名以 {@code æ} 开头）；随后 Java {@code billing_seed_batch_p0_v1} 插入了正确副本。
+     */
+    private int deleteP0ScriptMojibakeDuplicateRules() {
+        return jdbcTemplate.update("""
+                DELETE r FROM customer_product_rule r
+                INNER JOIN customer_product_rule g
+                  ON g.customer_id = r.customer_id
+                  AND g.priority = r.priority
+                  AND g.rule_type = r.rule_type
+                  AND (g.price <=> r.price)
+                  AND g.id <> r.id
+                  AND g.name NOT LIKE 'æ%'
+                WHERE r.name LIKE 'æ%'
+                """);
+    }
+
     private void seedProductRules(Long customerId, JsonNode rules) {
         if (!rules.isArray()) {
             return;
@@ -750,6 +979,12 @@ public class BillingSeedMigrationRunner implements CommandLineRunner {
             }
             if (ruleNode.hasNonNull("bagSizeEquals")) {
                 rule.setBagSizeEquals(intVal(ruleNode, "bagSizeEquals", null));
+            }
+            if (ruleNode.hasNonNull("minInstrumentCount")) {
+                rule.setMinInstrumentCount(intVal(ruleNode, "minInstrumentCount", null));
+            }
+            if (ruleNode.hasNonNull("maxInstrumentCount")) {
+                rule.setMaxInstrumentCount(intVal(ruleNode, "maxInstrumentCount", null));
             }
             rule.setSkipPackaging(bool(ruleNode, "skipPackaging", false));
             rule.setSkipDiscount(bool(ruleNode, "skipDiscount", false));

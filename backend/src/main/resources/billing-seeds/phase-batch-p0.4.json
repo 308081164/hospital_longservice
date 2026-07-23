@@ -12,8 +12,9 @@
   "customerAliases": [
     {"code": "ERYY-NG", "alias": "黑龙江省第二医院（南岗院区）", "matchType": "exact"},
     {"code": "ERYY-SB", "alias": "黑龙江省第二医院（松北院区）", "matchType": "exact"},
-    {"code": "HRB-HIT", "alias": "哈尔滨(工程)大学医院", "matchType": "exact"},
-    {"code": "HRB-HIT", "alias": "哈尔滨工程大学医院", "matchType": "exact"},
+    {"code": "HRB-HIT", "alias": "哈尔滨工业大学医院", "matchType": "exact"},
+    {"code": "HRB-HIT", "alias": "哈尔滨工业大学", "matchType": "contains"},
+    {"code": "HRB-HEU", "alias": "哈尔滨工程大学医院", "matchType": "exact"},
     {"code": "HULAN-RM", "alias": "哈尔滨市呼兰区第一人民医院", "matchType": "exact"},
     {"code": "HRB-HSZ", "alias": "哈尔滨市红十字妇产医院", "matchType": "exact"}
   ],

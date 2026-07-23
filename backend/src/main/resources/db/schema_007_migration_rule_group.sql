@@ -29,5 +29,5 @@ CREATE TABLE IF NOT EXISTS billing_rule_change_log (
     INDEX idx_brcl_group (rule_group_id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='规则变更审计日志';
 
-ALTER TABLE customer_product_rule ADD COLUMN IF NOT EXISTS rule_group_id BIGINT NULL COMMENT '所属规则组' AFTER customer_id;
-ALTER TABLE customer_product_rule ADD COLUMN IF NOT EXISTS variant_id BIGINT NULL COMMENT '规格级规则' AFTER product_id;
+-- MySQL 8.0 不支持 ADD COLUMN IF NOT EXISTS；重复执行时 entrypoint 使用 mysql --force 忽略 1060
+ALTER TABLE customer_product_rule ADD COLUMN rule_group_id BIGINT NULL COMMENT '所属规则组' AFTER customer_id;

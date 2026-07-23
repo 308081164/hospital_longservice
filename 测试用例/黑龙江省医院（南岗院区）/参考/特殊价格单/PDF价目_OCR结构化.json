@@ -1,0 +1,30 @@
+{
+  "source": "黑龙江省医院价格表.pdf",
+  "ocrFile": "OCR_黑龙江省医院价格表.txt",
+  "ocrDate": "2026-07-23",
+  "ocrEngine": "pymupdf + tesseract（部分页为可提取文本）",
+  "disclaimer": "采购文件「最高限价」模板，明细表多为空槽；产品固定价来自 6 月期待清单而非本 PDF 填表",
+  "customers": [
+    {"code": "SHENG-YY-NG", "name": "黑龙江省医院（南岗院区）"},
+    {"code": "SHENG-YY-XF", "name": "黑龙江省医院（香坊院区）"}
+  ],
+  "items": [
+    {
+      "section": "附件1-1",
+      "name": "常规高温灭菌手术器械-最高限价",
+      "unitPrice": 3.3,
+      "minCharge": 9.9,
+      "unit": "元/把"
+    },
+    {
+      "section": "附件1-2~4",
+      "name": "布类/纱布/单把",
+      "note": "PDF 表格无填写的院级单价，未落 productRules"
+    }
+  ],
+  "alignedWithJuneCsv": {
+    "ng": "测试用例/黑龙江省医院（南岗院区）/6月期待价格校正清单.csv",
+    "xf": "测试用例/黑龙江省医院（香坊院区）/6月期待价格校正清单.csv",
+    "seedRefs": ["phase-batch-p0.json", "phase-s3-pdf-align-20260722.json"]
+  }
+}

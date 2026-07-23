@@ -36,4 +36,16 @@
         SELECT * FROM customer_discount WHERE customer_id = #{customerId} ORDER BY priority ASC, id ASC
     </select>
 
+    <update id="updateById" parameterType="com.hospital.backend.entity.CustomerDiscount">
+        UPDATE customer_discount
+        SET name = #{name},
+            discount_rate = #{discountRate},
+            apply_stage = #{applyStage},
+            skip_when_fixed_price = #{skipWhenFixedPrice},
+            priority = #{priority},
+            is_active = #{isActive},
+            updated_at = NOW()
+        WHERE id = #{id}
+    </update>
+
 </mapper>

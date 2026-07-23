@@ -1,0 +1,114 @@
+{
+  "version": "1",
+  "description": "南岗区妇产医院 NG-FUCHAN：价格单_000145.pdf OCR 套包固定价（与 P0/S3 校正价规则名不重复；6月清单零差异）",
+  "newRules": [
+    {
+      "code": "NG-FUCHAN",
+      "ruleType": "FIXED_PRICE",
+      "name": "PDF带架治疗盘16.5",
+      "priority": 20,
+      "price": 16.5,
+      "keywords": [
+        "带架治疗"
+      ],
+      "skipPackaging": true,
+      "skipDiscount": true
+    },
+    {
+      "code": "NG-FUCHAN",
+      "ruleType": "FIXED_PRICE",
+      "name": "PDF小治疗16",
+      "priority": 21,
+      "price": 16,
+      "keywords": [
+        "小治疗"
+      ],
+      "skipPackaging": true,
+      "skipDiscount": true
+    },
+    {
+      "code": "NG-FUCHAN",
+      "ruleType": "FIXED_PRICE",
+      "name": "PDF取环包33",
+      "priority": 22,
+      "price": 33,
+      "keywords": [
+        "取环包"
+      ],
+      "skipPackaging": true,
+      "skipDiscount": true
+    },
+    {
+      "code": "NG-FUCHAN",
+      "ruleType": "FIXED_PRICE",
+      "name": "PDF上环包33",
+      "priority": 23,
+      "price": 33,
+      "keywords": [
+        "上环包"
+      ],
+      "skipPackaging": true,
+      "skipDiscount": true
+    },
+    {
+      "code": "NG-FUCHAN",
+      "ruleType": "FIXED_PRICE",
+      "name": "PDF药流包27.5",
+      "priority": 24,
+      "price": 27.5,
+      "keywords": [
+        "药流包"
+      ],
+      "skipPackaging": true,
+      "skipDiscount": true
+    },
+    {
+      "code": "NG-FUCHAN",
+      "ruleType": "FIXED_PRICE",
+      "name": "PDF人工流产33",
+      "priority": 25,
+      "price": 33,
+      "keywords": [
+        "人工流产"
+      ],
+      "skipPackaging": true,
+      "skipDiscount": true
+    },
+    {
+      "code": "NG-FUCHAN",
+      "ruleType": "FIXED_PRICE",
+      "name": "PDF人流包22",
+      "priority": 26,
+      "price": 22,
+      "keywords": [
+        "人流包"
+      ],
+      "skipPackaging": true,
+      "skipDiscount": true
+    },
+    {
+      "code": "NG-FUCHAN",
+      "ruleType": "FIXED_PRICE",
+      "name": "PDF诊刮包8",
+      "priority": 27,
+      "price": 8,
+      "keywords": [
+        "诊刮"
+      ],
+      "skipPackaging": true,
+      "skipDiscount": true
+    },
+    {
+      "code": "NG-FUCHAN",
+      "ruleType": "FIXED_PRICE",
+      "name": "PDF大领子8",
+      "priority": 28,
+      "price": 8,
+      "keywords": [
+        "大领子"
+      ],
+      "skipPackaging": true,
+      "skipDiscount": true
+    }
+  ]
+}

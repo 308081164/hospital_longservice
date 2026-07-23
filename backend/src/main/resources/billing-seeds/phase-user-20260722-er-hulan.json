@@ -1,0 +1,119 @@
+{
+  "version": "1",
+  "description": "20260722 用户：省二南岗挖勺 5.5 元参与 7 折；呼兰 PDF(OCR) 价目 productRules",
+  "ruleUpdates": [
+    {
+      "code": "ERYY-NG",
+      "ruleName": "省二南岗挖勺每件3.85元",
+      "setPrice": 5.5,
+      "setName": "省二南岗挖勺每件5.5元",
+      "setSkipDiscount": false
+    }
+  ],
+  "discountUpdates": [
+    {
+      "code": "ERYY-NG",
+      "name": "省二院 0.7 折扣",
+      "skipWhenFixedPrice": false,
+      "insertIfMissing": true,
+      "rate": 0.7,
+      "applyStage": "after_base"
+    }
+  ],
+  "newRules": [
+    {
+      "code": "HULAN-RM",
+      "ruleType": "FIXED_PRICE",
+      "name": "PDF敷料小20x20x15",
+      "priority": 10,
+      "price": 10.5,
+      "keywords": ["敷料", "20cm*20cm*15cm"],
+      "skipPackaging": true,
+      "skipDiscount": true
+    },
+    {
+      "code": "HULAN-RM",
+      "ruleType": "FIXED_PRICE",
+      "name": "PDF敷料中20x30x30",
+      "priority": 11,
+      "price": 14,
+      "keywords": ["敷料", "20cm*30cm*30cm"],
+      "skipPackaging": true,
+      "skipDiscount": true
+    },
+    {
+      "code": "HULAN-RM",
+      "ruleType": "FIXED_PRICE",
+      "name": "PDF纱布棉球大20x20x15",
+      "priority": 15,
+      "price": 28,
+      "keywords": ["纱布", "棉球"],
+      "skipPackaging": true,
+      "skipDiscount": true
+    },
+    {
+      "code": "HULAN-RM",
+      "ruleType": "FIXED_PRICE",
+      "name": "PDF纸塑袋15cm",
+      "priority": 20,
+      "price": 3.85,
+      "keywords": ["纸塑袋"],
+      "bagSizeEquals": 15,
+      "skipPackaging": true,
+      "skipDiscount": true
+    },
+    {
+      "code": "HULAN-RM",
+      "ruleType": "FIXED_PRICE",
+      "name": "PDF纸塑袋10cm",
+      "priority": 21,
+      "price": 3.56,
+      "keywords": ["纸塑袋"],
+      "bagSizeEquals": 10,
+      "skipPackaging": true,
+      "skipDiscount": true
+    },
+    {
+      "code": "HULAN-RM",
+      "ruleType": "FIXED_PRICE",
+      "name": "PDF外来器械骨电钻11.55",
+      "priority": 25,
+      "price": 11.55,
+      "keywords": ["外来器械（骨电钻）"],
+      "skipPackaging": true,
+      "skipDiscount": true
+    },
+    {
+      "code": "HULAN-RM",
+      "ruleType": "FIXED_PRICE",
+      "name": "PDF外来器械植入物3.85",
+      "priority": 26,
+      "price": 3.85,
+      "keywords": ["外来器械（植入物）"],
+      "skipPackaging": true,
+      "skipDiscount": true
+    },
+    {
+      "code": "HULAN-RM",
+      "ruleType": "FIXED_PRICE",
+      "name": "PDF高温器械柜保护套3.5",
+      "priority": 30,
+      "price": 3.5,
+      "keywords": ["保护套", "器械柜"],
+      "temperature": "HT",
+      "skipPackaging": true,
+      "skipDiscount": true
+    },
+    {
+      "code": "HULAN-RM",
+      "ruleType": "FIXED_PRICE",
+      "name": "PDF低温器械柜保护套5.6",
+      "priority": 31,
+      "price": 5.6,
+      "keywords": ["保护套", "器械柜"],
+      "temperature": "LT",
+      "skipPackaging": true,
+      "skipDiscount": true
+    }
+  ]
+}

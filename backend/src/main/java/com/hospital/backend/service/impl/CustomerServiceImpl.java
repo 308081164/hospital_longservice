@@ -73,6 +73,10 @@ public class CustomerServiceImpl implements CustomerService {
         if (customerMapper.selectByCode(request.getCode()) != null) {
             return Result.fail(400, "客户编码已存在");
         }
+        String standardPricingError = resolveStandardPricingOverride(request);
+        if (standardPricingError != null) {
+            return Result.fail(400, standardPricingError);
+        }
         Customer customer = new Customer();
         applyRequest(customer, request);
         customerMapper.insert(customer);
@@ -92,6 +96,10 @@ public class CustomerServiceImpl implements CustomerService {
         Customer existingByCode = customerMapper.selectByCode(request.getCode());
         if (existingByCode != null && !existingByCode.getId().equals(id)) {
             return Result.fail(400, "客户编码已被其他客户使用");
+        }
+        String standardPricingError = resolveStandardPricingOverride(request);
+        if (standardPricingError != null) {
+            return Result.fail(400, standardPricingError);
         }
         applyRequest(customer, request);
         customerMapper.updateById(customer);
@@ -246,6 +254,7 @@ public class CustomerServiceImpl implements CustomerService {
         customer.setBillingPricingMode(normalizeBillingPricingMode(request.getBillingPricingMode()));
         customer.setPathOverride(buildPathOverrideJson(request.getPathOverride()));
         customer.setExportNameMapping(normalizeExportNameMapping(request.getExportNameMapping()));
+        customer.setStandardPricingOverride(request.getStandardPricingOverride());
         customer.setNotes(request.getNotes());
     }
 
@@ -642,6 +651,7 @@ public class CustomerServiceImpl implements CustomerService {
                 .billingPricingMode(customer.getBillingPricingMode())
                 .pathOverride(parsePathOverrideDto(customer.getPathOverride()))
                 .exportNameMapping(customer.getExportNameMapping())
+                .standardPricingOverride(customer.getStandardPricingOverride())
                 .notes(customer.getNotes())
                 .aliases(aliases)
                 .discounts(discounts)
@@ -1077,6 +1087,31 @@ public class CustomerServiceImpl implements CustomerService {
             return JsonUtils.toJson(parsed);
         } catch (Exception e) {
             return null;
+        }
+    }
+
+    /** Validates and normalizes {@link SaveCustomerRequest#getStandardPricingOverride()}; mutates request on success. */
+    private String resolveStandardPricingOverride(SaveCustomerRequest request) {
+        String raw = request.getStandardPricingOverride();
+        if (raw == null || raw.isBlank()) {
+            request.setStandardPricingOverride(null);
+            return null;
+        }
+        String trimmed = raw.trim();
+        if ("{}".equals(trimmed)) {
+            request.setStandardPricingOverride(null);
+            return null;
+        }
+        try {
+            Map<String, Object> parsed = JsonUtils.getObjectMapper().readValue(trimmed, Map.class);
+            if (parsed == null || parsed.isEmpty()) {
+                request.setStandardPricingOverride(null);
+                return null;
+            }
+            request.setStandardPricingOverride(JsonUtils.toJson(parsed));
+            return null;
+        } catch (Exception e) {
+            return "标准灭菌价覆盖 JSON 格式无效，请检查语法与结构";
         }
     }
 

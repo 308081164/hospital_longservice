@@ -253,6 +253,8 @@ public class SchemaMigrationRunner implements CommandLineRunner {
                 "path_override JSON NULL COMMENT '路径覆盖 disableLowTemp/forceHighTempUnitPrice' AFTER billing_pricing_mode");
         addColumnIfMissing("customer", "export_name_mapping",
                 "export_name_mapping JSON NULL COMMENT '导出名称替换 FR-M1-09' AFTER path_override");
+        addColumnIfMissing("customer", "standard_pricing_override",
+                "standard_pricing_override JSON NULL COMMENT '客户标准灭菌阶梯价覆盖' AFTER export_name_mapping");
         seedBillingEnabledForExistingCustomers();
     }
 

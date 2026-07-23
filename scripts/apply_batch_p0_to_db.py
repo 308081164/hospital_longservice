@@ -17,7 +17,7 @@ def mysql_exec(sql: str) -> str:
     cmd = [
         "docker", "exec", "hospital-mysql",
         "sh", "-c",
-        f'mysql -uhospital -p"$MYSQL_PASSWORD" hospital -N -e "{sql.replace(chr(34), chr(92)+chr(34))}"',
+        f'mysql -uhospital -p"$MYSQL_PASSWORD" --default-character-set=utf8mb4 hospital -N -e "{sql.replace(chr(34), chr(92)+chr(34))}"',
     ]
     return subprocess.check_output(cmd, text=True)
 

@@ -1,0 +1,84 @@
+{
+  "source": "哈尔滨市呼兰区第一人民医院价格单_000144.pdf",
+  "ocrFile": "OCR_价格单_000144.txt",
+  "ocrDate": "2026-07-22",
+  "disclaimer": "扫描件 OCR，部分字段需人工校对；已写入 billing-seeds/phase-user-20260722-er-hulan.json",
+  "items": [
+    {
+      "section": "附表一-1",
+      "name": "常规高温灭菌手术器械",
+      "unitPrice": 3.85,
+      "unit": "元/把",
+      "minCharge": 11.55,
+      "note": "含双层无纺布、指示胶带与包内化学指示卡"
+    },
+    {
+      "section": "附表一-2",
+      "name": "敷料小",
+      "size": "20cm×20cm×15cm",
+      "unitPrice": 10.5
+    },
+    {
+      "section": "附表一-2",
+      "name": "敷料中",
+      "size": "20cm×30cm×30cm",
+      "unitPrice": 14
+    },
+    {
+      "section": "附表一-3",
+      "name": "纱布棉球（公司纸塑包装）",
+      "size": "20cm×20cm×15cm",
+      "unitPrice": 28
+    },
+    {
+      "section": "附表一-3",
+      "name": "纸塑袋",
+      "size": "15cm",
+      "unitPrice": 3.85
+    },
+    {
+      "section": "附表一-3",
+      "name": "纸塑袋",
+      "size": "10cm",
+      "unitPrice": 3.56
+    },
+    {
+      "section": "附表一-6",
+      "name": "外来器械（骨电钻）",
+      "unitPrice": 11.55,
+      "unit": "元/单包把"
+    },
+    {
+      "section": "附表一-6",
+      "name": "外来器械（植入物）",
+      "unitPrice": 3.85,
+      "unit": "元/件"
+    },
+    {
+      "section": "附表一-7",
+      "name": "高温器械柜保护套",
+      "unitPrice": 3.5,
+      "unit": "元/次/个"
+    },
+    {
+      "section": "附表一-7",
+      "name": "低温器械柜保护套",
+      "unitPrice": 5.6,
+      "unit": "元/次/个"
+    },
+    {
+      "section": "附表一-8",
+      "name": "物流",
+      "unitPrice": 1.76,
+      "unit": "元/公里",
+      "urgentUnitPrice": 2.0
+    },
+    {
+      "section": "附表一-10",
+      "name": "加急包",
+      "surchargeRate": 0.25,
+      "logisticsUrgent": 6,
+      "unit": "元/公里"
+    }
+  ]
+}

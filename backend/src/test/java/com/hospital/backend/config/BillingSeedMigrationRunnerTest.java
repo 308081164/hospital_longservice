@@ -35,7 +35,14 @@ class BillingSeedMigrationRunnerTest {
                 "billing-seeds/phase5-batch-c.json",
                 "billing-seeds/phase7-batch-d.json",
                 "billing-seeds/phase7-batch-e.json",
-                "billing-seeds/phase-zyy-d1-fuyi.json")) {
+                "billing-seeds/phase-zyy-d1-fuyi.json",
+                "billing-seeds/phase-zyy-d1-standard-pricing-20260723.json",
+                "billing-seeds/phase-hulan-heu-hit-20260722.json",
+                "billing-seeds/phase-hrb-hx-eye-20260723.json",
+                "billing-seeds/phase-ng-fuchan-gongqiangjing-20260723.json",
+                "billing-seeds/phase-ng-fuchan-pdf-ocr-20260723.json",
+                "billing-seeds/phase-hrb-bc-med-beauty-20260723.json",
+                "billing-seeds/phase-s7-bokang-pdf-ocr-20260723.json")) {
             assertThat(new ClassPathResource(file).exists())
                     .as("seed file %s", file)
                     .isTrue();

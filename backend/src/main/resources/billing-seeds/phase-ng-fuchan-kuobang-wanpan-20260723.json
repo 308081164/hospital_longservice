@@ -1,0 +1,30 @@
+{
+  "version": "1",
+  "description": "南岗区妇产医院 NG-FUCHAN：PDF 散件价 扩棒/弯盘 各 8 元（与校正价8.0 取环器/宫颈钳 规则名区分；弯盘-2/扩棒三件套仍走 P0 16/24）",
+  "newRules": [
+    {
+      "code": "NG-FUCHAN",
+      "ruleType": "FIXED_PRICE",
+      "name": "校正价扩棒8",
+      "priority": 13,
+      "price": 8.0,
+      "keywords": [
+        "扩棒"
+      ],
+      "skipPackaging": true,
+      "skipDiscount": true
+    },
+    {
+      "code": "NG-FUCHAN",
+      "ruleType": "FIXED_PRICE",
+      "name": "校正价弯盘8",
+      "priority": 13,
+      "price": 8.0,
+      "keywords": [
+        "弯盘"
+      ],
+      "skipPackaging": true,
+      "skipDiscount": true
+    }
+  ]
+}

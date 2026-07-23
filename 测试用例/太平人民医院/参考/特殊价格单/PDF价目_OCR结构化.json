@@ -1,0 +1,45 @@
+{
+  "source": "哈尔滨市道外区太平人民医院价格单_000143.pdf",
+  "ocrFile": "OCR_价格单_000143.txt",
+  "ocrDate": "2026-07-23",
+  "ocrEngine": "pymupdf 2.0–3.0 render + tesseract chi_sim+eng",
+  "disclaimer": "扫描件；主表为合同标准单价（非套包中标表），套包价以 6 月期待清单 + S4 手写价为准",
+  "alignedWithJuneCsv": {
+    "file": "测试用例/太平人民医院/6月期待价格校正清单.csv",
+    "seedRefs": [
+      "phase-batch-p0.json",
+      "phase-s3-pdf-align-20260722.json",
+      "phase-s4-fix-20260722.json",
+      "phase-s4-fix-part2-20260722.json",
+      "phase-s4-fix-part4-20260722.json"
+    ]
+  },
+  "items": [
+    {
+      "section": "附表一-1",
+      "name": "常规高温灭菌手术器械",
+      "unitPrice": 2.97,
+      "note": "元/把；special_only 模式下散件走校正价 8.3/8.91 等"
+    },
+    {
+      "section": "附表一-7",
+      "name": "高温器械篮框租赁",
+      "unitPrice": 5,
+      "unit": "元/次/个"
+    },
+    {
+      "section": "附表一-7",
+      "name": "低温器械保护盒租赁",
+      "unitPrice": 8,
+      "unit": "元/次/个",
+      "note": "未落 FIXED_PRICE；待账单包名确认"
+    },
+    {
+      "section": "附表一-10",
+      "name": "加急包",
+      "surchargeRate": 0,
+      "logisticsUrgentPerKm": 0,
+      "note": "OCR 读数异常，以合同原件为准"
+    }
+  ]
+}

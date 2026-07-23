@@ -26,9 +26,18 @@ class ZyyD1P0PricingRegressionTest {
     @BeforeEach
     void setUp() throws Exception {
         ObjectNode rules = (ObjectNode) MAPPER.valueToTree(DefaultPricingTemplate.buildRulesMap());
-        rules.putObject("billingProfile").put("pricingMode", "special_only");
-        ArrayNode fixedPrices = rules.withObject("specialRules").withArray("fixedPrices");
-        ArrayNode foldRules = rules.withObject("specialRules").withArray("foldRules");
+        ObjectNode billingProfile = rules.putObject("billingProfile");
+        billingProfile.put("pricingMode", "hybrid");
+        billingProfile.put("enabled", true);
+
+        JsonNode stdSeed = MAPPER.readTree(getClass().getResourceAsStream(
+                "/billing-seeds/phase-zyy-d1-standard-pricing-20260723.json"));
+        JsonNode override = stdSeed.path("customerUpdates").get(0).path("standardPricingOverride");
+        deepMerge(rules, (ObjectNode) override);
+
+        ObjectNode specialRules = (ObjectNode) rules.get("specialRules");
+        ArrayNode fixedPrices = (ArrayNode) specialRules.get("fixedPrices");
+        ArrayNode foldRules = (ArrayNode) specialRules.get("foldRules");
 
         JsonNode seed = MAPPER.readTree(getClass().getResourceAsStream("/billing-seeds/phase-zyy-d1-fuyi.json"));
         JsonNode productRules = seed.path("profiles").get(0).path("productRules");
@@ -50,11 +59,11 @@ class ZyyD1P0PricingRegressionTest {
     @Test
     void shouldFlagExpectedPriceCorrections() {
         assertWarning(row("换药包(120布)", "器械包(ZSD)", "", 3, 3, 22.6, 67.8), 21.99);
-        assertWarning(row("30°腹腔镜-1/z2060", "器械包(ZSD)", "", 1, 1, 28, 28), 30.38);
+        assertWarning(row("30°腹腔镜-1/z2060", "器械包(ZSD)", "", 1, 1, 28, 28), 30.4);
         assertWarning(row("辅料包", "敷料包(无纺布包)", "无纺布-150×150-50g", 0, 2, 0, 0), 28);
         assertWarning(row("球内注药-3件/Z1526", "额外包(纸塑袋)", "高温纸塑袋150*260", 24, 8, 17.6, 140.8), 13.2);
-        assertWarning(row("保温杯-1Z2044", "额外包(ETO)", "高温纸塑袋200*440", 2, 2, 10.4, 20.8), 17.58);
-        assertWarning(row("膀胱取石钳-1/z1560", "额外包(ETO)", "高温纸塑袋150*600", 1, 1, 8.8, 8.8), 19.98);
+        assertWarning(row("保温杯-1Z2044", "额外包(ETO)", "高温纸塑袋200*440", 2, 2, 10.4, 20.8), 17.6);
+        assertWarning(row("膀胱取石钳-1/z1560", "额外包(ETO)", "高温纸塑袋150*600", 1, 1, 8.8, 8.8), 20);
         assertWarning(row("冲洗头-120/z2030", "额外包(低温等离子)", "低温纸塑袋200*300", 120, 1, 328, 328), 310.4);
         assertWarning(row("王树人特器-26（筐1）/w12050", "额外包(ETO)", "无纺布-120×120-50g", 27, 1, 292.8, 292.8), 328);
     }
@@ -64,8 +73,36 @@ class ZyyD1P0PricingRegressionTest {
         assertUnchanged(row("持物钳罐-2/w6050", "额外包(无纺布)", "无纺布-60×60-50g", 2, 1, 13.2, 13.2));
         assertUnchanged(row("洗手服（XL号）/W15050", "敷料包(无纺布包)", "无纺布-150×150-50g", 0, 1, 28, 28));
         assertUnchanged(row("腹腔镜包", "器械包", "", 1, 1, 154, 154));
-        assertUnchanged(row("王树人特器-1件/z2060", "额外包(ETO)", "高温纸塑袋200*440", 1, 1, 22.4, 22.4));
-        assertUnchanged(row("保温杯(高温)-1Z2044", "额外包(纸塑袋)", "高温纸塑袋200*440", 1, 1, 10.4, 10.4));
+        assertUnchanged(row("王树人特器-1件/z2060", "额外包(ETO)", "高温纸塑袋200*440", 1, 1, 22.38, 22.38));
+        assertUnchanged(row("保温杯(高温)-1Z2044", "额外包(纸塑袋)", "高温纸塑袋200*440", 1, 1, 10.39, 10.39));
+    }
+
+    @Test
+    void shouldPriceStandardHighTempPaperPlasticWithFuyiTable() {
+        assertWarning(row("示例包", "额外包(纸塑袋)", "高温纸塑袋150*260", 8, 1, 10.4, 83.2), 35.2);
+        assertUnchanged(row("单件包", "额外包(纸塑袋)", "高温纸塑袋150*260", 1, 1, 8.79, 8.79));
+    }
+
+    @Test
+    void shouldPriceLowTempSterilizationMaterialByBagSize() {
+        assertUnchanged(row("持针器", "额外包(ETO)", "低温灭菌 20cm", 1, 1, 22.38, 22.38));
+    }
+
+    private static void deepMerge(ObjectNode target, ObjectNode patch) {
+        patch.fields().forEachRemaining(entry -> {
+            String key = entry.getKey();
+            JsonNode patchVal = entry.getValue();
+            if (patchVal.isObject()) {
+                JsonNode existing = target.get(key);
+                if (existing instanceof ObjectNode existingObj) {
+                    deepMerge(existingObj, (ObjectNode) patchVal);
+                } else {
+                    target.set(key, patchVal.deepCopy());
+                }
+            } else {
+                target.set(key, patchVal.deepCopy());
+            }
+        });
     }
 
     private void assertWarning(Map<String, Object> row, double expectedUnit) {

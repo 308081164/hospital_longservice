@@ -28,6 +28,7 @@ from analyze_test_case_excel import (  # noqa: E402
     DetailRow,
     compare_workbooks,
     discover_hospitals,
+    extract_date_range_token,
     extract_month_from_name,
     is_bill_file,
     match_raw_processed,
@@ -81,7 +82,8 @@ TODO_HOSPITALS: list[str] = [
     "黑龙江省第二医院（松北院区）",
     "哈尔滨市呼兰区第一人民医院",
     "哈尔滨市红十字妇产医院",
-    "哈尔滨(工程)大学医院",
+    "哈尔滨工业大学医院",
+    "哈尔滨工程大学医院",
 ]
 
 # Hardcoded engine rules not in billing-seeds (customer_code -> rules)
@@ -128,7 +130,22 @@ FOLDER_CODE_OVERRIDE: dict[str, str] = {
     "黑龙江省第二医院（松北院区）": "ERYY-SB",
     "哈尔滨市呼兰区第一人民医院": "HULAN-RM",
     "哈尔滨市红十字妇产医院": "HRB-HSZ",
-    "哈尔滨(工程)大学医院": "HRB-HIT",
+    "哈尔滨工业大学医院": "HRB-HIT",
+    "哈尔滨工程大学医院": "HRB-HEU",
+}
+
+# S4 验收固定原始/处理后成对（跨自然月账期）
+HOSPITAL_PAIR_OVERRIDE: dict[str, tuple[str, str, str]] = {
+    "太平人民医院": (
+        "原始表格/太平人民5.13-6.15账单.xlsx",
+        "处理后表格/5月__太平人民2026.5.13-2026.6.15账单.xlsx",
+        "5.13-6.15跨月验收",
+    ),
+    "哈尔滨工业大学医院": (
+        "原始表格/工业大学6.15-7.14原始账单.xlsx",
+        "处理后表格/6月__哈尔滨工业大学医院6.15-7.14月账单.xlsx",
+        "6.15-7.14跨月(6月验收)",
+    ),
 }
 
 
@@ -183,14 +200,24 @@ def load_seed_profiles() -> dict[str, CustomerProfile]:
         for node in data.get("profiles", []):
             code = node.get("code", "")
             name = node.get("name", "")
+            incoming_rules = list(node.get("productRules") or [])
             profile = CustomerProfile(
                 code=code,
                 name=name,
                 pricing_mode=node.get("billingPricingMode", "standard"),
                 aliases=list(node.get("aliases") or []),
-                product_rules=list(node.get("productRules") or []),
+                product_rules=incoming_rules,
                 discounts=list(node.get("discounts") or []),
             )
+            if code in by_code and incoming_rules:
+                merged = {r.get("name"): r for r in by_code[code].product_rules if r.get("name")}
+                for r in incoming_rules:
+                    n = r.get("name")
+                    if n:
+                        merged[n] = r
+                profile.product_rules = list(merged.values())
+            elif code in by_code and not incoming_rules:
+                profile.product_rules = list(by_code[code].product_rules)
             by_name[name] = profile
             by_code[code] = profile
             for alias in profile.aliases:
@@ -332,6 +359,14 @@ def pick_june_pair(hospital_dir: Path) -> tuple[Path | None, Path | None, str]:
     if not raw_dir.is_dir() or not proc_dir.is_dir():
         return None, None, "缺少原始或处理后目录"
 
+    name = hospital_dir.name
+    if name in HOSPITAL_PAIR_OVERRIDE:
+        rel_raw, rel_proc, label = HOSPITAL_PAIR_OVERRIDE[name]
+        raw = hospital_dir / rel_raw
+        proc = hospital_dir / rel_proc
+        if raw.is_file() and proc.is_file():
+            return raw, proc, label
+
     raw_files = [p for p in raw_dir.iterdir() if p.suffix.lower() in {".xlsx", ".xls"}]
     proc_files = [p for p in proc_dir.iterdir() if p.suffix.lower() in {".xlsx", ".xls"}]
 
@@ -341,7 +376,13 @@ def pick_june_pair(hospital_dir: Path) -> tuple[Path | None, Path | None, str]:
         if bill:
             return raw, bill, "6月"
 
-    # Date-range bills ending in June (e.g. 5.9-6.8)
+    # 5.13-6.15 等：按 match_raw_processed 的 5 月成对，避免 6.15 误配 6月__ 其它账期
+    if 5 in mapping:
+        raw5, bill5, _ = mapping[5]
+        if raw5 and bill5 and re.search(r"5\.\d+-6\.", raw5.name):
+            return raw5, bill5, "5月跨期(含6月)"
+
+    # Date-range bills ending in June (e.g. 5.9-6.8) — require处理后文件名含同日期段
     june_raw: list[Path] = []
     for raw in raw_files:
         m = extract_month_from_name(raw.name)
@@ -352,6 +393,13 @@ def pick_june_pair(hospital_dir: Path) -> tuple[Path | None, Path | None, str]:
     for raw in june_raw:
         bill = pick_processed_bill(TARGET_MONTH, proc_files, raw.name)
         if bill:
+            raw_range = extract_date_range_token(raw.name)
+            if raw_range and raw_range not in bill.name:
+                # 处理后账期与原始不一致，跳过
+                alt = pick_processed_bill(5, proc_files, raw.name)
+                if alt and (not raw_range or raw_range in alt.name):
+                    return raw, alt, f"跨月(原始:{raw.name})"
+                continue
             return raw, bill, f"6月(原始:{raw.name})"
 
     return None, None, "无6月可对比材料"

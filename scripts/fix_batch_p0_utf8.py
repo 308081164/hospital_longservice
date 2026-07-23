@@ -35,7 +35,7 @@ def main() -> None:
         lines.append(f"-- {profile['name']}")
         lines.append(
             f"DELETE FROM customer_product_rule WHERE customer_id=(SELECT id FROM customer c WHERE c.code='{code}') "
-            f"AND name LIKE '校正价%';"
+            f"AND (name LIKE '校正价%' OR name LIKE 'æ%');"
         )
         lines.append(
             f"UPDATE customer SET billing_pricing_mode='{esc_sql(profile.get('billingPricingMode', 'hybrid'))}', "

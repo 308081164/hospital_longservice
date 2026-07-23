@@ -1,0 +1,254 @@
+{
+  "version": "1",
+  "description": "S4 多报价收口：南岗妇产/呼兰中医 + 太平/松北/三辅手写价",
+  "ruleUpdates": [
+    {
+      "code": "NG-FUCHAN",
+      "ruleName": "校正价2.3",
+      "setMatchMode": "any_price",
+      "setAcceptedPrices": [2.3, 2.5]
+    },
+    {
+      "code": "NG-FUCHAN",
+      "ruleName": "校正价24.0",
+      "setMatchMode": "any_price",
+      "setAcceptedPrices": [16.5, 24.0]
+    },
+    {
+      "code": "HULAN-TCM",
+      "ruleName": "校正价275.0",
+      "setMatchMode": "any_price",
+      "setAcceptedPrices": [275.0, 297.0]
+    },
+    {
+      "code": "TAIPING-RM",
+      "ruleName": "校正价8.91",
+      "setMatchMode": "any_price",
+      "setAcceptedPrices": [8.91, 12.38]
+    },
+    {
+      "code": "TAIPING-RM",
+      "ruleName": "校正价8.3",
+      "setMatchMode": "any_price",
+      "setAcceptedPrices": [8.3, 8.25]
+    },
+    {
+      "code": "TAIPING-RM",
+      "ruleName": "校正价9.8",
+      "setMatchMode": "any_price",
+      "setAcceptedPrices": [9.8, 9.75]
+    },
+    {
+      "code": "TAIPING-RM",
+      "ruleName": "校正价18.8",
+      "setMatchMode": "any_price",
+      "setAcceptedPrices": [18.8, 18.75]
+    },
+    {
+      "code": "TAIPING-RM",
+      "ruleName": "校正价26.3",
+      "setMatchMode": "any_price",
+      "setAcceptedPrices": [26.3, 26.25]
+    },
+    {
+      "code": "TAIPING-RM",
+      "ruleName": "太平缝合包",
+      "setMatchMode": "any_price",
+      "setAcceptedPrices": [16.5, 20.63]
+    },
+    {
+      "code": "TAIPING-RM",
+      "ruleName": "太平皮肤拉钩",
+      "setMatchMode": "any_price",
+      "setAcceptedPrices": [10.13]
+    },
+    {
+      "code": "ERYY-SB",
+      "ruleName": "省二松北宫腔检查镜30度3件",
+      "setMatchMode": "any_price",
+      "setAcceptedPrices": [30.8, 23.45, 46.2]
+    },
+    {
+      "code": "ERYY-SB",
+      "ruleName": "省二松北扩棒7-10",
+      "setMatchMode": "any_price",
+      "setAcceptedPrices": [26.95, 28.7]
+    },
+    {
+      "code": "ERYY-SB",
+      "ruleName": "省二松北扩棒7.5-10",
+      "setMatchMode": "any_price",
+      "setAcceptedPrices": [23.1, 24.85]
+    },
+    {
+      "code": "ERYY-SB",
+      "ruleName": "取钉包多报价",
+      "setMatchMode": "any_price",
+      "setAcceptedPrices": [207.9, 127.05]
+    },
+    {
+      "code": "ZUYAN-SF",
+      "ruleName": "校正价33.0",
+      "setMatchMode": "any_price",
+      "setAcceptedPrices": [33.0, 280.5, 269.5, 286.0]
+    },
+    {
+      "code": "ZUYAN-SF",
+      "ruleName": "校正价38.5",
+      "setMatchMode": "any_price",
+      "setAcceptedPrices": [38.5, 286.0]
+    },
+    {
+      "code": "ZUYAN-SF",
+      "ruleName": "校正价22.0",
+      "setMatchMode": "any_price",
+      "setAcceptedPrices": [22.0, 24.5]
+    },
+    {
+      "code": "ZUYAN-SF",
+      "ruleName": "校正价30.0",
+      "setMatchMode": "any_price",
+      "setAcceptedPrices": [30.0, 16.5]
+    },
+    {
+      "code": "ZYY-D2-NG",
+      "ruleName": "PDF/期待价30",
+      "setMatchMode": "any_price",
+      "setAcceptedPrices": [30.0, 35.0]
+    }
+  ],
+  "newRules": [
+    {
+      "code": "TAIPING-RM",
+      "ruleType": "FIXED_PRICE",
+      "name": "太平腔镜器械",
+      "priority": 6,
+      "price": 119.63,
+      "keywords": ["腔镜器械"],
+      "matchMode": "any_price",
+      "acceptedPrices": [119.63],
+      "skipPackaging": true,
+      "skipDiscount": true
+    },
+    {
+      "code": "TAIPING-RM",
+      "ruleType": "FIXED_PRICE",
+      "name": "太平开腹包",
+      "priority": 7,
+      "price": 119.63,
+      "keywords": ["开腹包"],
+      "matchMode": "any_price",
+      "acceptedPrices": [119.63],
+      "skipPackaging": true,
+      "skipDiscount": true
+    },
+    {
+      "code": "TAIPING-RM",
+      "ruleType": "FIXED_PRICE",
+      "name": "太平肌钩",
+      "priority": 15,
+      "price": 10.13,
+      "keywords": ["肌钩"],
+      "matchMode": "any_price",
+      "acceptedPrices": [10.13],
+      "skipPackaging": true,
+      "skipDiscount": true
+    },
+    {
+      "code": "TAIPING-RM",
+      "ruleType": "FIXED_PRICE",
+      "name": "太平拇外翻13件",
+      "priority": 16,
+      "price": 53.63,
+      "keywords": ["拇外翻"],
+      "matchMode": "any_price",
+      "acceptedPrices": [53.63],
+      "skipPackaging": true,
+      "skipDiscount": true
+    },
+    {
+      "code": "ZUYAN-SF",
+      "ruleType": "FIXED_PRICE",
+      "name": "三辅探针瘘管刨刀包",
+      "priority": 8,
+      "price": 13.5,
+      "keywords": ["探针1瘘管1刨刀1"],
+      "matchMode": "any_price",
+      "acceptedPrices": [13.5, 16.5],
+      "skipPackaging": true,
+      "skipDiscount": true
+    },
+    {
+      "code": "ZYY-D2-NG",
+      "ruleType": "FIXED_PRICE",
+      "name": "附二南岗机扩针7盒",
+      "priority": 8,
+      "price": 16.5,
+      "keywords": ["机扩针-7盒1"],
+      "matchMode": "any_price",
+      "acceptedPrices": [11.0, 16.5],
+      "skipPackaging": true,
+      "skipDiscount": true
+    },
+    {
+      "code": "ZYY-D2-NG",
+      "ruleType": "FIXED_PRICE",
+      "name": "附二南岗刮勺探针4",
+      "priority": 9,
+      "price": 8.0,
+      "keywords": ["刮勺探针4"],
+      "matchMode": "any_price",
+      "acceptedPrices": [8.0, 22.0],
+      "skipPackaging": true,
+      "skipDiscount": true
+    },
+    {
+      "code": "ZYY-D2-NG",
+      "ruleType": "FIXED_PRICE",
+      "name": "附二南岗弯针2",
+      "priority": 10,
+      "price": 8.0,
+      "keywords": ["弯针-2"],
+      "matchMode": "any_price",
+      "acceptedPrices": [8.0, 13.5],
+      "skipPackaging": true,
+      "skipDiscount": true
+    },
+    {
+      "code": "ZYY-D2-NG",
+      "ruleType": "FIXED_PRICE",
+      "name": "附二南岗椎间孔镜镜头",
+      "priority": 11,
+      "price": 30.0,
+      "keywords": ["椎间孔镜镜头"],
+      "matchMode": "any_price",
+      "acceptedPrices": [30.0, 35.0],
+      "skipPackaging": true,
+      "skipDiscount": true
+    },
+    {
+      "code": "ZYY-D2-NG",
+      "ruleType": "FIXED_PRICE",
+      "name": "附二南岗关节镜30度",
+      "priority": 12,
+      "price": 44.0,
+      "keywords": ["关节镜30°"],
+      "matchMode": "any_price",
+      "acceptedPrices": [36.0, 44.0],
+      "skipPackaging": true,
+      "skipDiscount": true
+    },
+    {
+      "code": "ZYY-D2-NG",
+      "ruleType": "FIXED_PRICE",
+      "name": "附二南岗关节镜70度",
+      "priority": 13,
+      "price": 44.0,
+      "keywords": ["关节镜70°"],
+      "matchMode": "any_price",
+      "acceptedPrices": [28.0, 44.0],
+      "skipPackaging": true,
+      "skipDiscount": true
+    }
+  ]
+}

@@ -35,6 +35,9 @@ public class SaveCustomerRequest {
     /** JSON object string: { "原包名": "导出包名" } */
     private String exportNameMapping;
 
+    /** JSON object: merges into DefaultPricingTemplate (highTemperature / lowTemperature / dressingPack) */
+    private String standardPricingOverride;
+
     private String notes;
 
     private List<CustomerAliasDto> aliases;

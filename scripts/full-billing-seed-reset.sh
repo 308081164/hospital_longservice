@@ -94,7 +94,7 @@ done
 docker compose up -d frontend 2>/dev/null || true
 
 echo ">>> 种子执行日志摘要:"
-docker logs hospital-backend 2>&1 | grep -E 'Billing seed|Hardcoded|铂康|MasterData|billing_seed|bokang' | tail -30 || true
+bash "$ROOT/scripts/check-backend-billing-logs.sh"
 
 echo
 bash "$ROOT/scripts/verify-billing-seed.sh"

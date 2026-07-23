@@ -1,0 +1,153 @@
+{
+  "source": "哈尔滨市南岗区妇产医院价格单_000145.pdf",
+  "ocrFile": "OCR_价格单_000145.txt",
+  "ocrDate": "2026-07-23",
+  "ocrEngine": "pymupdf 2x–4x render + tesseract chi_sim+eng (psm 4/6)",
+  "disclaimer": "扫描件 OCR；序号 1–14 为中标单价表主表，价额已与 5月/6月期待价格校正清单及 P0 规则交叉核对；未在账单出现的套包价仅作备案，落库规则见 billing-seeds/phase-ng-fuchan-pdf-ocr-20260723.json",
+  "alignedWithJuneCsv": {
+    "file": "测试用例/南岗区妇产医院/6月期待价格校正清单.csv",
+    "status": "零差异（仅表头，无待校正行）",
+    "p0RulePrices": [2.3, 8.0, 16.0, 24.0, 32.0, 170.5]
+  },
+  "items": [
+    {
+      "seq": 1,
+      "name": "宫腔镜",
+      "setCount": 3,
+      "instrumentCount": 34,
+      "unitPrice": 170.5,
+      "billingRule": "校正价170.5",
+      "note": "与 6月/5月账单包名「宫腔镜」一致"
+    },
+    {
+      "seq": 2,
+      "name": "妇科宫腔镜手术器械",
+      "setCount": 3,
+      "instrumentCount": 36,
+      "unitPrice": 170.5,
+      "billingRule": "校正价170.5（关键词宫腔镜）"
+    },
+    {
+      "seq": 3,
+      "name": "妇科手术器械（大套）",
+      "setCount": 1,
+      "instrumentCount": 46,
+      "unitPrice": 170.5,
+      "billingRule": "校正价170.5（关键词宫腔镜）"
+    },
+    {
+      "seq": 4,
+      "name": "腹腔镜相关（含扩棒等，OCR 价列含 32/160 混读）",
+      "instrumentCount": 32,
+      "unitPrice": null,
+      "note": "OCR 不可靠；账单「盆2盘1杯1(腹腔镜里的)」按 32 元落 P0 校正价32.0"
+    },
+    {
+      "seq": 5,
+      "name": "大型综合手术器械包",
+      "setCount": 2,
+      "instrumentCount": 52,
+      "unitPrice": 269.5,
+      "billingRule": "PDF大型包269.5",
+      "note": "OCR 可读；待账单包名确认后收窄关键词"
+    },
+    {
+      "seq": 6,
+      "name": "（OCR 序号 6，名称不清）",
+      "setCount": 4,
+      "instrumentCount": 3,
+      "unitPrice": 18,
+      "note": "仅备案，暂未落规则"
+    },
+    {
+      "seq": 8,
+      "name": "大领子",
+      "setCount": 10,
+      "packCount": 2,
+      "unitPrice": 8,
+      "billingRule": "PDF大领子8"
+    },
+    {
+      "seq": 9,
+      "name": "带架治疗盘",
+      "setCount": 2,
+      "detail": "治疗盘1个、架1个",
+      "unitPrice": 16.5,
+      "billingRule": "PDF带架治疗盘16.5"
+    },
+    {
+      "seq": 10,
+      "name": "人工流产手术器械",
+      "setCount": 32,
+      "instrumentCount": 6,
+      "unitPrice": 33,
+      "billingRule": "PDF人工流产33"
+    },
+    {
+      "seq": 11,
+      "name": "取环包",
+      "setCount": 10,
+      "instrumentCount": 6,
+      "unitPrice": 33,
+      "billingRule": "PDF取环包33"
+    },
+    {
+      "seq": 12,
+      "name": "上环包",
+      "setCount": 8,
+      "instrumentCount": 6,
+      "unitPrice": 33,
+      "billingRule": "PDF上环包33"
+    },
+    {
+      "seq": 13,
+      "name": "药流包",
+      "setCount": 3,
+      "instrumentCount": 6,
+      "unitPrice": 27.5,
+      "billingRule": "PDF药流包27.5",
+      "note": "OCR 曾读成 275，按 27.5 校正"
+    },
+    {
+      "seq": 14,
+      "name": "人流包",
+      "setCount": 2,
+      "instrumentCount": 8,
+      "unitPrice": 22,
+      "billingRule": "PDF人流包22"
+    },
+    {
+      "seq": 15,
+      "name": "诊刮包",
+      "setCount": 2,
+      "instrumentCount": 3,
+      "unitPrice": 8,
+      "billingRule": "PDF诊刮包8"
+    },
+    {
+      "seq": 16,
+      "name": "散包（每包 1 把器械）",
+      "instrumentCount": 1,
+      "unitPrice": 8,
+      "billingRule": "校正价8.0（取环器-1/宫颈钳-1 等散件）"
+    },
+    {
+      "section": "表续/小项",
+      "name": "小治疗",
+      "unitPrice": 16,
+      "billingRule": "PDF小治疗16"
+    },
+    {
+      "section": "表续/小项",
+      "name": "小纱布",
+      "unitPrice": 2.3,
+      "billingRule": "校正价2.3"
+    },
+    {
+      "section": "表续/小项",
+      "name": "（OCR 序号 13，名称不清）",
+      "unitPrice": 4,
+      "note": "OCR 仅见单价 4，名称未识别，暂未落规则"
+    }
+  ]
+}

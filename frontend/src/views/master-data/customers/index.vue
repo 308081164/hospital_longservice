@@ -303,6 +303,35 @@
               />
             </ElFormItem>
           </ElCollapseItem>
+          <ElCollapseItem
+            name="standardPricingOverride"
+            :title="$t('menus.masterData.customerForm.standardPricingOverrideTitle')"
+          >
+            <div class="customer-advanced-collapse__intro">
+              <p>{{ $t('menus.masterData.customerForm.standardPricingOverrideDesc') }}</p>
+              <ul>
+                <li>{{ $t('menus.masterData.customerForm.standardPricingOverrideStructureHint') }}</li>
+                <li>{{ $t('menus.masterData.customerForm.standardPricingOverrideHybridHint') }}</li>
+              </ul>
+            </div>
+            <ElFormItem
+              :label="$t('menus.masterData.customerForm.standardPricingOverrideJson')"
+              prop="standardPricingOverrideText"
+              :rules="standardPricingOverrideRules"
+            >
+              <ElInput
+                v-model="form.standardPricingOverrideText"
+                type="textarea"
+                :rows="14"
+                :placeholder="$t('menus.masterData.customerForm.standardPricingOverridePlaceholder')"
+                class="font-mono text-xs"
+                spellcheck="false"
+              />
+              <div class="mt-1 text-xs text-gray-500 leading-relaxed">
+                {{ $t('menus.masterData.customerForm.standardPricingOverrideFormatHint') }}
+              </div>
+            </ElFormItem>
+          </ElCollapseItem>
         </ElCollapse>
 
         <ElDivider>{{ $t('menus.masterData.customerProductRules.title') }}</ElDivider>
@@ -590,6 +619,7 @@
       pathOverrideDisableLowTemp?: boolean
       pathOverrideForceHighTempUnitPrice?: number
       exportNameMapping?: string
+      standardPricingOverrideText?: string
     }
   >({
     code: '',
@@ -606,8 +636,47 @@
     productRules: [],
     pathOverrideDisableLowTemp: false,
     pathOverrideForceHighTempUnitPrice: undefined,
-    exportNameMapping: undefined
+    pathOverrideForceHighTempUnitPrice: undefined,
+    exportNameMapping: undefined,
+    standardPricingOverrideText: ''
   })
+
+  function validateStandardPricingOverrideJson(_rule: unknown, value: string, callback: (err?: Error) => void) {
+    const trimmed = (value ?? '').trim()
+    if (!trimmed) {
+      callback()
+      return
+    }
+    try {
+      const parsed = JSON.parse(trimmed) as unknown
+      if (parsed === null || typeof parsed !== 'object' || Array.isArray(parsed)) {
+        callback(new Error(t('menus.masterData.customerForm.standardPricingOverrideInvalid')))
+        return
+      }
+      callback()
+    } catch {
+      callback(new Error(t('menus.masterData.customerForm.standardPricingOverrideInvalid')))
+    }
+  }
+
+  const standardPricingOverrideRules = [
+    { validator: validateStandardPricingOverrideJson, trigger: 'blur' }
+  ]
+
+  function formatStandardPricingOverrideForEdit(raw?: string | null): string {
+    if (!raw?.trim()) return ''
+    try {
+      return JSON.stringify(JSON.parse(raw), null, 2)
+    } catch {
+      return raw
+    }
+  }
+
+  function serializeStandardPricingOverrideForSave(text: string): string | undefined {
+    const trimmed = text.trim()
+    if (!trimmed || trimmed === '{}') return undefined
+    return JSON.stringify(JSON.parse(trimmed))
+  }
 
   const rules: FormRules = {
     code: [{ required: true, message: '请输入客户编码', trigger: 'blur' }],
@@ -735,6 +804,7 @@
     form.pathOverrideDisableLowTemp = false
     form.pathOverrideForceHighTempUnitPrice = undefined
     form.exportNameMapping = undefined
+    form.standardPricingOverrideText = ''
     Object.assign(billingPolicyState, createEmptyBillingPolicyState())
     resetRuleDialog()
   }
@@ -1193,6 +1263,9 @@
     form.pathOverrideDisableLowTemp = pathOverride?.disableLowTemp ?? false
     form.pathOverrideForceHighTempUnitPrice = pathOverride?.forceHighTempUnitPrice
     form.exportNameMapping = row.export_name_mapping ?? row.exportNameMapping
+    form.standardPricingOverrideText = formatStandardPricingOverrideForEdit(
+      row.standard_pricing_override ?? row.standardPricingOverride
+    )
     form.defaultRuleId = row.default_rule_id ?? undefined
     form.notes = row.notes ?? ''
     form.aliases = (row.aliases ?? []).map((a) => ({ ...a }))
@@ -1232,8 +1305,19 @@
     saving.value = true
     try {
       syncFormFromBillingPolicyState()
+      let standardPricingOverride: string | undefined
+      try {
+        standardPricingOverride = serializeStandardPricingOverrideForSave(
+          form.standardPricingOverrideText ?? ''
+        )
+      } catch {
+        ElMessage.error(t('menus.masterData.customerForm.standardPricingOverrideInvalid'))
+        saving.value = false
+        return
+      }
       const payload: Api.MasterData.SaveCustomerPayload = {
         ...form,
+        standardPricingOverride,
         exportNameMapping:
           exportTemplatePanelRef.value?.getExportNameMapping?.() ?? form.exportNameMapping,
         pathOverride: {

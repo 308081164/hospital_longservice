@@ -1,0 +1,86 @@
+{
+  "version": "1",
+  "description": "S4 收口：漏检 / special_only 未命中 补规则",
+  "newRules": [
+    {
+      "code": "TAIPING-RM",
+      "ruleType": "FIXED_PRICE",
+      "name": "太平缝合包",
+      "priority": 8,
+      "price": 20.63,
+      "keywords": ["缝合包"],
+      "skipPackaging": true,
+      "skipDiscount": true
+    },
+    {
+      "code": "TAIPING-RM",
+      "ruleType": "FIXED_PRICE",
+      "name": "太平皮肤拉钩",
+      "priority": 9,
+      "price": 10.13,
+      "keywords": ["皮肤拉钩"],
+      "skipPackaging": true,
+      "skipDiscount": true
+    },
+    {
+      "code": "SHENG-YY-NG",
+      "ruleType": "FIXED_PRICE",
+      "name": "省医院南岗手术包6件",
+      "priority": 10,
+      "price": 22.01,
+      "keywords": ["手术包-6件", "双信封包装"],
+      "skipPackaging": true,
+      "skipDiscount": true
+    },
+    {
+      "code": "SHENG-YY-NG",
+      "ruleType": "FIXED_PRICE",
+      "name": "省医院南岗乐奥2件",
+      "priority": 11,
+      "price": 26.4,
+      "keywords": ["乐奥2件"],
+      "skipPackaging": true,
+      "skipDiscount": true
+    },
+    {
+      "code": "ERYY-SB",
+      "ruleType": "FIXED_PRICE",
+      "name": "省二松北宫腔检查镜30度3件",
+      "priority": 9,
+      "price": 30.8,
+      "keywords": ["宫腔检查镜30度-3件"],
+      "skipPackaging": true,
+      "skipDiscount": true
+    },
+    {
+      "code": "ERYY-SB",
+      "ruleType": "FIXED_PRICE",
+      "name": "省二松北扩棒7-10",
+      "priority": 11,
+      "price": 26.95,
+      "keywords": ["扩棒（7-10）"],
+      "skipPackaging": true,
+      "skipDiscount": true
+    },
+    {
+      "code": "ERYY-SB",
+      "ruleType": "FIXED_PRICE",
+      "name": "省二松北扩棒7.5-10",
+      "priority": 12,
+      "price": 23.1,
+      "keywords": ["扩棒（7.5-10）"],
+      "skipPackaging": true,
+      "skipDiscount": true
+    },
+    {
+      "code": "ERYY-SB",
+      "ruleType": "FIXED_PRICE",
+      "name": "省二松北取钉包",
+      "priority": 13,
+      "price": 207.9,
+      "keywords": ["取钉包"],
+      "skipPackaging": true,
+      "skipDiscount": true
+    }
+  ]
+}

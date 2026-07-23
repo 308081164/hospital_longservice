@@ -14,6 +14,7 @@
         <result property="billingPricingMode" column="billing_pricing_mode"/>
         <result property="pathOverride" column="path_override"/>
         <result property="exportNameMapping" column="export_name_mapping"/>
+        <result property="standardPricingOverride" column="standard_pricing_override"/>
         <result property="notes" column="notes"/>
         <result property="createdAt" column="created_at"/>
         <result property="updatedAt" column="updated_at"/>
@@ -22,10 +23,10 @@
     <insert id="insert" parameterType="com.hospital.backend.entity.Customer" useGeneratedKeys="true" keyProperty="id">
         INSERT INTO customer (code, canonical_name, status, cap_mode, charge_double_bag_when_capped,
                               default_rule_id, billing_enabled, billing_pricing_mode, path_override,
-                              export_name_mapping, notes, created_at, updated_at)
+                              export_name_mapping, standard_pricing_override, notes, created_at, updated_at)
         VALUES (#{code}, #{canonicalName}, #{status}, #{capMode}, #{chargeDoubleBagWhenCapped},
                 #{defaultRuleId}, #{billingEnabled}, #{billingPricingMode}, #{pathOverride},
-                #{exportNameMapping}, #{notes}, NOW(), NOW())
+                #{exportNameMapping}, #{standardPricingOverride}, #{notes}, NOW(), NOW())
     </insert>
 
     <update id="updateById" parameterType="com.hospital.backend.entity.Customer">
@@ -41,6 +42,7 @@
             <if test="billingPricingMode != null">billing_pricing_mode = #{billingPricingMode},</if>
             path_override = #{pathOverride},
             export_name_mapping = #{exportNameMapping},
+            standard_pricing_override = #{standardPricingOverride},
             <if test="notes != null">notes = #{notes},</if>
             updated_at = NOW(),
         </set>

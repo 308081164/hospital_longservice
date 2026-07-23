@@ -1,0 +1,43 @@
+{
+  "version": "1",
+  "description": "南岗区妇产医院：6月期待价 FIXED_PRICE 补录（纱布2.3、取环器/宫颈钳8、宫腔镜170.5）",
+  "newRules": [
+    {
+      "code": "NG-FUCHAN",
+      "ruleType": "FIXED_PRICE",
+      "name": "校正价2.3",
+      "priority": 10,
+      "price": 2.3,
+      "keywords": [
+        "纱布"
+      ],
+      "skipPackaging": true,
+      "skipDiscount": true
+    },
+    {
+      "code": "NG-FUCHAN",
+      "ruleType": "FIXED_PRICE",
+      "name": "校正价8.0",
+      "priority": 11,
+      "price": 8.0,
+      "keywords": [
+        "取环器-1",
+        "宫颈钳-1"
+      ],
+      "skipPackaging": true,
+      "skipDiscount": true
+    },
+    {
+      "code": "NG-FUCHAN",
+      "ruleType": "FIXED_PRICE",
+      "name": "校正价170.5",
+      "priority": 15,
+      "price": 170.5,
+      "keywords": [
+        "宫腔镜"
+      ],
+      "skipPackaging": true,
+      "skipDiscount": true
+    }
+  ]
+}

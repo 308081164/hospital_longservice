@@ -187,7 +187,10 @@ def compare_hospital(token: str, name: str) -> CompareResult:
             result.message = "零期待" + ("" if result.system_warnings == 0 else f"，但系统有 {result.system_warnings} 条 warning")
         elif result.missed == 0 and result.extra == 0:
             result.status = "pass"
-            result.message = f"完全一致 {result.expected} 条"
+            result.message = f"期待 {result.expected} 条，零漏检零多报"
+        elif result.missed == 0 and result.extra > 0:
+            result.status = "fail_extra"
+            result.message = f"期待 {result.expected} 条零漏检，但多报 {result.extra}（需规则多报价或补期待清单）"
         else:
             result.status = "fail"
             result.message = f"命中 {matched}/{result.expected}，漏检 {result.missed}，多报 {result.extra}"

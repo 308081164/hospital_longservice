@@ -1,0 +1,37 @@
+{
+  "version": "1",
+  "description": "哈尔滨冰城医疗美容：整形包58、脂充包54.5、高温≥3件其他包5.5元/件",
+  "ruleUpdates": [
+    {
+      "code": "BINGCHENG-YM",
+      "ruleName": "整形包54.5",
+      "setName": "脂充包54.5",
+      "setKeywords": ["脂充包"],
+      "setPrice": 54.5
+    }
+  ],
+  "newRules": [
+    {
+      "code": "BINGCHENG-YM",
+      "ruleType": "FIXED_PRICE",
+      "name": "整形包58",
+      "priority": 8,
+      "price": 58,
+      "keywords": ["整形包"],
+      "excludeKeywords": ["整形手术包", "脂充包"],
+      "skipPackaging": true,
+      "skipDiscount": true
+    },
+    {
+      "code": "BINGCHENG-YM",
+      "ruleType": "PRICE_PER_INSTRUMENT",
+      "name": "≥3件按件5.5元",
+      "priority": 50,
+      "price": 5.5,
+      "minInstrumentCount": 3,
+      "temperature": "HT",
+      "skipPackaging": true,
+      "skipDiscount": true
+    }
+  ]
+}

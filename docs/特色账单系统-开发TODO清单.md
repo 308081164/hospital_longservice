@@ -136,7 +136,7 @@
 | [x] | **P3-02** | 实现 TD-04：`ExportEngineService` 从对账服务拆出 | `ExportEngineService.java`、`HospitalReconciliationServiceImpl.java` | P0 | ❌ | M8、INT | FR-M8-* | — |
 | [x] | **P3-03** | 实现 `ExportTemplateResolver`：全局默认 → 客户覆盖 | `ExportEngineService.java` | P0 | ⚠️ | M8 | FR-M8-01 | — |
 | [x] | **P3-04** | 实现 `ColumnTransformPipeline`（删列/插列/保留例外） | `ColumnTransformPipeline.java` | P0 | ✅ | M8 | FR-M3-21 | [道外人民](./逐院需求登记表/道外区人民医院.md) |
-| [x] | **P3-05** | 实现 `SettlementTemplateFiller`：结款函独立折扣行、低消行 | `SettlementTemplateFiller.java` | P0 | ⚠️ | M8、M2 | FR-M2-03 | [工程大学](./逐院需求登记表/哈尔滨(工程)大学医院.md)、[九院](./逐院需求登记表/哈尔滨市南岗区人民医院（九院）.md) |
+| [x] | **P3-05** | 实现 `SettlementTemplateFiller`：结款函独立折扣行、低消行 | `SettlementTemplateFiller.java` | P0 | ⚠️ | M8、M2 | FR-M2-03 | [工程大学](./逐院需求登记表/哈尔滨工业大学医院.md)、[九院](./逐院需求登记表/哈尔滨市南岗区人民医院（九院）.md) |
 | [x] | **P3-06** | 实现账单导出（bill）模板绑定与 POI 填充 | `ExportEngineService.java` | P0 | ⚠️ | M8 | FR-M8-02 | [省二南岗](./逐院需求登记表/黑龙江省第二医院（南岗院区）.md) |
 | [x] | **P3-07** | 实现结款函导出（settlement）Excel/HTML | `ExportEngineService.java` | P0 | ⚠️ | M8 | FR-M8-03 | Batch-A 医院 |
 | [x] | **P3-08** | 实现 `ExportTemplateController` CRUD API | `ExportTemplateController.java` | P0 | ✅ | M8、CFG | — | — |
@@ -147,7 +147,7 @@
 | [x] | **P3-13** | 实现 `GuoyaoQuantityAlgorithm` 汽轮机核算（国药专用） | `GuoyaoQuantityAlgorithm.java` | P1 | ✅ | M8 | FR-M8-12 | [国药主院区](./逐院需求登记表/国药总医院主院区.md) |
 | [x] | **P3-14** | 导出 diff 自动化脚本 | `scripts/compare_export.py`（新建） | P1 | ✅ | NFR | — | — |
 | [x] | **P3-15** | Batch-A 导出模板上传与 column_mapping 配置 | 模板文件 + 配置 | P0 | ✅ | M8 | — | [省二南岗](./逐院需求登记表/黑龙江省第二医院（南岗院区）.md)、[呼兰一院](./逐院需求登记表/哈尔滨市呼兰区第一人民医院.md)、[冰城医美](./逐院需求登记表/哈尔滨冰城医疗美容医院.md) |
-| [x] | **P3-16** | Batch-B 结款函独立折扣模板（工程/九院/东大/先锋路） | 模板 + 配置 | P1 | ✅ | M8、M2 | FR-M2-03 | [工程大学](./逐院需求登记表/哈尔滨(工程)大学医院.md)、[东大肛肠](./逐院需求登记表/黑龙江东大肛肠.md)、[先锋路](./逐院需求登记表/南岗区先锋路社区卫生服务中心.md) |
+| [x] | **P3-16** | Batch-B 结款函独立折扣模板（工程/九院/东大/先锋路） | 模板 + 配置 | P1 | ✅ | M8、M2 | FR-M2-03 | [工程大学](./逐院需求登记表/哈尔滨工业大学医院.md)、[东大肛肠](./逐院需求登记表/黑龙江东大肛肠.md)、[先锋路](./逐院需求登记表/南岗区先锋路社区卫生服务中心.md) |
 | [x] | **P3-17** | `export_name_mapping` 导出名称替换规则 | `Customer.java`、`ExportEngineService.applyNameMapping()` | P1 | ✅ | M1 | FR-M1-09 | [国药主院区](./逐院需求登记表/国药总医院主院区.md) |
 | [x] | **P3-18** | Phase 3 UAT：Batch-A ≥3 家 MAT-02/MAT-03 通过（误差 ≤0.01 元） | [`uat/Phase3-Batch-A-UAT.md`](./uat/Phase3-Batch-A-UAT.md)、`UatHelperPanel.vue` | P0 | ❌ | INT | — | Batch-A |
 
@@ -171,7 +171,7 @@
 | [x] | **P4-07** | policy `applyStage`：bill_detail / settlement_only / **export_only** | `CustomerBillingPolicy.java`、`PricingRuleCompiler.java` | P1 | ✅ | M2 | FR-M2-05 | [太平人民](./逐院需求登记表/太平人民医院.md) |
 | [x] | **P4-08** | 实现 `ExportStageDiscountApplier` 导出阶段折扣 | `ExportStageDiscountApplier.java` | P1 | ⚠️ | M2、M8 | FR-M2-05 | [太平人民](./逐院需求登记表/太平人民医院.md) |
 | [x] | **P4-09** | 按把数分段折扣 `pieceTierDiscounts[]` | policy.params + `PricingEngine.java` | P1 | ✅ | M2 | FR-M2-06 | — |
-| [x] | **P4-10** | 结款函灭菌费独立打折（不影响 row expected） | `MonthlySettlementCalculator.java`、`SettlementTemplateFiller.java` | P1 | ✅ | M2 | FR-M2-03 | [工程大学](./逐院需求登记表/哈尔滨(工程)大学医院.md) |
+| [x] | **P4-10** | 结款函灭菌费独立打折（不影响 row expected） | `MonthlySettlementCalculator.java`、`SettlementTemplateFiller.java` | P1 | ✅ | M2 | FR-M2-03 | [工程大学](./逐院需求登记表/哈尔滨工业大学医院.md) |
 | [x] | **P4-11** | M5 增强：`excludeCategories[]` 不计入低消基数 | `MonthlySettlementCalculator.java`、policy.params | P1 | ✅ | M5 | FR-M5-03 | [呼兰中医](./逐院需求登记表/呼兰中医院.md)（BC-01 待确认） |
 | [x] | **P4-12** | 规则表单：科室条件、原价条件、拆行预览 | `CustomerProductRuleForm.vue` | P1 | ✅ | CFG、M3 | — | — |
 | [x] | **P4-13** | 未命中多报价时 `candidatePrices[]` 写入 billing_notes | `PricingEngine.processRow` | P1 | ✅ | M4 | FR-M4-03 | — |
@@ -331,7 +331,7 @@
 | 批次 | 里程碑 | 状态 | 任务 ID | 医院（逐院文档链接） | 主要 Phase |
 |:----:|:------:|:----:|---------|----------------------|:----------:|
 | Batch-A | M1 | [x] | **UAT-A** | [省二南岗](./逐院需求登记表/黑龙江省第二医院（南岗院区）.md)、[省二松北](./逐院需求登记表/黑龙江省第二医院（松北院区）.md)、[呼兰一院](./逐院需求登记表/哈尔滨市呼兰区第一人民医院.md)、[红十字妇产](./逐院需求登记表/哈尔滨市红十字妇产医院.md)、[冰城医美](./逐院需求登记表/哈尔滨冰城医疗美容医院.md) | 1–3 |
-| Batch-B | M2 | [x] | **UAT-B** | [道外人民](./逐院需求登记表/道外区人民医院.md)、[华夏眼科](./逐院需求登记表/哈尔滨华夏眼科医院.md)、[三精肾病](./逐院需求登记表/三精肾病医院.md)、[武警总队](./逐院需求登记表/武警黑龙江省总队医院.md)、[工程大学](./逐院需求登记表/哈尔滨(工程)大学医院.md)、[九院](./逐院需求登记表/哈尔滨市南岗区人民医院（九院）.md)、[东大肛肠](./逐院需求登记表/黑龙江东大肛肠.md)、[先锋路](./逐院需求登记表/南岗区先锋路社区卫生服务中心.md) | 3–4 |
+| Batch-B | M2 | [x] | **UAT-B** | [道外人民](./逐院需求登记表/道外区人民医院.md)、[华夏眼科](./逐院需求登记表/哈尔滨华夏眼科医院.md)、[三精肾病](./逐院需求登记表/三精肾病医院.md)、[武警总队](./逐院需求登记表/武警黑龙江省总队医院.md)、[工程大学](./逐院需求登记表/哈尔滨工业大学医院.md)、[九院](./逐院需求登记表/哈尔滨市南岗区人民医院（九院）.md)、[东大肛肠](./逐院需求登记表/黑龙江东大肛肠.md)、[先锋路](./逐院需求登记表/南岗区先锋路社区卫生服务中心.md) | 3–4 |
 | Batch-C | M2+ | [x] | **UAT-C** | [呼兰中医](./逐院需求登记表/呼兰中医院.md)、[太平人民](./逐院需求登记表/太平人民医院.md)、[呼兰红十字](./逐院需求登记表/呼兰区红十字医院.md)、[悦美芳华](./逐院需求登记表/悦美芳华医疗门诊医院.md)、[祖研×3](./逐院需求登记表/祖研-黑龙江省中医医院（南岗院区）.md) | 4–6 |
 | Batch-D | M3 | [x] | **UAT-D** | [市五院](./逐院需求登记表/哈尔滨市第五医院.md)、[市五院二门诊](./逐院需求登记表/哈尔滨市第五医院（二门诊）.md) | 7 |
 | Batch-E | M4 | [x] | **UAT-E** | [国药×3](./逐院需求登记表/国药总医院主院区.md)、[市二院](./逐院需求登记表/哈尔滨市第二医院.md)、[省医院×2](./逐院需求登记表/黑龙江省医院（南岗院区）.md)、[中医大二院×2](./逐院需求登记表/黑龙江中医药大学附属第二医院（南岗）.md) | 5–7 |

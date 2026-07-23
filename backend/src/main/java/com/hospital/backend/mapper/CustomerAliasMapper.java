@@ -15,4 +15,6 @@ public interface CustomerAliasMapper {
     List<CustomerAlias> selectByCustomerId(Long customerId);
 
     List<CustomerAlias> selectAllActive();
+
+    CustomerAlias selectByAlias(String alias);
 }

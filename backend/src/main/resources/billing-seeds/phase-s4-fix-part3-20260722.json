@@ -1,0 +1,16 @@
+{
+  "version": "1",
+  "description": "S4 松北宫腔检查镜规则补种（s4-fix 首包未入库）",
+  "newRules": [
+    {
+      "code": "ERYY-SB",
+      "ruleType": "FIXED_PRICE",
+      "name": "省二松北宫腔检查镜30度3件",
+      "priority": 9,
+      "price": 30.8,
+      "keywords": ["宫腔检查镜30度"],
+      "skipPackaging": true,
+      "skipDiscount": true
+    }
+  ]
+}

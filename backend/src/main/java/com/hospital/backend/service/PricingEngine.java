@@ -138,10 +138,13 @@ public class PricingEngine {
 
         // 袋尺寸检测（带缓存）。部分特例规则需要先知道袋型，例如“20cm 以下 5 件算 1 件”。
         int bagSize = detectBagSize(str(row, "packageMaterial") + str(row, "packName"));
-        boolean isPaperPlastic = str(row, "packageMaterial").contains("纸塑袋") || type.contains("纸塑袋");
+        boolean isPaperPlastic = str(row, "packageMaterial").contains("纸塑袋")
+                || type.contains("纸塑袋")
+                || str(row, "packageMaterial").contains("低温灭菌");
         boolean isNonWoven = str(row, "packageMaterial").contains("无纺布") || type.contains("无纺布");
         boolean isLowTemp = !disableLowTemp && ((type + packName + packageMaterial).contains("低温")
-                || type.contains("ETO") || type.contains("EO"));
+                || type.contains("ETO") || type.contains("EO")
+                || packageMaterial.contains("低温灭菌"));
         boolean isDouble = packName.contains("双");
         int zBagSize = isDouble ? extractSizeAfterDouble(packName) : 0;
         SpecialPriceResult preMatchedSpecialPrice = zeroPriceOverride != null
@@ -1070,6 +1073,23 @@ public class PricingEngine {
         double totalWithBag = round(packageFee + bagFee1 + bagFee2);
         double capPrice = config.path("minCharge").asDouble();
         String capMode = config.path("capMode").asText("standard");
+        if ("fuyi".equalsIgnoreCase(capMode)) {
+            if (instrumentCount == 1) {
+                double total = round(bagFee1 + bagFee2);
+                notes.add("附一高温纸塑：单件按袋规 " + fmt(bagFee1 + bagFee2) + " 元计费。");
+                return total;
+            }
+            if (instrumentCount == 2) {
+                double total = round(bagFee1 + bagFee2 + perPackagePrice);
+                notes.add("附一高温纸塑：2 件 = 袋规 " + fmt(bagFee1 + bagFee2) + " + 最低把价 "
+                        + fmt(perPackagePrice) + " = " + fmt(total) + " 元。");
+                return total;
+            }
+            double total = round(perPackagePrice * instrumentCount);
+            notes.add("附一高温纸塑：" + instrumentCount + " 件 × 最低把价 " + fmt(perPackagePrice)
+                    + " = " + fmt(total) + " 元。");
+            return total;
+        }
         if ("none".equalsIgnoreCase(capMode)) {
             notes.add("高温纸塑袋按件费 + 袋费计费，不启用 " + fmt(capPrice) + " 元封顶：件费 "
                     + fmt(packageFee) + " + 袋费 " + fmt(bagFee1 + bagFee2) + " = " + fmt(totalWithBag) + " 元。");

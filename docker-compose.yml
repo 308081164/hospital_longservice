@@ -82,9 +82,14 @@ services:
     build:
       context: ./frontend
       dockerfile: Dockerfile
+      args:
+        # 可选：export APP_BUILD_ID=$(date +%Y%m%d%H%M%S) 后 build，便于区分镜像版本
+        APP_BUILD_ID: ${APP_BUILD_ID:-}
     image: hospital-frontend:latest
     container_name: hospital-frontend
     restart: unless-stopped
+    # 静态资源在镜像 build 阶段打入，改 frontend 源码后须 rebuild，不能只 restart：
+    #   docker compose build frontend && docker compose up -d frontend
     ports:
       - "${HTTP_PORT:-1001}:80"
     depends_on:

@@ -1,0 +1,59 @@
+{
+  "version": "1",
+  "description": "2026-07-22 铂康：新增工程大学(HRB-HEU)；工业大学/九院/南岗妇产说明",
+  "profiles": [
+    {
+      "code": "HRB-HEU",
+      "name": "哈尔滨工程大学医院",
+      "billingEnabled": false,
+      "billingPricingMode": "standard",
+      "notes": "与哈尔滨工业大学医院不同：账单正常计费，结款函灭菌费9折。",
+      "aliases": [
+        "哈尔滨工程大学医院",
+        "哈尔滨工程大学",
+        "工程大学医院"
+      ],
+      "discounts": [
+        {
+          "name": "结款函灭菌9折",
+          "rate": 0.9,
+          "applyStage": "settlement_only",
+          "skipWhenFixedPrice": true
+        }
+      ]
+    },
+    {
+      "code": "HRB-NGJY",
+      "name": "哈尔滨市南岗区人民医院（九院）",
+      "billingEnabled": false,
+      "billingPricingMode": "standard",
+      "notes": "2026年5月起价格与旧版不同；客户提供6月账单为准。结款函灭菌9折。",
+      "discounts": [
+        {
+          "name": "结款函灭菌9折",
+          "rate": 0.9,
+          "applyStage": "settlement_only",
+          "skipWhenFixedPrice": true
+        }
+      ]
+    }
+  ],
+  "customerUpdates": [
+    {
+      "code": "HRB-HIT",
+      "notes": "哈尔滨工业大学医院（非工程大学）：账期多为每月15日–次月14日；口腔特色规则见 P0.4–P0.5 种子。"
+    },
+    {
+      "code": "NG-FUCHAN",
+      "notes": "2026年5月起价格调整；客户提供6月账单为准。特殊价格见测试用例/参考/特殊价格单 PDF。"
+    },
+    {
+      "code": "DAOWAI-RM",
+      "notes": "铂康简称「道外人民」= 道外区人民医院；无低温，高温3元等见特色价格单 PDF。"
+    },
+    {
+      "code": "ZY3-DIANLI",
+      "notes": "铂康简称「附三」= 黑龙江省中医药大学附属第三医院（电力）。"
+    }
+  ]
+}

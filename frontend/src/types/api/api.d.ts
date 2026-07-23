@@ -803,6 +803,8 @@ declare namespace Api {
       pathOverride?: CustomerPathOverride
       export_name_mapping?: string
       exportNameMapping?: string
+      standard_pricing_override?: string
+      standardPricingOverride?: string
       default_rule_id?: number | null
       notes?: string
       aliases?: CustomerAlias[]
@@ -827,6 +829,7 @@ declare namespace Api {
       billingPricingMode?: 'standard' | 'special_only' | 'hybrid'
       pathOverride?: CustomerPathOverride
       exportNameMapping?: string
+      standardPricingOverride?: string
       defaultRuleId?: number | null
       notes?: string
       aliases?: CustomerAlias[]

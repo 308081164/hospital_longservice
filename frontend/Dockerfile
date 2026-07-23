@@ -10,10 +10,12 @@ RUN pnpm install --frozen-lockfile
 
 COPY . .
 # 跳过 vue-tsc 类型检查，直接构建（Docker 环境类型定义可能与本地不同）
-ENV VITE_ACCESS_MODE=backend \
+ARG APP_BUILD_ID=
+RUN VITE_VERSION="${APP_BUILD_ID:-docker-$(date +%Y%m%d%H%M%S)}" \
+    VITE_ACCESS_MODE=backend \
     VITE_API_URL=/ \
-    VITE_BASE_URL=/
-RUN npx vite build
+    VITE_BASE_URL=/ \
+    npx vite build
 
 # Stage 2: Nginx 运行
 FROM nginx:alpine

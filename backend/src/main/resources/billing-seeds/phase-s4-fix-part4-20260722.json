@@ -1,0 +1,96 @@
+{
+  "version": "1",
+  "description": "回滚 part2 对「应在期待清单 warning」规则的多报价，避免漏检",
+  "ruleUpdates": [
+    {
+      "code": "TAIPING-RM",
+      "ruleName": "校正价8.91",
+      "setMatchMode": "first",
+      "setAcceptedPrices": []
+    },
+    {
+      "code": "TAIPING-RM",
+      "ruleName": "校正价8.3",
+      "setMatchMode": "first",
+      "setAcceptedPrices": []
+    },
+    {
+      "code": "TAIPING-RM",
+      "ruleName": "校正价9.8",
+      "setMatchMode": "first",
+      "setAcceptedPrices": []
+    },
+    {
+      "code": "TAIPING-RM",
+      "ruleName": "校正价18.8",
+      "setMatchMode": "first",
+      "setAcceptedPrices": []
+    },
+    {
+      "code": "TAIPING-RM",
+      "ruleName": "校正价26.3",
+      "setMatchMode": "first",
+      "setAcceptedPrices": []
+    },
+    {
+      "code": "TAIPING-RM",
+      "ruleName": "太平缝合包",
+      "setMatchMode": "first",
+      "setAcceptedPrices": []
+    },
+    {
+      "code": "TAIPING-RM",
+      "ruleName": "太平皮肤拉钩",
+      "setMatchMode": "first",
+      "setAcceptedPrices": []
+    },
+    {
+      "code": "ERYY-SB",
+      "ruleName": "省二松北扩棒7-10",
+      "setMatchMode": "first",
+      "setAcceptedPrices": []
+    },
+    {
+      "code": "ERYY-SB",
+      "ruleName": "省二松北扩棒7.5-10",
+      "setMatchMode": "first",
+      "setAcceptedPrices": []
+    },
+    {
+      "code": "ERYY-SB",
+      "ruleName": "取钉包多报价",
+      "setMatchMode": "first",
+      "setAcceptedPrices": []
+    },
+    {
+      "code": "ZUYAN-SF",
+      "ruleName": "校正价33.0",
+      "setMatchMode": "first",
+      "setAcceptedPrices": []
+    },
+    {
+      "code": "ZUYAN-SF",
+      "ruleName": "校正价38.5",
+      "setMatchMode": "first",
+      "setAcceptedPrices": []
+    },
+    {
+      "code": "ZUYAN-SF",
+      "ruleName": "校正价22.0",
+      "setMatchMode": "first",
+      "setAcceptedPrices": []
+    },
+    {
+      "code": "ZUYAN-SF",
+      "ruleName": "校正价30.0",
+      "setMatchMode": "first",
+      "setAcceptedPrices": []
+    }
+  ],
+  "deactivateRules": [
+    {
+      "code": "ZUYAN-SF",
+      "ruleName": "三辅探针瘘管刨刀包"
+    }
+  ]
+}

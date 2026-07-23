@@ -1,0 +1,26 @@
+{
+  "version": "1",
+  "description": "S7 外来器械 FIXED_PRICE 关键词修正（三精/呼兰）：完整短语匹配，避免裸「钉盒/骨电钻/植入物」误命中；规则仍为备案，待 M12",
+  "ruleUpdates": [
+    {
+      "code": "SANJING-SB",
+      "ruleName": "PDF外来器械钉盒40",
+      "setKeywords": ["外来器械（钉盒）"]
+    },
+    {
+      "code": "SANJING-SB",
+      "ruleName": "PDF外来器械骨电钻13.2",
+      "setKeywords": ["外来器械（骨电钻）"]
+    },
+    {
+      "code": "HULAN-RM",
+      "ruleName": "PDF外来器械骨电钻11.55",
+      "setKeywords": ["外来器械（骨电钻）"]
+    },
+    {
+      "code": "HULAN-RM",
+      "ruleName": "PDF外来器械植入物3.85",
+      "setKeywords": ["外来器械（植入物）"]
+    }
+  ]
+}

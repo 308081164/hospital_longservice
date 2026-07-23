@@ -13,4 +13,6 @@ public interface CustomerDiscountMapper {
     void deleteByCustomerId(Long customerId);
 
     List<CustomerDiscount> selectByCustomerId(Long customerId);
+
+    void updateById(CustomerDiscount discount);
 }

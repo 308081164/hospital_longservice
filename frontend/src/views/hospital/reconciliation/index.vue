@@ -253,7 +253,7 @@
                 >
               </div>
               <div
-                class="overflow-x-auto"
+                class="entry-group-scroll"
                 :style="{ maxHeight: entry.onlyShowAbnormal ? '70vh' : '500px', overflowY: 'auto' }"
               >
                 <div
@@ -262,14 +262,62 @@
                 >
                   正在从服务器加载全量数据，数据量较大时请耐心等待...
                 </div>
+                <template v-else>
                 <div
                   v-for="group in entryGroupedRows(entry)"
                   :key="group.sheetName"
-                  class="mb-6 last:mb-0"
+                  class="entry-sheet-group mb-6 last:mb-0"
                 >
-                  <div class="mb-2 flex items-center gap-2 rounded-md bg-gray-100 px-3 py-2">
-                    <span class="text-sm font-semibold text-gray-700">{{ group.sheetName }}</span>
+                  <div
+                    class="entry-sheet-group-header mb-2 flex flex-wrap items-center gap-x-3 gap-y-1 rounded-md bg-gray-100 px-3 py-2"
+                  >
+                    <span class="shrink-0 text-sm font-semibold text-gray-700">{{
+                      group.sheetName
+                    }}</span>
+                    <div
+                      class="flex min-w-0 flex-1 flex-wrap items-center gap-x-2 gap-y-0.5 text-xs"
+                    >
+                      <span class="text-gray-500"
+                        >行数
+                        <strong class="text-gray-800">{{ group.summary.total }}</strong></span
+                      >
+                      <span class="text-gray-300">|</span>
+                      <span class="text-gray-500"
+                        >包数
+                        <strong class="text-gray-800">{{ group.summary.packCount }}</strong></span
+                      >
+                      <span class="text-gray-300">|</span>
+                      <span class="text-gray-500"
+                        >原总价
+                        <strong class="text-gray-800">{{
+                          formatNumber(group.summary.originalTotalPrice)
+                        }}</strong></span
+                      >
+                      <span class="text-gray-300">|</span>
+                      <span class="text-gray-500"
+                        >修正总价
+                        <strong class="text-primary">{{
+                          formatNumber(group.summary.correctedTotalPrice)
+                        }}</strong></span
+                      >
+                      <span class="text-gray-300">|</span>
+                      <span class="text-gray-500"
+                        >{{ t('reconciliation.detail.pendingReviewDifference') }}
+                        <strong
+                          :class="
+                            group.summary.totalDifference >= 0 ? 'text-green-600' : 'text-red-600'
+                          "
+                          >{{ formatSignedNumber(group.summary.totalDifference) }}</strong
+                        ></span
+                      >
+                      <span class="text-gray-300">|</span>
+                      <span class="text-gray-500"
+                        >待复核
+                        <strong class="text-warning">{{ group.summary.warning }}</strong></span
+                      >
+                    </div>
                   </div>
+                  <div class="overflow-x-auto">
                   <ElTable
                     :data="group.rows"
                     border
@@ -381,7 +429,9 @@
                       </template>
                     </ElTableColumn>
                   </ElTable>
+                  </div>
                 </div>
+                </template>
               </div>
               <div class="mt-3 flex items-center justify-between">
                 <span class="text-xs text-gray-400"
@@ -2311,6 +2361,35 @@
     )
   }
 
+  /** 科室分组摘要（单次遍历，在分组时与 entryGroupedRows 一并计算） */
+  function computeGroupSummary(rows: ProcessedRow[]) {
+    return rows.reduce(
+      (acc, row) => {
+        acc.total += 1
+        if (row.status === 'corrected') acc.corrected += 1
+        if (row.status === 'unchanged') acc.unchanged += 1
+        if (row.status === 'warning') acc.warning += 1
+        if (row.status === 'skipped') acc.skipped += 1
+        if (row.status === 'warning') acc.totalDifference += row.difference ?? 0
+        acc.originalTotalPrice += row.totalPrice ?? 0
+        acc.correctedTotalPrice += row.correctedTotalPrice ?? 0
+        acc.packCount += row.packCount ?? 0
+        return acc
+      },
+      {
+        total: 0,
+        corrected: 0,
+        unchanged: 0,
+        warning: 0,
+        skipped: 0,
+        totalDifference: 0,
+        originalTotalPrice: 0,
+        correctedTotalPrice: 0,
+        packCount: 0
+      }
+    )
+  }
+
   let isReparsing = false
 
   watch(
@@ -2672,7 +2751,9 @@
   }
 
   /** 按科室分组条目行 */
-  function entryGroupedRows(entry: UploadEntry): { sheetName: string; rows: ProcessedRow[] }[] {
+  function entryGroupedRows(
+    entry: UploadEntry
+  ): { sheetName: string; rows: ProcessedRow[]; summary: ReturnType<typeof computeGroupSummary> }[] {
     const rows = entryDisplayRows(entry)
     const map = new Map<string, ProcessedRow[]>()
     for (const row of rows) {
@@ -2682,7 +2763,11 @@
     }
     return Array.from(map.entries())
       .sort(([a], [b]) => a.localeCompare(b, 'zh-CN'))
-      .map(([sheetName, rows]) => ({ sheetName, rows }))
+      .map(([sheetName, groupRows]) => ({
+        sheetName,
+        rows: groupRows,
+        summary: computeGroupSummary(groupRows)
+      }))
   }
 
   /** 从历史记录查找版本号 */

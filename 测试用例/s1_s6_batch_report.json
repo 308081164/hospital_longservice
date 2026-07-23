@@ -1,0 +1,977 @@
+{
+  "date": "2026-07-22",
+  "hospitals": [
+    {
+      "folder": "黑龙江中医药大学附属第一医院",
+      "s1": {
+        "status": "pass",
+        "detail": "原始 6 · 处理后 39"
+      },
+      "s2": {
+        "status": "pass",
+        "detail": "已生成 · 差异 2645 条"
+      },
+      "s3": {
+        "status": "pass",
+        "detail": "code=ZYY-D1；P0.6=是；productRules=38"
+      },
+      "s4": {
+        "status": "pass",
+        "detail": "pass"
+      },
+      "s5": {
+        "status": "partial",
+        "detail": "纠错测试记录.md 存在 · 用例未执行"
+      },
+      "s6": {
+        "status": "pass",
+        "detail": "v1.1 · 2026-07-22"
+      }
+    },
+    {
+      "folder": "黑龙江省中医药大学附属第三医院（电力）",
+      "s1": {
+        "status": "pass",
+        "detail": "原始 3 · 处理后 32"
+      },
+      "s2": {
+        "status": "pass",
+        "detail": "已生成 · 差异 85 条"
+      },
+      "s3": {
+        "status": "pass",
+        "detail": "code=ZY3-DIANLI；P0.6=是；productRules=6"
+      },
+      "s4": {
+        "status": "pass",
+        "detail": "pass"
+      },
+      "s5": {
+        "status": "partial",
+        "detail": "纠错测试记录.md 存在 · 用例未执行"
+      },
+      "s6": {
+        "status": "pass",
+        "detail": "登记表已存在且较新"
+      }
+    },
+    {
+      "folder": "国药总医院主院区",
+      "s1": {
+        "status": "pass",
+        "detail": "原始 6 · 处理后 7"
+      },
+      "s2": {
+        "status": "pass",
+        "detail": "已生成 · 差异 888 条"
+      },
+      "s3": {
+        "status": "pass",
+        "detail": "code=GUOYAO-MAIN；P0.6=是；productRules=3"
+      },
+      "s4": {
+        "status": "pass",
+        "detail": "pass_zero"
+      },
+      "s5": {
+        "status": "partial",
+        "detail": "纠错测试记录.md 存在 · 用例未执行"
+      },
+      "s6": {
+        "status": "pass",
+        "detail": "登记表已存在且较新"
+      }
+    },
+    {
+      "folder": "国药总医院第二院区",
+      "s1": {
+        "status": "pass",
+        "detail": "原始 6 · 处理后 7"
+      },
+      "s2": {
+        "status": "pass",
+        "detail": "已生成 · 差异 239 条"
+      },
+      "s3": {
+        "status": "pass",
+        "detail": "code=GUOYAO-2；P0.6=是；productRules=1"
+      },
+      "s4": {
+        "status": "pass",
+        "detail": "pass_zero"
+      },
+      "s5": {
+        "status": "partial",
+        "detail": "纠错测试记录.md 存在 · 用例未执行"
+      },
+      "s6": {
+        "status": "pass",
+        "detail": "登记表已存在且较新"
+      }
+    },
+    {
+      "folder": "国药总医院第三院区",
+      "s1": {
+        "status": "pass",
+        "detail": "原始 6 · 处理后 7"
+      },
+      "s2": {
+        "status": "pass",
+        "detail": "已生成 · 差异 36 条"
+      },
+      "s3": {
+        "status": "pass",
+        "detail": "code=GUOYAO-3；P0.6=是；productRules=1"
+      },
+      "s4": {
+        "status": "pass",
+        "detail": "pass_zero"
+      },
+      "s5": {
+        "status": "partial",
+        "detail": "纠错测试记录.md 存在 · 用例未执行"
+      },
+      "s6": {
+        "status": "pass",
+        "detail": "登记表已存在且较新"
+      }
+    },
+    {
+      "folder": "哈尔滨市第二医院",
+      "s1": {
+        "status": "pass",
+        "detail": "原始 6 · 处理后 17"
+      },
+      "s2": {
+        "status": "pass",
+        "detail": "已生成 · 差异 567 条"
+      },
+      "s3": {
+        "status": "pass",
+        "detail": "code=HRB-2ND；P0.6=是；productRules=4"
+      },
+      "s4": {
+        "status": "pass",
+        "detail": "pass"
+      },
+      "s5": {
+        "status": "partial",
+        "detail": "纠错测试记录.md 存在 · 用例未执行"
+      },
+      "s6": {
+        "status": "pass",
+        "detail": "登记表已存在且较新"
+      }
+    },
+    {
+      "folder": "哈尔滨市第五医院",
+      "s1": {
+        "status": "pass",
+        "detail": "原始 5 · 处理后 34"
+      },
+      "s2": {
+        "status": "pass",
+        "detail": "已生成 · 差异 4765 条"
+      },
+      "s3": {
+        "status": "pass",
+        "detail": "code=HRB-WY；P0.6=是；productRules=6"
+      },
+      "s4": {
+        "status": "pass",
+        "detail": "pass"
+      },
+      "s5": {
+        "status": "partial",
+        "detail": "纠错测试记录.md 存在 · 用例未执行"
+      },
+      "s6": {
+        "status": "pass",
+        "detail": "登记表已存在且较新"
+      }
+    },
+    {
+      "folder": "哈尔滨市第五医院（二门诊）",
+      "s1": {
+        "status": "pass",
+        "detail": "原始 5 · 处理后 6"
+      },
+      "s2": {
+        "status": "pass",
+        "detail": "已生成 · 差异 0 条"
+      },
+      "s3": {
+        "status": "pass",
+        "detail": "code=HRB-WY-EM；P0.6=是；productRules=6"
+      },
+      "s4": {
+        "status": "pass",
+        "detail": "pass_zero"
+      },
+      "s5": {
+        "status": "partial",
+        "detail": "纠错测试记录.md 存在 · 用例未执行"
+      },
+      "s6": {
+        "status": "pass",
+        "detail": "登记表已存在且较新"
+      }
+    },
+    {
+      "folder": "新发红十字医院",
+      "s1": {
+        "status": "pass",
+        "detail": "原始 6 · 处理后 12"
+      },
+      "s2": {
+        "status": "pass",
+        "detail": "已生成 · 差异 317 条"
+      },
+      "s3": {
+        "status": "pass",
+        "detail": "code=XINFA-HSZ；P0.6=是；productRules=2"
+      },
+      "s4": {
+        "status": "pass",
+        "detail": "pass"
+      },
+      "s5": {
+        "status": "partial",
+        "detail": "纠错测试记录.md 存在 · 用例未执行"
+      },
+      "s6": {
+        "status": "pass",
+        "detail": "登记表已存在且较新"
+      }
+    },
+    {
+      "folder": "黑龙江省医院（南岗院区）",
+      "s1": {
+        "status": "pass",
+        "detail": "原始 4 · 处理后 17"
+      },
+      "s2": {
+        "status": "pass",
+        "detail": "已生成 · 差异 7935 条"
+      },
+      "s3": {
+        "status": "pass",
+        "detail": "code=SHENG-YY-NG；P0.6=是；productRules=3"
+      },
+      "s4": {
+        "status": "pass",
+        "detail": "pass"
+      },
+      "s5": {
+        "status": "partial",
+        "detail": "纠错测试记录.md 存在 · 用例未执行"
+      },
+      "s6": {
+        "status": "pass",
+        "detail": "v1.1 · 2026-07-22"
+      }
+    },
+    {
+      "folder": "黑龙江省医院（香坊院区）",
+      "s1": {
+        "status": "pass",
+        "detail": "原始 4 · 处理后 17"
+      },
+      "s2": {
+        "status": "pass",
+        "detail": "已生成 · 差异 20648 条"
+      },
+      "s3": {
+        "status": "pass",
+        "detail": "code=SHENG-YY-XF；P0.6=是；productRules=4"
+      },
+      "s4": {
+        "status": "pass",
+        "detail": "pass"
+      },
+      "s5": {
+        "status": "partial",
+        "detail": "纠错测试记录.md 存在 · 用例未执行"
+      },
+      "s6": {
+        "status": "pass",
+        "detail": "v1.1 · 2026-07-22"
+      }
+    },
+    {
+      "folder": "祖研-黑龙江省中医医院（南岗院区）",
+      "s1": {
+        "status": "pass",
+        "detail": "原始 4 · 处理后 11"
+      },
+      "s2": {
+        "status": "pass",
+        "detail": "已生成 · 差异 211 条"
+      },
+      "s3": {
+        "status": "pass",
+        "detail": "code=ZUYAN-NG；P0.6=是；productRules=4"
+      },
+      "s4": {
+        "status": "pass",
+        "detail": "pass"
+      },
+      "s5": {
+        "status": "partial",
+        "detail": "纠错测试记录.md 存在 · 用例未执行"
+      },
+      "s6": {
+        "status": "pass",
+        "detail": "登记表已存在且较新"
+      }
+    },
+    {
+      "folder": "祖研-黑龙江省中医医院（三辅院区）",
+      "s1": {
+        "status": "pass",
+        "detail": "原始 9 · 处理后 22"
+      },
+      "s2": {
+        "status": "pass",
+        "detail": "已生成 · 差异 492 条"
+      },
+      "s3": {
+        "status": "pass",
+        "detail": "code=ZUYAN-SF；P0.6=是；productRules=5"
+      },
+      "s4": {
+        "status": "pass",
+        "detail": "pass"
+      },
+      "s5": {
+        "status": "partial",
+        "detail": "纠错测试记录.md 存在 · 用例未执行"
+      },
+      "s6": {
+        "status": "pass",
+        "detail": "登记表已存在且较新"
+      }
+    },
+    {
+      "folder": "祖研-黑龙江省中医医院（香安院区）",
+      "s1": {
+        "status": "pass",
+        "detail": "原始 4 · 处理后 11"
+      },
+      "s2": {
+        "status": "pass",
+        "detail": "已生成 · 差异 7 条"
+      },
+      "s3": {
+        "status": "pass",
+        "detail": "code=ZUYAN-XA；P0.6=是；productRules=3"
+      },
+      "s4": {
+        "status": "pass",
+        "detail": "pass_zero"
+      },
+      "s5": {
+        "status": "partial",
+        "detail": "纠错测试记录.md 存在 · 用例未执行"
+      },
+      "s6": {
+        "status": "pass",
+        "detail": "登记表已存在且较新"
+      }
+    },
+    {
+      "folder": "南岗区妇产医院",
+      "s1": {
+        "status": "pass",
+        "detail": "原始 2 · 处理后 6"
+      },
+      "s2": {
+        "status": "pass",
+        "detail": "已生成 · 差异 24 条"
+      },
+      "s3": {
+        "status": "pass",
+        "detail": "code=NG-FUCHAN；P0.6=是；productRules=6"
+      },
+      "s4": {
+        "status": "pass",
+        "detail": "pass_zero"
+      },
+      "s5": {
+        "status": "partial",
+        "detail": "纠错测试记录.md 存在 · 用例未执行"
+      },
+      "s6": {
+        "status": "pass",
+        "detail": "v1.1 · 2026-07-22"
+      }
+    },
+    {
+      "folder": "黑龙江省社会康复医院",
+      "s1": {
+        "status": "pass",
+        "detail": "原始 6 · 处理后 18"
+      },
+      "s2": {
+        "status": "pass",
+        "detail": "已生成 · 差异 98 条"
+      },
+      "s3": {
+        "status": "pass",
+        "detail": "code=SHKF-YY；P0.6=是；productRules=1"
+      },
+      "s4": {
+        "status": "pass",
+        "detail": "pass_zero"
+      },
+      "s5": {
+        "status": "partial",
+        "detail": "纠错测试记录.md 存在 · 用例未执行"
+      },
+      "s6": {
+        "status": "pass",
+        "detail": "登记表已存在且较新"
+      }
+    },
+    {
+      "folder": "道外区人民医院",
+      "s1": {
+        "status": "pass",
+        "detail": "原始 3 · 处理后 12"
+      },
+      "s2": {
+        "status": "pass",
+        "detail": "已生成 · 差异 307 条"
+      },
+      "s3": {
+        "status": "pass",
+        "detail": "code=DAOWAI-RM；P0.6=是；productRules=12"
+      },
+      "s4": {
+        "status": "pass",
+        "detail": "pass"
+      },
+      "s5": {
+        "status": "partial",
+        "detail": "纠错测试记录.md 存在 · 用例未执行"
+      },
+      "s6": {
+        "status": "pass",
+        "detail": "v1.1 · 2026-07-22"
+      }
+    },
+    {
+      "folder": "太平人民医院",
+      "s1": {
+        "status": "pass",
+        "detail": "原始 5 · 处理后 12"
+      },
+      "s2": {
+        "status": "pass",
+        "detail": "已生成 · 差异 972 条"
+      },
+      "s3": {
+        "status": "pass",
+        "detail": "code=TAIPING-RM；P0.6=是；productRules=5"
+      },
+      "s4": {
+        "status": "pass",
+        "detail": "pass"
+      },
+      "s5": {
+        "status": "partial",
+        "detail": "纠错测试记录.md 存在 · 用例未执行"
+      },
+      "s6": {
+        "status": "pass",
+        "detail": "v1.1 · 2026-07-22"
+      }
+    },
+    {
+      "folder": "三精肾病医院",
+      "s1": {
+        "status": "pass",
+        "detail": "原始 5 · 处理后 10"
+      },
+      "s2": {
+        "status": "pass",
+        "detail": "已生成 · 差异 89 条"
+      },
+      "s3": {
+        "status": "pass",
+        "detail": "code=SANJING-SB；P0.6=是；productRules=6"
+      },
+      "s4": {
+        "status": "pass",
+        "detail": "pass"
+      },
+      "s5": {
+        "status": "partial",
+        "detail": "纠错测试记录.md 存在 · 用例未执行"
+      },
+      "s6": {
+        "status": "pass",
+        "detail": "v1.1 · 2026-07-22"
+      }
+    },
+    {
+      "folder": "黑龙江维多利亚妇产医院",
+      "s1": {
+        "status": "pass",
+        "detail": "原始 3 · 处理后 12"
+      },
+      "s2": {
+        "status": "pass",
+        "detail": "已生成 · 差异 4 条"
+      },
+      "s3": {
+        "status": "pass",
+        "detail": "code=VICTORIA；P0.6=是；productRules=2"
+      },
+      "s4": {
+        "status": "pass",
+        "detail": "pass_zero"
+      },
+      "s5": {
+        "status": "partial",
+        "detail": "纠错测试记录.md 存在 · 用例未执行"
+      },
+      "s6": {
+        "status": "pass",
+        "detail": "登记表已存在且较新"
+      }
+    },
+    {
+      "folder": "黑龙江九洲妇科医院",
+      "s1": {
+        "status": "pass",
+        "detail": "原始 3 · 处理后 12"
+      },
+      "s2": {
+        "status": "pass",
+        "detail": "已生成 · 差异 0 条"
+      },
+      "s3": {
+        "status": "pass",
+        "detail": "code=JIUZHOU-FK；P0.6=是；productRules=1"
+      },
+      "s4": {
+        "status": "pass",
+        "detail": "pass_zero"
+      },
+      "s5": {
+        "status": "partial",
+        "detail": "纠错测试记录.md 存在 · 用例未执行"
+      },
+      "s6": {
+        "status": "pass",
+        "detail": "登记表已存在且较新"
+      }
+    },
+    {
+      "folder": "呼兰区红十字医院",
+      "s1": {
+        "status": "pass",
+        "detail": "原始 6 · 处理后 12"
+      },
+      "s2": {
+        "status": "pass",
+        "detail": "已生成 · 差异 3 条"
+      },
+      "s3": {
+        "status": "pass",
+        "detail": "code=HULAN-HSZ；P0.6=是；productRules=1"
+      },
+      "s4": {
+        "status": "pass",
+        "detail": "pass_zero"
+      },
+      "s5": {
+        "status": "partial",
+        "detail": "纠错测试记录.md 存在 · 用例未执行"
+      },
+      "s6": {
+        "status": "pass",
+        "detail": "登记表已存在且较新"
+      }
+    },
+    {
+      "folder": "呼兰中医院",
+      "s1": {
+        "status": "pass",
+        "detail": "原始 3 · 处理后 12"
+      },
+      "s2": {
+        "status": "pass",
+        "detail": "已生成 · 差异 0 条"
+      },
+      "s3": {
+        "status": "pass",
+        "detail": "code=HULAN-TCM；P0.6=是；productRules=3"
+      },
+      "s4": {
+        "status": "pass",
+        "detail": "pass_zero"
+      },
+      "s5": {
+        "status": "partial",
+        "detail": "纠错测试记录.md 存在 · 用例未执行"
+      },
+      "s6": {
+        "status": "pass",
+        "detail": "登记表已存在且较新"
+      }
+    },
+    {
+      "folder": "黑龙江中医药大学附属第二医院（南岗）",
+      "s1": {
+        "status": "pass",
+        "detail": "原始 6 · 处理后 21"
+      },
+      "s2": {
+        "status": "pass",
+        "detail": "已生成 · 差异 1551 条"
+      },
+      "s3": {
+        "status": "pass",
+        "detail": "code=ZYY-D2-NG；P0.6=是；productRules=6"
+      },
+      "s4": {
+        "status": "pass",
+        "detail": "pass"
+      },
+      "s5": {
+        "status": "partial",
+        "detail": "纠错测试记录.md 存在 · 用例未执行"
+      },
+      "s6": {
+        "status": "pass",
+        "detail": "登记表已存在且较新"
+      }
+    },
+    {
+      "folder": "黑龙江中医药大学附属第二医院（哈南分院）",
+      "s1": {
+        "status": "pass",
+        "detail": "原始 7 · 处理后 21"
+      },
+      "s2": {
+        "status": "pass",
+        "detail": "已生成 · 差异 340 条"
+      },
+      "s3": {
+        "status": "pass",
+        "detail": "code=ZYY-D2-HN；P0.6=是；productRules=1"
+      },
+      "s4": {
+        "status": "pass",
+        "detail": "pass_zero"
+      },
+      "s5": {
+        "status": "partial",
+        "detail": "纠错测试记录.md 存在 · 用例未执行"
+      },
+      "s6": {
+        "status": "pass",
+        "detail": "登记表已存在且较新"
+      }
+    },
+    {
+      "folder": "哈尔滨仁胜医院",
+      "s1": {
+        "status": "pass",
+        "detail": "原始 6 · 处理后 12"
+      },
+      "s2": {
+        "status": "pass",
+        "detail": "已生成 · 差异 12 条"
+      },
+      "s3": {
+        "status": "pass",
+        "detail": "code=RENSHENG；P0.6=是；productRules=0"
+      },
+      "s4": {
+        "status": "pass",
+        "detail": "pass_zero"
+      },
+      "s5": {
+        "status": "partial",
+        "detail": "纠错测试记录.md 存在 · 用例未执行"
+      },
+      "s6": {
+        "status": "pass",
+        "detail": "登记表已存在且较新"
+      }
+    },
+    {
+      "folder": "哈尔滨华夏眼科医院",
+      "s1": {
+        "status": "pass",
+        "detail": "原始 6 · 处理后 12"
+      },
+      "s2": {
+        "status": "pass",
+        "detail": "已生成 · 差异 79 条"
+      },
+      "s3": {
+        "status": "pass",
+        "detail": "code=HRB-HX-EYE；P0.6=是；productRules=0"
+      },
+      "s4": {
+        "status": "pass",
+        "detail": "pass_zero"
+      },
+      "s5": {
+        "status": "partial",
+        "detail": "纠错测试记录.md 存在 · 用例未执行"
+      },
+      "s6": {
+        "status": "pass",
+        "detail": "登记表已存在且较新"
+      }
+    },
+    {
+      "folder": "哈尔滨冰城医疗美容医院",
+      "s1": {
+        "status": "pass",
+        "detail": "原始 6 · 处理后 10"
+      },
+      "s2": {
+        "status": "pass",
+        "detail": "已生成 · 差异 6 条"
+      },
+      "s3": {
+        "status": "pass",
+        "detail": "code=BINGCHENG-YM；P0.6=是；productRules=2"
+      },
+      "s4": {
+        "status": "pass",
+        "detail": "pass"
+      },
+      "s5": {
+        "status": "partial",
+        "detail": "纠错测试记录.md 存在 · 用例未执行"
+      },
+      "s6": {
+        "status": "pass",
+        "detail": "登记表已存在且较新"
+      }
+    },
+    {
+      "folder": "香坊中医院",
+      "s1": {
+        "status": "pass",
+        "detail": "原始 6 · 处理后 6"
+      },
+      "s2": {
+        "status": "pass",
+        "detail": "已生成 · 差异 0 条"
+      },
+      "s3": {
+        "status": "pass",
+        "detail": "code=XF-ZYY；P0.6=是；productRules=0"
+      },
+      "s4": {
+        "status": "pass",
+        "detail": "pass_zero"
+      },
+      "s5": {
+        "status": "partial",
+        "detail": "纠错测试记录.md 存在 · 用例未执行"
+      },
+      "s6": {
+        "status": "pass",
+        "detail": "登记表已存在且较新"
+      }
+    },
+    {
+      "folder": "武警黑龙江省总队医院",
+      "s1": {
+        "status": "pass",
+        "detail": "原始 6 · 处理后 12"
+      },
+      "s2": {
+        "status": "pass",
+        "detail": "已生成 · 差异 522 条"
+      },
+      "s3": {
+        "status": "pass",
+        "detail": "code=WJ-HLJ-ZD；P0.6=是；productRules=4"
+      },
+      "s4": {
+        "status": "pass",
+        "detail": "pass"
+      },
+      "s5": {
+        "status": "partial",
+        "detail": "纠错测试记录.md 存在 · 用例未执行"
+      },
+      "s6": {
+        "status": "pass",
+        "detail": "登记表已存在且较新"
+      }
+    },
+    {
+      "folder": "悦美芳华医疗门诊医院",
+      "s1": {
+        "status": "pass",
+        "detail": "原始 6 · 处理后 12"
+      },
+      "s2": {
+        "status": "pass",
+        "detail": "已生成 · 差异 0 条"
+      },
+      "s3": {
+        "status": "pass",
+        "detail": "code=YUEMEI-FH；P0.6=是；productRules=0"
+      },
+      "s4": {
+        "status": "pass",
+        "detail": "pass_zero"
+      },
+      "s5": {
+        "status": "partial",
+        "detail": "纠错测试记录.md 存在 · 用例未执行"
+      },
+      "s6": {
+        "status": "pass",
+        "detail": "登记表已存在且较新"
+      }
+    },
+    {
+      "folder": "黑龙江省第二医院（南岗院区）",
+      "s1": {
+        "status": "pass",
+        "detail": "原始 3 · 处理后 6"
+      },
+      "s2": {
+        "status": "pass",
+        "detail": "已生成 · 差异 3 条"
+      },
+      "s3": {
+        "status": "pass",
+        "detail": "code=ERYY-NG；P0.6=是；productRules=9"
+      },
+      "s4": {
+        "status": "pass",
+        "detail": "pass_zero"
+      },
+      "s5": {
+        "status": "partial",
+        "detail": "纠错测试记录.md 存在 · 用例未执行"
+      },
+      "s6": {
+        "status": "pass",
+        "detail": "登记表已存在且较新"
+      }
+    },
+    {
+      "folder": "黑龙江省第二医院（松北院区）",
+      "s1": {
+        "status": "pass",
+        "detail": "原始 3 · 处理后 5"
+      },
+      "s2": {
+        "status": "pass",
+        "detail": "已生成 · 差异 590 条"
+      },
+      "s3": {
+        "status": "pass",
+        "detail": "code=ERYY-SB；P0.6=是；productRules=9"
+      },
+      "s4": {
+        "status": "pass",
+        "detail": "pass"
+      },
+      "s5": {
+        "status": "partial",
+        "detail": "纠错测试记录.md 存在 · 用例未执行"
+      },
+      "s6": {
+        "status": "pass",
+        "detail": "登记表已存在且较新"
+      }
+    },
+    {
+      "folder": "哈尔滨市呼兰区第一人民医院",
+      "s1": {
+        "status": "pass",
+        "detail": "原始 3 · 处理后 6"
+      },
+      "s2": {
+        "status": "pass",
+        "detail": "已生成 · 差异 0 条"
+      },
+      "s3": {
+        "status": "pass",
+        "detail": "code=HULAN-RM；P0.6=是；productRules=1"
+      },
+      "s4": {
+        "status": "pass",
+        "detail": "pass_zero"
+      },
+      "s5": {
+        "status": "partial",
+        "detail": "纠错测试记录.md 存在 · 用例未执行"
+      },
+      "s6": {
+        "status": "pass",
+        "detail": "v1.1 · 2026-07-22"
+      }
+    },
+    {
+      "folder": "哈尔滨市红十字妇产医院",
+      "s1": {
+        "status": "pass",
+        "detail": "原始 3 · 处理后 8"
+      },
+      "s2": {
+        "status": "pass",
+        "detail": "已生成 · 差异 76 条"
+      },
+      "s3": {
+        "status": "pass",
+        "detail": "code=HRB-HSZ；P0.6=是；productRules=8"
+      },
+      "s4": {
+        "status": "pass",
+        "detail": "pass_zero"
+      },
+      "s5": {
+        "status": "partial",
+        "detail": "纠错测试记录.md 存在 · 用例未执行"
+      },
+      "s6": {
+        "status": "pass",
+        "detail": "登记表已存在且较新"
+      }
+    },
+    {
+      "folder": "哈尔滨工业大学医院",
+      "s1": {
+        "status": "pass",
+        "detail": "原始 4 · 处理后 10"
+      },
+      "s2": {
+        "status": "pass",
+        "detail": "已生成 · 差异 46 条"
+      },
+      "s3": {
+        "status": "pass",
+        "detail": "code=HRB-HIT；P0.6=是；productRules=1"
+      },
+      "s4": {
+        "status": "pass",
+        "detail": "pass_zero"
+      },
+      "s5": {
+        "status": "partial",
+        "detail": "纠错测试记录.md 存在 · 用例未执行"
+      },
+      "s6": {
+        "status": "pass",
+        "detail": "v1.1 · 2026-07-22"
+      }
+    }
+  ]
+}

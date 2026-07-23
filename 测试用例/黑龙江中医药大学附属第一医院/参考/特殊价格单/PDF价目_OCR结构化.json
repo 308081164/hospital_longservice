@@ -1,0 +1,27 @@
+{
+  "source": "黑龙江中医药大学附属第一医院价格表.pdf",
+  "ocrFile": "OCR_附一价格表.txt",
+  "ocrDate": "2026-07-23",
+  "ocrEngine": "pymupdf 2.5 render + tesseract chi_sim+eng",
+  "disclaimer": "二次报价明细表 OCR；标准灭菌价与 phase-zyy-d1-standard-pricing-20260723.json 对齐；特色套包见 phase-zyy-d1-fuyi.json",
+  "alignedWithJuneCsv": {
+    "file": "测试用例/黑龙江中医药大学附属第一医院/6月期待价格校正清单.csv",
+    "seedRefs": [
+      "phase-zyy-d1-fuyi.json",
+      "phase-zyy-d1-standard-pricing-20260723.json",
+      "phase-zyy-d1-p0-2-price-align.json"
+    ]
+  },
+  "standardPricingSamples": [
+    {"name": "高温纸塑 4.4 / 起包 13.2", "ref": "standardPricingOverride.highTemperature.paperPlastic"},
+    {"name": "敷料大 27.97 / 中 23.98 / 小 19.98", "ref": "dressingPack + productRules 敷料*"},
+    {"name": "低温阶梯 5/10/20 件", "ref": "lowTemperature tierPrices 239.76/131.87/70.33"}
+  ],
+  "items": [
+    {"seq": 1, "name": "常规高温灭菌（招标单价经折扣列）", "bidUnitPrice": 4.4},
+    {"seq": 15, "name": "单把纸塑 15cm", "bidUnitPrice": 8.79},
+    {"seq": 17, "name": "软镜布包装 20 件", "bidUnitPrice": 239.76},
+    {"seq": 37, "name": "加急物流/公里", "bidUnitPrice": 5.99}
+  ],
+  "skippedForSeed": "未新增 PDF* 产品规则：与既有 fuyi/standardPricing 重复；加急/物流走通用策略"
+}

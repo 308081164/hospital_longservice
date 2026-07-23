@@ -1,0 +1,63 @@
+{
+  "version": "1",
+  "description": "ZYY-D1 中医附一：独立标准灭菌价表（附一收费规则 Sheet2）+ hybrid 计价",
+  "customerUpdates": [
+    {
+      "code": "ZYY-D1",
+      "billingPricingMode": "hybrid",
+      "standardPricingOverride": {
+        "highTemperature": {
+          "paperPlastic": {
+            "capMode": "fuyi",
+            "perPackagePrice": 4.4,
+            "minCharge": 13.2,
+            "bagSizes": [
+              {"size": 25, "price": 12.79, "keywords": ["25cm", "25", "特大"]},
+              {"size": 20, "price": 10.39, "keywords": ["20cm", "20", "大"]},
+              {"size": 15, "price": 8.79, "keywords": ["15cm", "15", "中"]},
+              {"size": 10, "price": 6.39, "keywords": ["10cm", "10", "小"]}
+            ]
+          },
+          "nonWoven": {
+            "minCharge": 13.2,
+            "flatPerPackagePrice": 4.4,
+            "flatRateThreshold": 3
+          }
+        },
+        "lowTemperature": {
+          "paperPlastic": {
+            "bagSizes": [
+              {"size": 30, "price": 27.97, "keywords": ["30cm", "30", "低温灭菌 30cm"]},
+              {"size": 25, "price": 23.98, "keywords": ["25cm", "25", "低温灭菌 25cm"]},
+              {"size": 20, "price": 22.38, "keywords": ["20cm", "20", "低温灭菌 20cm"]},
+              {"size": 15, "price": 19.98, "keywords": ["15cm", "15", "低温灭菌 15cm"]},
+              {"size": 10, "price": 17.58, "keywords": ["10cm", "10", "低温灭菌 10cm"]}
+            ],
+            "tierPrices": [
+              {"count": 20, "price": 239.76},
+              {"count": 10, "price": 131.87},
+              {"count": 5, "price": 70.33}
+            ],
+            "remainderPerPiecePrice": 17.58
+          },
+          "nonWoven": {
+            "tierPrices": [
+              {"count": 20, "price": 239.76},
+              {"count": 10, "price": 131.87},
+              {"count": 5, "price": 70.33}
+            ],
+            "remainderPerPiecePrice": 17.58,
+            "minSingleCharge": 17.58
+          }
+        },
+        "dressingPack": {
+          "nonWoven": {
+            "below90": 19.98,
+            "equals90": 23.98,
+            "range12to15": 27.97
+          }
+        }
+      }
+    }
+  ]
+}

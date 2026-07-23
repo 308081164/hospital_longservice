@@ -38,7 +38,7 @@
           "ruleType": "FIXED_PRICE",
           "name": "30°腹腔镜组合价",
           "priority": 5,
-          "price": 30.38,
+          "price": 30.4,
           "keywords": ["30°腹腔镜", "30度腹腔镜"],
           "skipPackaging": true,
           "skipDiscount": true
@@ -203,7 +203,7 @@
           "ruleType": "FIXED_PRICE",
           "name": "保温杯-1Z2044",
           "priority": 39,
-          "price": 17.58,
+          "price": 17.6,
           "keywords": ["保温杯-1Z2044"],
           "skipPackaging": true,
           "skipDiscount": true
@@ -221,7 +221,7 @@
           "ruleType": "FIXED_PRICE",
           "name": "低温袋15cm",
           "priority": 41,
-          "price": 19.98,
+          "price": 20,
           "keywords": ["低温灭菌 15cm", "膀胱取石钳"],
           "skipPackaging": true,
           "skipDiscount": true

@@ -45,6 +45,9 @@ public class CustomerResponse {
     @JsonProperty("export_name_mapping")
     private String exportNameMapping;
 
+    @JsonProperty("standard_pricing_override")
+    private String standardPricingOverride;
+
     private String notes;
 
     private List<CustomerAliasDto> aliases;

@@ -19,7 +19,8 @@ HOSPITALS = [
     "南岗区妇产医院",
     "呼兰中医院",
     "呼兰区红十字医院",
-    "哈尔滨(工程)大学医院",
+    "哈尔滨工业大学医院",
+    "哈尔滨工程大学医院",
     "哈尔滨仁胜医院",
     "哈尔滨冰城医疗美容医院",
     "哈尔滨华夏眼科医院",
@@ -64,7 +65,8 @@ CUSTOMER_CODES = {
     "黑龙江省第二医院（松北院区）": "ERYY-SB",
     "哈尔滨市呼兰区第一人民医院": "HULAN-RM",
     "哈尔滨市第五医院": "HRB-WY",
-    "哈尔滨(工程)大学医院": "HRB-HIT",
+    "哈尔滨工业大学医院": "HRB-HIT",
+    "哈尔滨工程大学医院": "HRB-HEU",
 }
 
 # System module implementation status (global, from codebase)
@@ -416,18 +418,28 @@ def build_hospital_data():
     fr(h, "FR-M3-10", "是", "方盘5.5元", "MAT-15")
 
     # H 工大医院
-    h = "哈尔滨(工程)大学医院"
+    h = "哈尔滨工业大学医院"
     add(h, billing_enabled="是", pricing_mode="hybrid", stage="L2", complexity="中",
         modules={"M1", "M2", "M3", "M8", "INT", "CFG"},
         mat_hints={"MAT-01", "MAT-02", "MAT-03"})
     add(h, aliases=["哈尔滨工业大学医院"])
     add(h, special_rules="口腔类所有「针类」：5.5元")
     add(h, special_rules="洁牙尖、成型片：5件算1件计费（5.5元）")
-    add(h, notes="源文件称「哈尔滨工业大学医院」，与文件夹名「哈尔滨(工程)大学医院」为同一客户")
+    add(h, notes="与哈尔滨工程大学医院（HRB-HEU）为独立客户")
     fr(h, "FR-M1-01", "是")
     fr(h, "FR-M3-01", "是", "口腔针类关键词", "MAT-15")
     fr(h, "FR-M3-11", "是", "针类5.5元/件", "MAT-02")
     fr(h, "FR-M3-13", "是", "洁牙尖/成型片5件算1件", "MAT-02")
+
+    # H2 工程大学医院（独立客户）
+    h = "哈尔滨工程大学医院"
+    add(h, billing_enabled="是", pricing_mode="standard", stage="L2", complexity="低",
+        modules={"M1", "M2", "M8", "INT", "CFG"},
+        mat_hints={"MAT-01", "MAT-02", "MAT-03"})
+    add(h, aliases=["哈尔滨工程大学医院", "工程大学医院"])
+    add(h, special_rules="结款函：灭菌费用9折（单独打折），物流不变，账单计费正常")
+    fr(h, "FR-M1-01", "是")
+    fr(h, "FR-M2-03", "是", "结款函灭菌费9折", "MAT-03")
 
     # I 道外区人民
     h = "道外区人民医院"
@@ -443,7 +455,6 @@ def build_hospital_data():
 
     # Settlement-only discount hospitals
     settlement_discount = {
-        "哈尔滨(工程)大学医院": None,  # already has special rules
         "哈尔滨市南岗区人民医院（九院）": ("9折", "结款函灭菌费9折，账单正常计费，物流不变"),
         "黑龙江东大肛肠": ("75折", "结款函灭菌费75折，账单正常计费，物流不变"),
         "南岗区先锋路社区卫生服务中心": ("8折", "结款函灭菌费8折，账单正常计费，物流不变"),
@@ -459,11 +470,6 @@ def build_hospital_data():
         add(h, special_rules=desc)
         fr(h, "FR-M1-01", "是")
         fr(h, "FR-M2-03", "是", f"结款函灭菌费{rate}，账单正常计费", "MAT-03")
-
-    # 工程大学 also has settlement discount in txt
-    add("哈尔滨(工程)大学医院", special_rules="结款函：灭菌费用9折（单独打折），物流不变，账单计费正常")
-    fr("哈尔滨(工程)大学医院", "FR-M2-03", "是", "结款函灭菌费9折", "MAT-03")
-
     # 华夏眼科
     h = "哈尔滨华夏眼科医院"
     add(h, billing_enabled="是", pricing_mode="hybrid", stage="L2", complexity="低",
@@ -1187,7 +1193,7 @@ def main():
     txt_hospitals_not_in_folder = [
         "黑龙江中医药大学附属第三医院",  # 非电力，txt 单独提及
         "三辅社区医院",  # 香坊中医院别名
-        "哈尔滨工业大学医院",  # 工程大学别名
+        "哈尔滨工程大学医院",
         "电机厂医院", "哈尔滨锅炉厂医院", "哈尔滨汽轮机医院",  # 国药别名
         "哈尔滨市呼兰区中医医院",  # 文件夹名：呼兰中医院
     ]

@@ -168,3 +168,11 @@ src/main/resources/
 | POST | `/api/v1/hospital/reconciliation/process` | 执行计价处理 |
 | GET | `/api/v1/hospital/reconciliation/rows` | 分页查询对账行 |
 | POST | `/api/v1/hospital/reconciliation/export` | 导出报表 |
+
+## 生产部署与运维
+
+GitHub Actions 推送 `main` 会自动构建并部署到生产环境。运维经验、P0.6 特色账单开关、MySQL/API 双校验、CI 重跑注意事项等见：
+
+**[deploy/README.md](./deploy/README.md)**
+
+相关：`deploy/PRODUCTION-RECOVERY.md`（网关/连库故障）、`deploy/MIGRATION.md`（Secrets 与首次部署）。

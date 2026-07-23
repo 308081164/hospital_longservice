@@ -1,0 +1,12 @@
+{
+  "version": "1",
+  "description": "松北宫腔镜规则去掉多报价，恢复 -2/-3 件 warning",
+  "ruleUpdates": [
+    {
+      "code": "ERYY-SB",
+      "ruleName": "省二松北宫腔检查镜30度3件",
+      "setMatchMode": "first",
+      "setAcceptedPrices": []
+    }
+  ]
+}

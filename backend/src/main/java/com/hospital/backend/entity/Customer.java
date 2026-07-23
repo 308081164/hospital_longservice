@@ -27,6 +27,9 @@ public class Customer extends BaseEntity {
     /** JSON: { "disableLowTemp": true, "forceHighTempUnitPrice": 3 } */
     private String pathOverride;
 
+    /** JSON：覆盖 DefaultPricingTemplate 中 highTemperature/lowTemperature/dressingPack 等标准阶梯（逐院标准价） */
+    private String standardPricingOverride;
+
     /** JSON: { "原包名": "导出包名" } — FR-M1-09 */
     private String exportNameMapping;
 

@@ -1,0 +1,62 @@
+{
+  "source": "哈尔滨市道外区人民医院价格单_000142.pdf",
+  "ocrFile": "OCR_价格单_000142.txt",
+  "ocrDate": "2026-07-23",
+  "ocrEngine": "pymupdf 2.0–3.0 render + tesseract chi_sim+eng (psm 6)",
+  "disclaimer": "扫描件 OCR 质量一般；附表一常规高温/布类/纱布/单把/外来器械/被服等以人工对照 OCR 第 1–3 页为准",
+  "alignedWithJuneCsv": {
+    "file": "测试用例/道外区人民医院/6月期待价格校正清单.csv",
+    "status": "套包价已由 P0 + phase-s3-pdf-align-20260722 校正价规则覆盖",
+    "seedRefs": ["phase-batch-p0.json", "phase-s3-pdf-align-20260722.json"]
+  },
+  "items": [
+    {
+      "section": "附表一-1",
+      "name": "常规高温灭菌手术器械",
+      "unitPrice": 3,
+      "minCharge": 9,
+      "unit": "元/把",
+      "note": "合同标准价；账单散件多走校正价3.0 等 P0 规则"
+    },
+    {
+      "section": "附表一-2",
+      "name": "敷料大",
+      "size": "30cm×30cm×50cm",
+      "unitPrice": 26.5
+    },
+    {
+      "section": "附表一-2",
+      "name": "敷料中",
+      "size": "20cm×30cm×30cm",
+      "unitPrice": 22.5
+    },
+    {
+      "section": "附表一-2",
+      "name": "敷料小",
+      "size": "20cm×20cm×15cm",
+      "unitPrice": 19
+    },
+    {
+      "section": "附表一-2",
+      "name": "敷料（OCR 序号 3）",
+      "unitPrice": 6.5,
+      "billingRule": "校正价6.5（关键词敷料/敷料包）"
+    },
+    {
+      "section": "附表一-6",
+      "name": "外来器械（钉盒）",
+      "unitPrice": 37.5,
+      "billingRule": "PDF外来器械钉盒37.5",
+      "seed": "phase-s7-bokang-pdf-ocr-20260723.json",
+      "note": "备案；关键词「外来器械（钉盒）」；6月账单无样例；待M12能力"
+    },
+    {
+      "section": "附表一-6",
+      "name": "外来器械（骨电钻）/单包把",
+      "unitPrice": 12.5,
+      "billingRule": "PDF外来器械骨电钻12.5",
+      "seed": "phase-s7-bokang-pdf-ocr-20260723.json",
+      "note": "备案；关键词「外来器械（骨电钻）」；6月账单无样例；待M12能力"
+    }
+  ]
+}

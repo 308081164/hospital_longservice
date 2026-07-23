@@ -1,0 +1,54 @@
+{
+  "version": "1",
+  "description": "呼兰一院 7 折 + 工业/工程大学客户拆分澄清",
+  "profiles": [
+    {
+      "code": "HULAN-RM",
+      "name": "哈尔滨市呼兰区第一人民医院",
+      "billingEnabled": true,
+      "billingPricingMode": "hybrid",
+      "notes": "账单明细 7 折；MAT-15 扫描 PDF 见测试用例/参考/特殊价格单/哈尔滨市呼兰区第一人民医院价格单_000144.pdf（固定价条目待 Excel/OCR 补种）",
+      "aliases": ["呼兰一院", "呼兰区第一人民医院", "哈尔滨市呼兰区第一人民医院"],
+      "discounts": [
+        {
+          "name": "呼兰7折",
+          "rate": 0.7,
+          "applyStage": "after_base",
+          "skipWhenFixedPrice": true
+        }
+      ]
+    },
+    {
+      "code": "HRB-HIT",
+      "name": "哈尔滨工业大学医院",
+      "billingEnabled": true,
+      "billingPricingMode": "special_only",
+      "notes": "账期多为 15 日–次月 14 日；测试目录 测试用例/哈尔滨工业大学医院/",
+      "aliases": [
+        "哈尔滨工业大学医院",
+        "哈尔滨工业大学",
+        "工业大学医院"
+      ]
+    },
+    {
+      "code": "HRB-HEU",
+      "name": "哈尔滨工程大学医院",
+      "billingEnabled": true,
+      "billingPricingMode": "standard",
+      "notes": "与工业大学独立：账单正常计费，结款函灭菌费 9 折；测试目录 测试用例/哈尔滨工程大学医院/",
+      "aliases": [
+        "哈尔滨工程大学医院",
+        "哈尔滨工程大学",
+        "工程大学医院"
+      ],
+      "discounts": [
+        {
+          "name": "结款函灭菌9折",
+          "rate": 0.9,
+          "applyStage": "settlement_only",
+          "skipWhenFixedPrice": true
+        }
+      ]
+    }
+  ]
+}

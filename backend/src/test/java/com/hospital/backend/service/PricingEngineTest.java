@@ -80,6 +80,363 @@ class PricingEngineTest {
     }
 
     @Test
+    void hrbHxEyeAppliesFixed275WhenHighTempInstrumentCountAtLeastThree() throws Exception {
+        ObjectNode rules = MAPPER.createObjectNode();
+        rules.setAll((ObjectNode) defaultRules());
+        ArrayNode fixedPrices = (ArrayNode) rules.path("specialRules").path("fixedPrices");
+        ObjectNode tierRule = fixedPrices.addObject();
+        tierRule.put("name", "≥3件器械包单价2.75");
+        tierRule.putArray("hospitals").add("哈尔滨华夏眼科医院");
+        tierRule.put("price", 2.75);
+        tierRule.put("minInstrumentCount", 3);
+        tierRule.put("temperature", "HT");
+
+        PricingEngine hxEngine = new PricingEngine(rules);
+
+        PricingEngine.ProcessedResult atThree = hxEngine.processRow(row(
+                "哈尔滨华夏眼科医院",
+                "额外包(纸塑袋)",
+                "持物钳-3/Z7520",
+                "高温纸塑袋75*200",
+                3,
+                1,
+                2.75,
+                2.75
+        ));
+        assertThat(atThree.expectedUnitPrice).isEqualTo(2.75);
+        assertThat(atThree.correctedTotalPrice).isEqualTo(2.75);
+
+        PricingEngine.ProcessedResult belowThree = hxEngine.processRow(row(
+                "哈尔滨华夏眼科医院",
+                "额外包(纸塑袋)",
+                "持物钳-2/Z7520",
+                "高温纸塑袋75*200",
+                2,
+                1,
+                6.39,
+                6.39
+        ));
+        assertThat(belowThree.expectedUnitPrice).isNotEqualTo(2.75);
+
+        PricingEngine.ProcessedResult lowTemp = hxEngine.processRow(row(
+                "哈尔滨华夏眼科医院",
+                "额外包(纸塑袋)",
+                "低温器械-5/Z7520",
+                "低温灭菌纸塑袋20cm",
+                5,
+                1,
+                70.33,
+                70.33
+        ));
+        assertThat(lowTemp.expectedUnitPrice).isNotEqualTo(2.75);
+    }
+
+    @Test
+    void bingchengYmAppliesZhengxing58Zichong54_5AndPerPiece55FromThreeInstruments() throws Exception {
+        ObjectNode rules = MAPPER.createObjectNode();
+        rules.setAll((ObjectNode) defaultRules());
+        ObjectNode billingProfile = rules.putObject("billingProfile");
+        billingProfile.put("pricingMode", "special_only");
+        ArrayNode fixedPrices = (ArrayNode) rules.path("specialRules").path("fixedPrices");
+        String hospital = "哈尔滨冰城医疗美容医院";
+
+        ObjectNode zhengxing = fixedPrices.addObject();
+        zhengxing.put("name", "整形包58");
+        zhengxing.put("price", 58);
+        zhengxing.put("skipPackaging", true);
+        zhengxing.put("skipHospitalDiscount", true);
+        zhengxing.putArray("hospitals").add(hospital);
+        zhengxing.putArray("keywords").add("整形包");
+        zhengxing.putArray("excludeKeywords").add("脂充包").add("整形手术包");
+
+        fixedPrices.add(MAPPER.valueToTree(fixedPrice(
+                "脂充包54.5",
+                List.of(hospital),
+                List.of("脂充包"),
+                54.5,
+                false,
+                false,
+                true)));
+
+        ObjectNode tierRule = fixedPrices.addObject();
+        tierRule.put("name", "≥3件按件5.5元");
+        tierRule.putArray("hospitals").add(hospital);
+        tierRule.put("price", 5.5);
+        tierRule.put("pricePerInstrument", true);
+        tierRule.put("minInstrumentCount", 3);
+        tierRule.put("temperature", "HT");
+        tierRule.put("skipPackaging", true);
+        tierRule.put("skipHospitalDiscount", true);
+
+        PricingEngine bcEngine = new PricingEngine(rules);
+
+        PricingEngine.ProcessedResult zhengxingPack = bcEngine.processRow(row(
+                hospital,
+                "额外包(纸塑袋)",
+                "整形包-3/Z7526",
+                "高温纸塑袋75*200",
+                3,
+                1,
+                54.5,
+                54.5
+        ));
+        assertThat(zhengxingPack.expectedUnitPrice).isEqualTo(58.0);
+        assertThat(zhengxingPack.correctedTotalPrice).isEqualTo(58.0);
+
+        PricingEngine.ProcessedResult zichongPack = bcEngine.processRow(row(
+                hospital,
+                "额外包(纸塑袋)",
+                "脂充包/Z7526",
+                "高温纸塑袋75*200",
+                2,
+                1,
+                54.5,
+                54.5
+        ));
+        assertThat(zichongPack.expectedUnitPrice).isEqualTo(54.5);
+
+        PricingEngine.ProcessedResult threePieces = bcEngine.processRow(row(
+                hospital,
+                "额外包(纸塑袋)",
+                "普通器械-3/Z7526",
+                "高温纸塑袋75*200",
+                3,
+                1,
+                16.5,
+                16.5
+        ));
+        assertThat(threePieces.expectedUnitPrice).isEqualTo(16.5);
+        assertThat(threePieces.correctedTotalPrice).isEqualTo(16.5);
+    }
+
+    @Test
+    void ngFuchanGongqiangjingAppliesFixed170_5() throws Exception {
+        ObjectNode rules = MAPPER.createObjectNode();
+        rules.setAll((ObjectNode) defaultRules());
+        ArrayNode fixedPrices = (ArrayNode) rules.path("specialRules").path("fixedPrices");
+        fixedPrices.add(MAPPER.valueToTree(fixedPrice(
+                "南岗妇产宫腔镜包",
+                List.of("南岗区妇产医院"),
+                List.of("宫腔镜"),
+                170.5,
+                false,
+                false,
+                true)));
+
+        PricingEngine ngEngine = new PricingEngine(rules);
+
+        PricingEngine.ProcessedResult result = ngEngine.processRow(row(
+                "南岗区妇产医院",
+                "额外包(纸塑袋)",
+                "宫腔镜",
+                "高温纸塑袋75*300",
+                13,
+                1,
+                192.5,
+                192.5
+        ));
+
+        assertThat(result.expectedUnitPrice).isEqualTo(170.5);
+        assertThat(result.correctedTotalPrice).isEqualTo(170.5);
+        assertThat(result.status).isEqualTo("warning");
+    }
+
+    @Test
+    void ngFuchanQuhuanqiAndGongshaApplyFixedPrice() throws Exception {
+        ObjectNode rules = MAPPER.createObjectNode();
+        rules.setAll((ObjectNode) defaultRules());
+        ArrayNode fixedPrices = (ArrayNode) rules.path("specialRules").path("fixedPrices");
+        fixedPrices.add(MAPPER.valueToTree(fixedPrice(
+                "校正价8.0",
+                List.of("南岗区妇产医院"),
+                List.of("取环器-1", "宫颈钳-1"),
+                8.0,
+                false,
+                false,
+                true)));
+        fixedPrices.add(MAPPER.valueToTree(fixedPrice(
+                "校正价2.3",
+                List.of("南岗区妇产医院"),
+                List.of("纱布"),
+                2.3,
+                false,
+                false,
+                true)));
+
+        PricingEngine ngEngine = new PricingEngine(rules);
+
+        PricingEngine.ProcessedResult quhuan = ngEngine.processRow(row(
+                "南岗区妇产医院",
+                "额外包(纸塑袋)",
+                "取环器-1/z1535",
+                "高温纸塑袋75*370",
+                1,
+                1,
+                11.0,
+                11.0
+        ));
+        assertThat(quhuan.expectedUnitPrice).isEqualTo(8.0);
+        assertThat(quhuan.correctedTotalPrice).isEqualTo(8.0);
+
+        PricingEngine.ProcessedResult gongsha = ngEngine.processRow(row(
+                "南岗区妇产医院",
+                "额外包(纸塑袋)",
+                "纱布/Z1526",
+                "高温纸塑袋200*250",
+                15,
+                1,
+                2.5,
+                37.5
+        ));
+        assertThat(gongsha.expectedUnitPrice).isEqualTo(2.3);
+        assertThat(gongsha.correctedTotalPrice).isEqualTo(34.5);
+    }
+
+    @Test
+    void ngFuchanKuobangAndWanpanScatterApplyFixedPriceEight() throws Exception {
+        ObjectNode rules = MAPPER.createObjectNode();
+        rules.setAll((ObjectNode) defaultRules());
+        ArrayNode fixedPrices = (ArrayNode) rules.path("specialRules").path("fixedPrices");
+        fixedPrices.add(MAPPER.valueToTree(fixedPrice(
+                "校正价16.0",
+                List.of("南岗区妇产医院"),
+                List.of("弯盘-2"),
+                16.0,
+                false,
+                false,
+                true)));
+        fixedPrices.add(MAPPER.valueToTree(fixedPrice(
+                "校正价24.0",
+                List.of("南岗区妇产医院"),
+                List.of("扩棒（4 4.5 5）-3"),
+                24.0,
+                false,
+                false,
+                true)));
+        fixedPrices.add(MAPPER.valueToTree(fixedPrice(
+                "校正价扩棒8",
+                List.of("南岗区妇产医院"),
+                List.of("扩棒"),
+                8.0,
+                false,
+                false,
+                true)));
+        fixedPrices.add(MAPPER.valueToTree(fixedPrice(
+                "校正价弯盘8",
+                List.of("南岗区妇产医院"),
+                List.of("弯盘"),
+                8.0,
+                false,
+                false,
+                true)));
+
+        PricingEngine ngEngine = new PricingEngine(rules);
+
+        PricingEngine.ProcessedResult kuobangScatter = ngEngine.processRow(row(
+                "南岗区妇产医院",
+                "额外包(纸塑袋)",
+                "扩棒-1/z1026",
+                "高温纸塑袋75*300",
+                1,
+                1,
+                11.0,
+                11.0
+        ));
+        assertThat(kuobangScatter.expectedUnitPrice).isEqualTo(8.0);
+        assertThat(kuobangScatter.correctedTotalPrice).isEqualTo(8.0);
+
+        PricingEngine.ProcessedResult kuobangBundle = ngEngine.processRow(row(
+                "南岗区妇产医院",
+                "额外包(纸塑袋)",
+                "扩棒（4 4.5 5）-3/z7526",
+                "高温纸塑袋75*300",
+                3,
+                1,
+                16.5,
+                16.5
+        ));
+        assertThat(kuobangBundle.expectedUnitPrice).isEqualTo(24.0);
+        assertThat(kuobangBundle.correctedTotalPrice).isEqualTo(24.0);
+
+        PricingEngine.ProcessedResult wanpanScatter = ngEngine.processRow(row(
+                "南岗区妇产医院",
+                "额外包(纸塑袋)",
+                "弯盘-1/z2032",
+                "高温纸塑袋75*300",
+                1,
+                1,
+                9.1,
+                9.1
+        ));
+        assertThat(wanpanScatter.expectedUnitPrice).isEqualTo(8.0);
+        assertThat(wanpanScatter.correctedTotalPrice).isEqualTo(8.0);
+
+        PricingEngine.ProcessedResult wanpanTwo = ngEngine.processRow(row(
+                "南岗区妇产医院",
+                "额外包(纸塑袋)",
+                "弯盘-2/Z2032",
+                "高温纸塑袋75*300",
+                2,
+                1,
+                16.5,
+                16.5
+        ));
+        assertThat(wanpanTwo.expectedUnitPrice).isEqualTo(16.0);
+        assertThat(wanpanTwo.correctedTotalPrice).isEqualTo(16.0);
+    }
+
+    @Test
+    void ngFuchanPdfQuhuanbaoAndDaijiaZhiliaopanApplyFixedPrice() throws Exception {
+        ObjectNode rules = MAPPER.createObjectNode();
+        rules.setAll((ObjectNode) defaultRules());
+        ArrayNode fixedPrices = (ArrayNode) rules.path("specialRules").path("fixedPrices");
+        fixedPrices.add(MAPPER.valueToTree(fixedPrice(
+                "PDF取环包33",
+                List.of("南岗区妇产医院"),
+                List.of("取环包"),
+                33.0,
+                false,
+                false,
+                true)));
+        fixedPrices.add(MAPPER.valueToTree(fixedPrice(
+                "PDF带架治疗盘16.5",
+                List.of("南岗区妇产医院"),
+                List.of("带架治疗"),
+                16.5,
+                false,
+                false,
+                true)));
+
+        PricingEngine ngEngine = new PricingEngine(rules);
+
+        PricingEngine.ProcessedResult quhuanbao = ngEngine.processRow(row(
+                "南岗区妇产医院",
+                "器械包",
+                "取环包",
+                "无纺布-60×60-50g",
+                6,
+                1,
+                16.5,
+                16.5
+        ));
+        assertThat(quhuanbao.expectedUnitPrice).isEqualTo(33.0);
+        assertThat(quhuanbao.correctedTotalPrice).isEqualTo(33.0);
+
+        PricingEngine.ProcessedResult daijia = ngEngine.processRow(row(
+                "南岗区妇产医院",
+                "额外包(纸塑袋)",
+                "带架治疗盘-1",
+                "高温纸塑袋75*300",
+                2,
+                1,
+                11.0,
+                11.0
+        ));
+        assertThat(daijia.expectedUnitPrice).isEqualTo(16.5);
+        assertThat(daijia.correctedTotalPrice).isEqualTo(16.5);
+    }
+
+    @Test
     void extraFeesConfigIsLoaded() {
         JsonNode rules = defaultRules();
         JsonNode feeRule = rules.path("specialRules").path("extraFees").get(0);
@@ -726,6 +1083,27 @@ class PricingEngineTest {
 
         assertThat(result.expectedUnitPrice).isEqualTo(25.0);
         assertThat(result.pricingRule).contains("敷料包");
+    }
+
+    @Test
+    void fuyiCapModePricesHighTempPaperPlastic() throws Exception {
+        ObjectNode rules = (ObjectNode) defaultRules();
+        ObjectNode htPaper = (ObjectNode) rules.path("highTemperature").path("paperPlastic");
+        htPaper.put("capMode", "fuyi");
+        htPaper.put("perPackagePrice", 4.4);
+        ArrayNode bagSizes = htPaper.withArray("bagSizes");
+        bagSizes.removeAll();
+        bagSizes.addObject().put("size", 15).put("price", 8.79)
+                .set("keywords", MAPPER.createArrayNode().add("15cm"));
+
+        PricingEngine engine = new PricingEngine(rules);
+        PricingEngine.ProcessedResult one = engine.processRow(row(
+                "附一", "额外包(纸塑袋)", "包", "高温纸塑袋150*260", 1, 1, 8.79, 8.79));
+        assertThat(one.expectedUnitPrice).isEqualTo(8.79);
+
+        PricingEngine.ProcessedResult eight = engine.processRow(row(
+                "附一", "额外包(纸塑袋)", "包", "高温纸塑袋150*260", 8, 1, 10.4, 83.2));
+        assertThat(eight.expectedUnitPrice).isEqualTo(35.2);
     }
 
     @Test

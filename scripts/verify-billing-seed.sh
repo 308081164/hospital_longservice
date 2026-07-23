@@ -29,7 +29,20 @@ WHERE setting_key IN (
   'billing_seed_profiles_v1',
   'hardcoded_rules_migrated_v1',
   'bokang_data_import_v1',
-  'ereryy_phase1_seeded_v1'
+  'ereryy_phase1_seeded_v1',
+  'billing_seed_zyy_d1_standard_pricing_20260723_v1',
+  'billing_seed_hrb_hx_eye_20260723_v1',
+  'billing_seed_ng_fuchan_gongqiangjing_20260723_v1',
+  'billing_seed_ng_fuchan_fixed_price_20260723_v2',
+  'billing_seed_ng_fuchan_pdf_ocr_20260723_v1',
+  'billing_seed_ng_fuchan_kuobang_wanpan_20260723_v1',
+  'billing_seed_s7_bokang_pdf_ocr_20260723_v1',
+  'billing_seed_s7_daowai_wailai_keywords_20260723_v1',
+  'billing_seed_s7_sanjing_hulan_wailai_keywords_20260723_v1',
+  'billing_seed_fix_p0_mojibake_dup_20260723_v1',
+  'billing_seed_hrb_bc_med_beauty_20260723_v1',
+  'billing_seed_zyy_d1_p0_v2',
+  'billing_seed_zyy_d1_p0_1_v3'
 )
 ORDER BY setting_key;
 "
@@ -113,7 +126,8 @@ REF_EXPECTED=(
   "南岗区妇产医院|NG-FUCHAN"
   "呼兰中医院|HULAN-TCM"
   "呼兰区红十字医院|HULAN-HSZ"
-  "哈尔滨(工程)大学医院|HRB-HIT"
+  "哈尔滨工业大学医院|HRB-HIT"
+  "哈尔滨工程大学医院|HRB-HEU"
   "哈尔滨仁胜医院|RENSHENG"
   "哈尔滨冰城医疗美容医院|BINGCHENG-YM"
   "哈尔滨华夏眼科医院|HRB-HX-EYE"

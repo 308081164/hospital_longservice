@@ -30,4 +30,8 @@
         SELECT * FROM customer_alias WHERE is_active = 1 ORDER BY priority ASC, id ASC
     </select>
 
+    <select id="selectByAlias" resultMap="CustomerAliasResultMap">
+        SELECT * FROM customer_alias WHERE alias = #{alias} LIMIT 1
+    </select>
+
 </mapper>

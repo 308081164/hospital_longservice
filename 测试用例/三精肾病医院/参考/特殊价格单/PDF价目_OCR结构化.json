@@ -1,0 +1,51 @@
+{
+  "source": "哈尔滨市三精肾脏病医院价格单_000146.pdf",
+  "ocrFile": "OCR_价格单_000146.txt",
+  "ocrDate": "2026-07-23",
+  "ocrEngine": "pymupdf 2.0–3.0 render + tesseract chi_sim+eng",
+  "disclaimer": "扫描件多页；套包价与 6 月期待清单已对齐；外来器械价来自 PDF 附表六",
+  "alignedWithJuneCsv": {
+    "file": "测试用例/三精肾病医院/6月期待价格校正清单.csv",
+    "p0RulePrices": [6.4, 9.0, 30.0, 42.0, 99.0, 102.0],
+    "seedRefs": ["phase-batch-p0.json", "phase-s3-pdf-align-20260722.json"]
+  },
+  "items": [
+    {
+      "section": "附表一-1",
+      "name": "常规高温灭菌器械",
+      "unitPrice": 3.85,
+      "minCharge": 9,
+      "note": "OCR 曾读成 3%；按 3.85 元/把理解"
+    },
+    {
+      "section": "附表一-2",
+      "name": "敷料大/中/小",
+      "unitPrices": [24, 20, 16],
+      "note": "布类尺寸价；账单敷料走校正价或标准路径"
+    },
+    {
+      "section": "附表六",
+      "name": "外来器械（器械）/件",
+      "unitPrice": 4.4,
+      "billingRule": "PDF外来器械4.4",
+      "seed": "phase-s7-bokang-pdf-ocr-20260723.json"
+    },
+    {
+      "section": "附表六",
+      "name": "外来器械（钉盒）",
+      "unitPrice": 40,
+      "billingRule": "PDF外来器械钉盒40"
+    },
+    {
+      "section": "附表六",
+      "name": "外来器械（骨电钻）/单包把",
+      "unitPrice": 13.2,
+      "billingRule": "PDF外来器械骨电钻13.2"
+    },
+    {
+      "section": "账单已覆盖套包",
+      "name": "插管包/插管包二/内瘘器械包/腹透包等",
+      "billingRule": "校正价 30–102（P0/S3）"
+    }
+  ]
+}

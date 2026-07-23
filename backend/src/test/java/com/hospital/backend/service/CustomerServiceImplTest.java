@@ -29,6 +29,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.doAnswer;
+import static org.mockito.Mockito.lenient;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -68,8 +69,41 @@ class CustomerServiceImplTest {
                 billingRuleGroupSyncService,
                 departmentEntryMapper,
                 physicianEntryMapper);
-        when(departmentEntryMapper.countActiveByCustomerId(anyLong())).thenReturn(0);
-        when(physicianEntryMapper.countActiveByCustomerId(anyLong())).thenReturn(0);
+        lenient().when(departmentEntryMapper.countActiveByCustomerId(anyLong())).thenReturn(0);
+        lenient().when(physicianEntryMapper.countActiveByCustomerId(anyLong())).thenReturn(0);
+    }
+
+    @Test
+    void updateCustomerPersistsStandardPricingOverride() {
+        Customer existing = customer("ZYY-D1", "中医附一");
+        when(customerMapper.selectById(1L)).thenReturn(existing);
+        when(customerMapper.selectByCode("ZYY-D1")).thenReturn(existing);
+        stubEmptyCustomerRelations();
+
+        SaveCustomerRequest request = saveRequest("ZYY-D1", "中医附一", foldRuleWithoutProductId());
+        request.setStandardPricingOverride("{\"highTemperature\":{\"paperPlastic\":{\"minCharge\":13.2}}}");
+
+        Result<CustomerResponse> result = customerService.updateCustomer(1L, request);
+
+        assertThat(result.getCode()).isEqualTo(200);
+        ArgumentCaptor<Customer> captor = ArgumentCaptor.forClass(Customer.class);
+        verify(customerMapper).updateById(captor.capture());
+        assertThat(captor.getValue().getStandardPricingOverride()).contains("highTemperature");
+        assertThat(result.getData().getStandardPricingOverride()).contains("highTemperature");
+    }
+
+    @Test
+    void updateCustomerRejectsInvalidStandardPricingOverride() {
+        Customer existing = customer("C003", "测试");
+        when(customerMapper.selectById(1L)).thenReturn(existing);
+        when(customerMapper.selectByCode("C003")).thenReturn(existing);
+
+        SaveCustomerRequest request = saveRequest("C003", "测试", foldRuleWithoutProductId());
+        request.setStandardPricingOverride("not-json");
+
+        Result<CustomerResponse> result = customerService.updateCustomer(1L, request);
+
+        assertThat(result.getCode()).isEqualTo(400);
     }
 
     @Test

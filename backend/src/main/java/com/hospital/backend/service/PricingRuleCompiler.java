@@ -85,6 +85,7 @@ public class PricingRuleCompiler {
         }
         applyBillingPolicies(compiled, customer);
         applyCustomerOverrides(compiled, customer, hospitalName);
+        applyStandardPricingOverride(compiled, customer);
         return compiled;
     }
 
@@ -316,6 +317,44 @@ public class PricingRuleCompiler {
         }
 
         compiled.set("customerOverrides", overrides);
+    }
+
+    /**
+     * 客户级标准灭菌阶梯价：深合并 highTemperature / lowTemperature / dressingPack 等节，
+     * 在特色规则未命中时由 PricingEngine 走标准路径并使用附一/道外等独立单价表。
+     */
+    private void applyStandardPricingOverride(ObjectNode compiled, Customer customer) {
+        String json = customer.getStandardPricingOverride();
+        if (json == null || json.isBlank()) {
+            return;
+        }
+        try {
+            JsonNode override = MAPPER.readTree(json);
+            if (!override.isObject()) {
+                return;
+            }
+            deepMergeObject(compiled, (ObjectNode) override);
+        } catch (Exception e) {
+            log.warn("standardPricingOverride parse failed for customer {}: {}",
+                    customer.getCode(), e.getMessage());
+        }
+    }
+
+    private void deepMergeObject(ObjectNode target, ObjectNode patch) {
+        patch.fields().forEachRemaining(entry -> {
+            String key = entry.getKey();
+            JsonNode patchVal = entry.getValue();
+            if (patchVal.isObject()) {
+                JsonNode existing = target.get(key);
+                if (existing instanceof ObjectNode existingObj) {
+                    deepMergeObject(existingObj, (ObjectNode) patchVal);
+                } else {
+                    target.set(key, patchVal.deepCopy());
+                }
+            } else {
+                target.set(key, patchVal.deepCopy());
+            }
+        });
     }
 
     private ObjectNode toFixedPriceNode(CustomerProductRule rule, List<String> hospitalNames) {
