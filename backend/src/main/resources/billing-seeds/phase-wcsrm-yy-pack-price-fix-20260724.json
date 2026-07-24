@@ -1,0 +1,71 @@
+{
+  "version": "1",
+  "description": "五常市人民医院：收窄75/10纸塑袋关键词；补空心钉/上肢锁定/墨希钉器械包固定价，避免误改价",
+  "ruleUpdates": [
+    {
+      "code": "WCSRMYY",
+      "ruleName": "额外包75纸塑袋10.5",
+      "setKeywords": ["75/双", "/z7526", "/z7530", "/z7534"],
+      "setExcludeKeywords": ["墨希钉"]
+    },
+    {
+      "code": "WCSRMYY",
+      "ruleName": "额外包10纸塑袋13.5",
+      "setKeywords": ["10/双", "/z1026", "/z1029", "/z1035"]
+    }
+  ],
+  "newRules": [
+    {
+      "code": "WCSRMYY",
+      "ruleType": "FIXED_PRICE",
+      "name": "优贝特空心钉4.0固定233",
+      "priority": 1,
+      "price": 233,
+      "keywords": ["优贝特空心钉4.0"],
+      "skipPackaging": true,
+      "skipDiscount": true
+    },
+    {
+      "code": "WCSRMYY",
+      "ruleType": "FIXED_PRICE",
+      "name": "空心钉4.0固定233",
+      "priority": 2,
+      "price": 233,
+      "keywords": ["空心钉4.0"],
+      "excludeKeywords": ["优贝特"],
+      "skipPackaging": true,
+      "skipDiscount": true
+    },
+    {
+      "code": "WCSRMYY",
+      "ruleType": "FIXED_PRICE",
+      "name": "上肢锁定长钉固定370.5",
+      "priority": 3,
+      "price": 370.5,
+      "keywords": ["上肢锁定长钉"],
+      "skipPackaging": true,
+      "skipDiscount": true
+    },
+    {
+      "code": "WCSRMYY",
+      "ruleType": "FIXED_PRICE",
+      "name": "上肢锁定固定332",
+      "priority": 4,
+      "price": 332,
+      "keywords": ["上肢锁定"],
+      "excludeKeywords": ["长钉"],
+      "skipPackaging": true,
+      "skipDiscount": true
+    },
+    {
+      "code": "WCSRMYY",
+      "ruleType": "FIXED_PRICE",
+      "name": "墨希钉固定50",
+      "priority": 4,
+      "price": 50,
+      "keywords": ["墨希钉"],
+      "skipPackaging": true,
+      "skipDiscount": true
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "version": "1",
+  "description": "九院（HRB-NGJY）：启用标准特色账单，使 0 元敷料包等行进入 PricingEngine 校对",
+  "customerUpdates": [
+    {
+      "code": "HRB-NGJY",
+      "billingEnabled": true,
+      "billingPricingMode": "standard"
+    }
+  ]
+}

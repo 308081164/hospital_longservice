@@ -2650,7 +2650,15 @@ public class HospitalReconciliationServiceImpl implements HospitalReconciliation
                 if (request.getSheetMetas() != null && request.getSheetMetas().size() > 1) {
                     distinctSheets = Math.max(distinctSheets, request.getSheetMetas().size());
                 }
-                if (distinctSheets > 1) {
+                long exportRowCount = request.getRows() != null
+                        ? request.getRows().stream().filter(r -> !"skipped".equals(r.getStatus())).count()
+                        : 0;
+                // 大行数多 sheet 克隆模板易 OOM（如哈工大 ~1152 行）；合并单 sheet 导出
+                if (distinctSheets > 1 && exportRowCount > BILL_EXPORT_COMBINED_MODE_ROW_THRESHOLD) {
+                    log.info("generateBillExportBytes: {} rows / {} sheets → combined workbook (OOM guard)",
+                            exportRowCount, distinctSheets);
+                    createCombinedBillWorkbook(workbook, request);
+                } else if (distinctSheets > 1) {
                     createBillTemplateWorkbook(workbook, request);
                 } else {
                     createCombinedBillWorkbook(workbook, request);
@@ -2911,9 +2919,21 @@ public class HospitalReconciliationServiceImpl implements HospitalReconciliation
 
     /** 账单导出后处理：超过此行数时跳过 autoSizeColumn，防止大行数 OOM */
     static final int BILL_EXPORT_AUTO_SIZE_ROW_THRESHOLD = 2000;
+    /** 超过此行数时仅写 D8 + K 列宽，跳过 autoSize / 行样式（D4 省医院香坊 ~3000 行） */
+    static final int BILL_EXPORT_LIGHT_POST_PROCESS_ROW_THRESHOLD = 2500;
+    /** 超过此行数且多 sheet 时走 combined 单表导出，避免 cloneSheet OOM（D6 哈工大 ~1152 行） */
+    static final int BILL_EXPORT_COMBINED_MODE_ROW_THRESHOLD = 1000;
 
     static boolean shouldAutoSizeBillExportColumns(int rowCount) {
         return rowCount <= BILL_EXPORT_AUTO_SIZE_ROW_THRESHOLD;
+    }
+
+    static boolean shouldApplyBillExportRowDecorations(int rowCount) {
+        return rowCount <= BILL_EXPORT_LIGHT_POST_PROCESS_ROW_THRESHOLD;
+    }
+
+    static boolean shouldCloneRowStylesForExport(int rowCount) {
+        return rowCount <= BILL_EXPORT_LIGHT_POST_PROCESS_ROW_THRESHOLD;
     }
 
     /**
@@ -3010,40 +3030,45 @@ public class HospitalReconciliationServiceImpl implements HospitalReconciliation
                     }
 
                     // 4. 第10行（首行数据）灰色底色（仅 D-K 列，不含 L 列及之后）
-                    Row row10 = sheet.getRow(9); // 0-indexed: row 10 = index 9
-                    if (row10 != null) {
-                        for (int c = 3; c <= 10; c++) { // D(3) ~ K(10)
-                            Cell cell = row10.getCell(c);
-                            if (cell != null) {
-                                CellStyle cs = workbook.createCellStyle();
-                                cs.cloneStyleFrom(cell.getCellStyle());
-                                cs.setFillForegroundColor(IndexedColors.GREY_25_PERCENT.getIndex());
-                                cs.setFillPattern(FillPatternType.SOLID_FOREGROUND);
-                                cell.setCellStyle(cs);
+                    if (shouldApplyBillExportRowDecorations(rowCount)) {
+                        Row row10 = sheet.getRow(9); // 0-indexed: row 10 = index 9
+                        if (row10 != null) {
+                            for (int c = 3; c <= 10; c++) { // D(3) ~ K(10)
+                                Cell cell = row10.getCell(c);
+                                if (cell != null) {
+                                    CellStyle cs = workbook.createCellStyle();
+                                    cs.cloneStyleFrom(cell.getCellStyle());
+                                    cs.setFillForegroundColor(IndexedColors.GREY_25_PERCENT.getIndex());
+                                    cs.setFillPattern(FillPatternType.SOLID_FOREGROUND);
+                                    cell.setCellStyle(cs);
+                                }
                             }
                         }
-                    }
 
-                    // 5. 仅第10行 I 列和 K 列加粗
-                    if (row10 != null) {
-                        Font boldFont = workbook.createFont();
-                        boldFont.setBold(true);
-                        // I 列 (index 8)
-                        Cell cellI10 = row10.getCell(8);
-                        if (cellI10 != null) {
-                            CellStyle boldStyle = workbook.createCellStyle();
-                            boldStyle.cloneStyleFrom(cellI10.getCellStyle());
-                            boldStyle.setFont(boldFont);
-                            cellI10.setCellStyle(boldStyle);
+                        // 5. 仅第10行 I 列和 K 列加粗
+                        if (row10 != null) {
+                            Font boldFont = workbook.createFont();
+                            boldFont.setBold(true);
+                            // I 列 (index 8)
+                            Cell cellI10 = row10.getCell(8);
+                            if (cellI10 != null) {
+                                CellStyle boldStyle = workbook.createCellStyle();
+                                boldStyle.cloneStyleFrom(cellI10.getCellStyle());
+                                boldStyle.setFont(boldFont);
+                                cellI10.setCellStyle(boldStyle);
+                            }
+                            // K 列 (index 10)
+                            Cell cellK10 = row10.getCell(10);
+                            if (cellK10 != null) {
+                                CellStyle boldStyle = workbook.createCellStyle();
+                                boldStyle.cloneStyleFrom(cellK10.getCellStyle());
+                                boldStyle.setFont(boldFont);
+                                cellK10.setCellStyle(boldStyle);
+                            }
                         }
-                        // K 列 (index 10)
-                        Cell cellK10 = row10.getCell(10);
-                        if (cellK10 != null) {
-                            CellStyle boldStyle = workbook.createCellStyle();
-                            boldStyle.cloneStyleFrom(cellK10.getCellStyle());
-                            boldStyle.setFont(boldFont);
-                            cellK10.setCellStyle(boldStyle);
-                        }
+                    } else {
+                        log.info("postProcessBillExport: sheet[{}] skip row decorations ({} rows > threshold {})",
+                                workbook.getSheetName(i), rowCount, BILL_EXPORT_LIGHT_POST_PROCESS_ROW_THRESHOLD);
                     }
                 }
 
@@ -3745,7 +3770,7 @@ public class HospitalReconciliationServiceImpl implements HospitalReconciliation
         int summaryRowIdx = headerRowOneIdx + 1; // 汇总行在表头行下一行
 
         // ===== 第六步：插入或删除行 =====
-        if (delta > 0) {
+        if (delta > 0 && shouldCloneRowStylesForExport(exportRows.size())) {
             // 数据行数多于模板预设 → 在模板最后行下方插入 (delta) 行
             insertRows(sheet, templateLastRow + 1, delta);
             // 为新插入的行克隆模板最后行的样式（字体、边框、背景色等）
@@ -3753,6 +3778,10 @@ public class HospitalReconciliationServiceImpl implements HospitalReconciliation
             for (int rowIdx = templateLastRow + 1; rowIdx <= dataEndRow; rowIdx++) {
                 cloneRowStyle(sheet, templateLastRow, rowIdx, headerRowOneIdx);
             }
+        } else if (delta > 0) {
+            insertRows(sheet, templateLastRow + 1, delta);
+            log.info("writeSheetFromTemplate: sheet[{}] skip cloneRowStyle ({} rows > threshold {})",
+                    sheetName, exportRows.size(), BILL_EXPORT_LIGHT_POST_PROCESS_ROW_THRESHOLD);
         } else if (delta < 0) {
             // 数据行数少于模板预设 → 保留模板空行（含边框），仅清除旧数据，不删除行
         }

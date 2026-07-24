@@ -573,7 +573,8 @@
         "title": "特色账单规则",
         "add": "添加策略",
         "product": "商品/关键词",
-        "productPlaceholder": "搜索并选择商品（可选）",
+        "productPlaceholder": "搜索商品库或输入包名关键词",
+        "productHint": "未录入商品时可直接输入包名/关键词，将同步写入下方匹配关键词",
         "optional": "可选",
         "ruleType": "规则类型",
         "fixedPrice": "固定价格",
@@ -732,7 +733,10 @@
       "actions": {
         "detail": "查看详情",
         "review": "审核",
-        "export": "导出"
+        "export": "导出",
+        "noReviewPermission": "当前账号无审核权限",
+        "noExportPermission": "当前账号无导出权限",
+        "alreadyReviewed": "该版本已{status}，无法再次审核"
       },
       "export": {
         "bill": "导出账单",

@@ -71,7 +71,7 @@ services:
       APP_JWT_SECRET: ${APP_JWT_SECRET}
       APP_COMPANY_BANK_ACCOUNT: ${APP_COMPANY_BANK_ACCOUNT:-}
       APP_COMPANY_BANK_NAME: ${APP_COMPANY_BANK_NAME:-}
-      JAVA_OPTS: ${JAVA_OPTS:--Xms512m -Xmx4096m}
+      JAVA_OPTS: ${JAVA_OPTS:--Xms512m -Xmx6144m}
       TZ: Asia/Shanghai
     volumes:
       - backend-uploads:/app/uploads

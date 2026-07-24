@@ -1,0 +1,16 @@
+{
+  "version": "1",
+  "description": "松电(HRB-SD-MB)、东北农大(NEAU-YY)：重补口腔科针类 FOLD 规则科室条件（mapper 修复 conditions_json 持久化后）",
+  "ruleUpdates": [
+    {
+      "code": "HRB-SD-MB",
+      "ruleName": "松电口腔科针类5件算1件",
+      "conditionsJson": "[{\"field\":\"department\",\"value\":[\"口腔科\"]}]"
+    },
+    {
+      "code": "NEAU-YY",
+      "ruleName": "东北农大口腔科针类5件算1件",
+      "conditionsJson": "[{\"field\":\"department\",\"value\":[\"口腔科\"]}]"
+    }
+  ]
+}

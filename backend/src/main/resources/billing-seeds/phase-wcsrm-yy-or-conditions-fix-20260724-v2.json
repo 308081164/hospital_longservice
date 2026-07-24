@@ -1,0 +1,21 @@
+{
+  "version": "1",
+  "description": "五常市人民医院：重补手术室 3 规则科室条件（mapper 修复 conditions_json 持久化后）",
+  "ruleUpdates": [
+    {
+      "code": "WCSRMYY",
+      "ruleName": "手术室操作器22元/件",
+      "conditionsJson": "[{\"field\":\"department\",\"value\":[\"手术室\"]}]"
+    },
+    {
+      "code": "WCSRMYY",
+      "ruleName": "手术室腹腔镜器械包187元/包",
+      "conditionsJson": "[{\"field\":\"department\",\"value\":[\"手术室\"]}]"
+    },
+    {
+      "code": "WCSRMYY",
+      "ruleName": "手术室骨元针5件算1件",
+      "conditionsJson": "[{\"field\":\"department\",\"value\":[\"手术室\"]}]"
+    }
+  ]
+}

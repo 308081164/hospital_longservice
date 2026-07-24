@@ -88,13 +88,49 @@ public class BillingSeedMigrationRunner implements CommandLineRunner {
             new IncrementalSeed("billing_seed_daowai_path_override_20260723_v1",
                     "billing-seeds/phase-daowai-path-override-20260723.json"),
             new IncrementalSeed("billing_seed_hlfb_sf_chezhen_20260724_v1",
-                    "billing-seeds/phase-hlfb-sf-chezhen-20260724.json")
+                    "billing-seeds/phase-hlfb-sf-chezhen-20260724.json"),
+            new IncrementalSeed("billing_seed_hrb_bc_med_beauty_fix_20260724_v1",
+                    "billing-seeds/phase-hrb-bc-med-beauty-fix-20260724.json"),
+            new IncrementalSeed("billing_seed_hrb_hx_eye_fix_20260724_v1",
+                    "billing-seeds/phase-hrb-hx-eye-fix-20260724.json"),
+            new IncrementalSeed("billing_seed_ng_fuchan_renliubao_fix_20260724_v1",
+                    "billing-seeds/phase-ng-fuchan-renliubao-fix-20260724.json"),
+            new IncrementalSeed("billing_seed_hrb_cj_fix_20260724_v1",
+                    "billing-seeds/phase-hrb-cj-fix-20260724.json"),
+            new IncrementalSeed("billing_seed_hrb_cj_surgical_pack_fix_20260724_v1",
+                    "billing-seeds/phase-hrb-cj-surgical-pack-fix-20260724.json"),
+            new IncrementalSeed("billing_seed_wcsrm_yy_or_pricing_20260724_v1",
+                    "billing-seeds/phase-wcsrm-yy-or-pricing-20260724.json"),
+            new IncrementalSeed("billing_seed_wcsrm_yy_extra_bag_fix_20260724_v1",
+                    "billing-seeds/phase-wcsrm-yy-extra-bag-fix-20260724.json"),
+            new IncrementalSeed("billing_seed_wcsrm_yy_pack_price_fix_20260724_v1",
+                    "billing-seeds/phase-wcsrm-yy-pack-price-fix-20260724.json"),
+            new IncrementalSeed("billing_seed_wcsrm_yy_or_conditions_fix_20260724_v2",
+                    "billing-seeds/phase-wcsrm-yy-or-conditions-fix-20260724-v2.json"),
+            new IncrementalSeed("billing_seed_wcsrm_yy_lap_per_piece_revert_20260724_v1",
+                    "billing-seeds/phase-wcsrm-yy-lap-per-piece-revert-20260724.json"),
+            new IncrementalSeed("billing_seed_wcsrm_yy_or_consolidate_20260724_v1",
+                    "billing-seeds/phase-wcsrm-yy-or-consolidate-20260724.json"),
+            new IncrementalSeed("billing_seed_hrb_2nd_fix_20260724_v1",
+                    "billing-seeds/phase-hrb-2nd-fix-20260724.json"),
+            new IncrementalSeed("billing_seed_hrb_2nd_fix_20260724_v2",
+                    "billing-seeds/phase-hrb-2nd-fix-20260724.json"),
+            new IncrementalSeed("billing_seed_hrb_sd_neau_kouqiang_fold_fix_20260724_v2",
+                    "billing-seeds/phase-hrb-sd-neau-kouqiang-fold-fix-20260724-v2.json"),
+            new IncrementalSeed("billing_seed_hrb_sh_pricing_20260724_v1",
+                    "billing-seeds/phase-hrb-sh-pricing-20260724.json"),
+            new IncrementalSeed("billing_seed_hrb_ngjy_fix_20260724_v1",
+                    "billing-seeds/phase-hrb-ngjy-fix-20260724.json"),
+            new IncrementalSeed("billing_seed_zuyan_ng_export_pricing_20260724_v1",
+                    "billing-seeds/phase-zuyan-ng-export-pricing-20260724.json")
     );
 
     private static final String ZYY_D1_P0_MARKER = "billing_seed_zyy_d1_p0_v2";
     private static final String ZYY_D1_P0_1_MARKER = "billing_seed_zyy_d1_p0_1_v3";
     /** apply_batch_p0_to_db.py 未用 utf8mb4 产生的乱码规则副本（与 Java P0 种子重复） */
     private static final String P0_MOJIBAKE_DUP_MARKER = "billing_seed_fix_p0_mojibake_dup_20260723_v1";
+    /** 五常并行 seed 产生的无科室条件重复规则清理 */
+    private static final String WCSRMYY_OR_DEDUP_MARKER = "billing_seed_wcsrm_yy_or_dedup_20260724_v1";
 
     private record IncrementalSeed(String markerKey, String classpathFile) {}
 
@@ -155,6 +191,22 @@ public class BillingSeedMigrationRunner implements CommandLineRunner {
                     || "billing-seeds/phase-hrb-mhm-xizhizhen-20260723.json".equals(incremental.classpathFile())
                     || "billing-seeds/phase-hrb-sd-neau-kouqiang-fold-20260723.json".equals(incremental.classpathFile())
                     || "billing-seeds/phase-hlfb-sf-chezhen-20260724.json".equals(incremental.classpathFile())
+                    || "billing-seeds/phase-hrb-bc-med-beauty-fix-20260724.json".equals(incremental.classpathFile())
+                    || "billing-seeds/phase-hrb-hx-eye-fix-20260724.json".equals(incremental.classpathFile())
+                    || "billing-seeds/phase-ng-fuchan-renliubao-fix-20260724.json".equals(incremental.classpathFile())
+                    || "billing-seeds/phase-hrb-cj-fix-20260724.json".equals(incremental.classpathFile())
+                    || "billing-seeds/phase-hrb-cj-surgical-pack-fix-20260724.json".equals(incremental.classpathFile())
+                    || "billing-seeds/phase-wcsrm-yy-or-pricing-20260724.json".equals(incremental.classpathFile())
+                    || "billing-seeds/phase-wcsrm-yy-extra-bag-fix-20260724.json".equals(incremental.classpathFile())
+                    || "billing-seeds/phase-wcsrm-yy-pack-price-fix-20260724.json".equals(incremental.classpathFile())
+                    || "billing-seeds/phase-wcsrm-yy-or-conditions-fix-20260724-v2.json".equals(incremental.classpathFile())
+                    || "billing-seeds/phase-wcsrm-yy-lap-per-piece-revert-20260724.json".equals(incremental.classpathFile())
+                    || "billing-seeds/phase-wcsrm-yy-or-consolidate-20260724.json".equals(incremental.classpathFile())
+                    || "billing-seeds/phase-hrb-2nd-fix-20260724.json".equals(incremental.classpathFile())
+                    || "billing-seeds/phase-hrb-sd-neau-kouqiang-fold-fix-20260724-v2.json".equals(incremental.classpathFile())
+                    || "billing-seeds/phase-hrb-sh-pricing-20260724.json".equals(incremental.classpathFile())
+                    || "billing-seeds/phase-hrb-ngjy-fix-20260724.json".equals(incremental.classpathFile())
+                    || "billing-seeds/phase-zuyan-ng-export-pricing-20260724.json".equals(incremental.classpathFile())
                     || "billing-seeds/phase-s7-bokang-pdf-ocr-20260723.json".equals(incremental.classpathFile())
                     || "billing-seeds/phase-s7-daowai-wailai-keywords-20260723.json".equals(incremental.classpathFile())) {
                 applyBatchPatchSeedFile(incremental.classpathFile());
@@ -173,6 +225,12 @@ public class BillingSeedMigrationRunner implements CommandLineRunner {
             insertMarker(P0_MOJIBAKE_DUP_MARKER,
                     "Remove duplicate customer_product_rule rows from apply_batch_p0_to_db.py latin1 import");
             log.info("P0 mojibake duplicate cleanup: deleted {} rules", deleted);
+        }
+        if (sysSettingMapper.countByKey(WCSRMYY_OR_DEDUP_MARKER) == 0) {
+            int deactivated = deactivateWcsrmYyDuplicateOrRules();
+            insertMarker(WCSRMYY_OR_DEDUP_MARKER,
+                    "Deactivate WCSRMYY OR rules duplicated without department conditions");
+            log.info("WCSRMYY OR duplicate cleanup: deactivated {} rules", deactivated);
         }
         if (sysSettingMapper.countByKey(ZYY_D1_P0_MARKER) == 0) {
             applyZyyD1P0RuleFixes();
@@ -587,6 +645,7 @@ public class BillingSeedMigrationRunner implements CommandLineRunner {
                 return;
             }
             JsonNode root = JsonUtils.getObjectMapper().readTree(resource.getInputStream());
+            seedProfiles(root.path("profiles"));
             for (JsonNode upd : root.path("customerUpdates")) {
                 String code = text(upd, "code");
                 if (code == null) {
@@ -654,6 +713,10 @@ public class BillingSeedMigrationRunner implements CommandLineRunner {
                         changed = true;
                     }
                 }
+                if (patch.has("setExcludeKeywords")) {
+                    rule.setExcludeKeywords(toJsonArray(patch.get("setExcludeKeywords")));
+                    changed = true;
+                }
                 if (patch.has("setMatchMode")) {
                     rule.setMatchMode(text(patch, "setMatchMode", "first"));
                     changed = true;
@@ -672,6 +735,22 @@ public class BillingSeedMigrationRunner implements CommandLineRunner {
                 }
                 if (patch.has("setSkipDiscount")) {
                     rule.setSkipDiscount(bool(patch, "setSkipDiscount", false));
+                    changed = true;
+                }
+                if (patch.has("setRuleType")) {
+                    rule.setRuleType(text(patch, "setRuleType"));
+                    changed = true;
+                }
+                if (patch.has("setSkipPackaging")) {
+                    rule.setSkipPackaging(bool(patch, "setSkipPackaging", false));
+                    changed = true;
+                }
+                if (patch.has("setMinInstrumentCount")) {
+                    if (patch.get("setMinInstrumentCount").isNull()) {
+                        rule.setMinInstrumentCount(null);
+                    } else {
+                        rule.setMinInstrumentCount(intVal(patch, "setMinInstrumentCount", null));
+                    }
                     changed = true;
                 }
                 if (changed) {
@@ -1080,6 +1159,52 @@ public class BillingSeedMigrationRunner implements CommandLineRunner {
                   AND g.name NOT LIKE 'æ%'
                 WHERE r.name LIKE 'æ%'
                 """);
+    }
+
+    /** 并行 seed 可能插入同名但无 conditions_json 的副本；保留带科室条件的那条。 */
+    private int deactivateWcsrmYyDuplicateOrRules() {
+        int deactivated = jdbcTemplate.update("""
+                UPDATE customer_product_rule r
+                INNER JOIN customer c ON c.id = r.customer_id AND c.code = 'WCSRMYY'
+                SET r.is_active = 0
+                WHERE r.is_active = 1
+                  AND r.name IN ('手术室操作器22元/件', '手术室腹腔镜器械包187元/包')
+                  AND (r.conditions_json IS NULL OR TRIM(r.conditions_json) = '' OR TRIM(r.conditions_json) = '[]')
+                  AND EXISTS (
+                    SELECT 1 FROM (
+                      SELECT r2.customer_id, r2.name
+                      FROM customer_product_rule r2
+                      WHERE r2.conditions_json IS NOT NULL
+                        AND TRIM(r2.conditions_json) <> ''
+                        AND TRIM(r2.conditions_json) <> '[]'
+                    ) conditioned
+                    WHERE conditioned.customer_id = r.customer_id
+                      AND conditioned.name = r.name
+                  )
+                """);
+        int reactivated = jdbcTemplate.update("""
+                UPDATE customer_product_rule r
+                INNER JOIN customer c ON c.id = r.customer_id AND c.code = 'WCSRMYY'
+                SET r.is_active = 1
+                WHERE r.is_active = 0
+                  AND r.name IN ('手术室操作器22元/件', '手术室腹腔镜器械包187元/包')
+                  AND r.conditions_json IS NOT NULL
+                  AND TRIM(r.conditions_json) <> ''
+                  AND TRIM(r.conditions_json) <> '[]'
+                  AND NOT EXISTS (
+                    SELECT 1 FROM (
+                      SELECT r2.customer_id, r2.name
+                      FROM customer_product_rule r2
+                      WHERE r2.is_active = 1
+                        AND r2.conditions_json IS NOT NULL
+                        AND TRIM(r2.conditions_json) <> ''
+                        AND TRIM(r2.conditions_json) <> '[]'
+                    ) active_conditioned
+                    WHERE active_conditioned.customer_id = r.customer_id
+                      AND active_conditioned.name = r.name
+                  )
+                """);
+        return deactivated + reactivated;
     }
 
     private void seedProductRules(Long customerId, JsonNode rules) {

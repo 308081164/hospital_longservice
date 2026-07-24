@@ -78,6 +78,8 @@ public class GuoyaoBillExportStrategy implements ExportStrategy {
         copy.setDifference(row.getDifference());
         copy.setStatus(row.getStatus());
         copy.setPricingRule(row.getPricingRule());
+        copy.setIsUrgent(row.getIsUrgent());
+        copy.setMatchedPriceOption(row.getMatchedPriceOption());
         return copy;
     }
 }

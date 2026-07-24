@@ -1,0 +1,23 @@
+{
+  "version": "1",
+  "description": "五常市人民医院：停用187元/包腹腔镜固定价，恢复17元/件按件计价（需求：腹腔镜器械(三号)）",
+  "deactivateRules": [
+    {
+      "code": "WCSRMYY",
+      "ruleName": "手术室腹腔镜器械包187元/包"
+    }
+  ],
+  "newRules": [
+    {
+      "code": "WCSRMYY",
+      "ruleType": "PRICE_PER_INSTRUMENT",
+      "name": "手术室腹腔镜器械(三号)17元/件",
+      "priority": 11,
+      "price": 17,
+      "keywords": ["腹腔镜器械"],
+      "conditionsJson": "[{\"field\":\"department\",\"value\":[\"手术室\"]}]",
+      "skipPackaging": true,
+      "skipDiscount": true
+    }
+  ]
+}

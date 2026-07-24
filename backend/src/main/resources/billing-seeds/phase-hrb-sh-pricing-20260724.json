@@ -1,0 +1,35 @@
+{
+  "version": "1",
+  "description": "哈尔滨森海医院（HRB-SH）：胶帽22元/件、纱布4元",
+  "profiles": [
+    {
+      "code": "HRB-SH",
+      "name": "哈尔滨森海医院",
+      "billingEnabled": true,
+      "billingPricingMode": "special_only",
+      "aliases": ["哈尔滨森海医院", "森海医院", "森海"]
+    }
+  ],
+  "newRules": [
+    {
+      "code": "HRB-SH",
+      "ruleType": "PRICE_PER_INSTRUMENT",
+      "name": "胶帽22元/件",
+      "priority": 10,
+      "price": 22,
+      "keywords": ["胶帽"],
+      "skipPackaging": true,
+      "skipDiscount": true
+    },
+    {
+      "code": "HRB-SH",
+      "ruleType": "FIXED_PRICE",
+      "name": "纱布4元",
+      "priority": 11,
+      "price": 4,
+      "keywords": ["纱布"],
+      "skipPackaging": true,
+      "skipDiscount": true
+    }
+  ]
+}

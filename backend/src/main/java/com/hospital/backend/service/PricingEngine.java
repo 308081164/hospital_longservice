@@ -281,6 +281,13 @@ public class PricingEngine {
                     notes.add("敷料包规格 " + measure + " 未命中定价表（<90→25, =90→30, 1.2~1.5→35），保留原始价格。");
                     requiresReview = true;
                 }
+            } else if (isZeroImport(unitPrice, totalPrice)) {
+                double defaultPrice = defaultDressingPackPrice();
+                expectedUnitPrice = defaultPrice;
+                pricingRule = "敷料包(无纺布包)——0元导入默认价";
+                notes.add("敷料包未能识别规格尺寸，0 元导入按标准小敷料包默认单价 "
+                        + fmt(defaultPrice) + " 元。");
+                requiresReview = true;
             } else {
                 pricingRule = "敷料包(无纺布包)——未识别规格";
                 notes.add("敷料包(无纺布包)未能识别到规格尺寸，保留原始价格。");
@@ -603,6 +610,13 @@ public class PricingEngine {
             }
         }
         if (anyPriceAcceptedMatch != null) {
+            if (unitPrice != null) {
+                Double accepted = findMatchingAcceptedPrice(unitPrice, anyPriceAcceptedMatch.acceptedPrices);
+                if (accepted != null) {
+                    anyPriceAcceptedMatch.matchedPriceOption = accepted;
+                    anyPriceAcceptedMatch.price = accepted;
+                }
+            }
             return anyPriceAcceptedMatch;
         }
         if (unitPriceMatch != null) {
@@ -1403,6 +1417,21 @@ public class PricingEngine {
             return Double.parseDouble(m.group(1));
         }
         return null;
+    }
+
+    private double defaultDressingPackPrice() {
+        JsonNode nonWoven = rules.path("dressingPack").path("nonWoven");
+        if (nonWoven.has("below90")) {
+            return nonWoven.path("below90").asDouble(25);
+        }
+        return 25;
+    }
+
+    private static boolean isZeroImport(Double unitPrice, Double totalPrice) {
+        if (unitPrice == null || Math.abs(unitPrice) > 0.001) {
+            return false;
+        }
+        return totalPrice == null || Math.abs(totalPrice) <= 0.001;
     }
 
     private double computeDressingPackPrice(double measure) {

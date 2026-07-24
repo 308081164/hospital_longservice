@@ -1,0 +1,35 @@
+{
+  "version": "1",
+  "description": "五常市人民医院：合并并行 seed 冲突——停用17元/件腹腔镜，保留187元/包并补科室条件",
+  "deactivateRules": [
+    {
+      "code": "WCSRMYY",
+      "ruleName": "手术室腹腔镜器械(三号)17元/件"
+    }
+  ],
+  "ruleUpdates": [
+    {
+      "code": "WCSRMYY",
+      "ruleName": "手术室腹腔镜器械包187元/包",
+      "conditionsJson": "[{\"field\":\"department\",\"value\":[\"手术室\"]}]"
+    },
+    {
+      "code": "WCSRMYY",
+      "ruleName": "手术室操作器22元/件",
+      "conditionsJson": "[{\"field\":\"department\",\"value\":[\"手术室\"]}]"
+    }
+  ],
+  "newRules": [
+    {
+      "code": "WCSRMYY",
+      "ruleType": "FIXED_PRICE",
+      "name": "手术室腹腔镜器械包187元/包",
+      "priority": 9,
+      "price": 187,
+      "keywords": ["腹腔镜器械"],
+      "conditionsJson": "[{\"field\":\"department\",\"value\":[\"手术室\"]}]",
+      "skipPackaging": true,
+      "skipDiscount": true
+    }
+  ]
+}

@@ -84,6 +84,7 @@ TODO_HOSPITALS: list[str] = [
     "哈尔滨市红十字妇产医院",
     "哈尔滨工业大学医院",
     "哈尔滨工程大学医院",
+    "哈尔滨长健医院",
 ]
 
 # Hardcoded engine rules not in billing-seeds (customer_code -> rules)
@@ -132,6 +133,7 @@ FOLDER_CODE_OVERRIDE: dict[str, str] = {
     "哈尔滨市红十字妇产医院": "HRB-HSZ",
     "哈尔滨工业大学医院": "HRB-HIT",
     "哈尔滨工程大学医院": "HRB-HEU",
+    "哈尔滨长健医院": "HRB-CJ",
 }
 
 # S4 验收固定原始/处理后成对（跨自然月账期）

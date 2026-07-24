@@ -1,0 +1,31 @@
+{
+  "version": "1",
+  "description": "五常市人民医院：额外包(纸塑袋)单件计价——75纸塑袋(75/双、/z7526等)10.5元、10纸塑袋(10/双、/z1026等)13.5元",
+  "newRules": [
+    {
+      "code": "WCSRMYY",
+      "ruleType": "FIXED_PRICE",
+      "name": "额外包75纸塑袋10.5",
+      "priority": 5,
+      "price": 10.5,
+      "keywords": ["75/双", "/z7526", "/z7530", "/z7534"],
+      "excludeKeywords": ["墨希钉"],
+      "minInstrumentCount": 1,
+      "maxInstrumentCount": 1,
+      "skipPackaging": true,
+      "skipDiscount": true
+    },
+    {
+      "code": "WCSRMYY",
+      "ruleType": "FIXED_PRICE",
+      "name": "额外包10纸塑袋13.5",
+      "priority": 6,
+      "price": 13.5,
+      "keywords": ["10/双", "/z1026", "/z1029", "/z1035"],
+      "minInstrumentCount": 1,
+      "maxInstrumentCount": 1,
+      "skipPackaging": true,
+      "skipDiscount": true
+    }
+  ]
+}

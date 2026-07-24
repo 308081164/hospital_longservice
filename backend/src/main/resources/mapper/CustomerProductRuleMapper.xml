@@ -14,6 +14,7 @@
         <result property="keywords" column="keywords"/>
         <result property="excludeKeywords" column="exclude_keywords"/>
         <result property="materials" column="materials"/>
+        <result property="conditionsJson" column="conditions_json"/>
         <result property="temperature" column="temperature"/>
         <result property="bagSizeEquals" column="bag_size_equals"/>
         <result property="maxBagSizeExclusive" column="max_bag_size_exclusive"/>
@@ -34,12 +35,12 @@
 
     <insert id="insert" parameterType="com.hospital.backend.entity.CustomerProductRule" useGeneratedKeys="true" keyProperty="id">
         INSERT INTO customer_product_rule (customer_id, rule_type, match_mode, name, priority, product_id, variant_id, keywords,
-                                           exclude_keywords, materials, temperature, bag_size_equals, max_bag_size_exclusive,
+                                           exclude_keywords, materials, conditions_json, temperature, bag_size_equals, max_bag_size_exclusive,
                                            min_instrument_count, max_instrument_count, price, accepted_prices, fee,
                                            multiplier, threshold, fold_ratio, skip_packaging, skip_discount, is_active,
                                            created_at, updated_at)
         VALUES (#{customerId}, #{ruleType}, #{matchMode}, #{name}, #{priority}, #{productId}, #{variantId}, #{keywords},
-                #{excludeKeywords}, #{materials}, #{temperature}, #{bagSizeEquals}, #{maxBagSizeExclusive},
+                #{excludeKeywords}, #{materials}, #{conditionsJson}, #{temperature}, #{bagSizeEquals}, #{maxBagSizeExclusive},
                 #{minInstrumentCount}, #{maxInstrumentCount}, #{price}, #{acceptedPrices}, #{fee},
                 #{multiplier}, #{threshold}, #{foldRatio}, #{skipPackaging}, #{skipDiscount}, #{isActive},
                 NOW(), NOW())
@@ -74,6 +75,7 @@
             keywords = #{keywords},
             exclude_keywords = #{excludeKeywords},
             materials = #{materials},
+            conditions_json = #{conditionsJson},
             temperature = #{temperature},
             bag_size_equals = #{bagSizeEquals},
             max_bag_size_exclusive = #{maxBagSizeExclusive},

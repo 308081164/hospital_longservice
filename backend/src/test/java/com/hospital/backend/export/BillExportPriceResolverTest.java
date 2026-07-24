@@ -41,4 +41,23 @@ class BillExportPriceResolverTest {
 
         assertThat(BillExportPriceResolver.resolveTotalPrice(row)).isEqualTo(55.0);
     }
+
+    @Test
+    void usesMatchedPriceOptionWhenExpectedUnitMissing() {
+        HospitalReconciliationRow row = new HospitalReconciliationRow();
+        row.setPackCount(3);
+        row.setMatchedPriceOption(15.0);
+        assertThat(BillExportPriceResolver.resolveTotalPrice(row)).isEqualTo(45.0);
+        assertThat(BillExportPriceResolver.resolveUnitPrice(row)).isEqualTo(15.0);
+    }
+
+    @Test
+    void prefersExpectedUnitPriceOverMatchedPriceOptionForEntityRow() {
+        HospitalReconciliationRow row = new HospitalReconciliationRow();
+        row.setPackCount(2);
+        row.setExpectedUnitPrice(13.5);
+        row.setMatchedPriceOption(110.0);
+        assertThat(BillExportPriceResolver.resolveTotalPrice(row)).isEqualTo(27.0);
+        assertThat(BillExportPriceResolver.resolveUnitPrice(row)).isEqualTo(13.5);
+    }
 }

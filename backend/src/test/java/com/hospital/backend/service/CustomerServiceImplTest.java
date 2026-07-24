@@ -163,6 +163,41 @@ class CustomerServiceImplTest {
         assertThat(saved.getFee()).isEqualByComparingTo(BigDecimal.valueOf(8));
     }
 
+    @Test
+    void createCustomerPersistsFixedPriceRuleWithKeywordsOnly() {
+        when(customerMapper.selectByCode("C003-FK")).thenReturn(null);
+        doAnswer(invocation -> {
+            Customer customer = invocation.getArgument(0);
+            customer.setId(3L);
+            return null;
+        }).when(customerMapper).insert(any(Customer.class));
+        Customer created = customer("C003-FK", "关键词固定价医院");
+        created.setId(3L);
+        when(customerMapper.selectById(3L)).thenReturn(created);
+        when(aliasMapper.selectByCustomerId(3L)).thenReturn(List.of());
+        when(billingPolicyMapper.selectByCustomerIdAndType(3L, "DISCOUNT")).thenReturn(List.of());
+        when(discountMapper.selectByCustomerId(3L)).thenReturn(List.of());
+        when(productRuleMapper.selectByCustomerId(3L)).thenReturn(List.of());
+
+        CustomerProductRuleDto fixedPrice = new CustomerProductRuleDto();
+        fixedPrice.setRuleType("FIXED_PRICE");
+        fixedPrice.setKeywords(List.of("小缝合包"));
+        fixedPrice.setPrice(BigDecimal.valueOf(38.5));
+
+        SaveCustomerRequest request = saveRequest("C003-FK", "关键词固定价医院", fixedPrice);
+
+        Result<CustomerResponse> result = customerService.createCustomer(request);
+
+        assertThat(result.getCode()).isEqualTo(200);
+        ArgumentCaptor<CustomerProductRule> captor = ArgumentCaptor.forClass(CustomerProductRule.class);
+        verify(productRuleMapper).insert(captor.capture());
+        CustomerProductRule saved = captor.getValue();
+        assertThat(saved.getRuleType()).isEqualTo("FIXED_PRICE");
+        assertThat(saved.getProductId()).isNull();
+        assertThat(saved.getKeywords()).contains("小缝合包");
+        assertThat(saved.getPrice()).isEqualByComparingTo(BigDecimal.valueOf(38.5));
+    }
+
     private Customer customer(String code, String name) {
         Customer customer = new Customer();
         customer.setId(1L);

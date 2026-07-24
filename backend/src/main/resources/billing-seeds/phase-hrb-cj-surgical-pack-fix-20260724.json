@@ -1,0 +1,12 @@
+{
+  "version": "1",
+  "description": "哈尔滨长健医院：手术包取消≥3件下限，任意件数均5.5元/件",
+  "ruleUpdates": [
+    {
+      "code": "HRB-CJ",
+      "ruleName": "手术包≥3件5.5元/件",
+      "setName": "手术包5.5元/件",
+      "setMinInstrumentCount": null
+    }
+  ]
+}

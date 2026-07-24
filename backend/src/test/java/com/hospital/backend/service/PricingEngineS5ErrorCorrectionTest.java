@@ -46,10 +46,10 @@ class PricingEngineS5ErrorCorrectionTest {
     }
 
     @Test
-    @DisplayName("EC-PACK · HRB-NGJY 敷料包无包材 → warning（未能识别）")
+    @DisplayName("EC-PACK · HRB-NGJY 敷料包无包材 → warning（0 元导入默认价）")
     void ecPack_unrecognizedDressingPack_yieldsWarning_ngjy() {
         PricingEngine engine = new PricingEngine(PricingEngineTestSupport.defaultRules());
-        PricingEngine.ProcessedResult result = engine.processRow(PricingEngineTestSupport.row(
+        Map<String, Object> row = PricingEngineTestSupport.row(
                 "哈尔滨市南岗区人民医院（九院）",
                 "敷料包",
                 "敷料包",
@@ -57,11 +57,14 @@ class PricingEngineS5ErrorCorrectionTest {
                 0,
                 1,
                 0,
-                0));
+                0);
+        row.put("department", "手术室");
+        PricingEngine.ProcessedResult result = engine.processRow(row);
 
         assertThat(result.status).isEqualTo("warning");
-        assertThat(result.expectedUnitPrice).isEqualTo(0.0);
-        assertThat(result.notes).anyMatch(n -> n.contains("未能识别"));
+        assertThat(result.expectedUnitPrice).isEqualTo(25.0);
+        assertThat(result.difference).isEqualTo(25.0);
+        assertThat(result.notes).anyMatch(n -> n.contains("0 元导入"));
     }
 
     @Test

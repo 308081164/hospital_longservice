@@ -21,17 +21,23 @@
           </span>
         </label>
         <ElSelect
-          v-model="draft.productId"
+          v-model="productKeywordValue"
           filterable
+          allow-create
+          default-first-option
           :clearable="!lockProduct || !productRequired"
           class="w-full"
           :placeholder="$t('menus.masterData.customerProductRules.productPlaceholder')"
           :loading="productsLoading"
           :disabled="lockProduct && productRequired"
-          @change="handleProductChange"
+          @change="handleProductKeywordChange"
+          @clear="handleProductKeywordClear"
         >
-          <ElOption v-for="p in displayProducts" :key="p.id" :label="p.name" :value="p.id" />
+          <ElOption v-for="p in displayProducts" :key="p.id" :label="p.name" :value="p.name" />
         </ElSelect>
+        <p class="customer-product-rule-form__hint">
+          {{ $t('menus.masterData.customerProductRules.productHint') }}
+        </p>
       </div>
     </RuleFieldGrid>
 
@@ -277,6 +283,7 @@ import {
   appendKeywordIfMissing,
   isProductRequired,
   isSettlementRule,
+  syncPrimaryKeyword,
   type CustomerProductRuleDraft,
   type CustomerProductRuleType,
 } from '@/utils/customerProductRule'
@@ -323,6 +330,54 @@ const displayProducts = computed(() => {
   return [{ id: productId, name, category_id: 0 }, ...props.products]
 })
 
+function resolveProductKeywordDisplay(): string {
+  if (props.draft.productId != null) {
+    return resolveProductName(props.draft.productId) ?? ''
+  }
+  return props.draft.keywords.map((k) => k.trim()).find(Boolean) ?? ''
+}
+
+const productKeywordValue = computed({
+  get: () => resolveProductKeywordDisplay(),
+  set: (value: string) => {
+    applyProductKeywordValue(value)
+  },
+})
+
+function findProductByName(name: string): Api.MasterData.ProductRecord | undefined {
+  const trimmed = name.trim()
+  if (!trimmed) return undefined
+  return displayProducts.value.find((p) => p.name.trim() === trimmed)
+}
+
+function applyProductKeywordValue(raw: string) {
+  const trimmed = raw.trim()
+  if (!trimmed) {
+    handleProductKeywordClear()
+    return
+  }
+  const product = findProductByName(trimmed)
+  if (product) {
+    props.draft.productId = product.id
+    props.draft.productName = product.name
+    appendKeywordIfMissing(props.draft.keywords, product.name)
+    return
+  }
+  props.draft.productId = undefined
+  props.draft.productName = undefined
+  syncPrimaryKeyword(props.draft.keywords, trimmed)
+}
+
+function handleProductKeywordChange(value: string) {
+  applyProductKeywordValue(value)
+}
+
+function handleProductKeywordClear() {
+  props.draft.productId = undefined
+  props.draft.productName = undefined
+  syncPrimaryKeyword(props.draft.keywords, '')
+}
+
 function resolveProductName(productId: number): string | undefined {
   const fromList = displayProducts.value.find((p) => p.id === productId)
   if (fromList?.name) return fromList.name
@@ -330,12 +385,6 @@ function resolveProductName(productId: number): string | undefined {
     return props.draft.productName ?? props.draft.name
   }
   return undefined
-}
-
-function handleProductChange(productId?: number) {
-  if (productId == null) return
-  const name = resolveProductName(productId)
-  if (name) appendKeywordIfMissing(props.draft.keywords, name)
 }
 
 function handleRuleTypeChange(ruleType: CustomerProductRuleType) {

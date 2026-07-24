@@ -128,6 +128,20 @@ export function appendKeywordIfMissing(keywords: string[], keyword: string): boo
   return true
 }
 
+/** Keep the first keyword slot aligned with the primary product/keyword field. */
+export function syncPrimaryKeyword(keywords: string[], keyword: string): void {
+  const trimmed = keyword.trim()
+  if (!trimmed) {
+    if (keywords.length > 0) keywords.shift()
+    return
+  }
+  if (keywords.length === 0) {
+    keywords.push(trimmed)
+    return
+  }
+  keywords[0] = trimmed
+}
+
 export function hasSameMatchSignature(
   a: Pick<CustomerProductRuleDraft, 'ruleType' | 'matchMode' | 'productId' | 'keywords' | 'excludeKeywords' | 'materials' | 'temperature' | 'bagSizeEquals' | 'maxBagSizeExclusive' | 'minInstrumentCount' | 'maxInstrumentCount'>,
   b: Pick<CustomerProductRuleDraft, 'ruleType' | 'matchMode' | 'productId' | 'keywords' | 'excludeKeywords' | 'materials' | 'temperature' | 'bagSizeEquals' | 'maxBagSizeExclusive' | 'minInstrumentCount' | 'maxInstrumentCount'>,
@@ -318,9 +332,10 @@ function hasKeywordOverlap(keywords: string[], excludeKeywords: string[]): boole
 
 export function validateProductRuleDraft(draft: CustomerProductRuleDraft): string | null {
   const hasKeywords = draft.keywords.some((k) => k.trim())
+  const hasProductOrKeyword = draft.productId != null || hasKeywords
   if (isProductRequired(draft.ruleType)) {
-    if (!draft.productId) return '请选择商品'
-  } else if (!draft.productId && !hasKeywords) {
+    if (!hasProductOrKeyword) return '请选择商品或填写匹配关键词'
+  } else if (!hasProductOrKeyword) {
     return '请绑定商品或填写匹配关键词'
   }
   if (draft.ruleType === 'FIXED_PRICE' || draft.ruleType === 'PRICE_PER_INSTRUMENT') {

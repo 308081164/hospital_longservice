@@ -403,18 +403,18 @@ public class CustomerServiceImpl implements CustomerService {
         if (!PRICING_RULE_TYPES.contains(ruleType)) {
             return "不支持的规则类型: " + ruleType;
         }
+        boolean hasKeywords = request.getKeywords() != null
+                && request.getKeywords().stream().anyMatch(k -> k != null && !k.isBlank());
         if (requiresProductBinding(ruleType)) {
-            if (request.getProductId() == null) {
-                return "商品不能为空";
+            if (request.getProductId() == null && !hasKeywords) {
+                return "请绑定商品或填写匹配关键词";
             }
-            if (productMapper.selectById(request.getProductId()) == null) {
+            if (request.getProductId() != null && productMapper.selectById(request.getProductId()) == null) {
                 return "商品不存在";
             }
         } else if (request.getProductId() != null && productMapper.selectById(request.getProductId()) == null) {
             return "商品不存在";
         }
-        boolean hasKeywords = request.getKeywords() != null
-                && request.getKeywords().stream().anyMatch(k -> k != null && !k.isBlank());
         boolean hasName = request.getName() != null && !request.getName().isBlank();
         if (!requiresProductBinding(ruleType)
                 && request.getProductId() == null

@@ -1,0 +1,12 @@
+{
+  "version": "1",
+  "description": "华夏眼科纠错：≥3件高温应按件2.75元（非整包2.75）",
+  "ruleUpdates": [
+    {
+      "code": "HRB-HX-EYE",
+      "ruleName": "≥3件器械包单价2.75",
+      "setRuleType": "PRICE_PER_INSTRUMENT",
+      "setSkipPackaging": true
+    }
+  ]
+}

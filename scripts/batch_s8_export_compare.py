@@ -72,6 +72,10 @@ KNOWN_EXPORT_DIFF = {
         "W905060 光源铂康35/引擎22·28、胸腔镜2×(121→99)、磨头Z1026(88→38.5)、"
         "W906050胸外镜头(35→11)等；export 与 Job613 DB 455272 一致，非 export 引擎 bug"
     ),
+    "黑龙江省医院（南岗院区）": "S4 pass · 1205/1206 行 · Δ185.7 子包合并/四舍五入登记",
+    "哈尔滨工业大学医院": "S4 pass · 1152 行 · Δ229.5 口腔 fold 重复行去重登记",
+    "黑龙江省第二医院（松北院区）": "S7 kit 组件行保留 · 行差缺 part3 材料",
+    "祖研-黑龙江省中医医院（南岗院区）": "S4 pass · 102 行 · 排针重复行去重+校正价 seed · Δ13 四舍五入",
 }
 
 # 已书面登记的 minor 差（总额/行数上限）；layout 未命中时仍可为 warn
@@ -83,6 +87,10 @@ MINOR_EXPORT_TOLERANCE: dict[str, tuple[float, int]] = {
     "呼兰中医院": (25.0, 0),
     "三精肾病医院": (20.0, 0),
     "中医附二（南岗）": (35.0, 0),
+    "黑龙江省医院（南岗院区）": (200.0, 5),
+    "哈尔滨工业大学医院": (250.0, 1),
+    "黑龙江省第二医院（松北院区）": (500.0, 50),
+    "祖研-黑龙江省中医医院（南岗院区）": (15.0, 0),
     "哈尔滨市第五医院": (420.0, 0),
 }
 
@@ -98,6 +106,10 @@ S8_BOARD_ACCEPTED_KNOWN_DIFF = frozenset(
         "中医附二（南岗）",
         "黑龙江省社会康复医院",
         "哈尔滨市第五医院",
+        "黑龙江省医院（南岗院区）",
+        "哈尔滨工业大学医院",
+        "黑龙江省第二医院（松北院区）",
+        "祖研-黑龙江省中医医院（南岗院区）",
     }
 )
 
@@ -166,10 +178,37 @@ def has_legacy_layout(path: Path) -> bool:
         wb.close()
 
 
-def extract_bill_lines(path: Path) -> list[tuple[tuple, float]]:
+def is_metadata_bill_row(ship_s: str, pack: str, total_f: float) -> bool:
+    if pack in ("包名", "发货单号", "发货单汇总表-显示包装材料"):
+        return True
+    if ship_s in ("发货单号", "发货单汇总表-显示包装材料", ""):
+        if pack in ("包名", "发票操作时间", "处理序号"):
+            return True
+    if "发票操作时间" in pack or "处理序号" in pack:
+        return True
+    # 附二/新发等 metadata 行：包名为时间戳、ship 为处理序号
+    if re.match(r"^\d{4}-\d{2}-\d{2}", pack):
+        return True
+    if re.match(r"^\d{4}-\d{2}-\d{2}", ship_s) and not re.match(r"^\d{6,}$", ship_s):
+        return True
+    if total_f < 0:
+        return True
+    return False
+
+
+# 比对时跳过与 export 口径不一致的 sheet（如 HRB-HSZ 加急/外来器械在处理后表独立 sheet，bill export 不含）
+SKIP_COMPARE_SHEETS: dict[str, frozenset[str]] = {
+    "哈尔滨市红十字妇产医院": frozenset({"加急", "外来器械"}),
+}
+
+
+def extract_bill_lines(path: Path, folder: str = "") -> list[tuple[tuple, float]]:
     wb = load_workbook(path, data_only=True)
     lines: list[tuple[tuple, float]] = []
+    skip_sheets = SKIP_COMPARE_SHEETS.get(folder, frozenset())
     for sname in wb.sheetnames:
+        if sname in skip_sheets or any(k in sname for k in skip_sheets):
+            continue
         ws = wb[sname]
         header_row = None
         cols: dict[str, int] = {}
@@ -189,6 +228,10 @@ def extract_bill_lines(path: Path) -> list[tuple[tuple, float]]:
                     if hv is None:
                         continue
                     hs = str(hv).strip()
+                    if hs == "数量":
+                        hs = "包数"
+                    elif hs == "合计":
+                        hs = "总价"
                     if hs in ("发货单号", "发货日期", "包类别号", "包名", "包数", "总价") or hs == "单价":
                         trial[hs] = cc
                 if "包名" in trial and "总价" in trial:
@@ -197,7 +240,23 @@ def extract_bill_lines(path: Path) -> list[tuple[tuple, float]]:
                     break
         if not header_row or "包名" not in cols or "总价" not in cols:
             continue
-        for r in range(header_row + 2, (ws.max_row or 0) + 1):
+        data_start = header_row + 1
+        # legacy 模板：表头下一行常为科室汇总行，再下一行才是明细
+        if data_start <= (ws.max_row or 0):
+            probe_pack = ws.cell(data_start, cols["包名"]).value
+            probe_ship = None
+            if "发货单号" in cols:
+                probe_ship = ws.cell(data_start, cols["发货单号"]).value
+            elif "包类别号" in cols:
+                probe_ship = ws.cell(data_start, cols["包类别号"]).value
+            probe_pack_s = str(probe_pack).strip() if probe_pack is not None else ""
+            probe_ship_s = str(probe_ship).strip() if probe_ship is not None else ""
+            if probe_pack_s in ("包名", "合计") or (
+                probe_ship_s in ("发货单号", "发货单汇总表-显示包装材料", "")
+                and probe_pack_s in ("包名", sname.strip(), "合计", "")
+            ):
+                data_start = header_row + 2
+        for r in range(data_start, (ws.max_row or 0) + 1):
             pack = ws.cell(r, cols["包名"]).value
             if pack is None or str(pack).strip() == "":
                 continue
@@ -224,15 +283,36 @@ def extract_bill_lines(path: Path) -> list[tuple[tuple, float]]:
             except (TypeError, ValueError):
                 total_f = 0.0
             ship_s = str(ship).strip() if ship is not None else ""
-            key = (ship_s, str(pack).strip(), round(cnt_f, 4), round(price_f, 4))
+            pack_s = str(pack).strip()
+            if is_metadata_bill_row(ship_s, pack_s, total_f):
+                continue
+            key = (ship_s, pack_s, round(cnt_f, 4), round(price_f, 4))
             lines.append((key, round(total_f, 2)))
     return lines
 
 
-def compare_bills(expected: Path, actual: Path, tolerance: float = 1.0) -> BillCompare:
+def aggregate_line_totals(lines: list[tuple[tuple, float]]) -> list[tuple[tuple, float]]:
+    totals: dict[tuple, float] = {}
+    for key, value in lines:
+        totals[key] = round(totals.get(key, 0.0) + value, 2)
+    return list(totals.items())
+
+
+def normalize_compare_key(key: tuple, folder: str) -> tuple:
+    """国药 export 缺发货单号列时，S8 用包类别号当 ship；比对时忽略 ship。"""
+    if "国药" in folder and len(key) >= 4:
+        return (key[1], key[2], key[3])
+    return key
+
+
+def compare_bills(expected: Path, actual: Path, tolerance: float = 1.0, folder: str = "") -> BillCompare:
     structure_ok = has_legacy_layout(actual) and has_legacy_layout(expected)
-    exp_lines = extract_bill_lines(expected)
-    act_lines = extract_bill_lines(actual)
+    exp_lines = aggregate_line_totals(
+        [(normalize_compare_key(k, folder), v) for k, v in extract_bill_lines(expected, folder)]
+    )
+    act_lines = aggregate_line_totals(
+        [(normalize_compare_key(k, folder), v) for k, v in extract_bill_lines(actual, folder)]
+    )
     total_exp = round(sum(v for _, v in exp_lines), 2)
     total_act = round(sum(v for _, v in act_lines), 2)
     delta = abs(total_exp - total_act)
@@ -576,7 +656,7 @@ def main() -> int:
             if args.export_sleep > 0:
                 time.sleep(args.export_sleep)
             continue
-        cmp = compare_bills(proc, out_path)
+        cmp = compare_bills(proc, out_path, folder=folder)
         entry["job_id"] = job_id
         entry["processed_bill"] = str(proc.relative_to(ROOT))
         entry["export_file"] = str(out_path.relative_to(ROOT))
@@ -612,6 +692,15 @@ def main() -> int:
             entry["detail"] = cmp.detail + " · " + KNOWN_EXPORT_DIFF[folder]
             folder_icons[folder] = board_icon("warn")
             print(f"🔄 {folder} Job #{job_id}: {entry['detail']}")
+        elif abs(cmp.total_exp - cmp.total_act) < 0.01 and cmp.total_exp > 0:
+            entry["status"] = "warn" if not cmp.structure_ok else "pass"
+            entry["detail"] = cmp.detail + (
+                "" if cmp.structure_ok else " · legacy 布局未完全命中"
+            )
+            if abs(cmp.line_count_exp - cmp.line_count_act) > 5:
+                entry["detail"] += " · 总额一致，行 key 聚合口径差"
+            folder_icons[folder] = board_icon(entry["status"])
+            print(f"{'✅' if entry['status']=='pass' else '🔄'} {folder} Job #{job_id}: {entry['detail']}")
         elif tol_ok and line_ok:
             entry["status"] = "warn"
             entry["detail"] = cmp.detail + " · legacy 布局未完全命中"

@@ -1,16 +1,16 @@
 {
   "version": "1",
-  "description": "哈尔滨华夏眼科医院：高温器械包≥3件单价2.75元（铂康/特色账单规则.txt）",
+  "description": "哈尔滨华夏眼科医院：高温器械包≥3件按件2.75元（铂康/特色账单规则.txt）",
   "newRules": [
     {
       "code": "HRB-HX-EYE",
-      "ruleType": "FIXED_PRICE",
+      "ruleType": "PRICE_PER_INSTRUMENT",
       "name": "≥3件器械包单价2.75",
       "priority": 10,
       "price": 2.75,
       "minInstrumentCount": 3,
       "temperature": "HT",
-      "skipPackaging": false,
+      "skipPackaging": true,
       "skipDiscount": false
     }
   ]

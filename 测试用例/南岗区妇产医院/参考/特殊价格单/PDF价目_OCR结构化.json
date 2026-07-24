@@ -113,8 +113,9 @@
       "name": "人流包",
       "setCount": 2,
       "instrumentCount": 8,
-      "unitPrice": 22,
-      "billingRule": "PDF人流包22"
+      "unitPrice": 33,
+      "billingRule": "PDF人流包33",
+      "note": "OCR 曾误读为 22；5月账单「人流包（90布）」均为 33，与取环包/人工流产一致"
     },
     {
       "seq": 15,

@@ -1,0 +1,95 @@
+{
+  "version": "1",
+  "description": "祖研南岗(ZUYAN-NG)：美容科排针 P0 校正价 + 10盘 fold，修复 export 仍按原始器械单价计价",
+  "customerUpdates": [
+    {
+      "code": "ZUYAN-NG",
+      "billingPricingMode": "special_only",
+      "billingEnabled": true
+    }
+  ],
+  "newRules": [
+    {
+      "code": "ZUYAN-NG",
+      "ruleType": "FIXED_PRICE",
+      "name": "校正价13.5",
+      "priority": 10,
+      "price": 13.5,
+      "keywords": [
+        "排针-11",
+        "排针-12",
+        "排针-14",
+        "排针-15",
+        "排针20",
+        "排针17",
+        "排针15",
+        "排针13",
+        "排针12",
+        "排针9件",
+        "排针-6",
+        "排针-10"
+      ],
+      "skipPackaging": true,
+      "skipDiscount": true
+    },
+    {
+      "code": "ZUYAN-NG",
+      "ruleType": "FIXED_PRICE",
+      "name": "校正价16.5",
+      "priority": 11,
+      "price": 16.5,
+      "keywords": [
+        "排针-23",
+        "排针-28",
+        "排针-30",
+        "排针21",
+        "排针22件",
+        "排针30件",
+        "排针21件",
+        "排针30件"
+      ],
+      "skipPackaging": true,
+      "skipDiscount": true
+    },
+    {
+      "code": "ZUYAN-NG",
+      "ruleType": "FIXED_PRICE",
+      "name": "校正价22.0",
+      "priority": 12,
+      "price": 22.0,
+      "keywords": [
+        "排针34件",
+        "排针35件",
+        "排针-34",
+        "排针-35",
+        "排针-47"
+      ],
+      "skipPackaging": true,
+      "skipDiscount": true
+    },
+    {
+      "code": "ZUYAN-NG",
+      "ruleType": "FIXED_PRICE",
+      "name": "校正价8.0",
+      "priority": 13,
+      "price": 8.0,
+      "keywords": [
+        "排针-6/Z",
+        "排针9件"
+      ],
+      "skipPackaging": true,
+      "skipDiscount": true
+    },
+    {
+      "code": "ZUYAN-NG",
+      "ruleType": "FOLD",
+      "name": "排针10盘算1件",
+      "priority": 20,
+      "keywords": ["排针"],
+      "threshold": 10,
+      "foldRatio": 5.5,
+      "skipPackaging": true,
+      "skipDiscount": true
+    }
+  ]
+}

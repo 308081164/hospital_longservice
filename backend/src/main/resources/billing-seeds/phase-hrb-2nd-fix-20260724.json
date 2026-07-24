@@ -1,0 +1,63 @@
+{
+  "version": "1",
+  "description": "市二院纠错：停用误伤正畸车针5.5规则；口腔科调刀8元；手术室止血带8元/包、电凝钩22元/件",
+  "deactivateRules": [
+    {
+      "code": "HRB-2ND",
+      "ruleName": "校正价5.5"
+    }
+  ],
+  "ruleUpdates": [
+    {
+      "code": "HRB-2ND",
+      "ruleName": "校正价8.0",
+      "addKeywords": ["市二院止血带"]
+    }
+  ],
+  "newRules": [
+    {
+      "code": "HRB-2ND",
+      "ruleType": "FIXED_PRICE",
+      "name": "口腔科正畸车针8元",
+      "priority": 7,
+      "price": 8,
+      "keywords": ["正畸去胶车针", "正畸去版车针"],
+      "conditionsJson": "[{\"field\":\"department\",\"value\":[\"口腔科\"]}]",
+      "skipPackaging": true,
+      "skipDiscount": true
+    },
+    {
+      "code": "HRB-2ND",
+      "ruleType": "FIXED_PRICE",
+      "name": "口腔科调刀8元",
+      "priority": 8,
+      "price": 8,
+      "keywords": ["调刀"],
+      "conditionsJson": "[{\"field\":\"department\",\"value\":[\"口腔科\"]}]",
+      "skipPackaging": true,
+      "skipDiscount": true
+    },
+    {
+      "code": "HRB-2ND",
+      "ruleType": "FIXED_PRICE",
+      "name": "手术室止血带8元",
+      "priority": 8,
+      "price": 8,
+      "keywords": ["市二院止血带"],
+      "conditionsJson": "[{\"field\":\"department\",\"value\":[\"手术室\"]}]",
+      "skipPackaging": true,
+      "skipDiscount": true
+    },
+    {
+      "code": "HRB-2ND",
+      "ruleType": "PRICE_PER_INSTRUMENT",
+      "name": "手术室电凝钩22元/件",
+      "priority": 9,
+      "price": 22,
+      "keywords": ["电凝钩吸引器"],
+      "conditionsJson": "[{\"field\":\"department\",\"value\":[\"手术室\"]}]",
+      "skipPackaging": true,
+      "skipDiscount": true
+    }
+  ]
+}

@@ -218,7 +218,17 @@
                   style="min-width: 120px"
                   @click="toggleAnomalyMode(entry)"
                 >
-                  {{ entry.anomalyLoading ? '正在加载全量数据...' : '仅查看异常' }}
+                  <span v-if="entry.anomalyLoading">正在加载全量数据...</span>
+                  <span v-else class="anomaly-filter-toggle-label">
+                    <span
+                      class="anomaly-filter-toggle-icon"
+                      :class="{ 'is-active': entry.onlyShowAbnormal }"
+                      aria-hidden="true"
+                    >
+                      <ElIcon v-if="entry.onlyShowAbnormal"><Select /></ElIcon>
+                    </span>
+                    仅查看异常
+                  </span>
                 </ElButton>
                 <ElButton
                   v-if="entry.savedJobId"
@@ -625,41 +635,56 @@
                 </span>
               </div>
 
-              <div class="mt-3 flex flex-wrap gap-2 border-t border-gray-200 pt-3">
+              <div class="mt-3 flex flex-wrap items-center gap-2 border-t border-gray-200 pt-3">
                 <ElButton size="small" @click="openDetail(group.item)">
                   {{ t('reconciliation.history.actions.detail') }}
                 </ElButton>
-                <ElButton
-                  size="small"
-                  type="primary"
-                  :disabled="group.item.reviewStatus !== 'pending' || !canReviewReconciliation"
-                  @click="openReview(group.item)"
+                <ElTooltip
+                  :disabled="canReviewHistoryCard(group.item)"
+                  :content="reviewHistoryCardDisabledReason(group.item)"
+                  placement="top"
                 >
-                  {{ t('reconciliation.history.actions.review') }}
-                </ElButton>
-                <ElDropdown
-                  v-if="canExport"
-                  size="small"
-                  @command="(cmd: string) => requestExport(group.item, cmd)"
+                  <span class="inline-flex">
+                    <ElButton
+                      size="small"
+                      :disabled="!canReviewHistoryCard(group.item)"
+                      @click="openReview(group.item)"
+                    >
+                      {{ t('reconciliation.history.actions.review') }}
+                    </ElButton>
+                  </span>
+                </ElTooltip>
+                <ElTooltip
+                  :disabled="canExport"
+                  :content="exportHistoryCardDisabledReason()"
+                  placement="top"
                 >
-                  <ElButton size="small" type="success">
-                    {{ t('reconciliation.history.actions.export') }}
-                    <ElIcon class="el-icon--right"><ArrowDown /></ElIcon>
-                  </ElButton>
-                  <template #dropdown>
-                    <ElDropdownMenu>
-                      <ElDropdownItem command="bill">
-                        {{ t('reconciliation.history.export.bill') }}
-                      </ElDropdownItem>
-                      <ElDropdownItem command="settlement">
-                        {{ t('reconciliation.history.export.settlement') }}
-                      </ElDropdownItem>
-                      <ElDropdownItem command="departmentSummary">
-                        {{ t('reconciliation.history.export.departmentSummary') }}
-                      </ElDropdownItem>
-                    </ElDropdownMenu>
-                  </template>
-                </ElDropdown>
+                  <span class="inline-flex">
+                    <ElDropdown
+                      trigger="click"
+                      :disabled="!canExport"
+                      @command="(cmd: string) => requestExport(group.item, cmd)"
+                    >
+                      <ElButton size="small" :disabled="!canExport">
+                        {{ t('reconciliation.history.actions.export') }}
+                        <ElIcon class="el-icon--right"><ArrowDown /></ElIcon>
+                      </ElButton>
+                      <template #dropdown>
+                        <ElDropdownMenu>
+                          <ElDropdownItem command="bill">
+                            {{ t('reconciliation.history.export.bill') }}
+                          </ElDropdownItem>
+                          <ElDropdownItem command="settlement">
+                            {{ t('reconciliation.history.export.settlement') }}
+                          </ElDropdownItem>
+                          <ElDropdownItem command="departmentSummary">
+                            {{ t('reconciliation.history.export.departmentSummary') }}
+                          </ElDropdownItem>
+                        </ElDropdownMenu>
+                      </template>
+                    </ElDropdown>
+                  </span>
+                </ElTooltip>
               </div>
             </div>
           </div>
@@ -705,7 +730,13 @@
     :settlement-adjustment="exportWizardJob?.settlementAdjustment ?? null"
     @exported="handleWizardExported"
   />
-  <ElDialog v-model="detailVisible" title="校对详情" width="90%" top="3vh" class="max-h-[90vh]">
+  <ElDialog
+    v-model="detailVisible"
+    title="校对详情"
+    width="90%"
+    top="3vh"
+    class="reconciliation-detail-dialog max-h-[90vh] flex flex-col"
+  >
     <template v-if="detailLoading">
       <div class="py-10 text-center text-sm text-gray-400">正在加载详情...</div>
     </template>
@@ -804,7 +835,13 @@
             {{ formatNumber(detailLogisticsAllocation.totalLogisticsFee) }}
           </span>
         </div>
-        <ElTable :data="detailLogisticsAllocation.deptAllocations" size="small" border stripe>
+        <ElTable
+          :data="detailLogisticsAllocation.deptAllocations"
+          size="small"
+          border
+          stripe
+          max-height="360"
+        >
           <ElTableColumn
             prop="department"
             :label="t('reconciliation.logisticsAllocation.department')"
@@ -3112,6 +3149,29 @@
     }
   }
 
+  function canReviewHistoryCard(item: Api.Hospital.ReconciliationJob): boolean {
+    return canReviewReconciliation.value && item.reviewStatus === 'pending'
+  }
+
+  function reviewHistoryCardDisabledReason(item: Api.Hospital.ReconciliationJob): string {
+    if (!canReviewReconciliation.value) {
+      return t('reconciliation.history.actions.noReviewPermission')
+    }
+    if (item.reviewStatus !== 'pending') {
+      return t('reconciliation.history.actions.alreadyReviewed', {
+        status: reviewLabelMap[item.reviewStatus] ?? item.reviewStatus
+      })
+    }
+    return ''
+  }
+
+  function exportHistoryCardDisabledReason(): string {
+    if (!canExport.value) {
+      return t('reconciliation.history.actions.noExportPermission')
+    }
+    return ''
+  }
+
   const openReview = async (item: Api.Hospital.ReconciliationJob) => {
     const ok = await runReviewPreflight(item, {
       t,
@@ -3281,6 +3341,18 @@
 </script>
 
 <style scoped>
+  :deep(.reconciliation-detail-dialog.el-dialog) {
+    display: flex;
+    flex-direction: column;
+    max-height: 90vh;
+  }
+
+  :deep(.reconciliation-detail-dialog .el-dialog__body) {
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow-y: auto;
+  }
+
   :deep(.compact-upload .el-upload) {
     width: 100%;
   }
@@ -3468,5 +3540,34 @@
 
   .review-conclusion-card.is-reject .review-conclusion-check {
     color: var(--el-color-danger);
+  }
+
+  .anomaly-filter-toggle-label {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .anomaly-filter-toggle-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 14px;
+    height: 14px;
+    border: 1.5px solid currentColor;
+    border-radius: 2px;
+    flex-shrink: 0;
+    opacity: 0.7;
+  }
+
+  .anomaly-filter-toggle-icon.is-active {
+    background: var(--el-color-warning);
+    border-color: var(--el-color-warning);
+    color: #fff;
+    opacity: 1;
+  }
+
+  .anomaly-filter-toggle-icon.is-active .el-icon {
+    font-size: 11px;
   }
 </style>

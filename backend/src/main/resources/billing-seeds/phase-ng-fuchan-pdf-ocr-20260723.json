@@ -77,9 +77,9 @@
     {
       "code": "NG-FUCHAN",
       "ruleType": "FIXED_PRICE",
-      "name": "PDF人流包22",
+      "name": "PDF人流包33",
       "priority": 26,
-      "price": 22,
+      "price": 33,
       "keywords": [
         "人流包"
       ],

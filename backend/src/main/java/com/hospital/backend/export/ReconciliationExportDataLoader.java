@@ -24,6 +24,7 @@ public class ReconciliationExportDataLoader {
     private final ExportNameMappingApplier exportNameMappingApplier;
     private final GuoyaoQuantityAlgorithm guoyaoQuantityAlgorithm;
     private final ReconciliationExportRowFilter exportRowFilter;
+    private final BillExportRowGrouper exportRowGrouper;
 
     public ExportContext loadContext(Long jobId, ExportType exportType, Long templateIdOverride) {
         HospitalReconciliationJob job = jobMapper.selectById(jobId);
@@ -37,9 +38,12 @@ public class ReconciliationExportDataLoader {
         String customerCode = customerOpt.map(c -> c.getCode()).orElse(null);
         rows = exportNameMappingApplier.apply(customerId, rows);
         rows = exportRowFilter.apply(customerCode, rows);
+        rows = exportRowGrouper.apply(customerCode, rows);
         ResolvedExportTemplate template = templateResolver.resolve(customerId, exportType, templateIdOverride);
         if (ExportTemplateResolverKeys.GUOYAO_BILL.equals(template.getStrategyKey())) {
+            rows = exportRowGrouper.aggregateGuoyaoDuplicateRows(rows);
             rows.forEach(guoyaoQuantityAlgorithm::applyToRow);
+            rows = exportRowGrouper.splitGuoyaoPlatinumRows(rows);
         }
         return ExportContext.builder()
                 .jobId(jobId)

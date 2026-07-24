@@ -561,7 +561,8 @@
         "title": "Special Billing Rules",
         "add": "Add Rule",
         "product": "Product / Keyword",
-        "productPlaceholder": "Search product (optional)",
+        "productPlaceholder": "Search catalog or type pack keyword",
+        "productHint": "Type a pack name when the product is not in the catalog; it syncs to match keywords below",
         "optional": "optional",
         "ruleType": "Rule Type",
         "fixedPrice": "Fixed Price",
@@ -720,7 +721,10 @@
       "actions": {
         "detail": "View Details",
         "review": "Review",
-        "export": "Export"
+        "export": "Export",
+        "noReviewPermission": "You do not have permission to review",
+        "noExportPermission": "You do not have permission to export",
+        "alreadyReviewed": "This version is already {status} and cannot be reviewed again"
       },
       "export": {
         "bill": "Export Bill",

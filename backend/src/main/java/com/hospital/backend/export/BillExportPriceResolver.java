@@ -62,9 +62,14 @@ public final class BillExportPriceResolver {
         if (row.getCorrectedTotalPrice() != null) {
             return row.getCorrectedTotalPrice();
         }
+        // D2/D6/D8：计价引擎 expectedUnitPrice 优先于 matchedPriceOption（后者常为原始器械单价）
         if (row.getExpectedUnitPrice() != null) {
             int packCount = row.getPackCount() != null ? Math.max(1, row.getPackCount()) : 1;
             return round(row.getExpectedUnitPrice() * packCount);
+        }
+        if (row.getMatchedPriceOption() != null) {
+            int packCount = row.getPackCount() != null ? Math.max(1, row.getPackCount()) : 1;
+            return round(row.getMatchedPriceOption() * packCount);
         }
         return row.getTotalPrice();
     }

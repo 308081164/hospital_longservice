@@ -1,0 +1,12 @@
+{
+  "version": "1",
+  "description": "南岗妇产纠错：PDF OCR 误读人流包为 22 元；5月/6月账单均为 33 元（与取环包、人工流产一致）",
+  "ruleUpdates": [
+    {
+      "code": "NG-FUCHAN",
+      "ruleName": "PDF人流包22",
+      "setPrice": 33,
+      "setName": "PDF人流包33"
+    }
+  ]
+}
