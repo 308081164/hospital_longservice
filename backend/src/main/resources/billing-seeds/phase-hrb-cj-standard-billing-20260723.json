@@ -1,0 +1,14 @@
+{
+  "version": "1",
+  "description": "哈尔滨长健医院（HRB-CJ）：铂康 rule_id=8 标准灭菌，启用特色账单以校验标准阶梯价（无单独 fixed 规则）",
+  "profiles": [
+    {
+      "code": "HRB-CJ",
+      "name": "哈尔滨长健医院",
+      "billingEnabled": true,
+      "billingPricingMode": "standard",
+      "defaultRuleId": 8,
+      "aliases": ["哈尔滨长健医院"]
+    }
+  ]
+}

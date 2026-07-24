@@ -1,0 +1,17 @@
+{
+  "version": "1",
+  "description": "道外区人民医院 pathOverride：无低温路径 + 散件高温 3 元/件（FR-M1-03 / 特色账单规则 §9）",
+  "profiles": [
+    {
+      "code": "DAOWAI-RM",
+      "name": "道外区人民医院",
+      "billingEnabled": true,
+      "billingPricingMode": "standard",
+      "notes": "2026-07-23 S3+：pathOverride 落库；P0 关键词 FIXED_PRICE 仍保留",
+      "pathOverride": {
+        "disableLowTemp": true,
+        "forceHighTempUnitPrice": 3.0
+      }
+    }
+  ]
+}

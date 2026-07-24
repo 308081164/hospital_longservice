@@ -4,9 +4,11 @@
 # Java SchemaMigrationRunner 仍会在应用启动后执行列级迁移。
 set -e
 
+JAVA_OPTS="${JAVA_OPTS:--Xms256m -Xmx2048m}"
+
 if [ "${SKIP_DB_MIGRATE:-}" = "1" ]; then
   echo "[entrypoint] SKIP_DB_MIGRATE=1，跳过 SQL 清单迁移"
-  exec java -jar /app/app.jar --spring.profiles.active=docker
+  exec java $JAVA_OPTS -jar /app/app.jar --spring.profiles.active=docker
 fi
 
 MYSQL_HOST="${MYSQL_HOST:-mysql}"
@@ -49,4 +51,4 @@ else
   echo "[entrypoint] 未找到 /app/db/migrate_manifest.txt，跳过 SQL 清单迁移"
 fi
 
-exec java -jar /app/app.jar --spring.profiles.active=docker
+exec java $JAVA_OPTS -jar /app/app.jar --spring.profiles.active=docker

@@ -11,6 +11,8 @@ public class ExportV2Request {
     /** Optional explicit export_template.id */
     private Long templateId;
 
-    /** When true, skip legacy bridge and use v2 strategy engine only */
+    /**
+     * Reserved for future strategy-only exports. Bill/settlement always use the legacy POI template path.
+     */
     private Boolean useStrategyEngine = true;
 }

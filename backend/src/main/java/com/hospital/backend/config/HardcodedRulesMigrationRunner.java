@@ -158,8 +158,8 @@ public class HardcodedRulesMigrationRunner implements CommandLineRunner {
                 List.of("机扩针"), null, 5, bd("5"));
         ensureFoldRule("HRB-HTFH", "航天风华镍钛锉 5 件算 1 件", 20,
                 List.of("镍钛锉"), null, 5, bd("5"));
-        ensureFoldRule("HRB-MHM", "美涵 20cm 以下 5 件算 1 件", 10,
-                List.of(), 20, 5, bd("5"));
+        ensureFoldRule("HRB-MHM", "美涵吸脂针20cm以下5件算1件", 10,
+                List.of("型号20cm以下", "20cm以下"), null, 5, bd("5"));
         ensureFoldRule("HY-HYY", "海员总医院松北 5 件算 1 件", 10,
                 List.of(), null, 5, bd("5"));
         ensureFoldRule("ZYY-DSFY", "中医药大学四院 5 件算 1 件", 10,

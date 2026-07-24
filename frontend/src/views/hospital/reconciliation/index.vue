@@ -638,9 +638,9 @@
                   {{ t('reconciliation.history.actions.review') }}
                 </ElButton>
                 <ElDropdown
-                  v-if="group.item.reviewStatus === 'approved' && canExport"
+                  v-if="canExport"
                   size="small"
-                  @command="(cmd: string) => openExportWizard(group.item, cmd)"
+                  @command="(cmd: string) => requestExport(group.item, cmd)"
                 >
                   <ElButton size="small" type="success">
                     {{ t('reconciliation.history.actions.export') }}
@@ -1996,6 +1996,10 @@
   import UatHelperPanel from '@/components/business/reconciliation/UatHelperPanel.vue'
   import BillingRoleBadge from '@/components/business/BillingRoleBadge.vue'
   import { useBillingPermission } from '@/composables/useBillingPermission'
+  import {
+    runExportPreflight,
+    runReviewPreflight
+  } from '@/composables/reconciliationExportPreflight'
   import { extractRowBillingFields, hasBillingDetail } from '@/utils/reconciliationBillingNotes'
 
   defineOptions({ name: 'HospitalReconciliation' })
@@ -2814,7 +2818,7 @@
       detailExternalRows.value = []
     }
     try {
-      detailAllocation.value = await getJobAllocationResult(jobId)
+      detailAllocation.value = (await getJobAllocationResult(jobId)) ?? null
     } catch {
       detailAllocation.value = null
     }
@@ -3108,10 +3112,44 @@
     }
   }
 
-  const openReview = (item: Api.Hospital.ReconciliationJob) => {
+  const openReview = async (item: Api.Hospital.ReconciliationJob) => {
+    const ok = await runReviewPreflight(item, {
+      t,
+      onOpenDetail: () => {
+        void openDetail(item)
+      }
+    })
+    if (!ok) return
     reviewTarget.value = item
     reviewForm.value = { status: 'approved', comment: '' }
     reviewVisible.value = true
+  }
+
+  function applyJobPatchToLists(updated: Api.Hospital.ReconciliationJob) {
+    const idx = historyItems.value.findIndex((item) => item.id === updated.id)
+    if (idx >= 0) {
+      historyItems.value[idx] = { ...historyItems.value[idx], ...updated }
+    }
+    if (detailData.value?.id === updated.id) {
+      detailData.value = { ...detailData.value, ...updated }
+    }
+    if (exportWizardJob.value?.id === updated.id) {
+      exportWizardJob.value = { ...exportWizardJob.value, ...updated }
+    }
+  }
+
+  const requestExport = async (item: Api.Hospital.ReconciliationJob, type: string) => {
+    if (!canExport.value) return
+    const outcome = await runExportPreflight(item, {
+      reviewerName: operatorName.value.trim() || '未命名审核人',
+      t,
+      onOpenDetail: () => {
+        void openDetail(item)
+      }
+    })
+    if (!outcome.proceed) return
+    applyJobPatchToLists(outcome.job)
+    openExportWizard(outcome.job, type)
   }
 
   const confirmReview = async () => {

@@ -73,10 +73,8 @@ public class DepartmentAllocationController {
             if (job == null) {
                 return ResponseEntity.notFound().build();
             }
-            Result<AllocationResult> allocationResult = departmentAllocationService.getAllocationResult(jobId);
-            AllocationResult allocation = allocationResult.getCode() == 200
-                    ? allocationResult.getData()
-                    : null;
+            AllocationResult allocation =
+                    departmentAllocationService.getAllocationResult(jobId).getData();
 
             List<HospitalReconciliationRow> rows =
                     rowMapper.selectByJobIdOrderBySheetNameAscRowNumberAsc(jobId);

@@ -30,14 +30,16 @@ export function runJobAllocation(jobId: number, config?: Record<string, unknown>
 }
 
 export function getJobAllocationResult(jobId: number) {
-  return request.get<AllocationResult>({
+  return request.get<AllocationResult | null>({
     url: `/api/hospital-reconciliations/${jobId}/allocation-result`,
+    showErrorMessage: false,
   })
 }
 
 export function getJobRosterHints(jobId: number) {
   return request.get<RosterMatchHint[]>({
     url: `/api/hospital-reconciliations/${jobId}/roster-hints`,
+    showErrorMessage: false,
   })
 }
 

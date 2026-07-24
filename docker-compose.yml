@@ -60,6 +60,8 @@ services:
       IMPORT_BOKANG_DATA: ${IMPORT_BOKANG_DATA:-0}
       BOKANG_DATA_DIR: /app/bokang-data
       BOKANG_MAX_PRODUCTS: ${BOKANG_MAX_PRODUCTS:-500}
+      # 大 Job export-v2（多 sheet POI）需更大堆；默认约 1G 易在批量 S8 时 OOM
+      JAVA_OPTS: ${JAVA_OPTS:--Xms256m -Xmx2048m}
       TZ: Asia/Shanghai
     volumes:
       - backend-uploads:/app/uploads

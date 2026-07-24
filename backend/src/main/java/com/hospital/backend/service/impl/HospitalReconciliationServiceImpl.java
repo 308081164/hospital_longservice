@@ -12,6 +12,7 @@ import com.hospital.backend.service.LogisticsPipelineService;
 import com.hospital.backend.service.MonthlySettlementCalculator;
 import com.hospital.backend.dto.response.logistics.LogisticsAllocationPreviewResponse;
 import com.hospital.backend.service.LogisticsAllocationService;
+import com.hospital.backend.export.BillExportPriceResolver;
 import com.hospital.backend.export.SheetOrchestrator;
 import com.hospital.backend.service.UrgentFeeCalculator;
 import com.hospital.backend.service.DeductionCalculator;
@@ -2646,6 +2647,9 @@ public class HospitalReconciliationServiceImpl implements HospitalReconciliation
                                 .distinct()
                                 .count()
                         : 1;
+                if (request.getSheetMetas() != null && request.getSheetMetas().size() > 1) {
+                    distinctSheets = Math.max(distinctSheets, request.getSheetMetas().size());
+                }
                 if (distinctSheets > 1) {
                     createBillTemplateWorkbook(workbook, request);
                 } else {
@@ -3380,6 +3384,16 @@ public class HospitalReconciliationServiceImpl implements HospitalReconciliation
             item.setTotalPrice(r.getTotalPrice());
             item.setExpectedUnitPrice(r.getExpectedUnitPrice());
             item.setCorrectedTotalPrice(r.getCorrectedTotalPrice());
+            Double exportUnit = BillExportPriceResolver.resolveUnitPrice(r);
+            Double exportTotal = BillExportPriceResolver.resolveTotalPrice(r);
+            if (exportUnit != null) {
+                item.setExpectedUnitPrice(exportUnit);
+                item.setUnitPrice(exportUnit);
+            }
+            if (exportTotal != null) {
+                item.setCorrectedTotalPrice(exportTotal);
+                item.setTotalPrice(exportTotal);
+            }
             item.setDifference(r.getDifference());
             item.setStatus(r.getStatus());
             item.setPricingRule(r.getPricingRule());
@@ -3764,10 +3778,7 @@ public class HospitalReconciliationServiceImpl implements HospitalReconciliation
         }
 
         // ===== 第八步：写入标题/信息区域 =====
-        // 标准模板保留原始标题，旧模板覆盖
-        if (!combinedMode) {
-            setCellValue(sheet, "C1", "发货单汇总表-显示包装材料");
-        }
+        setCellValue(sheet, "C1", "发货单汇总表-显示包装材料");
         BillSheetMeta meta = metaMap != null ? metaMap.get(sheetName) : null;
         if (meta != null) {
             // B4: 日期（仅在有有效文本时覆盖模板原始值）
@@ -3815,9 +3826,8 @@ public class HospitalReconciliationServiceImpl implements HospitalReconciliation
                 .sum();
         double totalAmount = exportRows.stream()
                 .mapToDouble(r -> {
-                    if (r.getCorrectedTotalPrice() != null) return r.getCorrectedTotalPrice();
-                    if (r.getTotalPrice() != null) return r.getTotalPrice();
-                    return 0.0;
+                    Double resolved = BillExportPriceResolver.resolveTotalPrice(r);
+                    return resolved != null ? resolved : 0.0;
                 })
                 .sum();
         // 包数列汇总（如模板有该列）
@@ -3867,11 +3877,11 @@ public class HospitalReconciliationServiceImpl implements HospitalReconciliation
                 setCellValue(sheet, r, instCountCol + 1, row.getInstrumentCount());
             }
             if (unitPriceCol != null) {
-                Double price = row.getExpectedUnitPrice() != null ? row.getExpectedUnitPrice() : row.getUnitPrice();
+                Double price = BillExportPriceResolver.resolveUnitPrice(row);
                 if (price != null) setCellValue(sheet, r, unitPriceCol + 1, price);
             }
             if (totalPriceCol != null) {
-                Double total = row.getCorrectedTotalPrice() != null ? row.getCorrectedTotalPrice() : row.getTotalPrice();
+                Double total = BillExportPriceResolver.resolveTotalPrice(row);
                 if (total != null) setCellValue(sheet, r, totalPriceCol + 1, total);
             }
             if (diffCol != null) {
@@ -5923,6 +5933,14 @@ public class HospitalReconciliationServiceImpl implements HospitalReconciliation
             row.put("matchedVariantId", match.getVariantId());
             row.put("pricingPath", match.getPricingPath());
             row.put("specFingerprint", match.getSpecFingerprint());
+            if (valueToString(row.get("packageMaterial"), "").isBlank()
+                    && match.getPackageMaterial() != null && !match.getPackageMaterial().isBlank()) {
+                row.put("packageMaterial", match.getPackageMaterial());
+            }
+            if (safeGetInt(row, "instrumentCount", 0) <= 0
+                    && match.getInstrumentCountHint() != null && match.getInstrumentCountHint() > 0) {
+                row.put("instrumentCount", match.getInstrumentCountHint());
+            }
         });
     }
 

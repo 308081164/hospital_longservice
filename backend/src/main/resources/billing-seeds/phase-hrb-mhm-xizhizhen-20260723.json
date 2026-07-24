@@ -1,0 +1,21 @@
+{
+  "version": "1",
+  "description": "哈尔滨美涵美 HRB-MHM：吸脂针包名含 20cm以下 时 5 件算 1 件；20cm以上 不折算（引擎侧跳过全局针小件规则）",
+  "deactivateRules": [
+    {
+      "code": "HRB-MHM",
+      "ruleName": "美涵 20cm 以下 5 件算 1 件"
+    }
+  ],
+  "newRules": [
+    {
+      "code": "HRB-MHM",
+      "ruleType": "FOLD",
+      "name": "美涵吸脂针20cm以下5件算1件",
+      "priority": 10,
+      "keywords": ["型号20cm以下", "20cm以下"],
+      "threshold": 5,
+      "foldRatio": 5
+    }
+  ]
+}

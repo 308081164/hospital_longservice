@@ -47,6 +47,55 @@ class CompareResult:
     extra_keys: list[str] = field(default_factory=list)
 
 
+def load_md_preamble() -> str:
+    if not OUTPUT_INDEX.is_file():
+        return ""
+    text = OUTPUT_INDEX.read_text(encoding="utf-8")
+    marker = "| 医院 |"
+    idx = text.find(marker)
+    if idx < 0:
+        return ""
+    return text[:idx].rstrip() + "\n\n"
+
+
+def parse_existing_results() -> dict[str, CompareResult]:
+    out: dict[str, CompareResult] = {}
+    if not OUTPUT_INDEX.is_file():
+        return out
+    for line in OUTPUT_INDEX.read_text(encoding="utf-8").splitlines():
+        if not line.startswith("|") or line.startswith("| 医院") or line.startswith("|------"):
+            continue
+        parts = [p.strip() for p in line.split("|") if p.strip()]
+        if len(parts) < 8:
+            continue
+        try:
+            job_id = int(parts[1])
+        except ValueError:
+            job_id = None
+        out[parts[0]] = CompareResult(
+            hospital=parts[0],
+            job_id=job_id,
+            expected=int(parts[2]),
+            system_warnings=int(parts[3]),
+            matched=int(parts[4]),
+            missed=int(parts[5]),
+            extra=int(parts[6]),
+            status=parts[7],
+        )
+    return out
+
+
+def merge_partial_results(
+    prior: dict[str, CompareResult], partial: list[CompareResult]
+) -> list[CompareResult]:
+    by_name = dict(prior)
+    for r in partial:
+        by_name[r.hospital] = r
+    merged = [by_name[h] for h in TODO_HOSPITALS if h in by_name]
+    extras = [by_name[k] for k in by_name if k not in TODO_HOSPITALS]
+    return merged + extras
+
+
 def docker_curl(args: list[str]) -> str:
     cmd = ["docker", "exec", BACKEND, "curl", "-sS", *args]
     return subprocess.check_output(cmd, text=True)
@@ -219,9 +268,12 @@ def compare_hospital(token: str, name: str) -> CompareResult:
     return result
 
 
-def render_index(results: list[CompareResult]) -> str:
+def render_index(results: list[CompareResult], preamble: str = "") -> str:
+    head = preamble.strip()
+    if not head:
+        head = "# 批量 6 月系统对账结果"
     lines = [
-        "# 批量 6 月系统对账结果",
+        head,
         "",
         "| 医院 | Job | 期待 | 系统warning | 命中 | 漏检 | 多报 | 状态 |",
         "|------|-----|------|------------|------|------|------|------|",
@@ -244,13 +296,18 @@ def render_index(results: list[CompareResult]) -> str:
 
 
 def main() -> int:
-    only = sys.argv[1:] if len(sys.argv) > 1 else TODO_HOSPITALS
+    only = sys.argv[1:] if len(sys.argv) > 1 else list(TODO_HOSPITALS)
+    partial_run = len(sys.argv) > 1
     token = get_token()
-    results = []
+    results: list[CompareResult] = []
     for name in only:
         print(f"Processing {name}...", flush=True)
         results.append(compare_hospital(token, name))
-    text = render_index(results)
+    preamble = load_md_preamble() if partial_run else ""
+    if partial_run:
+        prior = parse_existing_results()
+        results = merge_partial_results(prior, results) if prior else results
+    text = render_index(results, preamble=preamble)
     OUTPUT_INDEX.write_text(text, encoding="utf-8")
     print(text)
     print(f"\nWritten: {OUTPUT_INDEX}")

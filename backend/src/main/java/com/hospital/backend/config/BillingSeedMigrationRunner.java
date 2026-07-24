@@ -76,7 +76,19 @@ public class BillingSeedMigrationRunner implements CommandLineRunner {
             new IncrementalSeed("billing_seed_s7_daowai_wailai_keywords_20260723_v1",
                     "billing-seeds/phase-s7-daowai-wailai-keywords-20260723.json"),
             new IncrementalSeed("billing_seed_s7_sanjing_hulan_wailai_keywords_20260723_v1",
-                    "billing-seeds/phase-s7-sanjing-hulan-wailai-keywords-20260723.json")
+                    "billing-seeds/phase-s7-sanjing-hulan-wailai-keywords-20260723.json"),
+            new IncrementalSeed("billing_seed_hrb_cj_standard_billing_20260723_v1",
+                    "billing-seeds/phase-hrb-cj-standard-billing-20260723.json"),
+            new IncrementalSeed("billing_seed_hrb_mhm_xizhizhen_20260723_v1",
+                    "billing-seeds/phase-hrb-mhm-xizhizhen-20260723.json"),
+            new IncrementalSeed("billing_seed_hrb_sd_neau_kouqiang_fold_20260723_v1",
+                    "billing-seeds/phase-hrb-sd-neau-kouqiang-fold-20260723.json"),
+            new IncrementalSeed("billing_seed_export_rules_20260723_v1",
+                    "billing-seeds/phase-export-rules-20260723.json"),
+            new IncrementalSeed("billing_seed_daowai_path_override_20260723_v1",
+                    "billing-seeds/phase-daowai-path-override-20260723.json"),
+            new IncrementalSeed("billing_seed_hlfb_sf_chezhen_20260724_v1",
+                    "billing-seeds/phase-hlfb-sf-chezhen-20260724.json")
     );
 
     private static final String ZYY_D1_P0_MARKER = "billing_seed_zyy_d1_p0_v2";
@@ -94,6 +106,7 @@ public class BillingSeedMigrationRunner implements CommandLineRunner {
     private final CustomerBillingPolicyMapper billingPolicyMapper;
     private final CustomerGroupMapper customerGroupMapper;
     private final CustomerGroupMemberMapper customerGroupMemberMapper;
+    private final ExportTemplateMapper exportTemplateMapper;
     private final JdbcTemplate jdbcTemplate;
 
     @Override
@@ -121,6 +134,8 @@ public class BillingSeedMigrationRunner implements CommandLineRunner {
                 applyBokang20260722SeedFile(incremental.classpathFile());
             } else if ("billing-seeds/phase-zyy-d1-standard-pricing-20260723.json".equals(incremental.classpathFile())) {
                 applied = applyCustomerStandardPricingSeedFile(incremental.classpathFile());
+            } else if ("billing-seeds/phase-export-rules-20260723.json".equals(incremental.classpathFile())) {
+                applied = applyExportRulesSeedFile(incremental.classpathFile());
             } else if ("billing-seeds/phase-batch-p0.2.json".equals(incremental.classpathFile())
                     || "billing-seeds/phase-batch-p0.3.json".equals(incremental.classpathFile())
                     || "billing-seeds/phase-batch-p0.5.1.json".equals(incremental.classpathFile())
@@ -137,6 +152,9 @@ public class BillingSeedMigrationRunner implements CommandLineRunner {
                     || "billing-seeds/phase-ng-fuchan-pdf-ocr-20260723.json".equals(incremental.classpathFile())
                     || "billing-seeds/phase-ng-fuchan-kuobang-wanpan-20260723.json".equals(incremental.classpathFile())
                     || "billing-seeds/phase-hrb-bc-med-beauty-20260723.json".equals(incremental.classpathFile())
+                    || "billing-seeds/phase-hrb-mhm-xizhizhen-20260723.json".equals(incremental.classpathFile())
+                    || "billing-seeds/phase-hrb-sd-neau-kouqiang-fold-20260723.json".equals(incremental.classpathFile())
+                    || "billing-seeds/phase-hlfb-sf-chezhen-20260724.json".equals(incremental.classpathFile())
                     || "billing-seeds/phase-s7-bokang-pdf-ocr-20260723.json".equals(incremental.classpathFile())
                     || "billing-seeds/phase-s7-daowai-wailai-keywords-20260723.json".equals(incremental.classpathFile())) {
                 applyBatchPatchSeedFile(incremental.classpathFile());
@@ -425,6 +443,98 @@ public class BillingSeedMigrationRunner implements CommandLineRunner {
         }
     }
 
+    /** S7：客户级 export_template 绑定 + exportCatalog 文档化条目 */
+    private boolean applyExportRulesSeedFile(String file) {
+        try {
+            ClassPathResource resource = new ClassPathResource(file);
+            if (!resource.exists()) {
+                log.warn("Export rules seed file missing: {}", file);
+                return false;
+            }
+            JsonNode root = JsonUtils.getObjectMapper().readTree(resource.getInputStream());
+            seedProfiles(root.path("profiles"));
+            int bound = 0;
+            for (JsonNode overrideNode : root.path("exportTemplateOverrides")) {
+                String code = text(overrideNode, "code");
+                if (code == null) {
+                    continue;
+                }
+                Customer customer = customerMapper.selectByCode(code);
+                if (customer == null) {
+                    log.warn("Export template override skipped: {} not found", code);
+                    continue;
+                }
+                JsonNode templates = overrideNode.path("templates");
+                if (!templates.isArray()) {
+                    continue;
+                }
+                for (JsonNode tpl : templates) {
+                    if (ensureCustomerExportTemplateBinding(customer, tpl)) {
+                        bound++;
+                    }
+                }
+            }
+            log.info("Applied export rules seed: {} ({} template bindings)", file, bound);
+            return true;
+        } catch (Exception e) {
+            log.error("Failed to apply export rules seed {}: {}", file, e.getMessage(), e);
+            return false;
+        }
+    }
+
+    private boolean ensureCustomerExportTemplateBinding(Customer customer, JsonNode tpl) {
+        String type = text(tpl, "type");
+        String strategyKey = text(tpl, "strategyKey");
+        if (type == null || strategyKey == null) {
+            return false;
+        }
+        String name = text(tpl, "name");
+        if (name == null || name.isBlank()) {
+            name = customer.getCode() + "-" + type + "-S7";
+        }
+        String columnMapping = tpl.has("columnMapping") ? tpl.get("columnMapping").toString() : "{}";
+        String sheetConfig = String.format("{\"strategyKey\":\"%s\"}", strategyKey);
+
+        List<ExportTemplate> existing =
+                exportTemplateMapper.selectByCustomerAndType(customer.getId(), type);
+        ExportTemplate target = null;
+        if (existing != null) {
+            for (ExportTemplate row : existing) {
+                if (name.equals(row.getName())) {
+                    target = row;
+                    break;
+                }
+            }
+        }
+        if (target == null) {
+            ExportTemplate created = new ExportTemplate();
+            created.setCustomerId(customer.getId());
+            created.setTemplateType(type);
+            created.setName(name);
+            created.setStoragePath("");
+            created.setColumnMapping(columnMapping);
+            created.setSheetConfig(sheetConfig);
+            created.setIsActive(true);
+            exportTemplateMapper.insert(created);
+            log.info("Export template binding created: {} → {} ({})", customer.getCode(), name, type);
+            return true;
+        }
+        boolean changed = false;
+        if (!sheetConfig.equals(target.getSheetConfig())) {
+            target.setSheetConfig(sheetConfig);
+            changed = true;
+        }
+        if (!columnMapping.equals(target.getColumnMapping())) {
+            target.setColumnMapping(columnMapping);
+            changed = true;
+        }
+        if (changed) {
+            exportTemplateMapper.updateById(target);
+            log.info("Export template binding updated: {} → {}", customer.getCode(), name);
+        }
+        return true;
+    }
+
     /** 客户标准灭菌价覆盖 + 计价模式（如附一 hybrid + standardPricingOverride） */
     private boolean applyCustomerStandardPricingSeedFile(String file) {
         try {
@@ -477,6 +587,26 @@ public class BillingSeedMigrationRunner implements CommandLineRunner {
                 return;
             }
             JsonNode root = JsonUtils.getObjectMapper().readTree(resource.getInputStream());
+            for (JsonNode upd : root.path("customerUpdates")) {
+                String code = text(upd, "code");
+                if (code == null) {
+                    continue;
+                }
+                Customer customer = customerMapper.selectByCode(code);
+                if (customer == null) {
+                    log.warn("Batch patch customer update skipped: {} not found", code);
+                    continue;
+                }
+                if (upd.has("billingPricingMode")) {
+                    customer.setBillingPricingMode(text(upd, "billingPricingMode"));
+                }
+                if (upd.has("billingEnabled")) {
+                    customer.setBillingEnabled(bool(upd, "billingEnabled", false));
+                }
+                customerMapper.updateById(customer);
+                log.info("Batch patch updated customer {}: mode={} enabled={}",
+                        code, customer.getBillingPricingMode(), customer.getBillingEnabled());
+            }
             for (JsonNode patch : root.path("ruleUpdates")) {
                 String code = text(patch, "code");
                 String ruleName = text(patch, "ruleName");
@@ -711,6 +841,13 @@ public class BillingSeedMigrationRunner implements CommandLineRunner {
         if (profile.hasNonNull("notes") && (customer.getNotes() == null || customer.getNotes().isBlank())) {
             customer.setNotes(text(profile, "notes"));
             changed = true;
+        }
+        if (profile.hasNonNull("pathOverride")) {
+            String json = profile.get("pathOverride").toString();
+            if (customer.getPathOverride() == null || customer.getPathOverride().isBlank()) {
+                customer.setPathOverride(json);
+                changed = true;
+            }
         }
         if (changed) {
             customerMapper.updateById(customer);

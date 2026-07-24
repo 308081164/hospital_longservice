@@ -197,7 +197,8 @@ public class ProductFullImportRunner implements CommandLineRunner {
         variant.setCategoryNo(agg.categoryNo);
         variant.setFamilyNameParsed(p.familyName);
         variant.setSpecSuffix(p.specSuffix);
-        variant.setInstrumentCountHint(p.instrumentCountHint);
+        variant.setInstrumentCountHint(
+                agg.maxInstrumentCount != null ? agg.maxInstrumentCount : p.instrumentCountHint);
         variant.setOrderNoPattern(p.orderNoPattern);
         variant.setBagMaterialClass(p.bagInfo.materialClass);
         variant.setBagTempClass(p.bagInfo.tempClass);
@@ -341,6 +342,7 @@ public class ProductFullImportRunner implements CommandLineRunner {
         int count;
         final List<BigDecimal> prices = new ArrayList<>();
         Long variantId;
+        Integer maxInstrumentCount;
 
         VariantAggregate(PackNameSpecParser.ParsedPack parsed, String categoryNo) {
             this.parsed = parsed;
@@ -351,6 +353,11 @@ public class ProductFullImportRunner implements CommandLineRunner {
             count++;
             if (price != null) {
                 prices.add(price);
+            }
+            if (instrumentCount != null && instrumentCount > 0) {
+                if (maxInstrumentCount == null || instrumentCount > maxInstrumentCount) {
+                    maxInstrumentCount = instrumentCount;
+                }
             }
         }
 

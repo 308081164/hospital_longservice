@@ -81,7 +81,8 @@ public class DepartmentAllocationServiceImpl implements DepartmentAllocationServ
             return Result.fail(404, "Reconciliation job not found: " + jobId);
         }
         if (job.getAllocationResult() == null || job.getAllocationResult().isBlank()) {
-            return Result.fail(404, "No allocation result for job: " + jobId);
+            // 科室分配为可选步骤：未执行 allocate 时返回空成功，供详情页正常打开
+            return Result.success((AllocationResult) null);
         }
         try {
             AllocationResult result = objectMapper.readValue(job.getAllocationResult(), AllocationResult.class);

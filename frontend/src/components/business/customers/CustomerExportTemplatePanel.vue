@@ -47,6 +47,31 @@
         </div>
       </div>
 
+      <ElDivider>{{ t('exportTemplates.customerBinding.strategySummaryTitle') }}</ElDivider>
+      <ElDescriptions :column="1" border size="small" class="customer-export-template-panel__summary">
+        <ElDescriptionsItem :label="t('exportTemplates.customerBinding.billStrategyLabel')">
+          {{ billStrategyLabel }}
+        </ElDescriptionsItem>
+        <ElDescriptionsItem :label="t('exportTemplates.customerBinding.settlementStrategyLabel')">
+          {{ settlementStrategyLabel }}
+        </ElDescriptionsItem>
+        <ElDescriptionsItem :label="t('exportTemplates.customerBinding.settlementDiscountSummary')">
+          {{ settlementDiscountSummary }}
+        </ElDescriptionsItem>
+        <ElDescriptionsItem :label="t('exportTemplates.customerBinding.exportStageDiscountSummary')">
+          {{ exportStageDiscountSummary }}
+        </ElDescriptionsItem>
+      </ElDescriptions>
+      <div class="customer-export-template-panel__links">
+        <RouterLink to="/billing-config/export-templates" class="text-primary text-xs">
+          {{ t('exportTemplates.customerBinding.openTemplateAdmin') }}
+        </RouterLink>
+        <span class="text-gray-300">|</span>
+        <RouterLink to="/hospital/reconciliation" class="text-primary text-xs">
+          {{ t('exportTemplates.customerBinding.openExportWizard') }}
+        </RouterLink>
+      </div>
+
       <ElDivider>{{ t('exportTemplates.customerBinding.nameMappingTitle') }}</ElDivider>
       <p class="customer-export-template-panel__desc">
         {{ t('exportTemplates.customerBinding.nameMappingDesc') }}
@@ -77,7 +102,7 @@
 </template>
 
 <script setup lang="ts">
-  import { reactive, ref, watch } from 'vue'
+  import { computed, reactive, ref, watch } from 'vue'
   import { useI18n } from 'vue-i18n'
   import { ElMessage } from 'element-plus'
   import {
@@ -88,10 +113,15 @@
     updateExportTemplate,
     type ExportTemplateRecord
   } from '@/api/hospital/exportTemplatesApi'
+  import { listCustomerBillingPolicies } from '@/api/master-data/customersApi'
+  import type { BillingPolicyPanelState } from '@/utils/customerBillingPolicy'
+  import { parseDiscountApplyStages } from '@/utils/customerBillingPolicy'
 
   const props = defineProps<{
     customerId?: number | null
+    customerCode?: string | null
     exportNameMapping?: string | null
+    billingPolicyState?: BillingPolicyPanelState | null
   }>()
 
   const emit = defineEmits<{
@@ -102,6 +132,8 @@
 
   const loading = ref(false)
   const allTemplates = ref<ExportTemplateRecord[]>([])
+  const exportOnlyPolicyNames = ref<string[]>([])
+  const settlementPolicySummaries = ref<string[]>([])
   const bindings = reactive<Record<string, number | undefined>>({
     bill: undefined,
     settlement: undefined,
@@ -139,6 +171,112 @@
       name: tpl.name,
       strategy: tpl.strategyKey ?? ''
     })
+  }
+
+  function strategyForType(type: string): string {
+    const id = bindings[type]
+    if (id) {
+      const tpl = allTemplates.value.find((row) => row.id === id)
+      if (tpl?.strategyKey) return tpl.strategyKey
+    }
+    if (!props.customerCode) return 'standard_bill'
+    const global = globalTemplates(type).find(
+      (tpl) => tpl.sheetConfig?.includes(`"customerCode":"${props.customerCode}"`)
+    )
+    if (global?.strategyKey) return global.strategyKey
+    return type === 'settlement' ? 'standard_settlement' : 'standard_bill'
+  }
+
+  const billStrategyLabel = computed(() => {
+    const key = strategyForType('bill')
+    return t(`exportTemplates.strategy.${strategyKeyToLabel(key)}`, key)
+  })
+
+  const settlementStrategyLabel = computed(() => {
+    const key = strategyForType('settlement')
+    return t(`exportTemplates.strategy.${strategyKeyToLabel(key)}`, key)
+  })
+
+  function strategyKeyToLabel(key: string): string {
+    const map: Record<string, string> = {
+      standard_bill: 'standardBill',
+      standard_settlement: 'standardSettlement',
+      sheng_er_bill: 'shengErBill',
+      daowai_bill: 'daowaiBill',
+      guoyao_bill: 'guoyaoBill'
+    }
+    return map[key] ?? 'standardBill'
+  }
+
+  const settlementDiscountSummary = computed(() => {
+    const parts: string[] = [...settlementPolicySummaries.value]
+    const discounts = props.billingPolicyState?.discounts ?? []
+    for (const disc of discounts) {
+      const stages = parseDiscountApplyStages(disc)
+      if (!stages.includes('settlement_only')) continue
+      if (disc.discountRate != null) {
+        parts.push(`${disc.name || '折扣'} ${(disc.discountRate * 100).toFixed(0)}%`)
+      }
+    }
+    return parts.length ? parts.join('；') : t('exportTemplates.customerBinding.noneConfigured')
+  })
+
+  const exportStageDiscountSummary = computed(() => {
+    const fromPolicies = exportOnlyPolicyNames.value
+    if (fromPolicies.length) return fromPolicies.join('；')
+    const policies = props.billingPolicyState?.discounts ?? []
+    const fromDiscounts = policies
+      .filter((d) => parseDiscountApplyStages(d).includes('export_only'))
+      .map((d) => d.name || t('exportTemplates.customerBinding.exportStageDefaultName'))
+    if (fromDiscounts.length) return fromDiscounts.join('；')
+    return t('exportTemplates.customerBinding.noneConfigured')
+  })
+
+  function parsePolicyParams(raw?: string | null): Record<string, unknown> {
+    if (!raw?.trim()) return {}
+    try {
+      return JSON.parse(raw) as Record<string, unknown>
+    } catch {
+      return {}
+    }
+  }
+
+  async function loadExportPolicies() {
+    if (!props.customerId) {
+      exportOnlyPolicyNames.value = []
+      settlementPolicySummaries.value = []
+      return
+    }
+    try {
+      const policies = await listCustomerBillingPolicies(props.customerId)
+      exportOnlyPolicyNames.value = policies
+        .filter((p) => p.policyType === 'DISCOUNT' && p.isActive !== false)
+        .filter((p) => {
+          const params = parsePolicyParams(p.params)
+          const stage = params.applyStage as string | undefined
+          return stage === 'export_only'
+        })
+        .map((p) => p.name ?? t('exportTemplates.customerBinding.exportStageDefaultName'))
+      settlementPolicySummaries.value = policies
+        .filter((p) => p.policyType === 'DISCOUNT' && p.isActive !== false)
+        .filter((p) => {
+          const params = parsePolicyParams(p.params)
+          const stage = params.applyStage as string | undefined
+          return stage === 'settlement_only'
+        })
+        .map((p) => {
+          const params = parsePolicyParams(p.params)
+          const rate = params.rate as number | undefined
+          const label = p.name ?? '结款折扣'
+          if (rate != null && rate > 0 && rate < 1) {
+            return `${label} ${(rate * 100).toFixed(0)}%`
+          }
+          return label
+        })
+    } catch {
+      exportOnlyPolicyNames.value = []
+      settlementPolicySummaries.value = []
+    }
   }
 
   function parseNameMapping(raw?: string | null) {
@@ -181,6 +319,7 @@
     try {
       allTemplates.value = await listExportTemplates()
       syncBindingsFromTemplates()
+      await loadExportPolicies()
     } catch {
       ElMessage.error(t('exportTemplates.loadFailed'))
     } finally {
@@ -273,5 +412,17 @@
 
   .customer-export-template-panel__mapping-list {
     margin-top: 8px;
+  }
+
+  .customer-export-template-panel__summary {
+    margin-bottom: 8px;
+  }
+
+  .customer-export-template-panel__links {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 8px;
   }
 </style>

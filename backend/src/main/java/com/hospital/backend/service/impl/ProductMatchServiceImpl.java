@@ -44,6 +44,7 @@ public class ProductMatchServiceImpl implements ProductMatchService {
     private volatile Map<Long, List<ProductAlias>> cachedAliases = Map.of();
     private volatile List<ProductVariant> cachedVariants = List.of();
     private volatile Map<Long, ProductVariant> cachedVariantById = Map.of();
+    private volatile Map<String, ProductVariant> cachedVariantsByCategoryNo = Map.of();
     private volatile List<ProductMatchRule> cachedVariantRules = List.of();
 
     /** 须在 SchemaMigrationRunner（CommandLineRunner）建表完成后再加载缓存 */
@@ -68,8 +69,12 @@ public class ProductMatchServiceImpl implements ProductMatchService {
 
         List<ProductVariant> variants = variantMapper.selectAllActive();
         Map<Long, ProductVariant> variantById = new HashMap<>();
+        Map<String, ProductVariant> variantsByCategoryNo = new HashMap<>();
         for (ProductVariant variant : variants) {
             variantById.put(variant.getId(), variant);
+            if (variant.getCategoryNo() != null && !variant.getCategoryNo().isBlank()) {
+                variantsByCategoryNo.putIfAbsent(variant.getCategoryNo().trim(), variant);
+            }
         }
 
         List<ProductMatchRule> variantRules = matchRuleMapper.selectAllActiveVariantRules();
@@ -80,6 +85,7 @@ public class ProductMatchServiceImpl implements ProductMatchService {
         cachedAliases = Map.copyOf(aliases);
         cachedVariants = List.copyOf(variants);
         cachedVariantById = Map.copyOf(variantById);
+        cachedVariantsByCategoryNo = Map.copyOf(variantsByCategoryNo);
         cachedVariantRules = List.copyOf(variantRules);
         log.info("Product match cache refreshed: {} products, {} variants, {} variant rules",
                 products.size(), variants.size(), variantRules.size());
@@ -111,6 +117,19 @@ public class ProductMatchServiceImpl implements ProductMatchService {
                     if (product != null && category != null) {
                         return Optional.of(buildVariantResponse(product, category, variant, rule.getId(), "variant_rule"));
                     }
+                }
+            }
+        }
+
+        // 1b. 包类别号（ZSD 器械包等源账单常仅带 category_no）
+        String categoryNo = str(row, "categoryNo");
+        if (categoryNo != null && !categoryNo.isBlank()) {
+            ProductVariant byCategory = cachedVariantsByCategoryNo.get(categoryNo.trim());
+            if (byCategory != null) {
+                Product product = findProduct(byCategory.getProductId());
+                ProductCategory category = product != null ? cachedCategories.get(product.getCategoryId()) : null;
+                if (product != null && category != null) {
+                    return Optional.of(buildVariantResponse(product, category, byCategory, null, "category_no"));
                 }
             }
         }
@@ -206,6 +225,8 @@ public class ProductMatchServiceImpl implements ProductMatchService {
                 .variantDisplayName(variant.getDisplayName())
                 .specFingerprint(variant.getSpecFingerprint())
                 .variantPublicPrice(variant.getPublicPrice())
+                .packageMaterial(variant.getPackageMaterial())
+                .instrumentCountHint(variant.getInstrumentCountHint())
                 .source(source)
                 .build();
     }

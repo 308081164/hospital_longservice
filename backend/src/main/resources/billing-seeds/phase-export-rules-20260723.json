@@ -1,0 +1,470 @@
+{
+  "version": "1",
+  "description": "S7 优先医院导出规则：legacy 账单/结款函 + 模板绑定 + 折扣与登记表对齐说明",
+  "exportTemplateOverrides": [
+    {
+      "code": "DAOWAI-RM",
+      "templates": [
+        {
+          "type": "bill",
+          "name": "道外人民账单（S7）",
+          "strategyKey": "daowai_bill",
+          "columnMapping": { "removeColumns": ["器械数", "备注", "差额"] }
+        }
+      ]
+    },
+    {
+      "code": "ERYY-NG",
+      "templates": [
+        {
+          "type": "bill",
+          "name": "省二南岗账单（S7）",
+          "strategyKey": "sheng_er_bill",
+          "columnMapping": {
+            "keepColumns": ["发货日期", "单号", "类型", "包类别号", "包名", "器械数", "包数", "单价", "总价"]
+          }
+        }
+      ]
+    },
+    {
+      "code": "GUOYAO-MAIN",
+      "templates": [
+        {
+          "type": "bill",
+          "name": "国药主院汽轮机账单（S7）",
+          "strategyKey": "guoyao_bill",
+          "columnMapping": {
+            "keepColumns": ["发货日期", "单号", "类型", "包类别号", "包名", "器械数", "包数", "单价", "总价"]
+          }
+        }
+      ]
+    },
+    {
+      "code": "GUOYAO-2",
+      "templates": [
+        {
+          "type": "bill",
+          "name": "国药二院汽轮机账单（S7）",
+          "strategyKey": "guoyao_bill",
+          "columnMapping": {
+            "keepColumns": ["发货日期", "单号", "类型", "包类别号", "包名", "器械数", "包数", "单价", "总价"]
+          }
+        }
+      ]
+    },
+    {
+      "code": "GUOYAO-3",
+      "templates": [
+        {
+          "type": "bill",
+          "name": "国药三院汽轮机账单（S7）",
+          "strategyKey": "guoyao_bill",
+          "columnMapping": {
+            "keepColumns": ["发货日期", "单号", "类型", "包类别号", "包名", "器械数", "包数", "单价", "总价"]
+          }
+        }
+      ]
+    },
+    {
+      "code": "HULAN-RM",
+      "templates": [
+        {
+          "type": "bill",
+          "name": "呼兰一院账单列裁剪（S7）",
+          "strategyKey": "standard_bill",
+          "columnMapping": {
+            "keepColumns": ["发货日期", "单号", "类型", "包类别号", "包名", "包数", "单价", "总价"]
+          }
+        }
+      ]
+    },
+    {
+      "code": "BINGCHENG-YM",
+      "templates": [
+        {
+          "type": "bill",
+          "name": "冰城医美账单（S7）",
+          "strategyKey": "standard_bill",
+          "columnMapping": { "removeColumns": ["备注", "差额"] }
+        }
+      ]
+    },
+    {
+      "code": "HRB-HEU",
+      "templates": [
+        {
+          "type": "settlement",
+          "name": "工程大学结款函（S7）",
+          "strategyKey": "standard_settlement",
+          "columnMapping": { "settlementDiscountRows": true }
+        }
+      ]
+    },
+    {
+      "code": "HRB-NGJY",
+      "templates": [
+        {
+          "type": "settlement",
+          "name": "九院结款函（S7）",
+          "strategyKey": "standard_settlement",
+          "columnMapping": { "settlementDiscountRows": true }
+        }
+      ]
+    }
+  ],
+  "profiles": [
+    {
+      "code": "HRB-NGJY",
+      "name": "哈尔滨市南岗区人民医院（九院）",
+      "billingEnabled": true,
+      "discounts": [
+        {
+          "name": "结款函灭菌9折",
+          "rate": 0.9,
+          "applyStage": "settlement_only",
+          "skipWhenFixedPrice": true
+        }
+      ]
+    }
+  ],
+  "exportCatalog": [
+    {
+      "folder": "黑龙江中医药大学附属第一医院",
+      "code": "ZYY-D1",
+      "billStrategy": "standard_bill",
+      "settlementStrategy": "standard_settlement",
+      "settlementDiscount": null,
+      "exportStageDiscount": null,
+      "s7Status": "pass"
+    },
+    {
+      "folder": "黑龙江省中医药大学附属第三医院（电力）",
+      "code": "ZY3-DIANLI",
+      "billStrategy": "standard_bill",
+      "settlementStrategy": "standard_settlement",
+      "settlementDiscount": "结款7折",
+      "exportStageDiscount": null,
+      "s7Status": "pass"
+    },
+    {
+      "folder": "国药总医院主院区",
+      "code": "GUOYAO-MAIN",
+      "billStrategy": "guoyao_bill",
+      "settlementStrategy": "standard_settlement",
+      "settlementDiscount": null,
+      "exportStageDiscount": null,
+      "s7Status": "pass"
+    },
+    {
+      "folder": "国药总医院第二院区",
+      "code": "GUOYAO-2",
+      "billStrategy": "guoyao_bill",
+      "settlementStrategy": "standard_settlement",
+      "settlementDiscount": null,
+      "exportStageDiscount": null,
+      "s7Status": "pass"
+    },
+    {
+      "folder": "国药总医院第三院区",
+      "code": "GUOYAO-3",
+      "billStrategy": "guoyao_bill",
+      "settlementStrategy": "standard_settlement",
+      "settlementDiscount": null,
+      "exportStageDiscount": null,
+      "s7Status": "pass"
+    },
+    {
+      "folder": "哈尔滨市第二医院",
+      "code": "HRB-2ND",
+      "billStrategy": "standard_bill",
+      "settlementStrategy": "standard_settlement",
+      "settlementDiscount": null,
+      "exportStageDiscount": null,
+      "s7Status": "pass"
+    },
+    {
+      "folder": "哈尔滨市第五医院",
+      "code": "HRB-WY",
+      "billStrategy": "standard_bill",
+      "settlementStrategy": "standard_settlement",
+      "settlementDiscount": null,
+      "exportStageDiscount": null,
+      "s7Status": "pass",
+      "notes": "分科室汇总 global HRB-WY；结款合并组见 phase7-batch-d"
+    },
+    {
+      "folder": "哈尔滨市第五医院（二门诊）",
+      "code": "HRB-WY-EM",
+      "billStrategy": "standard_bill",
+      "settlementStrategy": "standard_settlement",
+      "settlementDiscount": null,
+      "exportStageDiscount": null,
+      "s7Status": "pass"
+    },
+    {
+      "folder": "新发红十字医院",
+      "code": "XINFA-HSZ",
+      "billStrategy": "standard_bill",
+      "settlementStrategy": "standard_settlement",
+      "settlementDiscount": null,
+      "exportStageDiscount": null,
+      "s7Status": "pass"
+    },
+    {
+      "folder": "黑龙江省医院（南岗院区）",
+      "code": "SHENG-YY-NG",
+      "billStrategy": "standard_bill",
+      "settlementStrategy": "standard_settlement",
+      "settlementDiscount": null,
+      "exportStageDiscount": null,
+      "s7Status": "pass"
+    },
+    {
+      "folder": "黑龙江省医院（香坊院区）",
+      "code": "SHENG-YY-XF",
+      "billStrategy": "standard_bill",
+      "settlementStrategy": "standard_settlement",
+      "settlementDiscount": null,
+      "exportStageDiscount": null,
+      "s7Status": "pass"
+    },
+    {
+      "folder": "祖研-黑龙江省中医医院（南岗院区）",
+      "code": "ZUYAN-NG",
+      "billStrategy": "standard_bill",
+      "settlementStrategy": "standard_settlement",
+      "settlementDiscount": null,
+      "exportStageDiscount": null,
+      "s7Status": "pass"
+    },
+    {
+      "folder": "祖研-黑龙江省中医医院（三辅院区）",
+      "code": "ZUYAN-SF",
+      "billStrategy": "standard_bill",
+      "settlementStrategy": "standard_settlement",
+      "settlementDiscount": null,
+      "exportStageDiscount": null,
+      "s7Status": "pass"
+    },
+    {
+      "folder": "祖研-黑龙江省中医医院（香安院区）",
+      "code": "ZUYAN-XA",
+      "billStrategy": "standard_bill",
+      "settlementStrategy": "standard_settlement",
+      "settlementDiscount": null,
+      "exportStageDiscount": null,
+      "s7Status": "pass"
+    },
+    {
+      "folder": "南岗区妇产医院",
+      "code": "NG-FUCHAN",
+      "billStrategy": "standard_bill",
+      "settlementStrategy": "standard_settlement",
+      "settlementDiscount": null,
+      "exportStageDiscount": null,
+      "s7Status": "pass"
+    },
+    {
+      "folder": "黑龙江省社会康复医院",
+      "code": "SHKF-YY",
+      "billStrategy": "standard_bill",
+      "settlementStrategy": "standard_settlement",
+      "settlementDiscount": null,
+      "exportStageDiscount": null,
+      "s7Status": "pass"
+    },
+    {
+      "folder": "道外区人民医院",
+      "code": "DAOWAI-RM",
+      "billStrategy": "daowai_bill",
+      "settlementStrategy": "standard_settlement",
+      "settlementDiscount": null,
+      "exportStageDiscount": null,
+      "s7Status": "pass",
+      "notes": "pathOverride 仍待 S3；导出列裁剪已绑定"
+    },
+    {
+      "folder": "太平人民医院",
+      "code": "TAIPING-RM",
+      "billStrategy": "standard_bill",
+      "settlementStrategy": "standard_settlement",
+      "settlementDiscount": null,
+      "exportStageDiscount": "2+把75%阶梯（export_only，phase5-batch-c）",
+      "s7Status": "pass",
+      "notes": "3把16.5→8.91 特例见 ExportStageDiscountApplierTest"
+    },
+    {
+      "folder": "三精肾病医院",
+      "code": "SANJING-SB",
+      "billStrategy": "standard_bill",
+      "settlementStrategy": "standard_settlement",
+      "settlementDiscount": null,
+      "exportStageDiscount": null,
+      "s7Status": "pass",
+      "notes": "≥3把3元 仅计价记录，非导出折扣"
+    },
+    {
+      "folder": "黑龙江维多利亚妇产医院",
+      "code": "VICTORIA",
+      "billStrategy": "standard_bill",
+      "settlementStrategy": "standard_settlement",
+      "settlementDiscount": null,
+      "exportStageDiscount": null,
+      "s7Status": "pass"
+    },
+    {
+      "folder": "黑龙江九洲妇科医院",
+      "code": "JIUZHOU-FK",
+      "billStrategy": "standard_bill",
+      "settlementStrategy": "standard_settlement",
+      "settlementDiscount": null,
+      "exportStageDiscount": null,
+      "s7Status": "pass"
+    },
+    {
+      "folder": "呼兰区红十字医院",
+      "code": "HULAN-HSZ",
+      "billStrategy": "standard_bill",
+      "settlementStrategy": "standard_settlement",
+      "settlementDiscount": null,
+      "exportStageDiscount": null,
+      "s7Status": "pass"
+    },
+    {
+      "folder": "呼兰中医院",
+      "code": "HULAN-TCM",
+      "billStrategy": "standard_bill",
+      "settlementStrategy": "standard_settlement",
+      "settlementDiscount": null,
+      "exportStageDiscount": null,
+      "s7Status": "pass"
+    },
+    {
+      "folder": "黑龙江中医药大学附属第二医院（南岗）",
+      "code": "ZYY-D2-NG",
+      "billStrategy": "standard_bill",
+      "settlementStrategy": "standard_settlement",
+      "settlementDiscount": null,
+      "exportStageDiscount": null,
+      "s7Status": "pass"
+    },
+    {
+      "folder": "黑龙江中医药大学附属第二医院（哈南分院）",
+      "code": "ZYY-D2-HN",
+      "billStrategy": "standard_bill",
+      "settlementStrategy": "standard_settlement",
+      "settlementDiscount": null,
+      "exportStageDiscount": null,
+      "s7Status": "pass"
+    },
+    {
+      "folder": "哈尔滨仁胜医院",
+      "code": "RENSHENG",
+      "billStrategy": "standard_bill",
+      "settlementStrategy": "standard_settlement",
+      "settlementDiscount": null,
+      "exportStageDiscount": null,
+      "s7Status": "pass"
+    },
+    {
+      "folder": "哈尔滨华夏眼科医院",
+      "code": "HRB-HX-EYE",
+      "billStrategy": "standard_bill",
+      "settlementStrategy": "standard_settlement",
+      "settlementDiscount": null,
+      "exportStageDiscount": null,
+      "s7Status": "pass"
+    },
+    {
+      "folder": "哈尔滨冰城医疗美容医院",
+      "code": "BINGCHENG-YM",
+      "billStrategy": "standard_bill",
+      "settlementStrategy": "standard_settlement",
+      "settlementDiscount": null,
+      "exportStageDiscount": null,
+      "s7Status": "pass"
+    },
+    {
+      "folder": "香坊中医院",
+      "code": "XF-ZYY",
+      "billStrategy": "standard_bill",
+      "settlementStrategy": "standard_settlement",
+      "settlementDiscount": null,
+      "exportStageDiscount": null,
+      "s7Status": "pass"
+    },
+    {
+      "folder": "武警黑龙江省总队医院",
+      "code": "WJ-HLJ-ZD",
+      "billStrategy": "standard_bill",
+      "settlementStrategy": "standard_settlement",
+      "settlementDiscount": null,
+      "exportStageDiscount": null,
+      "s7Status": "pass"
+    },
+    {
+      "folder": "悦美芳华医疗门诊医院",
+      "code": "YUEMEI-FH",
+      "billStrategy": "standard_bill",
+      "settlementStrategy": "standard_settlement",
+      "settlementDiscount": null,
+      "exportStageDiscount": null,
+      "s7Status": "pass"
+    },
+    {
+      "folder": "黑龙江省第二医院（南岗院区）",
+      "code": "ERYY-NG",
+      "billStrategy": "sheng_er_bill",
+      "settlementStrategy": "standard_settlement",
+      "settlementDiscount": null,
+      "exportStageDiscount": null,
+      "s7Status": "pass"
+    },
+    {
+      "folder": "黑龙江省第二医院（松北院区）",
+      "code": "ERYY-SB",
+      "billStrategy": "standard_bill",
+      "settlementStrategy": "standard_settlement",
+      "settlementDiscount": null,
+      "exportStageDiscount": null,
+      "s7Status": "pass"
+    },
+    {
+      "folder": "哈尔滨市呼兰区第一人民医院",
+      "code": "HULAN-RM",
+      "billStrategy": "standard_bill",
+      "settlementStrategy": "standard_settlement",
+      "settlementDiscount": "账单7折（after_base）",
+      "exportStageDiscount": null,
+      "s7Status": "pass"
+    },
+    {
+      "folder": "哈尔滨市红十字妇产医院",
+      "code": "HRB-HSZ",
+      "billStrategy": "standard_bill",
+      "settlementStrategy": "standard_settlement",
+      "settlementDiscount": "加急/抵扣见 phase1-batch-a",
+      "exportStageDiscount": null,
+      "s7Status": "pass"
+    },
+    {
+      "folder": "哈尔滨工业大学医院",
+      "code": "HRB-HIT",
+      "billStrategy": "standard_bill",
+      "settlementStrategy": "standard_settlement",
+      "settlementDiscount": null,
+      "exportStageDiscount": null,
+      "s7Status": "pass"
+    },
+    {
+      "folder": "哈尔滨工程大学医院",
+      "code": "HRB-HEU",
+      "billStrategy": "standard_bill",
+      "settlementStrategy": "standard_settlement",
+      "settlementDiscount": "结款灭菌9折",
+      "exportStageDiscount": null,
+      "s7Status": "skip",
+      "skipReason": "S1/S4 阻塞无原始账单；折扣与结款模板已落库"
+    }
+  ]
+}

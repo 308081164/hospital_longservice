@@ -1,0 +1,23 @@
+{
+  "version": "1",
+  "description": "黑龙江省妇幼保健院（人口）HLFB-SF：启用标准特色账单；口腔车针 5 件算 1 件后校正价 13.5 元（FOLD 见 HardcodedRulesMigrationRunner）",
+  "customerUpdates": [
+    {
+      "code": "HLFB-SF",
+      "billingEnabled": true,
+      "billingPricingMode": "standard"
+    }
+  ],
+  "newRules": [
+    {
+      "code": "HLFB-SF",
+      "ruleType": "FIXED_PRICE",
+      "name": "校正价13.5",
+      "priority": 10,
+      "price": 13.5,
+      "keywords": ["车针"],
+      "skipPackaging": true,
+      "skipDiscount": true
+    }
+  ]
+}

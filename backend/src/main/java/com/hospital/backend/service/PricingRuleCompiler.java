@@ -549,6 +549,7 @@ public class PricingRuleCompiler {
         }
         node.put("threshold", rule.getThreshold() != null ? rule.getThreshold() : 5);
         node.put("foldRatio", rule.getFoldRatio() != null ? rule.getFoldRatio().doubleValue() : 5.0);
+        appendRuleConditions(node, rule);
         return node;
     }
 

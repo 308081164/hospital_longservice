@@ -95,7 +95,7 @@
                   <ElButton
                     size="small"
                     type="primary"
-                    :disabled="row.reviewStatus !== 'pending'"
+                    :disabled="row.reviewStatus !== 'pending' || !canReviewReconciliation"
                     @click="openReview(row)"
                   >
                     审核
@@ -332,10 +332,13 @@ import {
   getReconciliationRows,
 } from '@/api/hospital/reconciliationsApi'
 import { buildReconciliationVersionGroupKey } from '@/utils/reconciliationVersionGroup'
+import { useBillingPermission } from '@/composables/useBillingPermission'
+import { runReviewPreflight } from '@/composables/reconciliationExportPreflight'
 
 defineOptions({ name: 'VersionManagement' })
 
 const { t } = useI18n()
+const { canReviewReconciliation } = useBillingPermission()
 
 const userStore = useUserStore()
 const operatorName = ref(userStore.info.userName || '')
@@ -608,7 +611,14 @@ function onDetailPageChange(page: number) {
   loadDetailPage(page)
 }
 
-const openReview = (item: Api.Hospital.ReconciliationJob) => {
+const openReview = async (item: Api.Hospital.ReconciliationJob) => {
+  const ok = await runReviewPreflight(item, {
+    t,
+    onOpenDetail: () => {
+      void openDetail(item)
+    }
+  })
+  if (!ok) return
   reviewTarget.value = item
   reviewForm.value = { status: 'approved', comment: '' }
   reviewVisible.value = true

@@ -807,6 +807,19 @@
       "ratio": "占比",
       "allocatedFee": "分摊物流费"
     },
+    "exportPreflight": {
+      "pendingReviewTitle": "仍有待复核行",
+      "pendingReviewMessage": "当前有 {count} 行待复核，建议先点击「查看详情」完成核对后再导出。是否仍要继续导出？",
+      "viewDetail": "查看详情",
+      "proceedExport": "继续导出",
+      "markApprovedTitle": "同步审核状态",
+      "markApprovedMessage": "当前无待复核行，是否同步将审核状态标记为「通过」？",
+      "markApprovedAndExport": "标记通过并导出",
+      "exportOnly": "仅导出",
+      "reviewPendingTitle": "仍有待复核行",
+      "reviewPendingMessage": "当前有 {count} 行待复核，建议先点击「查看详情」核对。是否仍要继续审核？",
+      "proceedReview": "继续审核"
+    },
     "exportWizard": {
       "title": "导出向导",
       "stepType": "类型",
@@ -830,7 +843,7 @@
       "downloadSuccess": "导出成功",
       "downloadFailed": "导出失败",
       "forceExportTitle": "存在未复核差异",
-      "forceExportMessage": "仍有 {count} 行待复核，建议审核通过后再导出。是否仍要导出？",
+      "forceExportMessage": "仍有 {count} 行待复核，建议先通过「查看详情」核对。是否仍要导出？",
       "forceExportConfirm": "仍要导出",
       "settlementAdjustment": "低消/封顶调整",
       "settlementReconcile": "月度勾稽",
@@ -1049,7 +1062,16 @@
       "nameMappingDesc": "导出阶段替换包名/类型显示，不影响计价结果（FR-M1-09）。",
       "fromPlaceholder": "原名称",
       "toPlaceholder": "导出名称",
-      "addMapping": "添加映射"
+      "addMapping": "添加映射",
+      "strategySummaryTitle": "导出策略摘要（S7）",
+      "billStrategyLabel": "账单模板策略",
+      "settlementStrategyLabel": "结款函模板策略",
+      "settlementDiscountSummary": "结款独立折扣",
+      "exportStageDiscountSummary": "导出阶段折扣",
+      "noneConfigured": "无（默认全价导出）",
+      "exportStageDefaultName": "导出折扣策略",
+      "openTemplateAdmin": "打开导出模板管理",
+      "openExportWizard": "对账页导出向导预览"
     }
   },
   "versionManagement": {

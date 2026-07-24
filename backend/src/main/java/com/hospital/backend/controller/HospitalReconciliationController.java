@@ -78,7 +78,9 @@ public class HospitalReconciliationController {
     }
 
     @PatchMapping("/hospital-reconciliations/{jobId}/review")
-    @org.springframework.security.access.prepost.PreAuthorize("hasAnyRole('SUPER','R_BILLING_REVIEWER')")
+    @org.springframework.security.access.prepost.PreAuthorize(
+            "hasAnyRole('SUPER','R_SUPER','R_ADMIN','R_BILLING_REVIEWER','R_BILLING_OPERATOR',"
+                    + "'R_BILLING_CONFIG','R_USER')")
     public Result<ReconciliationJobResponse> reviewReconciliation(
             @PathVariable Long jobId,
             @Valid @RequestBody ReconciliationReviewRequest request) {

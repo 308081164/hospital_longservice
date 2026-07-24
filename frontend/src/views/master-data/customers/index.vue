@@ -250,6 +250,8 @@
         <CustomerExportTemplatePanel
           ref="exportTemplatePanelRef"
           :customer-id="editingId"
+          :customer-code="form.code"
+          :billing-policy-state="billingPolicyState"
           v-model:export-name-mapping="form.exportNameMapping"
         />
 

@@ -1,0 +1,44 @@
+package com.hospital.backend.export;
+
+import com.hospital.backend.dto.request.hospital.BillRowItem;
+import com.hospital.backend.entity.HospitalReconciliationRow;
+import org.junit.jupiter.api.Test;
+
+import static org.assertj.core.api.Assertions.assertThat;
+
+class BillExportPriceResolverTest {
+
+    @Test
+    void prefersCorrectedTotalForBillRow() {
+        BillRowItem row = new BillRowItem();
+        row.setUnitPrice(22.0);
+        row.setTotalPrice(22.0);
+        row.setExpectedUnitPrice(16.5);
+        row.setCorrectedTotalPrice(16.5);
+        row.setPackCount(1);
+
+        assertThat(BillExportPriceResolver.resolveTotalPrice(row)).isEqualTo(16.5);
+        assertThat(BillExportPriceResolver.resolveUnitPrice(row)).isEqualTo(16.5);
+    }
+
+    @Test
+    void derivesTotalFromExpectedUnitWhenCorrectedMissing() {
+        BillRowItem row = new BillRowItem();
+        row.setUnitPrice(0.0);
+        row.setTotalPrice(0.0);
+        row.setExpectedUnitPrice(8.0);
+        row.setPackCount(3);
+
+        assertThat(BillExportPriceResolver.resolveTotalPrice(row)).isEqualTo(24.0);
+        assertThat(BillExportPriceResolver.resolveUnitPrice(row)).isEqualTo(8.0);
+    }
+
+    @Test
+    void resolvesEntityRowSameAsBillItem() {
+        HospitalReconciliationRow row = new HospitalReconciliationRow();
+        row.setExpectedUnitPrice(5.5);
+        row.setPackCount(10);
+
+        assertThat(BillExportPriceResolver.resolveTotalPrice(row)).isEqualTo(55.0);
+    }
+}

@@ -5,6 +5,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class GuoyaoQuantityAlgorithmTest {
 
@@ -16,26 +18,51 @@ class GuoyaoQuantityAlgorithmTest {
     }
 
     @Test
-    void prefersInstrumentCountWhenPresent() {
+    void prefersInstrumentCountForNonInstrumentPack() {
         HospitalReconciliationRow row = new HospitalReconciliationRow();
+        row.setType("额外包(纸塑袋)");
         row.setInstrumentCount(42);
         row.setPackCount(3);
         assertEquals(42, algorithm.computeQuantity(row));
     }
 
     @Test
-    void estimatesFromPackCountForHighTemp() {
+    void appliesFrM804ForInstrumentPack() {
         HospitalReconciliationRow row = new HospitalReconciliationRow();
-        row.setType("高温");
-        row.setPackCount(5);
-        assertEquals(50, algorithm.computeQuantity(row));
+        row.setType("器械包(ZSD)");
+        row.setCorrectedTotalPrice(313.5);
+        assertEquals(42, algorithm.computeInstrumentPackQuantity(313.5));
+        assertEquals(42, algorithm.computeQuantity(row));
     }
 
     @Test
-    void estimatesFromPackCountForLowTemp() {
+    void frM804ExampleWithRemainder() {
+        assertEquals(42, algorithm.computeInstrumentPackQuantity(313.5));
+    }
+
+    @Test
+    void skipsAlgorithmForDressingPack() {
         HospitalReconciliationRow row = new HospitalReconciliationRow();
-        row.setType("低温灭菌");
+        row.setType("敷料包(无纺布包)");
+        row.setPackCount(4);
+        row.setCorrectedTotalPrice(120.0);
+        assertEquals(4, algorithm.computeQuantity(row));
+        assertFalse(algorithm.isGuoyaoInstrumentPack(row));
+    }
+
+    @Test
+    void skipsAlgorithmForLowTempSinglePack() {
+        HospitalReconciliationRow row = new HospitalReconciliationRow();
+        row.setType("低温单包装包(纸塑袋)");
         row.setPackCount(2);
-        assertEquals(24, algorithm.computeQuantity(row));
+        assertEquals(2, algorithm.computeQuantity(row));
+        assertFalse(algorithm.isGuoyaoInstrumentPack(row));
+    }
+
+    @Test
+    void detectsInstrumentPackType() {
+        HospitalReconciliationRow row = new HospitalReconciliationRow();
+        row.setType("器械包(ZSD)");
+        assertTrue(algorithm.isGuoyaoInstrumentPack(row));
     }
 }

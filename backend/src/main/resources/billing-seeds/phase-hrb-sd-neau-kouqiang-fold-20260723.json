@@ -1,0 +1,44 @@
+{
+  "version": "1",
+  "description": "松电(HRB-SD-MB)、东北农大(NEAU-YY)：启用标准特色账单；口腔科针类（车针、扩大针等）5 件算 1 件",
+  "customerUpdates": [
+    {
+      "code": "HRB-SD-MB",
+      "billingEnabled": true,
+      "billingPricingMode": "standard"
+    },
+    {
+      "code": "NEAU-YY",
+      "billingEnabled": true,
+      "billingPricingMode": "standard"
+    }
+  ],
+  "deactivateRules": [
+    {
+      "code": "HRB-SD-MB",
+      "ruleName": "松电机扩针 5 件算 1 件"
+    }
+  ],
+  "newRules": [
+    {
+      "code": "HRB-SD-MB",
+      "ruleType": "FOLD",
+      "name": "松电口腔科针类5件算1件",
+      "priority": 10,
+      "keywords": ["车针", "扩大针", "机扩针", "根管针", "根管锉", "镍钛锉", "探针", "球钻", "拔髓针"],
+      "threshold": 5,
+      "foldRatio": 5,
+      "conditionsJson": "[{\"field\":\"department\",\"value\":[\"口腔科\"]}]"
+    },
+    {
+      "code": "NEAU-YY",
+      "ruleType": "FOLD",
+      "name": "东北农大口腔科针类5件算1件",
+      "priority": 10,
+      "keywords": ["车针", "扩大针", "机扩针", "根管针", "根管锉", "镍钛锉", "探针", "球钻", "拔髓针"],
+      "threshold": 5,
+      "foldRatio": 5,
+      "conditionsJson": "[{\"field\":\"department\",\"value\":[\"口腔科\"]}]"
+    }
+  ]
+}

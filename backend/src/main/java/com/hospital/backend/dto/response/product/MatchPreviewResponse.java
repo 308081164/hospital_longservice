@@ -57,5 +57,11 @@ public class MatchPreviewResponse {
     @JsonProperty("variant_public_price")
     private BigDecimal variantPublicPrice;
 
+    @JsonProperty("package_material")
+    private String packageMaterial;
+
+    @JsonProperty("instrument_count_hint")
+    private Integer instrumentCountHint;
+
     private String source;
 }

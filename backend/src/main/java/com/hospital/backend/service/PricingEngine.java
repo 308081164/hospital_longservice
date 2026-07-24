@@ -68,6 +68,8 @@ public class PricingEngine {
         String packName = str(row, "packName");
         String packageMaterial = str(row, "packageMaterial");
         String hospitalName = str(row, "hospitalName");
+        packageMaterial = inferPricingPackageMaterial(type, packageMaterial, notes);
+        row.put("packageMaterial", packageMaterial);
         int instrumentCount = intVal(row, "instrumentCount");
         int packCount = Math.max(1, intVal(row, "packCount"));
         Double unitPrice = doubleOrNull(row, "unitPrice");
@@ -137,11 +139,11 @@ public class PricingEngine {
 
 
         // 袋尺寸检测（带缓存）。部分特例规则需要先知道袋型，例如“20cm 以下 5 件算 1 件”。
-        int bagSize = detectBagSize(str(row, "packageMaterial") + str(row, "packName"));
-        boolean isPaperPlastic = str(row, "packageMaterial").contains("纸塑袋")
+        int bagSize = detectBagSize(packageMaterial + packName);
+        boolean isPaperPlastic = packageMaterial.contains("纸塑袋")
                 || type.contains("纸塑袋")
-                || str(row, "packageMaterial").contains("低温灭菌");
-        boolean isNonWoven = str(row, "packageMaterial").contains("无纺布") || type.contains("无纺布");
+                || packageMaterial.contains("低温灭菌");
+        boolean isNonWoven = packageMaterial.contains("无纺布") || type.contains("无纺布");
         boolean isLowTemp = !disableLowTemp && ((type + packName + packageMaterial).contains("低温")
                 || type.contains("ETO") || type.contains("EO")
                 || packageMaterial.contains("低温灭菌"));
@@ -196,7 +198,8 @@ public class PricingEngine {
                 appliedNeedleRule = true;
             }
         }
-        if (preMatchedSpecialPrice == null && !appliedSpecialFoldRule && !appliedNeedleRule) {
+        if (preMatchedSpecialPrice == null && !appliedSpecialFoldRule && !appliedNeedleRule
+                && !isLiposuctionNeedleLongVariant(packName)) {
             SmallItemSplit smallSplit = findSmallItemSplit(packName, needle.path("keywords"));
             if (smallSplit != null) {
                 int threshold = needle.path("threshold").asInt(5);
@@ -257,6 +260,11 @@ public class PricingEngine {
                 notes.add("敷料包(纸塑袋)+棉球未能识别纸塑袋规格（20cm/15cm），保留原始价格。");
                 requiresReview = true;
             }
+            skipPackaging = true;
+        } else if (type.contains("敷料包") && type.contains("纸塑袋")) {
+            // 敷料包(纸塑袋)（棉球已在上方单独定价）：按账单原单价，勿把纸塑袋 75*200 尺寸误当无纺布敷料包
+            pricingRule = "敷料包(纸塑袋)——保留原单价";
+            notes.add("敷料包(纸塑袋)按账单原单价计费，不套用无纺布敷料包尺寸价或高温纸塑袋阶梯。");
             skipPackaging = true;
         } else if (type.contains("敷料包")) {
             // 敷料包(无纺布包)
@@ -419,6 +427,8 @@ public class PricingEngine {
             difference = 0.0;
         } else if (difference != null && Math.abs(difference) > 0.001) {
             status = "warning";
+        } else if (requiresReview || isUnpricedZeroImport(unitPrice, totalPrice, expectedUnitPrice, specialPrice)) {
+            status = "warning";
         } else {
             status = "unchanged";
         }
@@ -524,17 +534,29 @@ public class PricingEngine {
 
     private int applySpecialFoldRules(Map<String, Object> row, int bagSize, int effectiveCount, List<String> notes) {
         String combined = combinedText(row);
-        String hospitalName = str(row, "hospitalName");
         JsonNode foldRules = rules.path("specialRules").path("foldRules");
-        return applyFoldRuleList(foldRules, combined, hospitalName, bagSize, effectiveCount, notes);
+        return applyFoldRuleList(row, foldRules, combined, bagSize, effectiveCount, notes);
     }
 
-    private int applyFoldRuleList(JsonNode foldRules, String combined, String hospitalName, int bagSize, int effectiveCount, List<String> notes) {
+    private int applyFoldRuleList(Map<String, Object> row, JsonNode foldRules, String combined, int bagSize,
+                                  int effectiveCount, List<String> notes) {
         if (!foldRules.isArray()) return effectiveCount;
+        BillingConditionEvaluator.RowContext ctx = new BillingConditionEvaluator.RowContext(
+                str(row, "type"),
+                str(row, "packName"),
+                str(row, "packageMaterial"),
+                str(row, "hospitalName"),
+                str(row, "department"),
+                doubleOrNull(row, "unitPrice"),
+                bagSize,
+                effectiveCount,
+                null,
+                null,
+                combined
+        );
         for (JsonNode rule : foldRules) {
-            if (!hospitalMatches(rule, hospitalName)) continue;
             if (!matchesRuleKeywords(combined, rule.path("keywords"))) continue;
-            if (!bagSizeMatches(rule, bagSize)) continue;
+            if (!BillingConditionEvaluator.matchesRule(rule, ctx)) continue;
             int threshold = rule.path("threshold").asInt(5);
             double foldRatio = rule.path("foldRatio").asDouble(5.0);
             int result = foldCount(effectiveCount, threshold, foldRatio);
@@ -599,6 +621,10 @@ public class PricingEngine {
         }
         ProductMatchResolver.StructuredProductMatch match = structuredMatch.get();
         if (match.publicPrice() == null || !"fixed".equals(match.pricingPath())) {
+            return null;
+        }
+        // 器械包走标准阶梯（件数×5.5），不用 variant 中位数公开价锁定单价
+        if ("INSTRUMENT_PACK".equals(match.categoryCode())) {
             return null;
         }
         if (unitPrice != null
@@ -931,6 +957,17 @@ public class PricingEngine {
         if (count <= 0) return 1;
         if (threshold > 0 && count <= threshold) return 1;
         return Math.max(1, (int) Math.ceil(count / Math.max(1.0, foldRatio)));
+    }
+
+    /**
+     * 吸脂针按包名区分型号长度：20cm 及以上按实件计费，不参与全局「针」小件 5 合 1 折算。
+     */
+    private boolean isLiposuctionNeedleLongVariant(String packName) {
+        if (packName == null || !packName.contains("吸脂针")) {
+            return false;
+        }
+        String normalized = packName.replaceAll("\\s+", "").toLowerCase();
+        return normalized.contains("型号20cm以上") || normalized.contains("20cm以上");
     }
 
     private String combinedText(Map<String, Object> row) {
@@ -1697,5 +1734,43 @@ public class PricingEngine {
         String keyword;
         int position;
         String compactText;
+    }
+
+    /**
+     * 账单 0 元且规则侧仍为 0（未命中 0 元覆盖/固定价），不应因差额为 0 而视为 unchanged。
+     */
+    private static boolean isUnpricedZeroImport(
+            Double unitPrice,
+            Double totalPrice,
+            Double expectedUnitPrice,
+            SpecialPriceResult specialPrice) {
+        if (specialPrice != null) {
+            return false;
+        }
+        if (unitPrice == null || Math.abs(unitPrice) > 0.001) {
+            return false;
+        }
+        if (totalPrice != null && Math.abs(totalPrice) > 0.001) {
+            return false;
+        }
+        return expectedUnitPrice != null && Math.abs(expectedUnitPrice) <= 0.001;
+    }
+
+    /**
+     * 源账单「器械包(ZSD)」常无包装材料列；按铂康惯例视为高温无纺布阶梯计费。
+     */
+    private String inferPricingPackageMaterial(String type, String packageMaterial, List<String> notes) {
+        if (packageMaterial != null && !packageMaterial.isBlank()) {
+            return packageMaterial;
+        }
+        if (type == null || type.isBlank()) {
+            return packageMaterial == null ? "" : packageMaterial;
+        }
+        String normalized = type.replaceAll("\\s+", "");
+        if (normalized.contains("器械包(ZSD)") || (normalized.contains("器械包") && normalized.toUpperCase().contains("ZSD"))) {
+            notes.add("器械包(ZSD)未填写包装材料，按高温无纺布标准阶梯计费。");
+            return "无纺布";
+        }
+        return packageMaterial == null ? "" : packageMaterial;
     }
 }

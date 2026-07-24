@@ -53,7 +53,8 @@ export function useBillingPermission() {
   const canImportRules = computed(() => isConfigurator.value)
   const canRunReconciliation = computed(() => isOperator.value)
   const canEditReconciliationRows = computed(() => isOperator.value)
-  const canReviewReconciliation = computed(() => isAuditor.value || isConfigurator.value)
+  /** 审核与导出：业务员（含 R_USER）均可操作，配置员/审核员同样可用 */
+  const canReviewReconciliation = computed(() => isOperator.value)
   const canExport = computed(() => isOperator.value)
   const isReadOnlyConfig = computed(() => !isConfigurator.value)
 

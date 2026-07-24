@@ -62,6 +62,42 @@ class PricingEngineTest {
     }
 
     @Test
+    void hrbCjZsdInstrumentPackUsesHighTempNonWovenTierWhenBillingEnabled() {
+        ObjectNode rules = (ObjectNode) defaultRules();
+        ObjectNode billingProfile = rules.putObject("billingProfile");
+        billingProfile.put("enabled", true);
+        billingProfile.put("pricingMode", "standard");
+        ((ObjectNode) rules.path("cleaning")).put("recomputeTotalsWhenPriceChanges", true);
+
+        PricingEngine pricingEngine = new PricingEngine(rules);
+
+        PricingEngine.ProcessedResult paperPlastic = pricingEngine.processRow(row(
+                "哈尔滨长健医院",
+                "额外包(纸塑袋)",
+                "尿道探子-14/w6050",
+                "高温纸塑袋75*300",
+                14,
+                1,
+                77,
+                77));
+        assertThat(paperPlastic.expectedUnitPrice).isEqualTo(77.0);
+        assertThat(paperPlastic.status).isEqualTo("unchanged");
+
+        PricingEngine.ProcessedResult zsdPack = pricingEngine.processRow(row(
+                "哈尔滨长健医院",
+                "器械包(ZSD)",
+                "手术包（二）",
+                "",
+                43,
+                1,
+                231,
+                231));
+        assertThat(zsdPack.expectedUnitPrice).isEqualTo(236.5);
+        assertThat(zsdPack.status).isEqualTo("warning");
+        assertThat(zsdPack.notes).anyMatch(note -> note.contains("器械包(ZSD)"));
+    }
+
+    @Test
     void foldsSongdianMachineExpansionNeedles() {
         PricingEngine.ProcessedResult result = engine.processRow(row(
                 "哈尔滨道外区松电慢性病专科门诊部",
@@ -1136,6 +1172,40 @@ class PricingEngineTest {
     }
 
     @Test
+    void ngjyZeroDressingPackWithoutMaterialFlagsWarning() {
+        PricingEngine.ProcessedResult result = engine.processRow(row(
+                "哈尔滨市南岗区人民医院（九院）",
+                "敷料包",
+                "敷料包",
+                "",
+                0, 1, 0, 0));
+
+        assertThat(result.status).isEqualTo("warning");
+        assertThat(result.expectedUnitPrice).isEqualTo(0.0);
+        assertThat(result.difference).isEqualTo(0.0);
+        assertThat(result.notes).anyMatch(n -> n.contains("未能识别"));
+    }
+
+    @Test
+    void dressingPaperPlasticPackKeepsOriginalUnitPrice() {
+        PricingEngine.ProcessedResult result = engine.processRow(row(
+                "南岗区先锋路社区卫生服务中心",
+                "敷料包(纸塑袋)",
+                "引流条/Z7520",
+                "高温纸塑袋75*200",
+                0,
+                2,
+                2.5,
+                5.0));
+
+        assertThat(result.expectedUnitPrice).isEqualTo(2.5);
+        assertThat(result.correctedTotalPrice).isEqualTo(5.0);
+        assertThat(result.status).isEqualTo("unchanged");
+        assertThat(result.pricingRule).contains("敷料包(纸塑袋)");
+        assertThat(result.notes).anyMatch(n -> n.contains("原单价"));
+    }
+
+    @Test
     void pathOverrideKeepsDressingPackPricing() {
         ObjectNode rules = (ObjectNode) defaultRules();
         ObjectNode billingProfile = rules.putObject("billingProfile");
@@ -1321,5 +1391,223 @@ class PricingEngineTest {
                 assertThat(notes).noneMatch(note -> note.contains(text));
             }
         }
+    }
+
+    @Test
+    void meihanmeiLiposuctionNeedleAbove20cmBillsByInstrumentCount() {
+        ObjectNode rules = (ObjectNode) defaultRules();
+        ObjectNode specialRules = (ObjectNode) rules.path("specialRules");
+        ArrayNode foldRules = specialRules.withArray("foldRules");
+        ObjectNode fold = foldRules.addObject();
+        fold.put("name", "美涵吸脂针20cm以下5件算1件");
+        fold.putArray("hospitals").add("哈尔滨美涵美医疗美容有限公司");
+        fold.putArray("keywords").add("型号20cm以下").add("20cm以下");
+        fold.put("threshold", 5);
+        fold.put("foldRatio", 5);
+
+        PricingEngine engine = new PricingEngine(rules);
+        PricingEngine.ProcessedResult result = engine.processRow(row(
+                "哈尔滨美涵美医疗美容有限公司",
+                "额外包(纸塑袋)",
+                "吸脂针(型号20cm以上)-7件/z1035",
+                "高温纸塑袋75*200",
+                7,
+                1,
+                38.5,
+                38.5
+        ));
+
+        assertThat(result.expectedUnitPrice).isEqualTo(38.5);
+        assertThat(result.correctedTotalPrice).isEqualTo(38.5);
+        assertThat(result.notes).noneMatch(n -> n.contains("小件关键词") && n.contains("折算"));
+    }
+
+    @Test
+    void meihanmeiLiposuctionNeedleBelow20cmFoldsFiveToOne() {
+        ObjectNode rules = (ObjectNode) defaultRules();
+        ObjectNode specialRules = (ObjectNode) rules.path("specialRules");
+        ArrayNode foldRules = specialRules.withArray("foldRules");
+        ObjectNode fold = foldRules.addObject();
+        fold.put("name", "美涵吸脂针20cm以下5件算1件");
+        fold.putArray("hospitals").add("哈尔滨美涵美医疗美容有限公司");
+        fold.putArray("keywords").add("型号20cm以下").add("20cm以下");
+        fold.put("threshold", 5);
+        fold.put("foldRatio", 5);
+
+        PricingEngine engine = new PricingEngine(rules);
+        PricingEngine.ProcessedResult result = engine.processRow(row(
+                "哈尔滨美涵美医疗美容有限公司",
+                "额外包(纸塑袋)",
+                "吸脂针(型号20cm以下)-5件/z1029",
+                "高温纸塑袋75*200",
+                5,
+                1,
+                8,
+                8
+        ));
+
+        assertThat(result.expectedUnitPrice).isEqualTo(8.0);
+        assertThat(result.correctedTotalPrice).isEqualTo(8.0);
+        assertThat(result.notes).anyMatch(n -> n.contains("美涵吸脂针20cm以下5件算1件"));
+    }
+
+    @Test
+    void hrbCjHighTempPaperPlasticChargesFivePointFivePerItemFromThreePieces() {
+        ObjectNode rules = (ObjectNode) defaultRules();
+        ObjectNode billingProfile = rules.putObject("billingProfile");
+        billingProfile.put("enabled", true);
+        billingProfile.put("pricingMode", "standard");
+
+        PricingEngine pricingEngine = new PricingEngine(rules);
+        PricingEngine.ProcessedResult result = pricingEngine.processRow(row(
+                "哈尔滨长健医院",
+                "额外包(纸塑袋)",
+                "尿道探子-14/w6050",
+                "高温纸塑袋75*300",
+                14,
+                1,
+                77,
+                77));
+
+        assertThat(result.expectedUnitPrice).isEqualTo(77.0);
+        assertThat(result.notes).anyMatch(n -> n.contains("5.5"));
+        assertThat(result.status).isEqualTo("unchanged");
+    }
+
+    @Test
+    void hlfbSfChezhenFiveNeedlesFixedAtThirteenPointFive() {
+        ObjectNode rules = (ObjectNode) defaultRules();
+        ObjectNode billingProfile = rules.putObject("billingProfile");
+        billingProfile.put("enabled", true);
+        billingProfile.put("pricingMode", "standard");
+        ObjectNode specialRules = (ObjectNode) rules.path("specialRules");
+        ArrayNode fixedPrices = specialRules.withArray("fixedPrices");
+        ObjectNode fixed = fixedPrices.addObject();
+        fixed.put("name", "校正价13.5");
+        fixed.putArray("hospitals").add("黑龙江省妇幼保健院（人口）");
+        fixed.putArray("keywords").add("车针");
+        fixed.put("price", 13.5);
+        fixed.put("skipPackaging", true);
+        fixed.put("skipDiscount", true);
+
+        PricingEngine engine = new PricingEngine(rules);
+        PricingEngine.ProcessedResult result = engine.processRow(row(
+                "黑龙江省妇幼保健院（人口）",
+                "额外包(纸塑袋)",
+                "车针-5/Z7520",
+                "高温纸塑袋75*200",
+                5,
+                1,
+                8,
+                8));
+
+        assertThat(result.expectedUnitPrice).isEqualTo(13.5);
+        assertThat(result.correctedTotalPrice).isEqualTo(13.5);
+        assertThat(result.status).isEqualTo("warning");
+        assertThat(result.notes).anyMatch(n -> n.contains("校正价13.5"));
+    }
+
+    @Test
+    void songdianOralChezhen32FoldsToSevenBillableUnits() {
+        ObjectNode rules = (ObjectNode) defaultRules();
+        ObjectNode billingProfile = rules.withObject("billingProfile");
+        billingProfile.put("enabled", true);
+        billingProfile.put("pricingMode", "standard");
+        ObjectNode specialRules = (ObjectNode) rules.path("specialRules");
+        ArrayNode foldRules = specialRules.withArray("foldRules");
+        ObjectNode fold = foldRules.addObject();
+        fold.put("name", "松电口腔科针类5件算1件");
+        fold.putArray("hospitals").add("哈尔滨道外区松电慢性病专科门诊部");
+        fold.putArray("keywords").add("车针");
+        fold.put("threshold", 5);
+        fold.put("foldRatio", 5);
+        fold.putArray("departments").add("口腔科");
+
+        PricingEngine engine = new PricingEngine(rules);
+        Map<String, Object> data = row(
+                "哈尔滨道外区松电慢性病专科门诊部",
+                "额外包(纸塑袋)",
+                "车针-32/Z7520",
+                "高温纸塑袋75*200",
+                32,
+                1,
+                66,
+                66
+        );
+        data.put("department", "口腔科");
+
+        PricingEngine.ProcessedResult result = engine.processRow(data);
+
+        assertThat(result.notes).anyMatch(n -> n.contains("松电口腔科针类5件算1件") && n.contains("折算为 7 件"));
+        assertThat(result.expectedUnitPrice).isEqualTo(38.5);
+        assertThat(result.correctedTotalPrice).isEqualTo(38.5);
+        assertThat(result.status).isEqualTo("corrected");
+    }
+
+    @Test
+    void neauOralChezhen62FoldsToThirteenBillableUnits() {
+        ObjectNode rules = (ObjectNode) defaultRules();
+        rules.withObject("billingProfile").put("enabled", true).put("pricingMode", "standard");
+        ObjectNode specialRules = (ObjectNode) rules.path("specialRules");
+        ArrayNode foldRules = specialRules.withArray("foldRules");
+        ObjectNode fold = foldRules.addObject();
+        fold.put("name", "东北农大口腔科针类5件算1件");
+        fold.putArray("hospitals").add("东北农业大学医院");
+        fold.putArray("keywords").add("车针");
+        fold.put("threshold", 5);
+        fold.put("foldRatio", 5);
+        fold.putArray("departments").add("口腔科");
+
+        PricingEngine engine = new PricingEngine(rules);
+        Map<String, Object> data = row(
+                "东北农业大学医院",
+                "额外包(纸塑袋)",
+                "车针-62/Z7520",
+                "高温纸塑袋75*200",
+                62,
+                1,
+                27.5,
+                27.5
+        );
+        data.put("department", "口腔科");
+
+        PricingEngine.ProcessedResult result = engine.processRow(data);
+
+        assertThat(result.notes).anyMatch(n -> n.contains("折算为 13 件"));
+        assertThat(result.expectedUnitPrice).isEqualTo(71.5);
+        assertThat(result.status).isEqualTo("corrected");
+    }
+
+    @Test
+    void oralNeedleFoldSkipsWhenDepartmentMismatch() {
+        ObjectNode rules = (ObjectNode) defaultRules();
+        rules.withObject("billingProfile").put("enabled", true).put("pricingMode", "standard");
+        ObjectNode specialRules = (ObjectNode) rules.path("specialRules");
+        ArrayNode foldRules = specialRules.withArray("foldRules");
+        ObjectNode fold = foldRules.addObject();
+        fold.put("name", "松电口腔科针类5件算1件");
+        fold.putArray("hospitals").add("哈尔滨道外区松电慢性病专科门诊部");
+        fold.putArray("keywords").add("车针");
+        fold.put("threshold", 5);
+        fold.put("foldRatio", 5);
+        fold.putArray("departments").add("口腔科");
+
+        PricingEngine engine = new PricingEngine(rules);
+        Map<String, Object> data = row(
+                "哈尔滨道外区松电慢性病专科门诊部",
+                "额外包(纸塑袋)",
+                "车针-32/Z7520",
+                "高温纸塑袋75*200",
+                32,
+                1,
+                66,
+                66
+        );
+        data.put("department", "内科");
+
+        PricingEngine.ProcessedResult result = engine.processRow(data);
+
+        assertThat(result.notes).noneMatch(n -> n.contains("松电口腔科针类5件算1件"));
+        // 非口腔科仍可能命中全局 needle 小件规则，此处只断言客户专属 FOLD 未生效
     }
 }

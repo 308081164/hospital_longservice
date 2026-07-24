@@ -23,6 +23,7 @@ public class ReconciliationExportDataLoader {
     private final ExportTemplateResolver templateResolver;
     private final ExportNameMappingApplier exportNameMappingApplier;
     private final GuoyaoQuantityAlgorithm guoyaoQuantityAlgorithm;
+    private final ReconciliationExportRowFilter exportRowFilter;
 
     public ExportContext loadContext(Long jobId, ExportType exportType, Long templateIdOverride) {
         HospitalReconciliationJob job = jobMapper.selectById(jobId);
@@ -31,10 +32,11 @@ public class ReconciliationExportDataLoader {
         }
         List<HospitalReconciliationRow> rows =
                 rowMapper.selectByJobIdOrderBySheetNameAscRowNumberAsc(jobId);
-        Long customerId = customerResolver.resolveByName(job.getHospitalName())
-                .map(c -> c.getId())
-                .orElse(null);
+        var customerOpt = customerResolver.resolveByName(job.getHospitalName());
+        Long customerId = customerOpt.map(c -> c.getId()).orElse(null);
+        String customerCode = customerOpt.map(c -> c.getCode()).orElse(null);
         rows = exportNameMappingApplier.apply(customerId, rows);
+        rows = exportRowFilter.apply(customerCode, rows);
         ResolvedExportTemplate template = templateResolver.resolve(customerId, exportType, templateIdOverride);
         if (ExportTemplateResolverKeys.GUOYAO_BILL.equals(template.getStrategyKey())) {
             rows.forEach(guoyaoQuantityAlgorithm::applyToRow);

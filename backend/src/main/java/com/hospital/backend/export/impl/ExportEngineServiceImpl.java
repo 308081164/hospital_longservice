@@ -4,6 +4,8 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.hospital.backend.dto.request.export.ExportV2Request;
 import com.hospital.backend.dto.request.hospital.HospitalBillTemplateExportRequest;
 import com.hospital.backend.dto.request.hospital.HospitalSettlementTemplateExportRequest;
+import com.hospital.backend.dto.request.hospital.SettlementFeeRow;
+import com.hospital.backend.export.BillExportRequestMapper;
 import com.hospital.backend.dto.response.export.ExportPreviewResponse;
 import com.hospital.backend.dto.response.export.ExportValidationResponse;
 import com.hospital.backend.entity.HospitalReconciliationExportLog;
@@ -50,6 +52,7 @@ public class ExportEngineServiceImpl implements ExportEngineService {
     private final PricingRuleCompiler pricingRuleCompiler;
     private final HospitalPricingRuleMapper pricingRuleMapper;
     private final SettlementTemplateFiller settlementTemplateFiller;
+    private final BillExportRequestMapper billExportRequestMapper;
 
     @Lazy
     @org.springframework.beans.factory.annotation.Autowired
@@ -61,6 +64,9 @@ public class ExportEngineServiceImpl implements ExportEngineService {
             ExportType exportType = ExportType.fromCode(
                     request.getExportType() != null ? request.getExportType() : "bill");
             ExportContext context = dataLoader.loadContext(jobId, exportType, request.getTemplateId());
+            if (shouldUseLegacyTemplateExport(exportType, context)) {
+                return exportViaLegacyTemplate(jobId, exportType, context);
+            }
             ExportStrategy strategy = strategyRegistry.require(context.getTemplate().getStrategyKey());
             ExportResult result = strategy.export(context);
             byte[] content = columnTransformPipeline.apply(
@@ -144,16 +150,14 @@ public class ExportEngineServiceImpl implements ExportEngineService {
                 || Math.abs(settlementTotal - reconciledGrandTotal) <= 0.02;
         Boolean allocationBalanced = parseAllocationBalanced(job.getAllocationResult());
 
-        boolean ready = (warnings == 0 || "approved".equalsIgnoreCase(job.getReviewStatus()))
-                && settlementReconciled
-                && (allocationBalanced == null || allocationBalanced);
+        boolean ready = settlementReconciled && (allocationBalanced == null || allocationBalanced);
         String message;
         if (!settlementReconciled) {
             message = "结款函勾稽未通过：合计 " + settlementTotal + " 与分项之和不一致";
         } else if (allocationBalanced != null && !allocationBalanced) {
             message = "科室分配勾稽未通过，请先运行 allocate";
-        } else if (warnings > 0 && !"approved".equalsIgnoreCase(job.getReviewStatus())) {
-            message = "存在 " + warnings + " 行警告，建议复核后再导出";
+        } else if (warnings > 0) {
+            message = "存在 " + warnings + " 行待复核，建议先查看详情核对";
         } else {
             message = "导出勾稽通过";
         }
@@ -273,6 +277,73 @@ public class ExportEngineServiceImpl implements ExportEngineService {
         Long customerId = customerResolver.resolveByName(hospitalName).map(c -> c.getId()).orElse(null);
         ResolvedExportTemplate resolved = templateResolverHelper.resolve(customerId, exportType, null);
         return columnTransformPipeline.apply(content, resolved.getColumnMapping());
+    }
+
+    /**
+     * Bill/settlement exports use the legacy POI template pipeline (same as export-template-bill).
+     * The v2 strategy classes only provide simplified workbooks for dept_summary / daily / L3.
+     */
+    private boolean shouldUseLegacyTemplateExport(ExportType exportType, ExportContext context) {
+        return exportType == ExportType.BILL || exportType == ExportType.SETTLEMENT;
+    }
+
+    private ResponseEntity<byte[]> exportViaLegacyTemplate(
+            Long jobId, ExportType exportType, ExportContext context) throws Exception {
+        if (exportType == ExportType.BILL) {
+            HospitalBillTemplateExportRequest billRequest = billExportRequestMapper.fromContext(context);
+            applyExportStageDiscounts(billRequest);
+            byte[] content = legacyExportBridge.generateBillExportBytes(billRequest);
+            content = legacyExportBridge.postProcessBillExport(content, billRequest.getTemplateId());
+            content = applyTemplateTransforms(
+                    billRequest.getTemplateId(), billRequest.getHospitalName(), content, ExportType.BILL);
+            String filename = safeName(context.getHospitalName()) + "_"
+                    + LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmmss")) + ".xlsx";
+            logExport(jobId, exportType.code(), filename, context.getJob());
+            return legacyExportBridge.buildExcelDownloadResponse(content, filename);
+        }
+        if (exportType == ExportType.SETTLEMENT) {
+            HospitalSettlementTemplateExportRequest settlementRequest = buildSettlementExportRequest(context);
+            byte[] content = legacyExportBridge.generateSettlementExportBytes(settlementRequest);
+            content = applyTemplateTransforms(
+                    settlementRequest.getTemplateId(),
+                    settlementRequest.getHospitalName(),
+                    content,
+                    ExportType.SETTLEMENT);
+            String filename = safeName(context.getHospitalName()) + "_settlement_"
+                    + LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmmss")) + ".xlsx";
+            logExport(jobId, exportType.code(), filename, context.getJob());
+            return legacyExportBridge.buildExcelDownloadResponse(content, filename);
+        }
+        throw new IllegalArgumentException("Legacy export not supported for type: " + exportType);
+    }
+
+    private HospitalSettlementTemplateExportRequest buildSettlementExportRequest(ExportContext context) {
+        HospitalSettlementTemplateExportRequest request = new HospitalSettlementTemplateExportRequest();
+        request.setHospitalName(context.getHospitalName());
+        request.setTemplateId(String.valueOf(context.getJobId()));
+        request.setHospitalDisplayName(context.getHospitalName());
+        request.setDateRangeText(context.getJob().getSourceDateRange());
+        double sterilizeTotal = context.getJob().getCorrectedTotalPrice() != null
+                ? context.getJob().getCorrectedTotalPrice()
+                : context.getRows().stream()
+                        .mapToDouble(r -> r.getCorrectedTotalPrice() != null
+                                ? r.getCorrectedTotalPrice()
+                                : (r.getTotalPrice() != null ? r.getTotalPrice() : 0))
+                        .sum();
+        var fillerRows = settlementTemplateFiller.buildFeeRows(context.getJob(), sterilizeTotal);
+        request.setFeeRows(fillerRows.stream().map(this::toSettlementFeeRow).toList());
+        double total = settlementTemplateFiller.computeTotalAmount(fillerRows);
+        request.setTotalAmount(total);
+        return request;
+    }
+
+    private SettlementFeeRow toSettlementFeeRow(SettlementTemplateFiller.SettlementFeeRow row) {
+        SettlementFeeRow dto = new SettlementFeeRow();
+        dto.setIndexLabel(String.valueOf(row.getSequence()));
+        dto.setItemLabel(row.getItemName());
+        dto.setAmount(row.getAmount());
+        dto.setRemark(row.getRemark());
+        return dto;
     }
 
     private void logExport(Long jobId, String exportType, String fileName, HospitalReconciliationJob job) {
