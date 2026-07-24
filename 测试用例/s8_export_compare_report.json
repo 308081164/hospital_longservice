@@ -86,8 +86,15 @@
   {
     "folder": "哈尔滨市第五医院",
     "status": "fail",
-    "detail": "export-v2 失败 Job #613: Command '['docker', 'exec', 'hospital-backend', 'curl', '-sS', '-X', 'POST', 'http://127.0.0.1:8000/api/hospital-reconciliations/613/export-v2', '-H', 'Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoxLCJ1c2VybmFtZSI6ImFkbWluIiwiaXNfc3VwZXJ1c2VyIjp0cnVlLCJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiaWF0IjoxNzg0ODU2NzI5LCJleHAiOjE3ODQ4NzExMjl9.XP6HRa8Vd-tBvoWR10HZKq_4FOIFwhPUs5wiiruKMPM', '-H', 'Content-Type: application/json', '-d', '{\"exportType\":\"bill\",\"useStrategyEngine\":true}', '-o', '/tmp/s8_job_613.xlsx']' returned non-zero exit status 137.",
+    "detail": "行 5005 vs 5005 (Δ0) · 总额 455272.0 vs 455692.0 (Δ420.00)",
     "job_id": 613,
+    "processed_bill": "测试用例/哈尔滨市第五医院/处理后表格/5月__哈尔滨市第五医院2026年5月9日-2026年6月8日账单.xlsx",
+    "export_file": "测试用例/.s8_exports/job613_哈尔滨市第五医院.xlsx",
+    "structure_ok": true,
+    "totals": {
+      "expected": 455692.0,
+      "actual": 455272.0
+    },
     "category": "material_mismatch"
   },
   {

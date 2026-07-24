@@ -2909,6 +2909,13 @@ public class HospitalReconciliationServiceImpl implements HospitalReconciliation
         return wb;
     }
 
+    /** 账单导出后处理：超过此行数时跳过 autoSizeColumn，防止大行数 OOM */
+    static final int BILL_EXPORT_AUTO_SIZE_ROW_THRESHOLD = 2000;
+
+    static boolean shouldAutoSizeBillExportColumns(int rowCount) {
+        return rowCount <= BILL_EXPORT_AUTO_SIZE_ROW_THRESHOLD;
+    }
+
     /**
      * 后处理：在最终输出的 byte[] 上直接修正 D8 和列宽。
      *
@@ -2979,20 +2986,27 @@ public class HospitalReconciliationServiceImpl implements HospitalReconciliation
                     sheet.setColumnHidden(0, true); // A列
                     sheet.setColumnHidden(1, true); // B列
                     sheet.setColumnHidden(2, true); // C列
-                    int lastCol = 0;
-                    for (int r = 0; r <= sheet.getLastRowNum(); r++) {
-                        Row row = sheet.getRow(r);
-                        if (row != null && row.getLastCellNum() > lastCol) {
-                            lastCol = row.getLastCellNum();
+                    int rowCount = sheet.getLastRowNum() + 1;
+                    if (shouldAutoSizeBillExportColumns(rowCount)) {
+                        int lastCol = 0;
+                        for (int r = 0; r <= sheet.getLastRowNum(); r++) {
+                            Row row = sheet.getRow(r);
+                            if (row != null && row.getLastCellNum() > lastCol) {
+                                lastCol = row.getLastCellNum();
+                            }
                         }
-                    }
-                    for (int c = 3; c < lastCol; c++) {
-                        try {
-                            sheet.autoSizeColumn(c);
-                            int w = sheet.getColumnWidth(c);
-                            sheet.setColumnWidth(c, Math.min(w + 1024, 65280));
-                        } catch (Exception ignored) {
+                        for (int c = 3; c < lastCol; c++) {
+                            try {
+                                sheet.autoSizeColumn(c);
+                                int w = sheet.getColumnWidth(c);
+                                sheet.setColumnWidth(c, Math.min(w + 1024, 65280));
+                            } catch (Exception ignored) {
+                            }
                         }
+                    } else {
+                        // 大行数账单跳过 autoSizeColumn，避免 POI 全表扫描导致 OOM（如市五院 ~5005 行）
+                        log.info("postProcessBillExport: sheet[{}] skip autoSizeColumn ({} rows > threshold {})",
+                                workbook.getSheetName(i), rowCount, BILL_EXPORT_AUTO_SIZE_ROW_THRESHOLD);
                     }
 
                     // 4. 第10行（首行数据）灰色底色（仅 D-K 列，不含 L 列及之后）
