@@ -81,20 +81,7 @@
       ]
     },
     {
-      "code": "HRB-HX-EYE",
-      "name": "哈尔滨华夏眼科医院",
-      "billingEnabled": true,
-      "policies": [
-        {
-          "policyType": "LOGISTICS",
-          "name": "结款物流50",
-          "params": {"feePerTrip": 50},
-          "priority": 30
-        }
-      ]
-    },
-    {
-      "code": "VICTORIA",
+      "code": "SANJING-SB",
       "name": "黑龙江维多利亚妇产医院",
       "billingEnabled": true,
       "policies": [

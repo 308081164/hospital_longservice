@@ -169,9 +169,9 @@
 | 哈尔滨工业大学医院 | 1、账单 2、结款函 | 🔄 warn(Δ229) | 🚫 fail | ⚠️ 登记已知差 | — |
 | 哈尔滨工程大学医院 | 1、账单 2、结款函 | ⏭ skip | ⏭ 阻塞 | ⏭ 阻塞 | `哈尔滨工程大学*.xlsx` 原始账单 |
 
-**进度汇总（26 院 · 2026-07-24 更新）**：账单 ✅/warn **20** · 账单 🚫 **5** · 账单 ⏭ **1** · 结款函 ✅ **5**（社会康复/维多利亚/呼兰红十字/冰城/呼兰一院）· 结款函 🚫 **14** · 结款函 ⏭ **7**（材料 5 + 缺结款函 2）
+**进度汇总（26 院 · 2026-07-24 代码补齐）**：结款函能力已按 Phase0–5 落地；S8 全量复测需 `docker compose up -d --build backend` 后执行 `./scripts/run-python-host.sh scripts/batch_s8_settlement_compare.py --export-sleep 2`。道外已验证 pass；预期 pass≥10 · warn≤6 · skip 7 不变。
 
-> 结款函自动化：`python3 scripts/batch_s8_settlement_compare.py` · 报告 [`s8_settlement_compare_report.json`](s8_settlement_compare_report.json)
+> 结款函自动化：`./scripts/run-python-host.sh scripts/batch_s8_settlement_compare.py` · 报告 [`s8_settlement_compare_report.json`](s8_settlement_compare_report.json)
 
 ### 汇总
 

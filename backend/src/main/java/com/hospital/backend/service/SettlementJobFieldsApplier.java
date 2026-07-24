@@ -115,11 +115,6 @@ public class SettlementJobFieldsApplier {
             HospitalReconciliationJob job,
             JsonNode compiledRules,
             List<Map<String, Object>> rows) {
-        if (BillingPolicyInspector.settlementOmitMinChargeRow(compiledRules)) {
-            job.setSettlementAdjustment(null);
-            job.setMonthlyBreakdown(null);
-            return;
-        }
         double sterilizeTotal = job.getCorrectedTotalPrice() != null ? job.getCorrectedTotalPrice() : 0.0;
         double monthlyBase = computeMonthlySettlementBase(job, compiledRules, rows, sterilizeTotal);
         MonthlySettlementCalculator.compute(compiledRules, monthlyBase, rows).ifPresentOrElse(

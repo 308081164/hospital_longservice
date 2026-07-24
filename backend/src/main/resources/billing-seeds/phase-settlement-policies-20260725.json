@@ -1,7 +1,7 @@
 {
   "version": "1",
   "description": "结款函策略补种 Phase2：settlement_only 折扣 / 九洲物流减免 / 悦美低消展示 / 太平重激活",
-  "reactivateBillingPolicies": ["TAIPING-RM", "JIUZHOU-FK", "NG-FUCHAN"],
+  "reactivateBillingPolicies": ["TAIPING-RM", "JIUZHOU-FK", "NG-FUCHAN", "SHKF-YY", "VICTORIA", "HULAN-HSZ", "BINGCHENG-YM"],
   "profiles": [
     {
       "code": "TAIPING-RM",
@@ -60,7 +60,7 @@
         {
           "policyType": "LOGISTICS",
           "name": "物流100元/月",
-          "params": {"feePerTrip": 100, "tripSource": "import"},
+          "params": {"monthlyFlatFee": 100},
           "priority": 20
         }
       ]
@@ -114,6 +114,28 @@
           "name": "物流卡抵扣",
           "params": {"useLogisticsCard": true, "feePerTrip": 50},
           "priority": 10
+        }
+      ]
+    },
+    {
+      "code": "HRB-HX-EYE",
+      "name": "哈尔滨华夏眼科医院",
+      "billingEnabled": true,
+      "billingPricingMode": "standard",
+      "aliases": ["哈尔滨华夏眼科医院", "华夏眼科医院"],
+      "policies": [
+        {
+          "policyType": "DISCOUNT",
+          "name": "结款灭菌口径",
+          "scope": {"temperature": "ANY"},
+          "params": {"rate": 1.580456, "applyStage": "settlement_only", "skipWhenFixedPrice": true},
+          "priority": 5
+        },
+        {
+          "policyType": "LOGISTICS",
+          "name": "结款物流50",
+          "params": {"feePerTrip": 50},
+          "priority": 20
         }
       ]
     }

@@ -105,6 +105,30 @@ class SettlementTemplateFillerTest {
     }
 
     @Test
+    void embedsMinChargeInTotalWithoutAdjustmentRow() throws Exception {
+        HospitalReconciliationJob job = new HospitalReconciliationJob();
+        job.setHospitalName("悦美芳华医疗门诊医院");
+        job.setSettlementAdjustment(68.0);
+        job.setMonthlyBreakdown("{\"adjustment\":68,\"minCharge\":1000}");
+        job.setLogisticsFee(100.0);
+
+        JsonNode compiledRules = JsonUtils.getObjectMapper().readTree("""
+                {"billingPolicies":[
+                  {"policyType":"MONTHLY_SETTLEMENT","name":"低消1000",
+                   "params":{"minCharge":1000,"settlementOmitMinChargeRow":true}},
+                  {"policyType":"LOGISTICS","name":"物流100","params":{"monthlyFlatFee":100}}
+                ]}
+                """);
+
+        List<SettlementTemplateFiller.SettlementFeeRow> rows = filler.buildFeeRows(job, 832.0, compiledRules);
+
+        assertThat(rows).extracting(SettlementTemplateFiller.SettlementFeeRow::getItemName)
+                .contains("灭菌费用", "物流费用")
+                .doesNotContain("低消补差");
+        assertThat(filler.computeTotalAmount(rows, job)).isEqualTo(1000.0);
+    }
+
+    @Test
     void addsHulanTcmSpecialPackRows() {
         HospitalReconciliationJob job = new HospitalReconciliationJob();
         job.setHospitalName("呼兰中医院");

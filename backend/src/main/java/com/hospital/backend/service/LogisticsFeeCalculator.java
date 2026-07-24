@@ -49,7 +49,8 @@ public final class LogisticsFeeCalculator {
             Long singleOwnerCustomerId,
             Long policyId,
             String feeSource,
-            int waivedTrips
+            int waivedTrips,
+            Double monthlyFlatFee
     ) {
     }
 
@@ -67,6 +68,15 @@ public final class LogisticsFeeCalculator {
         }
 
         LogisticsPolicyParams params = resolvePolicyParams(compiledRules);
+        if (params.monthlyFlatFee() != null && params.monthlyFlatFee() > 0) {
+            return Optional.of(new Result(
+                    1,
+                    params.monthlyFlatFee(),
+                    params.monthlyFlatFee(),
+                    params.feeSource(),
+                    params.policyId(),
+                    params.tripSource()));
+        }
         TripCountResult tripResult = countTrips(params, rows, imports);
         if (tripResult.tripCount() <= 0) {
             return Optional.empty();
@@ -118,6 +128,9 @@ public final class LogisticsFeeCalculator {
         int waivedTrips = policyParams.has("waivedTrips") && !policyParams.path("waivedTrips").isNull()
                 ? Math.max(0, policyParams.path("waivedTrips").asInt())
                 : 0;
+        Double monthlyFlatFee = policyParams.has("monthlyFlatFee") && !policyParams.path("monthlyFlatFee").isNull()
+                ? policyParams.path("monthlyFlatFee").asDouble()
+                : null;
 
         return new LogisticsPolicyParams(
                 fee.feePerTrip(),
@@ -133,7 +146,8 @@ public final class LogisticsFeeCalculator {
                 singleOwnerCustomerId,
                 fee.policyId(),
                 fee.source(),
-                waivedTrips);
+                waivedTrips,
+                monthlyFlatFee);
     }
 
     public static String toBreakdownJson(Result result) {

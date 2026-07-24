@@ -145,8 +145,10 @@ public class SettlementTemplateFiller {
                             .sequence(rowsOut.size() + 1)
                             .itemName(label)
                             .amount(breakdown.adjustment())
-                            .remark(Optional.ofNullable(breakdown.minCharge())
-                                    .map(m -> "低消 " + m).orElse(""))
+                        .remark(Optional.ofNullable(breakdown.minCharge())
+                                .map(m -> isHulanTcmHospital(job.getHospitalName()) && m >= 10000
+                                        ? "执行低消" + m.intValue() + "元"
+                                        : "低消 " + m).orElse(""))
                             .build());
                 }
             });
@@ -454,12 +456,16 @@ public class SettlementTemplateFiller {
     }
 
     public double computeTotalAmount(List<SettlementFeeRow> feeRows) {
+        return computeTotalAmount(feeRows, null);
+    }
+
+    public double computeTotalAmount(List<SettlementFeeRow> feeRows, HospitalReconciliationJob job) {
         java.util.Set<String> adjustedBaseNames = feeRows.stream()
                 .map(SettlementFeeRow::getItemName)
                 .filter(name -> name != null && name.endsWith("(减免后)"))
                 .map(name -> name.substring(0, name.length() - "(减免后)".length()))
                 .collect(java.util.stream.Collectors.toSet());
-        return feeRows.stream()
+        double sum = feeRows.stream()
                 .filter(row -> {
                     String name = row.getItemName();
                     if (name == null) {
@@ -469,6 +475,14 @@ public class SettlementTemplateFiller {
                 })
                 .mapToDouble(SettlementFeeRow::getAmount)
                 .sum();
+        if (job != null) {
+            boolean hasAdjustmentRow = feeRows.stream()
+                    .anyMatch(r -> "低消补差".equals(r.getItemName()) || "封顶调减".equals(r.getItemName()));
+            if (!hasAdjustmentRow && job.getSettlementAdjustment() != null) {
+                sum += job.getSettlementAdjustment();
+            }
+        }
+        return round2(sum);
     }
 
     private void resequence(List<SettlementFeeRow> rows) {

@@ -361,7 +361,7 @@ public class ExportEngineServiceImpl implements ExportEngineService {
                 compiledRules,
                 context.getRows());
         request.setFeeRows(fillerRows.stream().map(this::toSettlementFeeRow).toList());
-        double total = settlementTemplateFiller.computeTotalAmount(fillerRows);
+        double total = settlementTemplateFiller.computeTotalAmount(fillerRows, job);
         request.setTotalAmount(total);
         return request;
     }

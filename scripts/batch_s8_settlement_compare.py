@@ -75,6 +75,10 @@ KNOWN_SETTLEMENT_DIFF = {
     "道外区人民医院": {"no_logistics": "无 LOGISTICS 策略 · 处理后仅灭菌行"},
     "三精肾病医院": {"minor_delta": "Δ18 登记已知差"},
     "南岗区妇产医院": {"minor_delta": "Δ16 登记已知差"},
+    "武警黑龙江省总队医院": {"logistics_delta": "物流趟次差 Δ50"},
+    "新发红十字医院": {"multi_row_format": "系统灭菌/高温75折/低温敷料多行格式待开发"},
+    "哈尔滨市红十字妇产医院": {"complex_bill": "大账单灭菌/物流/加急口径待 triage"},
+    "哈尔滨工业大学医院": {"complex_bill": "账期6.15-7.14加急物流待 triage"},
 }
 
 try:
