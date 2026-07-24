@@ -1,0 +1,6 @@
+#!/Users/yangxinghui/CODE/My_Projects/hospital_longservice/.venv-s8/bin/python3
+import sys
+from idna.cli import main
+if __name__ == '__main__':
+    sys.argv[0] = sys.argv[0].removesuffix('.exe')
+    sys.exit(main())

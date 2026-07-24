@@ -48,7 +48,8 @@ public final class LogisticsFeeCalculator {
             boolean mergeSameDay,
             Long singleOwnerCustomerId,
             Long policyId,
-            String feeSource
+            String feeSource,
+            int waivedTrips
     ) {
     }
 
@@ -71,11 +72,14 @@ public final class LogisticsFeeCalculator {
             return Optional.empty();
         }
 
+        int waivedTrips = Math.min(params.waivedTrips(), tripResult.tripCount());
+        int billableTrips = tripResult.tripCount() - waivedTrips;
+
         double totalFee;
         if (tripResult.fixedFeeTotal() != null && tripResult.fixedFeeTotal() > 0) {
             totalFee = roundCurrency(tripResult.fixedFeeTotal());
         } else {
-            totalFee = roundCurrency(tripResult.tripCount() * params.feePerTrip());
+            totalFee = roundCurrency(billableTrips * params.feePerTrip());
         }
 
         return Optional.of(new Result(
@@ -111,6 +115,9 @@ public final class LogisticsFeeCalculator {
                 && !policyParams.path("singleOwnerCustomerId").isNull()
                 ? policyParams.path("singleOwnerCustomerId").asLong()
                 : null;
+        int waivedTrips = policyParams.has("waivedTrips") && !policyParams.path("waivedTrips").isNull()
+                ? Math.max(0, policyParams.path("waivedTrips").asInt())
+                : 0;
 
         return new LogisticsPolicyParams(
                 fee.feePerTrip(),
@@ -125,7 +132,8 @@ public final class LogisticsFeeCalculator {
                 mergeSameDay,
                 singleOwnerCustomerId,
                 fee.policyId(),
-                fee.source());
+                fee.source(),
+                waivedTrips);
     }
 
     public static String toBreakdownJson(Result result) {
@@ -141,6 +149,14 @@ public final class LogisticsFeeCalculator {
         breakdown.put("tripSource", result.tripSource());
         if (result.policyId() != null) {
             breakdown.put("policyId", result.policyId());
+        }
+        return breakdown;
+    }
+
+    public static Map<String, Object> toBreakdownMap(Result result, int waivedTrips) {
+        Map<String, Object> breakdown = toBreakdownMap(result);
+        if (waivedTrips > 0) {
+            breakdown.put("waivedTrips", Math.min(waivedTrips, result.tripCount()));
         }
         return breakdown;
     }

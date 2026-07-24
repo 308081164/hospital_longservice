@@ -122,7 +122,13 @@ public class BillingSeedMigrationRunner implements CommandLineRunner {
             new IncrementalSeed("billing_seed_hrb_ngjy_fix_20260724_v1",
                     "billing-seeds/phase-hrb-ngjy-fix-20260724.json"),
             new IncrementalSeed("billing_seed_zuyan_ng_export_pricing_20260724_v1",
-                    "billing-seeds/phase-zuyan-ng-export-pricing-20260724.json")
+                    "billing-seeds/phase-zuyan-ng-export-pricing-20260724.json"),
+            new IncrementalSeed("billing_seed_settlement_policies_20260724_v1",
+                    "billing-seeds/phase-settlement-policies-20260724.json"),
+            new IncrementalSeed("billing_seed_settlement_policies_20260725_v1",
+                    "billing-seeds/phase-settlement-policies-20260725.json"),
+            new IncrementalSeed("billing_seed_settlement_logistics_20260725_v1",
+                    "billing-seeds/phase-settlement-logistics-20260725.json")
     );
 
     private static final String ZYY_D1_P0_MARKER = "billing_seed_zyy_d1_p0_v2";
@@ -252,6 +258,7 @@ public class BillingSeedMigrationRunner implements CommandLineRunner {
                 return false;
             }
             JsonNode root = JsonUtils.getObjectMapper().readTree(resource.getInputStream());
+            reactivateBillingPolicies(root.path("reactivateBillingPolicies"));
             seedProfiles(root.path("profiles"));
             seedCustomerGroups(root.path("customerGroups"));
             log.info("Loaded billing seed: {}", file);
@@ -259,6 +266,29 @@ public class BillingSeedMigrationRunner implements CommandLineRunner {
         } catch (Exception e) {
             log.error("Failed to load billing seed {}: {}", file, e.getMessage(), e);
             return false;
+        }
+    }
+
+    private void reactivateBillingPolicies(JsonNode codes) {
+        if (!codes.isArray()) {
+            return;
+        }
+        for (JsonNode codeNode : codes) {
+            String code = codeNode.asText();
+            if (code == null || code.isBlank()) {
+                continue;
+            }
+            Customer customer = customerMapper.selectByCode(code);
+            if (customer == null) {
+                continue;
+            }
+            billingPolicyMapper.selectByCustomerId(customer.getId()).forEach(p -> {
+                if (!Boolean.TRUE.equals(p.getIsActive())) {
+                    p.setIsActive(true);
+                    billingPolicyMapper.updateById(p);
+                }
+            });
+            log.info("Reactivated billing policies for {}", code);
         }
     }
 
@@ -1023,6 +1053,19 @@ public class BillingSeedMigrationRunner implements CommandLineRunner {
             }
             List<CustomerBillingPolicy> existing = billingPolicyMapper.selectByCustomerIdAndType(customerId, type);
             if (existing != null && existing.stream().anyMatch(p -> name.equals(p.getName()))) {
+                existing.stream()
+                        .filter(p -> name.equals(p.getName()))
+                        .forEach(p -> {
+                            if (policyNode.has("scope")) {
+                                p.setScope(policyNode.get("scope").toString());
+                            }
+                            if (policyNode.has("params")) {
+                                p.setParams(policyNode.get("params").toString());
+                            }
+                            p.setPriority(intVal(policyNode, "priority", p.getPriority() != null ? p.getPriority() : 100));
+                            p.setIsActive(true);
+                            billingPolicyMapper.updateById(p);
+                        });
                 continue;
             }
             CustomerBillingPolicy policy = new CustomerBillingPolicy();

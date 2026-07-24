@@ -1,0 +1,183 @@
+{
+  "version": "1",
+  "description": "结款函 LOGISTICS 补种 v2：道外 feePerTrip0 + 标准两行院默认物流",
+  "profiles": [
+    {
+      "code": "DAOWAI-RM",
+      "name": "道外区人民医院",
+      "billingEnabled": true,
+      "policies": [
+        {
+          "policyType": "LOGISTICS",
+          "name": "结款不收物流",
+          "params": {"feePerTrip": 0},
+          "priority": 30
+        }
+      ]
+    },
+    {
+      "code": "SHKF-YY",
+      "name": "黑龙江省社会康复医院",
+      "billingEnabled": true,
+      "policies": [
+        {
+          "policyType": "LOGISTICS",
+          "name": "结款物流50",
+          "params": {"feePerTrip": 50},
+          "priority": 30
+        }
+      ]
+    },
+    {
+      "code": "HULAN-HSZ",
+      "name": "呼兰区红十字医院",
+      "billingEnabled": true,
+      "policies": [
+        {
+          "policyType": "LOGISTICS",
+          "name": "结款物流50",
+          "params": {"feePerTrip": 50},
+          "priority": 30
+        }
+      ]
+    },
+    {
+      "code": "BINGCHENG-YM",
+      "name": "哈尔滨冰城医疗美容医院",
+      "billingEnabled": true,
+      "policies": [
+        {
+          "policyType": "LOGISTICS",
+          "name": "结款物流50",
+          "params": {"feePerTrip": 50},
+          "priority": 30
+        }
+      ]
+    },
+    {
+      "code": "SANJING-SB",
+      "name": "三精肾病医院",
+      "billingEnabled": true,
+      "policies": [
+        {
+          "policyType": "LOGISTICS",
+          "name": "结款物流50",
+          "params": {"feePerTrip": 50},
+          "priority": 30
+        }
+      ]
+    },
+    {
+      "code": "NG-FUCHAN",
+      "name": "南岗区妇产医院",
+      "billingEnabled": true,
+      "policies": [
+        {
+          "policyType": "LOGISTICS",
+          "name": "结款物流50",
+          "params": {"feePerTrip": 50},
+          "priority": 30
+        }
+      ]
+    },
+    {
+      "code": "HRB-HX-EYE",
+      "name": "哈尔滨华夏眼科医院",
+      "billingEnabled": true,
+      "policies": [
+        {
+          "policyType": "LOGISTICS",
+          "name": "结款物流50",
+          "params": {"feePerTrip": 50},
+          "priority": 30
+        }
+      ]
+    },
+    {
+      "code": "VICTORIA",
+      "name": "黑龙江维多利亚妇产医院",
+      "billingEnabled": true,
+      "policies": [
+        {
+          "policyType": "LOGISTICS",
+          "name": "结款物流50",
+          "params": {"feePerTrip": 50},
+          "priority": 30
+        }
+      ]
+    },
+    {
+      "code": "HULAN-RM",
+      "name": "哈尔滨市呼兰区第一人民医院",
+      "billingEnabled": true,
+      "aliases": ["呼兰一院", "哈尔滨市呼兰区第一人民医院"],
+      "policies": [
+        {
+          "policyType": "LOGISTICS",
+          "name": "结款物流50",
+          "params": {"feePerTrip": 50},
+          "priority": 30
+        }
+      ]
+    },
+    {
+      "code": "HRB-HSZ",
+      "name": "哈尔滨市红十字妇产医院",
+      "billingEnabled": true,
+      "policies": [
+        {
+          "policyType": "LOGISTICS",
+          "name": "结款物流50",
+          "params": {"feePerTrip": 50},
+          "priority": 30
+        }
+      ]
+    },
+    {
+      "code": "HRB-HIT",
+      "name": "哈尔滨工业大学医院",
+      "billingEnabled": true,
+      "aliases": ["哈尔滨工业大学医院", "工业大学医院"],
+      "policies": [
+        {
+          "policyType": "LOGISTICS",
+          "name": "结款物流50",
+          "params": {"feePerTrip": 50},
+          "priority": 30
+        }
+      ]
+    },
+    {
+      "code": "XINFA-HSZ",
+      "name": "新发红十字医院",
+      "billingEnabled": true,
+      "policies": [
+        {
+          "policyType": "LOGISTICS",
+          "name": "结款物流50",
+          "params": {"feePerTrip": 50},
+          "priority": 30
+        },
+        {
+          "policyType": "URGENT",
+          "name": "加急125%减免后102.5%",
+          "params": {"urgentRate": 1.25, "reducedRate": 1.025},
+          "priority": 10
+        }
+      ]
+    },
+    {
+      "code": "JIUZHOU-FK",
+      "name": "黑龙江九洲妇科医院",
+      "billingEnabled": true,
+      "policies": [
+        {
+          "policyType": "LOGISTICS",
+          "name": "6月免3次物流",
+          "params": {"feePerTrip": 50, "waivedTrips": 3, "settlementOmitZeroRows": true},
+          "priority": 30
+        }
+      ]
+    }
+  ]
+}

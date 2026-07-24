@@ -49,7 +49,8 @@ public class LogisticsPipelineService {
         LogisticsFeeCalculator.LogisticsPolicyParams params =
                 LogisticsFeeCalculator.resolvePolicyParams(compiledRules);
         double totalFee = applyCrossCustomerMerge(customerId, compiledRules, rows, imports, params, base.get());
-        Map<String, Object> breakdown = new LinkedHashMap<>(LogisticsFeeCalculator.toBreakdownMap(base.get()));
+        Map<String, Object> breakdown = new LinkedHashMap<>(
+                LogisticsFeeCalculator.toBreakdownMap(base.get(), params.waivedTrips()));
         breakdown.put("total", totalFee);
 
         if ("dept_ratio".equalsIgnoreCase(params.allocationMode())) {
@@ -90,7 +91,8 @@ public class LogisticsPipelineService {
         LogisticsFeeCalculator.LogisticsPolicyParams params =
                 LogisticsFeeCalculator.resolvePolicyParams(compiledRules);
         double totalFee = applyCrossCustomerMerge(customerId, compiledRules, rows, imports, params, base.get());
-        Map<String, Object> breakdown = new LinkedHashMap<>(LogisticsFeeCalculator.toBreakdownMap(base.get()));
+        Map<String, Object> breakdown = new LinkedHashMap<>(
+                LogisticsFeeCalculator.toBreakdownMap(base.get(), params.waivedTrips()));
         breakdown.put("total", totalFee);
 
         if ("dept_ratio".equalsIgnoreCase(params.allocationMode())) {

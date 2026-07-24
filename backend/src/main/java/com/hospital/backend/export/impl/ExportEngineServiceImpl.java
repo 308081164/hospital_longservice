@@ -20,6 +20,7 @@ import com.hospital.backend.export.ExportStageDiscountApplier;
 import com.hospital.backend.export.ExportType;
 import com.hospital.backend.export.ReconciliationExportDataLoader;
 import com.hospital.backend.export.ReconciliationLegacyExportBridge;
+import com.hospital.backend.export.SettlementJobEnricher;
 import com.hospital.backend.export.model.ResolvedExportTemplate;
 import com.hospital.backend.export.strategy.ExportStrategy;
 import com.hospital.backend.export.strategy.ExportStrategyRegistry;
@@ -53,6 +54,7 @@ public class ExportEngineServiceImpl implements ExportEngineService {
     private final HospitalPricingRuleMapper pricingRuleMapper;
     private final SettlementTemplateFiller settlementTemplateFiller;
     private final BillExportRequestMapper billExportRequestMapper;
+    private final SettlementJobEnricher settlementJobEnricher;
 
     @Lazy
     @org.springframework.beans.factory.annotation.Autowired
@@ -142,7 +144,8 @@ public class ExportEngineServiceImpl implements ExportEngineService {
                                 ? r.getCorrectedTotalPrice()
                                 : (r.getTotalPrice() != null ? r.getTotalPrice() : 0))
                         .sum();
-        var feeRows = settlementTemplateFiller.buildFeeRows(job, sterilizeTotal);
+        var feeRows = settlementTemplateFiller.buildFeeRows(
+                job, sterilizeTotal, resolveCompiledRulesFromContext(context), context.getRows());
         double settlementTotal = settlementTemplateFiller.computeTotalAmount(feeRows);
         Double externalTotal = parseExternalInstrumentTotal(job);
         Double reconciledGrandTotal = parseReconciledGrandTotal(job);
@@ -245,6 +248,24 @@ public class ExportEngineServiceImpl implements ExportEngineService {
         }
     }
 
+    private JsonNode resolveCompiledRulesFromContext(ExportContext context) {
+        try {
+            HospitalReconciliationJob job = context.getJob();
+            if (job.getRuleId() == null) {
+                return null;
+            }
+            HospitalPricingRule ruleEntity = pricingRuleMapper.selectById(job.getRuleId());
+            if (ruleEntity == null || ruleEntity.getRulesJson() == null) {
+                return null;
+            }
+            JsonNode baseRules = JsonUtils.getObjectMapper().readTree(ruleEntity.getRulesJson());
+            return pricingRuleCompiler.compile(baseRules, context.getHospitalName());
+        } catch (Exception e) {
+            log.warn("compiled rules skipped for job {}: {}", context.getJobId(), e.getMessage());
+            return null;
+        }
+    }
+
     private JsonNode resolveCompiledRules(HospitalBillTemplateExportRequest request, String hospitalName)
             throws Exception {
         Long ruleId = null;
@@ -318,19 +339,27 @@ public class ExportEngineServiceImpl implements ExportEngineService {
     }
 
     private HospitalSettlementTemplateExportRequest buildSettlementExportRequest(ExportContext context) {
+        HospitalReconciliationJob job = context.getJob();
+        JsonNode compiledRules = resolveCompiledRulesFromContext(context);
+        settlementJobEnricher.enrichForExport(job, compiledRules, context.getRows());
+
         HospitalSettlementTemplateExportRequest request = new HospitalSettlementTemplateExportRequest();
         request.setHospitalName(context.getHospitalName());
         request.setTemplateId(String.valueOf(context.getJobId()));
         request.setHospitalDisplayName(context.getHospitalName());
-        request.setDateRangeText(context.getJob().getSourceDateRange());
-        double sterilizeTotal = context.getJob().getCorrectedTotalPrice() != null
-                ? context.getJob().getCorrectedTotalPrice()
+        request.setDateRangeText(job.getSourceDateRange());
+        double sterilizeTotal = job.getCorrectedTotalPrice() != null
+                ? job.getCorrectedTotalPrice()
                 : context.getRows().stream()
                         .mapToDouble(r -> r.getCorrectedTotalPrice() != null
                                 ? r.getCorrectedTotalPrice()
                                 : (r.getTotalPrice() != null ? r.getTotalPrice() : 0))
                         .sum();
-        var fillerRows = settlementTemplateFiller.buildFeeRows(context.getJob(), sterilizeTotal);
+        var fillerRows = settlementTemplateFiller.buildFeeRows(
+                job,
+                sterilizeTotal,
+                compiledRules,
+                context.getRows());
         request.setFeeRows(fillerRows.stream().map(this::toSettlementFeeRow).toList());
         double total = settlementTemplateFiller.computeTotalAmount(fillerRows);
         request.setTotalAmount(total);
