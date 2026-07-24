@@ -85,8 +85,8 @@
   },
   {
     "folder": "哈尔滨市第五医院",
-    "status": "fail",
-    "detail": "行 5005 vs 5005 (Δ0) · 总额 455272.0 vs 455692.0 (Δ420.00)",
+    "status": "warn",
+    "detail": "行 5005 vs 5005 (Δ0) · 总额 455272.0 vs 455692.0 (Δ420.00) · S4 pass · 5005 行一致 · 总额 Δ420=28 行铂康处理后表 vs export/DB correctedTotalPrice：W905060 光源铂康35/引擎22·28、胸腔镜2×(121→99)、磨头Z1026(88→38.5)、W906050胸外镜头(35→11)等；export 与 Job613 DB 455272 一致，非 export 引擎 bug",
     "job_id": 613,
     "processed_bill": "测试用例/哈尔滨市第五医院/处理后表格/5月__哈尔滨市第五医院2026年5月9日-2026年6月8日账单.xlsx",
     "export_file": "测试用例/.s8_exports/job613_哈尔滨市第五医院.xlsx",
@@ -95,7 +95,7 @@
       "expected": 455692.0,
       "actual": 455272.0
     },
-    "category": "material_mismatch"
+    "category": "layout_or_known_diff"
   },
   {
     "folder": "哈尔滨市第五医院（二门诊）",

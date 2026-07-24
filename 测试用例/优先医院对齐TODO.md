@@ -40,7 +40,7 @@
 | 3b | 国药总医院第二院区 | ✅ | ✅ | ✅ | 🔄 | ✅ | ✅ | ✅ | 🚫 | fail_extra | Phase2 Job **646** · S8 Δ121.5 · 1 条 warning |
 | 3c | 国药总医院第三院区 | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | pass_zero | Phase2 Job **647** · S8 登记已知差 Δ2元 · legacy 合并口径 |
 | 4 | 哈尔滨市第二医院 | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | 🚫 | pass 6 |  · S5 引擎+记录 ✅ 2026-07-23 |
-| 5a | 哈尔滨市第五医院 | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | 🚫 | pass 31 | 主院区 S4 已 pass · S5 引擎+记录 ✅ 2026-07-23 |
+| 5a | 哈尔滨市第五医院 | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | pass 31 | 主院区 S4 已 pass · S5 引擎+记录 ✅ 2026-07-23 |
 | 5b | 哈尔滨市第五医院（二门诊） | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | pass_zero |  · S5 引擎+记录 ✅ 2026-07-23 |
 | 6 | 新发红十字医院 | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | 🚫 | pass 1 |  · S5 引擎+记录 ✅ 2026-07-23 |
 | 7a | 黑龙江省医院（南岗院区） | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | 🚫 | pass 40/40 | 共用 PDF；**无** phase-s7；S5 引擎+记录 ✅ 2026-07-23 |
@@ -205,11 +205,14 @@
 
 
 
+
+
+
 ## S8 批量执行摘要（2026-07-23）
 
 | 项 | 结果 | 说明 |
 |----|------|------|
-| API export-v2 vs 处理后表 | **24 ✅** · **0 🔄** · **1 ⏭** · **12 🚫** | `scripts/batch_s8_export_compare.py` · 报告 [`s8_export_compare_report.json`](s8_export_compare_report.json) |
+| API export-v2 vs 处理后表 | **25 ✅** · **0 🔄** · **1 ⏭** · **11 🚫** | `scripts/batch_s8_export_compare.py` · 报告 [`s8_export_compare_report.json`](s8_export_compare_report.json) |
 | 比对口径 | 全 sheet 账单行 · 总价容差 max(1元,0.01%) · legacy 布局抽检 | 结款函/分科室汇总需 UI 或 `--settlement` 扩展 |
-> **看板口径**：S8 列 ✅ 含 Phase1 **登记已知差**（如 layout）；自动化脚本仍计 pass/warn。JSON 报告 **pass 16** 为严格 API 口径，看板 **24 ✅** 含国药三院、香安等人工签字项。
+> **看板口径**：S8 列 ✅ 含 Phase1 **登记已知差**（如 layout）；自动化脚本仍计 pass/warn。JSON 报告 **pass 16** 为严格 API 口径，看板 **25 ✅** 含国药三院、香安等人工签字项。
 
