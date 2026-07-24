@@ -4,7 +4,7 @@
 # Java SchemaMigrationRunner 仍会在应用启动后执行列级迁移。
 set -e
 
-JAVA_OPTS="${JAVA_OPTS:--Xms256m -Xmx2048m}"
+JAVA_OPTS="${JAVA_OPTS:--Xms512m -Xmx4096m}"
 
 if [ "${SKIP_DB_MIGRATE:-}" = "1" ]; then
   echo "[entrypoint] SKIP_DB_MIGRATE=1，跳过 SQL 清单迁移"
