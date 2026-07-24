@@ -86,15 +86,8 @@
   {
     "folder": "哈尔滨市第五医院",
     "status": "fail",
-    "detail": "行 5005 vs 5005 (Δ0) · 总额 455272.0 vs 455692.0 (Δ420.00)",
+    "detail": "export-v2 失败 Job #613: Command '['docker', 'exec', 'hospital-backend', 'curl', '-sS', '-X', 'POST', 'http://127.0.0.1:8000/api/hospital-reconciliations/613/export-v2', '-H', 'Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoxLCJ1c2VybmFtZSI6ImFkbWluIiwiaXNfc3VwZXJ1c2VyIjp0cnVlLCJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiaWF0IjoxNzg0ODU2NTg2LCJleHAiOjE3ODQ4NzA5ODZ9.I4G-i8E-otR7BZPTzNh0vCs2tPYb0xg_eXJ96eXwkKk', '-H', 'Content-Type: application/json', '-d', '{\"exportType\":\"bill\",\"useStrategyEngine\":true}', '-o', '/tmp/s8_job_613.xlsx']' returned non-zero exit status 137.",
     "job_id": 613,
-    "processed_bill": "测试用例/哈尔滨市第五医院/处理后表格/5月__哈尔滨市第五医院2026年5月9日-2026年6月8日账单.xlsx",
-    "export_file": "测试用例/.s8_exports/job613_哈尔滨市第五医院.xlsx",
-    "structure_ok": true,
-    "totals": {
-      "expected": 455692.0,
-      "actual": 455272.0
-    },
     "category": "material_mismatch"
   },
   {
@@ -142,15 +135,8 @@
   {
     "folder": "黑龙江省医院（香坊院区）",
     "status": "fail",
-    "detail": "行 3078 vs 2975 (Δ103) · 总额 186589.5 vs 178518.9 (Δ8070.60)",
+    "detail": "export-v2 失败 Job #617: Command '['docker', 'exec', 'hospital-backend', 'curl', '-sS', '-X', 'POST', 'http://127.0.0.1:8000/api/hospital-reconciliations/617/export-v2', '-H', 'Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoxLCJ1c2VybmFtZSI6ImFkbWluIiwiaXNfc3VwZXJ1c2VyIjp0cnVlLCJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiaWF0IjoxNzg0ODU2NTMwLCJleHAiOjE3ODQ4NzA5MzB9.iuz1zSiDT9TRAvgx4WLYmPa6kPLBUDx03fB-_6BaRyk', '-H', 'Content-Type: application/json', '-d', '{\"exportType\":\"bill\",\"useStrategyEngine\":true}', '-o', '/tmp/s8_job_617.xlsx']' returned non-zero exit status 137.",
     "job_id": 617,
-    "processed_bill": "测试用例/黑龙江省医院（香坊院区）/处理后表格/6月__香坊省医院5.21-6.20账单(2).xlsx",
-    "export_file": "测试用例/.s8_exports/job617_黑龙江省医院（香坊院区）.xlsx",
-    "structure_ok": true,
-    "totals": {
-      "expected": 178518.9,
-      "actual": 186589.5
-    },
     "category": "material_mismatch"
   },
   {
