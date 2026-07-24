@@ -81,7 +81,10 @@ public class ExportTemplateResolver {
             case SETTLEMENT -> DEFAULT_SETTLEMENT_STRATEGY;
             case DEPT_SUMMARY -> ExportTemplateResolverKeys.STANDARD_DEPT_SUMMARY;
             case DAILY -> ExportTemplateResolverKeys.DAILY_SPLIT;
-            case PRICE_SUMMARY -> ExportTemplateResolverKeys.ORCHESTRATED_L3;
+            case PRICE_SUMMARY -> ExportTemplateResolverKeys.STANDARD_PRICE_SUMMARY;
+            case INSTRUMENT_AUDIT -> ExportTemplateResolverKeys.INSTRUMENT_AUDIT;
+            case LOGISTICS_ALLOCATION -> ExportTemplateResolverKeys.LOGISTICS_ALLOCATION;
+            case GRAND_SUMMARY -> ExportTemplateResolverKeys.GRAND_SUMMARY;
             default -> DEFAULT_BILL_STRATEGY;
         };
         return ResolvedExportTemplate.builder()
@@ -138,6 +141,24 @@ public class ExportTemplateResolver {
         }
         if ("settlement".equalsIgnoreCase(templateType)) {
             return DEFAULT_SETTLEMENT_STRATEGY;
+        }
+        if ("dept_summary".equalsIgnoreCase(templateType)) {
+            return ExportTemplateResolverKeys.STANDARD_DEPT_SUMMARY;
+        }
+        if ("price_summary".equalsIgnoreCase(templateType)) {
+            return ExportTemplateResolverKeys.STANDARD_PRICE_SUMMARY;
+        }
+        if ("instrument_audit".equalsIgnoreCase(templateType)) {
+            return ExportTemplateResolverKeys.INSTRUMENT_AUDIT;
+        }
+        if ("logistics_allocation".equalsIgnoreCase(templateType)) {
+            return ExportTemplateResolverKeys.LOGISTICS_ALLOCATION;
+        }
+        if ("grand_summary".equalsIgnoreCase(templateType)) {
+            return ExportTemplateResolverKeys.GRAND_SUMMARY;
+        }
+        if ("daily".equalsIgnoreCase(templateType)) {
+            return ExportTemplateResolverKeys.DAILY_SPLIT;
         }
         return DEFAULT_BILL_STRATEGY;
     }

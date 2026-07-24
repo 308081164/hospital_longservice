@@ -2,9 +2,9 @@ package com.hospital.backend.export;
 
 import com.hospital.backend.allocation.AllocatedLineItem;
 import com.hospital.backend.allocation.AllocationResult;
-import com.hospital.backend.allocation.DepartmentSheetSummary;
 import com.hospital.backend.entity.ExternalInstrument;
 import com.hospital.backend.entity.HospitalReconciliationRow;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
@@ -12,7 +12,6 @@ import org.springframework.stereotype.Component;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.math.BigDecimal;
 import java.util.*;
 
 /**
@@ -21,7 +20,10 @@ import java.util.*;
  */
 @Slf4j
 @Component
+@RequiredArgsConstructor
 public class SheetOrchestrator {
+
+    private final SummarySheetWriter summarySheetWriter;
 
     public byte[] buildOrchestratedWorkbook(
             String hospitalName,
@@ -32,12 +34,12 @@ public class SheetOrchestrator {
         try (XSSFWorkbook workbook = new XSSFWorkbook();
              ByteArrayOutputStream out = new ByteArrayOutputStream()) {
 
-            CellStyle headerStyle = createHeaderStyle(workbook);
+            CellStyle headerStyle = summarySheetWriter.createHeaderStyle(workbook);
 
             writeDepartmentSummariesSheet(workbook, headerStyle, hospitalName, allocation);
             writeAdjustmentSheet(workbook, headerStyle, allocation);
             writeAllocatedLinesSheet(workbook, headerStyle, allocation);
-            writeExternalInstrumentSheet(workbook, headerStyle, externalInstruments);
+            summarySheetWriter.writeExternalInstrumentSheet(workbook, headerStyle, externalInstruments);
             writePriceSummarySheet(workbook, headerStyle, allocation);
 
             Map<String, List<HospitalReconciliationRow>> bySheet = groupRowsBySheet(sourceRows);
@@ -53,32 +55,7 @@ public class SheetOrchestrator {
     private void writeDepartmentSummariesSheet(
             XSSFWorkbook workbook, CellStyle headerStyle, String hospitalName, AllocationResult allocation) {
         Sheet sheet = workbook.createSheet("分科室汇总");
-        int rowIdx = 0;
-        Row title = sheet.createRow(rowIdx++);
-        title.createCell(0).setCellValue(hospitalName + " — 分科室汇总");
-
-        Row header = sheet.createRow(rowIdx++);
-        String[] cols = {"科室", "类型", "行数", "包数", "把数", "毛额", "调整额", "净额"};
-        for (int i = 0; i < cols.length; i++) {
-            Cell cell = header.createCell(i);
-            cell.setCellValue(cols[i]);
-            cell.setCellStyle(headerStyle);
-        }
-
-        if (allocation != null && allocation.getDepartmentSummaries() != null) {
-            for (DepartmentSheetSummary summary : allocation.getDepartmentSummaries()) {
-                Row row = sheet.createRow(rowIdx++);
-                row.createCell(0).setCellValue(summary.getDepartmentName());
-                row.createCell(1).setCellValue(summary.getSheetType());
-                row.createCell(2).setCellValue(summary.getLineCount());
-                row.createCell(3).setCellValue(summary.getPackCount());
-                row.createCell(4).setCellValue(summary.getInstrumentCount());
-                row.createCell(5).setCellValue(summary.getGrossAmount());
-                row.createCell(6).setCellValue(summary.getAdjustmentAmount());
-                row.createCell(7).setCellValue(summary.getNetAmount());
-            }
-        }
-        autosize(sheet, cols.length);
+        summarySheetWriter.writeDepartmentSummariesSheet(sheet, headerStyle, hospitalName, allocation);
     }
 
     private void writeAdjustmentSheet(XSSFWorkbook workbook, CellStyle headerStyle, AllocationResult allocation) {
@@ -132,65 +109,9 @@ public class SheetOrchestrator {
         autosize(sheet, cols.length);
     }
 
-    private void writeExternalInstrumentSheet(
-            XSSFWorkbook workbook, CellStyle headerStyle, List<ExternalInstrument> instruments) {
-        Sheet sheet = workbook.createSheet("外来器械");
-        int rowIdx = 0;
-        Row header = sheet.createRow(rowIdx++);
-        String[] cols = {"科室", "包类别号", "包名", "材料", "患者", "使用日期", "包数", "单价", "合计"};
-        for (int i = 0; i < cols.length; i++) {
-            Cell cell = header.createCell(i);
-            cell.setCellValue(cols[i]);
-            cell.setCellStyle(headerStyle);
-        }
-        if (instruments != null) {
-            for (ExternalInstrument inst : instruments) {
-                Row row = sheet.createRow(rowIdx++);
-                row.createCell(0).setCellValue(nullToEmpty(inst.getDepartment()));
-                row.createCell(1).setCellValue(nullToEmpty(inst.getCategoryNo()));
-                row.createCell(2).setCellValue(nullToEmpty(inst.getPackName()));
-                row.createCell(3).setCellValue(nullToEmpty(inst.getPackageMaterial()));
-                row.createCell(4).setCellValue(nullToEmpty(inst.getPatientName()));
-                if (inst.getUsageDate() != null) {
-                    row.createCell(5).setCellValue(inst.getUsageDate().toString());
-                }
-                setInt(row, 6, inst.getPackCount());
-                if (inst.getUnitPrice() != null) {
-                    row.createCell(7).setCellValue(inst.getUnitPrice().doubleValue());
-                }
-                if (inst.getTotalAmount() != null) {
-                    row.createCell(8).setCellValue(inst.getTotalAmount().doubleValue());
-                }
-            }
-        }
-        autosize(sheet, cols.length);
-    }
-
     private void writePriceSummarySheet(XSSFWorkbook workbook, CellStyle headerStyle, AllocationResult allocation) {
         Sheet sheet = workbook.createSheet("总汇总");
-        int rowIdx = 0;
-        Row header = sheet.createRow(rowIdx++);
-        header.createCell(0).setCellValue("项目");
-        header.createCell(1).setCellValue("金额");
-        header.getCell(0).setCellStyle(headerStyle);
-        header.getCell(1).setCellStyle(headerStyle);
-
-        if (allocation != null && allocation.getPriceSummaryByCategory() != null) {
-            for (Map.Entry<String, Double> entry : allocation.getPriceSummaryByCategory().entrySet()) {
-                Row row = sheet.createRow(rowIdx++);
-                row.createCell(0).setCellValue(entry.getKey());
-                row.createCell(1).setCellValue(entry.getValue());
-            }
-        }
-        if (allocation != null) {
-            Row balance = sheet.createRow(rowIdx++);
-            balance.createCell(0).setCellValue("勾稽状态");
-            balance.createCell(1).setCellValue(allocation.isBalanced() ? "通过" : "待核对");
-            Row msg = sheet.createRow(rowIdx);
-            msg.createCell(0).setCellValue(nullToEmpty(allocation.getBalanceMessage()));
-        }
-        sheet.autoSizeColumn(0);
-        sheet.autoSizeColumn(1);
+        summarySheetWriter.writePriceSummarySheet(sheet, headerStyle, allocation, null);
     }
 
     private void writeSourceSheet(
@@ -243,14 +164,6 @@ public class SheetOrchestrator {
         return name;
     }
 
-    private CellStyle createHeaderStyle(Workbook workbook) {
-        CellStyle style = workbook.createCellStyle();
-        Font font = workbook.createFont();
-        font.setBold(true);
-        style.setFont(font);
-        return style;
-    }
-
     private void autosize(Sheet sheet, int columnCount) {
         for (int i = 0; i < columnCount; i++) {
             sheet.autoSizeColumn(i);
@@ -276,44 +189,8 @@ public class SheetOrchestrator {
     public byte[] buildLogisticsAllocationWorkbook(
             String hospitalName,
             List<Map<String, Object>> deptAllocations) throws IOException {
-        try (XSSFWorkbook workbook = new XSSFWorkbook();
-             ByteArrayOutputStream out = new ByteArrayOutputStream()) {
-            CellStyle headerStyle = createHeaderStyle(workbook);
-            Sheet sheet = workbook.createSheet("物流分摊");
-            int rowIdx = 0;
-            Row title = sheet.createRow(rowIdx++);
-            title.createCell(0).setCellValue(nullToEmpty(hospitalName) + " — 科室物流分摊");
-
-            Row header = sheet.createRow(rowIdx++);
-            String[] cols = {"科室", "灭菌费基数", "分摊比例", "分摊物流费"};
-            for (int i = 0; i < cols.length; i++) {
-                Cell cell = header.createCell(i);
-                cell.setCellValue(cols[i]);
-                cell.setCellStyle(headerStyle);
-            }
-
-            if (deptAllocations != null) {
-                for (Map<String, Object> item : deptAllocations) {
-                    Row row = sheet.createRow(rowIdx++);
-                    row.createCell(0).setCellValue(String.valueOf(item.getOrDefault("department", "")));
-                    Object sterilizeTotal = item.get("sterilizeTotal");
-                    if (sterilizeTotal instanceof Number number) {
-                        row.createCell(1).setCellValue(number.doubleValue());
-                    }
-                    Object ratio = item.get("ratio");
-                    if (ratio instanceof Number number) {
-                        row.createCell(2).setCellValue(number.doubleValue());
-                    }
-                    Object allocatedFee = item.get("allocatedFee");
-                    if (allocatedFee instanceof Number number) {
-                        row.createCell(3).setCellValue(number.doubleValue());
-                    }
-                }
-            }
-
-            autosize(sheet, cols.length);
-            workbook.write(out);
-            return out.toByteArray();
-        }
+        return summarySheetWriter.buildSingleSheetWorkbook("物流分摊", (sheet, headerStyle) ->
+                summarySheetWriter.writeLogisticsAllocationSheet(
+                        sheet, headerStyle, hospitalName, deptAllocations));
     }
 }

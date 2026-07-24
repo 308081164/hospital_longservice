@@ -729,7 +729,11 @@
       "export": {
         "bill": "Export Bill",
         "settlement": "Export Settlement Letter",
-        "departmentSummary": "Export Department Summary"
+        "departmentSummary": "Export Department Summary",
+        "priceSummary": "Export Price Summary",
+        "instrumentAudit": "Export Instrument Audit",
+        "logisticsAllocation": "Export Logistics Allocation",
+        "grandSummary": "Export Grand Summary"
       },
       "pagination": {
         "total": "{count} forms in total",
@@ -996,7 +1000,10 @@
       "bill": "Bill Template",
       "settlement": "Settlement Template",
       "deptSummary": "Dept Summary Template",
-      "priceSummary": "Price Summary Template"
+      "priceSummary": "Price Summary Template",
+      "instrumentAudit": "Instrument Audit Template",
+      "logisticsAllocation": "Logistics Allocation Template",
+      "grandSummary": "Grand Summary Template"
     },
     "strategy": {
       "standardBill": "Standard Bill Template",

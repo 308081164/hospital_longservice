@@ -6,7 +6,9 @@ public enum ExportType {
     DEPT_SUMMARY("dept_summary"),
     PRICE_SUMMARY("price_summary"),
     INSTRUMENT_AUDIT("instrument_audit"),
-    DAILY("daily");
+    DAILY("daily"),
+    LOGISTICS_ALLOCATION("logistics_allocation"),
+    GRAND_SUMMARY("grand_summary");
 
     private final String code;
 

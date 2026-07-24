@@ -30,7 +30,14 @@ export interface ColumnMappingModel {
 }
 
 export interface ExportV2Payload {
-  exportType?: 'bill' | 'settlement' | 'dept_summary'
+  exportType?:
+    | 'bill'
+    | 'settlement'
+    | 'dept_summary'
+    | 'price_summary'
+    | 'instrument_audit'
+    | 'logistics_allocation'
+    | 'grand_summary'
   templateId?: number
   useStrategyEngine?: boolean
 }
@@ -62,7 +69,10 @@ export const EXPORT_TEMPLATE_TYPES = [
   'bill',
   'settlement',
   'dept_summary',
-  'price_summary'
+  'price_summary',
+  'instrument_audit',
+  'logistics_allocation',
+  'grand_summary'
 ] as const
 
 export const EXPORT_STRATEGY_OPTIONS = [

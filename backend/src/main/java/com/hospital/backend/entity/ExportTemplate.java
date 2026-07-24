@@ -9,7 +9,7 @@ public class ExportTemplate extends BaseEntity {
 
     private Long customerId;
 
-    /** bill | settlement | dept_summary | price_summary | instrument_audit | daily */
+    /** bill | settlement | dept_summary | price_summary | instrument_audit | daily | logistics_allocation | grand_summary */
     private String templateType;
 
     private String name;

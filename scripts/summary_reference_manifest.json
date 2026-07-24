@@ -1,0 +1,173 @@
+{
+  "version": "1",
+  "description": "额外表格 S8 参考表 manifest（6月优先，缺则 fallback）",
+  "entries": [
+    {
+      "hospital": "黑龙江省中医药大学附属第三医院（电力）",
+      "customerCode": "ZY3-DIANLI",
+      "exportType": "instrument_audit",
+      "referenceGlob": "*器械把数*.xlsx",
+      "referenceMonth": "6月",
+      "tolerance": 0.01
+    },
+    {
+      "hospital": "黑龙江中医药大学附属第一医院",
+      "customerCode": "ZYY-D1",
+      "exportType": "dept_summary",
+      "referenceGlob": "*各科室费用汇总*.xlsx",
+      "referenceMonth": "6月",
+      "tolerance": 1.0
+    },
+    {
+      "hospital": "黑龙江中医药大学附属第一医院",
+      "customerCode": "ZYY-D1",
+      "exportType": "logistics_allocation",
+      "referenceGlob": "*物流明细*.xlsx",
+      "referenceMonth": "6月",
+      "tolerance": 1.0
+    },
+    {
+      "hospital": "哈尔滨市第五医院",
+      "customerCode": "HRB-WY",
+      "exportType": "dept_summary",
+      "referenceGlob": "*分科室汇总*.xlsx",
+      "referenceMonth": "6月",
+      "tolerance": 50.0
+    },
+    {
+      "hospital": "哈尔滨市第五医院",
+      "customerCode": "HRB-WY",
+      "exportType": "price_summary",
+      "referenceGlob": "*包数量*.xlsx",
+      "referenceMonth": "2月",
+      "referenceMonthFallback": true,
+      "tolerance": 100.0
+    },
+    {
+      "hospital": "哈尔滨市第五医院",
+      "customerCode": "HRB-WY",
+      "exportType": "instrument_audit",
+      "referenceGlob": "*外来器械*.xlsx",
+      "referenceMonth": "6月",
+      "tolerance": 1.0
+    },
+    {
+      "hospital": "哈尔滨市第五医院",
+      "customerCode": "HRB-WY",
+      "exportType": "grand_summary",
+      "referenceGlob": "*总汇总*.xlsx",
+      "referenceMonth": "6月",
+      "tolerance": 100.0
+    },
+    {
+      "hospital": "黑龙江省医院（南岗院区）",
+      "customerCode": "SHENG-YY-NG",
+      "exportType": "price_summary",
+      "referenceGlob": "*汇总*.xlsx",
+      "referenceMonth": "3月",
+      "referenceMonthFallback": true,
+      "tolerance": 50.0
+    },
+    {
+      "hospital": "黑龙江省医院（南岗院区）",
+      "customerCode": "SHENG-YY-NG",
+      "exportType": "instrument_audit",
+      "referenceGlob": "*南岗*.xlsx",
+      "referenceMonth": "3月",
+      "referenceMonthFallback": true,
+      "tolerance": 50.0
+    },
+    {
+      "hospital": "黑龙江省医院（南岗院区）",
+      "customerCode": "SHENG-YY-NG",
+      "exportType": "logistics_allocation",
+      "referenceGlob": "*物流*.xlsx",
+      "referenceMonth": "3月",
+      "referenceMonthFallback": true,
+      "tolerance": 50.0
+    },
+    {
+      "hospital": "黑龙江省医院（香坊院区）",
+      "customerCode": "SHENG-YY-XF",
+      "exportType": "price_summary",
+      "referenceGlob": "*汇总*.xlsx",
+      "referenceMonth": "3月",
+      "referenceMonthFallback": true,
+      "tolerance": 50.0
+    },
+    {
+      "hospital": "黑龙江省医院（香坊院区）",
+      "customerCode": "SHENG-YY-XF",
+      "exportType": "instrument_audit",
+      "referenceGlob": "*香坊*.xlsx",
+      "referenceMonth": "3月",
+      "referenceMonthFallback": true,
+      "tolerance": 50.0
+    },
+    {
+      "hospital": "黑龙江省医院（香坊院区）",
+      "customerCode": "SHENG-YY-XF",
+      "exportType": "logistics_allocation",
+      "referenceGlob": "*物流*.xlsx",
+      "referenceMonth": "3月",
+      "referenceMonthFallback": true,
+      "tolerance": 50.0
+    },
+    {
+      "hospital": "祖研-黑龙江省中医医院（南岗院区）",
+      "customerCode": "ZUYAN-NG",
+      "exportType": "price_summary",
+      "referenceGlob": "*汇总*.xlsx",
+      "referenceMonth": "6月",
+      "tolerance": 1.0
+    },
+    {
+      "hospital": "祖研-黑龙江省中医医院（三辅院区）",
+      "customerCode": "ZUYAN-SF",
+      "exportType": "price_summary",
+      "referenceGlob": "*汇总*.xlsx",
+      "referenceMonth": "6月",
+      "tolerance": 1.0
+    },
+    {
+      "hospital": "祖研-黑龙江省中医医院（香安院区）",
+      "customerCode": "ZUYAN-XA",
+      "exportType": "price_summary",
+      "referenceGlob": "*汇总*.xlsx",
+      "referenceMonth": "6月",
+      "tolerance": 1.0
+    },
+    {
+      "hospital": "黑龙江中医药大学附属第二医院（南岗）",
+      "customerCode": "ZYY-D2-NG",
+      "exportType": "price_summary",
+      "referenceGlob": "*包数据*.xls*",
+      "referenceMonth": "6月",
+      "tolerance": 50.0
+    },
+    {
+      "hospital": "黑龙江中医药大学附属第二医院（南岗）",
+      "customerCode": "ZYY-D2-NG",
+      "exportType": "instrument_audit",
+      "referenceGlob": "*包数据*.xls*",
+      "referenceMonth": "6月",
+      "tolerance": 50.0
+    },
+    {
+      "hospital": "黑龙江中医药大学附属第二医院（哈南分院）",
+      "customerCode": "ZYY-D2-HN",
+      "exportType": "price_summary",
+      "referenceGlob": "*包数据*.xls*",
+      "referenceMonth": "6月",
+      "tolerance": 50.0
+    },
+    {
+      "hospital": "黑龙江中医药大学附属第二医院（哈南分院）",
+      "customerCode": "ZYY-D2-HN",
+      "exportType": "instrument_audit",
+      "referenceGlob": "*包数据*.xls*",
+      "referenceMonth": "6月",
+      "tolerance": 50.0
+    }
+  ]
+}

@@ -7,6 +7,7 @@ import com.hospital.backend.entity.ExternalInstrument;
 import com.hospital.backend.entity.HospitalReconciliationRow;
 import com.hospital.backend.entity.RosterEntry;
 import com.hospital.backend.export.SheetOrchestrator;
+import com.hospital.backend.export.SummarySheetWriter;
 import com.hospital.backend.service.impl.DepartmentAllocationServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -28,7 +29,7 @@ class WuyuanEndToEndIntegrationTest {
     @BeforeEach
     void setUp() {
         allocationService = new DepartmentAllocationServiceImpl(null, null, null, null, null);
-        sheetOrchestrator = new SheetOrchestrator();
+        sheetOrchestrator = new SheetOrchestrator(new SummarySheetWriter());
         config = new AllocationConfig();
     }
 

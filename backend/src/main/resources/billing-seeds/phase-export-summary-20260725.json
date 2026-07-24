@@ -1,0 +1,206 @@
+{
+  "version": "1",
+  "description": "S7+ 额外表格导出：price_summary / instrument_audit / dept_summary / logistics_allocation / grand_summary 绑定",
+  "exportTemplateOverrides": [
+    {
+      "code": "ZY3-DIANLI",
+      "templates": [
+        {
+          "type": "instrument_audit",
+          "name": "附三电力器械把数表（S7+）",
+          "strategyKey": "instrument_audit"
+        }
+      ]
+    },
+    {
+      "code": "ZYY-D1",
+      "templates": [
+        {
+          "type": "dept_summary",
+          "name": "附一各科室费用汇总（S7+）",
+          "strategyKey": "fuyi_dept_summary"
+        },
+        {
+          "type": "logistics_allocation",
+          "name": "附一物流分摊（S7+）",
+          "strategyKey": "logistics_allocation"
+        }
+      ]
+    },
+    {
+      "code": "HRB-WY",
+      "templates": [
+        {
+          "type": "dept_summary",
+          "name": "市五院分科室汇总（S7+）",
+          "strategyKey": "standard_dept_summary"
+        },
+        {
+          "type": "price_summary",
+          "name": "市五院价格汇总（S7+）",
+          "strategyKey": "standard_price_summary"
+        },
+        {
+          "type": "instrument_audit",
+          "name": "市五院外来器械把数（S7+）",
+          "strategyKey": "instrument_audit",
+          "sheetConfig": "{\"strategyKey\":\"instrument_audit\",\"layout\":\"external_instrument\"}"
+        },
+        {
+          "type": "grand_summary",
+          "name": "市五院总汇总（S7+）",
+          "strategyKey": "grand_summary"
+        }
+      ]
+    },
+    {
+      "code": "HRB-WY-EM",
+      "templates": [
+        {
+          "type": "grand_summary",
+          "name": "市五二门诊总汇总（S7+）",
+          "strategyKey": "grand_summary"
+        }
+      ]
+    },
+    {
+      "code": "SHENG-YY-NG",
+      "templates": [
+        {
+          "type": "price_summary",
+          "name": "省医院南岗价格汇总（S7+）",
+          "strategyKey": "standard_price_summary"
+        },
+        {
+          "type": "instrument_audit",
+          "name": "省医院南岗器械把数（S7+）",
+          "strategyKey": "instrument_audit"
+        },
+        {
+          "type": "logistics_allocation",
+          "name": "省医院南岗物流分摊（S7+）",
+          "strategyKey": "logistics_allocation"
+        }
+      ]
+    },
+    {
+      "code": "SHENG-YY-XF",
+      "templates": [
+        {
+          "type": "price_summary",
+          "name": "省医院香坊价格汇总（S7+）",
+          "strategyKey": "standard_price_summary"
+        },
+        {
+          "type": "instrument_audit",
+          "name": "省医院香坊器械把数（S7+）",
+          "strategyKey": "instrument_audit"
+        },
+        {
+          "type": "logistics_allocation",
+          "name": "省医院香坊物流分摊（S7+）",
+          "strategyKey": "logistics_allocation"
+        }
+      ]
+    },
+    {
+      "code": "ZUYAN-NG",
+      "templates": [
+        {
+          "type": "price_summary",
+          "name": "祖研南岗价格汇总（S7+）",
+          "strategyKey": "standard_price_summary",
+          "sheetConfig": "{\"strategyKey\":\"standard_price_summary\",\"sheetName\":\"汇总\"}"
+        }
+      ]
+    },
+    {
+      "code": "ZUYAN-SF",
+      "templates": [
+        {
+          "type": "price_summary",
+          "name": "祖研三辅价格汇总（S7+）",
+          "strategyKey": "standard_price_summary",
+          "sheetConfig": "{\"strategyKey\":\"standard_price_summary\",\"sheetName\":\"汇总\"}"
+        }
+      ]
+    },
+    {
+      "code": "ZUYAN-XA",
+      "templates": [
+        {
+          "type": "price_summary",
+          "name": "祖研香安价格汇总（S7+）",
+          "strategyKey": "standard_price_summary",
+          "sheetConfig": "{\"strategyKey\":\"standard_price_summary\",\"sheetName\":\"汇总\"}"
+        }
+      ]
+    },
+    {
+      "code": "ZYY-D2-NG",
+      "templates": [
+        {
+          "type": "price_summary",
+          "name": "附二南岗包数据汇总（S7+）",
+          "strategyKey": "fue2_pack_data"
+        },
+        {
+          "type": "instrument_audit",
+          "name": "附二南岗包数据把数（S7+）",
+          "strategyKey": "fue2_pack_data"
+        }
+      ]
+    },
+    {
+      "code": "ZYY-D2-HN",
+      "templates": [
+        {
+          "type": "price_summary",
+          "name": "附二哈南包数据汇总（S7+）",
+          "strategyKey": "fue2_pack_data"
+        },
+        {
+          "type": "instrument_audit",
+          "name": "附二哈南包数据把数（S7+）",
+          "strategyKey": "fue2_pack_data"
+        }
+      ]
+    }
+  ],
+  "exportCatalog": [
+    {
+      "code": "ZY3-DIANLI",
+      "instrument_audit": "instrument_audit",
+      "notes": "附三电力 6月器械把数表"
+    },
+    {
+      "code": "ZYY-D1",
+      "dept_summary": "fuyi_dept_summary",
+      "logistics_allocation": "logistics_allocation",
+      "notes": "附一各科室费用汇总 + 物流明细"
+    },
+    {
+      "code": "HRB-WY",
+      "dept_summary": "standard_dept_summary",
+      "price_summary": "standard_price_summary",
+      "instrument_audit": "instrument_audit/external_instrument",
+      "grand_summary": "grand_summary",
+      "notes": "市五 L3 全量 + 总汇总 merge 二门诊"
+    },
+    {
+      "code": "SHENG-YY-NG",
+      "price_summary": "standard_price_summary",
+      "instrument_audit": "instrument_audit",
+      "logistics_allocation": "logistics_allocation"
+    },
+    {
+      "code": "ZUYAN-NG",
+      "price_summary": "standard_price_summary"
+    },
+    {
+      "code": "ZYY-D2-NG",
+      "price_summary": "fue2_pack_data",
+      "instrument_audit": "fue2_pack_data"
+    }
+  ]
+}

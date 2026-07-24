@@ -238,7 +238,10 @@
     { value: 'bill', labelKey: 'exportTemplates.types.bill' },
     { value: 'settlement', labelKey: 'exportTemplates.types.settlement' },
     { value: 'dept_summary', labelKey: 'exportTemplates.types.deptSummary' },
-    { value: 'price_summary', labelKey: 'exportTemplates.types.priceSummary' }
+    { value: 'price_summary', labelKey: 'exportTemplates.types.priceSummary' },
+    { value: 'instrument_audit', labelKey: 'exportTemplates.types.instrumentAudit' },
+    { value: 'logistics_allocation', labelKey: 'exportTemplates.types.logisticsAllocation' },
+    { value: 'grand_summary', labelKey: 'exportTemplates.types.grandSummary' }
   ]
 
   const strategyOptions = EXPORT_STRATEGY_OPTIONS

@@ -741,7 +741,11 @@
       "export": {
         "bill": "导出账单",
         "settlement": "导出结款函",
-        "departmentSummary": "导出分科室价格汇总"
+        "departmentSummary": "导出分科室价格汇总",
+        "priceSummary": "导出价格汇总",
+        "instrumentAudit": "导出器械把数表",
+        "logisticsAllocation": "导出物流分摊表",
+        "grandSummary": "导出总汇总表"
       },
       "pagination": {
         "total": "共 {count} 个表单",
@@ -1021,7 +1025,10 @@
       "bill": "账单模板",
       "settlement": "结款函模板",
       "deptSummary": "分科室汇总模板",
-      "priceSummary": "价格汇总模板"
+      "priceSummary": "价格汇总模板",
+      "instrumentAudit": "器械把数表模板",
+      "logisticsAllocation": "物流分摊模板",
+      "grandSummary": "总汇总模板"
     },
     "strategy": {
       "standardBill": "标准账单模板",

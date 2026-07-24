@@ -24,6 +24,18 @@
             <ElRadio value="dept_summary">{{
               t('reconciliation.history.export.departmentSummary')
             }}</ElRadio>
+            <ElRadio value="price_summary">{{
+              t('reconciliation.history.export.priceSummary')
+            }}</ElRadio>
+            <ElRadio value="instrument_audit">{{
+              t('reconciliation.history.export.instrumentAudit')
+            }}</ElRadio>
+            <ElRadio value="logistics_allocation">{{
+              t('reconciliation.history.export.logisticsAllocation')
+            }}</ElRadio>
+            <ElRadio value="grand_summary">{{
+              t('reconciliation.history.export.grandSummary')
+            }}</ElRadio>
           </ElRadioGroup>
         </ElFormItem>
         <ElFormItem
@@ -152,7 +164,14 @@
   const props = defineProps<{
     jobId?: number | null
     hospitalName?: string
-    initialExportType?: 'bill' | 'settlement' | 'dept_summary'
+    initialExportType?:
+      | 'bill'
+      | 'settlement'
+      | 'dept_summary'
+      | 'price_summary'
+      | 'instrument_audit'
+      | 'logistics_allocation'
+      | 'grand_summary'
     monthlyBreakdown?: {
       rawSterilizeTotal?: number
       adjustedTotal?: number
@@ -172,7 +191,15 @@
   const visible = defineModel<boolean>({ default: false })
 
   const step = ref(0)
-  const exportType = ref<'bill' | 'settlement' | 'dept_summary'>('bill')
+  const exportType = ref<
+    | 'bill'
+    | 'settlement'
+    | 'dept_summary'
+    | 'price_summary'
+    | 'instrument_audit'
+    | 'logistics_allocation'
+    | 'grand_summary'
+  >('bill')
   const templateId = ref<number | undefined>()
   const templates = ref<ExportTemplateRecord[]>([])
   const preview = ref<ExportPreviewResult | null>(null)
@@ -307,10 +334,14 @@
         templateId: templateId.value,
         useStrategyEngine: true
       })
-      const prefixMap = {
+      const prefixMap: Record<string, string> = {
         bill: '账单',
         settlement: '结款函',
-        dept_summary: '分科室汇总'
+        dept_summary: '分科室汇总',
+        price_summary: '价格汇总',
+        instrument_audit: '器械把数表',
+        logistics_allocation: '物流分摊',
+        grand_summary: '总汇总'
       }
       const fileName = buildFileName(prefixMap[exportType.value])
       triggerBlobDownload(blob, fileName)
