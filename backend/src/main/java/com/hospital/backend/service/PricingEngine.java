@@ -59,6 +59,7 @@ public class PricingEngine {
      *              unitPrice, totalPrice
      */
     public ProcessedResult processRow(Map<String, Object> row) {
+        row = new HashMap<>(row);
         List<String> notes = new ArrayList<>();
         String status = "unchanged";
         String pricingRule = "未命中规则";
