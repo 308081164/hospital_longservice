@@ -1,0 +1,2 @@
+# 铂康 SQL 转储（单文件可达 400MB+）
+铂康/建表语句/*.sql filter=lfs diff=lfs merge=lfs -text
