@@ -334,7 +334,11 @@ public class CustomerServiceImpl implements CustomerService {
             }
             if (PRICING_RULE_TYPES.contains(dto.getRuleType())) {
                 if (requiresProductBinding(dto.getRuleType()) && dto.getProductId() == null) {
-                    continue;
+                    boolean hasKeywords = dto.getKeywords() != null
+                            && dto.getKeywords().stream().anyMatch(k -> k != null && !k.isBlank());
+                    if (!hasKeywords) {
+                        continue;
+                    }
                 }
                 SaveCustomerProductRuleRequest request = new SaveCustomerProductRuleRequest();
                 request.setProductId(dto.getProductId());
