@@ -1,0 +1,36 @@
+{
+  "version": "1",
+  "description": "黑龙江省医院香坊院区神外一：勾刀13.2元/件、勾刀-2固定26.4元（2×13.2）；移除全局误配勾刀-2@13.2",
+  "ruleUpdates": [
+    {
+      "code": "SHENG-YY-XF",
+      "ruleName": "校正价13.2",
+      "removeKeywords": ["勾刀-2"]
+    }
+  ],
+  "newRules": [
+    {
+      "code": "SHENG-YY-XF",
+      "ruleType": "FIXED_PRICE",
+      "name": "神外一勾刀-2 26.4元",
+      "priority": 3,
+      "price": 26.4,
+      "keywords": ["勾刀-2", "钩刀-2"],
+      "conditionsJson": "[{\"field\":\"department\",\"value\":[\"神外一\"]}]",
+      "skipPackaging": true,
+      "skipDiscount": true
+    },
+    {
+      "code": "SHENG-YY-XF",
+      "ruleType": "FIXED_PRICE",
+      "name": "神外一勾刀13.2元",
+      "priority": 4,
+      "price": 13.2,
+      "keywords": ["勾刀", "钩刀"],
+      "excludeKeywords": ["-2"],
+      "conditionsJson": "[{\"field\":\"department\",\"value\":[\"神外一\"]}]",
+      "skipPackaging": true,
+      "skipDiscount": true
+    }
+  ]
+}
