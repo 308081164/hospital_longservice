@@ -47,6 +47,10 @@ WHERE setting_key IN (
   'billing_seed_export_rules_20260723_v1',
   'billing_seed_fix_p0_mojibake_dup_20260723_v1',
   'billing_seed_hrb_bc_med_beauty_20260723_v1',
+  'billing_seed_hrb_bc_med_beauty_fix_20260724_v1',
+  'billing_seed_hrb_bc_med_beauty_fix_20260724_v2',
+  'billing_seed_hrb_hx_eye_fix_20260724_v1',
+  'billing_seed_hrb_hx_eye_fix_20260724_v2',
   'billing_seed_zyy_d1_p0_v2',
   'billing_seed_zyy_d1_p0_1_v3'
 )

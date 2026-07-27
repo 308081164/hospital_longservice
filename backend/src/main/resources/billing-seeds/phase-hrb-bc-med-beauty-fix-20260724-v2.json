@@ -1,0 +1,50 @@
+{
+  "version": "1",
+  "description": "冰城医美 v2：强制整形手术包58元、脂充包54.5（prod 可能已打 v1 fix marker 但 exclude 仍误伤整形手术包）",
+  "customerUpdates": [
+    {
+      "code": "BINGCHENG-YM",
+      "billingEnabled": true,
+      "billingPricingMode": "special_only"
+    }
+  ],
+  "ruleUpdates": [
+    {
+      "code": "BINGCHENG-YM",
+      "ruleName": "整形包54.5",
+      "setName": "脂充包54.5",
+      "setKeywords": ["脂充包"],
+      "setPrice": 54.5,
+      "setExcludeKeywords": ["整形包", "整形手术包"]
+    },
+    {
+      "code": "BINGCHENG-YM",
+      "ruleName": "脂充包54.5",
+      "setKeywords": ["脂充包"],
+      "setPrice": 54.5,
+      "setExcludeKeywords": ["整形包", "整形手术包"]
+    },
+    {
+      "code": "BINGCHENG-YM",
+      "ruleName": "整形包58",
+      "setKeywords": ["整形包", "整形手术包"],
+      "setExcludeKeywords": ["脂充包"],
+      "setPrice": 58,
+      "setRuleType": "FIXED_PRICE",
+      "setSkipPackaging": true
+    }
+  ],
+  "newRules": [
+    {
+      "code": "BINGCHENG-YM",
+      "ruleType": "FIXED_PRICE",
+      "name": "整形包58",
+      "priority": 8,
+      "price": 58,
+      "keywords": ["整形包", "整形手术包"],
+      "excludeKeywords": ["脂充包"],
+      "skipPackaging": true,
+      "skipDiscount": true
+    }
+  ]
+}

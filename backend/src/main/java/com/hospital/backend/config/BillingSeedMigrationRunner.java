@@ -91,8 +91,12 @@ public class BillingSeedMigrationRunner implements CommandLineRunner {
                     "billing-seeds/phase-hlfb-sf-chezhen-20260724.json"),
             new IncrementalSeed("billing_seed_hrb_bc_med_beauty_fix_20260724_v1",
                     "billing-seeds/phase-hrb-bc-med-beauty-fix-20260724.json"),
+            new IncrementalSeed("billing_seed_hrb_bc_med_beauty_fix_20260724_v2",
+                    "billing-seeds/phase-hrb-bc-med-beauty-fix-20260724-v2.json"),
             new IncrementalSeed("billing_seed_hrb_hx_eye_fix_20260724_v1",
                     "billing-seeds/phase-hrb-hx-eye-fix-20260724.json"),
+            new IncrementalSeed("billing_seed_hrb_hx_eye_fix_20260724_v2",
+                    "billing-seeds/phase-hrb-hx-eye-fix-20260724-v2.json"),
             new IncrementalSeed("billing_seed_ng_fuchan_renliubao_fix_20260724_v1",
                     "billing-seeds/phase-ng-fuchan-renliubao-fix-20260724.json"),
             new IncrementalSeed("billing_seed_hrb_cj_fix_20260724_v1",
@@ -192,7 +196,9 @@ public class BillingSeedMigrationRunner implements CommandLineRunner {
                     || "billing-seeds/phase-hrb-sd-neau-kouqiang-fold-20260723.json".equals(incremental.classpathFile())
                     || "billing-seeds/phase-hlfb-sf-chezhen-20260724.json".equals(incremental.classpathFile())
                     || "billing-seeds/phase-hrb-bc-med-beauty-fix-20260724.json".equals(incremental.classpathFile())
+                    || "billing-seeds/phase-hrb-bc-med-beauty-fix-20260724-v2.json".equals(incremental.classpathFile())
                     || "billing-seeds/phase-hrb-hx-eye-fix-20260724.json".equals(incremental.classpathFile())
+                    || "billing-seeds/phase-hrb-hx-eye-fix-20260724-v2.json".equals(incremental.classpathFile())
                     || "billing-seeds/phase-ng-fuchan-renliubao-fix-20260724.json".equals(incremental.classpathFile())
                     || "billing-seeds/phase-hrb-cj-fix-20260724.json".equals(incremental.classpathFile())
                     || "billing-seeds/phase-hrb-cj-surgical-pack-fix-20260724.json".equals(incremental.classpathFile())

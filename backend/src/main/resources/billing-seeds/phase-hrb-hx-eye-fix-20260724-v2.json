@@ -1,0 +1,34 @@
+{
+  "version": "1",
+  "description": "华夏眼科 v2：强制 ≥3件高温按件2.75（prod 可能已打 v1 fix marker 但 ruleType 仍为 FIXED_PRICE）",
+  "customerUpdates": [
+    {
+      "code": "HRB-HX-EYE",
+      "billingEnabled": true,
+      "billingPricingMode": "standard"
+    }
+  ],
+  "ruleUpdates": [
+    {
+      "code": "HRB-HX-EYE",
+      "ruleName": "≥3件器械包单价2.75",
+      "setRuleType": "PRICE_PER_INSTRUMENT",
+      "setSkipPackaging": true,
+      "setPrice": 2.75,
+      "setMinInstrumentCount": 3
+    }
+  ],
+  "newRules": [
+    {
+      "code": "HRB-HX-EYE",
+      "ruleType": "PRICE_PER_INSTRUMENT",
+      "name": "≥3件器械包单价2.75",
+      "priority": 10,
+      "price": 2.75,
+      "minInstrumentCount": 3,
+      "temperature": "HT",
+      "skipPackaging": true,
+      "skipDiscount": false
+    }
+  ]
+}
