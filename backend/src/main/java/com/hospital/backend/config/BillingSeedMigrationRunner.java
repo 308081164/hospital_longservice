@@ -128,7 +128,11 @@ public class BillingSeedMigrationRunner implements CommandLineRunner {
             new IncrementalSeed("billing_seed_zuyan_ng_export_pricing_20260724_v1",
                     "billing-seeds/phase-zuyan-ng-export-pricing-20260724.json"),
             new IncrementalSeed("billing_seed_sanjing_neilou_instrument_count_fix_20260727_v1",
-                    "billing-seeds/phase-sanjing-neilou-instrument-count-fix-20260727.json")
+                    "billing-seeds/phase-sanjing-neilou-instrument-count-fix-20260727.json"),
+            new IncrementalSeed("billing_seed_sheng_yy_xf_dept_pricing_20260727_v1",
+                    "billing-seeds/phase-sheng-yy-xf-dept-pricing-20260727.json"),
+            new IncrementalSeed("billing_seed_sheng_yy_xf_shenwai_goudao_20260728_v1",
+                    "billing-seeds/phase-sheng-yy-xf-shenwai-goudao-20260728.json")
     );
 
     private static final String ZYY_D1_P0_MARKER = "billing_seed_zyy_d1_p0_v2";
@@ -217,7 +221,9 @@ public class BillingSeedMigrationRunner implements CommandLineRunner {
                     || "billing-seeds/phase-zuyan-ng-export-pricing-20260724.json".equals(incremental.classpathFile())
                     || "billing-seeds/phase-s7-bokang-pdf-ocr-20260723.json".equals(incremental.classpathFile())
                     || "billing-seeds/phase-s7-daowai-wailai-keywords-20260723.json".equals(incremental.classpathFile())
-                    || "billing-seeds/phase-sanjing-neilou-instrument-count-fix-20260727.json".equals(incremental.classpathFile())) {
+                    || "billing-seeds/phase-sanjing-neilou-instrument-count-fix-20260727.json".equals(incremental.classpathFile())
+                    || "billing-seeds/phase-sheng-yy-xf-dept-pricing-20260727.json".equals(incremental.classpathFile())
+                    || "billing-seeds/phase-sheng-yy-xf-shenwai-goudao-20260728.json".equals(incremental.classpathFile())) {
                 applyBatchPatchSeedFile(incremental.classpathFile());
             } else {
                 applied = loadSeedClasspathFile(incremental.classpathFile());

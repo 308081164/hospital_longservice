@@ -45,6 +45,8 @@ WHERE setting_key IN (
   'billing_seed_daowai_path_override_20260723_v1',
   'billing_seed_s7_sanjing_hulan_wailai_keywords_20260723_v1',
   'billing_seed_sanjing_neilou_instrument_count_fix_20260727_v1',
+  'billing_seed_sheng_yy_xf_dept_pricing_20260727_v1',
+  'billing_seed_sheng_yy_xf_shenwai_goudao_20260728_v1',
   'billing_seed_export_rules_20260723_v1',
   'billing_seed_fix_p0_mojibake_dup_20260723_v1',
   'billing_seed_hrb_bc_med_beauty_20260723_v1',

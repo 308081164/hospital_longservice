@@ -1,0 +1,60 @@
+{
+  "version": "1",
+  "description": "黑龙江省医院香坊院区：手术室胸腔镜17件178.2、额外包胸腔镜19.8；生殖医学科刷手服/W9050纺织18元",
+  "ruleUpdates": [
+    {
+      "code": "SHENG-YY-XF",
+      "ruleName": "W9050纺织现价",
+      "setAcceptedPrices": [15, 18]
+    }
+  ],
+  "newRules": [
+    {
+      "code": "SHENG-YY-XF",
+      "ruleType": "FIXED_PRICE",
+      "name": "手术室胸腔镜17件178.2",
+      "priority": 3,
+      "price": 178.2,
+      "keywords": ["胸腔镜-17件"],
+      "minInstrumentCount": 17,
+      "maxInstrumentCount": 17,
+      "conditionsJson": "[{\"field\":\"department\",\"value\":[\"手术室\"]}]",
+      "skipPackaging": true,
+      "skipDiscount": true
+    },
+    {
+      "code": "SHENG-YY-XF",
+      "ruleType": "FIXED_PRICE",
+      "name": "手术室额外包胸腔镜19.8",
+      "priority": 4,
+      "price": 19.8,
+      "keywords": ["胸腔镜"],
+      "excludeKeywords": ["w12050", "W12050", "17件", "21件", "22件", "32件"],
+      "conditionsJson": "[{\"field\":\"department\",\"value\":[\"手术室\"]}]",
+      "skipPackaging": true,
+      "skipDiscount": true
+    },
+    {
+      "code": "SHENG-YY-XF",
+      "ruleType": "FIXED_PRICE",
+      "name": "生殖医学科刷手服18元",
+      "priority": 3,
+      "price": 18.0,
+      "keywords": ["刷手服"],
+      "conditionsJson": "[{\"field\":\"department\",\"value\":[\"生殖医学科\"]}]",
+      "skipPackaging": true,
+      "skipDiscount": true
+    },
+    {
+      "code": "SHENG-YY-XF",
+      "ruleType": "FIXED_PRICE",
+      "name": "生殖医学科W9050纺织18元",
+      "priority": 3,
+      "price": 18.0,
+      "keywords": ["床单/W9050", "敷料包/W9050", "敷料包", "刷手服/W9050"],
+      "conditionsJson": "[{\"field\":\"department\",\"value\":[\"生殖医学科\"]}]",
+      "skipPackaging": true,
+      "skipDiscount": true
+    }
+  ]
+}
