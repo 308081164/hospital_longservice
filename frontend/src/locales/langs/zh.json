@@ -851,7 +851,22 @@
       "forceExportConfirm": "仍要导出",
       "settlementAdjustment": "低消/封顶调整",
       "settlementReconcile": "月度勾稽",
-      "settlementFormula": "灭菌 {raw} + 物流 {logistics} + 调整 {adjustment} → 结算 {total}"
+      "settlementFormula": "灭菌 {raw} + 物流 {logistics} + 调整 {adjustment} → 结算 {total}",
+      "profile": {
+        "specialExport": "特色导出",
+        "standardExport": "常规导出",
+        "layoutDeptSplit": "分科室",
+        "layoutCombined": "合计单表",
+        "layoutAuto": "自动布局",
+        "d8HospitalName": "D8 显示：医院名称",
+        "d8RuleName": "D8 显示：计费规则名",
+        "d8Auto": "D8 显示：自动",
+        "expectedMultiDept": "预期：多 Sheet（按科室），非合计单表",
+        "expectedCombined": "预期：单 Sheet 合计汇总",
+        "sheetCount": "科室 Sheet 数",
+        "layoutMismatchTitle": "导出布局与配置不符",
+        "layoutMismatchMessage": "已配置分科室导出，但当前 Job 仅 {count} 个 Sheet 分组，导出可能仍为合计版，请核对导入数据。"
+      }
     },
     "allocation": {
       "title": "科室分配与 L3 勾稽",

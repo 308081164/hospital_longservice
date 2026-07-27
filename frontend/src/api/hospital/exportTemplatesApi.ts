@@ -44,6 +44,12 @@ export interface ExportPreviewResult {
   customerOverride: boolean
   rowCount: number
   hospitalName: string
+  billingEnabled?: boolean
+  billLayout?: string
+  d8DisplaySource?: string
+  exportProfileLabel?: string
+  expectedSheetMode?: string
+  distinctSheetCount?: number
 }
 
 export interface ExportValidationResult {
@@ -56,6 +62,14 @@ export interface ExportValidationResult {
   settlementAdjustment?: number
   ready: boolean
   message: string
+  billingEnabled?: boolean
+  billLayout?: string
+  d8DisplaySource?: string
+  exportProfileLabel?: string
+  expectedSheetMode?: string
+  strategyKey?: string
+  distinctSheetCount?: number
+  layoutMismatchWarning?: boolean
 }
 
 export const EXPORT_TEMPLATE_TYPES = [

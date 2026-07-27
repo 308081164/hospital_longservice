@@ -30,3 +30,4 @@ Thumbs.db
 测试用例/.s8_exports/
 **/__pycache__/
 *.pyc
+docs/*.zip

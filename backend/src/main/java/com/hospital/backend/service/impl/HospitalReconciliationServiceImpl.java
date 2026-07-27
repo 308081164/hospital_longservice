@@ -22,8 +22,14 @@ import com.hospital.backend.service.SettlementJobFieldsApplier;
 import com.hospital.backend.service.ExternalInstrumentService;
 import com.hospital.backend.service.HospitalReconciliationService;
 import com.hospital.backend.service.ReconciliationVersionGroup;
+import com.hospital.backend.export.BillExportLayoutResolver;
+import com.hospital.backend.export.D8DisplayNameResolver;
 import com.hospital.backend.export.ExportEngineService;
+import com.hospital.backend.export.ExportTemplateResolver;
 import com.hospital.backend.export.ReconciliationLegacyExportBridge;
+import com.hospital.backend.export.ExportType;
+import com.hospital.backend.export.model.ColumnMappingConfig;
+import com.hospital.backend.export.model.ResolvedExportTemplate;
 import com.hospital.backend.dto.request.hospital.*;
 import com.hospital.backend.dto.response.hospital.ReconciliationExportLogResponse;
 import com.hospital.backend.dto.response.hospital.ReconciliationJobResponse;
@@ -200,6 +206,12 @@ public class HospitalReconciliationServiceImpl implements HospitalReconciliation
     private final ExternalInstrumentService externalInstrumentService;
 
     private final SheetOrchestrator sheetOrchestrator;
+
+    private final BillExportLayoutResolver billExportLayoutResolver;
+
+    private final D8DisplayNameResolver d8DisplayNameResolver;
+
+    private final ExportTemplateResolver exportTemplateResolver;
 
     @Lazy
     @org.springframework.beans.factory.annotation.Autowired
@@ -2615,14 +2627,23 @@ public class HospitalReconciliationServiceImpl implements HospitalReconciliation
                 long exportRowCount = request.getRows() != null
                         ? request.getRows().stream().filter(r -> !"skipped".equals(r.getStatus())).count()
                         : 0;
-                // 大行数多 sheet 克隆模板易 OOM（如哈工大 ~1152 行）；合并单 sheet 导出
-                if (distinctSheets > 1 && exportRowCount > BILL_EXPORT_COMBINED_MODE_ROW_THRESHOLD) {
-                    log.info("generateBillExportBytes: {} rows / {} sheets → combined workbook (OOM guard)",
+                ExportLayoutSettings layoutSettings = resolveExportLayoutSettings(request);
+                boolean deptSplit = billExportLayoutResolver.useDeptSplitWorkbook(
+                        layoutSettings.billLayout(), distinctSheets, exportRowCount);
+                if (billExportLayoutResolver.preferProgrammaticTemplate(layoutSettings.billLayout(), exportRowCount)) {
+                    log.info("generateBillExportBytes: {} rows → programmatic template master (dept_split OOM guard)",
+                            exportRowCount);
+                    workbook.close();
+                    workbook = createProgrammaticBillTemplate();
+                    copyLogoFromOriginalFile(request.getTemplateId(), workbook);
+                }
+                if (deptSplit) {
+                    log.info("generateBillExportBytes: {} rows / {} sheets → dept_split workbook",
                             exportRowCount, distinctSheets);
-                    createCombinedBillWorkbook(workbook, request);
-                } else if (distinctSheets > 1) {
                     createBillTemplateWorkbook(workbook, request);
                 } else {
+                    log.info("generateBillExportBytes: {} rows / {} sheets → combined workbook",
+                            exportRowCount, distinctSheets);
                     createCombinedBillWorkbook(workbook, request);
                 }
                 byte[] result = writeWorkbookToBytes(workbook);
@@ -2884,7 +2905,7 @@ public class HospitalReconciliationServiceImpl implements HospitalReconciliation
     /** 超过此行数时仅写 D8 + K 列宽，跳过 autoSize / 行样式（D4 省医院香坊 ~3000 行） */
     static final int BILL_EXPORT_LIGHT_POST_PROCESS_ROW_THRESHOLD = 2500;
     /** 超过此行数且多 sheet 时走 combined 单表导出，避免 cloneSheet OOM（D6 哈工大 ~1152 行） */
-    static final int BILL_EXPORT_COMBINED_MODE_ROW_THRESHOLD = 1000;
+    public static final int BILL_EXPORT_COMBINED_MODE_ROW_THRESHOLD = 1000;
 
     static boolean shouldAutoSizeBillExportColumns(int rowCount) {
         return rowCount <= BILL_EXPORT_AUTO_SIZE_ROW_THRESHOLD;
@@ -2916,7 +2937,7 @@ public class HospitalReconciliationServiceImpl implements HospitalReconciliation
                 return content;
             }
 
-            String displayName = resolveD8DisplayName(job);
+            String displayName = resolveD8DisplayName(job, resolveExportLayoutSettingsForJob(jobId).d8DisplaySource());
             log.info("postProcessBillExport: resolved displayName='{}' for jobId={}", displayName, jobId);
 
             if (displayName.isBlank()) {
@@ -5584,7 +5605,7 @@ public class HospitalReconciliationServiceImpl implements HospitalReconciliation
                 return;
             }
 
-            String displayName = resolveD8DisplayName(job);
+            String displayName = resolveD8DisplayName(job, resolveExportLayoutSettingsForJob(jobId).d8DisplaySource());
 
             if (displayName.isBlank()) {
                 log.warn("resolveD8HospitalText: displayName is blank, no suitable name found");
@@ -5601,35 +5622,55 @@ public class HospitalReconciliationServiceImpl implements HospitalReconciliation
         }
     }
 
+    private record ExportLayoutSettings(String billLayout, String d8DisplaySource) {}
+
+    private ExportLayoutSettings resolveExportLayoutSettings(HospitalBillTemplateExportRequest request) {
+        String billLayout = request.getBillLayout();
+        String d8DisplaySource = request.getD8DisplaySource();
+        if ((billLayout == null || billLayout.isBlank() || d8DisplaySource == null || d8DisplaySource.isBlank())
+                && request.getTemplateId() != null && !request.getTemplateId().isBlank()) {
+            try {
+                Long jobId = Long.parseLong(request.getTemplateId());
+                ExportLayoutSettings fromJob = resolveExportLayoutSettingsForJob(jobId);
+                if (billLayout == null || billLayout.isBlank()) {
+                    billLayout = fromJob.billLayout();
+                }
+                if (d8DisplaySource == null || d8DisplaySource.isBlank()) {
+                    d8DisplaySource = fromJob.d8DisplaySource();
+                }
+            } catch (NumberFormatException ignored) {
+                // templateId not a job id
+            }
+        }
+        return new ExportLayoutSettings(
+                billExportLayoutResolver.normalizeBillLayout(billLayout),
+                billExportLayoutResolver.normalizeD8DisplaySource(d8DisplaySource));
+    }
+
+    private ExportLayoutSettings resolveExportLayoutSettingsForJob(Long jobId) {
+        if (jobId == null) {
+            return new ExportLayoutSettings(BillExportLayoutResolver.LAYOUT_AUTO, BillExportLayoutResolver.D8_AUTO);
+        }
+        HospitalReconciliationJob job = jobMapper.selectById(jobId);
+        if (job == null) {
+            return new ExportLayoutSettings(BillExportLayoutResolver.LAYOUT_AUTO, BillExportLayoutResolver.D8_AUTO);
+        }
+        Long customerId = customerResolver.resolveByName(job.getHospitalName()).map(c -> c.getId()).orElse(null);
+        ResolvedExportTemplate template = exportTemplateResolver.resolve(customerId, ExportType.BILL, null);
+        ColumnMappingConfig mapping = template != null ? template.getColumnMapping() : null;
+        return new ExportLayoutSettings(
+                billExportLayoutResolver.resolveBillLayout(mapping),
+                billExportLayoutResolver.resolveD8DisplaySource(mapping));
+    }
+
     /**
-     * 解析 D8 显示名称。
-     *
-     * 优先级：
-     * 1. 原始导入文件第9行 D 列的值（如果不为空）
-     * 2. 计费规则的方案名称（planName）
-     * 3. 计费规则名称（ruleName）
-     * 4. 医院名称（hospitalName）
+     * 解析 D8 显示名称（医院计费规则行）。
      */
-    private String resolveD8DisplayName(HospitalReconciliationJob job) {
-        // 1. 优先使用计费规则：planName > ruleName
-        if (job.getPlanName() != null && !job.getPlanName().isBlank()) {
-            log.info("resolveD8DisplayName: 使用方案名称='{}'", job.getPlanName());
-            return job.getPlanName();
-        }
-        if (job.getRuleName() != null && !job.getRuleName().isBlank()) {
-            log.info("resolveD8DisplayName: 使用规则名称='{}'", job.getRuleName());
-            return job.getRuleName();
-        }
-        // 2. 回退：原始文件D列 > hospitalName
-        String originalD8 = readOriginalFileD8(job.getSourceFilePath());
-        if (originalD8 != null && !originalD8.isBlank()) {
-            log.info("resolveD8DisplayName: 使用原始文件第9行 D 列='{}'", originalD8);
-            return originalD8.trim();
-        }
-        if (job.getHospitalName() != null && !job.getHospitalName().isBlank()) {
-            return job.getHospitalName();
-        }
-        return "";
+    private String resolveD8DisplayName(HospitalReconciliationJob job, String d8DisplaySource) {
+        String resolved = d8DisplayNameResolver.resolve(
+                job, d8DisplaySource, this::readOriginalFileD8);
+        log.info("resolveD8DisplayName: source='{}' → '{}'", d8DisplaySource, resolved);
+        return resolved != null ? resolved : "";
     }
 
     /**

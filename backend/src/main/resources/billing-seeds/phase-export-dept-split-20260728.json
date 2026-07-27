@@ -1,0 +1,174 @@
+{
+  "version": "1",
+  "description": "P0 分科室账单导出：省医院南岗/香坊、附一、市二院 — billLayout=dept_split + D8 医院名",
+  "exportTemplateOverrides": [
+    {
+      "code": "SHENG-YY-NG",
+      "templates": [
+        {
+          "type": "bill",
+          "name": "省医院南岗账单（分科室 S7）",
+          "strategyKey": "standard_bill",
+          "columnMapping": {
+            "billLayout": "dept_split",
+            "d8DisplaySource": "hospitalName"
+          }
+        }
+      ]
+    },
+    {
+      "code": "SHENG-YY-XF",
+      "templates": [
+        {
+          "type": "bill",
+          "name": "省医院香坊账单（分科室 S7）",
+          "strategyKey": "standard_bill",
+          "columnMapping": {
+            "billLayout": "dept_split",
+            "d8DisplaySource": "hospitalName"
+          }
+        }
+      ]
+    },
+    {
+      "code": "ZYY-D1",
+      "templates": [
+        {
+          "type": "bill",
+          "name": "附一账单（分科室 S7）",
+          "strategyKey": "standard_bill",
+          "columnMapping": {
+            "billLayout": "dept_split",
+            "d8DisplaySource": "hospitalName"
+          }
+        }
+      ]
+    },
+    {
+      "code": "HRB-2ND",
+      "templates": [
+        {
+          "type": "bill",
+          "name": "市二院账单（分科室 S7）",
+          "strategyKey": "standard_bill",
+          "columnMapping": {
+            "billLayout": "dept_split",
+            "d8DisplaySource": "hospitalName"
+          }
+        }
+      ]
+    },
+    {
+      "code": "ZYY-D2-NG",
+      "templates": [
+        {
+          "type": "bill",
+          "name": "附二南岗账单（分科室 S7）",
+          "strategyKey": "standard_bill",
+          "columnMapping": {
+            "billLayout": "dept_split",
+            "d8DisplaySource": "hospitalName"
+          }
+        }
+      ]
+    },
+    {
+      "code": "ZYY-D2-HN",
+      "templates": [
+        {
+          "type": "bill",
+          "name": "附二哈南账单（分科室 S7）",
+          "strategyKey": "standard_bill",
+          "columnMapping": {
+            "billLayout": "dept_split",
+            "d8DisplaySource": "hospitalName"
+          }
+        }
+      ]
+    },
+    {
+      "code": "ERYY-SB",
+      "templates": [
+        {
+          "type": "bill",
+          "name": "省二松北账单（分科室 S7）",
+          "strategyKey": "standard_bill",
+          "columnMapping": {
+            "billLayout": "dept_split",
+            "d8DisplaySource": "hospitalName"
+          }
+        }
+      ]
+    },
+    {
+      "code": "ZUYAN-NG",
+      "templates": [
+        {
+          "type": "bill",
+          "name": "祖研南岗账单（分科室 S7）",
+          "strategyKey": "standard_bill",
+          "columnMapping": {
+            "billLayout": "dept_split",
+            "d8DisplaySource": "hospitalName"
+          }
+        }
+      ]
+    },
+    {
+      "code": "ZUYAN-SF",
+      "templates": [
+        {
+          "type": "bill",
+          "name": "祖研三辅账单（分科室 S7）",
+          "strategyKey": "standard_bill",
+          "columnMapping": {
+            "billLayout": "dept_split",
+            "d8DisplaySource": "hospitalName"
+          }
+        }
+      ]
+    },
+    {
+      "code": "ZUYAN-XA",
+      "templates": [
+        {
+          "type": "bill",
+          "name": "祖研香安账单（分科室 S7）",
+          "strategyKey": "standard_bill",
+          "columnMapping": {
+            "billLayout": "dept_split",
+            "d8DisplaySource": "hospitalName"
+          }
+        }
+      ]
+    },
+    {
+      "code": "NG-FUCHAN",
+      "templates": [
+        {
+          "type": "bill",
+          "name": "南岗妇产账单（分科室 S7）",
+          "strategyKey": "standard_bill",
+          "columnMapping": {
+            "billLayout": "dept_split",
+            "d8DisplaySource": "hospitalName"
+          }
+        }
+      ]
+    },
+    {
+      "code": "HRB-HIT",
+      "templates": [
+        {
+          "type": "bill",
+          "name": "哈工大账单（合计 S7）",
+          "strategyKey": "standard_bill",
+          "columnMapping": {
+            "billLayout": "combined",
+            "d8DisplaySource": "hospitalName"
+          }
+        }
+      ]
+    }
+  ]
+}

@@ -14,4 +14,10 @@ public class HospitalBillTemplateExportRequest {
     private List<BillRowItem> rows;
 
     private List<BillSheetMeta> sheetMetas;
+
+    /** auto | dept_split | combined */
+    private String billLayout;
+
+    /** auto | hospitalName | ruleName */
+    private String d8DisplaySource;
 }

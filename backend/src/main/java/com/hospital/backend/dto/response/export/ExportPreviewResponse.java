@@ -15,4 +15,11 @@ public class ExportPreviewResponse {
     private boolean customerOverride;
     private int rowCount;
     private String hospitalName;
+    private Boolean billingEnabled;
+    private String billLayout;
+    private String d8DisplaySource;
+    private String exportProfileLabel;
+    private String expectedSheetMode;
+    /** Distinct sheet names in job rows (for layout mismatch warning) */
+    private Integer distinctSheetCount;
 }

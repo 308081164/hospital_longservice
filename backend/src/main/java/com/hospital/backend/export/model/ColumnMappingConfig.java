@@ -14,6 +14,12 @@ import java.util.Map;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class ColumnMappingConfig {
 
+    /** auto | dept_split | combined — bill export sheet layout */
+    private String billLayout;
+
+    /** auto | hospitalName | ruleName — D8 header display source */
+    private String d8DisplaySource;
+
     private List<String> removeColumns = new ArrayList<>();
     private List<InsertColumnSpec> insertColumns = new ArrayList<>();
     private List<String> keepColumns = new ArrayList<>();

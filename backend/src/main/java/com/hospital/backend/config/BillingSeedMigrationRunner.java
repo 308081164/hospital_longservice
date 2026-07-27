@@ -138,7 +138,9 @@ public class BillingSeedMigrationRunner implements CommandLineRunner {
             new IncrementalSeed("billing_seed_settlement_policies_20260725_v1",
                     "billing-seeds/phase-settlement-policies-20260725.json"),
             new IncrementalSeed("billing_seed_settlement_logistics_20260725_v1",
-                    "billing-seeds/phase-settlement-logistics-20260725.json")
+                    "billing-seeds/phase-settlement-logistics-20260725.json"),
+            new IncrementalSeed("billing_seed_export_dept_split_20260728_v1",
+                    "billing-seeds/phase-export-dept-split-20260728.json")
     );
 
     private static final String ZYY_D1_P0_MARKER = "billing_seed_zyy_d1_p0_v2";
@@ -186,7 +188,8 @@ public class BillingSeedMigrationRunner implements CommandLineRunner {
                 applyBokang20260722SeedFile(incremental.classpathFile());
             } else if ("billing-seeds/phase-zyy-d1-standard-pricing-20260723.json".equals(incremental.classpathFile())) {
                 applied = applyCustomerStandardPricingSeedFile(incremental.classpathFile());
-            } else if ("billing-seeds/phase-export-rules-20260723.json".equals(incremental.classpathFile())) {
+            } else if ("billing-seeds/phase-export-rules-20260723.json".equals(incremental.classpathFile())
+                    || "billing-seeds/phase-export-dept-split-20260728.json".equals(incremental.classpathFile())) {
                 applied = applyExportRulesSeedFile(incremental.classpathFile());
             } else if ("billing-seeds/phase-batch-p0.2.json".equals(incremental.classpathFile())
                     || "billing-seeds/phase-batch-p0.3.json".equals(incremental.classpathFile())

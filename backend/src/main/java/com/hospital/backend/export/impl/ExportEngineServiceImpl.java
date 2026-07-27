@@ -5,6 +5,7 @@ import com.hospital.backend.dto.request.export.ExportV2Request;
 import com.hospital.backend.dto.request.hospital.HospitalBillTemplateExportRequest;
 import com.hospital.backend.dto.request.hospital.HospitalSettlementTemplateExportRequest;
 import com.hospital.backend.dto.request.hospital.SettlementFeeRow;
+import com.hospital.backend.export.BillExportLayoutResolver;
 import com.hospital.backend.export.BillExportRequestMapper;
 import com.hospital.backend.dto.response.export.ExportPreviewResponse;
 import com.hospital.backend.dto.response.export.ExportValidationResponse;
@@ -55,6 +56,8 @@ public class ExportEngineServiceImpl implements ExportEngineService {
     private final SettlementTemplateFiller settlementTemplateFiller;
     private final BillExportRequestMapper billExportRequestMapper;
     private final SettlementJobEnricher settlementJobEnricher;
+
+    private final BillExportLayoutResolver billExportLayoutResolver;
 
     @Lazy
     @org.springframework.beans.factory.annotation.Autowired
@@ -119,6 +122,7 @@ public class ExportEngineServiceImpl implements ExportEngineService {
         ExportType type = ExportType.fromCode(exportType != null ? exportType : "bill");
         ExportContext context = dataLoader.loadContext(jobId, type, templateId);
         ResolvedExportTemplate template = context.getTemplate();
+        ExportProfileFields profile = buildExportProfileFields(context);
         return ExportPreviewResponse.builder()
                 .jobId(jobId)
                 .exportType(type.code())
@@ -128,6 +132,12 @@ public class ExportEngineServiceImpl implements ExportEngineService {
                 .customerOverride(template.isCustomerOverride())
                 .rowCount(context.getRows().size())
                 .hospitalName(context.getHospitalName())
+                .billingEnabled(profile.billingEnabled())
+                .billLayout(profile.billLayout())
+                .d8DisplaySource(profile.d8DisplaySource())
+                .exportProfileLabel(profile.exportProfileLabel())
+                .expectedSheetMode(profile.expectedSheetMode())
+                .distinctSheetCount(profile.distinctSheetCount())
                 .build();
     }
 
@@ -135,6 +145,7 @@ public class ExportEngineServiceImpl implements ExportEngineService {
     public ExportValidationResponse validateBeforeExport(Long jobId) {
         ExportContext context = dataLoader.loadContext(jobId, ExportType.BILL, null);
         HospitalReconciliationJob job = context.getJob();
+        ExportProfileFields profile = buildExportProfileFields(context);
         int warnings = job.getWarningRows() != null ? job.getWarningRows() : 0;
 
         double sterilizeTotal = job.getCorrectedTotalPrice() != null
@@ -179,7 +190,49 @@ public class ExportEngineServiceImpl implements ExportEngineService {
                 .allocationBalanced(allocationBalanced)
                 .ready(ready)
                 .message(message)
+                .billingEnabled(profile.billingEnabled())
+                .billLayout(profile.billLayout())
+                .d8DisplaySource(profile.d8DisplaySource())
+                .exportProfileLabel(profile.exportProfileLabel())
+                .expectedSheetMode(profile.expectedSheetMode())
+                .strategyKey(context.getTemplate().getStrategyKey())
+                .distinctSheetCount(profile.distinctSheetCount())
+                .layoutMismatchWarning(profile.layoutMismatchWarning())
                 .build();
+    }
+
+    private record ExportProfileFields(
+            Boolean billingEnabled,
+            String billLayout,
+            String d8DisplaySource,
+            String exportProfileLabel,
+            String expectedSheetMode,
+            Integer distinctSheetCount,
+            Boolean layoutMismatchWarning) {}
+
+    private ExportProfileFields buildExportProfileFields(ExportContext context) {
+        var mapping = context.getTemplate().getColumnMapping();
+        String billLayout = billExportLayoutResolver.resolveBillLayout(mapping);
+        String d8DisplaySource = billExportLayoutResolver.resolveD8DisplaySource(mapping);
+        boolean billingEnabled = customerResolver.resolveByName(context.getHospitalName())
+                .map(c -> Boolean.TRUE.equals(c.getBillingEnabled()))
+                .orElse(false);
+        int distinctSheets = (int) context.getRows().stream()
+                .map(r -> r.getSheetName())
+                .filter(n -> n != null && !n.isBlank())
+                .distinct()
+                .count();
+        String expectedSheetMode = billExportLayoutResolver.expectedSheetMode(billLayout);
+        boolean layoutMismatch = BillExportLayoutResolver.SHEET_MODE_MULTI_DEPT.equals(expectedSheetMode)
+                && distinctSheets <= 1;
+        return new ExportProfileFields(
+                billingEnabled,
+                billLayout,
+                d8DisplaySource,
+                billExportLayoutResolver.buildExportProfileLabel(billingEnabled, billLayout),
+                expectedSheetMode,
+                distinctSheets,
+                layoutMismatch);
     }
 
     private Double parseReconciledGrandTotal(HospitalReconciliationJob job) {

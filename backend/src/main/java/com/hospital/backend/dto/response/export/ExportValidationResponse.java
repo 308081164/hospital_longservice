@@ -20,4 +20,13 @@ public class ExportValidationResponse {
     private Boolean allocationBalanced;
     private boolean ready;
     private String message;
+    private Boolean billingEnabled;
+    private String billLayout;
+    private String d8DisplaySource;
+    private String exportProfileLabel;
+    private String expectedSheetMode;
+    private String strategyKey;
+    private Integer distinctSheetCount;
+    /** true when dept_split configured but job has only one sheet group */
+    private Boolean layoutMismatchWarning;
 }

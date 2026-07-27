@@ -49,6 +49,7 @@
 
     <!-- Step 2 -->
     <div v-else-if="step === 1" v-loading="previewLoading" class="export-wizard-step">
+      <ExportProfileBanner v-if="preview" :profile="preview" class="mb-4" />
       <template v-if="preview">
         <ElDescriptions :column="1" border size="small">
           <ElDescriptionsItem :label="t('reconciliation.exportWizard.hospital')">
@@ -81,6 +82,26 @@
 
     <!-- Step 3 -->
     <div v-else class="export-wizard-step">
+      <ExportProfileBanner
+        v-if="validation"
+        :profile="validation"
+        :layout-mismatch="validation.layoutMismatchWarning"
+        class="mb-4"
+      />
+      <ElAlert
+        v-if="validation?.layoutMismatchWarning"
+        type="error"
+        :closable="false"
+        show-icon
+        class="mb-4"
+        :title="t('reconciliation.exportWizard.profile.layoutMismatchTitle')"
+      >
+        {{
+          t('reconciliation.exportWizard.profile.layoutMismatchMessage', {
+            count: validation?.distinctSheetCount ?? 0
+          })
+        }}
+      </ElAlert>
       <ElAlert
         v-if="validation"
         :type="validation.ready ? 'success' : 'warning'"
@@ -148,6 +169,7 @@
     type ExportTemplateRecord,
     type ExportValidationResult
   } from '@/api/hospital/exportTemplatesApi'
+  import ExportProfileBanner from './ExportProfileBanner.vue'
 
   const props = defineProps<{
     jobId?: number | null

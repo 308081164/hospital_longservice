@@ -23,6 +23,28 @@ RECON_MD = TEST_CASE / "批量6月系统对账结果.md"
 REPORT_JSON = TEST_CASE / "s8_export_compare_report.json"
 REPORT_MD = TEST_CASE / "S8导出比对摘要.md"
 EXPORT_DIR = TEST_CASE / ".s8_exports"
+DEPT_SPLIT_SEED = (
+    ROOT / "backend/src/main/resources/billing-seeds/phase-export-dept-split-20260728.json"
+)
+
+# 分科室导出验收：folder → 客户编码（与 seed exportTemplateOverrides 对齐）
+DEPT_SPLIT_FOLDERS: frozenset[str] = frozenset(
+    {
+        "黑龙江省医院（南岗院区）",
+        "黑龙江省医院（香坊院区）",
+        "黑龙江中医药大学附属第一医院",
+        "哈尔滨市第二医院",
+        "黑龙江中医药大学附属第二医院（南岗）",
+        "黑龙江中医药大学附属第二医院（哈南分院）",
+        "黑龙江省第二医院（松北院区）",
+        "祖研-黑龙江省中医医院（南岗院区）",
+        "祖研-黑龙江省中医医院（三辅院区）",
+        "祖研-黑龙江省中医医院（香安院区）",
+        "南岗区妇产医院",
+    }
+)
+
+COMBINED_LAYOUT_FOLDERS: frozenset[str] = frozenset({"哈尔滨工业大学医院"})
 
 BACKEND = __import__("os").environ.get("BACKEND_CONTAINER", "hospital-backend")
 API = __import__("os").environ.get("API_INTERNAL", "http://127.0.0.1:8000")
@@ -122,6 +144,9 @@ class BillCompare:
     total_act: float
     structure_ok: bool
     detail: str
+    sheet_count: int = 0
+    layout_mode: str = "unknown"
+    summary_label: str = ""
 
 
 def docker_curl(args: list[str]) -> str:
@@ -176,6 +201,64 @@ def has_legacy_layout(path: Path) -> bool:
         return False
     finally:
         wb.close()
+
+
+def count_bill_sheets(path: Path) -> int:
+    wb = load_workbook(path, read_only=True, data_only=True)
+    try:
+        return len(wb.sheetnames)
+    finally:
+        wb.close()
+
+
+def read_first_sheet_summary_label(path: Path) -> str:
+    """legacy 模板：表头下一行（或下两行）D 列常为科室名/合计。"""
+    wb = load_workbook(path, read_only=True, data_only=True)
+    try:
+        ws = wb[wb.sheetnames[0]]
+        header_row = None
+        for r in range(1, min(25, (ws.max_row or 0) + 1)):
+            for c in range(1, (ws.max_column or 0) + 1):
+                if ws.cell(r, c).value == "包名":
+                    header_row = r
+                    break
+            if header_row is not None:
+                break
+        if header_row is None:
+            return ""
+        for probe in (header_row + 1, header_row + 2):
+            if probe > (ws.max_row or 0):
+                continue
+            for c in range(1, 6):
+                v = ws.cell(probe, c).value
+                if isinstance(v, str) and v.strip() in ("合计", "小计", "总计"):
+                    return v.strip()
+            for c in range(1, 6):
+                v = ws.cell(probe, c).value
+                if isinstance(v, str) and v.strip() and v.strip() not in ("包名", "发货单号"):
+                    pack_probe = ws.cell(probe, 8).value if (ws.max_column or 0) >= 8 else None
+                    pack_s = str(pack_probe).strip() if pack_probe is not None else ""
+                    if pack_s in ("包名", "合计", ""):
+                        return v.strip()
+        return ""
+    finally:
+        wb.close()
+
+
+def evaluate_layout(actual: Path, folder: str) -> tuple[bool, int, str, str]:
+    """返回 (layout_ok, sheet_count, layout_mode, summary_label)。"""
+    sheet_count = count_bill_sheets(actual)
+    summary_label = read_first_sheet_summary_label(actual)
+    if folder in DEPT_SPLIT_FOLDERS:
+        layout_mode = "dept_split"
+        layout_ok = sheet_count > 1 and summary_label != "合计"
+        return layout_ok, sheet_count, layout_mode, summary_label
+    if folder in COMBINED_LAYOUT_FOLDERS:
+        layout_mode = "combined"
+        layout_ok = sheet_count == 1 or summary_label == "合计"
+        return layout_ok, sheet_count, layout_mode, summary_label
+    layout_mode = "auto"
+    return True, sheet_count, layout_mode, summary_label
 
 
 def is_metadata_bill_row(ship_s: str, pack: str, total_f: float) -> bool:
@@ -306,7 +389,9 @@ def normalize_compare_key(key: tuple, folder: str) -> tuple:
 
 
 def compare_bills(expected: Path, actual: Path, tolerance: float = 1.0, folder: str = "") -> BillCompare:
-    structure_ok = has_legacy_layout(actual) and has_legacy_layout(expected)
+    legacy_ok = has_legacy_layout(actual) and has_legacy_layout(expected)
+    layout_ok, sheet_count, layout_mode, summary_label = evaluate_layout(actual, folder)
+    structure_ok = legacy_ok and layout_ok
     exp_lines = aggregate_line_totals(
         [(normalize_compare_key(k, folder), v) for k, v in extract_bill_lines(expected, folder)]
     )
@@ -320,12 +405,22 @@ def compare_bills(expected: Path, actual: Path, tolerance: float = 1.0, folder: 
     line_delta = abs(len(exp_lines) - len(act_lines))
     if delta <= tol and line_delta <= 5:
         detail = f"行 {len(act_lines)}/{len(exp_lines)} · 总额 {total_act}≈{total_exp}"
-        return BillCompare(len(exp_lines), len(act_lines), total_exp, total_act, structure_ok, detail)
+        if folder in DEPT_SPLIT_FOLDERS:
+            detail += f" · sheets={sheet_count} summary={summary_label or '?'}"
+        return BillCompare(
+            len(exp_lines), len(act_lines), total_exp, total_act, structure_ok, detail,
+            sheet_count, layout_mode, summary_label,
+        )
     detail = (
         f"行 {len(act_lines)} vs {len(exp_lines)} (Δ{line_delta}) · "
         f"总额 {total_act} vs {total_exp} (Δ{delta:.2f})"
     )
-    return BillCompare(len(exp_lines), len(act_lines), total_exp, total_act, structure_ok, detail)
+    if folder in DEPT_SPLIT_FOLDERS:
+        detail += f" · sheets={sheet_count} summary={summary_label or '?'}"
+    return BillCompare(
+        len(exp_lines), len(act_lines), total_exp, total_act, structure_ok, detail,
+        sheet_count, layout_mode, summary_label,
+    )
 
 
 def export_bill(token: str, job_id: int, dest: Path) -> None:
@@ -661,6 +756,9 @@ def main() -> int:
         entry["processed_bill"] = str(proc.relative_to(ROOT))
         entry["export_file"] = str(out_path.relative_to(ROOT))
         entry["structure_ok"] = cmp.structure_ok
+        entry["sheet_count"] = cmp.sheet_count
+        entry["layout_mode"] = cmp.layout_mode
+        entry["summary_label"] = cmp.summary_label
         entry["totals"] = {"expected": cmp.total_exp, "actual": cmp.total_act}
 
         tol_ok = abs(cmp.total_exp - cmp.total_act) <= max(1.0, cmp.total_exp * 1e-4)

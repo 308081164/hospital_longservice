@@ -2,11 +2,14 @@
   {
     "folder": "黑龙江中医药大学附属第一医院",
     "status": "pass",
-    "detail": "行 1848/1848 · 总额 155448.12≈155448.8",
+    "detail": "行 1848/1848 · 总额 155448.12≈155448.8 · sheets=42 summary=中医经典病房",
     "job_id": 607,
     "processed_bill": "测试用例/黑龙江中医药大学附属第一医院/处理后表格/6月__附一6月账单__附一6月账单.xlsx",
     "export_file": "测试用例/.s8_exports/job607_黑龙江中医药大学附属第一医院.xlsx",
     "structure_ok": true,
+    "sheet_count": 42,
+    "layout_mode": "dept_split",
+    "summary_label": "中医经典病房",
     "totals": {
       "expected": 155448.8,
       "actual": 155448.12
@@ -57,7 +60,7 @@
   },
   {
     "folder": "国药总医院第三院区",
-    "status": "warn",
+    "status": "fail",
     "detail": "行 11 vs 15 (Δ4) · 总额 1665.0 vs 1667.0 (Δ2.00) · S8 已知差：相对 6月__5.26-6.25 处理后表 15 行/1667 元，export-v2 14 行/1665 元（Δ1 行 Δ2 元）；缺「内热针(中)-15」行、中单 3+5 被合并为两行 5×5、止血钳/内热针(长)包数与铂康表不一致；S4 pass_zero，属 legacy 汽轮机导出汇总口径",
     "job_id": 647,
     "processed_bill": "测试用例/国药总医院第三院区/处理后表格/6月__国药总医院第三院区5.26-6.25账单.xlsx",
@@ -67,16 +70,19 @@
       "expected": 1667.0,
       "actual": 1665.0
     },
-    "category": "layout_or_known_diff"
+    "category": "minor_total_delta"
   },
   {
     "folder": "哈尔滨市第二医院",
     "status": "fail",
-    "detail": "行 1922 vs 1958 (Δ36) · 总额 93483.0 vs 105383.0 (Δ11900.00)",
+    "detail": "行 1922 vs 1958 (Δ36) · 总额 93483.0 vs 105383.0 (Δ11900.00) · sheets=23 summary=供应室",
     "job_id": 655,
     "processed_bill": "测试用例/哈尔滨市第二医院/处理后表格/6月__2026年6月市二院账单(1).xlsx",
     "export_file": "测试用例/.s8_exports/job655_哈尔滨市第二医院.xlsx",
     "structure_ok": false,
+    "sheet_count": 23,
+    "layout_mode": "dept_split",
+    "summary_label": "供应室",
     "totals": {
       "expected": 105383.0,
       "actual": 93483.0
@@ -127,24 +133,48 @@
   },
   {
     "folder": "黑龙江省医院（南岗院区）",
-    "status": "fail",
-    "detail": "export-v2 失败 Job #616: Command '['docker', 'exec', 'hospital-backend', 'curl', '-sS', '-X', 'POST', 'http://127.0.0.1:8000/api/hospital-reconciliations/616/export-v2', '-H', 'Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoxLCJ1c2VybmFtZSI6ImFkbWluIiwiaXNfc3VwZXJ1c2VyIjp0cnVlLCJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiaWF0IjoxNzg0ODk4NzA0LCJleHAiOjE3ODQ5MTMxMDR9.zMqX0jT5sXR6nm-wBwVTC_V8FVcZ5vPOudG4idrkZYk', '-H', 'Content-Type: application/json', '-d', '{\"exportType\":\"bill\",\"useStrategyEngine\":true}', '-o', '/tmp/s8_job_616.xlsx']' returned non-zero exit status 137.",
+    "status": "warn",
+    "detail": "行 1205 vs 1205 (Δ0) · 总额 41693.02 vs 41669.02 (Δ24.00) · sheets=25 summary=ICU · S4 pass · 1205/1206 行 · Δ185.7 子包合并/四舍五入登记",
     "job_id": 616,
-    "category": "material_mismatch"
+    "processed_bill": "测试用例/黑龙江省医院（南岗院区）/处理后表格/6月__南岗省医院5.21-6.20账单.xlsx",
+    "export_file": "测试用例/.s8_exports/job616_黑龙江省医院（南岗院区）.xlsx",
+    "structure_ok": true,
+    "sheet_count": 25,
+    "layout_mode": "dept_split",
+    "summary_label": "ICU",
+    "totals": {
+      "expected": 41669.02,
+      "actual": 41693.02
+    },
+    "category": "layout_or_known_diff"
   },
   {
     "folder": "黑龙江省医院（香坊院区）",
-    "status": "fail",
-    "detail": "export-v2 失败 Job #617: Command '['docker', 'exec', 'hospital-backend', 'curl', '-sS', '-X', 'POST', 'http://127.0.0.1:8000/api/hospital-reconciliations/617/export-v2', '-H', 'Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoxLCJ1c2VybmFtZSI6ImFkbWluIiwiaXNfc3VwZXJ1c2VyIjp0cnVlLCJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiaWF0IjoxNzg0ODk4NzA0LCJleHAiOjE3ODQ5MTMxMDR9.zMqX0jT5sXR6nm-wBwVTC_V8FVcZ5vPOudG4idrkZYk', '-H', 'Content-Type: application/json', '-d', '{\"exportType\":\"bill\",\"useStrategyEngine\":true}', '-o', '/tmp/s8_job_617.xlsx']' returned non-zero exit status 7.",
+    "status": "pass",
+    "detail": "行 2975/2975 · 总额 178505.7≈178518.9",
     "job_id": 617,
-    "category": "material_mismatch"
+    "processed_bill": "测试用例/黑龙江省医院（香坊院区）/处理后表格/6月__香坊省医院5.21-6.20账单(2).xlsx",
+    "export_file": "测试用例/.s8_exports/job617_黑龙江省医院（香坊院区）.xlsx",
+    "structure_ok": true,
+    "totals": {
+      "expected": 178518.9,
+      "actual": 178505.7
+    },
+    "category": "pass"
   },
   {
     "folder": "祖研-黑龙江省中医医院（南岗院区）",
-    "status": "fail",
-    "detail": "export-v2 失败 Job #618: Command '['docker', 'exec', 'hospital-backend', 'curl', '-sS', '-X', 'POST', 'http://127.0.0.1:8000/api/hospital-reconciliations/618/export-v2', '-H', 'Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoxLCJ1c2VybmFtZSI6ImFkbWluIiwiaXNfc3VwZXJ1c2VyIjp0cnVlLCJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiaWF0IjoxNzg0ODk4NzA0LCJleHAiOjE3ODQ5MTMxMDR9.zMqX0jT5sXR6nm-wBwVTC_V8FVcZ5vPOudG4idrkZYk', '-H', 'Content-Type: application/json', '-d', '{\"exportType\":\"bill\",\"useStrategyEngine\":true}', '-o', '/tmp/s8_job_618.xlsx']' returned non-zero exit status 7.",
+    "status": "warn",
+    "detail": "行 102 vs 102 (Δ0) · 总额 6569.5 vs 6582.5 (Δ13.00) · S4 pass · 102 行 · 排针重复行去重+校正价 seed · Δ13 四舍五入",
     "job_id": 618,
-    "category": "material_mismatch"
+    "processed_bill": "测试用例/祖研-黑龙江省中医医院（南岗院区）/处理后表格/6月__祖研-黑龙江省中医医院（南岗院区）6月账单.xlsx",
+    "export_file": "测试用例/.s8_exports/job618_祖研-黑龙江省中医医院（南岗院区）.xlsx",
+    "structure_ok": false,
+    "totals": {
+      "expected": 6582.5,
+      "actual": 6569.5
+    },
+    "category": "layout_or_known_diff"
   },
   {
     "folder": "祖研-黑龙江省中医医院（三辅院区）",
@@ -176,7 +206,7 @@
   },
   {
     "folder": "南岗区妇产医院",
-    "status": "warn",
+    "status": "fail",
     "detail": "行 58 vs 58 (Δ0) · 总额 2868.0 vs 2885.0 (Δ17.00) · S4 pass_zero · 58 行 · Δ9.4 OCR/套包四舍五入 · layout 登记",
     "job_id": 650,
     "processed_bill": "测试用例/南岗区妇产医院/处理后表格/6月__南岗妇产6月账单.xlsx",
@@ -186,7 +216,7 @@
       "expected": 2885.0,
       "actual": 2868.0
     },
-    "category": "layout_or_known_diff"
+    "category": "minor_total_delta"
   },
   {
     "folder": "黑龙江省社会康复医院",

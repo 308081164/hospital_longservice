@@ -18,6 +18,11 @@ public class BillExportRequestMapper {
         request.setHospitalName(context.getHospitalName());
         request.setTemplateId(String.valueOf(context.getJobId()));
         request.setRows(context.getRows().stream().map(this::toBillRowItem).toList());
+        if (context.getTemplate() != null && context.getTemplate().getColumnMapping() != null) {
+            var mapping = context.getTemplate().getColumnMapping();
+            request.setBillLayout(mapping.getBillLayout());
+            request.setD8DisplaySource(mapping.getD8DisplaySource());
+        }
         return request;
     }
 
