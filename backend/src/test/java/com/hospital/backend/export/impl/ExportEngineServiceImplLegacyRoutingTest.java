@@ -11,6 +11,7 @@ import com.hospital.backend.export.ExportStageDiscountApplier;
 import com.hospital.backend.export.ExportType;
 import com.hospital.backend.export.ReconciliationExportDataLoader;
 import com.hospital.backend.export.ReconciliationLegacyExportBridge;
+import com.hospital.backend.export.SettlementJobEnricher;
 import com.hospital.backend.export.SettlementTemplateFiller;
 import com.hospital.backend.export.model.ResolvedExportTemplate;
 import com.hospital.backend.export.strategy.ExportStrategyRegistry;
@@ -62,6 +63,8 @@ class ExportEngineServiceImplLegacyRoutingTest {
     @Mock
     private BillExportRequestMapper billExportRequestMapper;
     @Mock
+    private SettlementJobEnricher settlementJobEnricher;
+    @Mock
     private ReconciliationLegacyExportBridge legacyExportBridge;
 
     private ExportEngineServiceImpl service;
@@ -79,7 +82,8 @@ class ExportEngineServiceImplLegacyRoutingTest {
                 pricingRuleCompiler,
                 pricingRuleMapper,
                 settlementTemplateFiller,
-                billExportRequestMapper);
+                billExportRequestMapper,
+                settlementJobEnricher);
         ReflectionTestUtils.setField(service, "legacyExportBridge", legacyExportBridge);
     }
 

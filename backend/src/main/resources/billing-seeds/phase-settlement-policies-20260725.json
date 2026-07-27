@@ -1,0 +1,121 @@
+{
+  "version": "1",
+  "description": "结款函策略补种 Phase2：settlement_only 折扣 / 九洲物流减免 / 悦美低消展示 / 太平重激活",
+  "reactivateBillingPolicies": ["TAIPING-RM", "JIUZHOU-FK", "NG-FUCHAN"],
+  "profiles": [
+    {
+      "code": "TAIPING-RM",
+      "name": "太平人民医院",
+      "billingEnabled": true,
+      "billingPricingMode": "hybrid",
+      "aliases": ["太平人民", "太平人民医院"],
+      "policies": [
+        {
+          "policyType": "DISCOUNT",
+          "name": "结款函7.5折",
+          "scope": {"temperature": "ANY"},
+          "params": {"rate": 0.75, "applyStage": "settlement_only", "skipWhenFixedPrice": true},
+          "priority": 5
+        },
+        {
+          "policyType": "LOGISTICS",
+          "name": "不收物流费",
+          "params": {"feePerTrip": 0},
+          "priority": 20
+        }
+      ]
+    },
+    {
+      "code": "JIUZHOU-FK",
+      "name": "黑龙江九洲妇科医院",
+      "billingEnabled": true,
+      "billingPricingMode": "standard",
+      "aliases": ["九州妇科", "黑龙江九洲妇科医院"],
+      "settlement": {"omitZeroRows": true},
+      "policies": [
+        {
+          "policyType": "LOGISTICS",
+          "name": "6月免3次物流",
+          "params": {"feePerTrip": 50, "waivedTrips": 3},
+          "priority": 30
+        }
+      ]
+    },
+    {
+      "code": "YUEMEI-FH",
+      "name": "悦美芳华医疗门诊医院",
+      "billingEnabled": true,
+      "billingPricingMode": "standard",
+      "aliases": ["悦美芳华", "悦美芳华医疗门诊医院"],
+      "policies": [
+        {
+          "policyType": "MONTHLY_SETTLEMENT",
+          "name": "低消1000",
+          "params": {
+            "minCharge": 1000,
+            "settlementOmitMinChargeRow": true
+          },
+          "priority": 10
+        },
+        {
+          "policyType": "LOGISTICS",
+          "name": "物流100元/月",
+          "params": {"feePerTrip": 100, "tripSource": "import"},
+          "priority": 20
+        }
+      ]
+    },
+    {
+      "code": "NG-FUCHAN",
+      "name": "南岗区妇产医院",
+      "billingEnabled": true,
+      "billingPricingMode": "hybrid",
+      "aliases": ["南岗妇产", "南岗区妇产医院"]
+    },
+    {
+      "code": "WJ-HLJ-ZD",
+      "name": "武警黑龙江省总队医院",
+      "billingEnabled": true,
+      "billingPricingMode": "standard",
+      "aliases": ["武警黑龙江省总队医院", "武警总队医院"],
+      "policies": [
+        {
+          "policyType": "LOGISTICS",
+          "name": "物流50元/趟",
+          "params": {"feePerTrip": 50, "mergeSameDay": true},
+          "priority": 10
+        }
+      ]
+    },
+    {
+      "code": "ERYY-NG",
+      "name": "黑龙江省第二医院（南岗院区）",
+      "billingEnabled": true,
+      "billingPricingMode": "standard",
+      "aliases": ["省二南岗", "黑龙江省第二医院（南岗院区）"],
+      "policies": [
+        {
+          "policyType": "LOGISTICS",
+          "name": "省二南岗物流80.5",
+          "params": {"feePerTrip": 80.5},
+          "priority": 10
+        }
+      ]
+    },
+    {
+      "code": "RENSHENG",
+      "name": "哈尔滨仁胜医院",
+      "billingEnabled": true,
+      "billingPricingMode": "standard",
+      "aliases": ["仁胜", "哈尔滨仁胜医院"],
+      "policies": [
+        {
+          "policyType": "LOGISTICS",
+          "name": "物流卡抵扣",
+          "params": {"useLogisticsCard": true, "feePerTrip": 50},
+          "priority": 10
+        }
+      ]
+    }
+  ]
+}

@@ -23,3 +23,10 @@ Thumbs.db
 **/target/
 **/node_modules/
 **/dist/
+
+# Python 虚拟环境 / S8 临时导出（勿提交）
+.venv-s8/
+**/.venv-s8/
+测试用例/.s8_exports/
+**/__pycache__/
+*.pyc

@@ -12,12 +12,13 @@ import com.hospital.backend.service.LogisticsPipelineService;
 import com.hospital.backend.service.MonthlySettlementCalculator;
 import com.hospital.backend.dto.response.logistics.LogisticsAllocationPreviewResponse;
 import com.hospital.backend.service.LogisticsAllocationService;
+import com.hospital.backend.service.LogisticsImportService;
 import com.hospital.backend.export.BillExportPriceResolver;
 import com.hospital.backend.export.SheetOrchestrator;
 import com.hospital.backend.service.UrgentFeeCalculator;
 import com.hospital.backend.service.DeductionCalculator;
 import com.hospital.backend.service.ProductMatchService;
-import com.hospital.backend.service.LogisticsImportService;
+import com.hospital.backend.service.SettlementJobFieldsApplier;
 import com.hospital.backend.service.ExternalInstrumentService;
 import com.hospital.backend.service.HospitalReconciliationService;
 import com.hospital.backend.service.ReconciliationVersionGroup;
@@ -192,6 +193,8 @@ public class HospitalReconciliationServiceImpl implements HospitalReconciliation
 
     private final LogisticsPipelineService logisticsPipelineService;
 
+    private final SettlementJobFieldsApplier settlementJobFieldsApplier;
+
     private final LogisticsImportService logisticsImportService;
 
     private final ExternalInstrumentService externalInstrumentService;
@@ -287,29 +290,7 @@ public class HospitalReconciliationServiceImpl implements HospitalReconciliation
         }
         try {
             JsonNode compiled = pricingRuleCompiler.compile(baseRules, hospitalName);
-            Long customerId = customerResolver.resolveByName(hospitalName).map(c -> c.getId()).orElse(null);
-            String billingMonth = resolveBillingMonth(job);
-            Map<String, Object> breakdown = logisticsPipelineService.buildBreakdownForJob(
-                    customerId, job.getId(), billingMonth, compiled, rows, true);
-            if (!breakdown.isEmpty()) {
-                Object tripCount = breakdown.get("tripCount");
-                Object total = breakdown.getOrDefault("payableFee", breakdown.get("total"));
-                if (tripCount instanceof Number number) {
-                    job.setLogisticsTripCount(number.intValue());
-                }
-                if (total instanceof Number feeNumber) {
-                    job.setLogisticsFee(feeNumber.doubleValue());
-                }
-                job.setLogisticsBreakdown(logisticsPipelineService.toBreakdownJson(breakdown));
-            } else {
-                LogisticsFeeCalculator.compute(compiled, rows).ifPresent(result -> {
-                    job.setLogisticsTripCount(result.tripCount());
-                    job.setLogisticsFee(result.totalFee());
-                    job.setLogisticsBreakdown(LogisticsFeeCalculator.toBreakdownJson(result));
-                });
-            }
-            applyMonthlySettlementToJob(job, compiled);
-            applyUrgentAndDeductionToJob(job, compiled, rows);
+            settlementJobFieldsApplier.applyAllFromMaps(job, compiled, rows, true);
         } catch (Exception e) {
             log.warn("物流费计算失败: {}", e.getMessage());
         }
@@ -443,25 +424,6 @@ public class HospitalReconciliationServiceImpl implements HospitalReconciliation
         return (Map<String, Object>) map;
     }
 
-    private void applyUrgentAndDeductionToJob(
-            HospitalReconciliationJob job,
-            JsonNode compiledRules,
-            List<Map<String, Object>> rows) {
-        UrgentFeeCalculator.compute(compiledRules, rows).ifPresentOrElse(
-                result -> job.setUrgentBreakdown(UrgentFeeCalculator.toBreakdownJson(result)),
-                () -> job.setUrgentBreakdown(null));
-        DeductionCalculator.compute(compiledRules).ifPresentOrElse(
-                result -> job.setDeductionBreakdown(DeductionCalculator.toBreakdownJson(result)),
-                () -> job.setDeductionBreakdown(null));
-    }
-
-    private void applyMonthlySettlementToJob(HospitalReconciliationJob job, JsonNode compiledRules) {
-        double sterilizeTotal = job.getCorrectedTotalPrice() != null ? job.getCorrectedTotalPrice() : 0.0;
-        MonthlySettlementCalculator.compute(compiledRules, sterilizeTotal).ifPresent(result -> {
-            job.setSettlementAdjustment(result.adjustment());
-            job.setMonthlyBreakdown(MonthlySettlementCalculator.toBreakdownJson(result));
-        });
-    }
 
     private void recomputeJobPriceTotals(HospitalReconciliationJob job, List<Map<String, Object>> rows) {
         double originalTotal = 0.0;
@@ -4237,7 +4199,13 @@ public class HospitalReconciliationServiceImpl implements HospitalReconciliation
                 cloneRowStyle(sheet, totalRow + diff, rowIdx, detailStartRow - 1);
             }
         } else if (diff < 0) {
-            deleteRows(sheet, detailStartRow + feeRowCount, -diff);
+            // 不物理删行：deleteRows/shiftRows 易破坏模板 merged regions（F13:G13 等）
+            for (int i = 0; i < -diff; i++) {
+                clearSettlementDetailRow(sheet, detailStartRow + feeRowCount + i);
+            }
+            // 清除模板预设合计/大写行的残留内容（feeRowCount=1 时 row15 仍留旧值）
+            clearSettlementDetailRow(sheet, totalRow);
+            clearSettlementDetailRow(sheet, totalRow + 1);
         }
 
         // ===== 重新计算行号 =====
@@ -4826,6 +4794,19 @@ public class HospitalReconciliationServiceImpl implements HospitalReconciliation
         }
     }
 
+    private void clearSettlementDetailRow(XSSFSheet sheet, int rowOneIdx) {
+        Row row = sheet.getRow(rowOneIdx - 1);
+        if (row == null) {
+            return;
+        }
+        for (int col = 3; col <= 8; col++) {
+            Cell cell = row.getCell(col);
+            if (cell != null) {
+                cell.setBlank();
+            }
+        }
+    }
+
     /**
      * 删除行（匹配 openpyxl delete_rows 语义）
      *
@@ -4940,14 +4921,27 @@ public class HospitalReconciliationServiceImpl implements HospitalReconciliation
      */
     private void addMergedRegionSafe(XSSFSheet sheet, String rangeStr) {
         CellRangeAddress range = CellRangeAddress.valueOf(rangeStr);
-        // 检查是否已存在完全相同的合并区域
-        for (int i = 0; i < sheet.getNumMergedRegions(); i++) {
+        int exactCount = 0;
+        for (int i = sheet.getNumMergedRegions() - 1; i >= 0; i--) {
             CellRangeAddress existing = sheet.getMergedRegion(i);
             if (existing.formatAsString().equals(rangeStr)) {
-                return;  // 已存在，跳过不做重复添加
+                exactCount++;
+                if (exactCount > 1) {
+                    sheet.removeMergedRegion(i);
+                }
+                continue;
+            }
+            if (existing.intersects(range)) {
+                sheet.removeMergedRegion(i);
             }
         }
-        sheet.addMergedRegion(range);  // 不存在时添加
+        if (exactCount == 0) {
+            try {
+                sheet.addMergedRegion(range);
+            } catch (IllegalStateException e) {
+                log.warn("skip duplicate merged region {}: {}", rangeStr, e.getMessage());
+            }
+        }
     }
 
     /**
