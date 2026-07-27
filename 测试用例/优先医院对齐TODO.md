@@ -1,6 +1,6 @@
 # 优先医院特色账单对齐 TODO
 
-> 最后更新：**2026-07-24**（S8 全量基线复跑 · pass **19** warn **9** fail **9** · D1/D3/D7 diff 归因 · 看板仍 🚫 3 院）  
+> 最后更新：**2026-07-27**（S8 全量复跑 · pass **19** warn **10** fail **8** skip **1** · dept_split 11 院 layout 实测 · 结款函 pass **6**/26）  
 > 上一批：**2026-07-24**（S8 审计闭环 · D10 附二哈南 pass · `BillExportRowGrouper` 落地）
 > 依据：客户优先对齐清单 + [`docs/逐院需求登记表/`](../docs/逐院需求登记表/) + `测试用例/{医院}/`
 
@@ -87,55 +87,55 @@
 
 ---
 
-## 逐院导出文件类型与覆盖情况（2026-07-24）
+## 逐院导出文件类型与覆盖情况（2026-07-27）
 
-> 依据：`测试用例/{院}/处理后表格/` 铂康参考样表 · `导出规则配置.md` · [`S7导出规则配置说明.md`](S7导出规则配置说明.md) · [`s8_export_compare_report.json`](s8_export_compare_report.json) · `铂康/特色账单规则.txt`
+> 依据：`测试用例/{院}/处理后表格/` 铂康参考样表 · `导出规则配置.md` · [`S7导出规则配置说明.md`](S7导出规则配置说明.md) · [`s8_export_compare_report.json`](s8_export_compare_report.json) · [`s8_settlement_compare_report.json`](s8_settlement_compare_report.json) · [`特色账单分科室导出-验收结果.md`](特色账单分科室导出-验收结果.md)
 >
 > 系统导出类型：`bill` 账单 · `settlement` 结款函 · `dept_summary` 分科室汇总 · `price_summary` 价格汇总 · `instrument_audit` 器械把数表 · 物流分摊/总汇总等为铂康手工表，暂无独立 exportType。
 >
-> S8 当前仅自动比对 **账单(bill)** 导出；结款函/汇总类需 UI 手工验收。
+> **2026-07-27**：`billLayout=dept_split` 已落库 12 院（实测 11 院多 Sheet + D8 医院名）；**不等于** `dept_summary` 独立导出类型。S8 自动比对 **账单(bill)**；结款函见 `batch_s8_settlement_compare.py`。
 
 | 医院名称 | 导出文件类型 | 功能是否全覆盖（未覆盖则标注缺失表格） |
 |----------|-------------|----------------------------------------|
-| 黑龙江中医药大学附属第一医院 | 1、账单(bill) 2、结款函(settlement) 3、分科室汇总(dept_summary) 4、物流分摊表 | ❌ 未全覆盖（缺 分科室汇总、物流分摊表） |
-| 黑龙江省中医药大学附属第三医院（电力） | 1、账单(bill) 2、结款函(settlement) 3、器械把数表(instrument_audit) | ⚠️ 类型已配（账单 S8 fail（material_mismatch）） |
-| 国药总医院主院区 | 1、账单(bill) 2、结款函(settlement) | ⚠️ 类型已配（账单 S8 fail（material_mismatch）） |
-| 国药总医院第二院区 | 1、账单(bill) 2、结款函(settlement) | ⚠️ 类型已配（账单 S8 fail（material_mismatch）） |
-| 国药总医院第三院区 | 1、账单(bill) 2、结款函(settlement) | ⚠️ 类型已配（账单 S8 warn · Δ2 登记已知差） |
-| 哈尔滨市第二医院 | 1、账单(bill) 2、结款函(settlement) | ⚠️ 类型已配（账单 S8 fail（material_mismatch）· 🚫 vendor 材料） |
-| 哈尔滨市第五医院 | 1、账单(bill) 2、结款函(settlement) 3、分科室汇总(dept_summary) 4、价格汇总(price_summary) 5、器械把数表(instrument_audit) 6、总汇总表 | ❌ 未全覆盖（缺 价格汇总、器械把数表、总汇总表；账单 S8 登记已知差） |
-| 哈尔滨市第五医院（二门诊） | 1、账单(bill) 2、结款函(settlement) 3、总汇总表 | ❌ 未全覆盖（缺 总汇总表） |
-| 新发红十字医院 | 1、账单(bill) 2、结款函(settlement) | ⚠️ 账单 S8 pass；低温敷料多 Sheet 导出待开发 |
-| 黑龙江省医院（南岗院区） | 1、账单(bill) 2、结款函(settlement) 3、价格汇总(price_summary) 4、器械把数表(instrument_audit) 5、物流分摊表 | ❌ 未全覆盖（缺 价格汇总、器械把数表、物流分摊表；账单 S8 登记已知差） |
-| 黑龙江省医院（香坊院区） | 1、账单(bill) 2、结款函(settlement) 3、价格汇总(price_summary) 4、器械把数表(instrument_audit) 5、物流分摊表 | ❌ 未全覆盖（缺 价格汇总、器械把数表、物流分摊表） |
-| 祖研-黑龙江省中医医院（南岗院区） | 1、账单(bill) 2、结款函(settlement) 3、价格汇总(price_summary) | ❌ 未全覆盖（缺 价格汇总；账单 S8 登记已知差） |
-| 祖研-黑龙江省中医医院（三辅院区） | 1、账单(bill) 2、结款函(settlement) 3、价格汇总(price_summary) | ❌ 未全覆盖（缺 价格汇总；账单 S8 登记已知差） |
-| 祖研-黑龙江省中医医院（香安院区） | 1、账单(bill) 2、结款函(settlement) 3、价格汇总(price_summary) | ❌ 未全覆盖（缺 价格汇总；账单 S8 登记已知差） |
-| 南岗区妇产医院 | 1、账单(bill) 2、结款函(settlement) | ⚠️ 类型已配（账单 S8 warn · Δ17 登记已知差） |
-| 黑龙江省社会康复医院 | 1、账单(bill) 2、结款函(settlement) | ✅ 全覆盖 |
-| 道外区人民医院 | 1、账单(bill) 2、结款函(settlement) | ✅ 全覆盖 |
-| 太平人民医院 | 1、账单(bill) 2、结款函(settlement) | ✅ 类型全覆盖（账单 S8 登记已知差） |
-| 三精肾病医院 | 1、账单(bill) 2、结款函(settlement) | ✅ 类型全覆盖（账单 S8 登记已知差） |
-| 黑龙江维多利亚妇产医院 | 1、账单(bill) 2、结款函(settlement) | ❌ 未全覆盖（结款函缺分温分栏（高温5折/低温7折+低消）） |
-| 黑龙江九洲妇科医院 | 1、账单(bill) 2、结款函(settlement) | ❌ 未全覆盖（结款函缺分温分栏（高温5折/低温7折）） |
-| 呼兰区红十字医院 | 1、账单(bill) 2、结款函(settlement) | ✅ 全覆盖 |
-| 呼兰中医院 | 1、账单(bill) 2、结款函(settlement) | ❌ 未全覆盖（结款函缺外科包/阑尾包独立行；账单 S8 登记已知差） |
-| 黑龙江中医药大学附属第二医院（南岗） | 1、账单(bill) 2、结款函(settlement) 3、价格汇总(price_summary) 4、器械把数表(instrument_audit) | ❌ 未全覆盖（缺 价格汇总、器械把数表；账单 S8 fail（minor_total_delta）） |
-| 黑龙江中医药大学附属第二医院（哈南分院） | 1、账单(bill) 2、结款函(settlement) 3、价格汇总(price_summary) 4、器械把数表(instrument_audit) | ❌ 未全覆盖（缺 价格汇总、器械把数表） |
-| 哈尔滨仁胜医院 | 1、账单(bill) 2、结款函(settlement) | ✅ 全覆盖 |
-| 哈尔滨华夏眼科医院 | 1、账单(bill) 2、结款函(settlement) | ✅ 全覆盖 |
-| 哈尔滨冰城医疗美容医院 | 1、账单(bill) 2、结款函(settlement) | ✅ 全覆盖 |
-| 香坊中医院 | 1、账单(bill) 2、结款函(settlement) | ✅ 全覆盖 |
-| 武警黑龙江省总队医院 | 1、账单(bill) 2、结款函(settlement) | ✅ 全覆盖 |
-| 悦美芳华医疗门诊医院 | 1、账单(bill) 2、结款函(settlement) | ✅ 全覆盖 |
-| 黑龙江省第二医院（南岗院区） | 1、账单(bill) 2、结款函(settlement) | ✅ 全覆盖 |
-| 黑龙江省第二医院（松北院区） | 1、账单(bill) 2、结款函(settlement) | ⚠️ 类型已配（账单 S8 fail（material_mismatch）） |
-| 哈尔滨市呼兰区第一人民医院 | 1、账单(bill) 2、结款函(settlement) | ✅ 全覆盖 |
-| 哈尔滨市红十字妇产医院 | 1、账单(bill) 2、结款函(settlement) | ✅ 全覆盖 |
-| 哈尔滨工业大学医院 | 1、账单(bill) 2、结款函(settlement) | ✅ 类型全覆盖（账单 S8 登记已知差） |
-| 哈尔滨工程大学医院 | 1、账单(bill) 2、结款函(settlement) | ⏭ 阻塞（无原始账单 · S8 skip · 结款灭菌9折种子已配） |
+| 黑龙江中医药大学附属第一医院 | 1、账单(bill) 2、结款函(settlement) 3、分科室汇总(dept_summary) 4、物流分摊表 | ❌ 未全覆盖（缺 dept_summary/物流分摊；账单 S8 pass · **dept_split 42 sheets** · D8 医院名） |
+| 黑龙江省中医药大学附属第三医院（电力） | 1、账单(bill) 2、结款函(settlement) 3、器械把数表(instrument_audit) | ⚠️ 类型已配（账单 S8 fail material · 缺 instrument_audit S8 验收） |
+| 国药总医院主院区 | 1、账单(bill) 2、结款函(settlement) | ⚠️ 类型已配（账单 S8 fail material · 结款函 ⏭ 材料阻塞） |
+| 国药总医院第二院区 | 1、账单(bill) 2、结款函(settlement) | ⚠️ 类型已配（账单 S8 fail material · 结款函 ⏭ 材料阻塞） |
+| 国药总医院第三院区 | 1、账单(bill) 2、结款函(settlement) | ⚠️ 类型已配（账单 S8 warn Δ2 · 结款函 ⏭ 缺参考表） |
+| 哈尔滨市第二医院 | 1、账单(bill) 2、结款函(settlement) | ⚠️ 类型已配（**dept_split 23 sheets** · 账单 S8 fail material Δ11900 · 结款函 ⏭ 材料阻塞） |
+| 哈尔滨市第五医院 | 1、账单(bill) 2、结款函(settlement) 3、分科室汇总(dept_summary) 4、价格汇总(price_summary) 5、器械把数表(instrument_audit) 6、总汇总表 | ❌ 未全覆盖（缺 price_summary/instrument_audit/总汇总；账单 S8 warn Δ420 登记已知差） |
+| 哈尔滨市第五医院（二门诊） | 1、账单(bill) 2、结款函(settlement) 3、总汇总表 | ❌ 未全覆盖（缺 总汇总表 · 账单 S8 pass） |
+| 新发红十字医院 | 1、账单(bill) 2、结款函(settlement) | ⚠️ 账单 S8 pass · 结款函 S8 fail · 低温多 Sheet 待开发 |
+| 黑龙江省医院（南岗院区） | 1、账单(bill) 2、结款函(settlement) 3、价格汇总(price_summary) 4、器械把数表(instrument_audit) 5、物流分摊表 | ❌ 未全覆盖（缺 price_summary/instrument_audit/物流分摊；**dept_split 25 sheets** · 账单 S8 warn Δ24） |
+| 黑龙江省医院（香坊院区） | 1、账单(bill) 2、结款函(settlement) 3、价格汇总(price_summary) 4、器械把数表(instrument_audit) 5、物流分摊表 | ❌ 未全覆盖（缺 price_summary/instrument_audit/物流分摊；**dept_split 56 sheets** · 账单 S8 pass） |
+| 祖研-黑龙江省中医医院（南岗院区） | 1、账单(bill) 2、结款函(settlement) 3、价格汇总(price_summary) | ❌ 未全覆盖（缺 price_summary；**dept_split 10 sheets** · 账单 S8 warn Δ13） |
+| 祖研-黑龙江省中医医院（三辅院区） | 1、账单(bill) 2、结款函(settlement) 3、价格汇总(price_summary) | ❌ 未全覆盖（缺 price_summary；**dept_split 13 sheets** · 账单 S8 warn Δ24） |
+| 祖研-黑龙江省中医医院（香安院区） | 1、账单(bill) 2、结款函(settlement) 3、价格汇总(price_summary) | ❌ 未全覆盖（缺 price_summary；**dept_split 6 sheets** · 账单 S8 warn layout 登记） |
+| 南岗区妇产医院 | 1、账单(bill) 2、结款函(settlement) | ⚠️ 类型已配（**dept_split 3 sheets** · 账单 S8 warn Δ17 · 结款函 S8 fail） |
+| 黑龙江省社会康复医院 | 1、账单(bill) 2、结款函(settlement) | ✅ 全覆盖（账单+结款函 S8 pass） |
+| 道外区人民医院 | 1、账单(bill) 2、结款函(settlement) | ✅ 全覆盖（账单+结款函 S8 pass） |
+| 太平人民医院 | 1、账单(bill) 2、结款函(settlement) | ⚠️ 类型已配（账单 S8 fail material · 结款函 S8 fail · export_only 阶梯登记） |
+| 三精肾病医院 | 1、账单(bill) 2、结款函(settlement) | ⚠️ 类型已配（账单 S8 warn Δ18 · 结款函 S8 fail） |
+| 黑龙江维多利亚妇产医院 | 1、账单(bill) 2、结款函(settlement) | ✅ 全覆盖（账单+结款函 S8 pass · 分温结款函已验收） |
+| 黑龙江九洲妇科医院 | 1、账单(bill) 2、结款函(settlement) | ⚠️ 类型已配（账单 S8 pass · 结款函 S8 fail · 物流减免 BC-06 待配） |
+| 呼兰区红十字医院 | 1、账单(bill) 2、结款函(settlement) | ✅ 全覆盖（账单+结款函 S8 pass） |
+| 呼兰中医院 | 1、账单(bill) 2、结款函(settlement) | ❌ 未全覆盖（结款函缺外科包/阑尾包独立行；账单 S8 warn Δ22 · 结款函 fail） |
+| 黑龙江中医药大学附属第二医院（南岗） | 1、账单(bill) 2、结款函(settlement) 3、价格汇总(price_summary) 4、器械把数表(instrument_audit) | ❌ 未全覆盖（缺 price_summary/instrument_audit；**dept_split 17 sheets** · 账单 S8 fail Δ30） |
+| 黑龙江中医药大学附属第二医院（哈南分院） | 1、账单(bill) 2、结款函(settlement) 3、价格汇总(price_summary) 4、器械把数表(instrument_audit) | ❌ 未全覆盖（缺 price_summary/instrument_audit；**dept_split 9 sheets** · 账单 S8 pass） |
+| 哈尔滨仁胜医院 | 1、账单(bill) 2、结款函(settlement) | ⚠️ 类型已配（账单 S8 pass · 结款函 S8 fail） |
+| 哈尔滨华夏眼科医院 | 1、账单(bill) 2、结款函(settlement) | ⚠️ 类型已配（账单 S8 pass · 结款函 S8 fail） |
+| 哈尔滨冰城医疗美容医院 | 1、账单(bill) 2、结款函(settlement) | ✅ 全覆盖（账单+结款函 S8 pass） |
+| 香坊中医院 | 1、账单(bill) 2、结款函(settlement) | ⚠️ 类型已配（账单 S8 pass · 结款函 ⏭ 缺参考表） |
+| 武警黑龙江省总队医院 | 1、账单(bill) 2、结款函(settlement) | ⚠️ 类型已配（账单 S8 pass · 结款函 S8 fail） |
+| 悦美芳华医疗门诊医院 | 1、账单(bill) 2、结款函(settlement) | ⚠️ 类型已配（账单 S8 pass · 结款函 S8 fail） |
+| 黑龙江省第二医院（南岗院区） | 1、账单(bill) 2、结款函(settlement) | ⚠️ 类型已配（账单 S8 pass · 结款函 S8 fail） |
+| 黑龙江省第二医院（松北院区） | 1、账单(bill) 2、结款函(settlement) | ⚠️ 类型已配（**dept_split 22 sheets** · 账单 S8 fail material · 结款函 ⏭ 材料阻塞） |
+| 哈尔滨市呼兰区第一人民医院 | 1、账单(bill) 2、结款函(settlement) | ✅ 全覆盖（账单+结款函 S8 pass） |
+| 哈尔滨市红十字妇产医院 | 1、账单(bill) 2、结款函(settlement) | ⚠️ 类型已配（账单 S8 pass · 结款函 S8 fail） |
+| 哈尔滨工业大学医院 | 1、账单(bill) 2、结款函(settlement) | ⚠️ 类型已配（**combined 1 sheet** · 账单 S8 warn Δ229 · 结款函 fail） |
+| 哈尔滨工程大学医院 | 1、账单(bill) 2、结款函(settlement) | ⏭ 阻塞（无原始账单 · 账单 S8 skip · 结款函 ⏭ 材料阻塞） |
 
-### 仅账单+结款函 · 修复进度（2026-07-24）
+### 仅账单+结款函 · 修复进度（2026-07-27）
 
 > 范围：上表「导出文件类型」仅含 1、账单 2、结款函 的 **26 院**（不含附一/附三/市五/省医院/祖研/附二等需汇总表医院）。
 > 账单复测：`python3 scripts/batch_s8_export_compare.py --hospital "…"` · 结款函：`python3 scripts/batch_s8_settlement_compare.py --hospital "…"`
@@ -144,40 +144,40 @@
 |----------|-------------|---------|--------|----------------|-------------------|
 | 国药总医院主院区 | 1、账单 2、结款函 | 🚫 fail | ⏭ 阻塞 | 🚫 材料 | kit BOM + 原始行未入库（见 [`铂康材料缺口清单.md`](铂康材料缺口清单.md) §2） |
 | 国药总医院第二院区 | 1、账单 2、结款函 | 🚫 fail | ⏭ 阻塞 | 🚫 材料 | 同上 · Job646 |
-| 国药总医院第三院区 | 1、账单 2、结款函 | 🔄 warn(Δ2) | ⏭ 阻塞 | ⚠️ 登记已知差 | — |
-| 哈尔滨市第二医院 | 1、账单 2、结款函 | 🚫 fail | ⏭ 阻塞 | 🚫 材料 | 6月 vendor 补录 xlsx（7 sheet） |
-| 新发红十字医院 | 1、账单 2、结款函 | ✅ pass | 🚫 fail | ⚠️ 账单 pass · 结款缺加急/低温行 · 多 Sheet 待开发 | — |
-| 南岗区妇产医院 | 1、账单 2、结款函 | 🔄 warn(Δ17) | 🚫 fail | ⚠️ 登记已知差 | — |
-| 黑龙江省社会康复医院 | 1、账单 2、结款函 | ✅ pass | 🚫 fail | ⚠️ 账单 ✅；结款函待 UI 验收 | ✅ |
-| 道外区人民医院 | 1、账单 2、结款函 | ✅ pass | ✅ pass | ⚠️ 账单 ✅；结款函待 UI 验收 | ✅ |
-| 太平人民医院 | 1、账单 2、结款函 | 🔄 warn(Δ20) | 🚫 fail | ⚠️ 登记已知差 | — |
+| 国药总医院第三院区 | 1、账单 2、结款函 | 🔄 warn(Δ2) | ⏭ 缺表 | ⚠️ 登记已知差 | — |
+| 哈尔滨市第二医院 | 1、账单 2、结款函 | 🚫 fail | ⏭ 阻塞 | 🚫 材料 | 6月 vendor 补录 xlsx（7 sheet）· dept_split layout OK |
+| 新发红十字医院 | 1、账单 2、结款函 | ✅ pass | 🚫 fail | ⚠️ 账单 pass · 结款缺加急/低温行 | — |
+| 南岗区妇产医院 | 1、账单 2、结款函 | 🔄 warn(Δ17) | 🚫 fail | ⚠️ dept_split · 登记已知差 | — |
+| 黑龙江省社会康复医院 | 1、账单 2、结款函 | ✅ pass | ✅ pass | ✅ 账单+结款函 S8 pass | ✅ |
+| 道外区人民医院 | 1、账单 2、结款函 | ✅ pass | ✅ pass | ✅ 账单+结款函 S8 pass | ✅ |
+| 太平人民医院 | 1、账单 2、结款函 | 🚫 fail | 🚫 fail | ⚠️ export_only 阶梯 · 处理后表已含折后价 | — |
 | 三精肾病医院 | 1、账单 2、结款函 | 🔄 warn(Δ18) | 🚫 fail | ⚠️ 登记已知差 | — |
-| 黑龙江维多利亚妇产医院 | 1、账单 2、结款函 | ✅ pass | 🚫 fail | ✅ 分温结款函 S8 验收 | — |
+| 黑龙江维多利亚妇产医院 | 1、账单 2、结款函 | ✅ pass | ✅ pass | ✅ 分温结款函 S8 pass | — |
 | 黑龙江九洲妇科医院 | 1、账单 2、结款函 | ✅ pass | 🚫 fail | ⚠️ 分温行 OK · 物流减免(BC-06)待配 | — |
-| 呼兰区红十字医院 | 1、账单 2、结款函 | ✅ pass | 🚫 fail | ⚠️ 账单 ✅；结款函待 UI 验收 | ✅ |
-| 呼兰中医院 | 1、账单 2、结款函 | 🔄 warn(Δ22) | 🚫 fail | ⚠️ 特殊包行已开发 · Job632 数据/低消基数差 | — |
-| 哈尔滨仁胜医院 | 1、账单 2、结款函 | ✅ pass | 🚫 fail | ⚠️ 账单 ✅；结款函待 UI 验收 | — |
-| 哈尔滨华夏眼科医院 | 1、账单 2、结款函 | ✅ pass | 🚫 fail | ⚠️ 账单 ✅；结款函待 UI 验收 | — |
-| 哈尔滨冰城医疗美容医院 | 1、账单 2、结款函 | ✅ pass | 🚫 fail | ⚠️ 账单 ✅；结款函待 UI 验收 | ✅ |
-| 香坊中医院 | 1、账单 2、结款函 | ✅ pass | ⏭ 阻塞 | ⚠️ 账单 ✅；结款函待 UI 验收 | — |
-| 武警黑龙江省总队医院 | 1、账单 2、结款函 | ✅ pass | 🚫 fail | ⚠️ 账单 ✅；结款函待 UI 验收 | — |
-| 悦美芳华医疗门诊医院 | 1、账单 2、结款函 | ✅ pass | 🚫 fail | ⚠️ 账单 ✅；结款函待 UI 验收 | — |
-| 黑龙江省第二医院（南岗院区） | 1、账单 2、结款函 | ✅ pass | 🚫 fail | ⚠️ 账单 ✅；结款函待 UI 验收 | — |
-| 黑龙江省第二医院（松北院区） | 1、账单 2、结款函 | 🚫 fail | ⏭ 阻塞 | 🚫 材料 | part3/vendor 补录 + kit 拆行规则 |
-| 哈尔滨市呼兰区第一人民医院 | 1、账单 2、结款函 | ✅ pass | 🚫 fail | ⚠️ 账单 ✅；结款函待 UI 验收 | ✅ |
-| 哈尔滨市红十字妇产医院 | 1、账单 2、结款函 | ✅ pass | 🚫 fail | ⚠️ 账单 ✅；结款函待 UI 验收 | — |
-| 哈尔滨工业大学医院 | 1、账单 2、结款函 | 🔄 warn(Δ229) | 🚫 fail | ⚠️ 登记已知差 | — |
+| 呼兰区红十字医院 | 1、账单 2、结款函 | ✅ pass | ✅ pass | ✅ 账单+结款函 S8 pass | ✅ |
+| 呼兰中医院 | 1、账单 2、结款函 | 🔄 warn(Δ22) | 🚫 fail | ⚠️ 特殊包行已开发 · 低消基数差 | — |
+| 哈尔滨仁胜医院 | 1、账单 2、结款函 | ✅ pass | 🚫 fail | ⚠️ 账单 ✅ · 结款函 fail | — |
+| 哈尔滨华夏眼科医院 | 1、账单 2、结款函 | ✅ pass | 🚫 fail | ⚠️ 账单 ✅ · 结款函 fail | — |
+| 哈尔滨冰城医疗美容医院 | 1、账单 2、结款函 | ✅ pass | ✅ pass | ✅ 账单+结款函 S8 pass | ✅ |
+| 香坊中医院 | 1、账单 2、结款函 | ✅ pass | ⏭ 缺表 | ⚠️ 账单 ✅ · 缺处理后结款函 | — |
+| 武警黑龙江省总队医院 | 1、账单 2、结款函 | ✅ pass | 🚫 fail | ⚠️ 账单 ✅ · 结款函 fail | — |
+| 悦美芳华医疗门诊医院 | 1、账单 2、结款函 | ✅ pass | 🚫 fail | ⚠️ 账单 ✅ · 结款函 fail | — |
+| 黑龙江省第二医院（南岗院区） | 1、账单 2、结款函 | ✅ pass | 🚫 fail | ⚠️ 账单 ✅ · 结款函 fail | — |
+| 黑龙江省第二医院（松北院区） | 1、账单 2、结款函 | 🚫 fail | ⏭ 阻塞 | 🚫 材料 | part3/vendor 补录 + kit 拆行规则 · dept_split layout OK |
+| 哈尔滨市呼兰区第一人民医院 | 1、账单 2、结款函 | ✅ pass | ✅ pass | ✅ 账单+结款函 S8 pass | ✅ |
+| 哈尔滨市红十字妇产医院 | 1、账单 2、结款函 | ✅ pass | 🚫 fail | ⚠️ 账单 ✅ · 结款函 fail | — |
+| 哈尔滨工业大学医院 | 1、账单 2、结款函 | 🔄 warn(Δ229) | 🚫 fail | ⚠️ combined 单 Sheet · 登记已知差 | — |
 | 哈尔滨工程大学医院 | 1、账单 2、结款函 | ⏭ skip | ⏭ 阻塞 | ⏭ 阻塞 | `哈尔滨工程大学*.xlsx` 原始账单 |
 
-**进度汇总（26 院 · 2026-07-24 更新）**：账单 ✅/warn **20** · 账单 🚫 **5** · 账单 ⏭ **1** · 结款函 ✅ **5**（社会康复/维多利亚/呼兰红十字/冰城/呼兰一院）· 结款函 🚫 **14** · 结款函 ⏭ **7**（材料 5 + 缺结款函 2）
+**进度汇总（26 院 · 2026-07-27 更新）**：账单 ✅ **15** · 账单 🔄 **5** · 账单 🚫 **5** · 账单 ⏭ **1** · 结款函 ✅ **6**（社会康复/道外/维多利亚/呼兰红十字/冰城/呼兰一院）· 结款函 🚫 **13** · 结款函 ⏭ **7**（材料阻塞 5 + 缺参考表 2）
 
 > 结款函自动化：`python3 scripts/batch_s8_settlement_compare.py` · 报告 [`s8_settlement_compare_report.json`](s8_settlement_compare_report.json)
 
 ### 汇总
 
-- **✅ 账单+结款函全覆盖**：12 院
-- **⚠️ 类型已配 / 登记已知差**：10 院（S8 账单 warn/fail 但无额外表格缺口，或仅有登记口径差）
-- **❌ 未全覆盖**：14 院（缺汇总/把数/物流类表格，或结款函特殊格式未开发）
+- **✅ 账单+结款函 S8 双 pass**：6 院（社会康复、道外、维多利亚、呼兰红十字、冰城医美、呼兰一院）
+- **⚠️ 类型已配 / 登记已知差 / 单通道 pass**：17 院
+- **❌ 未全覆盖**（缺汇总/把数/物流类表格）：14 院
 - **⏭ 阻塞**：1 院（工程大学缺原始账单）
 
 **高频缺失表格类型：**
@@ -187,10 +187,10 @@
 | 价格汇总(price_summary) | 市五院、省医院两院区、祖研三院区、附二南岗/哈南 |
 | 器械把数表(instrument_audit) | 市五院、省医院两院区、附二南岗/哈南（附三已有骨架但未 S8 验收） |
 | 总汇总表 | 市五院、市五二门诊 |
-| 分科室汇总(dept_summary) | 附一（市五院 S7 已配 `standard_dept_summary`） |
+| 分科室汇总(dept_summary) | 附一（**bill dept_split 已修复**，独立 dept_summary 仍缺） |
 | 物流分摊表 | 附一、省医院两院区 |
 | 结款函分温/特殊行 | 九洲物流减免(BC-06) · 呼兰中低消基数 · 新发加急/低温行 · 多 Sheet 账单 |
-| 账单多 Sheet | 新发红十字 |
+| 账单多 Sheet | 新发红十字（低温敷料）· dept_split 12 院 bill 布局已验收 |
 
 ---
 
