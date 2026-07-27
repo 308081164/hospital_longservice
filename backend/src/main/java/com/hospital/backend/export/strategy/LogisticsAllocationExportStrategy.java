@@ -1,7 +1,7 @@
 package com.hospital.backend.export.strategy;
 
 import com.hospital.backend.common.Result;
-import com.hospital.backend.dto.response.reconciliation.LogisticsAllocationPreviewResponse;
+import com.hospital.backend.dto.response.logistics.LogisticsAllocationPreviewResponse;
 import com.hospital.backend.export.ExportContext;
 import com.hospital.backend.export.ExportResult;
 import com.hospital.backend.export.SummarySheetWriter;
@@ -31,7 +31,7 @@ public class LogisticsAllocationExportStrategy implements ExportStrategy {
         Result<LogisticsAllocationPreviewResponse> preview =
                 reconciliationService.getLogisticsAllocationPreview(context.getJobId());
         if (preview.getCode() != 200 || preview.getData() == null) {
-            throw new IllegalStateException("物流分摊预览失败: " + preview.getMessage());
+            throw new IllegalStateException("物流分摊预览失败: " + preview.getMsg());
         }
         List<Map<String, Object>> deptAllocations = preview.getData().getDeptAllocations();
         byte[] content = summarySheetWriter.buildSingleSheetWorkbook("物流分摊", (sheet, headerStyle) ->
