@@ -126,7 +126,9 @@ public class BillingSeedMigrationRunner implements CommandLineRunner {
             new IncrementalSeed("billing_seed_hrb_ngjy_fix_20260724_v1",
                     "billing-seeds/phase-hrb-ngjy-fix-20260724.json"),
             new IncrementalSeed("billing_seed_zuyan_ng_export_pricing_20260724_v1",
-                    "billing-seeds/phase-zuyan-ng-export-pricing-20260724.json")
+                    "billing-seeds/phase-zuyan-ng-export-pricing-20260724.json"),
+            new IncrementalSeed("billing_seed_sanjing_neilou_instrument_count_fix_20260727_v1",
+                    "billing-seeds/phase-sanjing-neilou-instrument-count-fix-20260727.json")
     );
 
     private static final String ZYY_D1_P0_MARKER = "billing_seed_zyy_d1_p0_v2";
@@ -214,7 +216,8 @@ public class BillingSeedMigrationRunner implements CommandLineRunner {
                     || "billing-seeds/phase-hrb-ngjy-fix-20260724.json".equals(incremental.classpathFile())
                     || "billing-seeds/phase-zuyan-ng-export-pricing-20260724.json".equals(incremental.classpathFile())
                     || "billing-seeds/phase-s7-bokang-pdf-ocr-20260723.json".equals(incremental.classpathFile())
-                    || "billing-seeds/phase-s7-daowai-wailai-keywords-20260723.json".equals(incremental.classpathFile())) {
+                    || "billing-seeds/phase-s7-daowai-wailai-keywords-20260723.json".equals(incremental.classpathFile())
+                    || "billing-seeds/phase-sanjing-neilou-instrument-count-fix-20260727.json".equals(incremental.classpathFile())) {
                 applyBatchPatchSeedFile(incremental.classpathFile());
             } else {
                 applied = loadSeedClasspathFile(incremental.classpathFile());
@@ -756,6 +759,14 @@ public class BillingSeedMigrationRunner implements CommandLineRunner {
                         rule.setMinInstrumentCount(null);
                     } else {
                         rule.setMinInstrumentCount(intVal(patch, "setMinInstrumentCount", null));
+                    }
+                    changed = true;
+                }
+                if (patch.has("setMaxInstrumentCount")) {
+                    if (patch.get("setMaxInstrumentCount").isNull()) {
+                        rule.setMaxInstrumentCount(null);
+                    } else {
+                        rule.setMaxInstrumentCount(intVal(patch, "setMaxInstrumentCount", null));
                     }
                     changed = true;
                 }

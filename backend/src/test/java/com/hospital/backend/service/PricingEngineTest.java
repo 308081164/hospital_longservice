@@ -2343,4 +2343,66 @@ class PricingEngineTest {
 
         return rules;
     }
+
+    @ParameterizedTest
+    @MethodSource("sanjingNeilouPackRowsByInstrumentCount")
+    void sanjingNeilouPackPriceByInstrumentCount(
+            String packName, int instrumentCount, double unitPrice, double expectedPrice, String expectedRule) {
+        PricingEngine engine = new PricingEngine(sanjingNeilouInstrumentCountRules());
+        PricingEngine.ProcessedResult result = engine.processRow(row(
+                "三精肾病医院",
+                "器械包(ZSD)",
+                packName,
+                "无纺布-60×60-50g",
+                instrumentCount,
+                2,
+                unitPrice,
+                unitPrice * 2));
+
+        assertThat(result.expectedUnitPrice).isEqualTo(expectedPrice);
+        assertThat(result.correctedTotalPrice).isEqualTo(expectedPrice * 2);
+        assertThat(result.notes).anyMatch(n -> n.contains(expectedRule));
+    }
+
+    static Stream<Object[]> sanjingNeilouPackRowsByInstrumentCount() {
+        return Stream.of(
+                new Object[]{"内瘘器械包（一）", 66, 181.5, 99.0, "校正价99.0"},
+                new Object[]{"内瘘器械包（一）", 68, 187.0, 102.0, "校正价102.0-内瘘68件"},
+                new Object[]{"腹透包-34件（临时）/W9050", 34, 187.0, 102.0, "校正价102.0"}
+        );
+    }
+
+    private static ObjectNode sanjingNeilouInstrumentCountRules() {
+        ObjectNode rules = (ObjectNode) defaultRules();
+        rules.withObject("billingProfile").put("enabled", true).put("pricingMode", "standard");
+        ArrayNode fixedPrices = rules.withObject("specialRules").withArray("fixedPrices");
+        ObjectNode rule99 = fixedPrices.addObject();
+        rule99.put("name", "校正价99.0");
+        rule99.putArray("hospitals").add("三精肾病医院");
+        rule99.putArray("keywords").add("内瘘器械包（一）");
+        rule99.put("price", 99.0);
+        rule99.put("minInstrumentCount", 66);
+        rule99.put("maxInstrumentCount", 66);
+        rule99.put("skipPackaging", true);
+        rule99.put("skipHospitalDiscount", true);
+
+        ObjectNode rule102Neilou = fixedPrices.addObject();
+        rule102Neilou.put("name", "校正价102.0-内瘘68件");
+        rule102Neilou.putArray("hospitals").add("三精肾病医院");
+        rule102Neilou.putArray("keywords").add("内瘘器械包（一）");
+        rule102Neilou.put("price", 102.0);
+        rule102Neilou.put("minInstrumentCount", 68);
+        rule102Neilou.put("maxInstrumentCount", 68);
+        rule102Neilou.put("skipPackaging", true);
+        rule102Neilou.put("skipHospitalDiscount", true);
+
+        ObjectNode rule102Futou = fixedPrices.addObject();
+        rule102Futou.put("name", "校正价102.0");
+        rule102Futou.putArray("hospitals").add("三精肾病医院");
+        rule102Futou.putArray("keywords").add("腹透包-34件（临时）");
+        rule102Futou.put("price", 102.0);
+        rule102Futou.put("skipPackaging", true);
+        rule102Futou.put("skipHospitalDiscount", true);
+        return rules;
+    }
 }

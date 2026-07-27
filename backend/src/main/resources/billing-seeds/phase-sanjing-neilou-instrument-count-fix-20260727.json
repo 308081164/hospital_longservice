@@ -1,0 +1,31 @@
+{
+  "version": "1",
+  "description": "三精肾病医院：内瘘器械包（一）按器械件数区分 66件99元、68件102元（同名包不同件数不同价）",
+  "ruleUpdates": [
+    {
+      "code": "SANJING-SB",
+      "ruleName": "校正价99.0",
+      "setMinInstrumentCount": 66,
+      "setMaxInstrumentCount": 66
+    },
+    {
+      "code": "SANJING-SB",
+      "ruleName": "校正价102.0",
+      "removeKeywords": ["内瘘器械包（一）"]
+    }
+  ],
+  "newRules": [
+    {
+      "code": "SANJING-SB",
+      "ruleType": "FIXED_PRICE",
+      "name": "校正价102.0-内瘘68件",
+      "priority": 15,
+      "price": 102.0,
+      "keywords": ["内瘘器械包（一）"],
+      "minInstrumentCount": 68,
+      "maxInstrumentCount": 68,
+      "skipPackaging": true,
+      "skipDiscount": true
+    }
+  ]
+}
