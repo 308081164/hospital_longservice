@@ -1,7 +1,7 @@
 # 优先医院特色账单对齐 TODO
 
-> 最后更新：**2026-07-27**（S8 全量复跑 · pass **19** warn **10** fail **8** skip **1** · dept_split 11 院 layout 实测 · 结款函 pass **6**/26）  
-> 上一批：**2026-07-24**（S8 审计闭环 · D10 附二哈南 pass · `BillExportRowGrouper` 落地）
+> 最后更新：**2026-07-28**（20260728 计价批次 + P1 导出 Strategy 落地 · S8 复跑 Job656–692 · bill pass **8** warn **8** fail **21** skip **1** · settlement pass **4**/26）  
+> 上一批：**2026-07-27**（S8 全量复跑 · pass 19 warn 10 fail 8 skip 1 · dept_split 11 院 layout 实测 · 结款函 pass 6/26）
 > 依据：客户优先对齐清单 + [`docs/逐院需求登记表/`](../docs/逐院需求登记表/) + `测试用例/{医院}/`
 
 ---
@@ -144,27 +144,27 @@
 |----------|-------------|---------|--------|----------------|-------------------|
 | 国药总医院主院区 | 1、账单 2、结款函 | 🚫 fail | ⏭ 阻塞 | 🚫 材料 | kit BOM + 原始行未入库（见 [`铂康材料缺口清单.md`](铂康材料缺口清单.md) §2） |
 | 国药总医院第二院区 | 1、账单 2、结款函 | 🚫 fail | ⏭ 阻塞 | 🚫 材料 | 同上 · Job646 |
-| 国药总医院第三院区 | 1、账单 2、结款函 | 🔄 warn(Δ2) | ⏭ 缺表 | ⚠️ 登记已知差 | — |
+| 国药总医院第三院区 | 1、账单 2、结款函 | 🔄 warn(Δ2) | ⏭ 阻塞 | ⚠️ 登记已知差 | — |
 | 哈尔滨市第二医院 | 1、账单 2、结款函 | 🚫 fail | ⏭ 阻塞 | 🚫 材料 | 6月 vendor 补录 xlsx（7 sheet）· dept_split layout OK |
 | 新发红十字医院 | 1、账单 2、结款函 | ✅ pass | 🚫 fail | ⚠️ 账单 pass · 结款缺加急/低温行 | — |
 | 南岗区妇产医院 | 1、账单 2、结款函 | 🔄 warn(Δ17) | 🚫 fail | ⚠️ dept_split · 登记已知差 | — |
-| 黑龙江省社会康复医院 | 1、账单 2、结款函 | ✅ pass | ✅ pass | ✅ 账单+结款函 S8 pass | ✅ |
+| 黑龙江省社会康复医院 | 1、账单 2、结款函 | ✅ pass | 🚫 fail | ✅ 账单+结款函 S8 pass | ✅ |
 | 道外区人民医院 | 1、账单 2、结款函 | ✅ pass | ✅ pass | ✅ 账单+结款函 S8 pass | ✅ |
 | 太平人民医院 | 1、账单 2、结款函 | 🚫 fail | 🚫 fail | ⚠️ export_only 阶梯 · 处理后表已含折后价 | — |
-| 三精肾病医院 | 1、账单 2、结款函 | 🔄 warn(Δ18) | 🚫 fail | ⚠️ 登记已知差 | — |
-| 黑龙江维多利亚妇产医院 | 1、账单 2、结款函 | ✅ pass | ✅ pass | ✅ 分温结款函 S8 pass | — |
+| 三精肾病医院 | 1、账单 2、结款函 | 🔄 warn(Δ18) | ✅ pass | ⚠️ 登记已知差 | ✅ |
+| 黑龙江维多利亚妇产医院 | 1、账单 2、结款函 | ✅ pass | 🚫 fail | ✅ 分温结款函 S8 pass | — |
 | 黑龙江九洲妇科医院 | 1、账单 2、结款函 | ✅ pass | 🚫 fail | ⚠️ 分温行 OK · 物流减免(BC-06)待配 | — |
 | 呼兰区红十字医院 | 1、账单 2、结款函 | ✅ pass | ✅ pass | ✅ 账单+结款函 S8 pass | ✅ |
 | 呼兰中医院 | 1、账单 2、结款函 | 🔄 warn(Δ22) | 🚫 fail | ⚠️ 特殊包行已开发 · 低消基数差 | — |
 | 哈尔滨仁胜医院 | 1、账单 2、结款函 | ✅ pass | 🚫 fail | ⚠️ 账单 ✅ · 结款函 fail | — |
 | 哈尔滨华夏眼科医院 | 1、账单 2、结款函 | ✅ pass | 🚫 fail | ⚠️ 账单 ✅ · 结款函 fail | — |
 | 哈尔滨冰城医疗美容医院 | 1、账单 2、结款函 | ✅ pass | ✅ pass | ✅ 账单+结款函 S8 pass | ✅ |
-| 香坊中医院 | 1、账单 2、结款函 | ✅ pass | ⏭ 缺表 | ⚠️ 账单 ✅ · 缺处理后结款函 | — |
+| 香坊中医院 | 1、账单 2、结款函 | ✅ pass | ⏭ 阻塞 | ⚠️ 账单 ✅ · 缺处理后结款函 | — |
 | 武警黑龙江省总队医院 | 1、账单 2、结款函 | ✅ pass | 🚫 fail | ⚠️ 账单 ✅ · 结款函 fail | — |
 | 悦美芳华医疗门诊医院 | 1、账单 2、结款函 | ✅ pass | 🚫 fail | ⚠️ 账单 ✅ · 结款函 fail | — |
 | 黑龙江省第二医院（南岗院区） | 1、账单 2、结款函 | ✅ pass | 🚫 fail | ⚠️ 账单 ✅ · 结款函 fail | — |
 | 黑龙江省第二医院（松北院区） | 1、账单 2、结款函 | 🚫 fail | ⏭ 阻塞 | 🚫 材料 | part3/vendor 补录 + kit 拆行规则 · dept_split layout OK |
-| 哈尔滨市呼兰区第一人民医院 | 1、账单 2、结款函 | ✅ pass | ✅ pass | ✅ 账单+结款函 S8 pass | ✅ |
+| 哈尔滨市呼兰区第一人民医院 | 1、账单 2、结款函 | ✅ pass | 🚫 fail | ✅ 账单+结款函 S8 pass | ✅ |
 | 哈尔滨市红十字妇产医院 | 1、账单 2、结款函 | ✅ pass | 🚫 fail | ⚠️ 账单 ✅ · 结款函 fail | — |
 | 哈尔滨工业大学医院 | 1、账单 2、结款函 | 🔄 warn(Δ229) | 🚫 fail | ⚠️ combined 单 Sheet · 登记已知差 | — |
 | 哈尔滨工程大学医院 | 1、账单 2、结款函 | ⏭ skip | ⏭ 阻塞 | ⏭ 阻塞 | `哈尔滨工程大学*.xlsx` 原始账单 |
@@ -184,13 +184,13 @@
 
 | 缺失类型 | 涉及医院 |
 |----------|----------|
-| 价格汇总(price_summary) | 市五院、省医院两院区、祖研三院区、附二南岗/哈南 |
-| 器械把数表(instrument_audit) | 市五院、省医院两院区、附二南岗/哈南（附三已有骨架但未 S8 验收） |
-| 总汇总表 | 市五院、市五二门诊 |
+| 价格汇总(price_summary) | ~~市五院、省医院两院区、祖研三院区、附二南岗/哈南~~ → **Strategy 已落地** · 待 `--export-type price_summary` 逐院 S8 |
+| 器械把数表(instrument_audit) | ~~市五院、省医院两院区、附二南岗/哈南~~ → **Strategy 已落地** · 待 S8 验收 |
+| 总汇总表 | ~~市五院、市五二门诊~~ → **GrandTotalExportStrategy** · 需 L3 allocationResult |
 | 分科室汇总(dept_summary) | 附一（**bill dept_split 已修复**，独立 dept_summary 仍缺） |
-| 物流分摊表 | 附一、省医院两院区 |
-| 结款函分温/特殊行 | 九洲物流减免(BC-06) · 呼兰中低消基数 · 新发加急/低温行 · 多 Sheet 账单 |
-| 账单多 Sheet | 新发红十字（低温敷料）· dept_split 12 院 bill 布局已验收 |
+| 物流分摊表 | ~~附一、省医院两院区~~ → **LogisticsAllocationExportStrategy** |
+| 结款函分温/特殊行 | 九洲物流减免(BC-06) · 呼兰中低消基数 · 新发加急/低温行 |
+| 账单多 Sheet | ~~新发红十字（低温敷料）~~ → **splitLowTempDressingSheets** · dept_split 12 院 bill 布局已验收 |
 
 ---
 
@@ -209,6 +209,11 @@
 
 ## 全局待办（跨院）
 
+- [x] **20260728 计价批次**：`phase-wj-ngjy-sd-neau-zero-fold-fix` · `phase-hlj-jyglj-weike-jiaqian` · 附一 FOLD/附二南岗/南岗妇产 · 引擎 ZSD 跳过小件折算 · 括号归一化 · `mvn test` Docker Java17 绿
+- [x] **P1 导出类型（2026-07-28）**：`PriceSummaryExportStrategy` · `InstrumentAuditExportStrategy` · `LogisticsAllocationExportStrategy` · `GrandTotalExportStrategy` · `batch_s8_export_compare.py --export-type`
+- [x] **P0 新发低温 Sheet**：`BillExportRowGrouper#splitLowTempDressingSheets`（XINFA-HSZ）
+- [ ] **P0 Kit BOM 导入**：`KitBomImportService` 骨架已建 · 待铂康 BOM xlsx + import 管线挂接（国药 645/646）
+- [ ] **P0 结款函**：新发 Δ15841 · 呼兰中 BC-01 · 九洲 BC-06 物流减免
 - [x] **S3** 十四院 PDF/P0 补种（`phase-s3-pdf-align-20260722`）
 - [x] **S3+ / S7（2026-07-23）** 铂康 **7 院** PDF：[`铂康/特殊价格单/README.md`](../铂康/特殊价格单/README.md) + 各院 `特色账单规则梳理.md` + 铂康目录备份 md；dev 已应用 S7 / ng-fuchan / zyy-d1-standard / phase-user 等 marker
 - [ ] **S3+ 剩余** — PDF **仅记录** 项（太平 export 双口径、三精 ≥3 把 3 元、省医院 override 数值、南岗妇产 OCR 套包待账单验证）；**M12 外来** 全院系 **备案** 非自动匹配 · ~~道外 pathOverride~~ ✅ `phase-daowai-path-override-20260723`

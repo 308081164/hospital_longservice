@@ -1,0 +1,27 @@
+{
+  "version": "1",
+  "description": "省监狱管理局医院：微克夹钳特殊固定价 35 元",
+  "profiles": [
+    {
+      "code": "HLJ-JYGLJ-YY",
+      "name": "省监狱管理局医院",
+      "billingEnabled": true,
+      "billingPricingMode": "standard",
+      "aliases": [
+        "监狱管理局医院",
+        "省监狱管理局医院"
+      ],
+      "productRules": [
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "微克夹钳35元",
+          "priority": 10,
+          "price": 35.0,
+          "keywords": ["微克夹钳"],
+          "skipPackaging": true,
+          "skipDiscount": true
+        }
+      ]
+    }
+  ]
+}

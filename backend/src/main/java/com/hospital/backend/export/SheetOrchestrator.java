@@ -23,6 +23,77 @@ import java.util.*;
 @Component
 public class SheetOrchestrator {
 
+    public byte[] buildPriceSummaryWorkbook(String hospitalName, AllocationResult allocation) throws IOException {
+        try (XSSFWorkbook workbook = new XSSFWorkbook();
+             ByteArrayOutputStream out = new ByteArrayOutputStream()) {
+            writePriceSummarySheet(workbook, createHeaderStyle(workbook), allocation);
+            workbook.write(out);
+            return out.toByteArray();
+        }
+    }
+
+    public byte[] buildLogisticsAllocationWorkbook(AllocationResult allocation) throws IOException {
+        try (XSSFWorkbook workbook = new XSSFWorkbook();
+             ByteArrayOutputStream out = new ByteArrayOutputStream()) {
+            CellStyle headerStyle = createHeaderStyle(workbook);
+            Sheet sheet = workbook.createSheet("物流分摊");
+            int rowIdx = 0;
+            Row header = sheet.createRow(rowIdx++);
+            String[] cols = {"科室", "类型", "金额", "备注"};
+            for (int i = 0; i < cols.length; i++) {
+                Cell cell = header.createCell(i);
+                cell.setCellValue(cols[i]);
+                cell.setCellStyle(headerStyle);
+            }
+            if (allocation != null && allocation.getAllocatedLines() != null) {
+                for (AllocatedLineItem line : allocation.getAllocatedLines()) {
+                    if (line.getMatchReason() == null || !line.getMatchReason().contains("物流")) {
+                        continue;
+                    }
+                    Row row = sheet.createRow(rowIdx++);
+                    row.createCell(0).setCellValue(nullToEmpty(line.getMatchedDepartment()));
+                    row.createCell(1).setCellValue(nullToEmpty(line.getAllocationType()));
+                    setDouble(row, 2, line.getAmount());
+                    row.createCell(3).setCellValue(nullToEmpty(line.getMatchReason()));
+                }
+            }
+            autosize(sheet, cols.length);
+            workbook.write(out);
+            return out.toByteArray();
+        }
+    }
+
+    public byte[] buildGrandTotalWorkbook(String hospitalName, AllocationResult allocation) throws IOException {
+        try (XSSFWorkbook workbook = new XSSFWorkbook();
+             ByteArrayOutputStream out = new ByteArrayOutputStream()) {
+            CellStyle headerStyle = createHeaderStyle(workbook);
+            Sheet sheet = workbook.createSheet("总汇总");
+            int rowIdx = 0;
+            sheet.createRow(rowIdx++).createCell(0).setCellValue(hospitalName + " — 总汇总");
+            Row header = sheet.createRow(rowIdx++);
+            header.createCell(0).setCellValue("科室");
+            header.createCell(1).setCellValue("净额");
+            header.getCell(0).setCellStyle(headerStyle);
+            header.getCell(1).setCellStyle(headerStyle);
+            double grand = 0;
+            if (allocation != null && allocation.getDepartmentSummaries() != null) {
+                for (DepartmentSheetSummary summary : allocation.getDepartmentSummaries()) {
+                    Row row = sheet.createRow(rowIdx++);
+                    row.createCell(0).setCellValue(summary.getDepartmentName());
+                    row.createCell(1).setCellValue(summary.getNetAmount());
+                    grand += summary.getNetAmount();
+                }
+            }
+            Row total = sheet.createRow(rowIdx);
+            total.createCell(0).setCellValue("合计");
+            total.createCell(1).setCellValue(grand);
+            sheet.autoSizeColumn(0);
+            sheet.autoSizeColumn(1);
+            workbook.write(out);
+            return out.toByteArray();
+        }
+    }
+
     public byte[] buildOrchestratedWorkbook(
             String hospitalName,
             List<HospitalReconciliationRow> sourceRows,

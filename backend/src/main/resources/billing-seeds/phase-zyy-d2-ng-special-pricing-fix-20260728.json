@@ -1,0 +1,41 @@
+{
+  "version": "1",
+  "description": "附二南岗 ZYY-D2-NG：刮勺探针4/弯针-2/椎间孔镜镜头/关节镜 撤销 S4 any_price，强制特色校正价",
+  "ruleUpdates": [
+    {
+      "code": "ZYY-D2-NG",
+      "ruleName": "附二南岗刮勺探针4",
+      "setMatchMode": "first",
+      "setPrice": 22.0,
+      "setAcceptedPrices": [22.0]
+    },
+    {
+      "code": "ZYY-D2-NG",
+      "ruleName": "附二南岗弯针2",
+      "setMatchMode": "first",
+      "setPrice": 13.5,
+      "setAcceptedPrices": [13.5]
+    },
+    {
+      "code": "ZYY-D2-NG",
+      "ruleName": "附二南岗椎间孔镜镜头",
+      "setMatchMode": "first",
+      "setPrice": 35.0,
+      "setAcceptedPrices": [35.0]
+    },
+    {
+      "code": "ZYY-D2-NG",
+      "ruleName": "附二南岗关节镜70度",
+      "setMatchMode": "first",
+      "setPrice": 28.0,
+      "setAcceptedPrices": [28.0]
+    },
+    {
+      "code": "ZYY-D2-NG",
+      "ruleName": "附二南岗关节镜30度",
+      "setMatchMode": "first",
+      "setPrice": 36.0,
+      "setAcceptedPrices": [36.0]
+    }
+  ]
+}

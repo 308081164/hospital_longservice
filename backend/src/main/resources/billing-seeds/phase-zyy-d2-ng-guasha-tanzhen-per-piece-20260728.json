@@ -1,0 +1,22 @@
+{
+  "version": "1",
+  "description": "附二南岗 ZYY-D2-NG：刮勺探针 5.5 元/把，包名刮勺探针x 总价=5.5×x；停用固定价刮勺探针4",
+  "deactivateRules": [
+    {
+      "code": "ZYY-D2-NG",
+      "ruleName": "附二南岗刮勺探针4"
+    }
+  ],
+  "newRules": [
+    {
+      "code": "ZYY-D2-NG",
+      "ruleType": "PRICE_PER_INSTRUMENT",
+      "name": "附二南岗刮勺探针5.5元/把",
+      "priority": 8,
+      "price": 5.5,
+      "keywords": ["刮勺探针"],
+      "skipPackaging": true,
+      "skipDiscount": true
+    }
+  ]
+}

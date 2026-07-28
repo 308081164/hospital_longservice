@@ -98,6 +98,28 @@ class PricingEngineTest {
     }
 
     @Test
+    void zsdKirschnerWirePliersPackSkipsSmallItemFoldAndUsesFullInstrumentCount() {
+        ObjectNode rules = (ObjectNode) defaultRules();
+        rules.putObject("billingProfile").put("enabled", true).put("pricingMode", "standard");
+        ((ObjectNode) rules.path("cleaning")).put("recomputeTotalsWhenPriceChanges", true);
+
+        PricingEngine pricingEngine = new PricingEngine(rules);
+        PricingEngine.ProcessedResult result = pricingEngine.processRow(row(
+                "哈尔滨市平房区人民医院",
+                "器械包(ZSD)",
+                "克氏针.钳",
+                "无纺布-90×90-50g",
+                15,
+                1,
+                82.5,
+                82.5));
+
+        assertThat(result.expectedUnitPrice).isEqualTo(82.5);
+        assertThat(result.correctedTotalPrice).isEqualTo(82.5);
+        assertThat(result.notes).noneMatch(n -> n.contains("小件关键词") && n.contains("折算"));
+    }
+
+    @Test
     void foldsSongdianMachineExpansionNeedles() {
         PricingEngine.ProcessedResult result = engine.processRow(row(
                 "哈尔滨道外区松电慢性病专科门诊部",
@@ -393,7 +415,7 @@ class PricingEngineTest {
                 List.of("南岗区妇产医院"),
                 List.of("纱布"),
                 2.3,
-                false,
+                true,
                 false,
                 true)));
 
@@ -422,7 +444,7 @@ class PricingEngineTest {
                 2.5,
                 37.5
         ));
-        assertThat(gongsha.expectedUnitPrice).isEqualTo(2.3);
+        assertThat(gongsha.expectedUnitPrice).isEqualTo(34.5);
         assertThat(gongsha.correctedTotalPrice).isEqualTo(34.5);
     }
 
@@ -517,6 +539,49 @@ class PricingEngineTest {
         ));
         assertThat(wanpanTwo.expectedUnitPrice).isEqualTo(16.0);
         assertThat(wanpanTwo.correctedTotalPrice).isEqualTo(16.0);
+    }
+
+    @Test
+    void ngFuchanKuobangBundleForcesTwentyFourDespiteOriginalBillSixteenFive() throws Exception {
+        ObjectNode rules = MAPPER.createObjectNode();
+        rules.setAll((ObjectNode) defaultRules());
+        ArrayNode fixedPrices = (ArrayNode) rules.path("specialRules").path("fixedPrices");
+        Map<String, Object> bundle24 = new LinkedHashMap<>(fixedPrice(
+                "校正价24.0",
+                List.of("南岗区妇产医院"),
+                List.of("扩棒（4 4.5 5）-3"),
+                24.0,
+                false,
+                false,
+                true));
+        bundle24.put("matchMode", "first");
+        bundle24.put("acceptedPrices", List.of(24.0));
+        fixedPrices.add(MAPPER.valueToTree(bundle24));
+        Map<String, Object> scatter8 = new LinkedHashMap<>(fixedPrice(
+                "校正价扩棒8",
+                List.of("南岗区妇产医院"),
+                List.of("扩棒"),
+                8.0,
+                false,
+                false,
+                true));
+        scatter8.put("excludeKeywords", List.of("扩棒（4 4.5 5）-3", "（4 4.5 5）-3"));
+        fixedPrices.add(MAPPER.valueToTree(scatter8));
+
+        PricingEngine ngEngine = new PricingEngine(rules);
+        PricingEngine.ProcessedResult bundle = ngEngine.processRow(row(
+                "南岗区妇产医院",
+                "额外包(纸塑袋)",
+                "扩棒（4 4.5 5）-3/z7526",
+                "高温纸塑袋75*300",
+                3,
+                1,
+                16.5,
+                16.5
+        ));
+        assertThat(bundle.expectedUnitPrice).isEqualTo(24.0);
+        assertThat(bundle.correctedTotalPrice).isEqualTo(24.0);
+        assertThat(bundle.pricingRule).contains("校正价24.0");
     }
 
     @Test
@@ -1141,6 +1206,76 @@ class PricingEngineTest {
     }
 
     @Test
+    void zyyD2NgSpecialPricingForcesTargetDespiteLowOriginalBill() {
+        ObjectNode rules = (ObjectNode) defaultRules();
+        ArrayNode fixedPrices = ((ObjectNode) rules.path("specialRules")).withArray("fixedPrices");
+        fixedPrices.add(MAPPER.valueToTree(perPieceRule(
+                301L, "附二南岗刮勺探针5.5元/把", "附二南岗", "刮勺探针", 5.5)));
+        fixedPrices.add(MAPPER.valueToTree(fixedPriceRule(
+                302L, "附二南岗弯针2", "附二南岗", "弯针-2", 13.5)));
+        fixedPrices.add(MAPPER.valueToTree(fixedPriceRule(
+                303L, "校正价35.0", "附二南岗", "小单", 35.0)));
+        fixedPrices.add(MAPPER.valueToTree(fixedPriceRule(
+                304L, "附二南岗椎间孔镜镜头", "附二南岗", "椎间孔镜镜头", 35.0)));
+        fixedPrices.add(MAPPER.valueToTree(fixedPriceRule(
+                305L, "附二南岗关节镜70度", "附二南岗", "关节镜70°", 28.0)));
+        fixedPrices.add(MAPPER.valueToTree(fixedPriceRule(
+                306L, "附二南岗关节镜30度", "附二南岗", "关节镜30°", 36.0)));
+
+        PricingEngine engine = new PricingEngine(rules);
+        assertSpecialPriceWarning(engine, row(
+                "附二南岗", "额外包(纸塑袋)", "刮勺探针4/z1035", "高温纸塑袋75*200",
+                1, 1, 8, 8), 22.0, "附二南岗刮勺探针5.5元/把");
+        assertSpecialPriceWarning(engine, row(
+                "附二南岗", "额外包(纸塑袋)", "刮勺探针3/z1035", "高温纸塑袋75*200",
+                1, 1, 8, 8), 16.5, "附二南岗刮勺探针5.5元/把");
+        assertSpecialPriceWarning(engine, row(
+                "附二南岗", "额外包(纸塑袋)", "弯针-2/z1035", "高温纸塑袋75*200",
+                1, 1, 8, 8), 13.5, "附二南岗弯针2");
+        assertSpecialPriceWarning(engine, row(
+                "附二南岗", "敷料包(无纺布)", "小单/w1250", "无纺布-125×125-50g",
+                2, 2, 25, 50), 35.0, "校正价35.0");
+        assertSpecialPriceWarning(engine, row(
+                "附二南岗", "额外包(低温等离子)", "椎间孔镜镜头-1（双层）/z2060", "低温纸塑袋200*300",
+                1, 1, 30, 30), 35.0, "附二南岗椎间孔镜镜头");
+        assertSpecialPriceWarning(engine, row(
+                "附二南岗", "额外包(低温等离子)", "关节镜70°镜头/z2060", "低温纸塑袋200*300",
+                1, 1, 44, 44), 28.0, "附二南岗关节镜70度");
+        assertSpecialPriceWarning(engine, row(
+                "附二南岗", "额外包(低温等离子)", "关节镜30°镜头/z2060", "低温纸塑袋200*300",
+                1, 1, 44, 44), 36.0, "附二南岗关节镜30度");
+    }
+
+    private static Map<String, Object> fixedPriceRule(long id, String name, String hospital,
+                                                      String keyword, double price) {
+        Map<String, Object> rule = new LinkedHashMap<>();
+        rule.put("ruleId", id);
+        rule.put("name", name);
+        rule.put("price", price);
+        rule.put("matchMode", "first");
+        rule.put("hospitals", List.of(hospital));
+        rule.put("keywords", List.of(keyword));
+        rule.put("skipPackaging", true);
+        rule.put("skipDiscount", true);
+        return rule;
+    }
+
+    private static Map<String, Object> perPieceRule(long id, String name, String hospital,
+                                                    String keyword, double unitPrice) {
+        Map<String, Object> rule = fixedPriceRule(id, name, hospital, keyword, unitPrice);
+        rule.put("pricePerInstrument", true);
+        return rule;
+    }
+
+    private static void assertSpecialPriceWarning(PricingEngine engine, Map<String, Object> row,
+                                                    double expectedUnit, String ruleFragment) {
+        PricingEngine.ProcessedResult result = engine.processRow(row);
+        assertThat(result.status).isEqualTo("warning");
+        assertThat(result.expectedUnitPrice).isEqualTo(expectedUnit);
+        assertThat(result.pricingRule).contains(ruleFragment);
+    }
+
+    @Test
     void anyPriceMatchIncludesDiscountChainWhenDiscountApplied() {
         ObjectNode rules = (ObjectNode) defaultRules();
         ObjectNode specialRules = (ObjectNode) rules.path("specialRules");
@@ -1292,13 +1427,106 @@ class PricingEngineTest {
 
     @Test
     void ngjyZeroDressingPackWithoutMaterialFlagsWarning() {
-        PricingEngine.ProcessedResult result = engine.processRow(ngjyDressingPackRow(
+        ObjectNode rules = (ObjectNode) defaultRules();
+        ObjectNode specialRules = (ObjectNode) rules.path("specialRules");
+        ArrayNode zeroOverrides = specialRules.withArray("zeroPriceOverrides");
+        ObjectNode zeroRule = zeroOverrides.addObject();
+        zeroRule.put("name", "九院敷料包0元覆盖15");
+        zeroRule.putArray("hospitals").add("哈尔滨市南岗区人民医院（九院）");
+        zeroRule.putArray("keywords").add("敷料包");
+        zeroRule.put("price", 15.0);
+        zeroRule.put("skipPackaging", true);
+
+        PricingEngine ngjyEngine = new PricingEngine(rules);
+        PricingEngine.ProcessedResult result = ngjyEngine.processRow(ngjyDressingPackRow(
                 "手术室", 0, 1, 0, 0));
 
         assertThat(result.status).isEqualTo("warning");
-        assertThat(result.expectedUnitPrice).isEqualTo(25.0);
-        assertThat(result.difference).isEqualTo(25.0);
+        assertThat(result.expectedUnitPrice).isEqualTo(15.0);
+        assertThat(result.difference).isEqualTo(15.0);
         assertThat(result.notes).anyMatch(n -> n.contains("0 元导入"));
+    }
+
+    @Test
+    void wjZeroPricePaperPlasticDressingPackUsesEightYuan() {
+        ObjectNode rules = (ObjectNode) defaultRules();
+        ObjectNode billingProfile = rules.putObject("billingProfile");
+        ObjectNode pathOverride = billingProfile.putObject("pathOverride");
+        pathOverride.put("zeroPriceMode", "packaging_type");
+        ArrayNode fixedPrices = ((ObjectNode) rules.path("specialRules")).withArray("fixedPrices");
+        ObjectNode fixed = fixedPrices.addObject();
+        fixed.put("name", "校正价8.0");
+        fixed.putArray("hospitals").add("武警黑龙江省总队医院");
+        fixed.putArray("keywords").add("器械包（纸塑袋）").add("敷料包（纸塑袋）");
+        fixed.put("price", 8.0);
+        fixed.put("skipPackaging", true);
+
+        PricingEngine wjEngine = new PricingEngine(rules);
+        PricingEngine.ProcessedResult result = wjEngine.processRow(row(
+                "武警黑龙江省总队医院",
+                "敷料包(纸塑袋)",
+                "敷料包(纸塑袋)",
+                "",
+                1,
+                1,
+                0,
+                0));
+
+        assertThat(result.expectedUnitPrice).isEqualTo(8.0);
+        assertThat(result.notes).anyMatch(n -> n.contains("校正价8.0") || n.contains("纸塑袋"));
+    }
+
+    @Test
+    void wjZeroPriceNonWovenInstrumentPackUsesTwentyYuan() {
+        ObjectNode rules = (ObjectNode) defaultRules();
+        ObjectNode billingProfile = rules.putObject("billingProfile");
+        billingProfile.putObject("pathOverride").put("zeroPriceMode", "packaging_type");
+        ArrayNode fixedPrices = ((ObjectNode) rules.path("specialRules")).withArray("fixedPrices");
+        ObjectNode fixed = fixedPrices.addObject();
+        fixed.put("name", "校正价20.0");
+        fixed.putArray("hospitals").add("武警黑龙江省总队医院");
+        fixed.putArray("keywords").add("器械包（无纺布）").add("敷料包（无纺布）");
+        fixed.put("price", 20.0);
+        fixed.put("skipPackaging", true);
+
+        PricingEngine wjEngine = new PricingEngine(rules);
+        PricingEngine.ProcessedResult result = wjEngine.processRow(row(
+                "武警黑龙江省总队医院",
+                "敷料包(无纺布包)",
+                "器械包 (无纺布)",
+                "",
+                2,
+                1,
+                0,
+                0));
+
+        assertThat(result.expectedUnitPrice).isEqualTo(20.0);
+    }
+
+    @Test
+    void songdianChezhenFoldsWithoutDepartmentRestriction() {
+        ObjectNode rules = (ObjectNode) defaultRules();
+        rules.putObject("billingProfile").put("enabled", true).put("pricingMode", "standard");
+        ArrayNode foldRules = ((ObjectNode) rules.path("specialRules")).withArray("foldRules");
+        ObjectNode fold = foldRules.addObject();
+        fold.put("name", "松电车针5件算1件");
+        fold.putArray("hospitals").add("哈尔滨道外区松电慢性病专科门诊部");
+        fold.putArray("keywords").add("车针");
+        fold.put("threshold", 5);
+        fold.put("foldRatio", 5);
+
+        PricingEngine sdEngine = new PricingEngine(rules);
+        PricingEngine.ProcessedResult result = sdEngine.processRow(row(
+                "哈尔滨道外区松电慢性病专科门诊部",
+                "额外包(纸塑袋)",
+                "车针-32/Z7520",
+                "高温纸塑袋75*200",
+                32,
+                1,
+                66,
+                66));
+
+        assertThat(result.notes).anyMatch(n -> n.contains("松电车针5件算1件") && n.contains("折算为 7 件"));
     }
 
     @Test
@@ -1737,6 +1965,37 @@ class PricingEngineTest {
     }
 
     @Test
+    void hljJygljWeikeJiaqianFixedAtThirtyFive() {
+        ObjectNode rules = (ObjectNode) defaultRules();
+        rules.putObject("billingProfile").put("enabled", true).put("pricingMode", "standard");
+        ObjectNode specialRules = (ObjectNode) rules.path("specialRules");
+        ArrayNode fixedPrices = specialRules.withArray("fixedPrices");
+        ObjectNode fixed = fixedPrices.addObject();
+        fixed.put("name", "微克夹钳35元");
+        fixed.putArray("hospitals").add("省监狱管理局医院");
+        fixed.putArray("keywords").add("微克夹钳");
+        fixed.put("price", 35.0);
+        fixed.put("skipPackaging", true);
+        fixed.put("skipHospitalDiscount", true);
+
+        PricingEngine engine = new PricingEngine(rules);
+        PricingEngine.ProcessedResult result = engine.processRow(row(
+                "省监狱管理局医院",
+                "额外包(ETO)",
+                "微克夹钳-1/双z2060",
+                "",
+                1,
+                1,
+                28,
+                28));
+
+        assertThat(result.expectedUnitPrice).isEqualTo(35.0);
+        assertThat(result.correctedTotalPrice).isEqualTo(35.0);
+        assertThat(result.status).isEqualTo("warning");
+        assertThat(result.notes).anyMatch(n -> n.contains("微克夹钳35元"));
+    }
+
+    @Test
     void songdianOralChezhen32FoldsToSevenBillableUnits() {
         ObjectNode rules = (ObjectNode) defaultRules();
         ObjectNode billingProfile = rules.putObject("billingProfile");
@@ -1986,7 +2245,7 @@ class PricingEngineTest {
     @Test
     void wuchangExtraBag75PaperPlasticFixedAtTenPointFive() {
         ObjectNode rules = (ObjectNode) defaultRules();
-        rules.withObject("billingProfile").put("enabled", true).put("pricingMode", "standard");
+        rules.putObject("billingProfile").put("enabled", true).put("pricingMode", "standard");
         ObjectNode specialRules = (ObjectNode) rules.path("specialRules");
         ArrayNode fixedPrices = specialRules.withArray("fixedPrices");
         ObjectNode rule = fixedPrices.addObject();
@@ -2024,7 +2283,7 @@ class PricingEngineTest {
     @Test
     void wuchangExtraBag10PaperPlasticFixedAtThirteenPointFive() {
         ObjectNode rules = (ObjectNode) defaultRules();
-        rules.withObject("billingProfile").put("enabled", true).put("pricingMode", "standard");
+        rules.putObject("billingProfile").put("enabled", true).put("pricingMode", "standard");
         ObjectNode specialRules = (ObjectNode) rules.path("specialRules");
         ArrayNode fixedPrices = specialRules.withArray("fixedPrices");
         ObjectNode rule = fixedPrices.addObject();
@@ -2089,7 +2348,7 @@ class PricingEngineTest {
     @Test
     void wuchangMoixiNailDoesNotMatchBroad75PaperPlasticKeyword() {
         ObjectNode rules = (ObjectNode) defaultRules();
-        rules.withObject("billingProfile").put("enabled", true).put("pricingMode", "standard");
+        rules.putObject("billingProfile").put("enabled", true).put("pricingMode", "standard");
         ObjectNode specialRules = (ObjectNode) rules.path("specialRules");
         ArrayNode fixedPrices = specialRules.withArray("fixedPrices");
         ObjectNode broad75Rule = fixedPrices.addObject();
@@ -2129,7 +2388,7 @@ class PricingEngineTest {
 
     private static JsonNode wuchangPackPriceFixRules() {
         ObjectNode rules = (ObjectNode) defaultRules();
-        rules.withObject("billingProfile").put("enabled", true).put("pricingMode", "standard");
+        rules.putObject("billingProfile").put("enabled", true).put("pricingMode", "standard");
         ObjectNode specialRules = (ObjectNode) rules.path("specialRules");
         ArrayNode fixedPrices = specialRules.withArray("fixedPrices");
 
@@ -2374,8 +2633,8 @@ class PricingEngineTest {
 
     private static ObjectNode sanjingNeilouInstrumentCountRules() {
         ObjectNode rules = (ObjectNode) defaultRules();
-        rules.withObject("billingProfile").put("enabled", true).put("pricingMode", "standard");
-        ArrayNode fixedPrices = rules.withObject("specialRules").withArray("fixedPrices");
+        rules.putObject("billingProfile").put("enabled", true).put("pricingMode", "standard");
+        ArrayNode fixedPrices = ((ObjectNode) rules.path("specialRules")).withArray("fixedPrices");
         ObjectNode rule99 = fixedPrices.addObject();
         rule99.put("name", "校正价99.0");
         rule99.putArray("hospitals").add("三精肾病医院");
@@ -2568,7 +2827,7 @@ class PricingEngineTest {
     private static JsonNode shengYyXfShenwaiGoudaoRules() {
         ObjectNode rules = (ObjectNode) defaultRules();
         rules.putObject("billingProfile").put("enabled", true).put("pricingMode", "special_only");
-        ArrayNode fixedPrices = rules.withObject("specialRules").withArray("fixedPrices");
+        ArrayNode fixedPrices = ((ObjectNode) rules.path("specialRules")).withArray("fixedPrices");
 
         ObjectNode goudao2 = fixedPrices.addObject();
         goudao2.put("name", "神外一勾刀-2 26.4元");
@@ -2595,7 +2854,7 @@ class PricingEngineTest {
     private static JsonNode shengYyXfDeptPricingRules() {
         ObjectNode rules = (ObjectNode) defaultRules();
         rules.putObject("billingProfile").put("enabled", true).put("pricingMode", "special_only");
-        ArrayNode fixedPrices = rules.withObject("specialRules").withArray("fixedPrices");
+        ArrayNode fixedPrices = ((ObjectNode) rules.path("specialRules")).withArray("fixedPrices");
 
         ObjectNode thor17 = fixedPrices.addObject();
         thor17.put("name", "手术室胸腔镜17件178.2");
@@ -2640,6 +2899,7 @@ class PricingEngineTest {
         legacy180.put("name", "校正价180.0");
         legacy180.putArray("hospitals").add("黑龙江省医院（香坊院区）");
         legacy180.putArray("keywords").add("胸腔镜-").add("外一27件筐1").add("普镜-");
+        legacy180.putArray("excludeKeywords").add("17件");
         legacy180.put("price", 180.0);
         legacy180.put("skipPackaging", true);
         legacy180.put("skipHospitalDiscount", true);

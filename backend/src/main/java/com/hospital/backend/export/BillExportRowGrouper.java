@@ -25,6 +25,7 @@ public class BillExportRowGrouper {
     private static final Set<String> EXACT_DEDUPE_CODES = Set.of("ZUYAN-NG", "HRB-HIT");
     private static final Set<String> DUPLICATE_AGGREGATE_CODES = Set.of();
     static final Set<String> GUOYAO_CODES = Set.of("GUOYAO-MAIN", "GUOYAO-2", "GUOYAO-3");
+    private static final Set<String> LOW_TEMP_SHEET_SPLIT_CODES = Set.of("XINFA-HSZ");
 
     /** 如「膝关节镜器械 1/5」「半髋器械 2/2」「上肢器械（国药科学）3/4」 */
     private static final Pattern SUB_PACK_SUFFIX = Pattern.compile("^(.*)\\s+(\\d+)/(\\d+)$");
@@ -38,6 +39,9 @@ public class BillExportRowGrouper {
             return rows;
         }
         List<HospitalReconciliationRow> working = new ArrayList<>(rows);
+        if (LOW_TEMP_SHEET_SPLIT_CODES.contains(customerCode)) {
+            working = splitLowTempDressingSheets(working);
+        }
         if (SUB_PACK_MERGE_CODES.contains(customerCode)) {
             working = mergeSubPackSuffixRows(working);
         }
@@ -278,5 +282,40 @@ public class BillExportRowGrouper {
         copy.setMatchedPriceOption(row.getMatchedPriceOption());
         copy.setIsUrgent(row.getIsUrgent());
         return copy;
+    }
+
+    /** 新发红十字：敷料/低温行写入「{科室}低温敷料」Sheet，与处理后表一致。 */
+    List<HospitalReconciliationRow> splitLowTempDressingSheets(List<HospitalReconciliationRow> rows) {
+        List<HospitalReconciliationRow> result = new ArrayList<>(rows.size());
+        for (HospitalReconciliationRow row : rows) {
+            if (!isLowTempDressingExportRow(row)) {
+                result.add(row);
+                continue;
+            }
+            String sheet = row.getSheetName() != null ? row.getSheetName().trim() : "";
+            if (sheet.contains("低温")) {
+                result.add(row);
+                continue;
+            }
+            String dept = sheet.isBlank() ? "默认" : sheet.replaceAll("低温.*$", "").trim();
+            if (dept.isBlank()) {
+                dept = "默认";
+            }
+            HospitalReconciliationRow copy = cloneRow(row);
+            copy.setSheetName(dept + "低温敷料");
+            result.add(copy);
+        }
+        return result;
+    }
+
+    private boolean isLowTempDressingExportRow(HospitalReconciliationRow row) {
+        String type = row.getType() != null ? row.getType() : "";
+        String material = row.getPackageMaterial() != null ? row.getPackageMaterial() : "";
+        String pack = row.getPackName() != null ? row.getPackName() : "";
+        String combined = (type + material + pack).toLowerCase();
+        if (combined.contains("低温") || combined.contains("等离子") || combined.contains("eto")) {
+            return type.contains("敷料") || type.contains("辅料") || material.contains("敷料") || pack.contains("敷料");
+        }
+        return false;
     }
 }

@@ -1,0 +1,20 @@
+{
+  "version": "2",
+  "description": "南岗妇产 NG-FUCHAN：扩棒（4 4.5 5）-3 计划生育套包强制 24 元/包（v2 修正种子路由误走 export rules）",
+  "ruleUpdates": [
+    {
+      "code": "NG-FUCHAN",
+      "ruleName": "校正价24.0",
+      "setMatchMode": "first",
+      "setAcceptedPrices": [24.0]
+    },
+    {
+      "code": "NG-FUCHAN",
+      "ruleName": "校正价扩棒8",
+      "addExcludeKeywords": [
+        "扩棒（4 4.5 5）-3",
+        "（4 4.5 5）-3"
+      ]
+    }
+  ]
+}

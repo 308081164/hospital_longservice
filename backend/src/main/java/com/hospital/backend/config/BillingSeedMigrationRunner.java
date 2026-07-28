@@ -140,7 +140,21 @@ public class BillingSeedMigrationRunner implements CommandLineRunner {
             new IncrementalSeed("billing_seed_settlement_logistics_20260725_v1",
                     "billing-seeds/phase-settlement-logistics-20260725.json"),
             new IncrementalSeed("billing_seed_export_dept_split_20260728_v1",
-                    "billing-seeds/phase-export-dept-split-20260728.json")
+                    "billing-seeds/phase-export-dept-split-20260728.json"),
+            new IncrementalSeed("billing_seed_ng_fuchan_kuobang_bundle_24_fix_20260728_v1",
+                    "billing-seeds/phase-ng-fuchan-kuobang-bundle-24-fix-20260728.json"),
+            new IncrementalSeed("billing_seed_ng_fuchan_kuobang_bundle_24_fix_20260728_v2",
+                    "billing-seeds/phase-ng-fuchan-kuobang-bundle-24-fix-20260728-v2.json"),
+            new IncrementalSeed("billing_seed_zyy_d1_fold_ganlan_chongxi_fix_20260728_v1",
+                    "billing-seeds/phase-zyy-d1-fold-ganlan-chongxi-fix-20260728.json"),
+            new IncrementalSeed("billing_seed_zyy_d2_ng_special_pricing_fix_20260728_v1",
+                    "billing-seeds/phase-zyy-d2-ng-special-pricing-fix-20260728.json"),
+            new IncrementalSeed("billing_seed_zyy_d2_ng_guasha_tanzhen_per_piece_20260728_v1",
+                    "billing-seeds/phase-zyy-d2-ng-guasha-tanzhen-per-piece-20260728.json"),
+            new IncrementalSeed("billing_seed_wj_ngjy_sd_neau_zero_fold_20260728_v1",
+                    "billing-seeds/phase-wj-ngjy-sd-neau-zero-fold-fix-20260728.json"),
+            new IncrementalSeed("billing_seed_hlj_jyglj_weike_jiaqian_20260728_v1",
+                    "billing-seeds/phase-hlj-jyglj-weike-jiaqian-20260728.json")
     );
 
     private static final String ZYY_D1_P0_MARKER = "billing_seed_zyy_d1_p0_v2";
@@ -232,7 +246,14 @@ public class BillingSeedMigrationRunner implements CommandLineRunner {
                     || "billing-seeds/phase-s7-daowai-wailai-keywords-20260723.json".equals(incremental.classpathFile())
                     || "billing-seeds/phase-sanjing-neilou-instrument-count-fix-20260727.json".equals(incremental.classpathFile())
                     || "billing-seeds/phase-sheng-yy-xf-dept-pricing-20260727.json".equals(incremental.classpathFile())
-                    || "billing-seeds/phase-sheng-yy-xf-shenwai-goudao-20260728.json".equals(incremental.classpathFile())) {
+                    || "billing-seeds/phase-sheng-yy-xf-shenwai-goudao-20260728.json".equals(incremental.classpathFile())
+                    || "billing-seeds/phase-ng-fuchan-kuobang-bundle-24-fix-20260728.json".equals(incremental.classpathFile())
+                    || "billing-seeds/phase-ng-fuchan-kuobang-bundle-24-fix-20260728-v2.json".equals(incremental.classpathFile())
+                    || "billing-seeds/phase-zyy-d1-fold-ganlan-chongxi-fix-20260728.json".equals(incremental.classpathFile())
+                    || "billing-seeds/phase-zyy-d2-ng-special-pricing-fix-20260728.json".equals(incremental.classpathFile())
+                    || "billing-seeds/phase-zyy-d2-ng-guasha-tanzhen-per-piece-20260728.json".equals(incremental.classpathFile())
+                    || "billing-seeds/phase-wj-ngjy-sd-neau-zero-fold-fix-20260728.json".equals(incremental.classpathFile())
+                    || "billing-seeds/phase-hlj-jyglj-weike-jiaqian-20260728.json".equals(incremental.classpathFile())) {
                 applyBatchPatchSeedFile(incremental.classpathFile());
             } else {
                 applied = loadSeedClasspathFile(incremental.classpathFile());
@@ -809,6 +830,14 @@ public class BillingSeedMigrationRunner implements CommandLineRunner {
                     }
                     changed = true;
                 }
+                if (patch.has("setThreshold")) {
+                    rule.setThreshold(intVal(patch, "setThreshold", 5));
+                    changed = true;
+                }
+                if (patch.has("setFoldRatio")) {
+                    rule.setFoldRatio(decimal(patch, "setFoldRatio"));
+                    changed = true;
+                }
                 if (changed) {
                     customerProductRuleMapper.updateById(rule);
                     log.info("Batch patch updated rule {}/{}", code, ruleName);
@@ -979,7 +1008,7 @@ public class BillingSeedMigrationRunner implements CommandLineRunner {
         }
         if (profile.hasNonNull("pathOverride")) {
             String json = profile.get("pathOverride").toString();
-            if (customer.getPathOverride() == null || customer.getPathOverride().isBlank()) {
+            if (!json.equals(customer.getPathOverride())) {
                 customer.setPathOverride(json);
                 changed = true;
             }

@@ -1,0 +1,45 @@
+{
+  "version": "1",
+  "description": "武警0元按包装计价、九院敷料包15元、松电/农大车针全院5合1",
+  "profiles": [
+    {
+      "code": "WJ-HLJ-ZD",
+      "name": "武警黑龙江省总队医院",
+      "billingEnabled": true,
+      "billingPricingMode": "standard",
+      "pathOverride": {
+        "zeroPriceMode": "packaging_type"
+      }
+    }
+  ],
+  "newRules": [
+    {
+      "code": "HRB-NGJY",
+      "ruleType": "ZERO_PRICE_OVERRIDE",
+      "name": "九院敷料包0元覆盖15",
+      "priority": 10,
+      "keywords": ["敷料包"],
+      "price": 15.0,
+      "skipPackaging": true,
+      "skipDiscount": true
+    },
+    {
+      "code": "HRB-SD-MB",
+      "ruleType": "FOLD",
+      "name": "松电车针5件算1件",
+      "priority": 9,
+      "keywords": ["车针"],
+      "threshold": 5,
+      "foldRatio": 5
+    },
+    {
+      "code": "NEAU-YY",
+      "ruleType": "FOLD",
+      "name": "东北农大车针5件算1件",
+      "priority": 9,
+      "keywords": ["车针"],
+      "threshold": 5,
+      "foldRatio": 5
+    }
+  ]
+}

@@ -46,9 +46,19 @@ class PricingEngineS5ErrorCorrectionTest {
     }
 
     @Test
-    @DisplayName("EC-PACK · HRB-NGJY 敷料包无包材 → warning（0 元导入默认价）")
+    @DisplayName("EC-PACK · HRB-NGJY 敷料包无包材 → warning（0 元导入九院15元）")
     void ecPack_unrecognizedDressingPack_yieldsWarning_ngjy() {
-        PricingEngine engine = new PricingEngine(PricingEngineTestSupport.defaultRules());
+        ObjectNode rules = (ObjectNode) PricingEngineTestSupport.defaultRules();
+        ObjectNode specialRules = (ObjectNode) rules.path("specialRules");
+        ArrayNode zeroOverrides = specialRules.withArray("zeroPriceOverrides");
+        ObjectNode zeroRule = zeroOverrides.addObject();
+        zeroRule.put("name", "九院敷料包0元覆盖15");
+        zeroRule.putArray("hospitals").add("哈尔滨市南岗区人民医院（九院）");
+        zeroRule.putArray("keywords").add("敷料包");
+        zeroRule.put("price", 15.0);
+        zeroRule.put("skipPackaging", true);
+
+        PricingEngine engine = new PricingEngine(rules);
         Map<String, Object> row = PricingEngineTestSupport.row(
                 "哈尔滨市南岗区人民医院（九院）",
                 "敷料包",
@@ -62,8 +72,8 @@ class PricingEngineS5ErrorCorrectionTest {
         PricingEngine.ProcessedResult result = engine.processRow(row);
 
         assertThat(result.status).isEqualTo("warning");
-        assertThat(result.expectedUnitPrice).isEqualTo(25.0);
-        assertThat(result.difference).isEqualTo(25.0);
+        assertThat(result.expectedUnitPrice).isEqualTo(15.0);
+        assertThat(result.difference).isEqualTo(15.0);
         assertThat(result.notes).anyMatch(n -> n.contains("0 元导入"));
     }
 

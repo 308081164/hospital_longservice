@@ -30,16 +30,27 @@ public final class BillingConditionEvaluator {
         return false;
     }
 
+    /** 规则匹配前统一全角括号与空白，避免账单半角括号导致关键词未命中。 */
+    public static String normalizeMatchText(String text) {
+        if (text == null) {
+            return "";
+        }
+        return text
+                .replace('（', '(')
+                .replace('）', ')')
+                .replace('【', '[')
+                .replace('】', ']')
+                .replaceAll("\\s+", "");
+    }
+
     public static boolean matchesKeywords(String text, JsonNode keywords) {
         if (keywords == null || !keywords.isArray() || keywords.isEmpty()) {
             return false;
         }
-        if (text == null) {
-            text = "";
-        }
+        String normalizedText = normalizeMatchText(text).toLowerCase();
         for (JsonNode kw : keywords) {
-            String keyword = kw.asText("");
-            if (!keyword.isBlank() && text.contains(keyword)) {
+            String keyword = normalizeMatchText(kw.asText("")).toLowerCase();
+            if (!keyword.isBlank() && normalizedText.contains(keyword)) {
                 return true;
             }
         }

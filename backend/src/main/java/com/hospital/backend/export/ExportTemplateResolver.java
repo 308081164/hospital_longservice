@@ -81,7 +81,10 @@ public class ExportTemplateResolver {
             case SETTLEMENT -> DEFAULT_SETTLEMENT_STRATEGY;
             case DEPT_SUMMARY -> ExportTemplateResolverKeys.STANDARD_DEPT_SUMMARY;
             case DAILY -> ExportTemplateResolverKeys.DAILY_SPLIT;
-            case PRICE_SUMMARY -> ExportTemplateResolverKeys.ORCHESTRATED_L3;
+            case PRICE_SUMMARY -> ExportTemplateResolverKeys.PRICE_SUMMARY;
+            case INSTRUMENT_AUDIT -> ExportTemplateResolverKeys.INSTRUMENT_AUDIT;
+            case LOGISTICS_ALLOCATION -> ExportTemplateResolverKeys.LOGISTICS_ALLOCATION;
+            case GRAND_TOTAL -> ExportTemplateResolverKeys.GRAND_TOTAL;
             default -> DEFAULT_BILL_STRATEGY;
         };
         return ResolvedExportTemplate.builder()

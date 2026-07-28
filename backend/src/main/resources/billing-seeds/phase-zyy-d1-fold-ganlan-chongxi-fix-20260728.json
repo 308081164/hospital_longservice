@@ -1,0 +1,18 @@
+{
+  "version": "1",
+  "description": "附一 ZYY-D1：橄榄头/冲洗头 FOLD 规则 foldRatio 1→5（五件算一件）",
+  "ruleUpdates": [
+    {
+      "code": "ZYY-D1",
+      "ruleName": "橄榄头5件算1件",
+      "setFoldRatio": 5,
+      "setThreshold": 5
+    },
+    {
+      "code": "ZYY-D1",
+      "ruleName": "冲洗头5件算1件",
+      "setFoldRatio": 5,
+      "setThreshold": 5
+    }
+  ]
+}

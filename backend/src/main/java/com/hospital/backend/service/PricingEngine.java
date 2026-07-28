@@ -97,9 +97,10 @@ public class PricingEngine {
 
         boolean isLowTempType = !disableLowTemp
                 && (type.contains("低温") || type.contains("ETO") || type.contains("EO"));
+        boolean isZsdInstrumentPack = isZsdInstrumentPackType(type);
 
         int effectiveCount = instrumentCount;
-        if (packCount > 1) {
+        if (packCount > 1 && !isZsdInstrumentPack) {
             effectiveCount = Math.max(1, (int) Math.round((double) effectiveCount / packCount));
         }
         if (effectiveCount == 0) effectiveCount = 1;
@@ -158,8 +159,9 @@ public class PricingEngine {
         }
 
         // 甲方测试中补充的小件折算规则，例如：机扩针/镍钛锉 5 件算 1 件。
+        // 器械包(ZSD) 按单包器械总数阶梯计费，包名含「克氏针」等小件词也不折算。
         boolean appliedSpecialFoldRule = false;
-        if (preMatchedSpecialPrice == null) {
+        if (preMatchedSpecialPrice == null && !isZsdInstrumentPack) {
             int countBeforeSpecialFold = effectiveCount;
             effectiveCount = applySpecialFoldRules(row, bagSize, effectiveCount, notes);
             appliedSpecialFoldRule = effectiveCount != countBeforeSpecialFold;
@@ -170,7 +172,7 @@ public class PricingEngine {
         java.util.regex.Pattern needleQtyPattern = java.util.regex.Pattern.compile("针(\\d+)");
         java.util.regex.Matcher needleQtyMatcher = needleQtyPattern.matcher(packName);
         boolean appliedNeedleRule = false;
-        if (preMatchedSpecialPrice == null && !appliedSpecialFoldRule && needleQtyMatcher.find()) {
+        if (preMatchedSpecialPrice == null && !appliedSpecialFoldRule && !isZsdInstrumentPack && needleQtyMatcher.find()) {
             String[] parts = packName.split("针\\d+", 2);
             String beforeNeedle = parts[0];
             String afterNeedle = parts.length > 1 ? parts[1] : "";
@@ -200,7 +202,7 @@ public class PricingEngine {
             }
         }
         if (preMatchedSpecialPrice == null && !appliedSpecialFoldRule && !appliedNeedleRule
-                && !isLiposuctionNeedleLongVariant(packName)) {
+                && !isLiposuctionNeedleLongVariant(packName) && !isZsdInstrumentPack) {
             SmallItemSplit smallSplit = findSmallItemSplit(packName, needle.path("keywords"));
             if (smallSplit != null) {
                 int threshold = needle.path("threshold").asInt(5);
@@ -276,6 +278,9 @@ public class PricingEngine {
                     expectedUnitPrice = dressPrice;
                     pricingRule = "敷料包(无纺布包)——" + measure;
                     notes.add("敷料包规格 " + measure + "，按敷料包定价表计算单价为 " + fmt(expectedUnitPrice) + " 元。");
+                    if (unitPrice != null && Math.abs(dressPrice - unitPrice) <= 0.05) {
+                        expectedUnitPrice = unitPrice;
+                    }
                 } else {
                     pricingRule = "敷料包(无纺布包)——未匹配定价";
                     notes.add("敷料包规格 " + measure + " 未命中定价表（<90→25, =90→30, 1.2~1.5→35），保留原始价格。");
@@ -345,7 +350,9 @@ public class PricingEngine {
         } else {
             pricingRule = "未识别包装类型，保留原价";
             notes.add("包装材料\"" + packageMaterial + "\"未能识别为纸塑袋或无纺布，已保留原始价格，请检查包装材料列填写是否正确，或手动调整单价。");
-            requiresReview = true;
+            if (unitPrice == null || isZeroImport(unitPrice, totalPrice)) {
+                requiresReview = true;
+            }
         }
 
         if (specialPrice == null && expectedUnitPrice != null) {
@@ -673,7 +680,10 @@ public class PricingEngine {
         }
         if (Double.isNaN(basePrice)) return null;
         boolean pricePerInstrument = rule.path("pricePerInstrument").asBoolean(false);
-        result.price = pricePerInstrument ? round(basePrice * Math.max(1, effectiveCount)) : basePrice;
+        int billingCount = pricePerInstrument
+                ? resolvePricePerInstrumentCount(rule, str(row, "packName"), combined, effectiveCount)
+                : effectiveCount;
+        result.price = pricePerInstrument ? round(basePrice * Math.max(1, billingCount)) : basePrice;
         result.ruleName = rule.path("name").asText("特殊固定单价");
         result.ruleId = rule.has("ruleId") ? rule.path("ruleId").asLong() : null;
         result.anyPriceMode = "any_price".equalsIgnoreCase(matchMode) && !acceptedPrices.isEmpty();
@@ -682,12 +692,30 @@ public class PricingEngine {
         result.skipHospitalDiscount = rule.path("skipHospitalDiscount").asBoolean(false);
         result.note = pricePerInstrument
                 ? result.ruleName + "，按每件 " + fmt(basePrice) + " 元，单包计费件数 "
-                + Math.max(1, effectiveCount) + " 件，单价按 " + fmt(result.price) + " 元。"
+                + Math.max(1, billingCount) + " 件，单价按 " + fmt(result.price) + " 元。"
                 : result.ruleName + "，单价按 " + fmt(result.price) + " 元。";
         if (result.anyPriceMode) {
             result.note += "（多报价候选：" + formatPriceList(acceptedPrices) + "）";
         }
         return result;
+    }
+
+    /** 刮勺探针x：按包名后缀 x 作为按件计价件数（5.5×x） */
+    private int resolvePricePerInstrumentCount(JsonNode rule, String packName, String combined, int effectiveCount) {
+        if (packName == null || !rule.path("keywords").isArray()) {
+            return effectiveCount;
+        }
+        for (JsonNode kwNode : rule.path("keywords")) {
+            if (!"刮勺探针".equals(kwNode.asText())) {
+                continue;
+            }
+            if (!combined.contains("刮勺探针")) {
+                return effectiveCount;
+            }
+            int suffix = extractLastNumber(packName.split("/")[0]);
+            return suffix > 0 ? suffix : effectiveCount;
+        }
+        return effectiveCount;
     }
 
     private List<Double> parseAcceptedPrices(JsonNode acceptedPricesNode) {
@@ -777,13 +805,6 @@ public class PricingEngine {
      */
     private SpecialPriceResult resolveZeroPriceOverride(
             Map<String, Object> row, JsonNode pathOverride, Double unitPrice) {
-        if (pathOverride == null || pathOverride.isMissingNode()) {
-            return null;
-        }
-        String zeroPriceMode = pathOverride.path("zeroPriceMode").asText("");
-        if (zeroPriceMode.isBlank()) {
-            return null;
-        }
         if (unitPrice != null && Math.abs(unitPrice) > 0.001) {
             return null;
         }
@@ -808,6 +829,10 @@ public class PricingEngine {
                 return result;
             }
         }
+        JsonNode pathOverrideSafe = pathOverride == null || pathOverride.isMissingNode()
+                ? mapper.createObjectNode()
+                : pathOverride;
+        String zeroPriceMode = pathOverrideSafe.path("zeroPriceMode").asText("");
         if ("packaging_type".equalsIgnoreCase(zeroPriceMode)) {
             return resolvePackagingTypeZeroPrice(row, combined);
         }
@@ -817,17 +842,22 @@ public class PricingEngine {
     private SpecialPriceResult resolvePackagingTypeZeroPrice(Map<String, Object> row, String combined) {
         String packageMaterial = str(row, "packageMaterial");
         String packName = str(row, "packName");
+        String type = str(row, "type");
+        String normalized = BillingConditionEvaluator.normalizeMatchText(
+                type + packName + packageMaterial + combined).toLowerCase();
         Double price = null;
         String label = null;
-        if (packageMaterial.contains("无纺布")) {
+        if (containsPackagingKeyword(normalized, "无纺布")) {
             price = 20.0;
             label = "无纺布";
-        } else if (packageMaterial.contains("纸塑袋")) {
+        } else if (containsPackagingKeyword(normalized, "纸塑袋")) {
             price = 8.0;
             label = "纸塑袋";
-        } else if (packName.contains("过氧化氢") || combined.contains("过氧化氢")) {
+        } else if (containsPackagingKeyword(normalized, "环氧乙烷")
+                || normalized.contains("过氧化氢")
+                || containsLowTempSterilantKeyword(normalized)) {
             price = 35.0;
-            label = "过氧化氢";
+            label = "环氧乙烷";
         }
         if (price == null) {
             return null;
@@ -839,6 +869,27 @@ public class PricingEngine {
         result.skipHospitalDiscount = false;
         result.note = "0 元导入，按" + label + "规则单价 " + fmt(price) + " 元。";
         return result;
+    }
+
+    private boolean containsPackagingKeyword(String normalizedText, String keyword) {
+        return normalizedText.contains(BillingConditionEvaluator.normalizeMatchText(keyword).toLowerCase());
+    }
+
+    private boolean containsLowTempSterilantKeyword(String normalizedText) {
+        if (normalizedText.contains("eto")) {
+            return true;
+        }
+        int idx = 0;
+        while ((idx = normalizedText.indexOf("eo", idx)) != -1) {
+            char prev = idx > 0 ? normalizedText.charAt(idx - 1) : 0;
+            char next = idx + 2 < normalizedText.length() ? normalizedText.charAt(idx + 2) : 0;
+            if ((prev == 0 || !Character.isLetter(prev))
+                    && (next == 0 || !Character.isLetter(next))) {
+                return true;
+            }
+            idx += 2;
+        }
+        return false;
     }
 
     private AppliedDiscount applyScopedDiscounts(
@@ -1414,7 +1465,12 @@ public class PricingEngine {
         java.util.regex.Matcher m = java.util.regex.Pattern.compile("(\\d+(?:\\.\\d+)?)\\s*[×x*]\\s*\\d+")
                 .matcher(material);
         if (m.find()) {
-            return Double.parseDouble(m.group(1));
+            double measure = Double.parseDouble(m.group(1));
+            // 150×150 等填写为 cm，定价表 1.2~1.5 为米
+            if (measure >= 100) {
+                measure = measure / 100.0;
+            }
+            return measure;
         }
         return null;
     }
@@ -1510,9 +1566,9 @@ public class PricingEngine {
 
     private boolean matchesKeywords(String text, JsonNode keywords) {
         if (!keywords.isArray()) return false;
-        String normalized = text.replaceAll("\\s+", "").toLowerCase();
+        String normalized = BillingConditionEvaluator.normalizeMatchText(text).toLowerCase();
         for (JsonNode kw : keywords) {
-            String raw = kw.asText().replaceAll("\\s+", "").toLowerCase();
+            String raw = BillingConditionEvaluator.normalizeMatchText(kw.asText()).toLowerCase();
             if (raw.isEmpty()) continue;
             for (String k : raw.split("[，,]")) {
                 if (!k.isEmpty() && normalized.contains(k)) return true;
@@ -1797,10 +1853,19 @@ public class PricingEngine {
             return packageMaterial == null ? "" : packageMaterial;
         }
         String normalized = type.replaceAll("\\s+", "");
-        if (normalized.contains("器械包(ZSD)") || (normalized.contains("器械包") && normalized.toUpperCase().contains("ZSD"))) {
+        if (isZsdInstrumentPackType(type)) {
             notes.add("器械包(ZSD)未填写包装材料，按高温无纺布标准阶梯计费。");
             return "无纺布";
         }
         return packageMaterial == null ? "" : packageMaterial;
+    }
+
+    private boolean isZsdInstrumentPackType(String type) {
+        if (type == null || type.isBlank()) {
+            return false;
+        }
+        String normalized = type.replaceAll("\\s+", "");
+        return normalized.contains("器械包(ZSD)")
+                || (normalized.contains("器械包") && normalized.toUpperCase().contains("ZSD"));
     }
 }

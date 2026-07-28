@@ -149,7 +149,7 @@
           "priority": 15,
           "keywords": ["橄榄头"],
           "threshold": 5,
-          "foldRatio": 1,
+          "foldRatio": 5,
           "skipPackaging": true,
           "skipDiscount": true
         },
@@ -159,7 +159,7 @@
           "priority": 16,
           "keywords": ["冲洗头"],
           "threshold": 5,
-          "foldRatio": 1,
+          "foldRatio": 5,
           "skipPackaging": true,
           "skipDiscount": true
         },

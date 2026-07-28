@@ -423,8 +423,8 @@ def compare_bills(expected: Path, actual: Path, tolerance: float = 1.0, folder: 
     )
 
 
-def export_bill(token: str, job_id: int, dest: Path) -> None:
-    container_tmp = f"/tmp/s8_job_{job_id}.xlsx"
+def export_bill(token: str, job_id: int, dest: Path, export_type: str = "bill") -> None:
+    container_tmp = f"/tmp/s8_job_{job_id}_{export_type}.xlsx"
     docker_curl(
         [
             "-X",
@@ -435,7 +435,7 @@ def export_bill(token: str, job_id: int, dest: Path) -> None:
             "-H",
             "Content-Type: application/json",
             "-d",
-            '{"exportType":"bill","useStrategyEngine":true}',
+            f'{{"exportType":"{export_type}","useStrategyEngine":true}}',
             "-o",
             container_tmp,
         ]
@@ -657,6 +657,12 @@ def parse_args() -> argparse.Namespace:
         default=2.0,
         help="每次 export-v2 间隔秒数，减轻 backend OOM（默认 2）",
     )
+    p.add_argument(
+        "--export-type",
+        default="bill",
+        choices=["bill", "dept_summary", "price_summary", "instrument_audit", "logistics_allocation", "grand_total"],
+        help="export-v2 类型（非 bill 时仅验证导出成功，不做处理后表逐行比对）",
+    )
     return p.parse_args()
 
 
@@ -737,9 +743,9 @@ def main() -> int:
             print(f"⏭ {folder}: {entry['detail']}")
             continue
 
-        out_path = EXPORT_DIR / f"job{job_id}_{folder.replace('/', '_')}.xlsx"
+        out_path = EXPORT_DIR / f"job{job_id}_{folder.replace('/', '_')}_{args.export_type}.xlsx"
         try:
-            export_bill(token, job_id, out_path)
+            export_bill(token, job_id, out_path, args.export_type)
         except (subprocess.CalledProcessError, RuntimeError) as exc:
             entry["status"] = "fail"
             entry["detail"] = f"export-v2 失败 Job #{job_id}: {exc}"
@@ -748,6 +754,18 @@ def main() -> int:
             folder_icons[folder] = board_icon("fail")
             results.append(entry)
             print(f"🚫 {folder}: {entry['detail']}")
+            if args.export_sleep > 0:
+                time.sleep(args.export_sleep)
+            continue
+        if args.export_type != "bill":
+            entry["status"] = "pass"
+            entry["detail"] = f"export-v2 {args.export_type} 成功 Job #{job_id}"
+            entry["job_id"] = job_id
+            entry["export_file"] = str(out_path.relative_to(ROOT))
+            entry["category"] = classify_result(entry)
+            folder_icons[folder] = board_icon("pass")
+            results.append(entry)
+            print(f"✅ {folder} Job #{job_id}: {entry['detail']}")
             if args.export_sleep > 0:
                 time.sleep(args.export_sleep)
             continue

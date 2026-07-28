@@ -88,6 +88,21 @@ class ZyyD1P0PricingRegressionTest {
         assertUnchanged(row("持针器", "额外包(ETO)", "低温灭菌 20cm", 1, 1, 22.38, 22.38));
     }
 
+    @Test
+    void shouldFoldGanlanAndChongxiHeadFivePiecesIntoOne() {
+        PricingEngine.ProcessedResult ganlan20 = engine.processRow(row(
+                "橄榄头-20/Z2030", "额外包(低温等离子)", "低温纸塑袋200*300", 20, 1, 70.4, 1408));
+        assertThat(ganlan20.notes).anyMatch(n -> n.contains("橄榄头5件算1件") && n.contains("折算为 4 件"));
+
+        PricingEngine.ProcessedResult chongxi5 = engine.processRow(row(
+                "冲洗头-50/z2030", "额外包(低温等离子)", "低温纸塑袋200*300", 5, 1, 240, 240));
+        assertThat(chongxi5.notes).anyMatch(n -> n.contains("冲洗头5件算1件") && n.contains("折算为 1 件"));
+
+        PricingEngine.ProcessedResult chongxi120Fixed = engine.processRow(row(
+                "冲洗头-120/z2030", "额外包(低温等离子)", "低温纸塑袋200*300", 120, 1, 328, 328));
+        assertThat(chongxi120Fixed.notes).noneMatch(n -> n.contains("冲洗头5件算1件"));
+    }
+
     private static void deepMerge(ObjectNode target, ObjectNode patch) {
         patch.fields().forEachRemaining(entry -> {
             String key = entry.getKey();
