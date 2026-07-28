@@ -13,7 +13,8 @@
           "priority": 3,
           "price": 35,
           "keywords": ["敷料包/W12050"],
-          "skipPackaging": true
+          "skipPackaging": true,
+          "conditionsJson": "[{\"field\":\"exportApply\",\"value\":true}]"
         },
         {
           "ruleType": "FIXED_PRICE",
@@ -21,7 +22,8 @@
           "priority": 3,
           "price": 22,
           "keywords": ["硅胶珠子7号"],
-          "skipPackaging": true
+          "skipPackaging": true,
+          "conditionsJson": "[{\"field\":\"exportApply\",\"value\":true}]"
         }
       ]
     },
@@ -36,7 +38,8 @@
           "priority": 3,
           "price": 35,
           "keywords": ["大衣-无纺布"],
-          "skipPackaging": true
+          "skipPackaging": true,
+          "conditionsJson": "[{\"field\":\"exportApply\",\"value\":true}]"
         }
       ]
     }

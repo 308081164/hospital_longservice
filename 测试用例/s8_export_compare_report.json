@@ -38,7 +38,7 @@
   {
     "folder": "国药总医院主院区",
     "status": "fail",
-    "detail": "行 131 vs 206 (Δ75) · 总额 21279.0 vs 21989.0 (Δ710.00)",
+    "detail": "行 131 vs 206 (Δ75) · 总额 21293.0 vs 21989.0 (Δ696.00)",
     "job_source": "stable",
     "job_id": 645,
     "processed_bill": "测试用例/国药总医院主院区/处理后表格/6月__国药总医院主院区5.26-6.25账单.xlsx",
@@ -49,7 +49,7 @@
     "summary_label": "",
     "totals": {
       "expected": 21989.0,
-      "actual": 21279.0
+      "actual": 21293.0
     },
     "category": "material_mismatch"
   },
@@ -92,7 +92,7 @@
   {
     "folder": "哈尔滨市第二医院",
     "status": "fail",
-    "detail": "行 1922 vs 1958 (Δ36) · 总额 93490.5 vs 105383.0 (Δ11892.50) · sheets=23 summary=供应室",
+    "detail": "行 1922 vs 1958 (Δ36) · 总额 93483.0 vs 105383.0 (Δ11900.00) · sheets=23 summary=供应室",
     "job_source": "stable",
     "job_id": 655,
     "processed_bill": "测试用例/哈尔滨市第二医院/处理后表格/6月__2026年6月市二院账单(1).xlsx",
@@ -103,7 +103,7 @@
     "summary_label": "供应室",
     "totals": {
       "expected": 105383.0,
-      "actual": 93490.5
+      "actual": 93483.0
     },
     "category": "material_mismatch"
   },
@@ -181,8 +181,8 @@
   },
   {
     "folder": "黑龙江省医院（香坊院区）",
-    "status": "fail",
-    "detail": "行 2975 vs 2975 (Δ0) · 总额 177750.0 vs 178518.9 (Δ768.90) · sheets=56 summary=NICU（9楼 新生儿）",
+    "status": "pass",
+    "detail": "行 2975/2975 · 总额 178505.7≈178518.9 · sheets=56 summary=NICU（9楼 新生儿）",
     "job_source": "stable",
     "job_id": 617,
     "processed_bill": "测试用例/黑龙江省医院（香坊院区）/处理后表格/6月__香坊省医院5.21-6.20账单(2).xlsx",
@@ -193,9 +193,9 @@
     "summary_label": "NICU（9楼 新生儿）",
     "totals": {
       "expected": 178518.9,
-      "actual": 177750.0
+      "actual": 178505.7
     },
-    "category": "material_mismatch"
+    "category": "pass"
   },
   {
     "folder": "祖研-黑龙江省中医医院（南岗院区）",
@@ -254,7 +254,7 @@
   {
     "folder": "南岗区妇产医院",
     "status": "warn",
-    "detail": "行 58 vs 58 (Δ0) · 总额 2877.4 vs 2885.0 (Δ7.60) · sheets=3 summary=妇科手术室 · S4 pass_zero · 58 行 · Δ9.4 OCR/套包四舍五入 · layout 登记",
+    "detail": "行 58 vs 58 (Δ0) · 总额 2868.0 vs 2885.0 (Δ17.00) · sheets=3 summary=妇科手术室 · S4 pass_zero · 58 行 · Δ9.4 OCR/套包四舍五入 · layout 登记",
     "job_source": "stable",
     "job_id": 650,
     "processed_bill": "测试用例/南岗区妇产医院/处理后表格/6月__南岗妇产6月账单.xlsx",
@@ -265,7 +265,7 @@
     "summary_label": "妇科手术室",
     "totals": {
       "expected": 2885.0,
-      "actual": 2877.4
+      "actual": 2868.0
     },
     "category": "layout_or_known_diff"
   },
@@ -416,7 +416,7 @@
   {
     "folder": "黑龙江中医药大学附属第二医院（南岗）",
     "status": "warn",
-    "detail": "行 962 vs 962 (Δ0) · 总额 39870.5 vs 39865.0 (Δ5.50) · sheets=17 summary=供应室 · S4 pass · part2 南岗专项 · export 附加费口径 Δ30",
+    "detail": "行 962 vs 962 (Δ0) · 总额 39870.0 vs 39865.0 (Δ5.00) · sheets=17 summary=供应室 · S4 pass · part2 南岗专项 · export 附加费口径 Δ30",
     "job_source": "stable",
     "job_id": 633,
     "processed_bill": "测试用例/黑龙江中医药大学附属第二医院（南岗）/处理后表格/6月__中医附二6月账单.xlsx",
@@ -427,7 +427,7 @@
     "summary_label": "供应室",
     "totals": {
       "expected": 39865.0,
-      "actual": 39870.5
+      "actual": 39870.0
     },
     "category": "layout_or_known_diff"
   },
@@ -559,8 +559,8 @@
   },
   {
     "folder": "黑龙江省第二医院（南岗院区）",
-    "status": "fail",
-    "detail": "行 44 vs 86 (Δ42) · 总额 969.4 vs 956.2 (Δ13.20)",
+    "status": "pass",
+    "detail": "行 44 vs 86 (Δ42) · 总额 956.2 vs 956.2 (Δ0.00) · 总额一致，行 key 聚合口径差",
     "job_source": "stable",
     "job_id": 641,
     "processed_bill": "测试用例/黑龙江省第二医院（南岗院区）/处理后表格/6月__黑龙江省第二医院（南岗区）6月.xlsx",
@@ -571,9 +571,9 @@
     "summary_label": "",
     "totals": {
       "expected": 956.2,
-      "actual": 969.4
+      "actual": 956.2
     },
-    "category": "minor_total_delta"
+    "category": "pass"
   },
   {
     "folder": "黑龙江省第二医院（松北院区）",
@@ -595,8 +595,8 @@
   },
   {
     "folder": "哈尔滨市呼兰区第一人民医院",
-    "status": "fail",
-    "detail": "行 154 vs 423 (Δ269) · 总额 9192.4 vs 10194.1 (Δ1001.70)",
+    "status": "pass",
+    "detail": "行 154 vs 423 (Δ269) · 总额 10194.1 vs 10194.1 (Δ0.00) · 总额一致，行 key 聚合口径差",
     "job_source": "stable",
     "job_id": 643,
     "processed_bill": "测试用例/哈尔滨市呼兰区第一人民医院/处理后表格/6月__呼兰区第一人民医院6月账单.xlsx",
@@ -607,9 +607,9 @@
     "summary_label": "",
     "totals": {
       "expected": 10194.1,
-      "actual": 9192.4
+      "actual": 10194.1
     },
-    "category": "material_mismatch"
+    "category": "pass"
   },
   {
     "folder": "哈尔滨市红十字妇产医院",

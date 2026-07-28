@@ -1,0 +1,26 @@
+{
+  "version": "1",
+  "description": "S8 波次3 收尾：ExportFixedPrice 回归修复 — 香坊胸腔镜 exclude · 长健/附二 exportApply",
+  "ruleUpdates": [
+    {
+      "code": "SHENG-YY-XF",
+      "ruleName": "手术室额外包胸腔镜19.8",
+      "addExcludeKeywords": ["-21"]
+    },
+    {
+      "code": "CHANGJIAN",
+      "ruleName": "长健敷料包W12050",
+      "conditionsJson": "[{\"field\":\"exportApply\",\"value\":true}]"
+    },
+    {
+      "code": "CHANGJIAN",
+      "ruleName": "长健硅胶珠子22",
+      "conditionsJson": "[{\"field\":\"exportApply\",\"value\":true}]"
+    },
+    {
+      "code": "ZYY-D2-NG",
+      "ruleName": "附二南岗大衣无纺布35",
+      "conditionsJson": "[{\"field\":\"exportApply\",\"value\":true}]"
+    }
+  ]
+}

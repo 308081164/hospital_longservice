@@ -23,6 +23,7 @@ class ExportFixedPriceApplierTest {
         ObjectNode rule = fixedPrices.addObject();
         rule.put("name", "长健敷料包");
         rule.put("price", 35);
+        rule.put("exportApply", true);
         rule.putArray("keywords").add("敷料包/W12050");
 
         BillRowItem row = new BillRowItem();
@@ -44,9 +45,11 @@ class ExportFixedPriceApplierTest {
         ArrayNode fixedPrices = special.putArray("fixedPrices");
         ObjectNode wufang = fixedPrices.addObject();
         wufang.put("price", 35);
+        wufang.put("exportApply", true);
         wufang.putArray("keywords").add("大衣-无纺布");
         ObjectNode dayi = fixedPrices.addObject();
         dayi.put("price", 30);
+        dayi.put("exportApply", true);
         dayi.putArray("keywords").add("大衣");
 
         BillRowItem row = new BillRowItem();
@@ -57,5 +60,58 @@ class ExportFixedPriceApplierTest {
 
         List<BillRowItem> result = applier.apply(rules, List.of(row));
         assertThat(result.get(0).getCorrectedTotalPrice()).isEqualTo(70.0);
+    }
+
+    @Test
+    void skipsExportFixedPriceWhenCorrectedTotalPresentWithoutExportApply() throws Exception {
+        ObjectNode rules = mapper.createObjectNode();
+        ObjectNode special = rules.putObject("specialRules");
+        ArrayNode fixedPrices = special.putArray("fixedPrices");
+        ObjectNode rule = fixedPrices.addObject();
+        rule.put("price", 19.8);
+        rule.putArray("keywords").add("胸腔镜");
+        rule.putArray("departments").add("手术室");
+
+        BillRowItem row = new BillRowItem();
+        row.setSheetName("NICU（9楼 新生儿）");
+        row.setPackName("胸腔镜-21");
+        row.setPackCount(1);
+        row.setUnitPrice(180.0);
+        row.setCorrectedTotalPrice(180.0);
+        row.setStatus("unchanged");
+
+        List<BillRowItem> result = applier.apply(rules, List.of(row));
+        assertThat(result.get(0).getCorrectedTotalPrice()).isEqualTo(180.0);
+    }
+
+    @Test
+    void respectsDepartmentAndExcludeKeywordsForExportApplyRules() throws Exception {
+        ObjectNode rules = mapper.createObjectNode();
+        ObjectNode special = rules.putObject("specialRules");
+        ArrayNode fixedPrices = special.putArray("fixedPrices");
+        ObjectNode rule = fixedPrices.addObject();
+        rule.put("price", 19.8);
+        rule.put("exportApply", true);
+        rule.putArray("keywords").add("胸腔镜");
+        rule.putArray("excludeKeywords").add("-21");
+        rule.putArray("departments").add("手术室");
+
+        BillRowItem thoracic = new BillRowItem();
+        thoracic.setSheetName("手术室");
+        thoracic.setPackName("胸腔镜-21");
+        thoracic.setPackCount(1);
+        thoracic.setCorrectedTotalPrice(180.0);
+        thoracic.setStatus("unchanged");
+
+        BillRowItem extra = new BillRowItem();
+        extra.setSheetName("手术室");
+        extra.setPackName("胸腔镜");
+        extra.setPackCount(1);
+        extra.setCorrectedTotalPrice(50.0);
+        extra.setStatus("unchanged");
+
+        List<BillRowItem> result = applier.apply(rules, List.of(thoracic, extra));
+        assertThat(result.get(0).getCorrectedTotalPrice()).isEqualTo(180.0);
+        assertThat(result.get(1).getCorrectedTotalPrice()).isEqualTo(19.8);
     }
 }

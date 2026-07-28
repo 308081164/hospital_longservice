@@ -412,9 +412,24 @@ public class PricingRuleCompiler {
         }
         if (rule.getConditionsJson() != null && !rule.getConditionsJson().isBlank()) {
             try {
-                node.set("conditions", MAPPER.readTree(rule.getConditionsJson()));
+                JsonNode conditions = MAPPER.readTree(rule.getConditionsJson());
+                node.set("conditions", conditions);
+                appendExportApplyFromConditions(node, conditions);
             } catch (Exception ignored) {
                 // ignore malformed JSON
+            }
+        }
+    }
+
+    private void appendExportApplyFromConditions(ObjectNode node, JsonNode conditions) {
+        if (!conditions.isArray()) {
+            return;
+        }
+        for (JsonNode cond : conditions) {
+            if ("exportApply".equalsIgnoreCase(cond.path("field").asText())
+                    && cond.path("value").asBoolean(false)) {
+                node.put("exportApply", true);
+                return;
             }
         }
     }

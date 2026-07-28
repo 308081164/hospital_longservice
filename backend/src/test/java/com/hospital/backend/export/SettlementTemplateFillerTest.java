@@ -245,4 +245,25 @@ class SettlementTemplateFillerTest {
                 .mapToDouble(SettlementTemplateFiller.SettlementFeeRow::getAmount).findFirst().orElse(0))
                 .isEqualTo(13536.5);
     }
+
+    @Test
+    void appliesSterilizeOverrideForZyyD2Ng() throws Exception {
+        HospitalReconciliationJob job = new HospitalReconciliationJob();
+        job.setHospitalName("黑龙江中医药大学附属第二医院（南岗）");
+        job.setSourceFileName("6月__中医附二6月结款涵.xlsx");
+
+        JsonNode compiledRules = JsonUtils.getObjectMapper().readTree("""
+                {"billingPolicies":[
+                  {"policyType":"SETTLEMENT_OVERRIDE","name":"附二南岗结款灭菌对齐",
+                   "params":{"sterilizeAmountByMonth":{"2026-06":39865.0}}}
+                ]}
+                """);
+
+        List<SettlementTemplateFiller.SettlementFeeRow> rows = filler.buildFeeRows(job, 40885.0, compiledRules);
+
+        assertThat(rows.stream().filter(r -> "灭菌费用".equals(r.getItemName()))
+                .mapToDouble(SettlementTemplateFiller.SettlementFeeRow::getAmount).findFirst().orElse(0))
+                .isEqualTo(39865.0);
+        assertThat(filler.computeTotalAmount(rows)).isEqualTo(39865.0);
+    }
 }

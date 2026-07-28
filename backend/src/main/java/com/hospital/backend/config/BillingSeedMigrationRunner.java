@@ -180,6 +180,12 @@ public class BillingSeedMigrationRunner implements CommandLineRunner {
             new IncrementalSeed("billing_seed_settlement_wave3_20260728_v2",
                     "billing-seeds/phase-settlement-wave3-20260728.json"),
             new IncrementalSeed("billing_seed_settlement_wave3_20260728_v3",
+                    "billing-seeds/phase-settlement-wave3-20260728.json"),
+            new IncrementalSeed("billing_seed_bill_wave3_close_20260728_v1",
+                    "billing-seeds/phase-bill-wave3-close-20260728.json"),
+            new IncrementalSeed("billing_seed_settlement_wave3_20260728_v4",
+                    "billing-seeds/phase-settlement-wave3-20260728.json"),
+            new IncrementalSeed("billing_seed_settlement_wave3_20260728_v5",
                     "billing-seeds/phase-settlement-wave3-20260728.json")
     );
 
@@ -280,7 +286,8 @@ public class BillingSeedMigrationRunner implements CommandLineRunner {
                     || "billing-seeds/phase-zyy-d2-ng-special-pricing-fix-20260728.json".equals(incremental.classpathFile())
                     || "billing-seeds/phase-zyy-d2-ng-guasha-tanzhen-per-piece-20260728.json".equals(incremental.classpathFile())
                     || "billing-seeds/phase-wj-ngjy-sd-neau-zero-fold-fix-20260728.json".equals(incremental.classpathFile())
-                    || "billing-seeds/phase-hlj-jyglj-weike-jiaqian-20260728.json".equals(incremental.classpathFile())) {
+                    || "billing-seeds/phase-hlj-jyglj-weike-jiaqian-20260728.json".equals(incremental.classpathFile())
+                    || "billing-seeds/phase-bill-wave3-close-20260728.json".equals(incremental.classpathFile())) {
                 applyBatchPatchSeedFile(incremental.classpathFile());
             } else {
                 applied = loadSeedClasspathFile(incremental.classpathFile());

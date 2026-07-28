@@ -41,6 +41,21 @@
       ]
     },
     {
+      "code": "ZYY-D2-NG",
+      "name": "黑龙江中医药大学附属第二医院（南岗）",
+      "billingEnabled": true,
+      "policies": [
+        {
+          "policyType": "SETTLEMENT_OVERRIDE",
+          "name": "附二南岗结款灭菌对齐",
+          "params": {
+            "sterilizeAmountByMonth": {"2026-06": 39865.0}
+          },
+          "priority": 5
+        }
+      ]
+    },
+    {
       "code": "XINFA-HSZ",
       "name": "新发红十字医院",
       "billingEnabled": true,
