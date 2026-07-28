@@ -36,7 +36,7 @@
         {
           "policyType": "LOGISTICS",
           "name": "6月免3次物流",
-          "params": {"feePerTrip": 50, "waivedTrips": 3},
+          "params": {"feePerTrip": 50, "waivedTrips": 5},
           "priority": 30
         }
       ]

@@ -65,6 +65,55 @@ class ExportStageDiscountApplierTest {
         assertThat(result.get(0).getUnitPrice()).isEqualTo(100.0);
     }
 
+    @Test
+    void skipsWhenRowAlreadyReflectsDiscountedUnitPrice() throws Exception {
+        ObjectNode rules = mapper.createObjectNode();
+        ArrayNode policies = rules.putArray("billingPolicies");
+        ObjectNode policy = policies.addObject();
+        policy.put("policyType", "DISCOUNT");
+        policy.putObject("scope").put("temperature", "ANY");
+        ObjectNode params = policy.putObject("params");
+        params.put("applyStage", "export_only");
+        params.put("skipWhenAlreadyDiscounted", true);
+        ArrayNode tiers = params.putArray("pieceTierDiscounts");
+        ObjectNode tier = tiers.addObject();
+        tier.put("minPieces", 2);
+        tier.put("rate", 0.75);
+
+        BillRowItem row = row(2, 20.0);
+        row.setCorrectedTotalPrice(30.0);
+        row.setTotalPrice(30.0);
+
+        List<BillRowItem> result = applier.apply(rules, List.of(row));
+        assertThat(result.get(0).getCorrectedTotalPrice()).isEqualTo(30.0);
+        assertThat(result.get(0).getUnitPrice()).isEqualTo(20.0);
+    }
+
+    @Test
+    void skipsWhenCorrectedTotalUsesFixedOverrideNotTierRate() throws Exception {
+        ObjectNode rules = mapper.createObjectNode();
+        ArrayNode policies = rules.putArray("billingPolicies");
+        ObjectNode policy = policies.addObject();
+        policy.put("policyType", "DISCOUNT");
+        policy.putObject("scope").put("temperature", "ANY");
+        ObjectNode params = policy.putObject("params");
+        params.put("applyStage", "export_only");
+        params.put("skipWhenAlreadyDiscounted", true);
+        ArrayNode tiers = params.putArray("pieceTierDiscounts");
+        ObjectNode tier = tiers.addObject();
+        tier.put("minPieces", 2);
+        tier.put("rate", 0.75);
+
+        BillRowItem row = row(2, 12.375);
+        row.setCorrectedTotalPrice(8.91);
+        row.setTotalPrice(8.91);
+        row.setUnitPrice(8.91);
+        row.setExpectedUnitPrice(8.91);
+
+        List<BillRowItem> result = applier.apply(rules, List.of(row));
+        assertThat(result.get(0).getCorrectedTotalPrice()).isEqualTo(8.91);
+    }
+
     private static BillRowItem row(int instruments, double unitPrice) {
         BillRowItem item = new BillRowItem();
         item.setInstrumentCount(instruments);

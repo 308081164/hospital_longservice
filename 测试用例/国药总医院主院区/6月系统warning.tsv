@@ -373,5 +373,5 @@ sheet	row	orderNo	packName	packCount	unitPrice	ruleUnit	status	pricingRule
 肛肠科	80	1616004	刮勺-1/z7530	1	8.0	8.0	warning	special_only 未命中特色规则
 肛肠科	81	1616004	剪子盒-1/带盖z3032	1	16.0	16.0	warning	special_only 未命中特色规则
 肛肠科	82	1616004	小剪刀-12件-筐1/W9050	1	71.5	71.5	warning	special_only 未命中特色规则
-胃肠镜室	11	1610255	中单/w12050	5	25.0	25.0	warning	敷料包(无纺布包)——未匹配定价
+胃肠镜室	11	1610255	中单/w12050	5	25.0	35.0	warning	敷料包(无纺布包)——1.2
 血透科	9	1616008	舌钳子-1/z1526	1	11.0	11.0	warning	special_only 未命中特色规则

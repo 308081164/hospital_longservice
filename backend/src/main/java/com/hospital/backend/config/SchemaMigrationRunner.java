@@ -370,6 +370,11 @@ public class SchemaMigrationRunner implements CommandLineRunner {
                 """, """
                 {"strategyKey":"standard_dept_summary","customerCode":"HRB-WY"}
                 """);
+        seedTemplateIfMissing("dept_summary", "中医附一分科室汇总骨架", """
+                {"columns":["科室","类型","行数","包数","把数","毛额","调整额","净额"]}
+                """, """
+                {"strategyKey":"standard_dept_summary","customerCode":"ZYY-D1"}
+                """);
         seedTemplateIfMissing("instrument_audit", "中医三院把数表骨架", """
                 {"columns":["科室","包名","把数","包数"]}
                 """, """

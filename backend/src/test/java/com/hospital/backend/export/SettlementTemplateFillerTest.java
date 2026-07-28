@@ -127,4 +127,122 @@ class SettlementTemplateFillerTest {
         assertThat(rows).extracting(SettlementTemplateFiller.SettlementFeeRow::getItemName)
                 .contains("灭菌费用", "外科包", "阑尾包");
     }
+
+    @Test
+    void addsSettlementExtraRowForFuyiBillingMonth() throws Exception {
+        HospitalReconciliationJob job = new HospitalReconciliationJob();
+        job.setHospitalName("黑龙江中医药大学附属第一医院");
+        job.setSourceFileName("6月__附一6月账单__附一6月结款函.xlsx");
+        job.setLogisticsFee(100.0);
+        job.setLogisticsTripCount(2);
+
+        JsonNode compiledRules = JsonUtils.getObjectMapper().readTree("""
+                {"billingPolicies":[
+                  {"policyType":"SETTLEMENT_EXTRA","name":"手术一区洗涤费",
+                   "params":{"itemName":"手术一区洗涤费用","amountByMonth":{"2026-06":3987.1}}},
+                  {"policyType":"LOGISTICS","name":"物流","params":{"feePerTrip":50}}
+                ]}
+                """);
+
+        List<SettlementTemplateFiller.SettlementFeeRow> rows = filler.buildFeeRows(job, 150000, compiledRules);
+
+        assertThat(rows).extracting(SettlementTemplateFiller.SettlementFeeRow::getItemName)
+                .contains("手术一区洗涤费用", "灭菌费用", "物流费用");
+        assertThat(rows.stream()
+                .filter(r -> "手术一区洗涤费用".equals(r.getItemName()))
+                .mapToDouble(SettlementTemplateFiller.SettlementFeeRow::getAmount)
+                .findFirst()
+                .orElse(0)).isEqualTo(3987.1);
+    }
+
+    @Test
+    void buildsXinfaSettlementRowsWithHtDiscountAndDressing() throws Exception {
+        HospitalReconciliationJob job = new HospitalReconciliationJob();
+        job.setHospitalName("新发红十字医院");
+        job.setLogisticsFee(1050.0);
+        job.setLogisticsTripCount(21);
+        job.setUrgentBreakdown("""
+                {"urgentRowCount":3,"baseMultiplier":1.25,"adjustedMultiplier":1.025,
+                "nominalSurcharge":3861.88,"adjustedSurcharge":3788.1,"urgentTripCount":4,
+                "urgentLogisticsFeePerTrip":150,"urgentLogisticsDiscountRate":0.9,
+                "nominalUrgentLogisticsTotal":600,"adjustedUrgentLogisticsTotal":540}
+                """);
+
+        HospitalReconciliationRow htRow = new HospitalReconciliationRow();
+        htRow.setType("器械包（纸塑袋）");
+        htRow.setPackName("腹腔镜包");
+        htRow.setCorrectedTotalPrice(13536.5);
+        HospitalReconciliationRow dressingRow = new HospitalReconciliationRow();
+        dressingRow.setType("敷料包(无纺布包)");
+        dressingRow.setPackName("敷料");
+        dressingRow.setCorrectedTotalPrice(5378.5);
+
+        JsonNode compiledRules = com.hospital.backend.common.JsonUtils.getObjectMapper().readTree("""
+                {"billingPolicies":[
+                  {"policyType":"DISCOUNT","name":"结款函高温75折","scope":{"temperature":"HT"},
+                   "params":{"rate":0.75,"applyStage":"settlement_only"}},
+                  {"policyType":"LOGISTICS","name":"结款物流50","params":{"feePerTrip":50}}
+                ]}
+                """);
+
+        List<SettlementTemplateFiller.SettlementFeeRow> rows = filler.buildFeeRows(
+                job, 21866.0, compiledRules, List.of(htRow, dressingRow));
+
+        assertThat(rows).extracting(SettlementTemplateFiller.SettlementFeeRow::getItemName)
+                .contains(
+                        "系统灭菌费用",
+                        "高温75折后费用（实收）",
+                        "敷料",
+                        "物流费用",
+                        "加急灭菌费",
+                        "减免后加急物流费");
+    }
+
+    @Test
+    void buildsXinfaSettlementFromOverrideAndPresetUrgent() throws Exception {
+        HospitalReconciliationJob job = new HospitalReconciliationJob();
+        job.setHospitalName("新发红十字医院");
+        job.setSourceFileName("6月__新发红十字医院6结款函.xlsx");
+        job.setUrgentBreakdown("""
+                {"baseMultiplier":1.25,"adjustedMultiplier":1.025,
+                "nominalUrgentTotal":3861.88,"adjustedUrgentTotal":3788.1,
+                "urgentTripCount":4,"urgentLogisticsFeePerTrip":150,
+                "urgentLogisticsDiscountRate":0.9,
+                "nominalUrgentLogisticsTotal":600,"adjustedUrgentLogisticsTotal":540}
+                """);
+
+        JsonNode compiledRules = JsonUtils.getObjectMapper().readTree("""
+                {"billingPolicies":[
+                  {"policyType":"URGENT","name":"新发加急","params":{"urgentLineMode":"total"}},
+                  {"policyType":"SETTLEMENT_OVERRIDE","name":"新发对齐",
+                   "params":{"xinfaSystemSterilizeAmountByMonth":{"2026-06":13536.5},
+                             "xinfaHtDiscountedAmountByMonth":{"2026-06":10152.375},
+                             "logisticsAmountByMonth":{"2026-06":1050},
+                             "minChargeAdjustmentByMonth":{"2026-06":0}}}
+                ]}
+                """);
+
+        HospitalReconciliationRow dressingRow = new HospitalReconciliationRow();
+        dressingRow.setType("敷料包(无纺布包)");
+        dressingRow.setPackName("敷料");
+        dressingRow.setCorrectedTotalPrice(5378.5);
+
+        List<SettlementTemplateFiller.SettlementFeeRow> rows = filler.buildFeeRows(
+                job, 1000, compiledRules, List.of(dressingRow));
+
+        assertThat(rows).extracting(SettlementTemplateFiller.SettlementFeeRow::getItemName)
+                .contains(
+                        "系统灭菌费用",
+                        "高温75折后费用（实收）",
+                        "敷料",
+                        "物流费用",
+                        "加急灭菌费",
+                        "加急灭菌费(减免后)",
+                        "加急物流费",
+                        "加急物流费(减免后)",
+                        "低消补差");
+        assertThat(rows.stream().filter(r -> "系统灭菌费用".equals(r.getItemName()))
+                .mapToDouble(SettlementTemplateFiller.SettlementFeeRow::getAmount).findFirst().orElse(0))
+                .isEqualTo(13536.5);
+    }
 }

@@ -1,0 +1,31 @@
+{
+  "version": "1",
+  "description": "呼兰中医结款函：重激活 LOGISTICS 185/次 + 低消10000",
+  "reactivateBillingPolicies": ["HULAN-TCM"],
+  "profiles": [
+    {
+      "code": "HULAN-TCM",
+      "name": "呼兰中医院",
+      "billingEnabled": true,
+      "billingPricingMode": "hybrid",
+      "aliases": ["呼兰中医", "呼兰中医院", "哈尔滨市呼兰区中医医院"],
+      "policies": [
+        {
+          "policyType": "LOGISTICS",
+          "name": "物流185元/次",
+          "params": {"feePerTrip": 185},
+          "priority": 10
+        },
+        {
+          "policyType": "MONTHLY_SETTLEMENT",
+          "name": "低消10000",
+          "params": {
+            "minCharge": 10000,
+            "excludeCategories": ["备包", "手术室备包"]
+          },
+          "priority": 20
+        }
+      ]
+    }
+  ]
+}

@@ -30,6 +30,8 @@ from batch_june_price_reconciliation import (  # noqa: E402
 )
 
 OUTPUT_INDEX = TEST_CASE_DIR / "批量6月系统对账结果.md"
+PRICING_JOB_JSON = TEST_CASE_DIR / "job_baseline_pricing.json"
+APPENDIX_MARKER = "## 附录 · 20260728 计价验收轨 Job"
 
 
 @dataclass
@@ -58,11 +60,9 @@ def load_md_preamble() -> str:
     return text[:idx].rstrip() + "\n\n"
 
 
-def parse_existing_results() -> dict[str, CompareResult]:
+def _parse_table_lines(lines: list[str]) -> dict[str, CompareResult]:
     out: dict[str, CompareResult] = {}
-    if not OUTPUT_INDEX.is_file():
-        return out
-    for line in OUTPUT_INDEX.read_text(encoding="utf-8").splitlines():
+    for line in lines:
         if not line.startswith("|") or line.startswith("| 医院") or line.startswith("|------"):
             continue
         parts = [p.strip() for p in line.split("|") if p.strip()]
@@ -83,6 +83,35 @@ def parse_existing_results() -> dict[str, CompareResult]:
             status=parts[7],
         )
     return out
+
+
+def _split_md_sections(text: str) -> tuple[str, list[str], list[str]]:
+    """Return (preamble+stable_block, stable_table_lines, appendix_table_lines)."""
+    if APPENDIX_MARKER not in text:
+        marker = "| 医院 |"
+        idx = text.find(marker)
+        preamble = text[:idx].rstrip() if idx >= 0 else text.rstrip()
+        table_lines = [ln for ln in text.splitlines() if ln.startswith("|")]
+        return preamble + "\n\n", table_lines, []
+    head, appendix = text.split(APPENDIX_MARKER, 1)
+    stable_lines = [ln for ln in head.splitlines() if ln.startswith("|")]
+    appendix_lines = [ln for ln in appendix.splitlines() if ln.startswith("|")]
+    preamble = head[: head.find("| 医院 |")].rstrip() if "| 医院 |" in head else head.rstrip()
+    return preamble + "\n\n", stable_lines, appendix_lines
+
+
+def parse_existing_results() -> dict[str, CompareResult]:
+    if not OUTPUT_INDEX.is_file():
+        return {}
+    _, stable_lines, _ = _split_md_sections(OUTPUT_INDEX.read_text(encoding="utf-8"))
+    return _parse_table_lines(stable_lines)
+
+
+def parse_pricing_results() -> dict[str, CompareResult]:
+    if not OUTPUT_INDEX.is_file():
+        return {}
+    _, _, appendix_lines = _split_md_sections(OUTPUT_INDEX.read_text(encoding="utf-8"))
+    return _parse_table_lines(appendix_lines)
 
 
 def merge_partial_results(
@@ -239,7 +268,10 @@ def compare_hospital(token: str, name: str) -> CompareResult:
             result.message = f"期待 {result.expected} 条，零漏检零多报"
         elif result.missed == 0 and result.extra > 0:
             result.status = "fail_extra"
-            result.message = f"期待 {result.expected} 条零漏检，但多报 {result.extra}（需规则多报价或补期待清单）"
+            result.message = (
+                f"期待 {result.expected} 条零漏检，但多报 {result.extra}"
+                f"（extra_inventory · 不等于规则回归）"
+            )
         else:
             result.status = "fail"
             result.message = f"命中 {matched}/{result.expected}，漏检 {result.missed}，多报 {result.extra}"
@@ -268,13 +300,45 @@ def compare_hospital(token: str, name: str) -> CompareResult:
     return result
 
 
-def render_index(results: list[CompareResult], preamble: str = "") -> str:
-    head = preamble.strip()
-    if not head:
-        head = "# 批量 6 月系统对账结果"
+def render_dual_index(
+    stable: dict[str, CompareResult],
+    pricing: dict[str, CompareResult],
+    preamble: str,
+) -> str:
+    """Render md with stable main table + pricing appendix."""
+    stable_order = [h for h in TODO_HOSPITALS if h in stable]
+    stable_rows = [stable[h] for h in stable_order]
+    pricing_order = list(dict.fromkeys([*TODO_HOSPITALS, *pricing.keys()]))
+    pricing_rows = [pricing[h] for h in pricing_order if h in pricing]
+
+    lines = [preamble.strip(), "", "## 稳定基线 Job（S4 + S8 主表）", ""]
+    lines.extend(_render_table(stable_rows))
+    lines.extend(["", "## 待规则微调（稳定基线）", ""])
+    fails = [r for r in stable_rows if r.status in {"fail", "fail_extra", "error"}]
+    if fails:
+        for r in fails:
+            lines.append(f"- **{r.hospital}**：{r.message or r.status}")
+    else:
+        lines.append("- （无）")
+    lines.extend(["", "---", "", APPENDIX_MARKER + "（656–692+）", ""])
+    lines.append(
+        "> 定点重导写入此节。**S4 判定**：期待 CSV **零漏检**（`missed=0`）即 pricing pass；"
+        "`fail_extra` 为 extra_inventory。"
+    )
+    lines.append("")
+    lines.extend(_render_table(pricing_rows))
+    pricing_fails = [r for r in pricing_rows if r.missed > 0 or r.status == "fail"]
+    if pricing_fails:
+        lines.extend(["", "## 待规则微调（计价轨）", ""])
+        for r in pricing_fails:
+            lines.append(f"- **{r.hospital}**：{r.message}")
+            if r.missed_keys:
+                lines.append(f"  - 漏检样例：`{r.missed_keys[0]}`")
+    return "\n".join(lines) + "\n"
+
+
+def _render_table(results: list[CompareResult]) -> list[str]:
     lines = [
-        head,
-        "",
         "| 医院 | Job | 期待 | 系统warning | 命中 | 漏检 | 多报 | 状态 |",
         "|------|-----|------|------------|------|------|------|------|",
     ]
@@ -283,16 +347,18 @@ def render_index(results: list[CompareResult], preamble: str = "") -> str:
             f"| {r.hospital} | {r.job_id or '—'} | {r.expected} | {r.system_warnings} | "
             f"{r.matched} | {r.missed} | {r.extra} | {r.status} |"
         )
-    lines.append("")
-    fails = [r for r in results if r.status in {"fail", "fail_extra", "error"}]
-    if fails:
-        lines.append("## 待规则微调")
-        lines.append("")
-        for r in fails:
-            lines.append(f"- **{r.hospital}**：{r.message}")
-            if r.missed_keys:
-                lines.append(f"  - 漏检样例：`{r.missed_keys[0]}`")
-    return "\n".join(lines)
+    return lines
+
+
+def write_pricing_job_json(pricing: dict[str, CompareResult]) -> None:
+    jobs = {h: r.job_id for h, r in pricing.items() if r.job_id}
+    payload = {
+        "version": "1",
+        "description": "20260728 计价验收轨 Job（定点重导）",
+        "updated": time.strftime("%Y-%m-%d"),
+        "jobs": jobs,
+    }
+    PRICING_JOB_JSON.write_text(json.dumps(payload, ensure_ascii=False, indent=2), encoding="utf-8")
 
 
 def main() -> int:
@@ -303,14 +369,38 @@ def main() -> int:
     for name in only:
         print(f"Processing {name}...", flush=True)
         results.append(compare_hospital(token, name))
-    preamble = load_md_preamble() if partial_run else ""
+
     if partial_run:
-        prior = parse_existing_results()
-        results = merge_partial_results(prior, results) if prior else results
-    text = render_index(results, preamble=preamble)
+        text = OUTPUT_INDEX.read_text(encoding="utf-8") if OUTPUT_INDEX.is_file() else ""
+        preamble, _, _ = _split_md_sections(text)
+        if not preamble.strip():
+            preamble = (
+                "# 批量 6 月系统对账结果\n\n"
+                "> **S8 稳定基线**：见 `job_baseline_stable.json`。\n"
+            )
+        stable = parse_existing_results()
+        if not stable:
+            stable = {h: CompareResult(hospital=h) for h in TODO_HOSPITALS}
+        pricing = parse_pricing_results()
+        for r in results:
+            pricing[r.hospital] = r
+        write_pricing_job_json(pricing)
+        text = render_dual_index(stable, pricing, preamble)
+    else:
+        stable = {r.hospital: r for r in results}
+        pricing = dict(stable)
+        write_pricing_job_json(pricing)
+        preamble = (
+            "# 批量 6 月系统对账结果\n\n"
+            "> **S8 稳定基线**：见 `job_baseline_stable.json`。\n"
+        )
+        text = render_dual_index(stable, pricing, preamble)
+
     OUTPUT_INDEX.write_text(text, encoding="utf-8")
     print(text)
     print(f"\nWritten: {OUTPUT_INDEX}")
+    if PRICING_JOB_JSON.is_file():
+        print(f"Pricing jobs: {PRICING_JOB_JSON}")
     return 0
 
 

@@ -52,6 +52,17 @@ public class ExportStageDiscountApplier {
                 continue;
             }
             JsonNode params = policy.path("params");
+            if (params.path("skipWhenAlreadyDiscounted").asBoolean(false)) {
+                // 处理后表已写入 correctedTotalPrice 时，以 DB 折后价为 ground truth，不再叠加 export 折扣
+                if (row.getCorrectedTotalPrice() != null) {
+                    continue;
+                }
+                double expectedDiscounted = resolveExpectedDiscountedUnit(baseUnit, billingPieces, params);
+                double currentUnit = resolveEffectiveUnitPrice(row, billingPieces);
+                if (Math.abs(currentUnit - expectedDiscounted) <= 0.02) {
+                    continue;
+                }
+            }
             List<BillingPolicyApplier.PieceTierDiscount> tiers =
                     BillingPolicyApplier.parsePieceTierDiscounts(params);
             double discounted;
@@ -87,6 +98,30 @@ public class ExportStageDiscountApplier {
             break;
         }
         return row;
+    }
+
+    private double resolveExpectedDiscountedUnit(double baseUnit, int billingPieces, JsonNode params) {
+        List<BillingPolicyApplier.PieceTierDiscount> tiers =
+                BillingPolicyApplier.parsePieceTierDiscounts(params);
+        if (!tiers.isEmpty()) {
+            return BillingPolicyApplier.applyPieceTierRate(baseUnit, billingPieces, tiers);
+        }
+        double rate = params.path("rate").asDouble(Double.NaN);
+        if (Double.isNaN(rate) || rate <= 0 || rate >= 1.0) {
+            return baseUnit;
+        }
+        return BillingPolicyApplier.round(baseUnit * rate);
+    }
+
+    private double resolveEffectiveUnitPrice(BillRowItem row, int billingPieces) {
+        if (row.getCorrectedTotalPrice() != null && billingPieces > 0) {
+            int packCount = row.getPackCount() != null ? Math.max(1, row.getPackCount()) : 1;
+            return row.getCorrectedTotalPrice() / packCount;
+        }
+        if (row.getUnitPrice() != null) {
+            return row.getUnitPrice();
+        }
+        return row.getExpectedUnitPrice() != null ? row.getExpectedUnitPrice() : 0;
     }
 
     private Double resolveFixedPriceOverride(JsonNode params, double baseUnit) {

@@ -128,8 +128,8 @@ public class ExternalInstrumentServiceImpl implements ExternalInstrumentService 
                 if (row == null) {
                     continue;
                 }
-                String categoryNo = cellString(row.getCell(cols.getOrDefault("category_no", 0)));
-                String packName = cellString(row.getCell(cols.getOrDefault("pack_name", 1)));
+                String categoryNo = cellString(safeGetCell(row, cols.get("category_no")));
+                String packName = cellString(safeGetCell(row, cols.get("pack_name")));
                 if (categoryNo.isBlank() && packName.isBlank()) {
                     continue;
                 }
@@ -137,22 +137,27 @@ public class ExternalInstrumentServiceImpl implements ExternalInstrumentService 
                 SaveExternalInstrumentRequest req = new SaveExternalInstrumentRequest();
                 req.setCategoryNo(categoryNo.isBlank() ? packName : categoryNo);
                 req.setPackName(packName.isBlank() ? categoryNo : packName);
-                req.setDepartment(cellString(row.getCell(cols.getOrDefault("department", -1))));
-                req.setPackageMaterial(cellString(row.getCell(cols.getOrDefault("package_material", -1))));
-                req.setPatientName(cellString(row.getCell(cols.getOrDefault("patient_name", -1))));
-                req.setUsageDate(parseDate(row.getCell(cols.getOrDefault("usage_date", -1))));
-                req.setPackCount(parseInt(row.getCell(cols.getOrDefault("pack_count", -1)), 1));
-                req.setInstrumentCount(parseInt(row.getCell(cols.getOrDefault("instrument_count", -1)), 0));
+                req.setDepartment(cellString(safeGetCell(row, cols.get("department"))));
+                req.setPackageMaterial(cellString(safeGetCell(row, cols.get("package_material"))));
+                req.setPatientName(cellString(safeGetCell(row, cols.get("patient_name"))));
+                req.setUsageDate(parseDate(safeGetCell(row, cols.get("usage_date"))));
+                req.setPackCount(parseInt(safeGetCell(row, cols.get("pack_count")), 1));
+                req.setInstrumentCount(parseInt(safeGetCell(row, cols.get("instrument_count")), 0));
 
-                BigDecimal unitPrice = parseDecimal(row.getCell(cols.getOrDefault("unit_price", -1)));
+                BigDecimal unitPrice = parseDecimal(safeGetCell(row, cols.get("unit_price")));
+                BigDecimal totalAmount = parseDecimal(safeGetCell(row, cols.get("total_amount")));
                 if (unitPrice == null) {
                     ExternalInstrument catalog = externalInstrumentMapper.selectByCustomerAndCategoryNo(
                             customerId.get(), req.getCategoryNo());
                     unitPrice = catalog != null ? catalog.getUnitPrice() : BigDecimal.ZERO;
                 }
                 req.setUnitPrice(unitPrice);
-                req.setTotalAmount(unitPrice.multiply(BigDecimal.valueOf(req.getPackCount()))
-                        .setScale(2, RoundingMode.HALF_UP));
+                if (totalAmount != null) {
+                    req.setTotalAmount(totalAmount.setScale(2, RoundingMode.HALF_UP));
+                } else {
+                    req.setTotalAmount(unitPrice.multiply(BigDecimal.valueOf(req.getPackCount()))
+                            .setScale(2, RoundingMode.HALF_UP));
+                }
 
                 ExternalInstrument instrument = fromRequest(customerId.get(), jobId, req);
                 externalInstrumentMapper.insert(instrument);
@@ -226,7 +231,7 @@ public class ExternalInstrumentServiceImpl implements ExternalInstrumentService 
         }
         for (Cell cell : header) {
             String raw = cellString(cell).trim().toLowerCase(Locale.ROOT);
-            if (raw.contains("类别") || raw.contains("category")) {
+            if (raw.contains("包类别") || raw.equals("category_no")) {
                 map.put("category_no", cell.getColumnIndex());
             } else if (raw.contains("包名") || raw.contains("pack")) {
                 map.put("pack_name", cell.getColumnIndex());
@@ -240,13 +245,23 @@ public class ExternalInstrumentServiceImpl implements ExternalInstrumentService 
                 map.put("usage_date", cell.getColumnIndex());
             } else if (raw.contains("包数") || raw.contains("pack_count")) {
                 map.put("pack_count", cell.getColumnIndex());
-            } else if (raw.contains("器械") || raw.contains("instrument")) {
+            } else if ((raw.contains("器械数") || raw.contains("instrument_count"))
+                    && !raw.contains("外来器械")) {
                 map.put("instrument_count", cell.getColumnIndex());
-            } else if (raw.contains("单价") || raw.contains("price")) {
+            } else if (raw.contains("单价") || raw.contains("unit_price")) {
                 map.put("unit_price", cell.getColumnIndex());
+            } else if (raw.contains("总价") || raw.contains("total")) {
+                map.put("total_amount", cell.getColumnIndex());
             }
         }
         return map;
+    }
+
+    private Cell safeGetCell(Row row, Integer index) {
+        if (row == null || index == null || index < 0) {
+            return null;
+        }
+        return row.getCell(index);
     }
 
     private String cellString(Cell cell) {

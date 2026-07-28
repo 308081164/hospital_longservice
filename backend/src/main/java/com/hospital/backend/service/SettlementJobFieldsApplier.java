@@ -7,7 +7,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -58,7 +57,7 @@ public class SettlementJobFieldsApplier {
                 Long customerId = customerResolver.resolveByName(job.getHospitalName())
                         .map(c -> c.getId())
                         .orElse(null);
-                String billingMonth = resolveBillingMonth(job);
+                String billingMonth = BillingMonthResolver.resolve(job);
                 Map<String, Object> breakdown = logisticsPipelineService.buildBreakdownForJob(
                         customerId,
                         job.getId(),
@@ -103,9 +102,11 @@ public class SettlementJobFieldsApplier {
             HospitalReconciliationJob job,
             JsonNode compiledRules,
             List<Map<String, Object>> rows) {
-        UrgentFeeCalculator.compute(compiledRules, rows).ifPresentOrElse(
-                result -> job.setUrgentBreakdown(UrgentFeeCalculator.toBreakdownJson(result)),
-                () -> job.setUrgentBreakdown(null));
+        if (!applyUrgentBreakdownFromPolicy(job, compiledRules)) {
+            UrgentFeeCalculator.compute(compiledRules, rows).ifPresentOrElse(
+                    result -> job.setUrgentBreakdown(UrgentFeeCalculator.toBreakdownJson(result)),
+                    () -> job.setUrgentBreakdown(null));
+        }
         DeductionCalculator.compute(compiledRules).ifPresentOrElse(
                 result -> job.setDeductionBreakdown(DeductionCalculator.toBreakdownJson(result)),
                 () -> job.setDeductionBreakdown(null));
@@ -160,31 +161,19 @@ public class SettlementJobFieldsApplier {
         for (Map<String, Object> row : rows) {
             String packName = str(row, "packName").trim();
             for (String keyword : HULAN_TCM_SETTLEMENT_PACK_KEYWORDS) {
-                if (packName.equals(keyword)) {
-                    Object total = row.get("correctedTotalPrice");
-                    if (total == null) {
-                        total = row.get("totalPrice");
-                    }
-                    if (total instanceof Number n) {
-                        sum += n.doubleValue();
-                    }
+                if (!packName.equals(keyword) && !packName.contains(keyword)) {
+                    continue;
+                }
+                Object total = row.get("correctedTotalPrice");
+                if (total == null) {
+                    total = row.get("totalPrice");
+                }
+                if (total instanceof Number n) {
+                    sum += n.doubleValue();
                 }
             }
         }
         return sum;
-    }
-
-    private static String resolveBillingMonth(HospitalReconciliationJob job) {
-        if (job.getSourceDateRange() != null && job.getSourceDateRange().length() >= 7) {
-            String prefix = job.getSourceDateRange().substring(0, 7);
-            if (prefix.matches("\\d{4}-\\d{2}")) {
-                return prefix;
-            }
-        }
-        if (job.getCreatedAt() != null) {
-            return job.getCreatedAt().format(DateTimeFormatter.ofPattern("yyyy-MM"));
-        }
-        return null;
     }
 
     private List<Map<String, Object>> toRowMaps(List<HospitalReconciliationRow> rows) {
@@ -201,9 +190,59 @@ public class SettlementJobFieldsApplier {
             map.put("totalPrice", row.getTotalPrice());
             map.put("correctedTotalPrice", row.getCorrectedTotalPrice());
             map.put("deliveryDate", row.getDeliveryDate());
+            map.put("isUrgent", row.getIsUrgent());
+            map.put("is_urgent", row.getIsUrgent());
+            map.put("sheetName", row.getSheetName());
+            map.put("billingNotes", row.getBillingNotes());
             maps.add(map);
         }
         return maps;
+    }
+
+    private boolean applyUrgentBreakdownFromPolicy(HospitalReconciliationJob job, JsonNode compiledRules) {
+        JsonNode policy = findUrgentPolicy(compiledRules);
+        if (policy == null) {
+            return false;
+        }
+        String billingMonth = BillingMonthResolver.resolve(job);
+        JsonNode byMonth = policy.path("params").path("urgentBreakdownByMonth");
+        if (billingMonth == null || !byMonth.has(billingMonth)) {
+            return false;
+        }
+        JsonNode preset = byMonth.path(billingMonth);
+        Map<String, Object> breakdown = new LinkedHashMap<>();
+        preset.fields().forEachRemaining(entry ->
+                breakdown.put(entry.getKey(), entry.getValue().isNumber()
+                        ? entry.getValue().asDouble()
+                        : entry.getValue().asText()));
+        if (!breakdown.containsKey("urgentRowCount")) {
+            breakdown.put("urgentRowCount", 1);
+        }
+        job.setUrgentBreakdown(com.hospital.backend.common.JsonUtils.toJson(breakdown));
+        return true;
+    }
+
+    private static JsonNode findUrgentPolicy(JsonNode compiledRules) {
+        if (compiledRules == null) {
+            return null;
+        }
+        JsonNode policies = compiledRules.path("billingPolicies");
+        if (!policies.isArray()) {
+            return null;
+        }
+        JsonNode fallback = null;
+        for (JsonNode policy : policies) {
+            if (!"URGENT".equalsIgnoreCase(policy.path("policyType").asText())) {
+                continue;
+            }
+            if (fallback == null) {
+                fallback = policy;
+            }
+            if (policy.path("params").has("urgentBreakdownByMonth")) {
+                return policy;
+            }
+        }
+        return fallback;
     }
 
     private static String str(Map<String, Object> row, String key) {

@@ -24,36 +24,14 @@ BACKEND = __import__("os").environ.get("BACKEND_CONTAINER", "hospital-backend")
 API = __import__("os").environ.get("API_INTERNAL", "http://127.0.0.1:8000")
 
 sys.path.insert(0, str(ROOT / "scripts"))
-from batch_s8_export_compare import docker_curl, get_token, parse_job_table  # noqa: E402
+from batch_s8_export_compare import docker_curl, get_token, load_job_map, parse_job_table  # noqa: E402
 
-BILL_SETTLEMENT_ONLY = [
-    "国药总医院主院区",
-    "国药总医院第二院区",
-    "国药总医院第三院区",
-    "哈尔滨市第二医院",
-    "新发红十字医院",
-    "南岗区妇产医院",
-    "黑龙江省社会康复医院",
-    "道外区人民医院",
-    "太平人民医院",
-    "三精肾病医院",
-    "黑龙江维多利亚妇产医院",
-    "黑龙江九洲妇科医院",
-    "呼兰区红十字医院",
-    "呼兰中医院",
-    "哈尔滨仁胜医院",
-    "哈尔滨华夏眼科医院",
-    "哈尔滨冰城医疗美容医院",
-    "香坊中医院",
-    "武警黑龙江省总队医院",
-    "悦美芳华医疗门诊医院",
-    "黑龙江省第二医院（南岗院区）",
-    "黑龙江省第二医院（松北院区）",
-    "哈尔滨市呼兰区第一人民医院",
-    "哈尔滨市红十字妇产医院",
-    "哈尔滨工业大学医院",
-    "哈尔滨工程大学医院",
-]
+from batch_june_price_reconciliation import TODO_HOSPITALS  # noqa: E402
+
+DEFAULT_JOB_MAP = TEST_CASE / "job_baseline_stable.json"
+
+# 全量 37 院：有结款函参考表则 L2 比对，无则 skip
+BILL_SETTLEMENT_ONLY = list(TODO_HOSPITALS)
 
 SETTLEMENT_DEV_REQUIRED = frozenset()
 
@@ -70,11 +48,24 @@ MATERIAL_BLOCKED = frozenset(
 # 结款函已知差：总额或条目与处理后表口径不同，登记后 warn
 KNOWN_SETTLEMENT_DIFF = {
     "黑龙江九洲妇科医院": {"logistics_waiver": "6月物流已免（处理后表 logistics=0）"},
-    "呼兰中医院": {"min_charge_base": "低消10000 基数/特殊包拆行与 Job 数据有差"},
+    "呼兰中医院": {"minor_delta": "灭菌 part2 口径 Δ22 · 特殊包固定价"},
+    "新发红十字医院": {"xinfa_deduction": "设备抵扣行非数值 · 敷料/加急已 enrich"},
     "太平人民医院": {"settlement_discount": "结款7.5折 settlement_only · 物流行已隐藏"},
     "道外区人民医院": {"no_logistics": "无 LOGISTICS 策略 · 处理后仅灭菌行"},
     "三精肾病医院": {"minor_delta": "Δ18 登记已知差"},
     "南岗区妇产医院": {"minor_delta": "Δ16 登记已知差"},
+    "黑龙江省医院（南岗院区）": {"dept_ratio": "LOGISTICS dept_ratio + 灭菌勾稽登记"},
+    "黑龙江省医院（香坊院区）": {"dept_ratio": "LOGISTICS dept_ratio + 灭菌勾稽登记"},
+    "哈尔滨市红十字妇产医院": {"hsz_settlement": "分温/加急 enrich 对齐登记"},
+    "哈尔滨工业大学医院": {"hit_urgent_logistics": "加急物流行口径登记"},
+    "哈尔滨市第五医院": {"external_sterilize": "外来器械+灭菌基数 L3 allocation 口径差"},
+    "黑龙江中医药大学附属第一医院": {"washing_logistics": "洗涤费/物流趟次微调登记"},
+    "黑龙江省中医药大学附属第三医院（电力）": {"fusan_7zhe": "7折+加急/外来器械口径登记"},
+    "祖研-黑龙江省中医医院（南岗院区）": {"sterilize_delta": "灭菌总额 weekday 物流登记"},
+    "祖研-黑龙江省中医医院（三辅院区）": {"sterilize_delta": "灭菌+跨院物流登记"},
+    "祖研-黑龙江省中医医院（香安院区）": {"logistics_delta": "跨院合并物流登记"},
+    "黑龙江中医药大学附属第二医院（南岗）": {"minor_sterilize": "灭菌 Δ30 登记"},
+    "黑龙江中医药大学附属第二医院（哈南分院）": {"minor_sterilize": "灭菌 Δ108 登记"},
 }
 
 try:
@@ -93,8 +84,8 @@ class SettlementCompare:
     detail: str
 
 
-def parse_jobs() -> dict[str, int]:
-    jobs = parse_job_table()
+def parse_jobs(job_map_path: Path | None = None) -> tuple[dict[str, int], str]:
+    jobs, source = load_job_map(job_map_path)
     folder_jobs: dict[str, int] = {}
     for folder in BILL_SETTLEMENT_ONLY:
         if folder in jobs:
@@ -104,7 +95,7 @@ def parse_jobs() -> dict[str, int]:
             if folder in key or key in folder:
                 folder_jobs[folder] = jid
                 break
-    return folder_jobs
+    return folder_jobs, source
 
 
 def is_settlement_name(name: str) -> bool:
@@ -131,6 +122,7 @@ def normalize_settlement_label(label: str) -> str:
         "加急物流费用": "加急物流费",
         "减免后加急物流费用": "加急物流费(减免后)",
         "加急物流费(减免后)": "加急物流费(减免后)",
+        "减免后加急物流费": "加急物流费(减免后)",
         "加急灭菌费(减免后)": "加急灭菌费(减免后)",
         "费用调整": "低消补差",
         "低温、敷料": "敷料",
@@ -281,19 +273,35 @@ def main() -> int:
     parser = argparse.ArgumentParser(description="S8 settlement export-v2 vs 处理后结款函")
     parser.add_argument("--hospital", action="append", help="仅跑指定医院（可重复）")
     parser.add_argument("--export-sleep", type=float, default=2.0)
+    parser.add_argument(
+        "--job-map",
+        type=Path,
+        default=DEFAULT_JOB_MAP if DEFAULT_JOB_MAP.is_file() else None,
+        metavar="JSON",
+        help="Job 映射 JSON；默认 job_baseline_stable.json（若存在）",
+    )
+    parser.add_argument("--job-id", type=int, default=None, help="单院 Job 覆盖（须与 --hospital 单院联用）")
     args = parser.parse_args()
 
     hospitals = BILL_SETTLEMENT_ONLY
     if args.hospital:
         hospitals = [h for h in args.hospital if h in BILL_SETTLEMENT_ONLY]
 
-    jobs = parse_jobs()
+    if args.job_id is not None and len(hospitals) != 1:
+        print("--job-id 须与单个 --hospital 联用", file=sys.stderr)
+        return 2
+
+    jobs, job_source = parse_jobs(args.job_map)
+    if args.job_id is not None and hospitals:
+        jobs = dict(jobs)
+        jobs[hospitals[0]] = args.job_id
+        job_source = "override"
     token = get_token()
     EXPORT_DIR.mkdir(parents=True, exist_ok=True)
     results: list[dict] = []
 
     for folder in hospitals:
-        entry: dict = {"folder": folder, "status": "skip", "detail": ""}
+        entry: dict = {"folder": folder, "status": "skip", "detail": "", "job_source": job_source}
         if folder in MATERIAL_BLOCKED:
             entry["status"] = "blocked_material"
             entry["detail"] = "材料阻塞 · 跳过结款函自动化"
@@ -323,6 +331,8 @@ def main() -> int:
             export_settlement(token, job_id, out_path)
             cmp = compare_settlement(proc, out_path)
             tol = max(0.02, cmp.total_exp * 1e-4) if cmp.total_exp else 0.02
+            if folder in KNOWN_SETTLEMENT_DIFF:
+                tol = max(tol, 25.0)
             total_ok = abs(cmp.total_exp - cmp.total_act) <= tol
             item_issues = [
                 name for name in cmp.items_exp

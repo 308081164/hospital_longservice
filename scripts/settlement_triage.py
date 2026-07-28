@@ -21,7 +21,9 @@ EXPORT_DIR = TEST_CASE / ".s8_exports"
 RECON_MD = TEST_CASE / "批量6月系统对账结果.md"
 
 sys.path.insert(0, str(ROOT / "scripts"))
-from batch_s8_export_compare import docker_curl, get_token, parse_job_table  # noqa: E402
+from batch_s8_export_compare import docker_curl, get_token, load_job_map, parse_job_table  # noqa: E402
+
+DEFAULT_JOB_MAP = TEST_CASE / "job_baseline_stable.json"
 from batch_s8_settlement_compare import (  # noqa: E402
     BILL_SETTLEMENT_ONLY,
     extract_settlement_items,
@@ -140,7 +142,14 @@ def print_result(r: dict) -> None:
 def main() -> int:
     parser = argparse.ArgumentParser(description="结款函灭菌口径 triage")
     parser.add_argument("--hospital", action="append", help="医院文件夹名（可重复）")
-    parser.add_argument("--job", type=int, help="仅 triage 指定 Job 对应医院")
+    parser.add_argument(
+        "--job-map",
+        type=Path,
+        default=DEFAULT_JOB_MAP if DEFAULT_JOB_MAP.is_file() else None,
+        metavar="JSON",
+        help="Job 映射 JSON；默认 job_baseline_stable.json（若存在）",
+    )
+    parser.add_argument("--job", type=int, help="仅 triage 指定 Job（查 stable/pricing map）")
     parser.add_argument(
         "--all-standard",
         action="store_true",
@@ -148,7 +157,9 @@ def main() -> int:
     )
     args = parser.parse_args()
 
-    jobs = parse_job_table()
+    jobs, _ = load_job_map(args.job_map if hasattr(args, "job_map") and args.job_map else DEFAULT_JOB_MAP)
+    pricing_jobs, _ = load_job_map(TEST_CASE / "job_baseline_pricing.json")
+    jobs = {**jobs, **pricing_jobs}
     if args.job:
         folder = next((k for k, v in jobs.items() if v == args.job), None)
         if not folder:

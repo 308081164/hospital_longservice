@@ -17,6 +17,7 @@ import com.hospital.backend.export.ColumnTransformPipeline;
 import com.hospital.backend.export.ExportContext;
 import com.hospital.backend.export.ExportEngineService;
 import com.hospital.backend.export.ExportResult;
+import com.hospital.backend.export.ExportFixedPriceApplier;
 import com.hospital.backend.export.ExportStageDiscountApplier;
 import com.hospital.backend.export.ExportType;
 import com.hospital.backend.export.ReconciliationExportDataLoader;
@@ -50,6 +51,7 @@ public class ExportEngineServiceImpl implements ExportEngineService {
     private final CustomerResolver customerResolver;
     private final ExportTemplateResolverHelper templateResolverHelper;
     private final HospitalReconciliationExportLogMapper exportLogMapper;
+    private final ExportFixedPriceApplier exportFixedPriceApplier;
     private final ExportStageDiscountApplier exportStageDiscountApplier;
     private final PricingRuleCompiler pricingRuleCompiler;
     private final HospitalPricingRuleMapper pricingRuleMapper;
@@ -295,6 +297,7 @@ public class ExportEngineServiceImpl implements ExportEngineService {
             if (compiled == null) {
                 return;
             }
+            request.setRows(exportFixedPriceApplier.apply(compiled, request.getRows()));
             request.setRows(exportStageDiscountApplier.apply(compiled, request.getRows()));
         } catch (Exception e) {
             log.warn("export stage discount skipped for {}: {}", hospitalName, e.getMessage());
@@ -302,20 +305,26 @@ public class ExportEngineServiceImpl implements ExportEngineService {
     }
 
     private JsonNode resolveCompiledRulesFromContext(ExportContext context) {
+        String hospitalName = context.getHospitalName();
         try {
+            JsonNode baseRules = JsonUtils.getObjectMapper().createObjectNode();
             HospitalReconciliationJob job = context.getJob();
-            if (job.getRuleId() == null) {
-                return null;
+            if (job.getRuleId() != null) {
+                HospitalPricingRule ruleEntity = pricingRuleMapper.selectById(job.getRuleId());
+                if (ruleEntity != null && ruleEntity.getRulesJson() != null) {
+                    baseRules = JsonUtils.getObjectMapper().readTree(ruleEntity.getRulesJson());
+                }
             }
-            HospitalPricingRule ruleEntity = pricingRuleMapper.selectById(job.getRuleId());
-            if (ruleEntity == null || ruleEntity.getRulesJson() == null) {
-                return null;
-            }
-            JsonNode baseRules = JsonUtils.getObjectMapper().readTree(ruleEntity.getRulesJson());
-            return pricingRuleCompiler.compile(baseRules, context.getHospitalName());
+            return pricingRuleCompiler.compile(baseRules, hospitalName);
         } catch (Exception e) {
-            log.warn("compiled rules skipped for job {}: {}", context.getJobId(), e.getMessage());
-            return null;
+            log.warn("compiled rules fallback for job {} ({}): {}", context.getJobId(), hospitalName, e.getMessage());
+            try {
+                return pricingRuleCompiler.compile(
+                        JsonUtils.getObjectMapper().createObjectNode(), hospitalName);
+            } catch (Exception ex) {
+                log.warn("compiled rules unavailable for job {}: {}", context.getJobId(), ex.getMessage());
+                return null;
+            }
         }
     }
 

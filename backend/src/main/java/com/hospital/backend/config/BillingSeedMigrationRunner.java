@@ -139,6 +139,14 @@ public class BillingSeedMigrationRunner implements CommandLineRunner {
                     "billing-seeds/phase-settlement-policies-20260725.json"),
             new IncrementalSeed("billing_seed_settlement_logistics_20260725_v1",
                     "billing-seeds/phase-settlement-logistics-20260725.json"),
+            new IncrementalSeed("billing_seed_settlement_p0_20260728_v1",
+                    "billing-seeds/phase-settlement-p0-20260728.json"),
+            new IncrementalSeed("billing_seed_settlement_logistics_batch_20260728_v1",
+                    "billing-seeds/phase-settlement-logistics-batch-20260728.json"),
+            new IncrementalSeed("billing_seed_settlement_logistics_batch_20260728_v2",
+                    "billing-seeds/phase-settlement-logistics-batch-20260728.json"),
+            new IncrementalSeed("billing_seed_bill_s8_fix_20260728_v1",
+                    "billing-seeds/phase-bill-s8-fix-20260728.json"),
             new IncrementalSeed("billing_seed_export_dept_split_20260728_v1",
                     "billing-seeds/phase-export-dept-split-20260728.json"),
             new IncrementalSeed("billing_seed_ng_fuchan_kuobang_bundle_24_fix_20260728_v1",
@@ -154,7 +162,25 @@ public class BillingSeedMigrationRunner implements CommandLineRunner {
             new IncrementalSeed("billing_seed_wj_ngjy_sd_neau_zero_fold_20260728_v1",
                     "billing-seeds/phase-wj-ngjy-sd-neau-zero-fold-fix-20260728.json"),
             new IncrementalSeed("billing_seed_hlj_jyglj_weike_jiaqian_20260728_v1",
-                    "billing-seeds/phase-hlj-jyglj-weike-jiaqian-20260728.json")
+                    "billing-seeds/phase-hlj-jyglj-weike-jiaqian-20260728.json"),
+            new IncrementalSeed("billing_seed_settlement_logistics_batch_20260728_v3",
+                    "billing-seeds/phase-settlement-logistics-batch-20260728.json"),
+            new IncrementalSeed("billing_seed_settlement_xinfa_20260728_v1",
+                    "billing-seeds/phase-settlement-xinfa-20260728.json"),
+            new IncrementalSeed("billing_seed_zyy_d2_ng_dayi_xiaodan_20260728_v1",
+                    "billing-seeds/phase-zyy-d2-ng-dayi-xiaodan-20260728.json"),
+            new IncrementalSeed("billing_seed_zyy_d2_ng_dayi_xiaodan_20260728_v2",
+                    "billing-seeds/phase-zyy-d2-ng-dayi-xiaodan-20260728.json"),
+            new IncrementalSeed("billing_seed_bill_wave3_fix_20260728_v1",
+                    "billing-seeds/phase-bill-wave3-fix-20260728.json"),
+            new IncrementalSeed("billing_seed_bill_wave3_fix_20260728_v2",
+                    "billing-seeds/phase-bill-wave3-fix-20260728.json"),
+            new IncrementalSeed("billing_seed_settlement_wave3_20260728_v1",
+                    "billing-seeds/phase-settlement-wave3-20260728.json"),
+            new IncrementalSeed("billing_seed_settlement_wave3_20260728_v2",
+                    "billing-seeds/phase-settlement-wave3-20260728.json"),
+            new IncrementalSeed("billing_seed_settlement_wave3_20260728_v3",
+                    "billing-seeds/phase-settlement-wave3-20260728.json")
     );
 
     private static final String ZYY_D1_P0_MARKER = "billing_seed_zyy_d1_p0_v2";
@@ -175,6 +201,7 @@ public class BillingSeedMigrationRunner implements CommandLineRunner {
     private final CustomerGroupMapper customerGroupMapper;
     private final CustomerGroupMemberMapper customerGroupMemberMapper;
     private final ExportTemplateMapper exportTemplateMapper;
+    private final LogisticsCardMapper logisticsCardMapper;
     private final JdbcTemplate jdbcTemplate;
 
     @Override
@@ -300,6 +327,7 @@ public class BillingSeedMigrationRunner implements CommandLineRunner {
             reactivateBillingPolicies(root.path("reactivateBillingPolicies"));
             seedProfiles(root.path("profiles"));
             seedCustomerGroups(root.path("customerGroups"));
+            seedLogisticsCards(root.path("logisticsCards"));
             log.info("Loaded billing seed: {}", file);
             return true;
         } catch (Exception e) {
@@ -1381,6 +1409,39 @@ public class BillingSeedMigrationRunner implements CommandLineRunner {
                 customerGroupMapper.insert(group);
             }
             seedGroupMembers(group.getId(), groupNode.path("memberCodes"));
+        }
+    }
+
+    private void seedLogisticsCards(JsonNode cards) {
+        if (!cards.isArray()) {
+            return;
+        }
+        for (JsonNode cardNode : cards) {
+            String customerCode = text(cardNode, "customerCode");
+            if (customerCode == null) {
+                continue;
+            }
+            Customer customer = customerMapper.selectByCode(customerCode);
+            if (customer == null) {
+                log.warn("Logistics card seed skipped: customer {} not found", customerCode);
+                continue;
+            }
+            LogisticsCard existing = logisticsCardMapper.selectActiveByCustomerId(customer.getId());
+            if (existing != null) {
+                continue;
+            }
+            LogisticsCard card = new LogisticsCard();
+            card.setCustomerId(customer.getId());
+            card.setName(text(cardNode, "name", customer.getCanonicalName() + "物流卡"));
+            double balance = cardNode.path("balance").asDouble(0);
+            double initial = cardNode.has("initialBalance")
+                    ? cardNode.path("initialBalance").asDouble(balance)
+                    : balance;
+            card.setBalance(balance);
+            card.setInitialBalance(initial);
+            card.setIsActive(true);
+            logisticsCardMapper.insert(card);
+            log.info("Seeded logistics card for {} balance={}", customerCode, balance);
         }
     }
 

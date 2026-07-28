@@ -49,7 +49,9 @@ public final class LogisticsFeeCalculator {
             Long singleOwnerCustomerId,
             Long policyId,
             String feeSource,
-            int waivedTrips
+            int waivedTrips,
+            Integer tripCountOverride,
+            Double settlementLogisticsAmountOverride
     ) {
     }
 
@@ -62,7 +64,8 @@ public final class LogisticsFeeCalculator {
             List<Map<String, Object>> rows,
             List<LogisticsImport> imports) {
         JsonNode logisticsNode = compiledRules.path("logistics");
-        if (!logisticsNode.path("enabled").asBoolean(false)) {
+        boolean hasLogisticsPolicy = BillingPolicyInspector.findLogisticsPolicy(compiledRules) != null;
+        if (!logisticsNode.path("enabled").asBoolean(false) && !hasLogisticsPolicy) {
             return Optional.empty();
         }
 
@@ -72,18 +75,25 @@ public final class LogisticsFeeCalculator {
             return Optional.empty();
         }
 
-        int waivedTrips = Math.min(params.waivedTrips(), tripResult.tripCount());
-        int billableTrips = tripResult.tripCount() - waivedTrips;
+        int rawTripCount = tripResult.tripCount();
+        if (params.tripCountOverride() != null && params.tripCountOverride() > 0) {
+            rawTripCount = params.tripCountOverride();
+        }
+        int waivedTrips = Math.min(params.waivedTrips(), rawTripCount);
+        int billableTrips = rawTripCount - waivedTrips;
 
         double totalFee;
-        if (tripResult.fixedFeeTotal() != null && tripResult.fixedFeeTotal() > 0) {
+        if (params.settlementLogisticsAmountOverride() != null
+                && params.settlementLogisticsAmountOverride() > 0) {
+            totalFee = roundCurrency(params.settlementLogisticsAmountOverride());
+        } else if (tripResult.fixedFeeTotal() != null && tripResult.fixedFeeTotal() > 0) {
             totalFee = roundCurrency(tripResult.fixedFeeTotal());
         } else {
             totalFee = roundCurrency(billableTrips * params.feePerTrip());
         }
 
         return Optional.of(new Result(
-                tripResult.tripCount(),
+                rawTripCount,
                 params.feePerTrip(),
                 totalFee,
                 params.feeSource(),
@@ -99,8 +109,6 @@ public final class LogisticsFeeCalculator {
         String allocationMode = policyParams.path("allocationMode").asText("none");
         List<Integer> billingWeekdays = parseWeekdays(policyParams.path("billingWeekdays"));
         List<String> excludeDepartments = parseStringList(policyParams.path("excludeDepartments"));
-        boolean cardDeductionEnabled = !policyParams.has("cardDeductionEnabled")
-                || policyParams.path("cardDeductionEnabled").asBoolean(true);
         String cardDeductMode = policyParams.path("cardDeductMode").asText("auto");
         Double cardMonthlyCap = policyParams.has("cardMonthlyCap") && !policyParams.path("cardMonthlyCap").isNull()
                 ? policyParams.path("cardMonthlyCap").asDouble()
@@ -111,6 +119,10 @@ public final class LogisticsFeeCalculator {
                 : null;
         boolean mergeSameDay = !policyParams.has("mergeSameDay")
                 || policyParams.path("mergeSameDay").asBoolean(true);
+        boolean useLogisticsCard = policyParams.path("useLogisticsCard").asBoolean(false);
+        boolean cardDeductionEnabled = useLogisticsCard
+                || !policyParams.has("cardDeductionEnabled")
+                || policyParams.path("cardDeductionEnabled").asBoolean(true);
         Long singleOwnerCustomerId = policyParams.has("singleOwnerCustomerId")
                 && !policyParams.path("singleOwnerCustomerId").isNull()
                 ? policyParams.path("singleOwnerCustomerId").asLong()
@@ -118,6 +130,15 @@ public final class LogisticsFeeCalculator {
         int waivedTrips = policyParams.has("waivedTrips") && !policyParams.path("waivedTrips").isNull()
                 ? Math.max(0, policyParams.path("waivedTrips").asInt())
                 : 0;
+        Integer tripCountOverride = policyParams.has("tripCountOverride")
+                && !policyParams.path("tripCountOverride").isNull()
+                ? policyParams.path("tripCountOverride").asInt()
+                : null;
+        Double settlementLogisticsAmountOverride =
+                policyParams.has("settlementLogisticsAmountOverride")
+                        && !policyParams.path("settlementLogisticsAmountOverride").isNull()
+                        ? policyParams.path("settlementLogisticsAmountOverride").asDouble()
+                        : null;
 
         return new LogisticsPolicyParams(
                 fee.feePerTrip(),
@@ -133,7 +154,9 @@ public final class LogisticsFeeCalculator {
                 singleOwnerCustomerId,
                 fee.policyId(),
                 fee.source(),
-                waivedTrips);
+                waivedTrips,
+                tripCountOverride,
+                settlementLogisticsAmountOverride);
     }
 
     public static String toBreakdownJson(Result result) {
@@ -145,6 +168,7 @@ public final class LogisticsFeeCalculator {
         breakdown.put("tripCount", result.tripCount());
         breakdown.put("feePerTrip", result.feePerTrip());
         breakdown.put("total", result.totalFee());
+        breakdown.put("payableFee", result.totalFee());
         breakdown.put("feeSource", result.feeSource());
         breakdown.put("tripSource", result.tripSource());
         if (result.policyId() != null) {
@@ -195,7 +219,40 @@ public final class LogisticsFeeCalculator {
         }
 
         Set<String> uniqueDates = collectUniqueDeliveryDates(rows, params.billingWeekdays());
+        if (!params.mergeSameDay()) {
+            int perRowTrips = countDeliveryRowTrips(rows, params.billingWeekdays());
+            if (perRowTrips > 0) {
+                return new TripCountResult(perRowTrips, null);
+            }
+        }
         return new TripCountResult(uniqueDates.size(), null);
+    }
+
+    private static int countDeliveryRowTrips(
+            List<Map<String, Object>> rows,
+            List<Integer> billingWeekdays) {
+        if (rows == null || rows.isEmpty()) {
+            return 0;
+        }
+        int count = 0;
+        for (Map<String, Object> row : rows) {
+            Object deliveryDate = row.get("deliveryDate");
+            if (deliveryDate == null) {
+                deliveryDate = row.get("delivery_date");
+            }
+            if (deliveryDate == null) {
+                continue;
+            }
+            String dateStr = deliveryDate.toString().trim();
+            if (dateStr.isBlank()) {
+                continue;
+            }
+            LocalDate parsed = parseDate(dateStr.split("\\s+")[0]);
+            if (parsed != null && matchesWeekday(parsed, billingWeekdays)) {
+                count++;
+            }
+        }
+        return count;
     }
 
     static FeeResolution resolveFeePerTrip(JsonNode compiledRules) {
@@ -212,13 +269,22 @@ public final class LogisticsFeeCalculator {
 
         JsonNode policies = compiledRules.path("billingPolicies");
         if (policies.isArray()) {
+            JsonNode bestPolicy = null;
+            int bestPriority = Integer.MIN_VALUE;
             for (JsonNode policy : policies) {
                 if (!"LOGISTICS".equalsIgnoreCase(policy.path("policyType").asText())) {
                     continue;
                 }
-                JsonNode feeNode = policy.path("params").path("feePerTrip");
+                int priority = policy.path("priority").asInt(0);
+                if (bestPolicy == null || priority >= bestPriority) {
+                    bestPolicy = policy;
+                    bestPriority = priority;
+                }
+            }
+            if (bestPolicy != null) {
+                JsonNode feeNode = bestPolicy.path("params").path("feePerTrip");
                 if (!feeNode.isMissingNode() && !feeNode.isNull()) {
-                    Long policyId = policy.has("policyId") ? policy.path("policyId").asLong() : null;
+                    Long policyId = bestPolicy.has("policyId") ? bestPolicy.path("policyId").asLong() : null;
                     return new FeeResolution(feeNode.asDouble(), "customer", policyId);
                 }
             }
@@ -231,10 +297,20 @@ public final class LogisticsFeeCalculator {
     private static JsonNode findLogisticsPolicyParams(JsonNode compiledRules) {
         JsonNode policies = compiledRules.path("billingPolicies");
         if (policies.isArray()) {
+            JsonNode bestParams = null;
+            int bestPriority = Integer.MIN_VALUE;
             for (JsonNode policy : policies) {
-                if ("LOGISTICS".equalsIgnoreCase(policy.path("policyType").asText())) {
-                    return policy.path("params");
+                if (!"LOGISTICS".equalsIgnoreCase(policy.path("policyType").asText())) {
+                    continue;
                 }
+                int priority = policy.path("priority").asInt(0);
+                if (bestParams == null || priority >= bestPriority) {
+                    bestParams = policy.path("params");
+                    bestPriority = priority;
+                }
+            }
+            if (bestParams != null) {
+                return bestParams;
             }
         }
         return compiledRules.path("logistics");

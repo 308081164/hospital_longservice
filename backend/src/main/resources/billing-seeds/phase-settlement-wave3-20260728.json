@@ -1,0 +1,90 @@
+{
+  "version": "1",
+  "description": "S8 波次3 结款函：市五灭菌/外来器械/物流 · 附一灭菌/物流对齐",
+  "profiles": [
+    {
+      "code": "HRB-WY",
+      "name": "哈尔滨市第五医院",
+      "billingEnabled": true,
+      "policies": [
+        {
+          "policyType": "LOGISTICS",
+          "name": "结款物流50·24趟",
+          "params": {"feePerTrip": 50, "tripCountOverride": 24},
+          "priority": 30
+        },
+        {
+          "policyType": "SETTLEMENT_OVERRIDE",
+          "name": "市五结款灭菌外来器械对齐",
+          "params": {
+            "sterilizeAmountByMonth": {"2026-06": 438045.5},
+            "externalInstrumentAmountByMonth": {"2026-06": 332816.0}
+          },
+          "priority": 5
+        }
+      ]
+    },
+    {
+      "code": "ZYY-D1",
+      "name": "黑龙江中医药大学附属第一医院",
+      "billingEnabled": true,
+      "policies": [
+        {
+          "policyType": "SETTLEMENT_OVERRIDE",
+          "name": "附一结款灭菌物流对齐",
+          "params": {
+            "sterilizeAmountByMonth": {"2026-06": 158295.6},
+            "logisticsAmountByMonth": {"2026-06": 2295.0}
+          },
+          "priority": 5
+        }
+      ]
+    },
+    {
+      "code": "XINFA-HSZ",
+      "name": "新发红十字医院",
+      "billingEnabled": true,
+      "policies": [
+        {
+          "policyType": "URGENT",
+          "name": "新发加急结款参考值",
+          "params": {
+            "urgentRate": 1.25,
+            "reducedRate": 1.025,
+            "urgentLogisticsFeePerTrip": 150,
+            "urgentLogisticsDiscountRate": 0.9,
+            "urgentLineMode": "total",
+            "urgentBreakdownByMonth": {
+              "2026-06": {
+                "baseMultiplier": 1.25,
+                "adjustedMultiplier": 1.025,
+                "nominalUrgentTotal": 3861.88,
+                "adjustedUrgentTotal": 3788.1,
+                "nominalSurcharge": 965.47,
+                "adjustedSurcharge": 76.69,
+                "urgentTripCount": 4,
+                "urgentLogisticsFeePerTrip": 150,
+                "urgentLogisticsDiscountRate": 0.9,
+                "nominalUrgentLogisticsTotal": 600,
+                "adjustedUrgentLogisticsTotal": 540
+              }
+            }
+          },
+          "priority": 10
+        },
+        {
+          "policyType": "SETTLEMENT_OVERRIDE",
+          "name": "新发结款行对齐",
+          "params": {
+            "xinfaSystemSterilizeAmountByMonth": {"2026-06": 13536.5},
+            "xinfaHtDiscountedAmountByMonth": {"2026-06": 10152.375},
+            "xinfaDressingAmountByMonth": {"2026-06": 5378.5},
+            "logisticsAmountByMonth": {"2026-06": 1050},
+            "minChargeAdjustmentByMonth": {"2026-06": 0}
+          },
+          "priority": 5
+        }
+      ]
+    }
+  ]
+}

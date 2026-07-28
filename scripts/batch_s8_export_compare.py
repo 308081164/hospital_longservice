@@ -88,6 +88,7 @@ KNOWN_EXPORT_DIFF = {
     "呼兰中医院": "S4 pass_zero · part2 腹腔镜 275/297 与 export 单价列口径差 · Δ22",
     "三精肾病医院": "≥3 把 3 元仅计价记录非 export 折扣 · Δ18",
     "中医附二（南岗）": "S4 pass · part2 南岗专项 · export 附加费口径 Δ30",
+    "黑龙江中医药大学附属第二医院（南岗）": "S4 pass · part2 南岗专项 · export 附加费口径 Δ30",
     "黑龙江省社会康复医院": "Job 625 与 6月__省康复6月账单 成对（非监狱单表）",
     "哈尔滨市第五医院": (
         "S4 pass · 5005 行一致 · 总额 Δ420=28 行铂康处理后表 vs export/DB correctedTotalPrice："
@@ -109,6 +110,7 @@ MINOR_EXPORT_TOLERANCE: dict[str, tuple[float, int]] = {
     "呼兰中医院": (25.0, 0),
     "三精肾病医院": (20.0, 0),
     "中医附二（南岗）": (35.0, 0),
+    "黑龙江中医药大学附属第二医院（南岗）": (35.0, 0),
     "黑龙江省医院（南岗院区）": (200.0, 5),
     "哈尔滨工业大学医院": (250.0, 1),
     "黑龙江省第二医院（松北院区）": (500.0, 50),
@@ -126,6 +128,7 @@ S8_BOARD_ACCEPTED_KNOWN_DIFF = frozenset(
         "呼兰中医院",
         "三精肾病医院",
         "中医附二（南岗）",
+        "黑龙江中医药大学附属第二医院（南岗）",
         "黑龙江省社会康复医院",
         "哈尔滨市第五医院",
         "黑龙江省医院（南岗院区）",
@@ -187,6 +190,29 @@ def parse_job_table() -> dict[str, int]:
         except ValueError:
             continue
     return out
+
+
+def load_job_map(path: Path | None) -> tuple[dict[str, int], str]:
+    """Load folder→jobId map. Returns (jobs, source_label)."""
+    if path and path.is_file():
+        data = json.loads(path.read_text(encoding="utf-8"))
+        jobs = data.get("jobs") if isinstance(data, dict) else data
+        if isinstance(jobs, dict):
+            return {k: int(v) for k, v in jobs.items()}, "stable"
+    return parse_job_table(), "recon_md"
+
+
+def resolve_jobs(
+    job_map_path: Path | None,
+    job_id_override: int | None,
+    hospital: str | None,
+) -> tuple[dict[str, int], str]:
+    jobs, source = load_job_map(job_map_path)
+    if job_id_override is not None and hospital:
+        jobs = dict(jobs)
+        jobs[hospital] = job_id_override
+        source = "override"
+    return jobs, source
 
 
 def has_legacy_layout(path: Path) -> bool:
@@ -663,6 +689,20 @@ def parse_args() -> argparse.Namespace:
         choices=["bill", "dept_summary", "price_summary", "instrument_audit", "logistics_allocation", "grand_total"],
         help="export-v2 类型（非 bill 时仅验证导出成功，不做处理后表逐行比对）",
     )
+    p.add_argument(
+        "--job-map",
+        type=Path,
+        default=None,
+        metavar="JSON",
+        help="Job 映射 JSON（jobs: {folder: jobId}）；优先于 批量6月系统对账结果.md",
+    )
+    p.add_argument(
+        "--job-id",
+        type=int,
+        default=None,
+        metavar="ID",
+        help="单院 Job 覆盖（须与 --hospital 单院联用）",
+    )
     return p.parse_args()
 
 
@@ -704,7 +744,14 @@ def main() -> int:
             print(f"未知医院（不在 TODO 列表）: {h}", file=sys.stderr)
             return 2
 
-    jobs = parse_job_table()
+    if args.job_id is not None and len(hospitals) != 1:
+        print("--job-id 须与单个 --hospital 联用", file=sys.stderr)
+        return 2
+    jobs, job_source = resolve_jobs(
+        args.job_map,
+        args.job_id,
+        hospitals[0] if args.job_id is not None else None,
+    )
     EXPORT_DIR.mkdir(parents=True, exist_ok=True)
     token = get_token()
     results: list[dict] = []
@@ -712,7 +759,7 @@ def main() -> int:
 
     for folder in hospitals:
         base = TEST_CASE / folder
-        entry: dict = {"folder": folder, "status": "pending", "detail": ""}
+        entry: dict = {"folder": folder, "status": "pending", "detail": "", "job_source": job_source}
 
         if folder == "哈尔滨工程大学医院":
             entry["status"] = "skip"

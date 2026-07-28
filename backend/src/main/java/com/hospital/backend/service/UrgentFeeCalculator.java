@@ -49,8 +49,10 @@ public final class UrgentFeeCalculator {
             return Optional.empty();
         }
 
-        double baseMultiplier = readParam(policy, "baseMultiplier", DEFAULT_BASE_MULTIPLIER);
-        double adjustedMultiplier = readParam(policy, "adjustedMultiplier", DEFAULT_ADJUSTED_MULTIPLIER);
+        double baseMultiplier = readParam(policy, "baseMultiplier",
+                readParam(policy, "urgentRate", DEFAULT_BASE_MULTIPLIER));
+        double adjustedMultiplier = readParam(policy, "adjustedMultiplier",
+                readParam(policy, "reducedRate", DEFAULT_ADJUSTED_MULTIPLIER));
         double urgentLogisticsFeePerTrip = readParam(policy, "urgentLogisticsFeePerTrip", DEFAULT_URGENT_LOGISTICS_FEE);
         double urgentLogisticsDiscountRate = readParam(policy, "urgentLogisticsDiscountRate", DEFAULT_URGENT_LOGISTICS_DISCOUNT);
 
@@ -141,7 +143,7 @@ public final class UrgentFeeCalculator {
         return breakdown;
     }
 
-    static boolean isUrgentRow(Map<String, Object> row) {
+    public static boolean isUrgentRow(Map<String, Object> row) {
         Object flag = row.get("isUrgent");
         if (flag == null) {
             flag = row.get("is_urgent");
@@ -154,6 +156,20 @@ public final class UrgentFeeCalculator {
         }
         if (flag instanceof String str) {
             return "true".equalsIgnoreCase(str) || "1".equals(str);
+        }
+        Object sheetName = row.get("sheetName");
+        if (sheetName == null) {
+            sheetName = row.get("sheet_name");
+        }
+        if (sheetName != null && String.valueOf(sheetName).contains("加急")) {
+            return true;
+        }
+        Object billingNotes = row.get("billingNotes");
+        if (billingNotes == null) {
+            billingNotes = row.get("billing_notes");
+        }
+        if (billingNotes != null && String.valueOf(billingNotes).contains("加急")) {
+            return true;
         }
         return false;
     }

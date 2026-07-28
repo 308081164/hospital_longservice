@@ -1,1 +1,1678 @@
 sheet	row	orderNo	packName	packCount	unitPrice	ruleUnit	status	pricingRule
+ICU病房	12	1608752	简易呼吸器-1/Z3044	1	22.0	22.0	warning	special_only 未命中特色规则
+ICU病房	13	1614232	导丝-1/Z1029	2	22.0	22.0	warning	special_only 未命中特色规则
+ICU病房	14	1614232	简易呼吸器-1/Z3044	1	22.0	22.0	warning	special_only 未命中特色规则
+ICU病房	15	1614232	湿化瓶-1/Z3032	1	22.0	22.0	warning	special_only 未命中特色规则
+ICU病房	16	1615676	口垫-1/Z1026	1	22.0	22.0	warning	special_only 未命中特色规则
+VIP	9	1615333	诊锤-1/Z1029	1	8.0	8.0	warning	special_only 未命中特色规则
+VIP	10	1615333	子痫包-3/Z1526	1	16.5	16.5	warning	special_only 未命中特色规则
+产二科	9	1613164	宫颈钳1卵圆钳1剪刀1/W6050	1	16.5	16.5	warning	special_only 未命中特色规则
+产二科	10	1615334	宫颈钳1卵圆钳1剪刀1/W6050	1	16.5	16.5	warning	special_only 未命中特色规则
+产五科	9	1611112	水囊引产	1	22.0	22.0	warning	special_only 未命中特色规则
+产前诊断	9	1608606	擦手巾（棉布）	2	15.0	15.0	warning	敷料包(无纺布包)——未识别规格
+产前诊断	10	1608664	持物钳,缸-2/Z2044	4	16.5	16.5	warning	special_only 未命中特色规则
+产前诊断	11	1610707	擦手巾（棉布）	2	15.0	15.0	warning	敷料包(无纺布包)——未识别规格
+产前诊断	12	1610787	持物钳,缸-2/Z2044	3	16.5	16.5	warning	special_only 未命中特色规则
+产前诊断	13	1612716	擦手巾（棉布）	2	15.0	15.0	warning	敷料包(无纺布包)——未识别规格
+产前诊断	14	1612751	持物钳,缸-2/Z2044	4	16.5	16.5	warning	special_only 未命中特色规则
+产前诊断	15	1614463	擦手巾（棉布）	2	15.0	15.0	warning	敷料包(无纺布包)——未识别规格
+产前诊断	16	1614567	持物钳,缸-2/Z2044	4	16.5	16.5	warning	special_only 未命中特色规则
+产前诊断	17	1614567	弯盘-1/Z2032	1	13.0	13.0	warning	special_only 未命中特色规则
+产前诊断	18	1616368	擦手巾（棉布）	2	15.0	15.0	warning	敷料包(无纺布包)——未识别规格
+产四科	9	1608655	球囊置换包-5/W6050	1	27.5	27.5	warning	special_only 未命中特色规则
+介入科	9	1610792	剪刀-1/Z1029	1	8.0	8.0	warning	special_only 未命中特色规则
+介入科	10	1610810	持物钳罐-2/W6050	1	16.5	16.5	warning	special_only 未命中特色规则
+介入科	11	1612387	凹凸钳-1/Z1035	1	8.0	8.0	warning	special_only 未命中特色规则
+介入科	12	1615337	剪刀-1/Z1029	1	8.0	8.0	warning	special_only 未命中特色规则
+介入科	13	1615337	持物钳罐-2/W6050	1	16.5	16.5	warning	special_only 未命中特色规则
+介入科	14	1616108	持物钳罐-2/W6050	1	16.5	16.5	warning	special_only 未命中特色规则
+分娩室	9	1608182	产包	9	27.5	27.5	warning	special_only 未命中特色规则
+分娩室	10	1608182	产钳-2/W7050	1	16.5	16.5	warning	special_only 未命中特色规则
+分娩室	11	1608270	侧切剪-1/Z1029	2	8.0	8.0	warning	special_only 未命中特色规则
+分娩室	12	1608270	拉钩-2/Z2032	1	16.5	16.5	warning	special_only 未命中特色规则
+分娩室	13	1608270	卵圆钳-2/Z1535	1	16.5	16.5	warning	special_only 未命中特色规则
+分娩室	14	1608270	镊子缸-2/Z2044	1	16.5	16.5	warning	special_only 未命中特色规则
+分娩室	15	1609013	侧切剪-1/Z1029	4	8.0	8.0	warning	special_only 未命中特色规则
+分娩室	16	1609013	拉钩-2/Z2032	2	16.5	16.5	warning	special_only 未命中特色规则
+分娩室	17	1609013	卵圆钳-2/Z1535	2	16.5	16.5	warning	special_only 未命中特色规则
+分娩室	18	1609013	产包	6	27.5	27.5	warning	special_only 未命中特色规则
+分娩室	19	1609779	侧切剪-1/Z1029	2	8.0	8.0	warning	special_only 未命中特色规则
+分娩室	20	1609779	拉钩-2/Z2032	2	16.5	16.5	warning	special_only 未命中特色规则
+分娩室	21	1609779	卵圆钳-2/Z1535	2	16.5	16.5	warning	special_only 未命中特色规则
+分娩室	22	1609779	产包	7	27.5	27.5	warning	special_only 未命中特色规则
+分娩室	23	1610351	侧切剪-1/Z1029	5	8.0	8.0	warning	special_only 未命中特色规则
+分娩室	24	1610351	拉钩-2/Z2032	1	16.5	16.5	warning	special_only 未命中特色规则
+分娩室	25	1610351	产包	12	27.5	27.5	warning	special_only 未命中特色规则
+分娩室	26	1611113	侧切剪-1/Z1029	2	8.0	8.0	warning	special_only 未命中特色规则
+分娩室	27	1611113	拉钩-2/Z2032	1	16.5	16.5	warning	special_only 未命中特色规则
+分娩室	28	1611113	卵圆钳-2/Z1535	1	16.5	16.5	warning	special_only 未命中特色规则
+分娩室	29	1611113	产包	8	27.5	27.5	warning	special_only 未命中特色规则
+分娩室	30	1611865	侧切剪-1/Z1029	2	8.0	8.0	warning	special_only 未命中特色规则
+分娩室	31	1611865	产包	5	27.5	27.5	warning	special_only 未命中特色规则
+分娩室	32	1612084	侧切剪-1/Z1029	3	8.0	8.0	warning	special_only 未命中特色规则
+分娩室	33	1612084	拉钩-2/Z2032	1	16.5	16.5	warning	special_only 未命中特色规则
+分娩室	34	1612084	卵圆钳-2/Z1535	2	16.5	16.5	warning	special_only 未命中特色规则
+分娩室	35	1612084	产包	11	27.5	27.5	warning	special_only 未命中特色规则
+分娩室	36	1612822	侧切剪-1/Z1029	4	8.0	8.0	warning	special_only 未命中特色规则
+分娩室	37	1612822	镊子缸-2/Z2044	1	16.5	16.5	warning	special_only 未命中特色规则
+分娩室	38	1612822	产包	9	27.5	27.5	warning	special_only 未命中特色规则
+分娩室	39	1613526	侧切剪-1/Z1029	5	8.0	8.0	warning	special_only 未命中特色规则
+分娩室	40	1613526	卵圆钳-2/Z1535	1	16.5	16.5	warning	special_only 未命中特色规则
+分娩室	41	1613526	产包	7	27.5	27.5	warning	special_only 未命中特色规则
+分娩室	42	1613788	侧切剪-1/Z1029	5	8.0	8.0	warning	special_only 未命中特色规则
+分娩室	43	1613788	拉钩-2/Z2032	1	16.5	16.5	warning	special_only 未命中特色规则
+分娩室	44	1613788	卵圆钳-2/Z1535	1	16.5	16.5	warning	special_only 未命中特色规则
+分娩室	45	1613788	产包	14	27.5	27.5	warning	special_only 未命中特色规则
+分娩室	46	1614105	侧切剪-1/Z1029	3	8.0	8.0	warning	special_only 未命中特色规则
+分娩室	47	1614105	拉钩-2/Z2032	1	16.5	16.5	warning	special_only 未命中特色规则
+分娩室	48	1614105	卵圆钳-2/Z1535	1	16.5	16.5	warning	special_only 未命中特色规则
+分娩室	49	1614105	产包	9	27.5	27.5	warning	special_only 未命中特色规则
+分娩室	50	1614891	侧切剪-1/Z1029	4	8.0	8.0	warning	special_only 未命中特色规则
+分娩室	51	1614891	产包	9	27.5	27.5	warning	special_only 未命中特色规则
+分娩室	52	1615548	侧切剪-1/Z1029	2	8.0	8.0	warning	special_only 未命中特色规则
+分娩室	53	1615548	拉钩-2/Z2032	1	16.5	16.5	warning	special_only 未命中特色规则
+分娩室	54	1615548	卵圆钳-2/Z1535	2	16.5	16.5	warning	special_only 未命中特色规则
+分娩室	55	1615548	产包	12	27.5	27.5	warning	special_only 未命中特色规则
+分娩室	56	1616073	产包	12	27.5	27.5	warning	special_only 未命中特色规则
+分娩室	57	1616104	侧切剪-1/Z1029	1	8.0	8.0	warning	special_only 未命中特色规则
+分娩室	58	1616104	拉钩-2/Z2032	1	16.5	16.5	warning	special_only 未命中特色规则
+分娩室	59	1616104	卵圆钳-2/Z1535	1	16.5	16.5	warning	special_only 未命中特色规则
+口腔科	9	1608665	车针-20/Z7520	1	22.0	22.0	warning	special_only 未命中特色规则
+口腔科	10	1608665	持针器-1/Z1029	1	8.0	8.0	warning	special_only 未命中特色规则
+口腔科	11	1608665	唇钩-3/Z7520	1	16.5	16.5	warning	special_only 未命中特色规则
+口腔科	12	1608665	根扩针-20/Z7520	1	22.0	22.0	warning	special_only 未命中特色规则
+口腔科	13	1608665	洁牙机手柄-1/Z7526	1	8.0	8.0	warning	special_only 未命中特色规则
+口腔科	14	1608665	镊子缸-1/Z2032	1	13.0	13.0	warning	special_only 未命中特色规则
+口腔科	15	1608665	排龈刀-1/Z7537	1	8.0	8.0	warning	special_only 未命中特色规则
+口腔科	16	1608665	钳子-1/Z1029	1	8.0	8.0	warning	special_only 未命中特色规则
+口腔科	17	1608665	三枪头-5/Z7520	1	27.5	27.5	warning	special_only 未命中特色规则
+口腔科	18	1608665	手机-1/Z7526	14	8.0	8.0	warning	special_only 未命中特色规则
+口腔科	19	1608665	吸唾-1/Z7534	1	8.0	8.0	warning	special_only 未命中特色规则
+口腔科	20	1608665	组件-5/Z1026	1	27.5	27.5	warning	special_only 未命中特色规则
+口腔科	21	1608700	持针器-1/Z1029	1	8.0	8.0	warning	special_only 未命中特色规则
+口腔科	22	1608700	钳子-1/Z1029	1	8.0	8.0	warning	special_only 未命中特色规则
+口腔科	23	1608700	三枪头-5/Z7520	1	27.5	27.5	warning	special_only 未命中特色规则
+口腔科	24	1608700	挺子-1/Z7526	2	8.0	8.0	warning	special_only 未命中特色规则
+口腔科	25	1608700	注射器-1/Z1029	2	8.0	8.0	warning	special_only 未命中特色规则
+口腔科	26	1609048	车针-20/Z7520	1	22.0	22.0	warning	special_only 未命中特色规则
+口腔科	27	1609048	唇钩-3/Z7520	1	16.5	16.5	warning	special_only 未命中特色规则
+口腔科	28	1609048	刀柄-1/Z7526	1	8.0	8.0	warning	special_only 未命中特色规则
+口腔科	29	1609048	根扩针-20/Z7520	1	22.0	22.0	warning	special_only 未命中特色规则
+口腔科	30	1609048	洁牙机手柄-1/Z7526	1	8.0	8.0	warning	special_only 未命中特色规则
+口腔科	31	1609048	三枪头-5/Z7520	2	27.5	27.5	warning	special_only 未命中特色规则
+口腔科	32	1609048	手机-1/Z7526	12	8.0	8.0	warning	special_only 未命中特色规则
+口腔科	33	1609048	组件-5/Z1026	1	27.5	27.5	warning	special_only 未命中特色规则
+口腔科	34	1609390	成型夹1/Z1026	1	8.0	8.0	warning	special_only 未命中特色规则
+口腔科	35	1609390	洁牙机手柄-1/Z7526	1	8.0	8.0	warning	special_only 未命中特色规则
+口腔科	36	1609390	三枪头-5/Z7520	1	27.5	27.5	warning	special_only 未命中特色规则
+口腔科	37	1609390	手机-1/Z7526	8	8.0	8.0	warning	special_only 未命中特色规则
+口腔科	38	1609390	针类组件-20/Z7520	2	22.0	22.0	warning	special_only 未命中特色规则
+口腔科	39	1609390	注射器-1/Z1029	1	8.0	8.0	warning	special_only 未命中特色规则
+口腔科	40	1609390	组件-5/Z1026	1	27.5	27.5	warning	special_only 未命中特色规则
+口腔科	41	1609837	唇钩-4/Z7520	1	22.0	22.0	warning	special_only 未命中特色规则
+口腔科	42	1609837	根扩针-20/Z7520	1	22.0	22.0	warning	special_only 未命中特色规则
+口腔科	43	1609837	三枪头-5/Z7520	1	27.5	27.5	warning	special_only 未命中特色规则
+口腔科	44	1609837	手机-1/Z7526	4	8.0	8.0	warning	special_only 未命中特色规则
+口腔科	45	1609837	挺子-1/Z7526	2	8.0	8.0	warning	special_only 未命中特色规则
+口腔科	46	1609837	注射器-1/Z1029	1	8.0	8.0	warning	special_only 未命中特色规则
+口腔科	47	1609837	组件-4/Z7530	1	22.0	22.0	warning	special_only 未命中特色规则
+口腔科	48	1610355	车针-20/Z7520	1	22.0	22.0	warning	special_only 未命中特色规则
+口腔科	49	1610355	唇钩-4/Z7520	1	22.0	22.0	warning	special_only 未命中特色规则
+口腔科	50	1610355	根扩针-15/Z7520	2	22.0	22.0	warning	special_only 未命中特色规则
+口腔科	51	1610355	三枪头-5/Z7520	1	27.5	27.5	warning	special_only 未命中特色规则
+口腔科	52	1610355	注射器-1/Z1029	1	8.0	8.0	warning	special_only 未命中特色规则
+口腔科	53	1610389	洁牙机手柄-1/Z7526	2	8.0	8.0	warning	special_only 未命中特色规则
+口腔科	54	1610389	手机-1/Z7526	6	8.0	8.0	warning	special_only 未命中特色规则
+口腔科	55	1610794	洁牙机手柄-1/Z7526	2	8.0	8.0	warning	special_only 未命中特色规则
+口腔科	56	1610794	三枪头-5/Z7520	1	27.5	27.5	warning	special_only 未命中特色规则
+口腔科	57	1610794	手机-1/Z7526	3	8.0	8.0	warning	special_only 未命中特色规则
+口腔科	58	1610794	针类组件-20/Z7520	1	22.0	22.0	warning	special_only 未命中特色规则
+口腔科	59	1611551	车针-20/Z7520	1	22.0	22.0	warning	special_only 未命中特色规则
+口腔科	60	1611551	唇钩-4/Z7520	1	22.0	22.0	warning	special_only 未命中特色规则
+口腔科	61	1611551	根扩针-20/Z7520	1	22.0	22.0	warning	special_only 未命中特色规则
+口腔科	62	1611551	刮治器-3/Z7530	1	16.5	16.5	warning	special_only 未命中特色规则
+口腔科	63	1611551	洁牙机手柄-1/Z7526	1	8.0	8.0	warning	special_only 未命中特色规则
+口腔科	64	1611551	三枪头-5/Z7520	1	27.5	27.5	warning	special_only 未命中特色规则
+口腔科	65	1611551	手机-1/Z7526	6	8.0	8.0	warning	special_only 未命中特色规则
+口腔科	66	1611551	注射器-1/Z1029	1	8.0	8.0	warning	special_only 未命中特色规则
+口腔科	67	1611551	组件-5/Z1026	2	27.5	27.5	warning	special_only 未命中特色规则
+口腔科	68	1611867	洁牙机手柄-1/Z7526	2	8.0	8.0	warning	special_only 未命中特色规则
+口腔科	69	1611867	开口器-1/Z1026	1	8.0	8.0	warning	special_only 未命中特色规则
+口腔科	70	1611867	镊子缸-2/Z2044	1	16.5	16.5	warning	special_only 未命中特色规则
+口腔科	71	1611867	去冠器-1/Z7534	2	8.0	8.0	warning	special_only 未命中特色规则
+口腔科	72	1611867	三枪头-5/Z7520	1	27.5	27.5	warning	special_only 未命中特色规则
+口腔科	73	1611867	手机-1/Z7526	10	8.0	8.0	warning	special_only 未命中特色规则
+口腔科	74	1611867	挺子-1/Z7526	1	8.0	8.0	warning	special_only 未命中特色规则
+口腔科	75	1611867	托盘-3/Z1526	1	16.5	16.5	warning	special_only 未命中特色规则
+口腔科	76	1611867	钥匙-1/Z1020	1	8.0	8.0	warning	special_only 未命中特色规则
+口腔科	77	1611867	针类组件-15/Z7520	1	16.5	16.5	warning	special_only 未命中特色规则
+口腔科	78	1611867	针类组件-20/Z7520	1	22.0	22.0	warning	special_only 未命中特色规则
+口腔科	79	1611867	组件-5/Z1026	1	27.5	27.5	warning	special_only 未命中特色规则
+口腔科	80	1612389	充填器-1/Z7530	1	8.0	8.0	warning	special_only 未命中特色规则
+口腔科	81	1612389	唇钩-4/Z7520	1	22.0	22.0	warning	special_only 未命中特色规则
+口腔科	82	1612389	洁牙机手柄-1/Z7526	1	8.0	8.0	warning	special_only 未命中特色规则
+口腔科	83	1612389	三枪头-5/Z7520	1	27.5	27.5	warning	special_only 未命中特色规则
+口腔科	84	1612389	手机-1/Z7526	6	8.0	8.0	warning	special_only 未命中特色规则
+口腔科	85	1612389	针类组件-15/Z7520	2	16.5	16.5	warning	special_only 未命中特色规则
+口腔科	86	1612389	组件-4/Z7530	1	22.0	22.0	warning	special_only 未命中特色规则
+口腔科	87	1612823	车针-15/z7520	1	16.5	16.5	warning	special_only 未命中特色规则
+口腔科	88	1612823	钳子-1/Z1029	2	8.0	8.0	warning	special_only 未命中特色规则
+口腔科	89	1612823	三枪头-5/Z7520	1	27.5	27.5	warning	special_only 未命中特色规则
+口腔科	90	1612823	手机-1/Z7526	2	8.0	8.0	warning	special_only 未命中特色规则
+口腔科	91	1612823	挺子-1/Z7526	3	8.0	8.0	warning	special_only 未命中特色规则
+口腔科	92	1612823	托盘-4/Z1526	1	22.0	22.0	warning	special_only 未命中特色规则
+口腔科	93	1613168	车针-20/Z7520	1	22.0	22.0	warning	special_only 未命中特色规则
+口腔科	94	1613168	成型夹1/Z1026	1	8.0	8.0	warning	special_only 未命中特色规则
+口腔科	95	1613168	三枪头-5/Z7520	1	27.5	27.5	warning	special_only 未命中特色规则
+口腔科	96	1613168	手机-1/Z7526	8	8.0	8.0	warning	special_only 未命中特色规则
+口腔科	97	1613168	注射器-1/Z1029	1	8.0	8.0	warning	special_only 未命中特色规则
+口腔科	98	1613168	组件-4/Z7530	2	22.0	22.0	warning	special_only 未命中特色规则
+口腔科	99	1613560	持针器-1/Z1029	1	8.0	8.0	warning	special_only 未命中特色规则
+口腔科	100	1613560	唇钩-3/Z7520	1	16.5	16.5	warning	special_only 未命中特色规则
+口腔科	101	1613560	洁牙机手柄-1/Z7526	1	8.0	8.0	warning	special_only 未命中特色规则
+口腔科	102	1613560	钳子-1/Z1029	2	8.0	8.0	warning	special_only 未命中特色规则
+口腔科	103	1613560	三枪头-5/Z7520	1	27.5	27.5	warning	special_only 未命中特色规则
+口腔科	104	1613560	手机-1/Z7526	4	8.0	8.0	warning	special_only 未命中特色规则
+口腔科	105	1613560	挺子-1/Z7526	1	8.0	8.0	warning	special_only 未命中特色规则
+口腔科	106	1613560	针类组件-15/Z7520	1	16.5	16.5	warning	special_only 未命中特色规则
+口腔科	107	1614137	成型夹1/Z1026	1	8.0	8.0	warning	special_only 未命中特色规则
+口腔科	108	1614137	洁牙机手柄-1/Z7526	1	8.0	8.0	warning	special_only 未命中特色规则
+口腔科	109	1614137	钳子-1/Z1029	1	8.0	8.0	warning	special_only 未命中特色规则
+口腔科	110	1614137	三枪头-5/Z7520	1	27.5	27.5	warning	special_only 未命中特色规则
+口腔科	111	1614137	手机-1/Z7526	13	8.0	8.0	warning	special_only 未命中特色规则
+口腔科	112	1614137	挺子-1/Z7526	2	8.0	8.0	warning	special_only 未命中特色规则
+口腔科	113	1614137	针类组件-15/Z7520	1	16.5	16.5	warning	special_only 未命中特色规则
+口腔科	114	1614137	针类组件-20/Z7520	1	22.0	22.0	warning	special_only 未命中特色规则
+口腔科	115	1614137	注射器-1/Z1029	2	8.0	8.0	warning	special_only 未命中特色规则
+口腔科	116	1614137	组件-4/Z7530	2	22.0	22.0	warning	special_only 未命中特色规则
+口腔科	117	1614572	车针-15/z7520	1	16.5	16.5	warning	special_only 未命中特色规则
+口腔科	118	1614572	唇钩-3/Z7520	1	16.5	16.5	warning	special_only 未命中特色规则
+口腔科	119	1614572	根扩针-15/Z7520	1	22.0	22.0	warning	special_only 未命中特色规则
+口腔科	120	1614572	洁牙机手柄-1/Z7526	2	8.0	8.0	warning	special_only 未命中特色规则
+口腔科	121	1614572	钳子-1/Z1029	1	8.0	8.0	warning	special_only 未命中特色规则
+口腔科	122	1614572	去冠器-1/Z7534	1	8.0	8.0	warning	special_only 未命中特色规则
+口腔科	123	1614572	三枪头-5/Z7520	2	27.5	27.5	warning	special_only 未命中特色规则
+口腔科	124	1614572	手机-1/Z7526	11	8.0	8.0	warning	special_only 未命中特色规则
+口腔科	125	1614572	组件-4/Z7530	2	22.0	22.0	warning	special_only 未命中特色规则
+口腔科	126	1614886	车针-15/z7520	1	16.5	16.5	warning	special_only 未命中特色规则
+口腔科	127	1614886	根扩针-15/Z7520	1	22.0	22.0	warning	special_only 未命中特色规则
+口腔科	128	1614886	三枪头-5/Z7520	2	27.5	27.5	warning	special_only 未命中特色规则
+口腔科	129	1614886	手机-1/Z7526	8	8.0	8.0	warning	special_only 未命中特色规则
+口腔科	130	1614886	托盘-4/Z1526	1	22.0	22.0	warning	special_only 未命中特色规则
+口腔科	131	1614886	组件-4/Z7530	2	22.0	22.0	warning	special_only 未命中特色规则
+口腔科	132	1615338	持针器-1/Z1029	1	8.0	8.0	warning	special_only 未命中特色规则
+口腔科	133	1615338	唇钩-3/Z7520	1	16.5	16.5	warning	special_only 未命中特色规则
+口腔科	134	1615338	钳子-1/Z1029	1	8.0	8.0	warning	special_only 未命中特色规则
+口腔科	135	1615338	去冠器-1/Z7534	1	8.0	8.0	warning	special_only 未命中特色规则
+口腔科	136	1615338	三枪头-5/Z7520	1	27.5	27.5	warning	special_only 未命中特色规则
+口腔科	137	1615338	手机-1/Z7526	3	8.0	8.0	warning	special_only 未命中特色规则
+口腔科	138	1615338	挺子-1/Z7526	4	8.0	8.0	warning	special_only 未命中特色规则
+口腔科	139	1615338	托盘-5/Z1526	1	27.5	27.5	warning	special_only 未命中特色规则
+口腔科	140	1615338	针类组件-15/Z7520	1	16.5	16.5	warning	special_only 未命中特色规则
+口腔科	141	1615338	注射器-1/Z1029	2	8.0	8.0	warning	special_only 未命中特色规则
+口腔科	142	1615338	组件-4/Z7530	1	22.0	22.0	warning	special_only 未命中特色规则
+口腔科	143	1615582	洁牙机手柄-1/Z7526	2	8.0	8.0	warning	special_only 未命中特色规则
+口腔科	144	1615582	三枪头-5/Z7520	1	27.5	27.5	warning	special_only 未命中特色规则
+口腔科	145	1615582	手机-1/Z7526	9	8.0	8.0	warning	special_only 未命中特色规则
+口腔科	146	1615582	针类组件-20/Z7520	1	22.0	22.0	warning	special_only 未命中特色规则
+口腔科	147	1616088	车针-15/z7520	2	16.5	16.5	warning	special_only 未命中特色规则
+口腔科	148	1616088	唇钩-5/Z7520	1	27.5	27.5	warning	special_only 未命中特色规则
+口腔科	149	1616088	根扩针-15/Z7520	2	22.0	22.0	warning	special_only 未命中特色规则
+口腔科	150	1616088	洁牙机手柄-1/Z7526	2	8.0	8.0	warning	special_only 未命中特色规则
+口腔科	151	1616088	开口器-1/Z1026	1	8.0	8.0	warning	special_only 未命中特色规则
+口腔科	152	1616088	三枪头-5/Z7520	1	27.5	27.5	warning	special_only 未命中特色规则
+口腔科	153	1616088	手机-1/Z7526	13	8.0	8.0	warning	special_only 未命中特色规则
+口腔科	154	1616088	托盘-4/Z1526	1	22.0	22.0	warning	special_only 未命中特色规则
+口腔科	155	1616088	组件-4/Z7530	1	22.0	22.0	warning	special_only 未命中特色规则
+口腔科	156	1616113	三枪头-5/Z7520	1	27.5	27.5	warning	special_only 未命中特色规则
+妇一科	9	1608654	凹凸钳-1/Z1035	1	8.0	8.0	warning	special_only 未命中特色规则
+妇一科	10	1608654	剪刀-1/Z1029	1	8.0	8.0	warning	special_only 未命中特色规则
+妇一科	11	1608654	止血钳-1/Z1029	1	8.0	8.0	warning	special_only 未命中特色规则
+妇一科	12	1608654	宫颈扩张包-4件/W6050	2	22.0	22.0	warning	special_only 未命中特色规则
+妇一科	13	1609044	宫颈扩张包-4件/W6050	1	22.0	22.0	warning	special_only 未命中特色规则
+妇一科	14	1609388	宫颈扩张包-4件/W6050	1	22.0	22.0	warning	special_only 未命中特色规则
+妇一科	15	1610789	凹凸钳-1/Z1035	1	8.0	8.0	warning	special_only 未命中特色规则
+妇一科	16	1610789	镊子-1/Z7534	1	8.0	8.0	warning	special_only 未命中特色规则
+妇一科	17	1610789	宫颈扩张包-4件/W6050	3	22.0	22.0	warning	special_only 未命中特色规则
+妇一科	18	1611519	宫颈扩张包-4件/W6050	1	22.0	22.0	warning	special_only 未命中特色规则
+妇一科	19	1611549	凹凸钳-1/Z1035	1	8.0	8.0	warning	special_only 未命中特色规则
+妇一科	20	1611549	剪刀-1/Z1029	1	8.0	8.0	warning	special_only 未命中特色规则
+妇一科	21	1612754	凹凸钳-1/Z1035	1	8.0	8.0	warning	special_only 未命中特色规则
+妇一科	22	1612754	宫颈钳-1/Z1535	1	11.0	11.0	warning	special_only 未命中特色规则
+妇一科	23	1612754	剪刀-1/Z1029	1	8.0	8.0	warning	special_only 未命中特色规则
+妇一科	24	1612754	宫颈扩张包-4件/W6050	1	22.0	22.0	warning	special_only 未命中特色规则
+妇一科	25	1613165	止血钳-1/Z1029	1	8.0	8.0	warning	special_only 未命中特色规则
+妇一科	26	1613528	宫颈扩张包-4件/W6050	1	22.0	22.0	warning	special_only 未命中特色规则
+妇一科	27	1613559	镊子-1/Z7534	1	8.0	8.0	warning	special_only 未命中特色规则
+妇一科	28	1614569	凹凸钳-1/Z1035	1	8.0	8.0	warning	special_only 未命中特色规则
+妇一科	29	1614569	剪刀-1/Z1029	2	8.0	8.0	warning	special_only 未命中特色规则
+妇一科	30	1614569	止血钳-1/Z1029	1	8.0	8.0	warning	special_only 未命中特色规则
+妇一科	31	1614569	宫颈扩张包-4件/W6050	2	22.0	22.0	warning	special_only 未命中特色规则
+妇一科	32	1614890	镊子-1/Z7534	1	8.0	8.0	warning	special_only 未命中特色规则
+妇一科	33	1614890	宫颈扩张包-4件/W6050	1	22.0	22.0	warning	special_only 未命中特色规则
+妇一科	34	1615335	宫颈扩张包-4件/W6050	1	22.0	22.0	warning	special_only 未命中特色规则
+妇一科	35	1615550	宫颈扩张包-4件/W6050	1	22.0	22.0	warning	special_only 未命中特色规则
+妇三	9	1608271	换药缸-1/Z2530	1	16.0	16.0	warning	special_only 未命中特色规则
+妇三	10	1609387	换药缸-1/Z2530	1	16.0	16.0	warning	special_only 未命中特色规则
+妇三	11	1610352	换药缸-1/Z2530	1	16.0	16.0	warning	special_only 未命中特色规则
+妇三	12	1611114	换药缸-1/Z2530	1	16.0	16.0	warning	special_only 未命中特色规则
+妇三	13	1612019	换药缸-1/Z2530	1	16.0	16.0	warning	special_only 未命中特色规则
+妇三	14	1612753	凹凸钳-1/Z1035	1	8.0	8.0	warning	special_only 未命中特色规则
+妇三	15	1613527	无菌缸-1/Z2530	1	16.0	16.0	warning	special_only 未命中特色规则
+妇三	16	1613846	换药缸-1/Z2530	1	16.0	16.0	warning	special_only 未命中特色规则
+妇三	17	1615549	换药缸-1/Z2530	1	16.0	16.0	warning	special_only 未命中特色规则
+妇三	18	1616105	换药缸-1/Z2530	1	16.0	16.0	warning	special_only 未命中特色规则
+妇保	9	1609386	止血钳-1/Z1029	1	8.0	8.0	warning	special_only 未命中特色规则
+妇幼门诊手术室	9	1608183	棉球/Z1535	15	2.5	2.5	warning	敷料包(纸塑袋)+棉球——未识别规格
+妇幼门诊手术室	10	1608225	人流包	4	49.5	49.5	warning	special_only 未命中特色规则
+妇幼门诊手术室	11	1608225	上取环包	3	49.5	49.5	warning	special_only 未命中特色规则
+妇幼门诊手术室	12	1608272	取环钳-1/Z1535	2	11.0	11.0	warning	special_only 未命中特色规则
+妇幼门诊手术室	13	1608272	止血钳-1/Z1029	3	8.0	8.0	warning	special_only 未命中特色规则
+妇幼门诊手术室	14	1608272	扩棒-6，吸头1/W6050	2	38.5	38.5	warning	special_only 未命中特色规则
+妇幼门诊手术室	15	1610332	棉球/Z1526	30	2.5	2.5	warning	敷料包(纸塑袋)+棉球——未识别规格
+妇幼门诊手术室	16	1610387	换药缸-1/Z2530	5	16.0	16.0	warning	special_only 未命中特色规则
+妇幼门诊手术室	17	1610387	取环钳-1/Z1535	1	11.0	11.0	warning	special_only 未命中特色规则
+妇幼门诊手术室	18	1610387	止血钳-1/Z1029	2	8.0	8.0	warning	special_only 未命中特色规则
+妇幼门诊手术室	19	1610387	人流包	5	49.5	49.5	warning	special_only 未命中特色规则
+妇幼门诊手术室	20	1610387	上取环包	3	49.5	49.5	warning	special_only 未命中特色规则
+妇幼门诊手术室	21	1612348	人流包	2	49.5	49.5	warning	special_only 未命中特色规则
+妇幼门诊手术室	22	1612348	上取环包	5	49.5	49.5	warning	special_only 未命中特色规则
+妇幼门诊手术室	23	1612384	换药缸-1/Z2530	5	16.0	16.0	warning	special_only 未命中特色规则
+妇幼门诊手术室	24	1612384	大镊子-1/Z7534	1	8.0	8.0	warning	special_only 未命中特色规则
+妇幼门诊手术室	25	1612384	剪刀-1/Z1029	3	8.0	8.0	warning	special_only 未命中特色规则
+妇幼门诊手术室	26	1612384	取环钳-1/Z1535	2	11.0	11.0	warning	special_only 未命中特色规则
+妇幼门诊手术室	27	1614106	换药缸-1/Z2530	2	16.0	16.0	warning	special_only 未命中特色规则
+妇幼门诊手术室	28	1614106	刮匙-1/Z7530	2	8.0	8.0	warning	special_only 未命中特色规则
+妇幼门诊手术室	29	1614106	取环钳-1/Z1535	3	11.0	11.0	warning	special_only 未命中特色规则
+妇幼门诊手术室	30	1614106	止血钳-1/Z1029	2	8.0	8.0	warning	special_only 未命中特色规则
+妇幼门诊手术室	31	1614106	人流包	3	49.5	49.5	warning	special_only 未命中特色规则
+妇幼门诊手术室	32	1614106	上取环包	6	49.5	49.5	warning	special_only 未命中特色规则
+妇幼门诊手术室	33	1614106	扩棒-6，吸头1/W6050	1	38.5	38.5	warning	special_only 未命中特色规则
+妇幼门诊手术室	34	1616024	棉球/Z1526	15	2.5	2.5	warning	敷料包(纸塑袋)+棉球——未识别规格
+妇幼门诊手术室	35	1616072	人流包	1	49.5	49.5	warning	special_only 未命中特色规则
+妇幼门诊手术室	36	1616072	上取环包	3	49.5	49.5	warning	special_only 未命中特色规则
+妇幼门诊手术室	37	1616086	换药缸-1/Z2530	2	16.0	16.0	warning	special_only 未命中特色规则
+妇幼门诊手术室	38	1616086	剪刀-1/Z1029	1	8.0	8.0	warning	special_only 未命中特色规则
+妇幼门诊手术室	39	1616086	取环钳-1/Z1535	2	11.0	11.0	warning	special_only 未命中特色规则
+妇幼门诊手术室	40	1616086	止血钳-1/Z1029	6	8.0	8.0	warning	special_only 未命中特色规则
+妇幼门诊手术室	41	1616106	换药缸-1/Z2530	5	16.0	16.0	warning	special_only 未命中特色规则
+急诊	9	1608226	缝合包(一个钩镊一个平镊)-6/W6050	3	33.0	33.0	warning	special_only 未命中特色规则
+急诊	10	1608273	止血钳-1/Z1029	2	8.0	8.0	warning	special_only 未命中特色规则
+急诊	11	1609045	止血钳-1/Z1029	1	8.0	8.0	warning	special_only 未命中特色规则
+急诊	12	1609045	缝合包(一个钩镊一个平镊)-6/W6050	1	33.0	33.0	warning	special_only 未命中特色规则
+急诊	13	1609836	缝合包(一个钩镊一个平镊)-6/W6050	2	33.0	33.0	warning	special_only 未命中特色规则
+急诊	14	1610388	刀柄-1/Z7526	1	8.0	8.0	warning	special_only 未命中特色规则
+急诊	15	1610388	镊子小-1/Z7526	1	8.0	8.0	warning	special_only 未命中特色规则
+急诊	16	1610388	止血钳-1/Z1029	4	8.0	8.0	warning	special_only 未命中特色规则
+急诊	17	1610388	缝合包(一个钩镊一个平镊)-6/W6050	4	33.0	33.0	warning	special_only 未命中特色规则
+急诊	18	1610790	开口器-1/Z1026	1	8.0	8.0	warning	special_only 未命中特色规则
+急诊	19	1610790	气切包-24/W6050	1	132.0	132.0	warning	special_only 未命中特色规则
+急诊	20	1611115	刀柄-1/Z7526	2	8.0	8.0	warning	special_only 未命中特色规则
+急诊	21	1611115	刮勺-1/Z7537	3	8.0	8.0	warning	special_only 未命中特色规则
+急诊	22	1611115	剪刀小-1/Z1026	2	8.0	8.0	warning	special_only 未命中特色规则
+急诊	23	1611115	探针-1/Z7537	1	8.0	8.0	warning	special_only 未命中特色规则
+急诊	24	1611115	缝合包(一个钩镊一个平镊)-6/W6050	7	33.0	33.0	warning	special_only 未命中特色规则
+急诊	25	1611520	缝合包(一个钩镊一个平镊)-6/W6050	1	33.0	33.0	warning	special_only 未命中特色规则
+急诊	26	1611866	针头-1/Z7526	1	8.0	8.0	warning	special_only 未命中特色规则
+急诊	27	1611866	缝合包(一个钩镊一个平镊)-6/W6050	3	33.0	33.0	warning	special_only 未命中特色规则
+急诊	28	1611974	湿化瓶-1/Z3032	2	22.0	22.0	warning	special_only 未命中特色规则
+急诊	29	1612335	缝合包(一个钩镊一个平镊)-6/W6050	3	33.0	33.0	warning	special_only 未命中特色规则
+急诊	30	1612385	刀柄-1/Z7526	1	8.0	8.0	warning	special_only 未命中特色规则
+急诊	31	1612385	止血钳-1/Z1029	1	8.0	8.0	warning	special_only 未命中特色规则
+急诊	32	1612755	刀柄-1/Z7526	1	8.0	8.0	warning	special_only 未命中特色规则
+急诊	33	1612755	缝合包(一个钩镊一个平镊)-6/W6050	2	33.0	33.0	warning	special_only 未命中特色规则
+急诊	34	1613529	缝合包(一个钩镊一个平镊)-6/W6050	2	33.0	33.0	warning	special_only 未命中特色规则
+急诊	35	1614107	缝合包(一个钩镊一个平镊)-6/W6050	4	33.0	33.0	warning	special_only 未命中特色规则
+急诊	36	1614233	萨博头-1/Z1526	1	22.0	22.0	warning	special_only 未命中特色规则
+急诊	37	1614889	刀柄-1/Z7526	1	8.0	8.0	warning	special_only 未命中特色规则
+急诊	38	1614889	止血钳-1/Z1029	4	8.0	8.0	warning	special_only 未命中特色规则
+急诊	39	1614889	缝合包(一个钩镊一个平镊)-6/W6050	2	33.0	33.0	warning	special_only 未命中特色规则
+急诊	40	1615551	缝合包(一个钩镊一个平镊)-6/W6050	2	33.0	33.0	warning	special_only 未命中特色规则
+急诊	41	1616107	刀柄-1/Z7526	1	8.0	8.0	warning	special_only 未命中特色规则
+急诊	42	1616107	缝合包(一个钩镊一个平镊)-6/W6050	2	33.0	33.0	warning	special_only 未命中特色规则
+手术室	9	1608046	剖宫包□	5	170.5	170.5	warning	special_only 未命中特色规则
+手术室	10	1608046	弹力钩-2/W6050	1	16.5	16.5	warning	special_only 未命中特色规则
+手术室	11	1608046	麻杯1换药碗2弯盘1/W6050	5	22.0	22.0	warning	special_only 未命中特色规则
+手术室	12	1608093	剖宫包□	9	170.5	170.5	warning	special_only 未命中特色规则
+手术室	13	1608093	麻杯1换药碗2弯盘1/W6050	9	22.0	22.0	warning	special_only 未命中特色规则
+手术室	14	1608186	擦手巾	2	15.0	15.0	warning	敷料包(无纺布包)——未识别规格
+手术室	18	1608229	刮宫包（10件）	1	55.0	55.0	warning	special_only 未命中特色规则
+手术室	19	1608229	临时剖宫包□	2	159.5	159.5	warning	special_only 未命中特色规则
+手术室	20	1608229	剖宫包□	9	170.5	170.5	warning	special_only 未命中特色规则
+手术室	21	1608229	全切包□	1	280.5	280.5	warning	special_only 未命中特色规则
+手术室	22	1608229	中引（3件）	1	16.5	16.5	warning	special_only 未命中特色规则
+手术室	23	1608229	产钳-2/W7050	1	16.5	16.5	warning	special_only 未命中特色规则
+手术室	24	1608229	持物钳罐-2/W6050	6	16.5	16.5	warning	special_only 未命中特色规则
+手术室	25	1608229	麻杯1换药碗2弯盘1/W6050	16	22.0	22.0	warning	special_only 未命中特色规则
+手术室	26	1608229	米氏-2持针器-1/W6050	1	16.5	16.5	warning	special_only 未命中特色规则
+手术室	27	1608233	剖宫包□	4	170.5	170.5	warning	special_only 未命中特色规则
+手术室	28	1608279	剪刀-1/Z1029	1	8.0	8.0	warning	special_only 未命中特色规则
+手术室	29	1608450	刮宫包（10件）	1	55.0	55.0	warning	special_only 未命中特色规则
+手术室	30	1608450	剖宫包□	7	170.5	170.5	warning	special_only 未命中特色规则
+手术室	31	1608450	全切包□	2	280.5	280.5	warning	special_only 未命中特色规则
+手术室	32	1608450	小外包△	1	269.5	269.5	warning	special_only 未命中特色规则
+手术室	33	1608450	中引（3件）	1	16.5	16.5	warning	special_only 未命中特色规则
+手术室	34	1608450	持物钳罐-2/W6050	3	16.5	16.5	warning	special_only 未命中特色规则
+手术室	35	1608450	卵圆钳-5/W6050	1	27.5	27.5	warning	special_only 未命中特色规则
+手术室	36	1608450	麻杯1换药碗2弯盘1/W6050	10	22.0	22.0	warning	special_only 未命中特色规则
+手术室	37	1608450	米氏-2持针器-1/W6050	1	16.5	16.5	warning	special_only 未命中特色规则
+手术室	38	1608604	擦手巾	1	15.0	15.0	warning	敷料包(无纺布包)——未识别规格
+手术室	39	1608604	骨科手术包敷料	1	25.0	25.0	warning	敷料包(无纺布包)——未识别规格
+手术室	40	1608604	手术衣	1	25.0	25.0	warning	敷料包(无纺布包)——未识别规格
+手术室	44	1608629	剖宫包□	10	170.5	170.5	warning	special_only 未命中特色规则
+手术室	45	1608629	缝合包△	1	99.0	99.0	warning	special_only 未命中特色规则
+手术室	46	1608629	持物钳罐-2/W6050	3	16.5	16.5	warning	special_only 未命中特色规则
+手术室	47	1608629	麻杯，换药碗，弯盘-3件 /W6050	1	16.5	16.5	warning	special_only 未命中特色规则
+手术室	48	1608629	麻杯1换药碗2弯盘1/W6050	10	22.0	22.0	warning	special_only 未命中特色规则
+手术室	49	1608667	刀柄-1/Z7526	1	8.0	8.0	warning	special_only 未命中特色规则
+手术室	50	1608823	剖宫包□	1	170.5	170.5	warning	special_only 未命中特色规则
+手术室	51	1608823	中引（3件）	1	16.5	16.5	warning	special_only 未命中特色规则
+手术室	52	1608823	麻杯1换药碗2弯盘1/W6050	1	22.0	22.0	warning	special_only 未命中特色规则
+手术室	53	1609018	成骨包□	1	258.5	258.5	warning	special_only 未命中特色规则
+手术室	54	1609018	宫颈椎切包△	1	104.5	104.5	warning	special_only 未命中特色规则
+手术室	55	1609018	骨关节器械包	1	121.0	121.0	warning	special_only 未命中特色规则
+手术室	56	1609018	剖宫包□	9	170.5	170.5	warning	special_only 未命中特色规则
+手术室	57	1609018	持物钳罐-2/W6050	3	16.5	16.5	warning	special_only 未命中特色规则
+手术室	58	1609018	麻杯，换药碗，弯盘-3件 /W6050	1	16.5	16.5	warning	special_only 未命中特色规则
+手术室	59	1609018	麻杯1换药碗2弯盘1/W6050	10	22.0	22.0	warning	special_only 未命中特色规则
+手术室	60	1609018	咬钉器-3/W7050	1	16.5	16.5	warning	special_only 未命中特色规则
+手术室	61	1609052	钢丝-1/Z1526	1	11.0	11.0	warning	special_only 未命中特色规则
+手术室	62	1609052	克氏针-8/Z7534	1	13.5	13.5	warning	special_only 未命中特色规则
+手术室	63	1609189	刮宫包（10件）	1	55.0	55.0	warning	special_only 未命中特色规则
+手术室	64	1609189	剖宫包□	4	170.5	170.5	warning	special_only 未命中特色规则
+手术室	65	1609189	中引（3件）	1	16.5	16.5	warning	special_only 未命中特色规则
+手术室	66	1609189	麻杯1换药碗2弯盘1/W6050	4	22.0	22.0	warning	special_only 未命中特色规则
+手术室	67	1609357	擦手巾	2	15.0	15.0	warning	敷料包(无纺布包)——未识别规格
+手术室	68	1609357	骨科手术包敷料	1	25.0	25.0	warning	敷料包(无纺布包)——未识别规格
+手术室	69	1609357	手术衣	1	25.0	25.0	warning	敷料包(无纺布包)——未识别规格
+手术室	71	1609381	剖宫包□	15	170.5	170.5	warning	special_only 未命中特色规则
+手术室	72	1609381	中引（3件）	1	16.5	16.5	warning	special_only 未命中特色规则
+手术室	73	1609381	麻杯1换药碗2弯盘1/W6050	6	22.0	22.0	warning	special_only 未命中特色规则
+手术室	74	1609393	O缝合针(10*28)-1/Z7520	20	8.0	8.0	warning	special_only 未命中特色规则
+手术室	75	1609393	持物钳罐-2/W6050	2	16.5	16.5	warning	special_only 未命中特色规则
+手术室	76	1609393	麻杯1换药碗2弯盘1/W6050	9	22.0	22.0	warning	special_only 未命中特色规则
+手术室	77	1609580	剖宫包□	2	170.5	170.5	warning	special_only 未命中特色规则
+手术室	78	1609580	中引（3件）	1	16.5	16.5	warning	special_only 未命中特色规则
+手术室	79	1609580	麻杯1换药碗2弯盘1/W6050	2	22.0	22.0	warning	special_only 未命中特色规则
+手术室	83	1609781	骨外伤	1	137.5	137.5	warning	special_only 未命中特色规则
+手术室	84	1609781	脊柱包	1	220.0	220.0	warning	special_only 未命中特色规则
+手术室	85	1609781	剖宫包□	9	170.5	170.5	warning	special_only 未命中特色规则
+手术室	86	1609781	宫颈锥切拆线包	1	27.5	27.5	warning	special_only 未命中特色规则
+手术室	87	1609781	持物钳罐-2/W6050	5	16.5	16.5	warning	special_only 未命中特色规则
+手术室	88	1609781	麻杯1换药碗2弯盘1/W6050	11	22.0	22.0	warning	special_only 未命中特色规则
+手术室	89	1609789	成骨包□	1	258.5	258.5	warning	special_only 未命中特色规则
+手术室	90	1609789	刮宫包（10件）	1	55.0	55.0	warning	special_only 未命中特色规则
+手术室	91	1609789	剖宫包□	1	170.5	170.5	warning	special_only 未命中特色规则
+手术室	92	1609789	克氏针-10/Z7534	1	13.5	13.5	warning	special_only 未命中特色规则
+手术室	93	1609789	克氏针-9/Z7534	1	49.5	49.5	warning	special_only 未命中特色规则
+手术室	94	1609789	线锯-5/Z1526	1	27.5	27.5	warning	special_only 未命中特色规则
+手术室	95	1609789	锤子-1/W6050	1	16.5	16.5	warning	special_only 未命中特色规则
+手术室	96	1609789	平直凿-3/W6050	1	16.5	16.5	warning	special_only 未命中特色规则
+手术室	97	1609896	骨钻(EO)-2/W7050	1	44.0	44.0	warning	special_only 未命中特色规则
+手术室	98	1609896	老虎钳(EO)-1/W6050	1	22.0	22.0	warning	special_only 未命中特色规则
+手术室	99	1609896	驱血带-1/Z2032	1	22.0	22.0	warning	special_only 未命中特色规则
+手术室	100	1609937	剖宫包□	1	170.5	170.5	warning	special_only 未命中特色规则
+手术室	101	1609937	缝合包△	1	99.0	99.0	warning	special_only 未命中特色规则
+手术室	102	1609937	麻杯，换药碗，弯盘-3件 /W6050	1	16.5	16.5	warning	special_only 未命中特色规则
+手术室	103	1609937	麻杯1换药碗2弯盘1/W6050	1	22.0	22.0	warning	special_only 未命中特色规则
+手术室	104	1609991	剖宫包□	3	170.5	170.5	warning	special_only 未命中特色规则
+手术室	105	1609991	持物钳罐-2/W6050	1	16.5	16.5	warning	special_only 未命中特色规则
+手术室	106	1609991	麻杯1换药碗2弯盘1/W6050	3	22.0	22.0	warning	special_only 未命中特色规则
+手术室	107	1610012	剖宫包□	2	170.5	170.5	warning	special_only 未命中特色规则
+手术室	108	1610012	中引（3件）	2	16.5	16.5	warning	special_only 未命中特色规则
+手术室	109	1610012	麻杯1换药碗2弯盘1/W6050	2	22.0	22.0	warning	special_only 未命中特色规则
+手术室	110	1610144	擦手巾	2	15.0	15.0	warning	敷料包(无纺布包)——未识别规格
+手术室	112	1610329	擦手巾	1	15.0	15.0	warning	敷料包(无纺布包)——未识别规格
+手术室	113	1610329	骨科手术包敷料	2	25.0	25.0	warning	敷料包(无纺布包)——未识别规格
+手术室	114	1610329	手术衣	2	25.0	25.0	warning	敷料包(无纺布包)——未识别规格
+手术室	116	1610329	中引纱布 棉球/Z1026	10	4.0	4.0	warning	敷料包(纸塑袋)+棉球——未识别规格
+手术室	117	1610338	剖宫包□	15	170.5	170.5	warning	special_only 未命中特色规则
+手术室	118	1610338	持物钳罐-2/W6050	3	16.5	16.5	warning	special_only 未命中特色规则
+手术室	119	1610338	麻杯1换药碗2弯盘1/W6050	15	22.0	22.0	warning	special_only 未命中特色规则
+手术室	120	1610564	刮宫包（10件）	2	55.0	55.0	warning	special_only 未命中特色规则
+手术室	121	1610564	剖宫包□	9	170.5	170.5	warning	special_only 未命中特色规则
+手术室	122	1610564	中引（3件）	3	16.5	16.5	warning	special_only 未命中特色规则
+手术室	123	1610564	持物钳罐-2/W6050	1	16.5	16.5	warning	special_only 未命中特色规则
+手术室	124	1610564	麻杯1换药碗2弯盘1/W6050	9	22.0	22.0	warning	special_only 未命中特色规则
+手术室	125	1610710	擦手巾	1	15.0	15.0	warning	敷料包(无纺布包)——未识别规格
+手术室	127	1610710	棉球/Z1526	1	2.5	2.5	warning	敷料包(纸塑袋)+棉球——未识别规格
+手术室	129	1610759	成骨包□	1	258.5	258.5	warning	special_only 未命中特色规则
+手术室	130	1610759	骨关节器械包	1	121.0	121.0	warning	special_only 未命中特色规则
+手术室	131	1610759	刮宫包（10件）	1	55.0	55.0	warning	special_only 未命中特色规则
+手术室	132	1610759	剖宫包□	6	170.5	170.5	warning	special_only 未命中特色规则
+手术室	133	1610759	中引（3件）	1	16.5	16.5	warning	special_only 未命中特色规则
+手术室	134	1610759	麻杯1换药碗2弯盘1/W6050	3	22.0	22.0	warning	special_only 未命中特色规则
+手术室	135	1610771	持物钳罐-2/W6050	3	16.5	16.5	warning	special_only 未命中特色规则
+手术室	136	1610771	麻杯1换药碗2弯盘1/W6050	4	22.0	22.0	warning	special_only 未命中特色规则
+手术室	137	1610933	剖宫包□	1	170.5	170.5	warning	special_only 未命中特色规则
+手术室	138	1610933	麻杯1换药碗2弯盘1/W6050	1	22.0	22.0	warning	special_only 未命中特色规则
+手术室	139	1611094	擦手巾	1	15.0	15.0	warning	敷料包(无纺布包)——未识别规格
+手术室	142	1611103	成骨包□	1	258.5	258.5	warning	special_only 未命中特色规则
+手术室	143	1611103	骨关节器械包	1	121.0	121.0	warning	special_only 未命中特色规则
+手术室	144	1611103	剖宫包□	19	170.5	170.5	warning	special_only 未命中特色规则
+手术室	145	1611103	持物钳罐-2/W6050	6	16.5	16.5	warning	special_only 未命中特色规则
+手术室	146	1611103	麻杯1换药碗2弯盘1/W6050	20	22.0	22.0	warning	special_only 未命中特色规则
+手术室	147	1611307	剖宫包□	7	170.5	170.5	warning	special_only 未命中特色规则
+手术室	148	1611307	中引（3件）	1	16.5	16.5	warning	special_only 未命中特色规则
+手术室	149	1611307	麻杯1换药碗2弯盘1/W6050	7	22.0	22.0	warning	special_only 未命中特色规则
+手术室	150	1611490	剖宫包□	11	170.5	170.5	warning	special_only 未命中特色规则
+手术室	151	1611490	擦手巾	2	15.0	15.0	warning	敷料包(无纺布包)——未识别规格
+手术室	152	1611504	刮宫包（10件）	1	55.0	55.0	warning	special_only 未命中特色规则
+手术室	153	1611504	剖宫包□	3	170.5	170.5	warning	special_only 未命中特色规则
+手术室	154	1611504	持物钳罐-2/W6050	5	16.5	16.5	warning	special_only 未命中特色规则
+手术室	155	1611504	麻杯1换药碗2弯盘1/W6050	14	22.0	22.0	warning	special_only 未命中特色规则
+手术室	156	1611524	(妇 三)大镊子-2/Z1535	1	13.5	13.5	warning	special_only 未命中特色规则
+手术室	157	1611672	刮宫包（10件）	1	55.0	55.0	warning	special_only 未命中特色规则
+手术室	158	1611672	剖宫包□	6	170.5	170.5	warning	special_only 未命中特色规则
+手术室	159	1611672	持物钳罐-2/W6050	1	16.5	16.5	warning	special_only 未命中特色规则
+手术室	160	1611672	麻杯1换药碗2弯盘1/W6050	6	22.0	22.0	warning	special_only 未命中特色规则
+手术室	161	1611850	剖宫包□	5	170.5	170.5	warning	special_only 未命中特色规则
+手术室	162	1611850	中引（3件）	1	16.5	16.5	warning	special_only 未命中特色规则
+手术室	163	1611850	持物钳罐-2/W6050	1	16.5	16.5	warning	special_only 未命中特色规则
+手术室	164	1611850	麻杯1换药碗2弯盘1/W6050	5	22.0	22.0	warning	special_only 未命中特色规则
+手术室	165	1611984	刮宫包（10件）	2	55.0	55.0	warning	special_only 未命中特色规则
+手术室	166	1611984	剖宫包□	4	170.5	170.5	warning	special_only 未命中特色规则
+手术室	167	1611984	中引（3件）	4	16.5	16.5	warning	special_only 未命中特色规则
+手术室	168	1611984	麻杯1换药碗2弯盘1/W6050	4	22.0	22.0	warning	special_only 未命中特色规则
+手术室	169	1612085	剖宫包□	2	170.5	170.5	warning	special_only 未命中特色规则
+手术室	170	1612085	麻杯1换药碗2弯盘1/W6050	2	22.0	22.0	warning	special_only 未命中特色规则
+手术室	171	1612156	刮宫包（10件）	1	55.0	55.0	warning	special_only 未命中特色规则
+手术室	172	1612156	剖宫包□	9	170.5	170.5	warning	special_only 未命中特色规则
+手术室	173	1612156	大刮勺-1/Z7537	1	8.0	8.0	warning	special_only 未命中特色规则
+手术室	174	1612156	中引（3件）	1	16.5	16.5	warning	special_only 未命中特色规则
+手术室	175	1612156	麻杯1换药碗2弯盘1/W6050	9	22.0	22.0	warning	special_only 未命中特色规则
+手术室	176	1612339	剖宫包□	8	170.5	170.5	warning	special_only 未命中特色规则
+手术室	177	1612339	擦手巾	2	15.0	15.0	warning	敷料包(无纺布包)——未识别规格
+手术室	178	1612339	麻杯1换药碗2弯盘1/W6050	5	22.0	22.0	warning	special_only 未命中特色规则
+手术室	180	1612349	剖宫包□	3	170.5	170.5	warning	special_only 未命中特色规则
+手术室	181	1612349	持物钳罐-2/W6050	2	16.5	16.5	warning	special_only 未命中特色规则
+手术室	182	1612349	麻杯1换药碗2弯盘1/W6050	6	22.0	22.0	warning	special_only 未命中特色规则
+手术室	183	1612525	剖宫包□	6	170.5	170.5	warning	special_only 未命中特色规则
+手术室	184	1612525	中引（3件）	1	16.5	16.5	warning	special_only 未命中特色规则
+手术室	185	1612525	麻杯1换药碗2弯盘1/W6050	6	22.0	22.0	warning	special_only 未命中特色规则
+手术室	186	1612610	剖宫包□	10	170.5	170.5	warning	special_only 未命中特色规则
+手术室	187	1612610	麻杯1换药碗2弯盘1/W6050	10	22.0	22.0	warning	special_only 未命中特色规则
+手术室	188	1612714	擦手巾	1	15.0	15.0	warning	敷料包(无纺布包)——未识别规格
+手术室	190	1612730	临时剖宫包□	1	159.5	159.5	warning	special_only 未命中特色规则
+手术室	191	1612730	剖宫包□	12	170.5	170.5	warning	special_only 未命中特色规则
+手术室	192	1612730	持物钳罐-2/W6050	1	16.5	16.5	warning	special_only 未命中特色规则
+手术室	193	1612730	麻杯1换药碗2弯盘1/W6050	9	22.0	22.0	warning	special_only 未命中特色规则
+手术室	194	1612741	O缝合针(10*28)-1/Z7520	30	8.0	8.0	warning	special_only 未命中特色规则
+手术室	195	1612741	麻杯1换药碗2弯盘1/W6050	4	22.0	22.0	warning	special_only 未命中特色规则
+手术室	196	1612825	持物钳罐-2/W6050	5	16.5	16.5	warning	special_only 未命中特色规则
+手术室	197	1612926	刮宫包（10件）	3	55.0	55.0	warning	special_only 未命中特色规则
+手术室	198	1612926	临时剖宫包□	1	159.5	159.5	warning	special_only 未命中特色规则
+手术室	199	1612926	剖宫包□	8	170.5	170.5	warning	special_only 未命中特色规则
+手术室	200	1612926	全切包□	1	280.5	280.5	warning	special_only 未命中特色规则
+手术室	201	1612926	缝合包△	1	99.0	99.0	warning	special_only 未命中特色规则
+手术室	202	1612926	麻杯，换药碗，弯盘-3件 /W6050	1	16.5	16.5	warning	special_only 未命中特色规则
+手术室	203	1612926	麻杯1换药碗2弯盘1/W6050	10	22.0	22.0	warning	special_only 未命中特色规则
+手术室	204	1613004	剖宫包□	9	170.5	170.5	warning	special_only 未命中特色规则
+手术室	205	1613004	麻杯1换药碗2弯盘1/W6050	9	22.0	22.0	warning	special_only 未命中特色规则
+手术室	206	1613075	剖宫包□	10	170.5	170.5	warning	special_only 未命中特色规则
+手术室	207	1613075	阴式-9件	1	49.5	49.5	warning	special_only 未命中特色规则
+手术室	208	1613075	中引（3件）	2	16.5	16.5	warning	special_only 未命中特色规则
+手术室	209	1613075	持物钳罐-2/W6050	4	16.5	16.5	warning	special_only 未命中特色规则
+手术室	210	1613075	麻杯1换药碗2弯盘1/W6050	11	22.0	22.0	warning	special_only 未命中特色规则
+手术室	211	1613075	组织钳-7/W6050	1	38.5	38.5	warning	special_only 未命中特色规则
+手术室	215	1613173	刮宫包（10件）	2	55.0	55.0	warning	special_only 未命中特色规则
+手术室	216	1613173	剖宫包□	1	170.5	170.5	warning	special_only 未命中特色规则
+手术室	217	1613173	孔巾	2	15.0	15.0	warning	敷料包(无纺布包)——未识别规格
+手术室	219	1613173	中引纱布 棉球/Z1026	10	4.0	4.0	warning	敷料包(纸塑袋)+棉球——未识别规格
+手术室	220	1613267	电刀清洁片-1/Z1020	4	22.0	22.0	warning	special_only 未命中特色规则
+手术室	221	1613323	刮宫包（10件）	2	55.0	55.0	warning	special_only 未命中特色规则
+手术室	222	1613323	临时剖宫包□	1	159.5	159.5	warning	special_only 未命中特色规则
+手术室	223	1613323	剖宫包□	1	170.5	170.5	warning	special_only 未命中特色规则
+手术室	224	1613323	麻杯1换药碗2弯盘1/W6050	2	22.0	22.0	warning	special_only 未命中特色规则
+手术室	225	1613496	擦手巾	2	15.0	15.0	warning	敷料包(无纺布包)——未识别规格
+手术室	226	1613512	剖宫包□	13	170.5	170.5	warning	special_only 未命中特色规则
+手术室	227	1613512	中引（3件）	1	16.5	16.5	warning	special_only 未命中特色规则
+手术室	229	1613535	持物钳罐-2/W6050	3	16.5	16.5	warning	special_only 未命中特色规则
+手术室	230	1613535	麻杯1换药碗2弯盘1/W6050	13	22.0	22.0	warning	special_only 未命中特色规则
+手术室	231	1613678	刮宫包（10件）	1	55.0	55.0	warning	special_only 未命中特色规则
+手术室	232	1613678	剖宫包□	4	170.5	170.5	warning	special_only 未命中特色规则
+手术室	233	1613678	麻杯1换药碗2弯盘1/W6050	4	22.0	22.0	warning	special_only 未命中特色规则
+手术室	235	1613751	剖宫包□	6	170.5	170.5	warning	special_only 未命中特色规则
+手术室	236	1613751	麻杯1换药碗2弯盘1/W6050	6	22.0	22.0	warning	special_only 未命中特色规则
+手术室	237	1613809	剖宫包□	4	170.5	170.5	warning	special_only 未命中特色规则
+手术室	238	1613809	麻杯1换药碗2弯盘1/W6050	4	22.0	22.0	warning	special_only 未命中特色规则
+手术室	239	1613844	擦手巾	1	15.0	15.0	warning	敷料包(无纺布包)——未识别规格
+手术室	240	1613849	剖宫包□	3	170.5	170.5	warning	special_only 未命中特色规则
+手术室	241	1613849	麻杯1换药碗2弯盘1/W6050	3	22.0	22.0	warning	special_only 未命中特色规则
+手术室	242	1613884	剖宫包□	2	170.5	170.5	warning	special_only 未命中特色规则
+手术室	243	1613884	持物钳罐-2/W6050	1	16.5	16.5	warning	special_only 未命中特色规则
+手术室	244	1613884	麻杯1换药碗2弯盘1/W6050	2	22.0	22.0	warning	special_only 未命中特色规则
+手术室	245	1614073	剖宫包□	10	170.5	170.5	warning	special_only 未命中特色规则
+手术室	246	1614073	麻杯1换药碗2弯盘1/W6050	10	22.0	22.0	warning	special_only 未命中特色规则
+手术室	247	1614092	擦手巾	2	15.0	15.0	warning	敷料包(无纺布包)——未识别规格
+手术室	250	1614094	肛肠包	1	60.5	60.5	warning	special_only 未命中特色规则
+手术室	251	1614094	剖宫包□	7	170.5	170.5	warning	special_only 未命中特色规则
+手术室	252	1614094	△缝合针(7*17)/Z7520	17	8.0	8.0	warning	special_only 未命中特色规则
+手术室	253	1614094	妇三开腹拉钩-3/W6050	1	16.5	16.5	warning	special_only 未命中特色规则
+手术室	254	1614094	麻杯1换药碗2弯盘1/W6050	7	22.0	22.0	warning	special_only 未命中特色规则
+手术室	255	1614094	自动开腹拉钩-1/W6050	1	16.5	16.5	warning	special_only 未命中特色规则
+手术室	256	1614138	刮宫包（10件）	4	55.0	55.0	warning	special_only 未命中特色规则
+手术室	257	1614138	剖宫包□	8	170.5	170.5	warning	special_only 未命中特色规则
+手术室	258	1614138	持物钳罐-2/W6050	3	16.5	16.5	warning	special_only 未命中特色规则
+手术室	259	1614138	麻杯1换药碗2弯盘1/W6050	8	22.0	22.0	warning	special_only 未命中特色规则
+手术室	260	1614138	弯盘1碗1/W6050	1	16.5	16.5	warning	special_only 未命中特色规则
+手术室	261	1614291	剖宫包□	2	170.5	170.5	warning	special_only 未命中特色规则
+手术室	262	1614291	麻杯1换药碗2弯盘1/W6050	2	22.0	22.0	warning	special_only 未命中特色规则
+手术室	263	1614354	剖宫包□	9	170.5	170.5	warning	special_only 未命中特色规则
+手术室	264	1614354	麻杯1换药碗2弯盘1/W6050	9	22.0	22.0	warning	special_only 未命中特色规则
+手术室	265	1614466	擦手巾	2	15.0	15.0	warning	敷料包(无纺布包)——未识别规格
+手术室	266	1614466	手术包敷料	1	25.0	25.0	warning	敷料包(无纺布包)——未识别规格
+手术室	267	1614466	手术衣	1	25.0	25.0	warning	敷料包(无纺布包)——未识别规格
+手术室	271	1614518	剖宫包□	13	170.5	170.5	warning	special_only 未命中特色规则
+手术室	272	1614518	持物钳罐-2/W6050	6	16.5	16.5	warning	special_only 未命中特色规则
+手术室	273	1614518	麻杯1换药碗2弯盘1/W6050	13	22.0	22.0	warning	special_only 未命中特色规则
+手术室	274	1614657	剖宫包□	7	170.5	170.5	warning	special_only 未命中特色规则
+手术室	275	1614657	持物钳罐-2/W6050	1	16.5	16.5	warning	special_only 未命中特色规则
+手术室	276	1614657	麻杯1换药碗2弯盘1/W6050	7	22.0	22.0	warning	special_only 未命中特色规则
+手术室	277	1614855	擦手巾	2	15.0	15.0	warning	敷料包(无纺布包)——未识别规格
+手术室	278	1614860	成骨包□	1	258.5	258.5	warning	special_only 未命中特色规则
+手术室	279	1614860	刮宫包（10件）	1	55.0	55.0	warning	special_only 未命中特色规则
+手术室	280	1614860	剖宫包□	5	170.5	170.5	warning	special_only 未命中特色规则
+手术室	281	1614860	全切包□	1	280.5	280.5	warning	special_only 未命中特色规则
+手术室	282	1614860	麻杯1换药碗2弯盘1/W6050	7	22.0	22.0	warning	special_only 未命中特色规则
+手术室	283	1614882	剖宫包□	1	170.5	170.5	warning	special_only 未命中特色规则
+手术室	284	1614882	持物钳罐-2/W6050	2	16.5	16.5	warning	special_only 未命中特色规则
+手术室	285	1614882	麻杯1换药碗2弯盘1/W6050	1	22.0	22.0	warning	special_only 未命中特色规则
+手术室	286	1615053	剖宫包□	5	170.5	170.5	warning	special_only 未命中特色规则
+手术室	287	1615053	持物钳罐-2/W6050	1	16.5	16.5	warning	special_only 未命中特色规则
+手术室	288	1615053	麻杯1换药碗2弯盘1/W6050	5	22.0	22.0	warning	special_only 未命中特色规则
+手术室	289	1615236	擦手巾	1	15.0	15.0	warning	敷料包(无纺布包)——未识别规格
+手术室	291	1615263	刮宫包（10件）	1	55.0	55.0	warning	special_only 未命中特色规则
+手术室	292	1615263	剖宫包□	9	170.5	170.5	warning	special_only 未命中特色规则
+手术室	293	1615263	中引（3件）	1	16.5	16.5	warning	special_only 未命中特色规则
+手术室	294	1615263	持物钳罐-2/W6050	1	16.5	16.5	warning	special_only 未命中特色规则
+手术室	295	1615263	麻杯1换药碗2弯盘1/W6050	9	22.0	22.0	warning	special_only 未命中特色规则
+手术室	296	1615391	剖宫包□	5	170.5	170.5	warning	special_only 未命中特色规则
+手术室	297	1615391	持物钳罐-2/W6050	1	16.5	16.5	warning	special_only 未命中特色规则
+手术室	298	1615391	麻杯1换药碗2弯盘1/W6050	5	22.0	22.0	warning	special_only 未命中特色规则
+手术室	299	1615452	剖宫包□	9	170.5	170.5	warning	special_only 未命中特色规则
+手术室	300	1615452	麻杯1换药碗2弯盘1/W6050	9	22.0	22.0	warning	special_only 未命中特色规则
+手术室	301	1615542	临时剖宫包□	1	159.5	159.5	warning	special_only 未命中特色规则
+手术室	302	1615542	剖宫包□	11	170.5	170.5	warning	special_only 未命中特色规则
+手术室	303	1615542	持物钳罐-2/W6050	4	16.5	16.5	warning	special_only 未命中特色规则
+手术室	304	1615542	麻杯1换药碗2弯盘1/W6050	6	22.0	22.0	warning	special_only 未命中特色规则
+手术室	305	1615555	△缝合针(13*34)-1/Z7520	10	8.0	8.0	warning	special_only 未命中特色规则
+手术室	306	1615555	麻杯1换药碗2弯盘1/W6050	6	22.0	22.0	warning	special_only 未命中特色规则
+手术室	307	1615696	刮宫包（10件）	3	55.0	55.0	warning	special_only 未命中特色规则
+手术室	308	1615696	临时剖宫包□	1	159.5	159.5	warning	special_only 未命中特色规则
+手术室	309	1615696	剖宫包□	5	170.5	170.5	warning	special_only 未命中特色规则
+手术室	310	1615696	小外包△	1	269.5	269.5	warning	special_only 未命中特色规则
+手术室	311	1615696	中引（3件）	2	16.5	16.5	warning	special_only 未命中特色规则
+手术室	312	1615696	持物钳罐-2/W6050	1	16.5	16.5	warning	special_only 未命中特色规则
+手术室	313	1615696	卵圆钳-5/W6050	1	27.5	27.5	warning	special_only 未命中特色规则
+手术室	314	1615696	麻杯，换药碗，弯盘-3件 /W6050	1	16.5	16.5	warning	special_only 未命中特色规则
+手术室	315	1615696	麻杯1换药碗2弯盘1/W6050	6	22.0	22.0	warning	special_only 未命中特色规则
+手术室	317	1615779	剖宫包□	2	170.5	170.5	warning	special_only 未命中特色规则
+手术室	318	1615779	麻杯1换药碗2弯盘1/W6050	2	22.0	22.0	warning	special_only 未命中特色规则
+手术室	319	1615884	剖宫包□	3	170.5	170.5	warning	special_only 未命中特色规则
+手术室	320	1615884	中引（3件）	1	16.5	16.5	warning	special_only 未命中特色规则
+手术室	321	1615884	持物钳罐-2/W6050	1	16.5	16.5	warning	special_only 未命中特色规则
+手术室	322	1615884	麻杯1换药碗2弯盘1/W6050	3	22.0	22.0	warning	special_only 未命中特色规则
+手术室	323	1616026	擦手巾	2	15.0	15.0	warning	敷料包(无纺布包)——未识别规格
+手术室	325	1616074	剖宫包□	5	170.5	170.5	warning	special_only 未命中特色规则
+手术室	326	1616074	持物钳罐-2/W6050	1	16.5	16.5	warning	special_only 未命中特色规则
+手术室	327	1616074	麻杯1换药碗2弯盘1/W6050	6	22.0	22.0	warning	special_only 未命中特色规则
+手术室	328	1616076	剖宫包□	1	170.5	170.5	warning	special_only 未命中特色规则
+手术室	329	1616248	剖宫包□	2	170.5	170.5	warning	special_only 未命中特色规则
+手术室	330	1616248	缝合包△	1	99.0	99.0	warning	special_only 未命中特色规则
+手术室	331	1616248	麻杯，换药碗，弯盘-3件 /W6050	1	16.5	16.5	warning	special_only 未命中特色规则
+手术室	332	1616248	麻杯1换药碗2弯盘1/W6050	2	22.0	22.0	warning	special_only 未命中特色规则
+手术室	333	1616366	擦手巾	1	15.0	15.0	warning	敷料包(无纺布包)——未识别规格
+手术室	334	1616366	骨科手术包敷料	1	25.0	25.0	warning	敷料包(无纺布包)——未识别规格
+手术室	335	1616366	手术衣	1	25.0	25.0	warning	敷料包(无纺布包)——未识别规格
+手术室	336	1616440	剖宫包□	12	170.5	170.5	warning	special_only 未命中特色规则
+手术室	337	1616440	持物钳罐-2/W6050	3	16.5	16.5	warning	special_only 未命中特色规则
+手术室	338	1616440	麻杯1换药碗2弯盘1/W6050	12	22.0	22.0	warning	special_only 未命中特色规则
+抗衰门诊	9	1608275	活检钳-1/Z1535	1	11.0	11.0	warning	special_only 未命中特色规则
+抗衰门诊	10	1608652	活检钳-1/Z2032	2	13.0	13.0	warning	special_only 未命中特色规则
+抗衰门诊	11	1609047	活检钳-1/Z1535	1	11.0	11.0	warning	special_only 未命中特色规则
+抗衰门诊	12	1609989	二氧化碳探头-1/Z1026	2	8.0	8.0	warning	special_only 未命中特色规则
+抗衰门诊	13	1609989	活检钳-1/Z1535	1	11.0	11.0	warning	special_only 未命中特色规则
+抗衰门诊	14	1609989	卡尺-1/Z1026	1	8.0	8.0	warning	special_only 未命中特色规则
+抗衰门诊	15	1610354	活检钳-1/Z1535	1	11.0	11.0	warning	special_only 未命中特色规则
+抗衰门诊	16	1610793	活检钳-1/Z1535	2	11.0	11.0	warning	special_only 未命中特色规则
+抗衰门诊	17	1610793	剪刀-1/Z1029	1	8.0	8.0	warning	special_only 未命中特色规则
+抗衰门诊	18	1610793	止血钳-1/Z1029	1	8.0	8.0	warning	special_only 未命中特色规则
+抗衰门诊	19	1611119	剪刀-1/Z1029	2	8.0	8.0	warning	special_only 未命中特色规则
+抗衰门诊	20	1611119	止血钳-1/Z1029	2	8.0	8.0	warning	special_only 未命中特色规则
+抗衰门诊	21	1611521	活检钳-1/Z1535	2	11.0	11.0	warning	special_only 未命中特色规则
+抗衰门诊	22	1611521	剪刀-1/Z1029	1	8.0	8.0	warning	special_only 未命中特色规则
+抗衰门诊	23	1611521	止血钳-1/Z1029	1	8.0	8.0	warning	special_only 未命中特色规则
+抗衰门诊	24	1612388	活检钳-1/Z2032	2	13.0	13.0	warning	special_only 未命中特色规则
+抗衰门诊	25	1612388	剪刀-1/Z1029	2	8.0	8.0	warning	special_only 未命中特色规则
+抗衰门诊	26	1612388	止血钳-1/Z1029	2	8.0	8.0	warning	special_only 未命中特色规则
+抗衰门诊	27	1613167	活检钳-1/Z1535	2	11.0	11.0	warning	special_only 未命中特色规则
+抗衰门诊	28	1613167	剪刀-1/Z1029	2	8.0	8.0	warning	special_only 未命中特色规则
+抗衰门诊	29	1613167	止血钳-1/Z1029	2	8.0	8.0	warning	special_only 未命中特色规则
+抗衰门诊	30	1613531	活检钳-1/Z1535	1	11.0	11.0	warning	special_only 未命中特色规则
+抗衰门诊	31	1613716	二氧化碳探头-1/Z1026	1	8.0	8.0	warning	special_only 未命中特色规则
+抗衰门诊	32	1613716	卡尺-1/Z1026	1	8.0	8.0	warning	special_only 未命中特色规则
+抗衰门诊	33	1614136	活检钳-1/Z1535	2	11.0	11.0	warning	special_only 未命中特色规则
+抗衰门诊	34	1614136	剪刀-1/Z1029	1	8.0	8.0	warning	special_only 未命中特色规则
+抗衰门诊	35	1614136	止血钳-1/Z1029	1	8.0	8.0	warning	special_only 未命中特色规则
+抗衰门诊	36	1614571	活检钳-1/Z1535	1	11.0	11.0	warning	special_only 未命中特色规则
+抗衰门诊	37	1614571	剪刀-1/Z1029	2	8.0	8.0	warning	special_only 未命中特色规则
+抗衰门诊	38	1614571	止血钳-1/Z1029	2	8.0	8.0	warning	special_only 未命中特色规则
+抗衰门诊	39	1614887	活检钳-1/Z1535	3	11.0	11.0	warning	special_only 未命中特色规则
+抗衰门诊	40	1615552	活检钳-1/Z1535	1	11.0	11.0	warning	special_only 未命中特色规则
+抗衰门诊	41	1616109	活检钳-1/Z1535	4	11.0	11.0	warning	special_only 未命中特色规则
+新生儿	9	1608187	奶锅	2	25.0	25.0	warning	敷料包(无纺布包)——未识别规格
+新生儿	10	1608187	奶瓶	1	25.0	25.0	warning	敷料包(无纺布包)——未识别规格
+新生儿	11	1608187	奶嘴	1	25.0	25.0	warning	敷料包(无纺布包)——未识别规格
+新生儿	12	1608230	方盘-1/W9050	1	16.5	16.5	warning	special_only 未命中特色规则
+新生儿	13	1608603	奶锅	2	25.0	25.0	warning	敷料包(无纺布包)——未识别规格
+新生儿	14	1608603	奶瓶	1	25.0	25.0	warning	敷料包(无纺布包)——未识别规格
+新生儿	15	1608603	奶瓶盖	1	25.0	25.0	warning	敷料包(无纺布包)——未识别规格
+新生儿	16	1608603	奶嘴	1	25.0	25.0	warning	敷料包(无纺布包)——未识别规格
+新生儿	17	1608630	方盘-1/W9050	2	16.5	16.5	warning	special_only 未命中特色规则
+新生儿	18	1608981	奶锅	2	25.0	25.0	warning	敷料包(无纺布包)——未识别规格
+新生儿	19	1608981	奶瓶	1	25.0	25.0	warning	敷料包(无纺布包)——未识别规格
+新生儿	20	1608981	奶嘴	1	25.0	25.0	warning	敷料包(无纺布包)——未识别规格
+新生儿	21	1609016	方盘-1/W9050	2	16.5	16.5	warning	special_only 未命中特色规则
+新生儿	22	1609355	奶锅	2	25.0	25.0	warning	敷料包(无纺布包)——未识别规格
+新生儿	23	1609355	奶瓶	2	25.0	25.0	warning	敷料包(无纺布包)——未识别规格
+新生儿	24	1609355	奶瓶盖	1	25.0	25.0	warning	敷料包(无纺布包)——未识别规格
+新生儿	25	1609355	奶嘴	1	25.0	25.0	warning	敷料包(无纺布包)——未识别规格
+新生儿	26	1609394	方盘-1/W9050	1	16.5	16.5	warning	special_only 未命中特色规则
+新生儿	27	1609749	奶锅	2	25.0	25.0	warning	敷料包(无纺布包)——未识别规格
+新生儿	28	1609749	奶瓶	1	25.0	25.0	warning	敷料包(无纺布包)——未识别规格
+新生儿	29	1609749	奶嘴	1	25.0	25.0	warning	敷料包(无纺布包)——未识别规格
+新生儿	30	1609777	方盘-1/W9050	1	16.5	16.5	warning	special_only 未命中特色规则
+新生儿	31	1609977	奶锅	2	25.0	25.0	warning	敷料包(无纺布包)——未识别规格
+新生儿	32	1609977	奶瓶	1	25.0	25.0	warning	敷料包(无纺布包)——未识别规格
+新生儿	33	1609977	奶瓶盖	1	25.0	25.0	warning	敷料包(无纺布包)——未识别规格
+新生儿	34	1609977	奶嘴	1	25.0	25.0	warning	敷料包(无纺布包)——未识别规格
+新生儿	35	1609992	方盘-1/W9050	2	16.5	16.5	warning	special_only 未命中特色规则
+新生儿	36	1610079	方盘-1/W9050	2	16.5	16.5	warning	special_only 未命中特色规则
+新生儿	37	1610079	奶锅	2	25.0	25.0	warning	敷料包(无纺布包)——未识别规格
+新生儿	38	1610079	奶瓶	2	25.0	25.0	warning	敷料包(无纺布包)——未识别规格
+新生儿	39	1610079	奶嘴	1	25.0	25.0	warning	敷料包(无纺布包)——未识别规格
+新生儿	40	1610328	奶锅	2	25.0	25.0	warning	敷料包(无纺布包)——未识别规格
+新生儿	41	1610328	奶瓶	2	25.0	25.0	warning	敷料包(无纺布包)——未识别规格
+新生儿	42	1610328	奶嘴	1	25.0	25.0	warning	敷料包(无纺布包)——未识别规格
+新生儿	43	1610328	尿布	1	25.0	25.0	warning	敷料包(无纺布包)——未识别规格
+新生儿	44	1610339	方盘-1/W9050	2	16.5	16.5	warning	special_only 未命中特色规则
+新生儿	45	1610711	奶锅	2	25.0	25.0	warning	敷料包(无纺布包)——未识别规格
+新生儿	46	1610711	奶瓶	2	25.0	25.0	warning	敷料包(无纺布包)——未识别规格
+新生儿	47	1610711	奶瓶盖	1	25.0	25.0	warning	敷料包(无纺布包)——未识别规格
+新生儿	48	1610711	奶嘴	1	25.0	25.0	warning	敷料包(无纺布包)——未识别规格
+新生儿	49	1610798	方盘-1/W9050	2	16.5	16.5	warning	special_only 未命中特色规则
+新生儿	50	1611093	奶锅	2	25.0	25.0	warning	敷料包(无纺布包)——未识别规格
+新生儿	51	1611093	奶瓶	1	25.0	25.0	warning	敷料包(无纺布包)——未识别规格
+新生儿	52	1611093	奶嘴	2	25.0	25.0	warning	敷料包(无纺布包)——未识别规格
+新生儿	53	1611104	方盘-1/W9050	2	16.5	16.5	warning	special_only 未命中特色规则
+新生儿	54	1611491	奶锅	2	25.0	25.0	warning	敷料包(无纺布包)——未识别规格
+新生儿	55	1611491	奶瓶	2	25.0	25.0	warning	敷料包(无纺布包)——未识别规格
+新生儿	56	1611491	奶嘴	2	25.0	25.0	warning	敷料包(无纺布包)——未识别规格
+新生儿	57	1611525	方盘-1/W9050	1	16.5	16.5	warning	special_only 未命中特色规则
+新生儿	58	1611829	奶锅	2	25.0	25.0	warning	敷料包(无纺布包)——未识别规格
+新生儿	59	1611829	奶瓶	2	25.0	25.0	warning	敷料包(无纺布包)——未识别规格
+新生儿	60	1611829	奶嘴	1	25.0	25.0	warning	敷料包(无纺布包)——未识别规格
+新生儿	61	1611849	方盘-1/W9050	1	16.5	16.5	warning	special_only 未命中特色规则
+新生儿	62	1612022	方盘-1/W9050	1	16.5	16.5	warning	special_only 未命中特色规则
+新生儿	63	1612022	奶锅	2	25.0	25.0	warning	敷料包(无纺布包)——未识别规格
+新生儿	64	1612022	奶瓶	2	25.0	25.0	warning	敷料包(无纺布包)——未识别规格
+新生儿	65	1612022	奶瓶盖	1	25.0	25.0	warning	敷料包(无纺布包)——未识别规格
+新生儿	66	1612022	奶嘴	1	25.0	25.0	warning	敷料包(无纺布包)——未识别规格
+新生儿	67	1612083	方盘-1/W9050	2	16.5	16.5	warning	special_only 未命中特色规则
+新生儿	68	1612083	奶锅	2	25.0	25.0	warning	敷料包(无纺布包)——未识别规格
+新生儿	69	1612083	奶瓶	1	25.0	25.0	warning	敷料包(无纺布包)——未识别规格
+新生儿	70	1612083	奶瓶盖	1	25.0	25.0	warning	敷料包(无纺布包)——未识别规格
+新生儿	71	1612340	奶锅	2	25.0	25.0	warning	敷料包(无纺布包)——未识别规格
+新生儿	72	1612340	奶瓶	1	25.0	25.0	warning	敷料包(无纺布包)——未识别规格
+新生儿	73	1612340	奶嘴	1	25.0	25.0	warning	敷料包(无纺布包)——未识别规格
+新生儿	74	1612340	尿布	1	25.0	25.0	warning	敷料包(无纺布包)——未识别规格
+新生儿	75	1612344	方盘-1/W9050	2	16.5	16.5	warning	special_only 未命中特色规则
+新生儿	76	1612713	奶锅	2	25.0	25.0	warning	敷料包(无纺布包)——未识别规格
+新生儿	77	1612713	奶瓶	1	25.0	25.0	warning	敷料包(无纺布包)——未识别规格
+新生儿	78	1612713	奶嘴	1	25.0	25.0	warning	敷料包(无纺布包)——未识别规格
+新生儿	79	1612731	方盘-1/W9050	2	16.5	16.5	warning	special_only 未命中特色规则
+新生儿	80	1613070	奶锅	2	25.0	25.0	warning	敷料包(无纺布包)——未识别规格
+新生儿	81	1613070	奶瓶	2	25.0	25.0	warning	敷料包(无纺布包)——未识别规格
+新生儿	82	1613070	奶瓶盖	1	25.0	25.0	warning	敷料包(无纺布包)——未识别规格
+新生儿	83	1613070	奶嘴	1	25.0	25.0	warning	敷料包(无纺布包)——未识别规格
+新生儿	84	1613174	方盘-1/W9050	1	16.5	16.5	warning	special_only 未命中特色规则
+新生儿	85	1613495	奶锅	2	25.0	25.0	warning	敷料包(无纺布包)——未识别规格
+新生儿	86	1613495	奶瓶	1	25.0	25.0	warning	敷料包(无纺布包)——未识别规格
+新生儿	87	1613495	奶嘴	1	25.0	25.0	warning	敷料包(无纺布包)——未识别规格
+新生儿	88	1613536	方盘-1/W9050	2	16.5	16.5	warning	special_only 未命中特色规则
+新生儿	89	1613717	方盘-1/W9050	3	16.5	16.5	warning	special_only 未命中特色规则
+新生儿	90	1613717	奶锅	2	25.0	25.0	warning	敷料包(无纺布包)——未识别规格
+新生儿	91	1613717	奶瓶	1	25.0	25.0	warning	敷料包(无纺布包)——未识别规格
+新生儿	92	1613717	奶瓶盖	1	25.0	25.0	warning	敷料包(无纺布包)——未识别规格
+新生儿	93	1613717	奶嘴	1	25.0	25.0	warning	敷料包(无纺布包)——未识别规格
+新生儿	94	1613770	奶锅	2	25.0	25.0	warning	敷料包(无纺布包)——未识别规格
+新生儿	95	1613770	奶瓶	2	25.0	25.0	warning	敷料包(无纺布包)——未识别规格
+新生儿	96	1613770	奶瓶盖	1	25.0	25.0	warning	敷料包(无纺布包)——未识别规格
+新生儿	97	1613770	奶嘴	1	25.0	25.0	warning	敷料包(无纺布包)——未识别规格
+新生儿	98	1613791	方盘-1/W9050	3	16.5	16.5	warning	special_only 未命中特色规则
+新生儿	99	1613843	奶锅	2	25.0	25.0	warning	敷料包(无纺布包)——未识别规格
+新生儿	100	1613843	奶瓶	2	25.0	25.0	warning	敷料包(无纺布包)——未识别规格
+新生儿	101	1613843	奶嘴	2	25.0	25.0	warning	敷料包(无纺布包)——未识别规格
+新生儿	102	1613847	方盘-1/W9050	1	16.5	16.5	warning	special_only 未命中特色规则
+新生儿	103	1614080	奶锅	2	25.0	25.0	warning	敷料包(无纺布包)——未识别规格
+新生儿	104	1614080	奶瓶	2	25.0	25.0	warning	敷料包(无纺布包)——未识别规格
+新生儿	105	1614080	奶嘴	2	25.0	25.0	warning	敷料包(无纺布包)——未识别规格
+新生儿	106	1614093	方盘-1/W9050	2	16.5	16.5	warning	special_only 未命中特色规则
+新生儿	107	1614467	奶锅	2	25.0	25.0	warning	敷料包(无纺布包)——未识别规格
+新生儿	108	1614467	奶瓶	3	25.0	25.0	warning	敷料包(无纺布包)——未识别规格
+新生儿	109	1614467	奶瓶盖	1	25.0	25.0	warning	敷料包(无纺布包)——未识别规格
+新生儿	110	1614467	奶嘴	1	25.0	25.0	warning	敷料包(无纺布包)——未识别规格
+新生儿	111	1614467	尿布	1	25.0	25.0	warning	敷料包(无纺布包)——未识别规格
+新生儿	112	1614516	方盘-1/W9050	2	16.5	16.5	warning	special_only 未命中特色规则
+新生儿	113	1614854	奶锅	2	25.0	25.0	warning	敷料包(无纺布包)——未识别规格
+新生儿	114	1614854	奶瓶	2	25.0	25.0	warning	敷料包(无纺布包)——未识别规格
+新生儿	115	1614854	奶瓶盖	1	25.0	25.0	warning	敷料包(无纺布包)——未识别规格
+新生儿	116	1614854	奶嘴	1	25.0	25.0	warning	敷料包(无纺布包)——未识别规格
+新生儿	117	1614859	方盘-1/W9050	2	16.5	16.5	warning	special_only 未命中特色规则
+新生儿	118	1615234	奶锅	2	25.0	25.0	warning	敷料包(无纺布包)——未识别规格
+新生儿	119	1615234	奶瓶	2	25.0	25.0	warning	敷料包(无纺布包)——未识别规格
+新生儿	120	1615234	奶瓶盖	1	25.0	25.0	warning	敷料包(无纺布包)——未识别规格
+新生儿	121	1615234	奶嘴	2	25.0	25.0	warning	敷料包(无纺布包)——未识别规格
+新生儿	122	1615262	方盘-1/W9050	2	16.5	16.5	warning	special_only 未命中特色规则
+新生儿	123	1615518	奶锅	2	25.0	25.0	warning	敷料包(无纺布包)——未识别规格
+新生儿	124	1615518	奶瓶	3	25.0	25.0	warning	敷料包(无纺布包)——未识别规格
+新生儿	125	1615518	奶嘴	2	25.0	25.0	warning	敷料包(无纺布包)——未识别规格
+新生儿	126	1615541	方盘-1/W9050	3	16.5	16.5	warning	special_only 未命中特色规则
+新生儿	127	1615736	方盘-1/W9050	1	16.5	16.5	warning	special_only 未命中特色规则
+新生儿	128	1615736	奶锅	2	25.0	25.0	warning	敷料包(无纺布包)——未识别规格
+新生儿	129	1615736	奶瓶	2	25.0	25.0	warning	敷料包(无纺布包)——未识别规格
+新生儿	130	1615736	奶瓶盖	1	25.0	25.0	warning	敷料包(无纺布包)——未识别规格
+新生儿	131	1615736	奶嘴	2	25.0	25.0	warning	敷料包(无纺布包)——未识别规格
+新生儿	132	1615736	尿布	1	25.0	25.0	warning	敷料包(无纺布包)——未识别规格
+新生儿	133	1615816	方盘-1/W9050	3	16.5	16.5	warning	special_only 未命中特色规则
+新生儿	134	1615816	奶锅	2	25.0	25.0	warning	敷料包(无纺布包)——未识别规格
+新生儿	135	1615816	奶瓶	3	25.0	25.0	warning	敷料包(无纺布包)——未识别规格
+新生儿	136	1615816	奶瓶盖	1	25.0	25.0	warning	敷料包(无纺布包)——未识别规格
+新生儿	137	1615816	奶嘴	1	25.0	25.0	warning	敷料包(无纺布包)——未识别规格
+新生儿	138	1616022	奶锅	2	25.0	25.0	warning	敷料包(无纺布包)——未识别规格
+新生儿	139	1616022	奶瓶	2	25.0	25.0	warning	敷料包(无纺布包)——未识别规格
+新生儿	140	1616022	奶嘴	1	25.0	25.0	warning	敷料包(无纺布包)——未识别规格
+新生儿	141	1616068	方盘-1/W9050	2	16.5	16.5	warning	special_only 未命中特色规则
+新生儿	142	1616365	奶锅	2	25.0	25.0	warning	敷料包(无纺布包)——未识别规格
+新生儿	143	1616365	奶瓶	2	25.0	25.0	warning	敷料包(无纺布包)——未识别规格
+新生儿	144	1616365	奶瓶盖	1	25.0	25.0	warning	敷料包(无纺布包)——未识别规格
+新生儿	145	1616365	奶嘴	1	25.0	25.0	warning	敷料包(无纺布包)——未识别规格
+新生儿	146	1616441	方盘-1/W9050	2	16.5	16.5	warning	special_only 未命中特色规则
+普外科	9	1608276	镊子-1/Z7534	2	8.0	8.0	warning	special_only 未命中特色规则
+普外科	10	1608666	镊子-1/Z7534	1	8.0	8.0	warning	special_only 未命中特色规则
+普外科	11	1609049	剪刀-1/Z1029	1	8.0	8.0	warning	special_only 未命中特色规则
+普外科	12	1609049	镊子-1/Z7534	1	8.0	8.0	warning	special_only 未命中特色规则
+普外科	13	1609049	普外缝合包	1	49.5	49.5	warning	special_only 未命中特色规则
+普外科	14	1609839	镊子-1/Z7534	1	8.0	8.0	warning	special_only 未命中特色规则
+普外科	15	1610078	剪刀-1/Z1029	2	8.0	8.0	warning	special_only 未命中特色规则
+普外科	16	1610078	镊子-1/Z7534	1	8.0	8.0	warning	special_only 未命中特色规则
+普外科	17	1610078	普外缝合包	1	49.5	49.5	warning	special_only 未命中特色规则
+普外科	18	1610356	剪刀-1/Z1029	1	8.0	8.0	warning	special_only 未命中特色规则
+普外科	19	1610356	镊子-1/Z7534	1	8.0	8.0	warning	special_only 未命中特色规则
+普外科	20	1610356	静切包-12件/W6050	1	66.0	66.0	warning	special_only 未命中特色规则
+普外科	21	1610795	剪刀-1/Z1029	1	8.0	8.0	warning	special_only 未命中特色规则
+普外科	22	1611522	长针-1/Z7534	1	8.0	8.0	warning	special_only 未命中特色规则
+普外科	23	1611522	静切包-12件/W6050	1	66.0	66.0	warning	special_only 未命中特色规则
+普外科	24	1612021	剪刀-1/Z1029	1	8.0	8.0	warning	special_only 未命中特色规则
+普外科	25	1612390	镊子-1/Z7534	1	8.0	8.0	warning	special_only 未命中特色规则
+普外科	26	1612757	长针-1/Z7534	1	8.0	8.0	warning	special_only 未命中特色规则
+普外科	27	1612757	镊子-1/Z7534	1	8.0	8.0	warning	special_only 未命中特色规则
+普外科	28	1613170	镊子-1/Z7534	1	8.0	8.0	warning	special_only 未命中特色规则
+普外科	29	1613170	静脉切开包-12/W6050	1	66.0	66.0	warning	special_only 未命中特色规则
+普外科	30	1613532	镊子-1/Z7534	1	8.0	8.0	warning	special_only 未命中特色规则
+普外科	31	1613790	长针-1/Z7534	1	8.0	8.0	warning	special_only 未命中特色规则
+普外科	32	1613790	镊子-1/Z7534	1	8.0	8.0	warning	special_only 未命中特色规则
+普外科	33	1614108	长针-1/Z7534	1	8.0	8.0	warning	special_only 未命中特色规则
+普外科	34	1614108	剪刀-1/Z1029	2	8.0	8.0	warning	special_only 未命中特色规则
+普外科	35	1614108	镊子-1/Z7534	1	8.0	8.0	warning	special_only 未命中特色规则
+普外科	36	1614573	长针-1/Z7534	1	8.0	8.0	warning	special_only 未命中特色规则
+普外科	37	1614573	普外缝合包	1	49.5	49.5	warning	special_only 未命中特色规则
+普外科	38	1614885	穿刺针-1/Z7526	1	8.0	8.0	warning	special_only 未命中特色规则
+普外科	39	1614885	镊子-1/Z7534	1	8.0	8.0	warning	special_only 未命中特色规则
+普外科	40	1615553	长针-1/Z7534	1	8.0	8.0	warning	special_only 未命中特色规则
+普外科	41	1615553	镊子-1/Z7534	2	8.0	8.0	warning	special_only 未命中特色规则
+理疗科	9	1612475	leep刀柄-1/Z7526	5	22.0	22.0	warning	special_only 未命中特色规则
+生殖中心	9	1608228	（试）移植包（4件）	1	22.0	22.0	warning	special_only 未命中特色规则
+生殖中心	10	1608228	取卵包-4件	6	22.0	22.0	warning	special_only 未命中特色规则
+生殖中心	11	1608228	通液包（3件）	9	16.5	16.5	warning	special_only 未命中特色规则
+生殖中心	12	1608278	宫颈钳-1/Z1535	2	11.0	11.0	warning	special_only 未命中特色规则
+生殖中心	13	1608278	换药缸-1/Z2530	1	16.0	16.0	warning	special_only 未命中特色规则
+生殖中心	14	1608278	探针-1/Z7537	5	8.0	8.0	warning	special_only 未命中特色规则
+生殖中心	15	1608278	针导-1/双Z1029	6	13.5	13.5	warning	special_only 未命中特色规则
+生殖中心	16	1608605	手术衣	1	25.0	25.0	warning	敷料包(无纺布包)——未识别规格
+生殖中心	19	1608651	针导-1/双Z1029	1	13.5	13.5	warning	special_only 未命中特色规则
+生殖中心	20	1608651	取卵包-4件	1	22.0	22.0	warning	special_only 未命中特色规则
+生殖中心	21	1608651	通液包（3件）	3	16.5	16.5	warning	special_only 未命中特色规则
+生殖中心	22	1608980	手术衣	2	25.0	25.0	warning	敷料包(无纺布包)——未识别规格
+生殖中心	23	1609015	（试）移植包（4件）	1	22.0	22.0	warning	special_only 未命中特色规则
+生殖中心	24	1609015	睾丸穿刺包-4件	2	22.0	22.0	warning	special_only 未命中特色规则
+生殖中心	25	1609015	取卵包-4件	2	22.0	22.0	warning	special_only 未命中特色规则
+生殖中心	26	1609015	通液包（3件）	3	16.5	16.5	warning	special_only 未命中特色规则
+生殖中心	27	1609051	换药缸-1/Z2530	1	16.0	16.0	warning	special_only 未命中特色规则
+生殖中心	28	1609051	窥器-1/Z1526	1	11.0	11.0	warning	special_only 未命中特色规则
+生殖中心	29	1609051	麻杯-1/Z1020	1	8.0	8.0	warning	special_only 未命中特色规则
+生殖中心	30	1609051	探针-1/Z7537	3	8.0	8.0	warning	special_only 未命中特色规则
+生殖中心	31	1609051	针导-1/双Z1029	1	13.5	13.5	warning	special_only 未命中特色规则
+生殖中心	34	1609392	针导-1/双Z1029	3	13.5	13.5	warning	special_only 未命中特色规则
+生殖中心	35	1609392	取卵包-4件	3	22.0	22.0	warning	special_only 未命中特色规则
+生殖中心	36	1609750	手术衣	1	25.0	25.0	warning	敷料包(无纺布包)——未识别规格
+生殖中心	40	1609778	睾丸穿刺包-4件	1	22.0	22.0	warning	special_only 未命中特色规则
+生殖中心	41	1609778	取卵包-4件	1	22.0	22.0	warning	special_only 未命中特色规则
+生殖中心	42	1609778	通液包（3件）	8	16.5	16.5	warning	special_only 未命中特色规则
+生殖中心	43	1609841	镊子-1/Z7534	1	8.0	8.0	warning	special_only 未命中特色规则
+生殖中心	44	1609841	针导-1/双Z1029	1	13.5	13.5	warning	special_only 未命中特色规则
+生殖中心	45	1610330	手术衣	1	25.0	25.0	warning	敷料包(无纺布包)——未识别规格
+生殖中心	46	1610341	（试）移植包（4件）	1	22.0	22.0	warning	special_only 未命中特色规则
+生殖中心	47	1610341	取卵包-4件	6	22.0	22.0	warning	special_only 未命中特色规则
+生殖中心	48	1610341	通液包（3件）	1	16.5	16.5	warning	special_only 未命中特色规则
+生殖中心	49	1610358	针导-1/双Z1029	6	13.5	13.5	warning	special_only 未命中特色规则
+生殖中心	52	1610797	换药缸-1/Z2530	1	16.0	16.0	warning	special_only 未命中特色规则
+生殖中心	53	1610797	针导-1/双Z1029	1	13.5	13.5	warning	special_only 未命中特色规则
+生殖中心	54	1610797	（试）移植包（4件）	1	22.0	22.0	warning	special_only 未命中特色规则
+生殖中心	55	1610797	取卵包-4件	1	22.0	22.0	warning	special_only 未命中特色规则
+生殖中心	56	1610797	通液包（3件）	2	16.5	16.5	warning	special_only 未命中特色规则
+生殖中心	57	1611095	手术衣	1	25.0	25.0	warning	敷料包(无纺布包)——未识别规格
+生殖中心	60	1611117	针导-1/双Z1029	1	13.5	13.5	warning	special_only 未命中特色规则
+生殖中心	61	1611117	取卵包-4件	1	22.0	22.0	warning	special_only 未命中特色规则
+生殖中心	62	1611117	通液包（3件）	4	16.5	16.5	warning	special_only 未命中特色规则
+生殖中心	63	1611489	通液包（3件）	4	16.5	16.5	warning	special_only 未命中特色规则
+生殖中心	64	1611523	（试）移植包（4件）	1	22.0	22.0	warning	special_only 未命中特色规则
+生殖中心	65	1611830	手术衣	1	25.0	25.0	warning	敷料包(无纺布包)——未识别规格
+生殖中心	66	1611868	（试）移植包（4件）	2	22.0	22.0	warning	special_only 未命中特色规则
+生殖中心	67	1611868	通液包（3件）	2	16.5	16.5	warning	special_only 未命中特色规则
+生殖中心	68	1612338	睾丸穿刺包-4件	1	22.0	22.0	warning	special_only 未命中特色规则
+生殖中心	69	1612338	取卵包-4件	6	22.0	22.0	warning	special_only 未命中特色规则
+生殖中心	70	1612345	（试）移植包（4件）	4	22.0	22.0	warning	special_only 未命中特色规则
+生殖中心	71	1612345	取卵包-4件	2	22.0	22.0	warning	special_only 未命中特色规则
+生殖中心	72	1612345	通液包（3件）	8	16.5	16.5	warning	special_only 未命中特色规则
+生殖中心	73	1612391	针导-1/双Z1029	8	13.5	13.5	warning	special_only 未命中特色规则
+生殖中心	74	1612715	手术衣	1	25.0	25.0	warning	敷料包(无纺布包)——未识别规格
+生殖中心	77	1612758	针导-1/双Z1029	2	13.5	13.5	warning	special_only 未命中特色规则
+生殖中心	78	1612758	止血钳-1/Z1029	1	8.0	8.0	warning	special_only 未命中特色规则
+生殖中心	79	1612758	（试）移植包（4件）	1	22.0	22.0	warning	special_only 未命中特色规则
+生殖中心	80	1612758	取卵包-4件	2	22.0	22.0	warning	special_only 未命中特色规则
+生殖中心	81	1612758	通液包（3件）	3	16.5	16.5	warning	special_only 未命中特色规则
+生殖中心	82	1613071	手术衣	2	25.0	25.0	warning	敷料包(无纺布包)——未识别规格
+生殖中心	85	1613172	（试）移植包（4件）	1	22.0	22.0	warning	special_only 未命中特色规则
+生殖中心	88	1613497	手术衣	1	25.0	25.0	warning	敷料包(无纺布包)——未识别规格
+生殖中心	89	1613534	（试）移植包（4件）	4	22.0	22.0	warning	special_only 未命中特色规则
+生殖中心	90	1613534	通液包（3件）	2	16.5	16.5	warning	special_only 未命中特色规则
+生殖中心	93	1614081	手术衣	1	25.0	25.0	warning	敷料包(无纺布包)——未识别规格
+生殖中心	95	1614096	（试）移植包（4件）	5	22.0	22.0	warning	special_only 未命中特色规则
+生殖中心	96	1614096	取卵包-4件	5	22.0	22.0	warning	special_only 未命中特色规则
+生殖中心	97	1614096	通液包（3件）	1	16.5	16.5	warning	special_only 未命中特色规则
+生殖中心	98	1614110	刮匙-1/Z7530	2	8.0	8.0	warning	special_only 未命中特色规则
+生殖中心	99	1614110	通液器-1/Z1035	1	8.0	8.0	warning	special_only 未命中特色规则
+生殖中心	100	1614110	针导-1/双Z1029	5	13.5	13.5	warning	special_only 未命中特色规则
+生殖中心	101	1614110	通液包（3件）	3	16.5	16.5	warning	special_only 未命中特色规则
+生殖中心	102	1614515	（试）移植包（4件）	3	22.0	22.0	warning	special_only 未命中特色规则
+生殖中心	103	1614515	取卵包-4件	2	22.0	22.0	warning	special_only 未命中特色规则
+生殖中心	104	1614515	通液包（3件）	1	16.5	16.5	warning	special_only 未命中特色规则
+生殖中心	105	1614575	麻杯-1/Z1020	1	8.0	8.0	warning	special_only 未命中特色规则
+生殖中心	106	1614575	针导-1/双Z1029	1	13.5	13.5	warning	special_only 未命中特色规则
+生殖中心	107	1614856	手术衣	2	25.0	25.0	warning	敷料包(无纺布包)——未识别规格
+生殖中心	110	1614883	宫颈钳-1/Z1535	2	11.0	11.0	warning	special_only 未命中特色规则
+生殖中心	111	1614883	换药缸-1/Z2530	1	16.0	16.0	warning	special_only 未命中特色规则
+生殖中心	112	1614883	（试）移植包（4件）	1	22.0	22.0	warning	special_only 未命中特色规则
+生殖中心	113	1614883	通液包（3件）	4	16.5	16.5	warning	special_only 未命中特色规则
+生殖中心	114	1615264	（试）移植包（4件）	1	22.0	22.0	warning	special_only 未命中特色规则
+生殖中心	115	1615264	取卵包-4件	1	22.0	22.0	warning	special_only 未命中特色规则
+生殖中心	116	1615264	通液包（3件）	4	16.5	16.5	warning	special_only 未命中特色规则
+生殖中心	117	1615340	探针-1/Z7537	1	8.0	8.0	warning	special_only 未命中特色规则
+生殖中心	118	1615340	针导-1/双Z1029	1	13.5	13.5	warning	special_only 未命中特色规则
+生殖中心	119	1615519	手术衣	1	25.0	25.0	warning	敷料包(无纺布包)——未识别规格
+生殖中心	122	1615554	（试）移植包（4件）	1	22.0	22.0	warning	special_only 未命中特色规则
+生殖中心	123	1616069	（试）移植包（4件）	1	22.0	22.0	warning	special_only 未命中特色规则
+生殖中心	124	1616069	取卵包-4件	1	22.0	22.0	warning	special_only 未命中特色规则
+生殖中心	125	1616069	通液包（3件）	6	16.5	16.5	warning	special_only 未命中特色规则
+生殖中心	126	1616111	针导-1/双Z1029	1	13.5	13.5	warning	special_only 未命中特色规则
+生殖中心	127	1616367	手术衣	1	25.0	25.0	warning	敷料包(无纺布包)——未识别规格
+美容科（朝鲜医院）	9	1609838	拆线包-2/Z1026	3	13.5	13.5	warning	special_only 未命中特色规则
+美容科（朝鲜医院）	10	1609838	鼻包-22件/W6050	1	121.0	121.0	warning	special_only 未命中特色规则
+美容科（朝鲜医院）	11	1609838	眼包-13/W6050	2	71.5	71.5	warning	special_only 未命中特色规则
+美容科（朝鲜医院）	12	1609838	眼包-14/W6050	1	77.0	77.0	warning	special_only 未命中特色规则
+美容科（朝鲜医院）	13	1613169	拆线包-2/Z1026	1	13.5	13.5	warning	special_only 未命中特色规则
+美容科（朝鲜医院）	14	1613169	眼包-13/W6050	2	71.5	71.5	warning	special_only 未命中特色规则
+耳鼻喉	9	1608269	间接喉镜-4/Z1035	1	22.0	22.0	warning	special_only 未命中特色规则
+耳鼻喉	10	1608269	卷棉子-5/Z1026	1	8.0	8.0	warning	special_only 未命中特色规则
+耳鼻喉	11	1608269	前鼻镜-6/Z2032	2	33.0	33.0	warning	special_only 未命中特色规则
+耳鼻喉	12	1608269	枪状镊-8/Z1029	1	44.0	44.0	warning	special_only 未命中特色规则
+耳鼻喉	13	1608269	吸引器头-4/Z1029	1	22.0	22.0	warning	special_only 未命中特色规则
+耳鼻喉	14	1608269	压舌板(缠纱布)-1/Z7530	1	8.0	8.0	warning	special_only 未命中特色规则
+耳鼻喉	15	1608269	异物钳(高温)-1/Z1535	1	11.0	11.0	warning	special_only 未命中特色规则
+耳鼻喉	16	1608269	针头8号-1/Z7526	1	8.0	8.0	warning	special_only 未命中特色规则
+耳鼻喉	17	1609019	棉球/Z2530	4	4.0	4.0	warning	敷料包(纸塑袋)+棉球——未识别规格
+耳鼻喉	18	1609043	间接喉镜-6/Z1035	1	33.0	33.0	warning	special_only 未命中特色规则
+耳鼻喉	19	1609043	卷棉子-10/Z1026	1	13.5	13.5	warning	special_only 未命中特色规则
+耳鼻喉	20	1609043	前鼻镜-6/Z2032	1	33.0	33.0	warning	special_only 未命中特色规则
+耳鼻喉	21	1609043	枪状镊-6/Z1029	2	33.0	33.0	warning	special_only 未命中特色规则
+耳鼻喉	22	1609043	吸引器头-8/Z1029	1	44.0	44.0	warning	special_only 未命中特色规则
+耳鼻喉	23	1609043	异物钳(高温)-1/Z1535	1	11.0	11.0	warning	special_only 未命中特色规则
+耳鼻喉	24	1609043	针头8号-1/Z7526	1	8.0	8.0	warning	special_only 未命中特色规则
+耳鼻喉	25	1609043	止血钳-1/Z1029	1	8.0	8.0	warning	special_only 未命中特色规则
+耳鼻喉	26	1609835	耳道异物钳-1/Z1535	1	11.0	11.0	warning	special_only 未命中特色规则
+耳鼻喉	27	1609835	间接喉镜-6/Z1035	1	33.0	33.0	warning	special_only 未命中特色规则
+耳鼻喉	28	1609835	卷棉子-10/Z1026	1	13.5	13.5	warning	special_only 未命中特色规则
+耳鼻喉	29	1609835	前鼻镜-4/Z2032	2	22.0	22.0	warning	special_only 未命中特色规则
+耳鼻喉	30	1609835	枪状镊-8/Z1029	2	44.0	44.0	warning	special_only 未命中特色规则
+耳鼻喉	31	1609835	吸引器头-5/Z1029	1	27.5	27.5	warning	special_only 未命中特色规则
+耳鼻喉	32	1609835	针头7号-1/Z7526	1	8.0	8.0	warning	special_only 未命中特色规则
+耳鼻喉	33	1610788	穿刺针(7号)-1/Z7526	2	8.0	8.0	warning	special_only 未命中特色规则
+耳鼻喉	34	1610788	耵聍钩-1/Z7534	2	8.0	8.0	warning	special_only 未命中特色规则
+耳鼻喉	35	1610788	喉异物钳-1/Z1535	3	11.0	11.0	warning	special_only 未命中特色规则
+耳鼻喉	36	1610788	间接喉镜-5/Z1035	1	27.5	27.5	warning	special_only 未命中特色规则
+耳鼻喉	37	1610788	卷棉子-5/Z1026	1	8.0	8.0	warning	special_only 未命中特色规则
+耳鼻喉	38	1610788	前鼻镜-9/Z2032	1	49.5	49.5	warning	special_only 未命中特色规则
+耳鼻喉	39	1610788	枪状镊-5/Z1029	2	33.0	33.0	warning	special_only 未命中特色规则
+耳鼻喉	40	1610788	弯盘-1/Z2032	1	13.0	13.0	warning	special_only 未命中特色规则
+耳鼻喉	41	1610788	吸引器头-6/Z1029	1	33.0	33.0	warning	special_only 未命中特色规则
+耳鼻喉	42	1610788	止血钳-1/Z1029	2	8.0	8.0	warning	special_only 未命中特色规则
+耳鼻喉	43	1611548	持针器-1/Z1029	1	8.0	8.0	warning	special_only 未命中特色规则
+耳鼻喉	44	1611548	穿刺针(7号)-1/Z7526	1	8.0	8.0	warning	special_only 未命中特色规则
+耳鼻喉	45	1611548	穿刺针(8号)-1/Z7526	2	8.0	8.0	warning	special_only 未命中特色规则
+耳鼻喉	46	1611548	刀柄-1/Z7526	1	8.0	8.0	warning	special_only 未命中特色规则
+耳鼻喉	47	1611548	间接喉镜-7/Z1035	1	38.5	38.5	warning	special_only 未命中特色规则
+耳鼻喉	48	1611548	卷棉子-10/Z1026	1	13.5	13.5	warning	special_only 未命中特色规则
+耳鼻喉	49	1611548	前鼻镜-6/Z2032	1	33.0	33.0	warning	special_only 未命中特色规则
+耳鼻喉	50	1611548	枪状镊-5/Z1029	2	33.0	33.0	warning	special_only 未命中特色规则
+耳鼻喉	51	1611548	探针-1/Z7537	1	8.0	8.0	warning	special_only 未命中特色规则
+耳鼻喉	52	1611548	弯盘-1/Z2032	2	13.0	13.0	warning	special_only 未命中特色规则
+耳鼻喉	53	1611548	吸引器头-2/Z7530	1	13.5	13.5	warning	special_only 未命中特色规则
+耳鼻喉	54	1611548	小剪刀-1/Z7526	1	8.0	8.0	warning	special_only 未命中特色规则
+耳鼻喉	55	1611548	止血钳-1/Z1029	6	8.0	8.0	warning	special_only 未命中特色规则
+耳鼻喉	56	1611629	活检钳(EO)-1/Z3044	1	22.0	22.0	warning	special_only 未命中特色规则
+耳鼻喉	58	1611864	耵聍钩-1/Z7534	1	8.0	8.0	warning	special_only 未命中特色规则
+耳鼻喉	59	1611864	耳道钳-1/Z1029	1	8.0	8.0	warning	special_only 未命中特色规则
+耳鼻喉	60	1611864	间接喉镜-7/Z1035	1	38.5	38.5	warning	special_only 未命中特色规则
+耳鼻喉	61	1611864	卷棉子-10/Z1026	1	13.5	13.5	warning	special_only 未命中特色规则
+耳鼻喉	62	1611864	前鼻镜-6/Z2032	1	33.0	33.0	warning	special_only 未命中特色规则
+耳鼻喉	63	1611864	枪状镊-9/Z1029	1	49.5	49.5	warning	special_only 未命中特色规则
+耳鼻喉	64	1611864	弯盘-1/Z2032	1	13.0	13.0	warning	special_only 未命中特色规则
+耳鼻喉	65	1611864	吸引器头-10/Z1029	1	55.0	55.0	warning	special_only 未命中特色规则
+耳鼻喉	66	1611864	止血钳-1/Z1029	1	8.0	8.0	warning	special_only 未命中特色规则
+耳鼻喉	67	1612752	间接喉镜-8/Z1035	1	44.0	44.0	warning	special_only 未命中特色规则
+耳鼻喉	68	1612752	卷棉子-10/Z1026	1	13.5	13.5	warning	special_only 未命中特色规则
+耳鼻喉	69	1612752	前鼻镜-5/Z2032	2	27.5	27.5	warning	special_only 未命中特色规则
+耳鼻喉	70	1612752	枪状镊-6/Z1029	2	33.0	33.0	warning	special_only 未命中特色规则
+耳鼻喉	71	1612752	吸引器头-3/Z1029	1	16.5	16.5	warning	special_only 未命中特色规则
+耳鼻喉	72	1612752	异物钳(高温)-1/Z1535	1	11.0	11.0	warning	special_only 未命中特色规则
+耳鼻喉	73	1613558	耵聍钩-1/Z7534	1	8.0	8.0	warning	special_only 未命中特色规则
+耳鼻喉	74	1613558	耳道异物钳-1/Z1535	1	11.0	11.0	warning	special_only 未命中特色规则
+耳鼻喉	75	1613558	卷棉子-5/Z1026	1	8.0	8.0	warning	special_only 未命中特色规则
+耳鼻喉	76	1613558	前鼻镜-5/Z2032	1	27.5	27.5	warning	special_only 未命中特色规则
+耳鼻喉	77	1613558	枪状镊-11/Z1035	1	60.5	60.5	warning	special_only 未命中特色规则
+耳鼻喉	78	1613558	吸引器头-8/Z1029	1	44.0	44.0	warning	special_only 未命中特色规则
+耳鼻喉	79	1613558	小剪刀-1/Z7526	1	8.0	8.0	warning	special_only 未命中特色规则
+耳鼻喉	80	1613558	针头8号-1/Z7526	2	8.0	8.0	warning	special_only 未命中特色规则
+耳鼻喉	81	1614568	耵聍钩-1/Z7534	2	8.0	8.0	warning	special_only 未命中特色规则
+耳鼻喉	82	1614568	间接喉镜-6/Z1035	2	33.0	33.0	warning	special_only 未命中特色规则
+耳鼻喉	83	1614568	卷棉子-5/Z1026	1	8.0	8.0	warning	special_only 未命中特色规则
+耳鼻喉	84	1614568	前鼻镜-6/Z2032	3	33.0	33.0	warning	special_only 未命中特色规则
+耳鼻喉	85	1614568	枪状镊-7/Z1029	1	38.5	38.5	warning	special_only 未命中特色规则
+耳鼻喉	86	1614568	吸引器头-7/Z1029	1	38.5	38.5	warning	special_only 未命中特色规则
+耳鼻喉	87	1615547	扁桃体直角钳-1/Z1029	1	8.0	8.0	warning	special_only 未命中特色规则
+耳鼻喉	88	1615547	大止血钳-1/Z1029	1	8.0	8.0	warning	special_only 未命中特色规则
+耳鼻喉	89	1615547	骨穿刺器-2件/z1026	1	13.5	13.5	warning	special_only 未命中特色规则
+耳鼻喉	90	1615547	间接喉镜-12/Z1535	1	66.0	66.0	warning	special_only 未命中特色规则
+耳鼻喉	91	1615547	卷棉子-5/Z1026	1	8.0	8.0	warning	special_only 未命中特色规则
+耳鼻喉	92	1615547	前鼻镜-5/Z2032	3	27.5	27.5	warning	special_only 未命中特色规则
+耳鼻喉	93	1615547	枪状镊-2/Z7530	6	13.5	13.5	warning	special_only 未命中特色规则
+耳鼻喉	94	1615547	吸引器头-8/Z1029	1	44.0	44.0	warning	special_only 未命中特色规则
+耳鼻喉	95	1615547	异物钳(高温)-1/Z1535	1	11.0	11.0	warning	special_only 未命中特色规则
+耳鼻喉	96	1615547	针头7号-1/Z7526	1	8.0	8.0	warning	special_only 未命中特色规则
+腔镜手术室	9	1608185	敷料包	1	25.0	25.0	warning	敷料包(无纺布包)——未识别规格
+腔镜手术室	10	1608185	手术衣	1	25.0	25.0	warning	敷料包(无纺布包)——未识别规格
+腔镜手术室	11	1608232	开腹器械包	1	335.5	335.5	warning	special_only 未命中特色规则
+腔镜手术室	12	1608277	检查包	3	60.5	60.5	warning	special_only 未命中特色规则
+腔镜手术室	13	1608277	剪刀-1/Z1029	1	8.0	8.0	warning	special_only 未命中特色规则
+腔镜手术室	14	1608277	取环钩-1/Z7537	1	8.0	8.0	warning	special_only 未命中特色规则
+腔镜手术室	15	1608277	吸头6号-1/Z7534	1	8.0	8.0	warning	special_only 未命中特色规则
+腔镜手术室	16	1608607	敷料包	5	25.0	25.0	warning	敷料包(无纺布包)——未识别规格
+腔镜手术室	17	1608607	敷料包（小，检查包）	5	20.0	20.0	warning	敷料包(无纺布包)——未识别规格
+腔镜手术室	18	1608607	手术衣	1	25.0	25.0	warning	敷料包(无纺布包)——未识别规格
+腔镜手术室	19	1608607	消毒锅	2	20.0	20.0	warning	敷料包(无纺布包)——未识别规格
+腔镜手术室	20	1608632	腹腔镜器械包	1	148.5	148.5	warning	special_only 未命中特色规则
+腔镜手术室	21	1608632	宫腔镜器械包	2	143.0	143.0	warning	special_only 未命中特色规则
+腔镜手术室	22	1608632	检查包	2	60.5	60.5	warning	special_only 未命中特色规则
+腔镜手术室	23	1608632	持物钳罐-2/W6050	1	16.5	16.5	warning	special_only 未命中特色规则
+腔镜手术室	24	1608632	内镜-大盆1小碗1杯1/W9050	1	16.5	16.5	warning	special_only 未命中特色规则
+腔镜手术室	25	1608701	冲洗器(带管)-1/Z7530	2	8.0	8.0	warning	special_only 未命中特色规则
+腔镜手术室	26	1608701	剪刀-1/Z1029	1	8.0	8.0	warning	special_only 未命中特色规则
+腔镜手术室	27	1608753	宫腔镜1号-5件	1	88.0	88.0	warning	special_only 未命中特色规则
+腔镜手术室	28	1608753	宫腔镜2号（特殊）-5件	1	88.0	88.0	warning	special_only 未命中特色规则
+腔镜手术室	29	1608753	宫腔镜4号-5件	1	88.0	88.0	warning	special_only 未命中特色规则
+腔镜手术室	30	1608753	成套-4件/双/Z2060	1	88.0	88.0	warning	special_only 未命中特色规则
+腔镜手术室	31	1608753	冲洗管-1/Z3044	1	22.0	22.0	warning	special_only 未命中特色规则
+腔镜手术室	32	1608753	冲洗器-1/Z1550	1	22.0	22.0	warning	special_only 未命中特色规则
+腔镜手术室	33	1608753	大勺钳-1/Z2060	1	22.0	22.0	warning	special_only 未命中特色规则
+腔镜手术室	34	1608753	气腹管-1/Z3044	1	22.0	22.0	warning	special_only 未命中特色规则
+腔镜手术室	35	1608753	输卵管抓钳-1/Z2060	1	22.0	22.0	warning	special_only 未命中特色规则
+腔镜手术室	36	1608753	水管-1/Z3044	3	22.0	22.0	warning	special_only 未命中特色规则
+腔镜手术室	37	1608753	腹腔镜镜头1号(特殊)-1/Z2060	1	22.0	22.0	warning	special_only 未命中特色规则
+腔镜手术室	38	1608753	检查镜1号-3(特殊)/Z2060	1	66.0	66.0	warning	special_only 未命中特色规则
+腔镜手术室	39	1608753	检查镜-3(11号)/Z2060	1	66.0	66.0	warning	special_only 未命中特色规则
+腔镜手术室	40	1608753	检查镜-3(13号)/Z2060	1	66.0	66.0	warning	special_only 未命中特色规则
+腔镜手术室	41	1608753	检查镜-3(3号)/Z2060	1	66.0	66.0	warning	special_only 未命中特色规则
+腔镜手术室	42	1608753	检查镜-3(6号).Z2060	1	66.0	66.0	warning	special_only 未命中特色规则
+腔镜手术室	43	1608753	检查镜-3(7号)/Z2060	1	66.0	66.0	warning	special_only 未命中特色规则
+腔镜手术室	44	1608961	超声刀手柄 钥匙-2/Z2040	1	44.0	44.0	warning	special_only 未命中特色规则
+腔镜手术室	45	1608979	敷料包	4	25.0	25.0	warning	敷料包(无纺布包)——未识别规格
+腔镜手术室	46	1608979	敷料包（小，检查包）	4	20.0	20.0	warning	敷料包(无纺布包)——未识别规格
+腔镜手术室	47	1608979	手术衣	1	25.0	25.0	warning	敷料包(无纺布包)——未识别规格
+腔镜手术室	48	1608979	消毒锅	1	20.0	20.0	warning	敷料包(无纺布包)——未识别规格
+腔镜手术室	49	1609017	腹腔镜器械包	1	148.5	148.5	warning	special_only 未命中特色规则
+腔镜手术室	50	1609017	宫腔镜器械包	6	143.0	143.0	warning	special_only 未命中特色规则
+腔镜手术室	51	1609017	检查包	2	60.5	60.5	warning	special_only 未命中特色规则
+腔镜手术室	52	1609017	冲洗器(带管)-1/Z7530	1	8.0	8.0	warning	special_only 未命中特色规则
+腔镜手术室	53	1609017	举宫包-9件	1	49.5	49.5	warning	special_only 未命中特色规则
+腔镜手术室	54	1609017	拉钩-2/W6050	1	16.5	16.5	warning	special_only 未命中特色规则
+腔镜手术室	55	1609017	内镜-大盆1小碗1杯1/W9050	1	16.5	16.5	warning	special_only 未命中特色规则
+腔镜手术室	56	1609017	棉球/Z1526	10	2.5	2.5	warning	敷料包(纸塑袋)+棉球——未识别规格
+腔镜手术室	57	1609050	冲洗器(带管)-1/Z7530	1	8.0	8.0	warning	special_only 未命中特色规则
+腔镜手术室	58	1609050	镊子缸-2/Z2044	1	16.5	16.5	warning	special_only 未命中特色规则
+腔镜手术室	59	1609050	取环钩-1/Z7537	1	8.0	8.0	warning	special_only 未命中特色规则
+腔镜手术室	60	1609050	吸头6号-1/Z7534	1	8.0	8.0	warning	special_only 未命中特色规则
+腔镜手术室	61	1609127	宫腔镜1号-5件	1	88.0	88.0	warning	special_only 未命中特色规则
+腔镜手术室	62	1609127	宫腔镜2号-5件	1	88.0	88.0	warning	special_only 未命中特色规则
+腔镜手术室	63	1609127	宫腔镜4号-5件	1	88.0	88.0	warning	special_only 未命中特色规则
+腔镜手术室	64	1609127	宫腔镜6号-5件	1	88.0	88.0	warning	special_only 未命中特色规则
+腔镜手术室	65	1609127	宫腔镜7号-5件	1	88.0	88.0	warning	special_only 未命中特色规则
+腔镜手术室	66	1609127	10MM剪刀-1/Z1535	1	22.0	22.0	warning	special_only 未命中特色规则
+腔镜手术室	67	1609127	10mm抓钳-1/保Z2060	1	22.0	22.0	warning	special_only 未命中特色规则
+腔镜手术室	68	1609127	5MM穿刺器-1/Z1029	1	22.0	22.0	warning	special_only 未命中特色规则
+腔镜手术室	69	1609127	成套-4件/双/Z2060	1	88.0	88.0	warning	special_only 未命中特色规则
+腔镜手术室	70	1609127	成像-1/Z3044	1	22.0	22.0	warning	special_only 未命中特色规则
+腔镜手术室	71	1609127	持针器-1/Z2060	2	22.0	22.0	warning	special_only 未命中特色规则
+腔镜手术室	72	1609127	冲洗管-1/Z3044	1	22.0	22.0	warning	special_only 未命中特色规则
+腔镜手术室	73	1609127	冲洗器-2/Z1029	1	44.0	44.0	warning	special_only 未命中特色规则
+腔镜手术室	74	1609127	单极钩-1线-1/Z2060	1	44.0	44.0	warning	special_only 未命中特色规则
+腔镜手术室	75	1609127	单极环 滚-2/Z1035	1	44.0	44.0	warning	special_only 未命中特色规则
+腔镜手术室	76	1609127	电切环-1/Z1045	4	22.0	22.0	warning	special_only 未命中特色规则
+腔镜手术室	77	1609127	光源线（光纤）-1/Z3044	1	22.0	22.0	warning	special_only 未命中特色规则
+腔镜手术室	78	1609127	滚状电极-1/Z7534	1	22.0	22.0	warning	special_only 未命中特色规则
+腔镜手术室	79	1609127	举宫包-7/Z2060	1	132.0	132.0	warning	special_only 未命中特色规则
+腔镜手术室	80	1609127	举宫杯-5/Z2060	1	88.0	88.0	warning	special_only 未命中特色规则
+腔镜手术室	81	1609127	气腹管-1/Z3044	1	22.0	22.0	warning	special_only 未命中特色规则
+腔镜手术室	82	1609127	取物钳-1/Z2044	1	22.0	22.0	warning	special_only 未命中特色规则
+腔镜手术室	83	1609127	取物勺-1/Z2044	1	22.0	22.0	warning	special_only 未命中特色规则
+腔镜手术室	84	1609127	水管-1/Z3044	1	22.0	22.0	warning	special_only 未命中特色规则
+腔镜手术室	85	1609127	弯钳-1/Z2060	2	22.0	22.0	warning	special_only 未命中特色规则
+腔镜手术室	86	1609127	旋切成套-6/双/Z2060	1	110.0	110.0	warning	special_only 未命中特色规则
+腔镜手术室	87	1609127	针状电极 滚-2/Z1035	1	44.0	44.0	warning	special_only 未命中特色规则
+腔镜手术室	88	1609127	针状电极-1/Z7537	4	22.0	22.0	warning	special_only 未命中特色规则
+腔镜手术室	89	1609127	注射针-1/Z1029	1	22.0	22.0	warning	special_only 未命中特色规则
+腔镜手术室	90	1609127	组件-1/Z7520	5	22.0	22.0	warning	special_only 未命中特色规则
+腔镜手术室	91	1609127	腹腔镜3号-1/Z2060	1	22.0	22.0	warning	special_only 未命中特色规则
+腔镜手术室	92	1609127	检查镜-3(10号)/Z2060	1	66.0	66.0	warning	special_only 未命中特色规则
+腔镜手术室	93	1609127	检查镜-3(13号)/Z2060	1	66.0	66.0	warning	special_only 未命中特色规则
+腔镜手术室	94	1609127	检查镜-3(14号)/Z2060	1	66.0	66.0	warning	special_only 未命中特色规则
+腔镜手术室	95	1609127	检查镜-3(4号)/Z2060	1	66.0	66.0	warning	special_only 未命中特色规则
+腔镜手术室	96	1609358	敷料包	3	25.0	25.0	warning	敷料包(无纺布包)——未识别规格
+腔镜手术室	97	1609358	手术衣	1	25.0	25.0	warning	敷料包(无纺布包)——未识别规格
+腔镜手术室	98	1609358	消毒锅	1	20.0	20.0	warning	敷料包(无纺布包)——未识别规格
+腔镜手术室	99	1609382	腹腔镜器械包	1	148.5	148.5	warning	special_only 未命中特色规则
+腔镜手术室	100	1609382	宫腔镜器械包	1	143.0	143.0	warning	special_only 未命中特色规则
+腔镜手术室	101	1609382	检查包	2	60.5	60.5	warning	special_only 未命中特色规则
+腔镜手术室	102	1609382	持物钳罐-2/W6050	1	16.5	16.5	warning	special_only 未命中特色规则
+腔镜手术室	103	1609382	内镜-大盆1小碗1杯1/W9050	1	16.5	16.5	warning	special_only 未命中特色规则
+腔镜手术室	104	1609391	冲洗器(带管)-1/Z7530	1	8.0	8.0	warning	special_only 未命中特色规则
+腔镜手术室	105	1609391	剪刀-1/Z1029	1	8.0	8.0	warning	special_only 未命中特色规则
+腔镜手术室	106	1609491	超声刀手柄 钥匙-2/Z2040	1	44.0	44.0	warning	special_only 未命中特色规则
+腔镜手术室	107	1609508	成套-4件/双/Z2060	1	88.0	88.0	warning	special_only 未命中特色规则
+腔镜手术室	108	1609508	冲洗管-1/Z3044	1	22.0	22.0	warning	special_only 未命中特色规则
+腔镜手术室	109	1609508	冲洗器-2/Z1029	1	44.0	44.0	warning	special_only 未命中特色规则
+腔镜手术室	110	1609508	穿刺器-13/Z2032	1	231.0	231.0	warning	special_only 未命中特色规则
+腔镜手术室	111	1609508	大勺钳-1/Z2060	1	22.0	22.0	warning	special_only 未命中特色规则
+腔镜手术室	112	1609508	气腹管-1/Z3044	1	22.0	22.0	warning	special_only 未命中特色规则
+腔镜手术室	113	1609508	输卵管抓钳-1/Z2060	1	22.0	22.0	warning	special_only 未命中特色规则
+腔镜手术室	114	1609508	水管-1/Z3044	1	22.0	22.0	warning	special_only 未命中特色规则
+腔镜手术室	115	1609508	腹腔镜6号-1/Z2060	1	22.0	22.0	warning	special_only 未命中特色规则
+腔镜手术室	116	1609508	检查镜1号-3(特殊)/Z2060	1	66.0	66.0	warning	special_only 未命中特色规则
+腔镜手术室	117	1609508	检查镜-3(4号)/Z2060	1	66.0	66.0	warning	special_only 未命中特色规则
+腔镜手术室	118	1609752	敷料包	4	25.0	25.0	warning	敷料包(无纺布包)——未识别规格
+腔镜手术室	119	1609752	敷料包（小，检查包）	5	20.0	20.0	warning	敷料包(无纺布包)——未识别规格
+腔镜手术室	120	1609752	手术衣	2	25.0	25.0	warning	敷料包(无纺布包)——未识别规格
+腔镜手术室	121	1609752	无菌锅-1	1	20.0	20.0	warning	敷料包(无纺布包)——未识别规格
+腔镜手术室	122	1609780	宫腔镜器械包	1	143.0	143.0	warning	special_only 未命中特色规则
+腔镜手术室	123	1609780	检查包	3	60.5	60.5	warning	special_only 未命中特色规则
+腔镜手术室	124	1609780	开腹器械包	1	335.5	335.5	warning	special_only 未命中特色规则
+腔镜手术室	125	1609840	腹腔镜器械包	1	148.5	148.5	warning	special_only 未命中特色规则
+腔镜手术室	126	1609840	检查包	1	60.5	60.5	warning	special_only 未命中特色规则
+腔镜手术室	127	1609840	艾利斯-2/Z1526	1	16.5	16.5	warning	special_only 未命中特色规则
+腔镜手术室	128	1609840	镊子缸-2/Z2044	1	16.5	16.5	warning	special_only 未命中特色规则
+腔镜手术室	129	1609840	阴道拉钩-2/Z1526	1	16.5	16.5	warning	special_only 未命中特色规则
+腔镜手术室	130	1609895	冲洗器-2/Z1029	1	44.0	44.0	warning	special_only 未命中特色规则
+腔镜手术室	131	1609895	单极钩-1线-1/Z2060	1	44.0	44.0	warning	special_only 未命中特色规则
+腔镜手术室	132	1609895	腹腔镜2号-1/Z2060	1	22.0	22.0	warning	special_only 未命中特色规则
+腔镜手术室	133	1609895	剪刀(EO)-1/Z2060	1	22.0	22.0	warning	special_only 未命中特色规则
+腔镜手术室	134	1609895	气腹管-1/Z3044	1	22.0	22.0	warning	special_only 未命中特色规则
+腔镜手术室	135	1609895	水管-1/Z3044	1	22.0	22.0	warning	special_only 未命中特色规则
+腔镜手术室	136	1609895	钛夹钳-1/双/保/Z2060	1	22.0	22.0	warning	special_only 未命中特色规则
+腔镜手术室	137	1609895	弯钳-1/Z2060	1	22.0	22.0	warning	special_only 未命中特色规则
+腔镜手术室	138	1609895	无损伤钳-1/Z2060	2	22.0	22.0	warning	special_only 未命中特色规则
+腔镜手术室	139	1609895	抓勺5MM-1/Z2060	1	22.0	22.0	warning	special_only 未命中特色规则
+腔镜手术室	140	1609895	检查镜-3(12号)/Z2060	1	66.0	66.0	warning	special_only 未命中特色规则
+腔镜手术室	141	1609895	检查镜-3(14号)/Z2060	1	66.0	66.0	warning	special_only 未命中特色规则
+腔镜手术室	142	1609895	检查镜-3(2号)/Z2060	1	66.0	66.0	warning	special_only 未命中特色规则
+腔镜手术室	143	1609895	检查镜-3(6号).Z2060	1	66.0	66.0	warning	special_only 未命中特色规则
+腔镜手术室	144	1609895	检查镜-3(7号)/Z2060	1	66.0	66.0	warning	special_only 未命中特色规则
+腔镜手术室	145	1609976	敷料包	1	25.0	25.0	warning	敷料包(无纺布包)——未识别规格
+腔镜手术室	146	1609976	无菌锅-1	1	20.0	20.0	warning	敷料包(无纺布包)——未识别规格
+腔镜手术室	147	1609990	换药缸-1/Z2530	2	16.0	16.0	warning	special_only 未命中特色规则
+腔镜手术室	148	1609990	冲洗器(带管)-1/Z7530	1	8.0	8.0	warning	special_only 未命中特色规则
+腔镜手术室	149	1610333	敷料包	1	25.0	25.0	warning	敷料包(无纺布包)——未识别规格
+腔镜手术室	150	1610333	敷料包（小，检查包）	4	20.0	20.0	warning	敷料包(无纺布包)——未识别规格
+腔镜手术室	151	1610333	手术衣	1	25.0	25.0	warning	敷料包(无纺布包)——未识别规格
+腔镜手术室	152	1610357	宫腔镜器械包	3	143.0	143.0	warning	special_only 未命中特色规则
+腔镜手术室	153	1610357	检查包	4	60.5	60.5	warning	special_only 未命中特色规则
+腔镜手术室	154	1610357	冲洗器(带管)-1/Z7530	1	8.0	8.0	warning	special_only 未命中特色规则
+腔镜手术室	155	1610357	剪刀-1/Z1029	1	8.0	8.0	warning	special_only 未命中特色规则
+腔镜手术室	156	1610476	宫腔镜7号-5件	1	88.0	88.0	warning	special_only 未命中特色规则
+腔镜手术室	157	1610476	宫腔镜9号-5件	1	88.0	88.0	warning	special_only 未命中特色规则
+腔镜手术室	158	1610476	铂康-检查镜-3/Z2060	1	66.0	66.0	warning	special_only 未命中特色规则
+腔镜手术室	159	1610476	水管-1/Z3044	1	22.0	22.0	warning	special_only 未命中特色规则
+腔镜手术室	160	1610476	检查镜-3(14号)/Z2060	1	66.0	66.0	warning	special_only 未命中特色规则
+腔镜手术室	161	1610476	检查镜-3(2号)/Z2060	1	66.0	66.0	warning	special_only 未命中特色规则
+腔镜手术室	162	1610476	检查镜-3(3号)/Z2060	1	66.0	66.0	warning	special_only 未命中特色规则
+腔镜手术室	163	1610476	检查镜-3(6号).Z2060	1	66.0	66.0	warning	special_only 未命中特色规则
+腔镜手术室	164	1610476	检查镜-3(7号)/Z2060	1	66.0	66.0	warning	special_only 未命中特色规则
+腔镜手术室	165	1610708	敷料包	4	25.0	25.0	warning	敷料包(无纺布包)——未识别规格
+腔镜手术室	166	1610708	敷料包（小，检查包）	5	20.0	20.0	warning	敷料包(无纺布包)——未识别规格
+腔镜手术室	167	1610708	手术衣	1	25.0	25.0	warning	敷料包(无纺布包)——未识别规格
+腔镜手术室	168	1610708	无菌锅-1	1	20.0	20.0	warning	敷料包(无纺布包)——未识别规格
+腔镜手术室	169	1610757	宫腔镜器械包	4	143.0	143.0	warning	special_only 未命中特色规则
+腔镜手术室	170	1610757	检查包	4	60.5	60.5	warning	special_only 未命中特色规则
+腔镜手术室	171	1610757	持针器-1/Z1029	1	8.0	8.0	warning	special_only 未命中特色规则
+腔镜手术室	172	1610757	冲洗器(带管)-1/Z7530	1	8.0	8.0	warning	special_only 未命中特色规则
+腔镜手术室	173	1610757	剪刀-1/Z1029	1	8.0	8.0	warning	special_only 未命中特色规则
+腔镜手术室	174	1610757	取环钩-1/Z7537	1	8.0	8.0	warning	special_only 未命中特色规则
+腔镜手术室	175	1610757	扩棒-9/W6050	1	49.5	49.5	warning	special_only 未命中特色规则
+腔镜手术室	176	1610796	窥器-1/Z1526	1	11.0	11.0	warning	special_only 未命中特色规则
+腔镜手术室	177	1610887	宫腔镜3号-5件	1	88.0	88.0	warning	special_only 未命中特色规则
+腔镜手术室	178	1610887	宫腔镜4号-5件	1	88.0	88.0	warning	special_only 未命中特色规则
+腔镜手术室	179	1610887	宫腔镜7号-5件	1	88.0	88.0	warning	special_only 未命中特色规则
+腔镜手术室	180	1610887	宫腔镜9号-5件	1	88.0	88.0	warning	special_only 未命中特色规则
+腔镜手术室	181	1610887	铂康-检查镜-3/Z2060	1	66.0	66.0	warning	special_only 未命中特色规则
+腔镜手术室	182	1610887	水管-1/Z3044	1	22.0	22.0	warning	special_only 未命中特色规则
+腔镜手术室	183	1610887	检查镜-3(12号)/Z2060	1	66.0	66.0	warning	special_only 未命中特色规则
+腔镜手术室	184	1610887	检查镜-3(2号)/Z2060	1	66.0	66.0	warning	special_only 未命中特色规则
+腔镜手术室	185	1610887	检查镜-3(3号)/Z2060	1	66.0	66.0	warning	special_only 未命中特色规则
+腔镜手术室	186	1610887	检查镜-3(6号).Z2060	1	66.0	66.0	warning	special_only 未命中特色规则
+腔镜手术室	187	1610887	检查镜-3(7号)/Z2060	1	66.0	66.0	warning	special_only 未命中特色规则
+腔镜手术室	188	1611097	敷料包	2	25.0	25.0	warning	敷料包(无纺布包)——未识别规格
+腔镜手术室	189	1611097	敷料包（小，检查包）	4	20.0	20.0	warning	敷料包(无纺布包)——未识别规格
+腔镜手术室	190	1611097	无菌锅-1	1	20.0	20.0	warning	敷料包(无纺布包)——未识别规格
+腔镜手术室	191	1611118	宫腔镜器械包	1	143.0	143.0	warning	special_only 未命中特色规则
+腔镜手术室	192	1611488	敷料包	4	25.0	25.0	warning	敷料包(无纺布包)——未识别规格
+腔镜手术室	193	1611488	敷料包（小，检查包）	5	20.0	20.0	warning	敷料包(无纺布包)——未识别规格
+腔镜手术室	194	1611488	手术衣	2	25.0	25.0	warning	敷料包(无纺布包)——未识别规格
+腔镜手术室	195	1611488	无菌锅-1	1	20.0	20.0	warning	敷料包(无纺布包)——未识别规格
+腔镜手术室	196	1611518	宫腔镜器械包	2	143.0	143.0	warning	special_only 未命中特色规则
+腔镜手术室	197	1611518	检查包	2	60.5	60.5	warning	special_only 未命中特色规则
+腔镜手术室	198	1611552	冲洗器(带管)-1/Z7530	2	8.0	8.0	warning	special_only 未命中特色规则
+腔镜手术室	199	1611552	吸头6号-1/Z7534	1	8.0	8.0	warning	special_only 未命中特色规则
+腔镜手术室	200	1611630	宫腔镜4号-5件	1	88.0	88.0	warning	special_only 未命中特色规则
+腔镜手术室	201	1611630	宫腔镜7号-5件	1	88.0	88.0	warning	special_only 未命中特色规则
+腔镜手术室	202	1611630	水管-1/Z3044	2	22.0	22.0	warning	special_only 未命中特色规则
+腔镜手术室	203	1611630	检查镜-3(3号)/Z2060	1	66.0	66.0	warning	special_only 未命中特色规则
+腔镜手术室	204	1611630	检查镜-3(6号).Z2060	1	66.0	66.0	warning	special_only 未命中特色规则
+腔镜手术室	205	1611831	敷料包	2	25.0	25.0	warning	敷料包(无纺布包)——未识别规格
+腔镜手术室	206	1611831	手术衣	2	25.0	25.0	warning	敷料包(无纺布包)——未识别规格
+腔镜手术室	207	1611831	无菌锅-1	1	20.0	20.0	warning	敷料包(无纺布包)——未识别规格
+腔镜手术室	208	1611851	腹腔镜器械包	1	148.5	148.5	warning	special_only 未命中特色规则
+腔镜手术室	209	1611851	宫腔镜器械包	2	143.0	143.0	warning	special_only 未命中特色规则
+腔镜手术室	210	1611851	检查包	2	60.5	60.5	warning	special_only 未命中特色规则
+腔镜手术室	211	1611851	换药缸-1/Z2530	2	16.0	16.0	warning	special_only 未命中特色规则
+腔镜手术室	212	1611851	冲洗器(带管)-1/Z7530	1	8.0	8.0	warning	special_only 未命中特色规则
+腔镜手术室	213	1611851	吸头7号-1/Z7534	1	8.0	8.0	warning	special_only 未命中特色规则
+腔镜手术室	214	1611851	举宫包-9件	1	49.5	49.5	warning	special_only 未命中特色规则
+腔镜手术室	215	1611851	持物钳罐-2/W6050	1	16.5	16.5	warning	special_only 未命中特色规则
+腔镜手术室	216	1611851	扩棒-9/W6050	1	49.5	49.5	warning	special_only 未命中特色规则
+腔镜手术室	217	1611975	宫腔镜1号-5件	1	88.0	88.0	warning	special_only 未命中特色规则
+腔镜手术室	218	1611975	宫腔镜3号-5件	1	88.0	88.0	warning	special_only 未命中特色规则
+腔镜手术室	219	1611975	宫腔镜4号-5件	1	88.0	88.0	warning	special_only 未命中特色规则
+腔镜手术室	220	1611975	铂康-检查镜-3/Z2060	1	66.0	66.0	warning	special_only 未命中特色规则
+腔镜手术室	221	1611975	成套-4件/双/Z2060	1	88.0	88.0	warning	special_only 未命中特色规则
+腔镜手术室	222	1611975	持针器-1/Z2060	1	22.0	22.0	warning	special_only 未命中特色规则
+腔镜手术室	223	1611975	冲洗管-1/Z3044	1	22.0	22.0	warning	special_only 未命中特色规则
+腔镜手术室	224	1611975	冲洗器-2/Z1029	1	44.0	44.0	warning	special_only 未命中特色规则
+腔镜手术室	225	1611975	大勺钳-1/Z2060	1	22.0	22.0	warning	special_only 未命中特色规则
+腔镜手术室	226	1611975	气腹管-1/Z3044	1	22.0	22.0	warning	special_only 未命中特色规则
+腔镜手术室	227	1611975	输卵管抓钳-1/Z2060	1	22.0	22.0	warning	special_only 未命中特色规则
+腔镜手术室	228	1611975	水管-1/Z3044	1	22.0	22.0	warning	special_only 未命中特色规则
+腔镜手术室	229	1611975	组织剪-1/Z2060	1	22.0	22.0	warning	special_only 未命中特色规则
+腔镜手术室	230	1611975	腹腔镜8号/Z2060	1	22.0	22.0	warning	special_only 未命中特色规则
+腔镜手术室	231	1611975	检查镜-3(12号)/Z2060	1	66.0	66.0	warning	special_only 未命中特色规则
+腔镜手术室	232	1611975	检查镜-3(6号).Z2060	1	66.0	66.0	warning	special_only 未命中特色规则
+腔镜手术室	233	1612337	敷料包	6	25.0	25.0	warning	敷料包(无纺布包)——未识别规格
+腔镜手术室	234	1612337	敷料包（小，检查包）	6	20.0	20.0	warning	敷料包(无纺布包)——未识别规格
+腔镜手术室	235	1612337	手术衣	1	25.0	25.0	warning	敷料包(无纺布包)——未识别规格
+腔镜手术室	236	1612337	无菌锅-1	1	20.0	20.0	warning	敷料包(无纺布包)——未识别规格
+腔镜手术室	237	1612347	宫腔镜器械包	1	143.0	143.0	warning	special_only 未命中特色规则
+腔镜手术室	238	1612347	检查包	9	60.5	60.5	warning	special_only 未命中特色规则
+腔镜手术室	239	1612347	冲洗器(带管)-1/Z7530	1	8.0	8.0	warning	special_only 未命中特色规则
+腔镜手术室	240	1612347	剪刀-1/Z1029	1	8.0	8.0	warning	special_only 未命中特色规则
+腔镜手术室	241	1612347	吸头7号-1/Z7534	1	8.0	8.0	warning	special_only 未命中特色规则
+腔镜手术室	242	1612347	扩棒-9/W6050	2	49.5	49.5	warning	special_only 未命中特色规则
+腔镜手术室	243	1612476	宫腔镜1号	1	22.0	22.0	warning	special_only 未命中特色规则
+腔镜手术室	244	1612476	宫腔镜1号-5件	1	88.0	88.0	warning	special_only 未命中特色规则
+腔镜手术室	245	1612476	宫腔镜3号-5件	1	88.0	88.0	warning	special_only 未命中特色规则
+腔镜手术室	246	1612476	宫腔镜4号-5件	1	88.0	88.0	warning	special_only 未命中特色规则
+腔镜手术室	247	1612476	铂康-检查镜-3/Z2060	1	66.0	66.0	warning	special_only 未命中特色规则
+腔镜手术室	248	1612476	水管-1/Z3044	1	22.0	22.0	warning	special_only 未命中特色规则
+腔镜手术室	249	1612476	检查镜-3(11号)/Z2060	1	66.0	66.0	warning	special_only 未命中特色规则
+腔镜手术室	250	1612476	检查镜-3(12号)/Z2060	1	66.0	66.0	warning	special_only 未命中特色规则
+腔镜手术室	251	1612476	检查镜-3(13号)/Z2060	1	66.0	66.0	warning	special_only 未命中特色规则
+腔镜手术室	252	1612476	检查镜-3(14号)/Z2060	1	66.0	66.0	warning	special_only 未命中特色规则
+腔镜手术室	253	1612476	检查镜-3(5号)/Z2060	1	66.0	66.0	warning	special_only 未命中特色规则
+腔镜手术室	254	1612476	检查镜-3(6号).Z2060	1	66.0	66.0	warning	special_only 未命中特色规则
+腔镜手术室	255	1612476	检查镜-3(7号)/Z2060	1	66.0	66.0	warning	special_only 未命中特色规则
+腔镜手术室	256	1612717	敷料包	4	25.0	25.0	warning	敷料包(无纺布包)——未识别规格
+腔镜手术室	257	1612717	敷料包（小，检查包）	6	20.0	20.0	warning	敷料包(无纺布包)——未识别规格
+腔镜手术室	258	1612717	手术衣	1	25.0	25.0	warning	敷料包(无纺布包)——未识别规格
+腔镜手术室	259	1612717	无菌锅-1	1	20.0	20.0	warning	敷料包(无纺布包)——未识别规格
+腔镜手术室	260	1612739	腹腔镜器械包	1	148.5	148.5	warning	special_only 未命中特色规则
+腔镜手术室	261	1612739	宫腔镜器械包	4	143.0	143.0	warning	special_only 未命中特色规则
+腔镜手术室	262	1612739	检查包	5	60.5	60.5	warning	special_only 未命中特色规则
+腔镜手术室	263	1612824	检查包	1	60.5	60.5	warning	special_only 未命中特色规则
+腔镜手术室	264	1612824	冲洗器(带管)-1/Z7530	1	8.0	8.0	warning	special_only 未命中特色规则
+腔镜手术室	265	1612824	剪刀-1/Z1029	1	8.0	8.0	warning	special_only 未命中特色规则
+腔镜手术室	266	1612824	扩棒(3.5-6.5)-7/W6050	1	38.5	38.5	warning	special_only 未命中特色规则
+腔镜手术室	267	1612824	取环钩-1/Z7537	2	8.0	8.0	warning	special_only 未命中特色规则
+腔镜手术室	268	1612824	吸头6号-1/Z7534	1	8.0	8.0	warning	special_only 未命中特色规则
+腔镜手术室	269	1612824	持物钳罐-2/W6050	1	16.5	16.5	warning	special_only 未命中特色规则
+腔镜手术室	270	1612824	扩棒-9/W6050	1	49.5	49.5	warning	special_only 未命中特色规则
+腔镜手术室	271	1612824	内镜-大盆1小碗1杯1/W9050	1	16.5	16.5	warning	special_only 未命中特色规则
+腔镜手术室	272	1612859	宫腔镜1号-5件	1	88.0	88.0	warning	special_only 未命中特色规则
+腔镜手术室	273	1612859	宫腔镜3号-5件	1	88.0	88.0	warning	special_only 未命中特色规则
+腔镜手术室	274	1612859	宫腔镜4号-5件	1	88.0	88.0	warning	special_only 未命中特色规则
+腔镜手术室	275	1612859	宫腔镜7号-5件	1	88.0	88.0	warning	special_only 未命中特色规则
+腔镜手术室	276	1612859	宫腔镜8号-6件	1	110.0	110.0	warning	special_only 未命中特色规则
+腔镜手术室	277	1612859	铂康-检查镜-3/Z2060	1	66.0	66.0	warning	special_only 未命中特色规则
+腔镜手术室	278	1612859	持针器-1/Z2060	1	22.0	22.0	warning	special_only 未命中特色规则
+腔镜手术室	279	1612859	冲洗管-1/Z3044	1	22.0	22.0	warning	special_only 未命中特色规则
+腔镜手术室	280	1612859	冲洗器-2/Z1029	1	44.0	44.0	warning	special_only 未命中特色规则
+腔镜手术室	281	1612859	电凝钩  导线（大接头！）-2/Z2060	1	44.0	44.0	warning	special_only 未命中特色规则
+腔镜手术室	282	1612859	分离钳(EO)-1/Z2060	1	22.0	22.0	warning	special_only 未命中特色规则
+腔镜手术室	283	1612859	腹腔镜1号-1/Z2060	1	22.0	22.0	warning	special_only 未命中特色规则
+腔镜手术室	284	1612859	剪刀(EO)-1/Z2060	1	22.0	22.0	warning	special_only 未命中特色规则
+腔镜手术室	285	1612859	气腹管-1/Z3044	1	22.0	22.0	warning	special_only 未命中特色规则
+腔镜手术室	286	1612859	水管-1/Z3044	1	22.0	22.0	warning	special_only 未命中特色规则
+腔镜手术室	287	1612859	钛夹钳-1/双/保/Z2060	1	22.0	22.0	warning	special_only 未命中特色规则
+腔镜手术室	288	1612859	无损伤钳-1/Z2060	1	22.0	22.0	warning	special_only 未命中特色规则
+腔镜手术室	289	1612859	鸭嘴钳-1/z2060	1	22.0	22.0	warning	special_only 未命中特色规则
+腔镜手术室	290	1612859	检查镜-3(11号)/Z2060	1	66.0	66.0	warning	special_only 未命中特色规则
+腔镜手术室	291	1612859	检查镜-3(13号)/Z2060	1	66.0	66.0	warning	special_only 未命中特色规则
+腔镜手术室	292	1612859	检查镜-3(5号)/Z2060	1	66.0	66.0	warning	special_only 未命中特色规则
+腔镜手术室	293	1612859	检查镜-3(6号).Z2060	1	66.0	66.0	warning	special_only 未命中特色规则
+腔镜手术室	294	1613073	腹腔镜器械包	2	148.5	148.5	warning	special_only 未命中特色规则
+腔镜手术室	295	1613073	宫腔镜器械包	1	143.0	143.0	warning	special_only 未命中特色规则
+腔镜手术室	296	1613073	敷料包	2	25.0	25.0	warning	敷料包(无纺布包)——未识别规格
+腔镜手术室	297	1613073	敷料包（小，检查包）	4	20.0	20.0	warning	敷料包(无纺布包)——未识别规格
+腔镜手术室	298	1613073	手术衣	2	25.0	25.0	warning	敷料包(无纺布包)——未识别规格
+腔镜手术室	299	1613073	无菌锅-1	1	20.0	20.0	warning	敷料包(无纺布包)——未识别规格
+腔镜手术室	300	1613073	举宫包-9件	1	49.5	49.5	warning	special_only 未命中特色规则
+腔镜手术室	301	1613073	棉球/Z1526	20	2.5	2.5	warning	敷料包(纸塑袋)+棉球——未识别规格
+腔镜手术室	302	1613171	检查包	4	60.5	60.5	warning	special_only 未命中特色规则
+腔镜手术室	303	1613171	冲洗器(带管)-1/Z7530	1	8.0	8.0	warning	special_only 未命中特色规则
+腔镜手术室	304	1613171	剪刀-1/Z1029	1	8.0	8.0	warning	special_only 未命中特色规则
+腔镜手术室	305	1613171	吸头6号-1/Z7534	1	8.0	8.0	warning	special_only 未命中特色规则
+腔镜手术室	306	1613171	吸头7号-1/Z7534	1	8.0	8.0	warning	special_only 未命中特色规则
+腔镜手术室	307	1613171	持物钳罐-2/W6050	2	16.5	16.5	warning	special_only 未命中特色规则
+腔镜手术室	308	1613171	内镜-大盆1小碗1杯1/W9050	1	16.5	16.5	warning	special_only 未命中特色规则
+腔镜手术室	309	1613266	成套-4件/双/Z2060	2	88.0	88.0	warning	special_only 未命中特色规则
+腔镜手术室	310	1613266	持针器-1/Z2060	1	22.0	22.0	warning	special_only 未命中特色规则
+腔镜手术室	311	1613266	冲洗管-1/Z3044	2	22.0	22.0	warning	special_only 未命中特色规则
+腔镜手术室	312	1613266	冲洗器-1/Z1550	1	22.0	22.0	warning	special_only 未命中特色规则
+腔镜手术室	313	1613266	冲洗器-2/Z1029	1	44.0	44.0	warning	special_only 未命中特色规则
+腔镜手术室	314	1613266	大勺钳-1/Z2060	2	22.0	22.0	warning	special_only 未命中特色规则
+腔镜手术室	315	1613266	气腹管-1/Z3044	2	22.0	22.0	warning	special_only 未命中特色规则
+腔镜手术室	316	1613266	输卵管抓钳-1/Z2060	2	22.0	22.0	warning	special_only 未命中特色规则
+腔镜手术室	317	1613266	水管-1/Z3044	1	22.0	22.0	warning	special_only 未命中特色规则
+腔镜手术室	318	1613266	组织剪-1/Z2060	1	22.0	22.0	warning	special_only 未命中特色规则
+腔镜手术室	319	1613266	腹腔镜3号-1/Z2060	1	22.0	22.0	warning	special_only 未命中特色规则
+腔镜手术室	320	1613266	腹腔镜5号-1/Z2060	1	22.0	22.0	warning	special_only 未命中特色规则
+腔镜手术室	321	1613266	检查镜2号-3(特殊)/Z2060	1	66.0	66.0	warning	special_only 未命中特色规则
+腔镜手术室	322	1613498	敷料包	2	25.0	25.0	warning	敷料包(无纺布包)——未识别规格
+腔镜手术室	323	1613498	手术衣	2	25.0	25.0	warning	敷料包(无纺布包)——未识别规格
+腔镜手术室	324	1613533	宫腔镜器械包	2	143.0	143.0	warning	special_only 未命中特色规则
+腔镜手术室	325	1613533	检查包	3	60.5	60.5	warning	special_only 未命中特色规则
+腔镜手术室	326	1613533	剪刀-1/Z1029	2	8.0	8.0	warning	special_only 未命中特色规则
+腔镜手术室	327	1613533	吸头6号-1/Z7534	1	8.0	8.0	warning	special_only 未命中特色规则
+腔镜手术室	328	1613631	宫腔镜3号-5件	1	88.0	88.0	warning	special_only 未命中特色规则
+腔镜手术室	329	1613631	宫腔镜4号-5件	1	88.0	88.0	warning	special_only 未命中特色规则
+腔镜手术室	330	1613631	铂康-检查镜-3/Z2060	1	66.0	66.0	warning	special_only 未命中特色规则
+腔镜手术室	331	1613631	水管-1/Z3044	1	22.0	22.0	warning	special_only 未命中特色规则
+腔镜手术室	332	1613842	敷料包	3	25.0	25.0	warning	敷料包(无纺布包)——未识别规格
+腔镜手术室	333	1613842	敷料包（小，检查包）	4	20.0	20.0	warning	敷料包(无纺布包)——未识别规格
+腔镜手术室	334	1613842	无菌锅-1	2	20.0	20.0	warning	敷料包(无纺布包)——未识别规格
+腔镜手术室	335	1613848	换药缸-1/Z2530	2	16.0	16.0	warning	special_only 未命中特色规则
+腔镜手术室	336	1613848	冲洗器(带管)-1/Z7530	1	8.0	8.0	warning	special_only 未命中特色规则
+腔镜手术室	337	1614082	敷料包	2	25.0	25.0	warning	敷料包(无纺布包)——未识别规格
+腔镜手术室	338	1614082	敷料包（小，检查包）	2	20.0	20.0	warning	敷料包(无纺布包)——未识别规格
+腔镜手术室	339	1614109	宫腔镜器械包	1	143.0	143.0	warning	special_only 未命中特色规则
+腔镜手术室	340	1614109	检查包	3	60.5	60.5	warning	special_only 未命中特色规则
+腔镜手术室	341	1614109	冲洗器(带管)-1/Z7530	1	8.0	8.0	warning	special_only 未命中特色规则
+腔镜手术室	342	1614109	卵圆钳-1/Z1535	1	11.0	11.0	warning	special_only 未命中特色规则
+腔镜手术室	343	1614109	吸头6号-1/Z7534	1	8.0	8.0	warning	special_only 未命中特色规则
+腔镜手术室	344	1614109	吸头7号-1/Z7534	2	8.0	8.0	warning	special_only 未命中特色规则
+腔镜手术室	345	1614234	铂康-检查镜-3/Z2060	1	66.0	66.0	warning	special_only 未命中特色规则
+腔镜手术室	346	1614234	水管-1/Z3044	1	22.0	22.0	warning	special_only 未命中特色规则
+腔镜手术室	347	1614234	检查镜2号-3(特殊)/Z2060	1	66.0	66.0	warning	special_only 未命中特色规则
+腔镜手术室	348	1614465	敷料包	6	25.0	25.0	warning	敷料包(无纺布包)——未识别规格
+腔镜手术室	349	1614465	敷料包（小，检查包）	6	20.0	20.0	warning	敷料包(无纺布包)——未识别规格
+腔镜手术室	350	1614465	手术衣	4	25.0	25.0	warning	敷料包(无纺布包)——未识别规格
+腔镜手术室	351	1614465	消毒锅	1	20.0	20.0	warning	敷料包(无纺布包)——未识别规格
+腔镜手术室	352	1614517	腹腔镜器械包	1	148.5	148.5	warning	special_only 未命中特色规则
+腔镜手术室	353	1614517	宫腔镜器械包	2	143.0	143.0	warning	special_only 未命中特色规则
+腔镜手术室	354	1614517	检查包	4	60.5	60.5	warning	special_only 未命中特色规则
+腔镜手术室	355	1614517	持物钳罐-2/W6050	1	16.5	16.5	warning	special_only 未命中特色规则
+腔镜手术室	356	1614517	扩棒-9/W6050	1	49.5	49.5	warning	special_only 未命中特色规则
+腔镜手术室	357	1614517	内镜-大盆1小碗1杯1/W9050	1	16.5	16.5	warning	special_only 未命中特色规则
+腔镜手术室	358	1614574	宫腔镜器械包	1	143.0	143.0	warning	special_only 未命中特色规则
+腔镜手术室	359	1614574	检查包	2	60.5	60.5	warning	special_only 未命中特色规则
+腔镜手术室	360	1614574	冲洗器(带管)-1/Z7530	1	8.0	8.0	warning	special_only 未命中特色规则
+腔镜手术室	361	1614574	剪刀-1/Z1029	1	8.0	8.0	warning	special_only 未命中特色规则
+腔镜手术室	362	1614574	取环钩-1/Z7537	1	8.0	8.0	warning	special_only 未命中特色规则
+腔镜手术室	363	1614574	吸头6号-1/Z7534	1	8.0	8.0	warning	special_only 未命中特色规则
+腔镜手术室	364	1614609	宫腔镜1号	1	22.0	22.0	warning	special_only 未命中特色规则
+腔镜手术室	365	1614609	宫腔镜1号-5件	1	88.0	88.0	warning	special_only 未命中特色规则
+腔镜手术室	366	1614609	宫腔镜3号-5件	1	88.0	88.0	warning	special_only 未命中特色规则
+腔镜手术室	367	1614609	宫腔镜4号-5件	1	88.0	88.0	warning	special_only 未命中特色规则
+腔镜手术室	368	1614609	5mm抓钳-1/保Z2060	1	22.0	22.0	warning	special_only 未命中特色规则
+腔镜手术室	369	1614609	铂康-检查镜-3/Z2060	1	66.0	66.0	warning	special_only 未命中特色规则
+腔镜手术室	370	1614609	成套-4件/双/Z2060	1	88.0	88.0	warning	special_only 未命中特色规则
+腔镜手术室	371	1614609	持针器-1/Z2060	1	22.0	22.0	warning	special_only 未命中特色规则
+腔镜手术室	372	1614609	冲洗管-1/Z3044	1	22.0	22.0	warning	special_only 未命中特色规则
+腔镜手术室	373	1614609	冲洗器-1/Z1550	1	22.0	22.0	warning	special_only 未命中特色规则
+腔镜手术室	374	1614609	大勺钳-1/Z2060	1	22.0	22.0	warning	special_only 未命中特色规则
+腔镜手术室	375	1614609	气腹管-1/Z3044	1	22.0	22.0	warning	special_only 未命中特色规则
+腔镜手术室	376	1614609	输卵管抓钳-1/Z2060	1	22.0	22.0	warning	special_only 未命中特色规则
+腔镜手术室	377	1614609	水管-1/Z3044	1	22.0	22.0	warning	special_only 未命中特色规则
+腔镜手术室	378	1614609	组织剪-1/Z2060	1	22.0	22.0	warning	special_only 未命中特色规则
+腔镜手术室	379	1614609	腹腔镜5号-1/Z2060	1	22.0	22.0	warning	special_only 未命中特色规则
+腔镜手术室	380	1614609	检查镜-3(13号)/Z2060	1	66.0	66.0	warning	special_only 未命中特色规则
+腔镜手术室	381	1614609	检查镜-3(14号)/Z2060	1	66.0	66.0	warning	special_only 未命中特色规则
+腔镜手术室	382	1614609	检查镜-3(5号)/Z2060	1	66.0	66.0	warning	special_only 未命中特色规则
+腔镜手术室	383	1614609	检查镜-3(6号).Z2060	1	66.0	66.0	warning	special_only 未命中特色规则
+腔镜手术室	384	1614858	敷料包	6	25.0	25.0	warning	敷料包(无纺布包)——未识别规格
+腔镜手术室	385	1614858	敷料包（小，检查包）	8	20.0	20.0	warning	敷料包(无纺布包)——未识别规格
+腔镜手术室	386	1614858	消毒锅	1	20.0	20.0	warning	敷料包(无纺布包)——未识别规格
+腔镜手术室	387	1614861	腹腔镜器械包	1	148.5	148.5	warning	special_only 未命中特色规则
+腔镜手术室	388	1614861	宫腔镜器械包	1	143.0	143.0	warning	special_only 未命中特色规则
+腔镜手术室	389	1614861	检查包	9	60.5	60.5	warning	special_only 未命中特色规则
+腔镜手术室	390	1614861	持物钳罐-2/W6050	1	16.5	16.5	warning	special_only 未命中特色规则
+腔镜手术室	391	1614861	扩棒-9/W6050	1	49.5	49.5	warning	special_only 未命中特色规则
+腔镜手术室	392	1614884	冲洗器(带管)-1/Z7530	1	8.0	8.0	warning	special_only 未命中特色规则
+腔镜手术室	393	1614884	吸头6号-1/Z7534	1	8.0	8.0	warning	special_only 未命中特色规则
+腔镜手术室	394	1614884	吸头7号-1/Z7534	1	8.0	8.0	warning	special_only 未命中特色规则
+腔镜手术室	395	1614942	取环钩-1/Z7537	1	8.0	8.0	warning	special_only 未命中特色规则
+腔镜手术室	396	1614985	宫腔镜4号-5件	1	88.0	88.0	warning	special_only 未命中特色规则
+腔镜手术室	397	1614985	5mm抓钳-1/保Z2060	1	22.0	22.0	warning	special_only 未命中特色规则
+腔镜手术室	398	1614985	铂康-检查镜-3/Z2060	1	66.0	66.0	warning	special_only 未命中特色规则
+腔镜手术室	399	1614985	成套-4件/双/Z2060	1	88.0	88.0	warning	special_only 未命中特色规则
+腔镜手术室	400	1614985	持针器-1/Z2060	1	22.0	22.0	warning	special_only 未命中特色规则
+腔镜手术室	401	1614985	冲洗管-1/Z3044	1	22.0	22.0	warning	special_only 未命中特色规则
+腔镜手术室	402	1614985	冲洗器-2/Z1029	1	44.0	44.0	warning	special_only 未命中特色规则
+腔镜手术室	403	1614985	大勺钳-1/Z2060	1	22.0	22.0	warning	special_only 未命中特色规则
+腔镜手术室	404	1614985	剪刀(EO)-1/Z2060	1	22.0	22.0	warning	special_only 未命中特色规则
+腔镜手术室	405	1614985	气腹管-1/Z3044	1	22.0	22.0	warning	special_only 未命中特色规则
+腔镜手术室	406	1614985	水管-1/Z3044	1	22.0	22.0	warning	special_only 未命中特色规则
+腔镜手术室	407	1614985	无损伤钳-1/Z2060	1	22.0	22.0	warning	special_only 未命中特色规则
+腔镜手术室	408	1614985	腹腔镜5号-1/Z2060	1	22.0	22.0	warning	special_only 未命中特色规则
+腔镜手术室	409	1614985	检查镜-3(11号)/Z2060	1	66.0	66.0	warning	special_only 未命中特色规则
+腔镜手术室	410	1614985	检查镜-3(12号)/Z2060	1	66.0	66.0	warning	special_only 未命中特色规则
+腔镜手术室	411	1614985	检查镜-3(13号)/Z2060	1	66.0	66.0	warning	special_only 未命中特色规则
+腔镜手术室	412	1614985	检查镜-3(14号)/Z2060	1	66.0	66.0	warning	special_only 未命中特色规则
+腔镜手术室	413	1614985	检查镜-3(5号)/Z2060	1	66.0	66.0	warning	special_only 未命中特色规则
+腔镜手术室	414	1614985	检查镜-3(6号).Z2060	1	66.0	66.0	warning	special_only 未命中特色规则
+腔镜手术室	415	1614985	检查镜-3(7号)/Z2060	1	66.0	66.0	warning	special_only 未命中特色规则
+腔镜手术室	416	1614985	检查镜-3(8号)/Z2060	1	66.0	66.0	warning	special_only 未命中特色规则
+腔镜手术室	417	1615237	敷料包	1	25.0	25.0	warning	敷料包(无纺布包)——未识别规格
+腔镜手术室	418	1615237	敷料包（小，检查包）	4	20.0	20.0	warning	敷料包(无纺布包)——未识别规格
+腔镜手术室	419	1615237	手术衣	1	25.0	25.0	warning	敷料包(无纺布包)——未识别规格
+腔镜手术室	420	1615237	消毒锅	1	20.0	20.0	warning	敷料包(无纺布包)——未识别规格
+腔镜手术室	421	1615265	宫腔镜器械包	2	143.0	143.0	warning	special_only 未命中特色规则
+腔镜手术室	422	1615265	检查包	1	60.5	60.5	warning	special_only 未命中特色规则
+腔镜手术室	423	1615265	扩棒-9/W6050	1	49.5	49.5	warning	special_only 未命中特色规则
+腔镜手术室	424	1615339	检查包	1	60.5	60.5	warning	special_only 未命中特色规则
+腔镜手术室	425	1615339	冲洗器(带管)-1/Z7530	1	8.0	8.0	warning	special_only 未命中特色规则
+腔镜手术室	426	1615339	取环钩-1/Z7537	1	8.0	8.0	warning	special_only 未命中特色规则
+腔镜手术室	427	1615355	宫腔镜1号-5件	1	88.0	88.0	warning	special_only 未命中特色规则
+腔镜手术室	428	1615355	宫腔镜3号-5件	1	88.0	88.0	warning	special_only 未命中特色规则
+腔镜手术室	429	1615355	宫腔镜4号-5件	1	88.0	88.0	warning	special_only 未命中特色规则
+腔镜手术室	430	1615355	铂康-检查镜-3/Z2060	1	66.0	66.0	warning	special_only 未命中特色规则
+腔镜手术室	431	1615355	水管-1/Z3044	1	22.0	22.0	warning	special_only 未命中特色规则
+腔镜手术室	432	1615355	检查镜-3(10号)/Z2060	1	66.0	66.0	warning	special_only 未命中特色规则
+腔镜手术室	433	1615355	检查镜-3(11号)/Z2060	1	66.0	66.0	warning	special_only 未命中特色规则
+腔镜手术室	434	1615355	检查镜-3(7号)/Z2060	1	66.0	66.0	warning	special_only 未命中特色规则
+腔镜手术室	435	1615520	敷料包	6	25.0	25.0	warning	敷料包(无纺布包)——未识别规格
+腔镜手术室	436	1615520	手术衣	2	25.0	25.0	warning	敷料包(无纺布包)——未识别规格
+腔镜手术室	437	1615520	消毒锅	1	20.0	20.0	warning	敷料包(无纺布包)——未识别规格
+腔镜手术室	438	1615543	宫腔镜器械包	4	143.0	143.0	warning	special_only 未命中特色规则
+腔镜手术室	439	1615543	检查包	1	60.5	60.5	warning	special_only 未命中特色规则
+腔镜手术室	440	1615677	宫腔镜1号-5件	1	88.0	88.0	warning	special_only 未命中特色规则
+腔镜手术室	441	1615677	宫腔镜3号-5件	1	88.0	88.0	warning	special_only 未命中特色规则
+腔镜手术室	442	1615677	宫腔镜4号-5件	1	88.0	88.0	warning	special_only 未命中特色规则
+腔镜手术室	443	1615677	铂康-检查镜-3/Z2060	1	66.0	66.0	warning	special_only 未命中特色规则
+腔镜手术室	444	1615677	冲洗器-2/Z1029	1	44.0	44.0	warning	special_only 未命中特色规则
+腔镜手术室	445	1615677	单极钩-1线-1/Z2060	1	44.0	44.0	warning	special_only 未命中特色规则
+腔镜手术室	446	1615677	分离钳(EO)-1/Z2060	1	22.0	22.0	warning	special_only 未命中特色规则
+腔镜手术室	447	1615677	腹腔镜1号-1/Z2060	1	22.0	22.0	warning	special_only 未命中特色规则
+腔镜手术室	448	1615677	气腹管-1/Z3044	1	22.0	22.0	warning	special_only 未命中特色规则
+腔镜手术室	449	1615677	水管-1/Z3044	1	22.0	22.0	warning	special_only 未命中特色规则
+腔镜手术室	450	1615677	钛夹钳-1/双/保/Z2060	1	22.0	22.0	warning	special_only 未命中特色规则
+腔镜手术室	451	1615677	无损伤钳-1/Z2060	1	22.0	22.0	warning	special_only 未命中特色规则
+腔镜手术室	452	1615677	组件-1/Z7520	7	22.0	22.0	warning	special_only 未命中特色规则
+腔镜手术室	453	1615677	组织剪-1/Z2060	1	22.0	22.0	warning	special_only 未命中特色规则
+腔镜手术室	454	1615677	检查镜-3(11号)/Z2060	1	66.0	66.0	warning	special_only 未命中特色规则
+腔镜手术室	455	1615677	检查镜-3(14号)/Z2060	1	66.0	66.0	warning	special_only 未命中特色规则
+腔镜手术室	456	1615738	腹腔镜器械包	1	148.5	148.5	warning	special_only 未命中特色规则
+腔镜手术室	457	1615738	换药缸-1/Z2530	2	16.0	16.0	warning	special_only 未命中特色规则
+腔镜手术室	458	1615738	冲洗器-1/Z75300	1	8.0	8.0	warning	special_only 未命中特色规则
+腔镜手术室	459	1615738	敷料包	1	25.0	25.0	warning	敷料包(无纺布包)——未识别规格
+腔镜手术室	460	1615738	无菌锅-1	1	20.0	20.0	warning	敷料包(无纺布包)——未识别规格
+腔镜手术室	461	1615738	持物钳罐-2/W6050	1	16.5	16.5	warning	special_only 未命中特色规则
+腔镜手术室	462	1616025	敷料包	1	25.0	25.0	warning	敷料包(无纺布包)——未识别规格
+腔镜手术室	463	1616025	手术衣	1	25.0	25.0	warning	敷料包(无纺布包)——未识别规格
+腔镜手术室	464	1616071	腹腔镜器械包	1	148.5	148.5	warning	special_only 未命中特色规则
+腔镜手术室	465	1616071	宫腔镜器械包	1	143.0	143.0	warning	special_only 未命中特色规则
+腔镜手术室	466	1616071	检查包	2	60.5	60.5	warning	special_only 未命中特色规则
+腔镜手术室	467	1616071	举宫包-9件	1	49.5	49.5	warning	special_only 未命中特色规则
+腔镜手术室	468	1616071	持物钳罐-2/W6050	1	16.5	16.5	warning	special_only 未命中特色规则
+腔镜手术室	469	1616112	冲洗器(带管)-1/Z7530	1	8.0	8.0	warning	special_only 未命中特色规则
+腔镜手术室	470	1616112	卵圆钳-1/Z1535	1	11.0	11.0	warning	special_only 未命中特色规则
+腔镜手术室	471	1616112	吸头7号-1/Z7534	1	8.0	8.0	warning	special_only 未命中特色规则
+腔镜手术室	472	1616191	宫腔镜1号（特殊）-5件	1	88.0	88.0	warning	special_only 未命中特色规则
+腔镜手术室	473	1616191	宫腔镜8号-6件	1	110.0	110.0	warning	special_only 未命中特色规则
+腔镜手术室	474	1616191	铂康-检查镜-3/Z2060	1	66.0	66.0	warning	special_only 未命中特色规则
+腔镜手术室	475	1616191	成套-4件/双/Z2060	1	88.0	88.0	warning	special_only 未命中特色规则
+腔镜手术室	476	1616191	冲洗管-1/Z3044	1	22.0	22.0	warning	special_only 未命中特色规则
+腔镜手术室	477	1616191	冲洗器-2/Z1029	1	44.0	44.0	warning	special_only 未命中特色规则
+腔镜手术室	478	1616191	气腹管-1/Z3044	1	22.0	22.0	warning	special_only 未命中特色规则
+腔镜手术室	479	1616191	输卵管抓钳-1/Z2060	1	22.0	22.0	warning	special_only 未命中特色规则
+腔镜手术室	480	1616191	水管-1/Z3044	1	22.0	22.0	warning	special_only 未命中特色规则
+腔镜手术室	481	1616191	腹腔镜5号-1/Z2060	1	22.0	22.0	warning	special_only 未命中特色规则
+腔镜手术室	482	1616191	检查镜2号-3(特殊)/Z2060	1	66.0	66.0	warning	special_only 未命中特色规则
+腔镜手术室	483	1616369	敷料包	5	25.0	25.0	warning	敷料包(无纺布包)——未识别规格
+腔镜手术室	484	1616369	敷料包（小，检查包）	8	20.0	20.0	warning	敷料包(无纺布包)——未识别规格
+腔镜手术室	485	1616369	手术衣	1	25.0	25.0	warning	敷料包(无纺布包)——未识别规格
+腔镜手术室	486	1616369	无菌锅-1	1	20.0	20.0	warning	敷料包(无纺布包)——未识别规格
+腔镜手术室	487	1616442	宫腔镜器械包	2	143.0	143.0	warning	special_only 未命中特色规则
+腔镜手术室	488	1616442	检查包	5	60.5	60.5	warning	special_only 未命中特色规则
+计划生育	9	1608184	孔巾	3	15.0	15.0	warning	敷料包(无纺布包)——未识别规格
+计划生育	10	1608184	棉球（大）/Z3032	30	4.0	4.0	warning	敷料包(纸塑袋)+棉球——未识别规格
+计划生育	11	1608227	环包	2	44.0	44.0	warning	special_only 未命中特色规则
+计划生育	12	1608227	人流包	11	49.5	49.5	warning	special_only 未命中特色规则
+计划生育	13	1608274	无菌缸-1/Z2530	2	16.0	16.0	warning	special_only 未命中特色规则
+计划生育	14	1608274	剪刀-1/Z1029	1	8.0	8.0	warning	special_only 未命中特色规则
+计划生育	15	1608274	扩棒(3.5-7号)-8/Z1029	1	44.0	44.0	warning	special_only 未命中特色规则
+计划生育	16	1608274	取环器-1/Z1535	2	11.0	11.0	warning	special_only 未命中特色规则
+计划生育	17	1608274	人流包	2	49.5	49.5	warning	special_only 未命中特色规则
+计划生育	18	1608631	人流包	14	49.5	49.5	warning	special_only 未命中特色规则
+计划生育	19	1608653	换药缸-1/Z2530	2	16.0	16.0	warning	special_only 未命中特色规则
+计划生育	20	1608653	无菌缸-1/Z2530	1	16.0	16.0	warning	special_only 未命中特色规则
+计划生育	21	1608653	18cm镊子,缸-2/Z2044	1	16.5	16.5	warning	special_only 未命中特色规则
+计划生育	22	1608978	孔巾	6	15.0	15.0	warning	敷料包(无纺布包)——未识别规格
+计划生育	23	1609014	环包	2	44.0	44.0	warning	special_only 未命中特色规则
+计划生育	24	1609014	人流包	7	49.5	49.5	warning	special_only 未命中特色规则
+计划生育	25	1609046	换药缸-1/Z2530	1	16.0	16.0	warning	special_only 未命中特色规则
+计划生育	26	1609046	18cm镊子,缸-2/Z2044	1	16.5	16.5	warning	special_only 未命中特色规则
+计划生育	27	1609046	剪刀-1/Z1029	1	8.0	8.0	warning	special_only 未命中特色规则
+计划生育	28	1609383	环包	3	44.0	44.0	warning	special_only 未命中特色规则
+计划生育	29	1609383	人流包	10	49.5	49.5	warning	special_only 未命中特色规则
+计划生育	30	1609389	换药缸-1/Z2530	1	16.0	16.0	warning	special_only 未命中特色规则
+计划生育	31	1609389	无菌缸-1/Z2530	2	16.0	16.0	warning	special_only 未命中特色规则
+计划生育	32	1609389	持物钳罐-2/Z2044	1	16.5	16.5	warning	special_only 未命中特色规则
+计划生育	33	1609389	扩棒(3.5-7号)-8/Z1029	1	44.0	44.0	warning	special_only 未命中特色规则
+计划生育	34	1609787	换药缸-1/Z2530	1	16.0	16.0	warning	special_only 未命中特色规则
+计划生育	35	1609787	无菌缸-1/Z2530	1	16.0	16.0	warning	special_only 未命中特色规则
+计划生育	36	1609787	18cm镊子,缸-2/Z2044	1	16.5	16.5	warning	special_only 未命中特色规则
+计划生育	37	1609787	取环器-1/Z1535	1	11.0	11.0	warning	special_only 未命中特色规则
+计划生育	38	1609787	环包	3	44.0	44.0	warning	special_only 未命中特色规则
+计划生育	39	1609787	人流包	11	49.5	49.5	warning	special_only 未命中特色规则
+计划生育	40	1609975	孔巾	4	15.0	15.0	warning	敷料包(无纺布包)——未识别规格
+计划生育	41	1609988	18cm镊子,缸-2/Z2044	1	16.5	16.5	warning	special_only 未命中特色规则
+计划生育	42	1609988	取环钩-1/Z7537	1	8.0	8.0	warning	special_only 未命中特色规则
+计划生育	43	1609988	环包	1	44.0	44.0	warning	special_only 未命中特色规则
+计划生育	44	1609988	人流包	1	49.5	49.5	warning	special_only 未命中特色规则
+计划生育	45	1610331	孔巾	3	15.0	15.0	warning	敷料包(无纺布包)——未识别规格
+计划生育	46	1610340	环包	2	44.0	44.0	warning	special_only 未命中特色规则
+计划生育	47	1610340	人流包	12	49.5	49.5	warning	special_only 未命中特色规则
+计划生育	48	1610353	换药缸-1/Z2530	1	16.0	16.0	warning	special_only 未命中特色规则
+计划生育	49	1610353	无菌缸-1/Z2530	3	16.0	16.0	warning	special_only 未命中特色规则
+计划生育	50	1610353	取环钩-1/Z7537	1	8.0	8.0	warning	special_only 未命中特色规则
+计划生育	51	1610758	人流包	9	49.5	49.5	warning	special_only 未命中特色规则
+计划生育	52	1610765	环包	1	44.0	44.0	warning	special_only 未命中特色规则
+计划生育	53	1610791	换药缸-1/Z2530	3	16.0	16.0	warning	special_only 未命中特色规则
+计划生育	54	1610791	18cm镊子,缸-2/Z2044	1	16.5	16.5	warning	special_only 未命中特色规则
+计划生育	55	1610791	刮勺-1/Z7537	1	8.0	8.0	warning	special_only 未命中特色规则
+计划生育	56	1610791	剪刀-1/Z1029	1	8.0	8.0	warning	special_only 未命中特色规则
+计划生育	57	1610791	取环器-1/Z1535	1	11.0	11.0	warning	special_only 未命中特色规则
+计划生育	58	1610791	止血钳-1/Z1029	1	8.0	8.0	warning	special_only 未命中特色规则
+计划生育	59	1610791	环包	3	44.0	44.0	warning	special_only 未命中特色规则
+计划生育	60	1610791	人流包	6	49.5	49.5	warning	special_only 未命中特色规则
+计划生育	61	1611096	孔巾	4	15.0	15.0	warning	敷料包(无纺布包)——未识别规格
+计划生育	62	1611096	棉球（小）/z2032	20	4.0	4.0	warning	敷料包(纸塑袋)+棉球——未识别规格
+计划生育	63	1611105	环包	4	44.0	44.0	warning	special_only 未命中特色规则
+计划生育	64	1611105	人流包	8	49.5	49.5	warning	special_only 未命中特色规则
+计划生育	65	1611116	换药缸-1/Z2530	1	16.0	16.0	warning	special_only 未命中特色规则
+计划生育	66	1611116	无菌缸-1/Z2530	2	16.0	16.0	warning	special_only 未命中特色规则
+计划生育	67	1611116	18cm镊子,缸-2/Z2044	1	16.5	16.5	warning	special_only 未命中特色规则
+计划生育	68	1611116	剪刀-1/Z1029	1	8.0	8.0	warning	special_only 未命中特色规则
+计划生育	69	1611116	取环器-1/Z1535	2	11.0	11.0	warning	special_only 未命中特色规则
+计划生育	70	1611116	人流包	3	49.5	49.5	warning	special_only 未命中特色规则
+计划生育	71	1611487	孔巾	4	15.0	15.0	warning	敷料包(无纺布包)——未识别规格
+计划生育	72	1611517	环包	3	44.0	44.0	warning	special_only 未命中特色规则
+计划生育	73	1611517	人流包	7	49.5	49.5	warning	special_only 未命中特色规则
+计划生育	74	1611550	换药缸-1/Z2530	1	16.0	16.0	warning	special_only 未命中特色规则
+计划生育	75	1611550	无菌缸-1/Z2530	1	16.0	16.0	warning	special_only 未命中特色规则
+计划生育	76	1611550	18cm镊子,缸-2/Z2044	1	16.5	16.5	warning	special_only 未命中特色规则
+计划生育	77	1611550	剪刀-1/Z1029	2	8.0	8.0	warning	special_only 未命中特色规则
+计划生育	78	1611550	取环器-1/Z1535	1	11.0	11.0	warning	special_only 未命中特色规则
+计划生育	79	1611852	换药缸-1/Z2530	2	16.0	16.0	warning	special_only 未命中特色规则
+计划生育	80	1611852	无菌缸-1/Z2530	1	16.0	16.0	warning	special_only 未命中特色规则
+计划生育	81	1611852	18cm镊子,缸-2/Z2044	1	16.5	16.5	warning	special_only 未命中特色规则
+计划生育	82	1611852	剪刀-1/Z1029	1	8.0	8.0	warning	special_only 未命中特色规则
+计划生育	83	1611852	环包	4	44.0	44.0	warning	special_only 未命中特色规则
+计划生育	84	1611852	人流包	12	49.5	49.5	warning	special_only 未命中特色规则
+计划生育	85	1612020	换药缸-1/Z2530	1	16.0	16.0	warning	special_only 未命中特色规则
+计划生育	86	1612020	无菌缸-1/Z2530	1	16.0	16.0	warning	special_only 未命中特色规则
+计划生育	87	1612020	18cm镊子,缸-2/Z2044	1	16.5	16.5	warning	special_only 未命中特色规则
+计划生育	88	1612020	孔巾	5	15.0	15.0	warning	敷料包(无纺布包)——未识别规格
+计划生育	89	1612336	孔巾	3	15.0	15.0	warning	敷料包(无纺布包)——未识别规格
+计划生育	90	1612336	环包	2	44.0	44.0	warning	special_only 未命中特色规则
+计划生育	91	1612346	环包	3	44.0	44.0	warning	special_only 未命中特色规则
+计划生育	92	1612346	人流包	12	49.5	49.5	warning	special_only 未命中特色规则
+计划生育	93	1612386	换药缸-1/Z2530	1	16.0	16.0	warning	special_only 未命中特色规则
+计划生育	94	1612386	无菌缸-1/Z2530	1	16.0	16.0	warning	special_only 未命中特色规则
+计划生育	95	1612386	扩棒(3.5-7号)-8/Z1029	1	44.0	44.0	warning	special_only 未命中特色规则
+计划生育	96	1612386	取环器-1/Z1535	2	11.0	11.0	warning	special_only 未命中特色规则
+计划生育	97	1612386	止血钳-1/Z1029	1	8.0	8.0	warning	special_only 未命中特色规则
+计划生育	98	1612740	环包	7	44.0	44.0	warning	special_only 未命中特色规则
+计划生育	99	1612740	人流包	6	49.5	49.5	warning	special_only 未命中特色规则
+计划生育	100	1612743	环包	1	44.0	44.0	warning	special_only 未命中特色规则
+计划生育	101	1612756	换药缸-1/Z2530	2	16.0	16.0	warning	special_only 未命中特色规则
+计划生育	102	1612756	无菌缸-1/Z2530	1	16.0	16.0	warning	special_only 未命中特色规则
+计划生育	103	1612756	18cm镊子,缸-2/Z2044	1	16.5	16.5	warning	special_only 未命中特色规则
+计划生育	104	1612756	剪刀-1/Z1029	4	8.0	8.0	warning	special_only 未命中特色规则
+计划生育	105	1613072	孔巾	5	15.0	15.0	warning	敷料包(无纺布包)——未识别规格
+计划生育	106	1613166	换药缸-1/Z2530	1	16.0	16.0	warning	special_only 未命中特色规则
+计划生育	107	1613166	无菌缸-1/Z2530	1	16.0	16.0	warning	special_only 未命中特色规则
+计划生育	108	1613166	18cm镊子,缸-2/Z2044	1	16.5	16.5	warning	special_only 未命中特色规则
+计划生育	109	1613166	环包	1	44.0	44.0	warning	special_only 未命中特色规则
+计划生育	110	1613166	人流包	10	49.5	49.5	warning	special_only 未命中特色规则
+计划生育	111	1613530	换药缸-1/Z2530	1	16.0	16.0	warning	special_only 未命中特色规则
+计划生育	112	1613530	无菌缸-1/Z2530	2	16.0	16.0	warning	special_only 未命中特色规则
+计划生育	113	1613530	18cm镊子,缸-2/Z2044	1	16.5	16.5	warning	special_only 未命中特色规则
+计划生育	114	1613530	环包	1	44.0	44.0	warning	special_only 未命中特色规则
+计划生育	115	1613530	人流包	10	49.5	49.5	warning	special_only 未命中特色规则
+计划生育	116	1613769	孔巾	5	15.0	15.0	warning	敷料包(无纺布包)——未识别规格
+计划生育	117	1613789	换药缸-1/Z2530	2	16.0	16.0	warning	special_only 未命中特色规则
+计划生育	118	1613789	无菌缸-1/Z2530	1	16.0	16.0	warning	special_only 未命中特色规则
+计划生育	119	1613789	18cm镊子,缸-2/Z2044	1	16.5	16.5	warning	special_only 未命中特色规则
+计划生育	120	1613789	剪刀-1/Z1029	1	8.0	8.0	warning	special_only 未命中特色规则
+计划生育	121	1613789	取环器-1/Z1535	1	11.0	11.0	warning	special_only 未命中特色规则
+计划生育	122	1613789	环包	3	44.0	44.0	warning	special_only 未命中特色规则
+计划生育	123	1614083	棉球（大）/Z3032	30	4.0	4.0	warning	敷料包(纸塑袋)+棉球——未识别规格
+计划生育	124	1614095	环包	3	44.0	44.0	warning	special_only 未命中特色规则
+计划生育	125	1614095	人流包	10	49.5	49.5	warning	special_only 未命中特色规则
+计划生育	126	1614135	无菌缸-1/Z2530	1	16.0	16.0	warning	special_only 未命中特色规则
+计划生育	127	1614135	剪刀-1/Z1029	1	8.0	8.0	warning	special_only 未命中特色规则
+计划生育	128	1614135	窥器-1/Z1526	1	11.0	11.0	warning	special_only 未命中特色规则
+计划生育	129	1614135	镊子-1/Z7534	1	8.0	8.0	warning	special_only 未命中特色规则
+计划生育	130	1614464	孔巾	2	15.0	15.0	warning	敷料包(无纺布包)——未识别规格
+计划生育	131	1614514	环包	2	44.0	44.0	warning	special_only 未命中特色规则
+计划生育	132	1614514	人流包	14	49.5	49.5	warning	special_only 未命中特色规则
+计划生育	133	1614570	换药缸-1/Z2530	1	16.0	16.0	warning	special_only 未命中特色规则
+计划生育	134	1614570	无菌缸-1/Z2530	2	16.0	16.0	warning	special_only 未命中特色规则
+计划生育	135	1614570	18cm镊子,缸-2/Z2044	1	16.5	16.5	warning	special_only 未命中特色规则
+计划生育	136	1614857	孔巾	3	15.0	15.0	warning	敷料包(无纺布包)——未识别规格
+计划生育	137	1614862	环包	2	44.0	44.0	warning	special_only 未命中特色规则
+计划生育	138	1614862	人流包	12	49.5	49.5	warning	special_only 未命中特色规则
+计划生育	139	1614888	换药缸-1/Z2530	3	16.0	16.0	warning	special_only 未命中特色规则
+计划生育	140	1614888	18cm镊子,缸-2/Z2044	1	16.5	16.5	warning	special_only 未命中特色规则
+计划生育	141	1615235	孔巾	4	15.0	15.0	warning	敷料包(无纺布包)——未识别规格
+计划生育	142	1615261	环包	5	44.0	44.0	warning	special_only 未命中特色规则
+计划生育	143	1615261	人流包	11	49.5	49.5	warning	special_only 未命中特色规则
+计划生育	144	1615336	无菌缸-1/Z2530	3	16.0	16.0	warning	special_only 未命中特色规则
+计划生育	145	1615336	18cm镊子,缸-2/Z2044	1	16.5	16.5	warning	special_only 未命中特色规则
+计划生育	146	1615336	扩棒(3.5-7号)-8/Z1029	1	44.0	44.0	warning	special_only 未命中特色规则
+计划生育	147	1615336	取环器-1/Z1535	1	11.0	11.0	warning	special_only 未命中特色规则
+计划生育	148	1615544	换药缸-1/Z2530	2	16.0	16.0	warning	special_only 未命中特色规则
+计划生育	149	1615544	无菌缸-1/Z2530	2	16.0	16.0	warning	special_only 未命中特色规则
+计划生育	150	1615544	18cm镊子,缸-2/Z2044	1	16.5	16.5	warning	special_only 未命中特色规则
+计划生育	151	1615544	刮勺-1/Z7537	1	8.0	8.0	warning	special_only 未命中特色规则
+计划生育	152	1615544	止血钳-1/Z1029	1	8.0	8.0	warning	special_only 未命中特色规则
+计划生育	153	1615544	环包	4	44.0	44.0	warning	special_only 未命中特色规则
+计划生育	154	1615544	人流包	6	49.5	49.5	warning	special_only 未命中特色规则
+计划生育	155	1615581	人流包	8	49.5	49.5	warning	special_only 未命中特色规则
+计划生育	156	1615609	剪刀-1/Z1029	1	8.0	8.0	warning	special_only 未命中特色规则
+计划生育	157	1615737	剪刀-1/Z1029	2	8.0	8.0	warning	special_only 未命中特色规则
+计划生育	158	1615737	孔巾	6	15.0	15.0	warning	敷料包(无纺布包)——未识别规格
+计划生育	159	1615737	环包	2	44.0	44.0	warning	special_only 未命中特色规则
+计划生育	160	1616023	孔巾	3	15.0	15.0	warning	敷料包(无纺布包)——未识别规格
+计划生育	161	1616070	环包	2	44.0	44.0	warning	special_only 未命中特色规则
+计划生育	162	1616075	人流包	9	49.5	49.5	warning	special_only 未命中特色规则
+计划生育	163	1616110	换药缸-1/Z2530	2	16.0	16.0	warning	special_only 未命中特色规则
+计划生育	164	1616110	无菌缸-1/Z2530	1	16.0	16.0	warning	special_only 未命中特色规则
+计划生育	165	1616110	剪刀-1/Z1029	2	8.0	8.0	warning	special_only 未命中特色规则
+计划生育	166	1616110	镊子缸-1/Z2032	1	13.0	13.0	warning	special_only 未命中特色规则
+计划生育	167	1616110	止血钳-1/Z1029	1	8.0	8.0	warning	special_only 未命中特色规则
+计划生育	168	1616430	棉球（小）/z2032	30	4.0	4.0	warning	敷料包(纸塑袋)+棉球——未识别规格
+计划生育	169	1616443	人流包	7	49.5	49.5	warning	special_only 未命中特色规则
+阴道镜	9	1608650	活检钳-2凹凸钳-1/W6050	1	16.5	16.5	warning	special_only 未命中特色规则
+阴道镜	10	1608650	活检钳-3/W6050	1	16.5	16.5	warning	special_only 未命中特色规则
+阴道镜	11	1608754	锐扶刀(EO)-1/Z1035	3	22.0	22.0	warning	special_only 未命中特色规则
+阴道镜	12	1610359	活检钳-2凹凸钳-1/W6050	1	16.5	16.5	warning	special_only 未命中特色规则
+阴道镜	13	1610359	活检钳-3/W6050	2	16.5	16.5	warning	special_only 未命中特色规则
+阴道镜	14	1610477	锐扶刀(EO)-1/Z1035	5	22.0	22.0	warning	special_only 未命中特色规则
+阴道镜	15	1612759	凹凸钳-3/W6050	1	16.5	16.5	warning	special_only 未命中特色规则
+阴道镜	16	1612759	活检钳-3/W6050	2	16.5	16.5	warning	special_only 未命中特色规则
+阴道镜	17	1612860	锐扶刀(EO)-1/Z1035	3	22.0	22.0	warning	special_only 未命中特色规则
+阴道镜	18	1616087	带盖方盘-1/Z3044	1	16.0	16.0	warning	special_only 未命中特色规则
+阴道镜	19	1616087	换药缸-1/Z2530	2	16.0	16.0	warning	special_only 未命中特色规则
+阴道镜	20	1616087	活检钳-2凹凸钳-1/W6050	1	16.5	16.5	warning	special_only 未命中特色规则
+阴道镜	21	1616192	锐扶刀(EO)-1/Z1035	1	22.0	22.0	warning	special_only 未命中特色规则
+骨密度	9	1613845	棉球/Z2032	10	4.0	4.0	warning	敷料包(纸塑袋)+棉球——未识别规格

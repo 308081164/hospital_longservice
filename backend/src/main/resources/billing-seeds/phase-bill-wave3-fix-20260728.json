@@ -1,0 +1,44 @@
+{
+  "version": "2",
+  "description": "S8 波次3 bill 修复：长健敷料/硅胶珠子 · 附二大衣-无纺布35",
+  "profiles": [
+    {
+      "code": "CHANGJIAN",
+      "name": "哈尔滨长健医院",
+      "billingEnabled": true,
+      "productRules": [
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "长健敷料包W12050",
+          "priority": 3,
+          "price": 35,
+          "keywords": ["敷料包/W12050"],
+          "skipPackaging": true
+        },
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "长健硅胶珠子22",
+          "priority": 3,
+          "price": 22,
+          "keywords": ["硅胶珠子7号"],
+          "skipPackaging": true
+        }
+      ]
+    },
+    {
+      "code": "ZYY-D2-NG",
+      "name": "黑龙江中医药大学附属第二医院（南岗）",
+      "billingEnabled": true,
+      "productRules": [
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "附二南岗大衣无纺布35",
+          "priority": 3,
+          "price": 35,
+          "keywords": ["大衣-无纺布"],
+          "skipPackaging": true
+        }
+      ]
+    }
+  ]
+}

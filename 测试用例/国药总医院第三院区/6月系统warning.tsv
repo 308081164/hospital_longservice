@@ -1,1 +1,3 @@
 sheet	row	orderNo	packName	packCount	unitPrice	ruleUnit	status	pricingRule
+妇科	13	1609671	妇科-人流包	2	49.5	99.0	warning	高温无纺布计费
+妇科	14	1609671	取环包/(90布)	10	49.5	495.0	warning	高温无纺布计费

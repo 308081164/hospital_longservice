@@ -1,0 +1,277 @@
+{
+  "version": "1",
+  "description": "结款函 S8 波次1-3：物流趟次对齐 · 仁胜加急/8折/物流卡 · 附二物流 · 市五隐藏物流 · 附一洗涤",
+  "profiles": [
+    {
+      "code": "WJ-HLJ-ZD",
+      "name": "武警黑龙江省总队医院",
+      "billingEnabled": true,
+      "policies": [
+        {
+          "policyType": "LOGISTICS",
+          "name": "物流50元/趟",
+          "params": {"feePerTrip": 50, "mergeSameDay": false, "tripCountOverride": 20},
+          "priority": 10
+        }
+      ]
+    },
+    {
+      "code": "YUEMEI-FH",
+      "name": "悦美芳华医疗门诊医院",
+      "billingEnabled": true,
+      "policies": [
+        {
+          "policyType": "LOGISTICS",
+          "name": "物流100元/月",
+          "params": {"feePerTrip": 50, "tripCountOverride": 2, "tripSource": "import"},
+          "priority": 20
+        },
+        {
+          "policyType": "MONTHLY_SETTLEMENT",
+          "name": "低消1000",
+          "params": {
+            "minCharge": 1000,
+            "settlementOmitMinChargeRow": true,
+            "settlementDisplayMode": "embed"
+          },
+          "priority": 10
+        }
+      ]
+    },
+    {
+      "code": "ERYY-NG",
+      "name": "黑龙江省第二医院（南岗院区）",
+      "billingEnabled": true,
+      "policies": [
+        {
+          "policyType": "LOGISTICS",
+          "name": "省二南岗物流80.5",
+          "params": {"feePerTrip": 80.5, "tripCountOverride": 4},
+          "priority": 10
+        }
+      ]
+    },
+    {
+      "code": "ZYY-D2-NG",
+      "name": "黑龙江中医药大学附属第二医院（南岗）",
+      "billingEnabled": true,
+      "policies": [
+        {
+          "policyType": "LOGISTICS",
+          "name": "附二南岗结款物流50·21趟",
+          "params": {"feePerTrip": 50, "tripCountOverride": 21},
+          "priority": 30
+        }
+      ]
+    },
+    {
+      "code": "ZYY-D2-HN",
+      "name": "黑龙江中医药大学附属第二医院（哈南分院）",
+      "billingEnabled": true,
+      "policies": [
+        {
+          "policyType": "LOGISTICS",
+          "name": "附二哈南结款物流50·10趟",
+          "params": {"feePerTrip": 50, "tripCountOverride": 10},
+          "priority": 30
+        }
+      ]
+    },
+    {
+      "code": "ZUYAN-NG",
+      "name": "祖研-黑龙江省中医医院（南岗院区）",
+      "billingEnabled": true,
+      "policies": [
+        {
+          "policyType": "LOGISTICS",
+          "name": "南岗135物流50·weekday",
+          "params": {"feePerTrip": 50, "billingWeekdays": [1, 3, 5], "tripCountOverride": 17},
+          "priority": 30
+        }
+      ]
+    },
+    {
+      "code": "ZUYAN-SF",
+      "name": "祖研-黑龙江省中医医院（三辅院区）",
+      "billingEnabled": true,
+      "policies": [
+        {
+          "policyType": "LOGISTICS",
+          "name": "三辅物流50·16.5趟对齐",
+          "params": {"feePerTrip": 50, "tripCountOverride": 16, "settlementLogisticsAmountOverride": 825},
+          "priority": 30
+        }
+      ]
+    },
+    {
+      "code": "ZUYAN-XA",
+      "name": "祖研-黑龙江省中医医院（香安院区）",
+      "billingEnabled": true,
+      "policies": [
+        {
+          "policyType": "LOGISTICS",
+          "name": "香安物流50·10趟",
+          "params": {"feePerTrip": 50, "tripCountOverride": 10},
+          "priority": 30
+        }
+      ]
+    },
+    {
+      "code": "RENSHENG",
+      "name": "哈尔滨仁胜医院",
+      "billingEnabled": true,
+      "policies": [
+        {
+          "policyType": "DISCOUNT",
+          "name": "结款函8折",
+          "params": {"rate": 0.8, "applyStage": "settlement_only"},
+          "priority": 5
+        },
+        {
+          "policyType": "URGENT",
+          "name": "加急125%整行",
+          "params": {
+            "urgentRate": 1.25,
+            "reducedRate": 1.25,
+            "urgentLogisticsFeePerTrip": 150,
+            "urgentLogisticsDiscountRate": 1.0,
+            "urgentLineMode": "total"
+          },
+          "priority": 10
+        },
+        {
+          "policyType": "LOGISTICS",
+          "name": "物流卡抵扣",
+          "params": {"useLogisticsCard": true, "feePerTrip": 50, "tripCountOverride": 1},
+          "priority": 20
+        }
+      ]
+    },
+    {
+      "code": "XINFA-HSZ",
+      "name": "新发红十字医院",
+      "billingEnabled": true,
+      "policies": [
+        {
+          "policyType": "URGENT",
+          "name": "加急125%减免后102.5%",
+          "params": {
+            "urgentRate": 1.25,
+            "reducedRate": 1.025,
+            "urgentLogisticsFeePerTrip": 150,
+            "urgentLogisticsDiscountRate": 0.9,
+            "inferUrgentFromSheet": true,
+            "urgentLineMode": "total"
+          },
+          "priority": 10
+        },
+        {
+          "policyType": "LOGISTICS",
+          "name": "结款物流50·21趟",
+          "params": {"feePerTrip": 50, "tripCountOverride": 21},
+          "priority": 30
+        },
+        {
+          "policyType": "DEDUCTION",
+          "name": "设备抵扣3270",
+          "params": {"monthlyDeduction": 3270},
+          "priority": 40
+        }
+      ]
+    },
+    {
+      "code": "ZYY-D1",
+      "name": "黑龙江中医药大学附属第一医院",
+      "billingEnabled": true,
+      "policies": [
+        {
+          "policyType": "SETTLEMENT_EXTRA",
+          "name": "手术一区洗涤费",
+          "params": {
+            "itemName": "手术一区洗涤费用",
+            "amountByMonth": {"2026-06": 3987.1, "2026-05": 5275.4}
+          },
+          "priority": 5
+        }
+      ]
+    },
+    {
+      "code": "HRB-WY",
+      "name": "哈尔滨市第五医院",
+      "billingEnabled": true,
+      "policies": [
+        {
+          "policyType": "LOGISTICS",
+          "name": "结款物流50·21趟",
+          "params": {"feePerTrip": 50, "tripCountOverride": 21},
+          "priority": 30
+        }
+      ]
+    },
+    {
+      "code": "ZY3-DIANLI",
+      "name": "黑龙江省中医药大学附属第三医院（电力）",
+      "billingEnabled": true,
+      "aliases": ["中医三院电力", "电力院区"],
+      "policies": [
+        {
+          "policyType": "LOGISTICS",
+          "name": "结款物流50·24趟",
+          "params": {"feePerTrip": 50, "tripCountOverride": 24},
+          "priority": 30
+        },
+        {
+          "policyType": "URGENT",
+          "name": "加急125%",
+          "params": {
+            "urgentRate": 1.25,
+            "reducedRate": 0.7,
+            "urgentLogisticsFeePerTrip": 50,
+            "inferUrgentFromSheet": true
+          },
+          "priority": 10
+        }
+      ]
+    },
+    {
+      "code": "TAIPING-RM",
+      "name": "太平人民医院",
+      "billingEnabled": true,
+      "policies": [
+        {
+          "policyType": "DISCOUNT",
+          "name": "结款7.5折",
+          "params": {"rate": 0.75, "applyStage": "settlement_only"},
+          "priority": 5
+        },
+        {
+          "policyType": "LOGISTICS",
+          "name": "结款不收物流",
+          "params": {"feePerTrip": 0, "settlementOmitLogisticsRow": true},
+          "priority": 20
+        }
+      ]
+    },
+    {
+      "code": "HRB-HX-EYE",
+      "name": "哈尔滨华夏眼科医院",
+      "billingEnabled": true,
+      "policies": [
+        {
+          "policyType": "DISCOUNT",
+          "name": "结款灭菌折扣",
+          "params": {"rate": 0.95, "applyStage": "settlement_only"},
+          "priority": 5
+        }
+      ]
+    }
+  ],
+  "logisticsCards": [
+    {
+      "customerCode": "RENSHENG",
+      "name": "仁胜物流卡",
+      "balance": 2600,
+      "initialBalance": 2650
+    }
+  ]
+}

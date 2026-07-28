@@ -1,0 +1,24 @@
+{
+  "version": "1",
+  "description": "附二南岗 ZYY-D2-NG：大衣/小单 FIXED_PRICE 对齐处理后表",
+  "newRules": [
+    {
+      "code": "ZYY-D2-NG",
+      "ruleType": "FIXED_PRICE",
+      "name": "附二南岗大衣W9050",
+      "priority": 4,
+      "price": 30,
+      "keywords": ["大衣"],
+      "skipPackaging": true
+    },
+    {
+      "code": "ZYY-D2-NG",
+      "ruleType": "FIXED_PRICE",
+      "name": "附二南岗小单w1250",
+      "priority": 4,
+      "price": 35,
+      "keywords": ["小单"],
+      "skipPackaging": true
+    }
+  ]
+}

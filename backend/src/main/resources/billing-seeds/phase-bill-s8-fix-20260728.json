@@ -1,0 +1,44 @@
+{
+  "version": "1",
+  "description": "S8 波次4 bill 修复：太平 export_only 跳过已折价 · 长健/附二南岗微调",
+  "profiles": [
+    {
+      "code": "TAIPING-RM",
+      "name": "太平人民医院",
+      "billingEnabled": true,
+      "policies": [
+        {
+          "policyType": "DISCOUNT",
+          "name": "太平导出阶段折扣",
+          "params": {
+            "applyStage": "export_only",
+            "skipWhenAlreadyDiscounted": true,
+            "pieceTierDiscounts": [
+              {"minPieces": 1, "maxPieces": 1, "rate": 1.0},
+              {"minPieces": 2, "maxPieces": 2, "rate": 0.75},
+              {"minPieces": 3, "maxPieces": 3, "rate": 0.891, "originalUnitPriceEquals": 16.5},
+              {"minPieces": 4, "maxPieces": 999, "rate": 0.75}
+            ]
+          },
+          "priority": 10
+        }
+      ]
+    },
+    {
+      "code": "CHANGJIAN",
+      "name": "哈尔滨长健医院",
+      "billingEnabled": true,
+      "productRules": [
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "长健结款单行对齐",
+          "priority": 5,
+          "price": 50,
+          "keywords": ["刀柄"],
+          "skipPackaging": true,
+          "skipDiscount": true
+        }
+      ]
+    }
+  ]
+}

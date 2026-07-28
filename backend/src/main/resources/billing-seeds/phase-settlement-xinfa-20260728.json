@@ -1,0 +1,49 @@
+{
+  "version": "1",
+  "description": "新发红十字结款函：高温75折 settlement_only + 低消展示",
+  "profiles": [
+    {
+      "code": "XINFA-HSZ",
+      "name": "新发红十字医院",
+      "billingEnabled": true,
+      "billingPricingMode": "hybrid",
+      "aliases": ["新发红十字", "新发红十字医院"],
+      "policies": [
+        {
+          "policyType": "DISCOUNT",
+          "name": "结款函高温75折",
+          "scope": {"temperature": "HT"},
+          "params": {
+            "rate": 0.75,
+            "applyStage": "settlement_only",
+            "skipWhenFixedPrice": true
+          },
+          "priority": 5
+        },
+        {
+          "policyType": "URGENT",
+          "name": "加急125%减免后102.5%",
+          "params": {
+            "urgentRate": 1.25,
+            "reducedRate": 1.025,
+            "urgentLogisticsFeePerTrip": 150,
+            "urgentLogisticsDiscountRate": 0.9
+          },
+          "priority": 10
+        },
+        {
+          "policyType": "DEDUCTION",
+          "name": "设备抵扣3270",
+          "params": {"monthlyDeduction": 3270},
+          "priority": 20
+        },
+        {
+          "policyType": "LOGISTICS",
+          "name": "结款物流50",
+          "params": {"feePerTrip": 50},
+          "priority": 30
+        }
+      ]
+    }
+  ]
+}

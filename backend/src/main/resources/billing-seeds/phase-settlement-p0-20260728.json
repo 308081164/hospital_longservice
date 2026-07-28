@@ -1,0 +1,84 @@
+{
+  "version": "1",
+  "description": "结款函 P0 20260728：九洲 waivedTrips=5 · 呼兰中医物流185 · 新发75折",
+  "reactivateBillingPolicies": ["JIUZHOU-FK", "HULAN-TCM", "XINFA-HSZ"],
+  "profiles": [
+    {
+      "code": "JIUZHOU-FK",
+      "name": "黑龙江九洲妇科医院",
+      "billingEnabled": true,
+      "billingPricingMode": "standard",
+      "aliases": ["九州妇科", "黑龙江九洲妇科医院"],
+      "settlement": {"omitZeroRows": true},
+      "policies": [
+        {
+          "policyType": "LOGISTICS",
+          "name": "6月免5次物流",
+          "params": {"feePerTrip": 50, "waivedTrips": 5, "settlementOmitZeroRows": true},
+          "priority": 30
+        }
+      ]
+    },
+    {
+      "code": "HULAN-TCM",
+      "name": "呼兰中医院",
+      "billingEnabled": true,
+      "billingPricingMode": "hybrid",
+      "aliases": ["呼兰中医", "呼兰中医院", "哈尔滨市呼兰区中医医院"],
+      "policies": [
+        {
+          "policyType": "LOGISTICS",
+          "name": "物流185元/次",
+          "params": {"feePerTrip": 185},
+          "priority": 10
+        },
+        {
+          "policyType": "MONTHLY_SETTLEMENT",
+          "name": "低消10000",
+          "params": {
+            "minCharge": 10000,
+            "excludeCategories": ["备包", "手术室备包"]
+          },
+          "priority": 20
+        }
+      ]
+    },
+    {
+      "code": "XINFA-HSZ",
+      "name": "新发红十字医院",
+      "billingEnabled": true,
+      "billingPricingMode": "hybrid",
+      "aliases": ["新发红十字", "新发红十字医院"],
+      "policies": [
+        {
+          "policyType": "DISCOUNT",
+          "name": "结款函高温75折",
+          "scope": {"temperature": "HT"},
+          "params": {
+            "rate": 0.75,
+            "applyStage": "settlement_only",
+            "skipWhenFixedPrice": true
+          },
+          "priority": 5
+        },
+        {
+          "policyType": "URGENT",
+          "name": "加急125%减免后102.5%",
+          "params": {
+            "urgentRate": 1.25,
+            "reducedRate": 1.025,
+            "urgentLogisticsFeePerTrip": 150,
+            "urgentLogisticsDiscountRate": 0.9
+          },
+          "priority": 10
+        },
+        {
+          "policyType": "LOGISTICS",
+          "name": "结款物流50",
+          "params": {"feePerTrip": 50},
+          "priority": 30
+        }
+      ]
+    }
+  ]
+}

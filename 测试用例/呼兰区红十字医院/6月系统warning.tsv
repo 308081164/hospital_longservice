@@ -1,1 +1,22 @@
 sheet	row	orderNo	packName	packCount	unitPrice	ruleUnit	status	pricingRule
+口腔科	13	1614459	持针器(高温)-1/Z1029	2	8.0	8.0	warning	special_only 未命中特色规则
+口腔科	14	1614459	剪刀(高温)-1/Z1029	1	8.0	8.0	warning	special_only 未命中特色规则
+口腔科	15	1614459	手机-1/Z7526	5	8.0	8.0	warning	special_only 未命中特色规则
+口腔科	16	1614459	止血钳（弯）-1/Z1026	1	8.0	8.0	warning	special_only 未命中特色规则
+手术室	9	1609967	妇科包	2	209.0	209.0	warning	special_only 未命中特色规则
+手术室	10	1609967	阑尾包	1	148.5	148.5	warning	special_only 未命中特色规则
+手术室	11	1609967	静脉探子-2/Z7534	1	13.5	13.5	warning	special_only 未命中特色规则
+手术室	12	1609967	镊子缸-2/Z2044	1	16.5	16.5	warning	special_only 未命中特色规则
+手术室	13	1609967	盆1碗1/W9050	3	16.5	16.5	warning	special_only 未命中特色规则
+手术室	14	1614412	妇科包	1	209.0	209.0	warning	special_only 未命中特色规则
+手术室	15	1614412	阑尾包	3	148.5	148.5	warning	special_only 未命中特色规则
+手术室	16	1614412	盆1碗1/W9050	1	16.5	16.5	warning	special_only 未命中特色规则
+手术室	17	1614460	妇科包	1	209.0	209.0	warning	special_only 未命中特色规则
+手术室	18	1614460	刮勺-1/Z7537	1	8.0	8.0	warning	special_only 未命中特色规则
+手术室	19	1614460	巾钳子-4/Z1526	1	22.0	22.0	warning	special_only 未命中特色规则
+手术室	20	1614460	镊子缸-2/Z2044	1	16.5	16.5	warning	special_only 未命中特色规则
+手术室	21	1614460	盆1碗1/W9050	4	16.5	16.5	warning	special_only 未命中特色规则
+手术室	22	1614484	戳卡5气腹针1转换器1/z2565	1	132.0	132.0	warning	special_only 未命中特色规则
+手术室	23	1614484	胆囊腹腔镜器械-10件/W12050	1	110.0	110.0	warning	special_only 未命中特色规则
+手术室	24	1614484	腹腔镜器械-7件/z2565	1	132.0	132.0	warning	special_only 未命中特色规则
+手术室	25	1614484	气腹管 导线-2/z3040	1	44.0	44.0	warning	special_only 未命中特色规则
