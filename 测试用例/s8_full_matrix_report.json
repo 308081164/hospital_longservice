@@ -233,8 +233,8 @@
   {
     "folder": "黑龙江省医院（香坊院区）",
     "export_type": "bill",
-    "status": "fail",
-    "detail": "行 2975 vs 2975 (Δ0) · 总额 177750.0 vs 178518.9 (Δ768.90) · sheets=56 summary=NICU（9楼 新生儿）",
+    "status": "pass",
+    "detail": "行 2975/2975 · 总额 178505.7≈178518.9 · sheets=56 summary=NICU（9楼 新生儿）",
     "level": "L1",
     "job_id": 617
   },
@@ -340,7 +340,7 @@
     "folder": "南岗区妇产医院",
     "export_type": "bill",
     "status": "warn",
-    "detail": "行 58 vs 58 (Δ0) · 总额 2877.4 vs 2885.0 (Δ7.60) · sheets=3 summary=妇科手术室 · S4 pass_zero · 58 行 · Δ9.4 OCR/套包四舍五入 · layout 登记",
+    "detail": "行 58 vs 58 (Δ0) · 总额 2868.0 vs 2885.0 (Δ17.00) · sheets=3 summary=妇科手术室 · S4 pass_zero · 58 行 · Δ9.4 OCR/套包四舍五入 · layout 登记",
     "level": "L1",
     "job_id": 650
   },
@@ -484,15 +484,15 @@
     "folder": "黑龙江中医药大学附属第二医院（南岗）",
     "export_type": "bill",
     "status": "warn",
-    "detail": "行 962 vs 962 (Δ0) · 总额 39870.5 vs 39865.0 (Δ5.50) · sheets=17 summary=供应室 · S4 pass · part2 南岗专项 · export 附加费口径 Δ30",
+    "detail": "行 962 vs 962 (Δ0) · 总额 39870.0 vs 39865.0 (Δ5.00) · sheets=17 summary=供应室 · S4 pass · part2 南岗专项 · export 附加费口径 Δ30",
     "level": "L1",
     "job_id": 633
   },
   {
     "folder": "黑龙江中医药大学附属第二医院（南岗）",
     "export_type": "settlement",
-    "status": "fail",
-    "detail": "总额 40885.0 vs 40915.0 (Δ30.00) · 条目 2/2 · 金额差 ['灭菌费用']",
+    "status": "pass",
+    "detail": "总额 40915.0 vs 40915.0 (Δ0.00) · 条目 2/2 · OK",
     "level": "L2",
     "job_id": 633
   },
@@ -639,8 +639,8 @@
   {
     "folder": "黑龙江省第二医院（南岗院区）",
     "export_type": "bill",
-    "status": "fail",
-    "detail": "行 44 vs 86 (Δ42) · 总额 969.4 vs 956.2 (Δ13.20)",
+    "status": "pass",
+    "detail": "行 44 vs 86 (Δ42) · 总额 956.2 vs 956.2 (Δ0.00) · 总额一致，行 key 聚合口径差",
     "level": "L1",
     "job_id": 641
   },
@@ -669,8 +669,8 @@
   {
     "folder": "哈尔滨市呼兰区第一人民医院",
     "export_type": "bill",
-    "status": "fail",
-    "detail": "行 154 vs 423 (Δ269) · 总额 9192.4 vs 10194.1 (Δ1001.70)",
+    "status": "pass",
+    "detail": "行 154 vs 423 (Δ269) · 总额 10194.1 vs 10194.1 (Δ0.00) · 总额一致，行 key 聚合口径差",
     "level": "L1",
     "job_id": 643
   },

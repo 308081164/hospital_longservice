@@ -1,9 +1,9 @@
 # 优先医院特色账单对齐 TODO
 
-> 最后更新：**2026-07-28（S8 波次3 收尾 · regression 修复 + 附二结款）**  
-> **S8 稳定基线**（[`job_baseline_stable.json`](job_baseline_stable.json) · Job 607–654）：bill **pass 20 · warn 12 · fail 5 · skip 1** · settlement **pass 19/37** · 全矩阵见 [`s8_full_matrix_report.json`](s8_full_matrix_report.json)  
-> **波次3 收尾**：bill fail **8→5** ✅ · 香坊/省二南岗/呼兰一 regression **pass** · 附二南岗结款 **pass** · `ExportFixedPriceApplier` 信任 correctedTotalPrice + 科室条件 + `exportApply`  
-> **波次3 进展**：长健 bill **pass** · 太平/附二南岗 bill **warn** · 结款 **+4 pass**（附一/市五/新发/附二南岗）· strict 双 pass **13 院**
+> 最后更新：**2026-07-28（S8 波次3 收尾 · 已 push `d02e772`）**  
+> **S8 稳定基线**（[`job_baseline_stable.json`](job_baseline_stable.json) · Job 607–654）：bill **pass 20 · warn 12 · fail 5 · skip 1** · settlement **pass 19/37** · 看板双 pass **19 院** · strict 双 pass **13 院**  
+> **波次3 收尾 ✅**：bill fail **8→5** · 香坊/省二南岗/呼兰一 regression **pass** · 附二南岗结款 **pass** · [`regression-wave3-bill-close.md`](regression-wave3-bill-close.md)  
+> **strict 双 pass 13 院**（bill pass + settlement pass）：附一、附二哈南、社会康复、道外、新发、维多利亚、九洲、呼兰红十字、冰城医美、武警、悦美、**呼兰一、省二南岗**
 
 ---
 
@@ -48,7 +48,7 @@ python3 scripts/batch_june_system_test.py "武警黑龙江省总队医院" "…"
 ## 逐院执行看板（步骤 1–8）
 
 > S4 列 = **stable 基线**；`P###` = **pricing Job**（20260728 定点重导，见附录）  
-> S8 列 = **stable Job** 导出比对（2026-07-28 复跑）
+> S8 列 = **stable Job** 导出比对（2026-07-28 **收尾**复跑 · commit `d02e772`）
 
 | # | 医院（院区） | S1 | S2 | S3 | S4 | S5 | S6 | S7 | S8 | stable Job | 备注 |
 |---|-------------|:--:|:--:|:--:|:--:|:--:|:--:|:--:|:--:|:----------:|------|
@@ -150,7 +150,7 @@ python3 scripts/batch_june_system_test.py "武警黑龙江省总队医院" "…"
 | 黑龙江九洲妇科医院 | 1、账单(bill) 2、结款函(settlement) | ✅ 全覆盖（账单+结款函 S8 **双 pass** · waivedTrips=5 policy） |
 | 呼兰区红十字医院 | 1、账单(bill) 2、结款函(settlement) | ✅ 全覆盖（账单+结款函 S8 **双 pass**） |
 | 呼兰中医院 | 1、账单(bill) 2、结款函(settlement) | ⚠️ 类型已配（账单 S8 **warn** Δ22 · 结款函 S8 **pass** · 特殊包/低消行） |
-| 黑龙江中医药大学附属第二医院（南岗） | 1、账单(bill) 2、结款函(settlement) 3、价格汇总(price_summary) 4、器械把数表(instrument_audit) | ❌ 未全覆盖（**dept_split 17 sheets** · 账单 S8 **warn** Δ5.5 · 结款函 **fail** Δ30 · **汇总四 type structure_ok**） |
+| 黑龙江中医药大学附属第二医院（南岗） | 1、账单(bill) 2、结款函(settlement) 3、价格汇总(price_summary) 4、器械把数表(instrument_audit) | ❌ 未全覆盖（**dept_split 17 sheets** · 账单 S8 **warn** Δ5.5 · 结款函 S8 **pass** · **汇总四 type structure_ok**） |
 | 黑龙江中医药大学附属第二医院（哈南分院） | 1、账单(bill) 2、结款函(settlement) 3、价格汇总(price_summary) 4、器械把数表(instrument_audit) | ❌ 未全覆盖（strict 待参考表；**dept_split 9 sheets** · 账单 S8 **pass** · 结款函 S8 **pass** Δ8 · **汇总四 type structure_ok**） |
 | 哈尔滨仁胜医院 | 1、账单(bill) 2、结款函(settlement) | ⚠️ 类型已配（账单 S8 **pass** · 结款函 S8 **fail** · 加急行待 DB sheet 标记） |
 | 哈尔滨华夏眼科医院 | 1、账单(bill) 2、结款函(settlement) | ⚠️ 类型已配（账单 S8 **pass** · 结款函 S8 **fail** · KNOWN_SETTLEMENT_DIFF 登记） |
@@ -158,7 +158,7 @@ python3 scripts/batch_june_system_test.py "武警黑龙江省总队医院" "…"
 | 香坊中医院 | 1、账单(bill) 2、结款函(settlement) | ⚠️ 类型已配（账单 S8 **pass** · 结款函 ⏭ 缺参考表） |
 | 武警黑龙江省总队医院 | 1、账单(bill) 2、结款函(settlement) | ✅ 全覆盖（账单+结款函 S8 **双 pass** · tripCountOverride=20） |
 | 悦美芳华医疗门诊医院 | 1、账单(bill) 2、结款函(settlement) | ✅ 全覆盖（账单+结款函 S8 **双 pass** · 物流 50×2 趟） |
-| 黑龙江省第二医院（南岗院区） | 1、账单(bill) 2、结款函(settlement) | ⚠️ 类型已配（账单 S8 **fail** layout · 结款函 S8 **pass** · tripCountOverride=4） |
+| 黑龙江省第二医院（南岗院区） | 1、账单(bill) 2、结款函(settlement) | ⚠️ 类型已配（账单 S8 **pass** 总额一致 · 结款函 S8 **pass** · 行 key 聚合口径差） |
 | 黑龙江省第二医院（松北院区） | 1、账单(bill) 2、结款函(settlement) | ⚠️ 类型已配（**dept_split 22 sheets** · 账单 S8 **fail** material · 结款函 ⏭ **材料阻塞**） |
 | 哈尔滨市呼兰区第一人民医院 | 1、账单(bill) 2、结款函(settlement) | ⚠️ 类型已配（账单 S8 **pass** 总额一致 · 结款函 S8 **pass**） |
 | 哈尔滨市红十字妇产医院 | 1、账单(bill) 2、结款函(settlement) | ⚠️ 类型已配（账单 S8 **pass** · 结款函 S8 **fail**） |
@@ -195,25 +195,26 @@ python3 scripts/batch_june_system_test.py "武警黑龙江省总队医院" "…"
 | 香坊中医院 | 1、账单 2、结款函 | ✅ pass | ⏭ 阻塞 | ⚠️ 账单 ✅ · 缺处理后结款函 | — |
 | 武警黑龙江省总队医院 | 1、账单 2、结款函 | ✅ pass | ✅ pass | ✅ 双 pass | ✅ |
 | 悦美芳华医疗门诊医院 | 1、账单 2、结款函 | ✅ pass | ✅ pass | ✅ 双 pass | ✅ |
-| 黑龙江省第二医院（南岗院区） | 1、账单 2、结款函 | 🚫 fail | ✅ pass | ⚠️ bill layout 154 vs 86 行 · 结款 pass | ✅ |
+| 黑龙江省第二医院（南岗院区） | 1、账单 2、结款函 | ✅ pass | ✅ pass | ✅ **strict 双 pass** · 行 key 聚合口径差 | ✅ |
 | 黑龙江省第二医院（松北院区） | 1、账单 2、结款函 | 🚫 fail | ⏭ 阻塞 | 🚫 材料 | part3/vendor + kit 拆行 · dept_split OK |
 | 哈尔滨市呼兰区第一人民医院 | 1、账单 2、结款函 | ✅ pass | ✅ pass | ⚠️ 行 key 聚合口径差 | ✅ |
 | 哈尔滨市红十字妇产医院 | 1、账单 2、结款函 | ✅ pass | 🚫 fail | ⚠️ 账单 ✅ · 结款 fail | — |
 | 哈尔滨工业大学医院 | 1、账单 2、结款函 | 🔄 warn(Δ229) | 🚫 fail | ⚠️ combined 单 Sheet · 登记已知差 | — |
 | 哈尔滨工程大学医院 | 1、账单 2、结款函 | ⏭ skip | ⏭ 阻塞 | ⏭ 阻塞 | `哈尔滨工程大学*.xlsx` 原始账单 |
 
-**进度汇总（26 院 · 2026-07-28 波次3 复跑）**：账单 ✅ **14** · 账单 🔄 **6** · 账单 🚫 **5** · 账单 ⏭ **1** · 结款函 ✅ **13** · 结款函 🚫 **5** · 结款函 ⏭ **7**（材料阻塞 5 + 缺参考表 2）
+**进度汇总（26 院 · 2026-07-28 收尾复跑）**：账单 ✅ **15** · 账单 🔄 **5** · 账单 🚫 **4** · 账单 ⏭ **1** · 结款函 ✅ **13** · 结款函 🚫 **5** · 结款函 ⏭ **6**（材料阻塞 5 + 缺参考表 1）
 
 > 结款函自动化：`python3 scripts/batch_s8_settlement_compare.py --job-map 测试用例/job_baseline_stable.json` · 报告 [`s8_settlement_compare_report.json`](s8_settlement_compare_report.json)  
 > **全 37 院扩测**：结款 pass **19** · fail **10** · blocked_material **5** · skip **4** · **双 pass（bill pass/warn + settlement pass）19 院**
 
 ### 汇总
 
-- **✅ 账单+结款函 S8 双 pass（26 院子集）**：9 院（社会康复、道外、维多利亚、呼兰红十字、冰城医美、**九洲、武警、悦美**）
-- **✅ 双 pass（全 37 院）**：上述 9 院 + **祖研三辅、附二哈南、附一、市五、新发** = **14 院**（bill pass/warn + settlement pass **16 院**含 warn 账单）
-- **⚠️ 类型已配 / 登记已知差 / 单通道 pass**：17 院
-- **❌ 未全覆盖**（缺汇总/把数/物流 strict 比对）：14 院
-- **⏭ 阻塞**：1 院（工程大学缺原始账单）
+- **✅ strict 双 pass（bill pass + settlement pass）13 院**：附一、附二哈南、社会康复、道外、新发、维多利亚、九洲、呼兰红十字、冰城医美、武警、悦美、**呼兰一、省二南岗**
+- **✅ 看板双 pass（26 院子集 · bill pass/warn + settlement pass）11 院**：社会康复、道外、维多利亚、呼兰红十字、冰城医美、九洲、武警、悦美、**呼兰一、省二南岗**、新发
+- **✅ 看板双 pass（全 37 院）19 院**（含 warn 账单 + settlement pass）
+- **🚫 bill fail 5 院（均为材料/规则阻塞）**：附三 · 国药主/二 · 市二 · 省二松北
+- **⚠️ 类型已配 / 登记已知差 / 单通道 pass**：其余院
+- **⏭ 阻塞**：工程大学缺原始账单
 
 **高频缺失表格类型：**
 
@@ -235,11 +236,15 @@ python3 scripts/batch_june_system_test.py "武警黑龙江省总队医院" "…"
 - [x] **20260728 计价批次** + 引擎修复 · Docker `mvn test` 绿
 - [x] **P1 ExportStrategy** + 汇总四 type **structure_ok 11 院**
 - [x] **P0 新发低温 Sheet**：`splitLowTempDressingSheets`
-- [x] **S8 stable 复跑**：bill pass **17** · warn **12** · fail **8**（波次3）
+- [x] **S8 stable 复跑（收尾）**：bill pass **20** · warn **12** · fail **5** · settlement pass **19**
+- [x] **波次3 收尾 deploy**：commit **`d02e772`** · CI Build and Deploy
 - [ ] **P0 Kit BOM**：`KitBomImportService` · 国药 645/646
-- [x] **P0 结款函**：附一/市五/新发 **pass** ✅ · 仁胜加急 🔄
-- [x] **P0 账单 fail 闭合**（8→≤5）：材料 4 院 + 附三 **5 fail** · 香坊/省二南岗/呼兰一 regression **已 pass**
-- [x] **附二南岗结款 Δ30**：SETTLEMENT_OVERRIDE 灭菌 39865/月
+- [x] **P0 结款函（波次3）**：附一/市五/新发/附二南岗 **pass** ✅
+- [x] **P0 账单 fail 闭合**（8→≤5）：剩材料 4 + 附三 1
+- [x] **附二南岗结款 Δ30**：SETTLEMENT_OVERRIDE 灭菌 **39865**/月（非总额 40915）
+- [x] **ExportFixedPrice regression**：香坊/省二南岗/呼兰一 bill 恢复 pass
+- [ ] **波次4 结款 P0**：香坊 Δ5996 · 省医院南岗 Δ3024 · 太平 Δ561 · 红十字妇产 Δ9094 · 哈工大 Δ13979
+- [ ] **波次4 附三**：bill+settlement 加急/外来器械行
 - [x] **dept_summary**：附一/市五 **structure_ok**
 - [x] **结款函扩至 37 院** + 全矩阵 [`s8_full_matrix_report.json`](s8_full_matrix_report.json)
 - [ ] **pricing 漏检闭合**：附二南岗（大衣/小单）· 香坊（9 行）
@@ -300,22 +305,30 @@ python3 scripts/batch_june_system_test.py "武警黑龙江省总队医院" "…"
 
 **新增结款 pass**：武警、悦美、省二南岗、九洲、南岗妇产、三精、呼兰中、祖研三辅、附二哈南（+ 原 pass 6 院）
 
-**仍 fail 重点**：附一 Δ3792 · 市五 Δ543 · 新发 Δ12478 加急 · 附三 加急/外来器械 · 省医院双院 · 祖研 · 太平 · 附二南岗 Δ30 · 仁胜 · 华夏 · 红十字妇产 · 哈工大
+**仍 fail 重点（波次4）**：香坊/省医院结款 · 祖研南岗/香安 · 太平 · 仁胜 · 华夏 · 红十字妇产 · 哈工大 · 附三 bill+结款
 
 Seeds：`phase-settlement-logistics-batch-20260728.json` · `phase-bill-s8-fix-20260728.json`
 
-### 2026-07-28 · stable 基线（主口径）
+### 2026-07-28 · stable 基线（收尾后 · 主口径）
 
 | 项 | bill | settlement（37 院） |
 |----|------|---------------------|
-| pass | **19** | **15**（26 院子集 **12** · baseline +9） |
-| warn | **10** | — |
-| fail | **8** | **14** |
+| pass | **20** | **19** |
+| warn | **12** | — |
+| fail | **5** | **10** |
 | skip / blocked | **1** | **9**（5 材料 + 4 缺表） |
-| 全矩阵 | pass **34** · fail **18** · warn **10** · blocked **10** | — |
-| dept_summary | — | 附一/市五 **structure_ok** |
+| strict 双 pass | **13 院** | — |
+| 看板双 pass | **19 院** | bill pass/warn + settlement pass |
 
-报告：[`s8_export_compare_report.json`](s8_export_compare_report.json) · [`s8_settlement_compare_report.json`](s8_settlement_compare_report.json) · [`S8导出状态变更对照.md`](S8导出状态变更对照.md) · [`s8_full_matrix_report.json`](s8_full_matrix_report.json)
+报告：[`s8_export_compare_report.json`](s8_export_compare_report.json) · [`s8_settlement_compare_report.json`](s8_settlement_compare_report.json) · [`S8导出状态变更对照.md`](S8导出状态变更对照.md) · [`regression-wave3-bill-close.md`](regression-wave3-bill-close.md)
+
+### 2026-07-28 · stable 基线（波次3 · 历史）
+
+| 项 | bill | settlement（37 院） |
+|----|------|---------------------|
+| pass | **17** | **18** |
+| warn | **12** | — |
+| fail | **8** | **11** |
 
 ### 2026-07-28 · 汇总 exportType
 
