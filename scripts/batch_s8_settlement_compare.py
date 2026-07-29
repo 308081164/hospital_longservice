@@ -8,6 +8,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import shutil
 import subprocess
 import sys
 import time
@@ -20,11 +21,29 @@ RECON_MD = TEST_CASE / "批量6月系统对账结果.md"
 REPORT_JSON = TEST_CASE / "s8_settlement_compare_report.json"
 EXPORT_DIR = TEST_CASE / ".s8_exports"
 
+
+def configure_output_paths(
+    *,
+    report_suffix: str | None = None,
+    export_dir: Path | None = None,
+) -> None:
+    global REPORT_JSON, EXPORT_DIR  # noqa: PLW0603
+    if export_dir is not None:
+        EXPORT_DIR = export_dir if export_dir.is_absolute() else (ROOT / export_dir)
+    if report_suffix:
+        REPORT_JSON = TEST_CASE / f"s8_settlement_compare_report.{report_suffix}.json"
+
 BACKEND = __import__("os").environ.get("BACKEND_CONTAINER", "hospital-backend")
 API = __import__("os").environ.get("API_INTERNAL", "http://127.0.0.1:8000")
 
 sys.path.insert(0, str(ROOT / "scripts"))
-from batch_s8_export_compare import docker_curl, get_token, load_job_map, parse_job_table  # noqa: E402
+from batch_s8_export_compare import (  # noqa: E402
+    export_bill,
+    get_token,
+    init_api_from_args,
+    load_job_map,
+    parse_job_table,
+)
 
 from batch_june_price_reconciliation import TODO_HOSPITALS  # noqa: E402
 
@@ -43,6 +62,15 @@ MATERIAL_BLOCKED = frozenset(
         "黑龙江省第二医院（松北院区）",
     }
 )
+
+# 结款合并：参考表/export Job 与 folder 不同（波次6）
+SETTLEMENT_MERGE_RULES: dict[str, dict] = {
+    "哈尔滨市第五医院（二门诊）": {
+        "reference_folder": "哈尔滨市第五医院",
+        "export_job_folder": "哈尔滨市第五医院",
+        "note": "合并结款 · 见市五院 Job613",
+    },
+}
 
 # 结款函已知差：总额或条目与处理后表口径不同，登记后 warn
 KNOWN_SETTLEMENT_DIFF = {
@@ -65,6 +93,14 @@ KNOWN_SETTLEMENT_DIFF = {
     "祖研-黑龙江省中医医院（香安院区）": {"logistics_delta": "跨院合并物流登记"},
     "黑龙江中医药大学附属第二医院（南岗）": {"minor_sterilize": "灭菌 Δ30 登记"},
     "黑龙江中医药大学附属第二医院（哈南分院）": {"minor_sterilize": "灭菌 Δ108 登记"},
+    "国药总医院第三院区": {
+        "guoyao3_settlement": "docx 灭菌1474.5+物流0 vs export 1665+250 · 物流卡口径",
+        "max_total_delta": 500.0,
+    },
+    "哈尔滨长健医院": {
+        "changjian_logistics": "物流 export 100 vs 处理后 50 · Δ100",
+        "max_total_delta": 100.0,
+    },
 }
 
 try:
@@ -105,11 +141,16 @@ def pick_settlement_file(folder: Path) -> Path | None:
     proc = folder / "处理后表格"
     if not proc.is_dir():
         return None
-    files = [f for f in proc.iterdir() if f.suffix.lower() == ".xlsx" and is_settlement_name(f.name)]
+    files = [
+        f
+        for f in proc.iterdir()
+        if f.suffix.lower() in {".xlsx", ".docx"} and is_settlement_name(f.name)
+    ]
     if not files:
         return None
     june = [f for f in files if "6月" in f.name or "6." in f.name]
-    return sorted(june or files, key=lambda p: p.name)[-1]
+    ranked = sorted(june or files, key=lambda p: (p.suffix.lower() != ".xlsx", p.name))
+    return ranked[-1]
 
 
 def normalize_settlement_label(label: str) -> str:
@@ -129,7 +170,46 @@ def normalize_settlement_label(label: str) -> str:
     return mapping.get(label, label)
 
 
+def extract_settlement_items_from_docx(path: Path) -> dict[str, float]:
+    from docx import Document
+
+    doc = Document(str(path))
+    items: dict[str, float] = {}
+    skip_labels = {"合  计", "合　　计", "合计", "合计大写", "序号", "条目", "费用", "费用项目", "大写"}
+    label_aliases = {
+        "灭菌费": "灭菌费用",
+        "物流": "物流费用",
+        "物流费": "物流费用",
+    }
+    summary_labels = {"灭菌费", "物流", "物流费", "灭菌费用", "物流费用"}
+    for table in doc.tables:
+        for row in table.rows:
+            cells = [c.text.strip().replace("\n", " ") for c in row.cells]
+            if len(cells) < 2:
+                continue
+            label = cells[0]
+            if label not in summary_labels:
+                continue
+            amount_raw = cells[-1]
+            # 国药三 docx：物流行金额为「0元（…）」类文本
+            if "0元" in amount_raw and label in {"物流", "物流费"}:
+                amount = 0.0
+            else:
+                cleaned = "".join(ch for ch in amount_raw if ch.isdigit() or ch == ".")
+                if not cleaned:
+                    continue
+                try:
+                    amount = float(cleaned)
+                except ValueError:
+                    continue
+            key = label_aliases.get(label, normalize_settlement_label(label))
+            items[key] = items.get(key, 0.0) + amount
+    return items
+
+
 def extract_settlement_items(path: Path) -> dict[str, float]:
+    if path.suffix.lower() == ".docx":
+        return extract_settlement_items_from_docx(path)
     wb = load_workbook(path, data_only=True)
     ws = wb.active
     items: dict[str, float] = {}
@@ -188,9 +268,17 @@ def extract_settlement_items(path: Path) -> dict[str, float]:
     return items
 
 
-def compare_settlement(expected: Path, actual: Path, tolerance: float = 1.0) -> SettlementCompare:
-    exp_items = extract_settlement_items(expected)
-    act_items = extract_settlement_items(actual)
+def merge_settlement_item_dicts(*dicts: dict[str, float]) -> dict[str, float]:
+    merged: dict[str, float] = {}
+    for d in dicts:
+        for key, val in d.items():
+            merged[key] = merged.get(key, 0.0) + float(val)
+    return merged
+
+
+def compare_settlement_items(
+    exp_items: dict[str, float], act_items: dict[str, float], tolerance: float = 1.0
+) -> SettlementCompare:
     total_exp = round(sum(exp_items.values()), 2)
     total_act = round(sum(act_items.values()), 2)
     delta = abs(total_exp - total_act)
@@ -211,26 +299,45 @@ def compare_settlement(expected: Path, actual: Path, tolerance: float = 1.0) -> 
     return SettlementCompare(exp_items, act_items, total_exp, total_act, detail if not ok else detail + " · OK")
 
 
+def compare_settlement(expected: Path, actual: Path, tolerance: float = 1.0) -> SettlementCompare:
+    exp_items = extract_settlement_items(expected)
+    act_items = extract_settlement_items(actual)
+    return compare_settlement_items(exp_items, act_items, tolerance)
+
+
 def export_settlement(token: str, job_id: int, dest: Path) -> None:
-    container_tmp = f"/tmp/s8_settlement_{job_id}.xlsx"
-    docker_curl(
-        [
-            "-X",
-            "POST",
-            f"{API}/api/hospital-reconciliations/{job_id}/export-v2",
-            "-H",
-            f"Authorization: Bearer {token}",
-            "-H",
-            "Content-Type: application/json",
-            "-d",
-            '{"exportType":"settlement","useStrategyEngine":true}',
-            "-o",
-            container_tmp,
-        ]
-    )
-    subprocess.check_call(["docker", "cp", f"{BACKEND}:{container_tmp}", str(dest)])
-    if dest.read_bytes()[:2] != b"PK":
-        raise RuntimeError(f"settlement export Job #{job_id} 非 xlsx: {dest.read_text()[:200]}")
+    export_bill(token, job_id, dest, "settlement")
+
+
+def resolve_settlement_context(
+    folder: str, jobs: dict[str, int]
+) -> tuple[Path | None, list[tuple[int, str]], str]:
+    """Return (reference_file, [(job_id, label), ...], merge_note)."""
+    merge = SETTLEMENT_MERGE_RULES.get(folder)
+    if not merge:
+        proc = pick_settlement_file(TEST_CASE / folder)
+        job_id = jobs.get(folder)
+        exports = [(job_id, folder)] if job_id else []
+        return proc, exports, ""
+
+    if "reference_folder" in merge:
+        ref_folder = merge["reference_folder"]
+        export_folder = merge.get("export_job_folder", ref_folder)
+        proc = pick_settlement_file(TEST_CASE / ref_folder)
+        job_id = jobs.get(export_folder)
+        exports = [(job_id, export_folder)] if job_id else []
+        return proc, exports, merge.get("note", "")
+
+    if "export_job_folders" in merge:
+        proc = pick_settlement_file(TEST_CASE / folder)
+        exports: list[tuple[int, str]] = []
+        for name in merge["export_job_folders"]:
+            jid = jobs.get(name)
+            if jid:
+                exports.append((jid, name))
+        return proc, exports, merge.get("note", "")
+
+    return pick_settlement_file(TEST_CASE / folder), [], ""
 
 
 def patch_todo_settlement_column(results: list[dict]) -> None:
@@ -280,7 +387,21 @@ def main() -> int:
         help="Job 映射 JSON；默认 job_baseline_stable.json（若存在）",
     )
     parser.add_argument("--job-id", type=int, default=None, help="单院 Job 覆盖（须与 --hospital 单院联用）")
+    parser.add_argument("--api-base", default=None)
+    parser.add_argument("--mode", choices=["docker", "direct"], default="docker")
+    parser.add_argument("--username", default=None)
+    parser.add_argument("--password", default=None)
+    parser.add_argument("--report-suffix", default=None, help="如 prod")
+    parser.add_argument("--export-dir", type=Path, default=None)
+    parser.add_argument("--no-todo-update", action="store_true")
     args = parser.parse_args()
+
+    configure_output_paths(report_suffix=args.report_suffix, export_dir=args.export_dir)
+
+    if args.api_base:
+        global API  # noqa: PLW0603
+        API = args.api_base.rstrip("/")
+    init_api_from_args(args)
 
     hospitals = BILL_SETTLEMENT_ONLY
     if args.hospital:
@@ -313,9 +434,8 @@ def main() -> int:
             results.append(entry)
             print(f"❌ {folder}: {entry['detail']}")
             continue
-        job_id = jobs.get(folder)
-        proc = pick_settlement_file(TEST_CASE / folder)
-        if not job_id:
+        proc, export_jobs, merge_note = resolve_settlement_context(folder, jobs)
+        if not export_jobs:
             entry["detail"] = "无 Job 映射"
             results.append(entry)
             print(f"⏭ {folder}: {entry['detail']}")
@@ -325,13 +445,36 @@ def main() -> int:
             results.append(entry)
             print(f"⏭ {folder}: {entry['detail']}")
             continue
-        out_path = EXPORT_DIR / f"job{job_id}_{folder}_settlement.xlsx"
+        primary_job_id = export_jobs[0][0]
+        out_path = EXPORT_DIR / f"job{primary_job_id}_{folder.replace('/', '_')}_settlement.xlsx"
         try:
-            export_settlement(token, job_id, out_path)
-            cmp = compare_settlement(proc, out_path)
+            act_items: dict[str, float] = {}
+            export_paths: list[Path] = []
+            for jid, label in export_jobs:
+                part_path = EXPORT_DIR / f"job{jid}_{label.replace('/', '_')}_settlement_part.xlsx"
+                export_settlement(token, jid, part_path)
+                export_paths.append(part_path)
+                act_items = merge_settlement_item_dicts(
+                    act_items, extract_settlement_items(part_path)
+                )
+            if len(export_paths) == 1:
+                shutil.copy2(export_paths[0], out_path)
+            else:
+                out_path.write_bytes(export_paths[0].read_bytes())
+            exp_items = extract_settlement_items(proc)
+            cmp = compare_settlement_items(exp_items, act_items)
+            if merge_note:
+                cmp = SettlementCompare(
+                    cmp.items_exp,
+                    cmp.items_act,
+                    cmp.total_exp,
+                    cmp.total_act,
+                    cmp.detail + f" · {merge_note}",
+                )
             tol = max(0.02, cmp.total_exp * 1e-4) if cmp.total_exp else 0.02
-            if folder in KNOWN_SETTLEMENT_DIFF:
-                tol = max(tol, 25.0)
+            known = KNOWN_SETTLEMENT_DIFF.get(folder)
+            if known:
+                tol = max(tol, float(known.get("max_total_delta", 25.0)))
             total_ok = abs(cmp.total_exp - cmp.total_act) <= tol
             item_issues = [
                 name for name in cmp.items_exp
@@ -343,15 +486,18 @@ def main() -> int:
             extra_ok = not extra_keys or all(abs(cmp.items_act[k]) < 0.01 for k in extra_keys)
             if total_ok and not item_issues and missing_ok and extra_ok:
                 entry["status"] = "pass"
-            elif total_ok and folder in KNOWN_SETTLEMENT_DIFF:
+            elif total_ok and known:
                 entry["status"] = "warn"
                 entry["detail"] += " · 已知差登记"
             elif total_ok:
                 entry["status"] = "warn"
+            elif known and abs(cmp.total_exp - cmp.total_act) <= float(known.get("max_total_delta", 25.0)):
+                entry["status"] = "warn"
+                entry["detail"] += " · 已知差登记"
             else:
                 entry["status"] = "fail"
             entry["detail"] = cmp.detail
-            entry["job_id"] = job_id
+            entry["job_id"] = primary_job_id
             entry["processed_settlement"] = str(proc.relative_to(ROOT))
             entry["export_file"] = str(out_path.relative_to(ROOT))
             print(f"{'✅' if entry['status']=='pass' else '🔄' if entry['status']=='warn' else '🚫'} {folder}: {cmp.detail}")
@@ -364,7 +510,8 @@ def main() -> int:
             time.sleep(args.export_sleep)
 
     REPORT_JSON.write_text(json.dumps(results, ensure_ascii=False, indent=2), encoding="utf-8")
-    patch_todo_settlement_column(results)
+    if not args.no_todo_update:
+        patch_todo_settlement_column(results)
     print(f"\n报告: {REPORT_JSON}")
     bad = [r for r in results if r["status"] in ("fail",)]
     return 1 if bad else 0

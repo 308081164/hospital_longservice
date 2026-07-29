@@ -127,7 +127,11 @@ jobs:
             deploy/apply-p0-6-billing-sql.sh \
             deploy/mysql-hospital-cli.sh \
             deploy/verify-billing-api-on-server.sh \
+            deploy/run-prod-verify.sh \
             "${SSH_USER}@${SSH_HOST}:${DEPLOY_PATH}/deploy/"
+          scp -i ~/.ssh/deploy_key -o StrictHostKeyChecking=no -P "${SSH_PORT}" -r \
+            bin/hospital-cli scripts/hospital_cli.py scripts/lib \
+            "${SSH_USER}@${SSH_HOST}:${DEPLOY_PATH}/"
           scp -i ~/.ssh/deploy_key -o StrictHostKeyChecking=no -P "${SSH_PORT}" \
             deploy/sql/p0-6-billing-toggle.sql \
             "${SSH_USER}@${SSH_HOST}:${DEPLOY_PATH}/deploy/sql/"
@@ -339,7 +343,11 @@ jobs:
             deploy/apply-p0-6-billing-sql.sh \
             deploy/mysql-hospital-cli.sh \
             deploy/verify-billing-api-on-server.sh \
+            deploy/run-prod-verify.sh \
             "${SSH_USER}@${SSH_HOST}:${DEPLOY_PATH}/deploy/"
+          scp -i ~/.ssh/deploy_billing_key -o StrictHostKeyChecking=no -P "${SSH_PORT}" -r \
+            bin/hospital-cli scripts/hospital_cli.py scripts/lib \
+            "${SSH_USER}@${SSH_HOST}:${DEPLOY_PATH}/"
           scp -i ~/.ssh/deploy_billing_key -o StrictHostKeyChecking=no -P "${SSH_PORT}" \
             deploy/sql/p0-6-billing-toggle.sql \
             "${SSH_USER}@${SSH_HOST}:${DEPLOY_PATH}/deploy/sql/"
@@ -374,3 +382,51 @@ jobs:
               docker logs hospital-backend 2>&1 | tail -80 || true
               exit 1
             }
+
+      - name: Post-deploy CLI smoke
+        uses: appleboy/ssh-action@v1.2.5
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          port: ${{ secrets.SSH_PORT || 22 }}
+          command_timeout: 10m
+          script: |
+            set -e
+            DPATH="${{ secrets.DEPLOY_PATH || '/mnt/newdisk/app/Hospital' }}"
+            cd "$DPATH"
+            chmod +x bin/hospital-cli deploy/run-prod-verify.sh 2>/dev/null || true
+            bash deploy/run-prod-verify.sh smoke --json
+
+  post-deploy-parity-gate:
+    needs: build-and-push
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    if: github.ref == 'refs/heads/main'
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Prod parity gate (read-only)
+        env:
+          PROD_HOST: ${{ secrets.SSH_HOST }}
+          SMOKE_USER: ${{ secrets.SMOKE_USER }}
+          SMOKE_PASS: ${{ secrets.SMOKE_PASS }}
+          ADMIN_USERNAME: ${{ secrets.SMOKE_USER }}
+          ADMIN_PASSWORD: ${{ secrets.SMOKE_PASS }}
+        run: |
+          chmod +x bin/hospital-cli scripts/run_prod_parity_gate.sh
+          bash scripts/run_prod_parity_gate.sh
+
+      - name: Upload calibration artifact
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: job_baseline_prod_calibration
+          path: 测试用例/job_baseline_prod_calibration.json
+          if-no-files-found: warn

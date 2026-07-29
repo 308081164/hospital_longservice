@@ -138,6 +138,35 @@ docker volume ls | grep hospital
 
 若需 80/443 反代而非直接暴露 `HTTP_PORT`，参考 `deploy/nginx-hospital.conf` 复制到 Nginx vhost 并 `nginx -t && reload`。
 
+## 9. 部署后 CLI 验证
+
+统一入口 `./bin/hospital-cli`（或 `python3 scripts/hospital_cli.py`），替代浏览器逐页点检与分散 bash 脚本。
+
+| 场景 | 命令 |
+|------|------|
+| 本地 Docker（默认） | `./bin/hospital-cli smoke` |
+| 本地 Docker + billing 计数 | `./bin/hospital-cli deploy-check` |
+| 生产 SSH 到部署机 | `bash deploy/run-prod-verify.sh smoke` |
+| 生产 SSH 全链路（smoke + deploy-check） | `bash deploy/run-prod-verify.sh full` |
+| 本机直连生产 8853 | `./bin/hospital-cli smoke --mode direct --api http://HOST:8853` |
+| 单院 S8（生产 Job map） | `./bin/hospital-cli s8 -H 太平人民医院 --job-map 测试用例/job_baseline_prod.json --mode direct --api http://HOST:8853` |
+| 定点 S4 pricing | `./bin/hospital-cli s4 -H "黑龙江中医药大学附属第二医院（南岗）"` |
+| 编排套件 | `./bin/hospital-cli verify --profile prod --level full --hospitals 太平,工程大学 --allow-import` |
+
+**三种传输模式**：
+
+- `docker`（默认）：`docker exec hospital-backend curl` → 容器内 `127.0.0.1:8000`
+- `direct`：宿主机 HTTP → 生产 `8853` 或本地映射端口
+- 环境变量：`API_BASE`、`API_MODE`、`SMOKE_USER`/`SMOKE_PASS`（或 `ADMIN_PASSWORD`）
+
+**生产 Job 映射**：`测试用例/job_baseline_prod.json` 自 stable 复制，部署后需校准：
+
+```bash
+./bin/hospital-cli jobs list -H "太平人民医院" --mode direct --api http://127.0.0.1:8853
+```
+
+与现有脚本关系：`deploy/verify-billing-api-on-server.sh` 仍保留；`deploy-check` 为其 Python 化 superset。详见 [`docs/CLI验证手册.md`](docs/CLI验证手册.md)。
+
 ---
 
 ## Future CI/CD（尚未实现，清单供后续添加 `.github/workflows/deploy.yml`）

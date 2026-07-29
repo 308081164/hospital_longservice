@@ -24,6 +24,20 @@ RECON_MD = TEST_CASE / "批量6月系统对账结果.md"
 REPORT_JSON = TEST_CASE / "s8_export_compare_report.json"
 REPORT_MD = TEST_CASE / "S8导出比对摘要.md"
 EXPORT_DIR = TEST_CASE / ".s8_exports"
+
+
+def configure_output_paths(
+    *,
+    report_suffix: str | None = None,
+    export_dir: Path | None = None,
+) -> None:
+    """切换报告/export 目录（生产审计用 prod 后缀，避免覆盖 stable 产物）。"""
+    global REPORT_JSON, REPORT_MD, EXPORT_DIR  # noqa: PLW0603
+    if export_dir is not None:
+        EXPORT_DIR = export_dir if export_dir.is_absolute() else (ROOT / export_dir)
+    if report_suffix:
+        REPORT_JSON = TEST_CASE / f"s8_export_compare_report.{report_suffix}.json"
+        REPORT_MD = TEST_CASE / f"S8导出比对摘要.{report_suffix}.md"
 DEPT_SPLIT_SEED = (
     ROOT / "backend/src/main/resources/billing-seeds/phase-export-dept-split-20260728.json"
 )
@@ -171,27 +185,28 @@ class BillCompare:
     summary_label: str = ""
 
 
+from lib.api_client import configure_client, get_client  # noqa: E402
+
+
+def init_api_from_args(args: argparse.Namespace | None = None) -> None:
+    if args is None:
+        configure_client(api_base=API, mode="docker", backend_container=BACKEND)
+        return
+    configure_client(
+        api_base=getattr(args, "api_base", None) or API,
+        mode=getattr(args, "mode", "docker"),
+        backend_container=BACKEND,
+        username=getattr(args, "username", None),
+        password=getattr(args, "password", None),
+    )
+
+
 def docker_curl(args: list[str]) -> str:
-    cmd = ["docker", "exec", BACKEND, "curl", "-sS", *args]
-    return subprocess.check_output(cmd, text=True)
+    return get_client().curl_raw(args)
 
 
 def get_token() -> str:
-    raw = docker_curl(
-        [
-            "-X",
-            "POST",
-            f"{API}/api/v1/base/access_token",
-            "-H",
-            "Content-Type: application/json",
-            "-d",
-            '{"username":"admin","password":"admin123"}',
-        ]
-    )
-    data = json.loads(raw)
-    if data.get("code") != 200:
-        raise RuntimeError(f"login failed: {data}")
-    return data["data"]["access_token"]
+    return get_client().login()
 
 
 def parse_job_table() -> dict[str, int]:
@@ -481,27 +496,7 @@ def compare_bills(expected: Path, actual: Path, tolerance: float = 1.0, folder: 
 
 
 def export_bill(token: str, job_id: int, dest: Path, export_type: str = "bill") -> None:
-    container_tmp = f"/tmp/s8_job_{job_id}_{export_type}.xlsx"
-    docker_curl(
-        [
-            "-X",
-            "POST",
-            f"{API}/api/hospital-reconciliations/{job_id}/export-v2",
-            "-H",
-            f"Authorization: Bearer {token}",
-            "-H",
-            "Content-Type: application/json",
-            "-d",
-            f'{{"exportType":"{export_type}","useStrategyEngine":true}}',
-            "-o",
-            container_tmp,
-        ]
-    )
-    subprocess.check_call(["docker", "cp", f"{BACKEND}:{container_tmp}", str(dest)])
-    head = dest.read_bytes()[:2]
-    if head != b"PK":
-        snippet = dest.read_text(encoding="utf-8", errors="replace")[:200]
-        raise RuntimeError(f"export-v2 Job #{job_id} 非 xlsx（可能 API 错误）: {snippet}")
+    get_client().export_v2(job_id, dest, export_type, token=token)
 
 
 def board_icon(status: str) -> str:
@@ -734,6 +729,27 @@ def parse_args() -> argparse.Namespace:
         metavar="ID",
         help="单院 Job 覆盖（须与 --hospital 单院联用）",
     )
+    p.add_argument("--api-base", default=None, help="API base URL（默认 API_INTERNAL / 127.0.0.1:8000）")
+    p.add_argument("--mode", choices=["docker", "direct"], default="docker")
+    p.add_argument("--username", default=None)
+    p.add_argument("--password", default=None)
+    p.add_argument(
+        "--report-suffix",
+        default=None,
+        metavar="SUFFIX",
+        help="报告文件名后缀，如 prod → s8_export_compare_report.prod.json",
+    )
+    p.add_argument(
+        "--export-dir",
+        type=Path,
+        default=None,
+        help="export-v2 输出目录（默认 测试用例/.s8_exports）",
+    )
+    p.add_argument(
+        "--no-todo-update",
+        action="store_true",
+        help="不更新 优先医院对齐TODO.md（生产只读审计必开）",
+    )
     return p.parse_args()
 
 
@@ -766,6 +782,11 @@ def icons_from_results(results: list[dict]) -> dict[str, str]:
 
 def main() -> int:
     args = parse_args()
+    configure_output_paths(report_suffix=args.report_suffix, export_dir=args.export_dir)
+    if args.api_base:
+        global API  # noqa: PLW0603
+        API = args.api_base.rstrip("/")
+    init_api_from_args(args)
     if args.hospital:
         hospitals = [resolve_cli_hospital(h) for h in args.hospital]
     else:
@@ -806,7 +827,7 @@ def main() -> int:
         job_id = jobs.get(folder)
         if not job_id:
             entry["status"] = "skip"
-            entry["detail"] = "批量6月系统对账结果.md 无 Job 映射"
+            entry["detail"] = f"{args.job_map or 'Job map'} 无 Job 映射"
             entry["category"] = classify_result(entry)
             folder_icons[folder] = board_icon("skip")
             results.append(entry)
@@ -932,7 +953,8 @@ def main() -> int:
 
     REPORT_JSON.write_text(json.dumps(results, ensure_ascii=False, indent=2), encoding="utf-8")
     write_markdown_summary(results)
-    update_todo_board(folder_icons)
+    if not args.no_todo_update:
+        update_todo_board(folder_icons)
     print(f"\n报告: {REPORT_JSON}")
     print(f"摘要: {REPORT_MD}")
     if args.hospital:
