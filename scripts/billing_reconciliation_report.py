@@ -273,7 +273,16 @@ def classify_deviations(
         if is_export_failure(detail):
             devs.append(Deviation("P0", name, "S8 bill", detail))
         elif st == "fail":
-            if name in KNOWN_BILL_FAIL:
+            if is_prod:
+                devs.append(
+                    Deviation(
+                        "P2",
+                        name,
+                        "S8 bill",
+                        f"与本地材料比对 fail · {detail or 'fail'}（prod Job 数据 · 非 export 失败）",
+                    )
+                )
+            elif name in KNOWN_BILL_FAIL:
                 delta = ""
                 totals = b.get("totals") or {}
                 if totals.get("expected") is not None and totals.get("actual") is not None:
@@ -296,7 +305,17 @@ def classify_deviations(
         if is_export_failure(detail):
             devs.append(Deviation("P0", name, "S8 settlement", detail))
         elif st == "fail":
-            devs.append(Deviation("P0", name, "S8 settlement", detail or "fail"))
+            if is_prod:
+                devs.append(
+                    Deviation(
+                        "P2",
+                        name,
+                        "S8 settlement",
+                        f"与本地材料比对 fail · {detail or 'fail'}（prod Job 数据）",
+                    )
+                )
+            else:
+                devs.append(Deviation("P0", name, "S8 settlement", detail or "fail"))
         elif st == "blocked_material":
             if name in MATERIAL_BLOCKED_SETTLEMENT:
                 devs.append(Deviation("P3", name, "S8 settlement", "材料阻塞 · 跳过结款自动化"))
