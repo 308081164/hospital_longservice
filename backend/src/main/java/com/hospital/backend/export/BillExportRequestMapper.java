@@ -42,6 +42,9 @@ public class BillExportRequestMapper {
         item.setTotalPrice(row.getTotalPrice());
         item.setExpectedUnitPrice(row.getExpectedUnitPrice());
         item.setCorrectedTotalPrice(row.getCorrectedTotalPrice());
+        if (row.getUnitPrice() != null) {
+            item.setOriginal(java.util.Map.of("importUnitPrice", row.getUnitPrice()));
+        }
         Double exportUnit = BillExportPriceResolver.resolveUnitPrice(row);
         Double exportTotal = BillExportPriceResolver.resolveTotalPrice(row);
         if (exportUnit != null) {

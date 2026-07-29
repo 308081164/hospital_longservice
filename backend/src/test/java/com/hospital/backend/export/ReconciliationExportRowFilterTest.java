@@ -151,6 +151,24 @@ class ReconciliationExportRowFilterTest {
     }
 
     @Test
+    void keepsZy3ExternalInstrumentSheetRows() {
+        HospitalReconciliationRow external = new HospitalReconciliationRow();
+        external.setSheetName("外来器械");
+        external.setPackName("梁艳华-股骨颈骨折");
+        external.setCorrectedTotalPrice(104.0);
+
+        HospitalReconciliationRow regular = new HospitalReconciliationRow();
+        regular.setSheetName("手术室");
+        regular.setPackName("常规包");
+        regular.setCorrectedTotalPrice(50.0);
+
+        List<HospitalReconciliationRow> filtered =
+                filter.apply("ZY3-DIANLI", List.of(external, regular));
+
+        assertThat(filtered).containsExactlyInAnyOrder(external, regular);
+    }
+
+    @Test
     void noOpForNonShengYyCustomer() {
         HospitalReconciliationRow row = new HospitalReconciliationRow();
         row.setPackName("x");

@@ -95,6 +95,18 @@ public class ReconciliationJobResponse {
     /** 全部行修正总价汇总 */
     private Double correctedTotalPrice;
 
+    /** 该医院可用的导出类型（bill / settlement / dept_summary / …） */
+    private List<String> exportTypes;
+
+    /** 是否启用特色账单计费 */
+    private Boolean billingEnabled;
+
+    /** 卡片标识：特色账单或额外导出类型 */
+    private Boolean hasSpecialExport;
+
+    /** 导出 profile 标签，如「特色导出·分科室」 */
+    private String exportProfileLabel;
+
     public ReconciliationJobResponse(Long id, String hospitalName, String sourceFileName,
                                      String sourceFilePath, Long sourceFileSize,
                                      Long ruleId, String ruleName, String ruleVersion,

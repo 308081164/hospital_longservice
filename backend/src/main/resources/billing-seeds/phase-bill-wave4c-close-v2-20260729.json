@@ -1,0 +1,26 @@
+{
+  "version": "1",
+  "description": "S8 波次4c v2：市五胸腔镜99 · 撤销附二/骨四误伤 exportApply",
+  "deactivateRules": [
+    {"code": "HRB-WY", "ruleName": "市五export 胸腔镜121"},
+    {"code": "HRB-WY", "ruleName": "市五export 骨四咬钳16.5"},
+    {"code": "ZYY-D2-NG", "ruleName": "附二南岗export 关节镜70度44"},
+    {"code": "ZYY-D2-NG", "ruleName": "附二南岗export 关节镜30度44"},
+    {"code": "ZYY-D2-NG", "ruleName": "附二南岗export 椎间孔镜35"},
+    {"code": "ZYY-D2-NG", "ruleName": "附二南岗export 刮勺探针22"},
+    {"code": "ZYY-D2-NG", "ruleName": "附二南岗export 机扩针7盒16.5"}
+  ],
+  "newRules": [
+    {
+      "code": "HRB-WY",
+      "ruleType": "FIXED_PRICE",
+      "name": "市五export 胸腔镜99",
+      "priority": 3,
+      "price": 99,
+      "keywords": ["胸腔镜-17件（筐1）"],
+      "conditionsJson": "[{\"field\":\"exportApply\",\"value\":true}]",
+      "skipPackaging": true,
+      "skipDiscount": true
+    }
+  ]
+}

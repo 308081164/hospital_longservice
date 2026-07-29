@@ -60,6 +60,16 @@ class BillingPolicyApplierTest {
     }
 
     @Test
+    void settlementOnlyPolicyDoesNotApplyToBillDetail() {
+        ObjectNode rules = rulesWithDiscount("settlement_only", 0.9, "ANY");
+
+        BillingPolicyApplier.BillDetailDiscount billDetail = BillingPolicyApplier.applyBillDetailDiscounts(
+                rules, "器械包", "测试", "纸塑袋", "工程大学", 100.0, 1, false, false);
+
+        assertThat(billDetail).isNull();
+    }
+
+    @Test
     void multiApplyStagesMatchBillDetailAndSettlement() throws Exception {
         ObjectNode rules = mapper.createObjectNode();
         ArrayNode policies = rules.putArray("billingPolicies");

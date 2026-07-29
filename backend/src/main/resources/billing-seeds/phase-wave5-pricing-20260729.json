@@ -1,0 +1,22 @@
+{
+  "version": "1",
+  "description": "波次5 pricing 漏检：附二大衣 any_price 收口 · 香坊 4K 套包 39.6 优先于空 keyword 13.2",
+  "ruleUpdates": [
+    {
+      "code": "ZYY-D2-NG",
+      "ruleName": "PDF/期待价30",
+      "setAcceptedPrices": [30.0]
+    },
+    {
+      "code": "SHENG-YY-XF",
+      "ruleName": "校正价13.2",
+      "setKeywords": ["勾刀-2", "钩刀-2"]
+    },
+    {
+      "code": "SHENG-YY-XF",
+      "ruleName": "校正价39.6",
+      "setKeywords": ["4K镜头1气腹管1光源1"],
+      "setMatchMode": "first"
+    }
+  ]
+}

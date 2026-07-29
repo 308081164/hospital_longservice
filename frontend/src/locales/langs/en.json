@@ -729,8 +729,13 @@
       "export": {
         "bill": "Export Bill",
         "settlement": "Export Settlement Letter",
-        "departmentSummary": "Export Department Summary"
+        "departmentSummary": "Export Department Summary",
+        "priceSummary": "Export Price Summary",
+        "instrumentAudit": "Export Instrument Audit",
+        "logisticsAllocation": "Export Logistics Allocation",
+        "grandTotal": "Export Grand Total"
       },
+      "specialExportBadge": "Special Export",
       "pagination": {
         "total": "{count} forms in total",
         "size6": "6 / page",

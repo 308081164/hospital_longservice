@@ -1,0 +1,33 @@
+{
+  "version": "1",
+  "description": "波次5：工程大学结款9折必须为 settlement_only，不得污染账单计价/导出",
+  "profiles": [
+    {
+      "code": "HRB-HEU",
+      "name": "哈尔滨工程大学医院",
+      "billingEnabled": true,
+      "policies": [
+        {
+          "policyType": "DISCOUNT",
+          "name": "结款函灭菌9折",
+          "scope": {"temperature": "ANY"},
+          "params": {
+            "rate": 0.9,
+            "applyStage": "settlement_only",
+            "skipWhenFixedPrice": true
+          },
+          "priority": 100
+        }
+      ]
+    }
+  ],
+  "discountUpdates": [
+    {
+      "code": "HRB-HEU",
+      "name": "结款函灭菌9折",
+      "rate": 0.9,
+      "applyStage": "settlement_only",
+      "skipWhenFixedPrice": true
+    }
+  ]
+}

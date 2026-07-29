@@ -33,6 +33,15 @@ class BillingMonthResolverTest {
     }
 
     @Test
+    void resolvesMidMonthPeriodStartMonthForHit() {
+        HospitalReconciliationJob job = new HospitalReconciliationJob();
+        job.setSourceDateRange("从:2026/6/15 00:00:00 至: 2026/7/14 23:59:59.999");
+
+        assertThat(BillingMonthResolver.resolveFromDateRange(job.getSourceDateRange())).isEqualTo("2026-06");
+        assertThat(BillingMonthResolver.resolve(job)).isEqualTo("2026-06");
+    }
+
+    @Test
     void fallsBackToCreatedAtWhenNoHints() {
         HospitalReconciliationJob job = new HospitalReconciliationJob();
         job.setCreatedAt(LocalDateTime.of(2026, 6, 15, 0, 0));

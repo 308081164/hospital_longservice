@@ -186,7 +186,25 @@ public class BillingSeedMigrationRunner implements CommandLineRunner {
             new IncrementalSeed("billing_seed_settlement_wave3_20260728_v4",
                     "billing-seeds/phase-settlement-wave3-20260728.json"),
             new IncrementalSeed("billing_seed_settlement_wave3_20260728_v5",
-                    "billing-seeds/phase-settlement-wave3-20260728.json")
+                    "billing-seeds/phase-settlement-wave3-20260728.json"),
+            new IncrementalSeed("billing_seed_settlement_wave4_20260728_v1",
+                    "billing-seeds/phase-settlement-wave4-20260728.json"),
+            new IncrementalSeed("billing_seed_bill_wave4_20260728_v1",
+                    "billing-seeds/phase-bill-wave4-20260728.json"),
+            new IncrementalSeed("billing_seed_wave4b_20260728_v1",
+                    "billing-seeds/phase-wave4b-20260728.json"),
+            new IncrementalSeed("billing_seed_jzsw_bio_yanhdao_20260729_v1",
+                    "billing-seeds/phase-jzsw-bio-yanhdao-20260729.json"),
+            new IncrementalSeed("billing_seed_bill_wave4c_close_20260729_v1",
+                    "billing-seeds/phase-bill-wave4c-close-20260729.json"),
+            new IncrementalSeed("billing_seed_bill_wave4c_close_v2_20260729_v1",
+                    "billing-seeds/phase-bill-wave4c-close-v2-20260729.json"),
+            new IncrementalSeed("billing_seed_wave5_heu_settlement_20260729_v1",
+                    "billing-seeds/phase-wave5-heu-settlement-discount-20260729.json"),
+            new IncrementalSeed("billing_seed_wave5_taiping_20260729_v1",
+                    "billing-seeds/phase-wave5-taiping-20260729.json"),
+            new IncrementalSeed("billing_seed_wave5_pricing_20260729_v1",
+                    "billing-seeds/phase-wave5-pricing-20260729.json")
     );
 
     private static final String ZYY_D1_P0_MARKER = "billing_seed_zyy_d1_p0_v2";
@@ -208,6 +226,7 @@ public class BillingSeedMigrationRunner implements CommandLineRunner {
     private final CustomerGroupMemberMapper customerGroupMemberMapper;
     private final ExportTemplateMapper exportTemplateMapper;
     private final LogisticsCardMapper logisticsCardMapper;
+    private final ExternalInstrumentMapper externalInstrumentMapper;
     private final JdbcTemplate jdbcTemplate;
 
     @Override
@@ -287,7 +306,14 @@ public class BillingSeedMigrationRunner implements CommandLineRunner {
                     || "billing-seeds/phase-zyy-d2-ng-guasha-tanzhen-per-piece-20260728.json".equals(incremental.classpathFile())
                     || "billing-seeds/phase-wj-ngjy-sd-neau-zero-fold-fix-20260728.json".equals(incremental.classpathFile())
                     || "billing-seeds/phase-hlj-jyglj-weike-jiaqian-20260728.json".equals(incremental.classpathFile())
-                    || "billing-seeds/phase-bill-wave3-close-20260728.json".equals(incremental.classpathFile())) {
+                    || "billing-seeds/phase-bill-wave3-close-20260728.json".equals(incremental.classpathFile())
+                    || "billing-seeds/phase-wave4b-20260728.json".equals(incremental.classpathFile())
+                    || "billing-seeds/phase-jzsw-bio-yanhdao-20260729.json".equals(incremental.classpathFile())
+                    || "billing-seeds/phase-bill-wave4c-close-20260729.json".equals(incremental.classpathFile())
+                    || "billing-seeds/phase-bill-wave4c-close-v2-20260729.json".equals(incremental.classpathFile())
+                    || "billing-seeds/phase-wave5-heu-settlement-discount-20260729.json".equals(incremental.classpathFile())
+                    || "billing-seeds/phase-wave5-taiping-20260729.json".equals(incremental.classpathFile())
+                    || "billing-seeds/phase-wave5-pricing-20260729.json".equals(incremental.classpathFile())) {
                 applyBatchPatchSeedFile(incremental.classpathFile());
             } else {
                 applied = loadSeedClasspathFile(incremental.classpathFile());
@@ -900,6 +926,7 @@ public class BillingSeedMigrationRunner implements CommandLineRunner {
                 }
                 deactivateProductRule(customer.getId(), ruleName);
             }
+            seedExternalInstruments(root.path("externalInstruments"));
             for (JsonNode discNode : root.path("discountUpdates")) {
                 String code = text(discNode, "code");
                 String name = text(discNode, "name");
@@ -949,6 +976,48 @@ public class BillingSeedMigrationRunner implements CommandLineRunner {
             log.info("Applied batch patch seed: {}", file);
         } catch (Exception e) {
             log.error("Failed to apply batch patch seed {}: {}", file, e.getMessage(), e);
+        }
+    }
+
+    private void seedExternalInstruments(JsonNode rows) {
+        if (rows == null || !rows.isArray()) {
+            return;
+        }
+        for (JsonNode row : rows) {
+            Long jobId = row.has("jobId") ? row.get("jobId").asLong() : null;
+            String code = text(row, "code");
+            String packName = text(row, "packName");
+            String categoryNo = text(row, "categoryNo");
+            if (jobId == null || code == null || packName == null) {
+                continue;
+            }
+            Customer customer = customerMapper.selectByCode(code);
+            if (customer == null) {
+                log.warn("External instrument seed skipped: customer {} not found", code);
+                continue;
+            }
+            List<ExternalInstrument> existing = externalInstrumentMapper.selectByJobId(jobId);
+            boolean duplicate = existing != null && existing.stream().anyMatch(item ->
+                    packName.equals(item.getPackName())
+                            && (categoryNo == null || categoryNo.equals(item.getCategoryNo())));
+            if (duplicate) {
+                continue;
+            }
+            ExternalInstrument instrument = new ExternalInstrument();
+            instrument.setCustomerId(customer.getId());
+            instrument.setReconciliationJobId(jobId);
+            instrument.setCategoryNo(categoryNo != null ? categoryNo : "");
+            instrument.setPackName(packName);
+            instrument.setDepartment("外来器械");
+            instrument.setPackCount(1);
+            instrument.setInstrumentCount(0);
+            double unit = row.path("unitPrice").asDouble(0);
+            double total = row.has("totalAmount") ? row.path("totalAmount").asDouble(unit) : unit;
+            instrument.setUnitPrice(BigDecimal.valueOf(unit));
+            instrument.setTotalAmount(BigDecimal.valueOf(total));
+            instrument.setIsActive(true);
+            externalInstrumentMapper.insert(instrument);
+            log.info("Seeded external instrument job {} pack {}", jobId, packName);
         }
     }
 

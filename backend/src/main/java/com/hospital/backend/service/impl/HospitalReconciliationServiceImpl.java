@@ -21,6 +21,7 @@ import com.hospital.backend.service.ProductMatchService;
 import com.hospital.backend.service.SettlementJobFieldsApplier;
 import com.hospital.backend.service.ExternalInstrumentService;
 import com.hospital.backend.service.HospitalReconciliationService;
+import com.hospital.backend.service.HospitalExportCapabilityService;
 import com.hospital.backend.service.ReconciliationVersionGroup;
 import com.hospital.backend.export.BillExportLayoutResolver;
 import com.hospital.backend.export.D8DisplayNameResolver;
@@ -216,6 +217,8 @@ public class HospitalReconciliationServiceImpl implements HospitalReconciliation
     @Lazy
     @org.springframework.beans.factory.annotation.Autowired
     private ExportEngineService exportEngineService;
+
+    private final HospitalExportCapabilityService hospitalExportCapabilityService;
 
     /** 数值格式样式缓存：避免为每个单元格重复创建 0.00 格式的 CellStyle */
     private final Map<String, CellStyle> numericStyleCache = new java.util.concurrent.ConcurrentHashMap<>();
@@ -2329,6 +2332,7 @@ public class HospitalReconciliationServiceImpl implements HospitalReconciliation
         response.setMonthlyBreakdown(parseMonthlyBreakdown(job.getMonthlyBreakdown()));
         response.setUrgentBreakdown(parseMonthlyBreakdown(job.getUrgentBreakdown()));
         response.setDeductionBreakdown(parseMonthlyBreakdown(job.getDeductionBreakdown()));
+        hospitalExportCapabilityService.enrichJobResponse(response, job.getHospitalName());
         return response;
     }
 

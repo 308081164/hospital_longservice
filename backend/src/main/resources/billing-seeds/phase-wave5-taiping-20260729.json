@@ -1,0 +1,11 @@
+{
+  "version": "1",
+  "description": "波次5：太平窥器 standalone 18.8 优先于 8.91 套包价",
+  "ruleUpdates": [
+    {
+      "code": "TAIPING-RM",
+      "ruleName": "校正价8.91",
+      "removeKeywords": ["窥器-1"]
+    }
+  ]
+}

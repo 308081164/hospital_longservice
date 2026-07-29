@@ -1,0 +1,37 @@
+{
+  "version": "1",
+  "description": "S8 波次4b：撤销市五过宽 exportApply · 附三 job608 外来器械行",
+  "deactivateRules": [
+    {"code": "HRB-WY", "ruleName": "市五W905060 export35"},
+    {"code": "HRB-WY", "ruleName": "市五Z1026 export88"},
+    {"code": "HRB-WY", "ruleName": "市五W906050 export35"},
+    {"code": "HRB-WY", "ruleName": "市五胸腔镜121"},
+    {"code": "HRB-WY", "ruleName": "市五W605060 export11"},
+    {"code": "HRB-WY", "ruleName": "市五W705060 export16.5"}
+  ],
+  "externalInstruments": [
+    {"jobId": 608, "code": "ZY3-DIANLI", "categoryNo": "1613242", "packName": "田洪-单侧膝关节骨性关节病1/8", "unitPrice": 143, "totalAmount": 143},
+    {"jobId": 608, "code": "ZY3-DIANLI", "categoryNo": "1613242", "packName": "田洪-单侧膝关节骨性关节病2/8", "unitPrice": 71.5, "totalAmount": 71.5},
+    {"jobId": 608, "code": "ZY3-DIANLI", "categoryNo": "1613242", "packName": "田洪-单侧膝关节骨性关节病3/8", "unitPrice": 60.5, "totalAmount": 60.5},
+    {"jobId": 608, "code": "ZY3-DIANLI", "categoryNo": "1613242", "packName": "田洪-单侧膝关节骨性关节病4/8", "unitPrice": 82.5, "totalAmount": 82.5},
+    {"jobId": 608, "code": "ZY3-DIANLI", "categoryNo": "1613242", "packName": "田洪-单侧膝关节骨性关节病5/8", "unitPrice": 143, "totalAmount": 143},
+    {"jobId": 608, "code": "ZY3-DIANLI", "categoryNo": "1613242", "packName": "田洪-单侧膝关节骨性关节病6/8", "unitPrice": 203.5, "totalAmount": 203.5},
+    {"jobId": 608, "code": "ZY3-DIANLI", "categoryNo": "1613242", "packName": "田洪-单侧膝关节骨性关节病7/8", "unitPrice": 203.5, "totalAmount": 203.5},
+    {"jobId": 608, "code": "ZY3-DIANLI", "categoryNo": "1613242", "packName": "田洪-单侧膝关节骨性关节病8/8", "unitPrice": 181.5, "totalAmount": 181.5},
+    {"jobId": 608, "code": "ZY3-DIANLI", "categoryNo": "1608695", "packName": "任尚君-股骨转子间骨折+骨折病1/1", "unitPrice": 93.5, "totalAmount": 93.5},
+    {"jobId": 608, "code": "ZY3-DIANLI", "categoryNo": "1608697", "packName": "王忠义-骨髓炎+慢性附骨疽1/1", "unitPrice": 49.5, "totalAmount": 49.5},
+    {"jobId": 608, "code": "ZY3-DIANLI", "categoryNo": "1608697", "packName": "任尚君-股骨转子间骨折+骨折病1/4", "unitPrice": 121, "totalAmount": 121},
+    {"jobId": 608, "code": "ZY3-DIANLI", "categoryNo": "1608697", "packName": "任尚君-股骨转子间骨折+骨折病2/4", "unitPrice": 71.5, "totalAmount": 71.5},
+    {"jobId": 608, "code": "ZY3-DIANLI", "categoryNo": "1608697", "packName": "任尚君-股骨转子间骨折+骨折病3/4", "unitPrice": 88, "totalAmount": 88},
+    {"jobId": 608, "code": "ZY3-DIANLI", "categoryNo": "1608751", "packName": "任尚君-股骨转子间骨折+骨折病4/4", "unitPrice": 288, "totalAmount": 288},
+    {"jobId": 608, "code": "ZY3-DIANLI", "categoryNo": "1613243", "packName": "梅树辉-股骨粗隆间骨折1/4", "unitPrice": 110, "totalAmount": 110},
+    {"jobId": 608, "code": "ZY3-DIANLI", "categoryNo": "1613243", "packName": "梅树辉-股骨粗隆间骨折2/4", "unitPrice": 82.5, "totalAmount": 82.5},
+    {"jobId": 608, "code": "ZY3-DIANLI", "categoryNo": "1613243", "packName": "梅树辉-股骨粗隆间骨折3/4", "unitPrice": 77, "totalAmount": 77},
+    {"jobId": 608, "code": "ZY3-DIANLI", "categoryNo": "1613243", "packName": "梅树辉-股骨粗隆间骨折4/4", "unitPrice": 326.5, "totalAmount": 326.5},
+    {"jobId": 608, "code": "ZY3-DIANLI", "categoryNo": "1613806", "packName": "梁艳华-股骨颈骨折1/5", "unitPrice": 286, "totalAmount": 286},
+    {"jobId": 608, "code": "ZY3-DIANLI", "categoryNo": "1613806", "packName": "梁艳华-股骨颈骨折2/5", "unitPrice": 242, "totalAmount": 242},
+    {"jobId": 608, "code": "ZY3-DIANLI", "categoryNo": "1613806", "packName": "梁艳华-股骨颈骨折3/5", "unitPrice": 115.5, "totalAmount": 115.5},
+    {"jobId": 608, "code": "ZY3-DIANLI", "categoryNo": "1613806", "packName": "梁艳华-股骨颈骨折4/5", "unitPrice": 71.5, "totalAmount": 71.5},
+    {"jobId": 608, "code": "ZY3-DIANLI", "categoryNo": "1613806", "packName": "梁艳华-股骨颈骨折5/5", "unitPrice": 22, "totalAmount": 22}
+  ]
+}

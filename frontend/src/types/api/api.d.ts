@@ -455,6 +455,14 @@ declare namespace Api {
         deductionAmount?: number
         policyName?: string
       }
+      /** 该医院可用导出类型（由后端按医院配置返回） */
+      exportTypes?: string[]
+      /** 是否启用特色账单 */
+      billingEnabled?: boolean
+      /** 卡片标识：特色账单或额外导出类型 */
+      hasSpecialExport?: boolean
+      /** 导出 profile 标签，如「特色导出·分科室」 */
+      exportProfileLabel?: string
     }
   }
 

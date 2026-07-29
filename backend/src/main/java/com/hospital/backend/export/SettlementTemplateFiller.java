@@ -66,7 +66,8 @@ public class SettlementTemplateFiller {
         String billingMonth = BillingMonthResolver.resolve(job);
         BillingPolicyInspector.SettlementOverride settlementOverride =
                 BillingPolicyInspector.resolveSettlementOverride(compiledRules, billingMonth);
-        double baseSterilize = settlementOverride != null && settlementOverride.sterilizeAmount() != null
+        boolean overrideSterilize = settlementOverride != null && settlementOverride.sterilizeAmount() != null;
+        double baseSterilize = overrideSterilize
                 ? settlementOverride.sterilizeAmount()
                 : resolveSettlementSterilizeBase(job, sterilizeTotal, compiledRules, rows, hospitalName);
 
@@ -75,7 +76,7 @@ public class SettlementTemplateFiller {
         } else {
             double displaySterilize = baseSterilize;
             String sterilizeRemark = "";
-            if (compiledRules != null) {
+            if (compiledRules != null && !overrideSterilize) {
                 BillingPolicyApplier.BillDetailDiscount settlementDiscount =
                         BillingPolicyApplier.applySettlementDiscount(
                                 compiledRules, "", "", "", hospitalName, baseSterilize);
@@ -500,7 +501,7 @@ public class SettlementTemplateFiller {
         }
         double sum = 0;
         for (HospitalReconciliationRow row : rows) {
-            if (!isXinfaOperatingRoomLowTempDressingRow(row)) {
+            if (!isDressingRow(row) && !isXinfaOperatingRoomLowTempDressingRow(row)) {
                 continue;
             }
             Double total = row.getCorrectedTotalPrice() != null
@@ -659,6 +660,12 @@ public class SettlementTemplateFiller {
     private boolean shouldShowLogisticsRow(HospitalReconciliationJob job, JsonNode compiledRules) {
         if (BillingPolicyInspector.settlementOmitLogisticsRow(compiledRules)) {
             return false;
+        }
+        String billingMonth = BillingMonthResolver.resolve(job);
+        BillingPolicyInspector.SettlementOverride settlementOverride =
+                BillingPolicyInspector.resolveSettlementOverride(compiledRules, billingMonth);
+        if (settlementOverride != null && settlementOverride.logisticsAmount() != null) {
+            return true;
         }
         Map<String, Object> logisticsBreakdown = parseLogisticsBreakdown(job.getLogisticsBreakdown());
         double payableFee = logisticsBreakdown != null && logisticsBreakdown.get("payableFee") instanceof Number p

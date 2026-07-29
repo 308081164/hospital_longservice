@@ -192,9 +192,12 @@ public class PricingRuleCompiler {
             policy.setName(discount.getName());
             policy.setScope("{\"temperature\":\"ANY\"}");
             policy.setParams(String.format(
-                    "{\"rate\":%s,\"skipWhenFixedPrice\":%s}",
+                    "{\"rate\":%s,\"skipWhenFixedPrice\":%s,\"applyStage\":\"%s\"}",
                     discount.getDiscountRate(),
-                    Boolean.TRUE.equals(discount.getSkipWhenFixedPrice())));
+                    Boolean.TRUE.equals(discount.getSkipWhenFixedPrice()),
+                    discount.getApplyStage() != null && !discount.getApplyStage().isBlank()
+                            ? discount.getApplyStage()
+                            : "bill_detail"));
             policy.setPriority(discount.getPriority());
             policy.setIsActive(true);
             synthesized.add(policy);
@@ -275,6 +278,9 @@ public class PricingRuleCompiler {
                 if (!"DISCOUNT".equalsIgnoreCase(policy.path("policyType").asText())) {
                     continue;
                 }
+                if (!BillingPolicyApplier.stageMatches(policy, BillingPolicyApplier.STAGE_BILL_DETAIL)) {
+                    continue;
+                }
                 String temperature = policy.path("scope").path("temperature").asText("ANY");
                 if (!"ANY".equalsIgnoreCase(temperature)) {
                     continue;
@@ -294,6 +300,9 @@ public class PricingRuleCompiler {
             List<CustomerDiscount> discounts = discountMapper.selectByCustomerId(customer.getId());
             for (CustomerDiscount discount : discounts) {
                 if (!Boolean.TRUE.equals(discount.getIsActive())) {
+                    continue;
+                }
+                if (!isBillPricingDiscountStage(discount.getApplyStage())) {
                     continue;
                 }
                 if (discount.getDiscountRate() != null) {
@@ -317,6 +326,16 @@ public class PricingRuleCompiler {
         }
 
         compiled.set("customerOverrides", overrides);
+    }
+
+    /** settlement_only / export_only 折扣不得写入 customerOverrides，避免污染账单计价。 */
+    private boolean isBillPricingDiscountStage(String applyStage) {
+        if (applyStage == null || applyStage.isBlank()) {
+            return true;
+        }
+        ObjectNode stub = MAPPER.createObjectNode();
+        stub.putObject("params").put("applyStage", applyStage.trim().toLowerCase());
+        return BillingPolicyApplier.stageMatches(stub, BillingPolicyApplier.STAGE_BILL_DETAIL);
     }
 
     /**

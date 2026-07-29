@@ -572,6 +572,17 @@
                     >
                       {{ reviewLabelMap[group.item.reviewStatus] ?? group.item.reviewStatus }}
                     </ElTag>
+                    <ElTag
+                      v-if="jobHasSpecialExport(group.item)"
+                      type="warning"
+                      size="small"
+                      effect="plain"
+                    >
+                      {{
+                        jobExportProfileLabel(group.item) ||
+                        t('reconciliation.history.specialExportBadge')
+                      }}
+                    </ElTag>
                     <span v-if="group.versions.length > 1" class="text-xs text-gray-400">
                       {{
                         t('reconciliation.history.versionCount', { count: group.versions.length })
@@ -671,14 +682,12 @@
                       </ElButton>
                       <template #dropdown>
                         <ElDropdownMenu>
-                          <ElDropdownItem command="bill">
-                            {{ t('reconciliation.history.export.bill') }}
-                          </ElDropdownItem>
-                          <ElDropdownItem command="settlement">
-                            {{ t('reconciliation.history.export.settlement') }}
-                          </ElDropdownItem>
-                          <ElDropdownItem command="departmentSummary">
-                            {{ t('reconciliation.history.export.departmentSummary') }}
+                          <ElDropdownItem
+                            v-for="exportType in resolveJobExportTypes(group.item)"
+                            :key="exportType"
+                            :command="exportType"
+                          >
+                            {{ t(exportTypeI18nKey(exportType)) }}
                           </ElDropdownItem>
                         </ElDropdownMenu>
                       </template>
@@ -725,6 +734,7 @@
     :job-id="exportWizardJob?.id"
     :hospital-name="exportWizardJob?.hospitalName"
     :initial-export-type="exportWizardInitialType"
+    :allowed-export-types="exportWizardAllowedTypes"
     :monthly-breakdown="exportWizardJob?.monthlyBreakdown ?? null"
     :logistics-fee="exportWizardJob?.logisticsFee ?? null"
     :settlement-adjustment="exportWizardJob?.settlementAdjustment ?? null"
@@ -2038,6 +2048,12 @@
     runReviewPreflight
   } from '@/composables/reconciliationExportPreflight'
   import { extractRowBillingFields, hasBillingDetail } from '@/utils/reconciliationBillingNotes'
+  import {
+    exportTypeI18nKey,
+    jobExportProfileLabel,
+    jobHasSpecialExport,
+    resolveJobExportTypes
+  } from '@/utils/hospitalExportCapabilities'
 
   defineOptions({ name: 'HospitalReconciliation' })
 
@@ -2366,7 +2382,8 @@
 
   const exportWizardVisible = ref(false)
   const exportWizardJob = ref<Api.Hospital.ReconciliationJob | null>(null)
-  const exportWizardInitialType = ref<'bill' | 'settlement' | 'dept_summary'>('bill')
+  const exportWizardInitialType = ref<string>('bill')
+  const exportWizardAllowedTypes = ref<string[]>(['bill', 'settlement'])
 
   const unmatchedDrawerVisible = ref(false)
   const unmatchedLoading = ref(false)
@@ -3240,8 +3257,10 @@
 
   const openExportWizard = (item: Api.Hospital.ReconciliationJob, type: string) => {
     exportWizardJob.value = item
-    exportWizardInitialType.value =
-      type === 'settlement' ? 'settlement' : type === 'departmentSummary' ? 'dept_summary' : 'bill'
+    exportWizardAllowedTypes.value = resolveJobExportTypes(item)
+    exportWizardInitialType.value = exportWizardAllowedTypes.value.includes(type)
+      ? type
+      : exportWizardAllowedTypes.value[0] ?? 'bill'
     exportWizardVisible.value = true
   }
 

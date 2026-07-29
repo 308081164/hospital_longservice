@@ -1,0 +1,73 @@
+{
+  "version": "1",
+  "description": "S8 波次4 bill：市五 exportApply 铂康价对齐 · 附二南岗/太平微调",
+  "profiles": [
+    {
+      "code": "HRB-WY",
+      "name": "哈尔滨市第五医院",
+      "billingEnabled": true,
+      "productRules": [
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "市五W905060 export35",
+          "priority": 8,
+          "price": 35,
+          "keywords": ["W905060"],
+          "conditionsJson": "[{\"field\":\"exportApply\",\"value\":true}]"
+        },
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "市五Z1026 export88",
+          "priority": 8,
+          "price": 88,
+          "keywords": ["Z1026"],
+          "conditionsJson": "[{\"field\":\"exportApply\",\"value\":true}]"
+        },
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "市五W906050 export35",
+          "priority": 8,
+          "price": 35,
+          "keywords": ["W906050"],
+          "conditionsJson": "[{\"field\":\"exportApply\",\"value\":true}]"
+        },
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "市五胸腔镜121",
+          "priority": 8,
+          "price": 121,
+          "keywords": ["胸腔镜-17件"],
+          "conditionsJson": "[{\"field\":\"exportApply\",\"value\":true}]"
+        },
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "市五W605060 export11",
+          "priority": 8,
+          "price": 11,
+          "keywords": ["W605060"],
+          "conditionsJson": "[{\"field\":\"exportApply\",\"value\":true}]"
+        },
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "市五W705060 export16.5",
+          "priority": 8,
+          "price": 16.5,
+          "keywords": ["W705060"],
+          "conditionsJson": "[{\"field\":\"exportApply\",\"value\":true}]"
+        }
+      ]
+    }
+  ],
+  "ruleUpdates": [
+    {
+      "code": "ZYY-D2-NG",
+      "ruleName": "附二南岗大衣无纺布35",
+      "conditionsJson": "[{\"field\":\"exportApply\",\"value\":true}]"
+    },
+    {
+      "code": "ZYY-D2-NG",
+      "ruleName": "附二南岗小单",
+      "conditionsJson": "[{\"field\":\"exportApply\",\"value\":true}]"
+    }
+  ]
+}

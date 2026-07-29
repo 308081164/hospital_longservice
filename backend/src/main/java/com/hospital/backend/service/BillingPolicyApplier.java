@@ -40,7 +40,8 @@ public final class BillingPolicyApplier {
             Integer maxPieces,
             double rate,
             int decimalPlaces,
-            Double fixedUnitPrice
+            Double fixedUnitPrice,
+            Double originalUnitPriceEquals
     ) {}
 
     public static AppliedDiscount resolveBestDiscount(
@@ -189,6 +190,10 @@ public final class BillingPolicyApplier {
             if (tier.maxPieces() != null && billingPieces > tier.maxPieces()) {
                 continue;
             }
+            if (tier.originalUnitPriceEquals() != null
+                    && Math.abs(basePrice - tier.originalUnitPriceEquals()) > 0.001) {
+                continue;
+            }
             if (tier.fixedUnitPrice() != null) {
                 return roundToPlaces(tier.fixedUnitPrice(), tier.decimalPlaces());
             }
@@ -213,7 +218,12 @@ public final class BillingPolicyApplier {
             Double fixedUnitPrice = tier.has("fixedUnitPrice") && !tier.path("fixedUnitPrice").isNull()
                     ? tier.path("fixedUnitPrice").asDouble()
                     : null;
-            tiers.add(new PieceTierDiscount(minPieces, maxPieces, rate, decimalPlaces, fixedUnitPrice));
+            Double originalUnitPriceEquals = tier.has("originalUnitPriceEquals")
+                    && !tier.path("originalUnitPriceEquals").isNull()
+                    ? tier.path("originalUnitPriceEquals").asDouble()
+                    : null;
+            tiers.add(new PieceTierDiscount(
+                    minPieces, maxPieces, rate, decimalPlaces, fixedUnitPrice, originalUnitPriceEquals));
         }
         tiers.sort(Comparator.comparingInt(PieceTierDiscount::minPieces));
         return tiers;

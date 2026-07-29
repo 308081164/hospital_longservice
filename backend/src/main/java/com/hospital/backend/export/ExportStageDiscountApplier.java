@@ -37,8 +37,13 @@ public class ExportStageDiscountApplier {
     }
 
     private BillRowItem applyToRow(BillRowItem row, List<JsonNode> exportPolicies) {
-        Double baseUnit = row.getExpectedUnitPrice() != null ? row.getExpectedUnitPrice() : row.getUnitPrice();
-        if (baseUnit == null) {
+        double importUnit = row.getUnitPrice() != null ? row.getUnitPrice() : 0;
+        Double originalImport = resolveOriginalImportUnit(row);
+        Double baseUnit = row.getExpectedUnitPrice() != null ? row.getExpectedUnitPrice() : importUnit;
+        if (originalImport != null && originalImport > 0) {
+            baseUnit = originalImport;
+        }
+        if (baseUnit == null || baseUnit <= 0) {
             return row;
         }
 
@@ -52,15 +57,36 @@ public class ExportStageDiscountApplier {
                 continue;
             }
             JsonNode params = policy.path("params");
-            if (params.path("skipWhenAlreadyDiscounted").asBoolean(false)) {
-                // 处理后表已写入 correctedTotalPrice 时，以 DB 折后价为 ground truth，不再叠加 export 折扣
-                if (row.getCorrectedTotalPrice() != null) {
+            boolean skipAlreadyDiscounted = params.path("skipWhenAlreadyDiscounted").asBoolean(false);
+            if (!skipAlreadyDiscounted && importUnit > baseUnit + 0.02) {
+                baseUnit = importUnit;
+            }
+            if (skipAlreadyDiscounted) {
+                double correctedUnit = resolveEffectiveUnitPrice(row, billingPieces);
+                double expectedDiscounted = resolveExpectedDiscountedUnit(baseUnit, billingPieces, params);
+                if (billingPieces > 1) {
+                    Double overridePrice = resolveFixedPriceOverride(params, baseUnit);
+                    if (overridePrice != null) {
+                        expectedDiscounted = overridePrice;
+                    }
+                }
+                if (Math.abs(importUnit - expectedDiscounted) <= 0.02
+                        || Math.abs(correctedUnit - expectedDiscounted) <= 0.02) {
                     continue;
                 }
-                double expectedDiscounted = resolveExpectedDiscountedUnit(baseUnit, billingPieces, params);
-                double currentUnit = resolveEffectiveUnitPrice(row, billingPieces);
-                if (Math.abs(currentUnit - expectedDiscounted) <= 0.02) {
+                if (Math.abs(importUnit - correctedUnit) <= 0.02 && importUnit > 0) {
                     continue;
+                }
+                if (originalImport != null && originalImport > 0) {
+                    if (importUnit > originalImport + 0.02) {
+                        applyExportPrice(row, originalImport, policy);
+                        break;
+                    }
+                    if (importUnit < originalImport - 0.02
+                            && Math.abs(originalImport - expectedDiscounted) <= 0.02) {
+                        applyExportPrice(row, originalImport, policy);
+                        break;
+                    }
                 }
             }
             List<BillingPolicyApplier.PieceTierDiscount> tiers =
@@ -85,19 +111,30 @@ public class ExportStageDiscountApplier {
 
             row.setUnitPrice(discounted);
             row.setExpectedUnitPrice(discounted);
-            int packCount = row.getPackCount() != null ? Math.max(1, row.getPackCount()) : 1;
-            double total = BillingPolicyApplier.round(discounted * packCount);
-            row.setTotalPrice(total);
-            row.setCorrectedTotalPrice(total);
-            row.setDifference(0.0);
-
-            List<String> notes = row.getNotes() != null ? new ArrayList<>(row.getNotes()) : new ArrayList<>();
-            notes.add("导出阶段折扣：" + policy.path("name").asText("客户折扣")
-                    + "，单价 " + String.format("%.2f", baseUnit) + " → " + String.format("%.2f", discounted));
-            row.setNotes(notes);
+            applyExportPrice(row, discounted, policy);
             break;
         }
         return row;
+    }
+
+    private void applyExportPrice(BillRowItem row, double discounted, JsonNode policy) {
+        int packCount = row.getPackCount() != null ? Math.max(1, row.getPackCount()) : 1;
+        double total = BillingPolicyApplier.round(discounted * packCount);
+        row.setTotalPrice(total);
+        row.setCorrectedTotalPrice(total);
+        row.setDifference(0.0);
+
+        List<String> notes = row.getNotes() != null ? new ArrayList<>(row.getNotes()) : new ArrayList<>();
+        notes.add("导出阶段折扣：" + policy.path("name").asText("客户折扣")
+                + "，单价 " + String.format("%.2f", discounted));
+        row.setNotes(notes);
+    }
+
+    private Double resolveOriginalImportUnit(BillRowItem row) {
+        if (row.getOriginal() != null && row.getOriginal().get("importUnitPrice") instanceof Number n) {
+            return n.doubleValue();
+        }
+        return null;
     }
 
     private double resolveExpectedDiscountedUnit(double baseUnit, int billingPieces, JsonNode params) {

@@ -1,0 +1,272 @@
+{
+  "version": "1",
+  "description": "S8 波次4c bill 闭合：12 院 warn 行级 exportApply 对齐处理后表",
+  "newRules": [
+    {
+      "code": "HRB-WY",
+      "ruleType": "FIXED_PRICE",
+      "name": "市五export DMD光源1号35",
+      "priority": 3,
+      "price": 35,
+      "keywords": ["DMD光源1号-1/W905060"],
+      "conditionsJson": "[{\"field\":\"exportApply\",\"value\":true}]",
+      "skipPackaging": true,
+      "skipDiscount": true
+    },
+    {
+      "code": "HRB-WY",
+      "ruleType": "FIXED_PRICE",
+      "name": "市五export DMD光源3号35",
+      "priority": 3,
+      "price": 35,
+      "keywords": ["DMD光源3号-1/W905060"],
+      "conditionsJson": "[{\"field\":\"exportApply\",\"value\":true}]",
+      "skipPackaging": true,
+      "skipDiscount": true
+    },
+    {
+      "code": "HRB-WY",
+      "ruleType": "FIXED_PRICE",
+      "name": "市五export 胸腔镜121",
+      "priority": 3,
+      "price": 121,
+      "keywords": ["胸腔镜-17件（筐1）"],
+      "conditionsJson": "[{\"field\":\"exportApply\",\"value\":true}]",
+      "skipPackaging": true,
+      "skipDiscount": true
+    },
+    {
+      "code": "HRB-WY",
+      "ruleType": "FIXED_PRICE",
+      "name": "市五export 磨头Z102688",
+      "priority": 3,
+      "price": 88,
+      "keywords": ["骨四（2）邹天彪磨头-4件/Z1026"],
+      "conditionsJson": "[{\"field\":\"exportApply\",\"value\":true}]",
+      "skipPackaging": true,
+      "skipDiscount": true
+    },
+    {
+      "code": "HRB-WY",
+      "ruleType": "FIXED_PRICE",
+      "name": "市五export 胸外镜头W90605035",
+      "priority": 3,
+      "price": 35,
+      "keywords": ["胸外镜头-1（盒1）/W906050"],
+      "conditionsJson": "[{\"field\":\"exportApply\",\"value\":true}]",
+      "skipPackaging": true,
+      "skipDiscount": true
+    },
+    {
+      "code": "HRB-WY",
+      "ruleType": "FIXED_PRICE",
+      "name": "市五export 骨六电钻16.5",
+      "priority": 3,
+      "price": 16.5,
+      "keywords": ["骨六业皋电钻-2件/W705060"],
+      "conditionsJson": "[{\"field\":\"exportApply\",\"value\":true}]",
+      "skipPackaging": true,
+      "skipDiscount": true
+    },
+    {
+      "code": "HRB-WY",
+      "ruleType": "FIXED_PRICE",
+      "name": "市五export 骨四咬钳16.5",
+      "priority": 3,
+      "price": 16.5,
+      "keywords": ["骨四1 宋晓辉韧带咬钳 2件/W605060"],
+      "conditionsJson": "[{\"field\":\"exportApply\",\"value\":true}]",
+      "skipPackaging": true,
+      "skipDiscount": true
+    },
+    {
+      "code": "SANJING-SB",
+      "ruleType": "FIXED_PRICE",
+      "name": "三精export 内瘘68件102",
+      "priority": 3,
+      "price": 102,
+      "keywords": ["内瘘器械包（一）"],
+      "minInstrumentCount": 68,
+      "maxInstrumentCount": 68,
+      "conditionsJson": "[{\"field\":\"exportApply\",\"value\":true}]",
+      "skipPackaging": true,
+      "skipDiscount": true
+    },
+    {
+      "code": "HULAN-TCM",
+      "ruleType": "FIXED_PRICE",
+      "name": "呼兰中医export 腹腔镜297",
+      "priority": 3,
+      "price": 297,
+      "keywords": ["外科腹腔镜-16件筐1/W12050"],
+      "conditionsJson": "[{\"field\":\"exportApply\",\"value\":true}]",
+      "skipPackaging": true,
+      "skipDiscount": true
+    },
+    {
+      "code": "HRB-HIT",
+      "ruleType": "FIXED_PRICE",
+      "name": "哈工大export 胆囊包10件165",
+      "priority": 3,
+      "price": 165,
+      "keywords": ["胆囊包10件（盒1）"],
+      "conditionsJson": "[{\"field\":\"exportApply\",\"value\":true}]",
+      "skipPackaging": true,
+      "skipDiscount": true
+    },
+    {
+      "code": "HRB-HIT",
+      "ruleType": "FIXED_PRICE",
+      "name": "哈工大export 种植盒23件27.5",
+      "priority": 3,
+      "price": 27.5,
+      "keywords": ["种植盒-23件 盒1/w6050"],
+      "conditionsJson": "[{\"field\":\"exportApply\",\"value\":true}]",
+      "skipPackaging": true,
+      "skipDiscount": true
+    },
+    {
+      "code": "HRB-HIT",
+      "ruleType": "FIXED_PRICE",
+      "name": "哈工大export 换药碗13",
+      "priority": 3,
+      "price": 13,
+      "keywords": ["换药碗-1/z2032"],
+      "conditionsJson": "[{\"field\":\"exportApply\",\"value\":true}]",
+      "skipPackaging": true,
+      "skipDiscount": true
+    },
+    {
+      "code": "ZUYAN-NG",
+      "ruleType": "FIXED_PRICE",
+      "name": "祖研南岗export 弯盘13",
+      "priority": 3,
+      "price": 13,
+      "keywords": ["弯盘-1/Z2032"],
+      "conditionsJson": "[{\"field\":\"exportApply\",\"value\":true}]",
+      "skipPackaging": true,
+      "skipDiscount": true
+    },
+    {
+      "code": "ZYY-D2-NG",
+      "ruleType": "FIXED_PRICE",
+      "name": "附二南岗export 关节镜70度44",
+      "priority": 3,
+      "price": 44,
+      "keywords": ["关节镜70°-1/z2060"],
+      "conditionsJson": "[{\"field\":\"exportApply\",\"value\":true}]",
+      "skipPackaging": true,
+      "skipDiscount": true
+    },
+    {
+      "code": "ZYY-D2-NG",
+      "ruleType": "FIXED_PRICE",
+      "name": "附二南岗export 关节镜30度44",
+      "priority": 3,
+      "price": 44,
+      "keywords": ["关节镜30°/z2060"],
+      "conditionsJson": "[{\"field\":\"exportApply\",\"value\":true}]",
+      "skipPackaging": true,
+      "skipDiscount": true
+    },
+    {
+      "code": "ZYY-D2-NG",
+      "ruleType": "FIXED_PRICE",
+      "name": "附二南岗export 椎间孔镜35",
+      "priority": 3,
+      "price": 35,
+      "keywords": ["椎间孔镜镜头-1（双层）/z2060"],
+      "conditionsJson": "[{\"field\":\"exportApply\",\"value\":true}]",
+      "skipPackaging": true,
+      "skipDiscount": true
+    },
+    {
+      "code": "ZYY-D2-NG",
+      "ruleType": "FIXED_PRICE",
+      "name": "附二南岗export 刮勺探针22",
+      "priority": 3,
+      "price": 22,
+      "keywords": ["刮勺探针4/z1035"],
+      "conditionsJson": "[{\"field\":\"exportApply\",\"value\":true}]",
+      "skipPackaging": true,
+      "skipDiscount": true
+    },
+    {
+      "code": "ZYY-D2-NG",
+      "ruleType": "FIXED_PRICE",
+      "name": "附二南岗export 机扩针7盒16.5",
+      "priority": 3,
+      "price": 16.5,
+      "keywords": ["机扩针-7盒1/z1526"],
+      "conditionsJson": "[{\"field\":\"exportApply\",\"value\":true}]",
+      "skipPackaging": true,
+      "skipDiscount": true
+    },
+    {
+      "code": "SHENG-YY-NG",
+      "ruleType": "FIXED_PRICE",
+      "name": "省医院南岗export 手术衣15",
+      "priority": 3,
+      "price": 15,
+      "keywords": ["手术衣-1件/W9050"],
+      "conditionsJson": "[{\"field\":\"exportApply\",\"value\":true}]",
+      "skipPackaging": true,
+      "skipDiscount": true
+    },
+    {
+      "code": "SHENG-YY-NG",
+      "ruleType": "FIXED_PRICE",
+      "name": "省医院南岗export 间盘A75.9",
+      "priority": 3,
+      "price": 75.9,
+      "keywords": ["间盘A（52件）2/2"],
+      "conditionsJson": "[{\"field\":\"exportApply\",\"value\":true}]",
+      "skipPackaging": true,
+      "skipDiscount": true
+    },
+    {
+      "code": "SHENG-YY-NG",
+      "ruleType": "FIXED_PRICE",
+      "name": "省医院南岗export 取环勾4.8",
+      "priority": 3,
+      "price": 4.8,
+      "keywords": ["取环勾-1/7530"],
+      "conditionsJson": "[{\"field\":\"exportApply\",\"value\":true}]",
+      "skipPackaging": true,
+      "skipDiscount": true
+    },
+    {
+      "code": "SHENG-YY-NG",
+      "ruleType": "FIXED_PRICE",
+      "name": "省医院南岗export 舌钳子6.6",
+      "priority": 3,
+      "price": 6.6,
+      "keywords": ["舌钳子-1/1526"],
+      "conditionsJson": "[{\"field\":\"exportApply\",\"value\":true}]",
+      "skipPackaging": true,
+      "skipDiscount": true
+    },
+    {
+      "code": "NG-FUCHAN",
+      "ruleType": "FIXED_PRICE",
+      "name": "南岗妇产export 扩棒16.5",
+      "priority": 3,
+      "price": 16.5,
+      "keywords": ["扩棒（6.5 7 7.5）-3件z7526"],
+      "conditionsJson": "[{\"field\":\"exportApply\",\"value\":true}]",
+      "skipPackaging": true,
+      "skipDiscount": true
+    },
+    {
+      "code": "ZUYAN-SF",
+      "ruleType": "FIXED_PRICE",
+      "name": "祖研三辅export 探针刨刀16.5",
+      "priority": 3,
+      "price": 16.5,
+      "keywords": ["探针1瘘管1刨刀1/Z1026"],
+      "conditionsJson": "[{\"field\":\"exportApply\",\"value\":true}]",
+      "skipPackaging": true,
+      "skipDiscount": true
+    }
+  ]
+}

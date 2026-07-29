@@ -120,6 +120,68 @@ class PricingEngineTest {
     }
 
     @Test
+    void yuemeiYanBaoMultiPackZsdUsesPerPackInstrumentCountForHighTempNonWoven() {
+        ObjectNode rules = (ObjectNode) defaultRules();
+        rules.putObject("billingProfile").put("enabled", true).put("pricingMode", "standard");
+        PricingEngine pricingEngine = new PricingEngine(rules);
+
+        PricingEngine.ProcessedResult twoPacks = pricingEngine.processRow(row(
+                "悦美芳华医疗门诊医院",
+                "器械包(ZSD)",
+                "眼包",
+                "",
+                28,
+                2,
+                77,
+                154));
+        assertThat(twoPacks.expectedUnitPrice).isEqualTo(77.0);
+        assertThat(twoPacks.correctedTotalPrice).isEqualTo(154.0);
+        assertThat(twoPacks.status).isEqualTo("unchanged");
+
+        PricingEngine.ProcessedResult sixPacks = pricingEngine.processRow(row(
+                "悦美芳华医疗门诊医院",
+                "器械包(ZSD)",
+                "眼包",
+                "",
+                84,
+                6,
+                77,
+                462));
+        assertThat(sixPacks.expectedUnitPrice).isEqualTo(77.0);
+        assertThat(sixPacks.correctedTotalPrice).isEqualTo(462.0);
+        assertThat(sixPacks.status).isEqualTo("unchanged");
+    }
+
+    @Test
+    void jzswBioArgonHeliumKnifeEoFixedPrice150() throws Exception {
+        ObjectNode rules = MAPPER.createObjectNode();
+        rules.setAll((ObjectNode) defaultRules());
+        ArrayNode fixedPrices = (ArrayNode) rules.path("specialRules").path("fixedPrices");
+        ObjectNode rule = fixedPrices.addObject();
+        rule.put("name", "氩氦刀（EO）150元");
+        rule.putArray("hospitals").add("哈尔滨基准生物科技有限公司");
+        rule.putArray("keywords").add("氩氦刀");
+        rule.put("price", 150);
+        rule.put("temperature", "LT");
+        rule.put("skipPackaging", true);
+        rule.put("skipHospitalDiscount", true);
+
+        PricingEngine engine = new PricingEngine(rules);
+        PricingEngine.ProcessedResult result = engine.processRow(row(
+                "哈尔滨基准生物科技有限公司",
+                "额外包(低温等离子)",
+                "氩氦刀-1件/W6050",
+                "低温纸塑袋200*300",
+                1,
+                1,
+                150,
+                150));
+        assertThat(result.expectedUnitPrice).isEqualTo(150.0);
+        assertThat(result.correctedTotalPrice).isEqualTo(150.0);
+        assertThat(result.status).isEqualTo("unchanged");
+    }
+
+    @Test
     void foldsSongdianMachineExpansionNeedles() {
         PricingEngine.ProcessedResult result = engine.processRow(row(
                 "哈尔滨道外区松电慢性病专科门诊部",

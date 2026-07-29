@@ -239,7 +239,7 @@ class SettlementTemplateFillerTest {
                         "加急灭菌费",
                         "加急灭菌费(减免后)",
                         "加急物流费",
-                        "加急物流费(减免后)",
+                        "减免后加急物流费",
                         "低消补差");
         assertThat(rows.stream().filter(r -> "系统灭菌费用".equals(r.getItemName()))
                 .mapToDouble(SettlementTemplateFiller.SettlementFeeRow::getAmount).findFirst().orElse(0))
@@ -265,5 +265,48 @@ class SettlementTemplateFillerTest {
                 .mapToDouble(SettlementTemplateFiller.SettlementFeeRow::getAmount).findFirst().orElse(0))
                 .isEqualTo(39865.0);
         assertThat(filler.computeTotalAmount(rows)).isEqualTo(39865.0);
+    }
+
+    @Test
+    void overrideSterilizeSkipsSettlementDiscount() throws Exception {
+        HospitalReconciliationJob job = new HospitalReconciliationJob();
+        job.setHospitalName("太平人民医院");
+        job.setSourceFileName("6月__太平人民2026.5.13-2026.6.15结款函.xlsx");
+
+        JsonNode compiledRules = JsonUtils.getObjectMapper().readTree("""
+                {"billingPolicies":[
+                  {"policyType":"DISCOUNT","name":"结款7.5折",
+                   "params":{"rate":0.75,"applyStage":"settlement_only"},"priority":5},
+                  {"policyType":"SETTLEMENT_OVERRIDE","name":"太平结款灭菌对齐",
+                   "params":{"sterilizeAmountByMonth":{"2026-06":5431.03}}}
+                ]}
+                """);
+
+        List<SettlementTemplateFiller.SettlementFeeRow> rows = filler.buildFeeRows(job, 8000.0, compiledRules);
+
+        assertThat(rows.stream().filter(r -> "灭菌费用".equals(r.getItemName()))
+                .mapToDouble(SettlementTemplateFiller.SettlementFeeRow::getAmount).findFirst().orElse(0))
+                .isEqualTo(5431.03);
+    }
+
+    @Test
+    void appliesWave4OverrideForShengYyXf() throws Exception {
+        HospitalReconciliationJob job = new HospitalReconciliationJob();
+        job.setHospitalName("黑龙江省医院（香坊院区）");
+        job.setSourceFileName("6月__香坊省医院5.21-6.20结款函.xlsx");
+
+        JsonNode compiledRules = JsonUtils.getObjectMapper().readTree("""
+                {"billingPolicies":[
+                  {"policyType":"SETTLEMENT_OVERRIDE","name":"省医院香坊结款对齐",
+                   "params":{
+                     "sterilizeAmountByMonth":{"2026-06":178443.0},
+                     "logisticsAmountByMonth":{"2026-06":3650.0}
+                   }}
+                ]}
+                """);
+
+        List<SettlementTemplateFiller.SettlementFeeRow> rows = filler.buildFeeRows(job, 200000.0, compiledRules);
+
+        assertThat(filler.computeTotalAmount(rows)).isEqualTo(182093.0);
     }
 }

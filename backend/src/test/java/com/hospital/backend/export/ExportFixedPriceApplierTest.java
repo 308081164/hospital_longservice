@@ -63,6 +63,32 @@ class ExportFixedPriceApplierTest {
     }
 
     @Test
+    void appliesExportFixedPriceUsingTotalInstrumentCountRange() throws Exception {
+        ObjectNode rules = mapper.createObjectNode();
+        ObjectNode special = rules.putObject("specialRules");
+        ArrayNode fixedPrices = special.putArray("fixedPrices");
+        ObjectNode rule = fixedPrices.addObject();
+        rule.put("price", 102);
+        rule.put("exportApply", true);
+        rule.put("minInstrumentCount", 68);
+        rule.put("maxInstrumentCount", 68);
+        rule.putArray("keywords").add("内瘘器械包（一）");
+
+        BillRowItem row = new BillRowItem();
+        row.setPackName("内瘘器械包（一）");
+        row.setType("器械包(纸塑袋)");
+        row.setPackCount(2);
+        row.setInstrumentCount(68);
+        row.setUnitPrice(99.0);
+        row.setCorrectedTotalPrice(198.0);
+        row.setStatus("unchanged");
+
+        List<BillRowItem> result = applier.apply(rules, List.of(row));
+        assertThat(result.get(0).getUnitPrice()).isEqualTo(102.0);
+        assertThat(result.get(0).getCorrectedTotalPrice()).isEqualTo(204.0);
+    }
+
+    @Test
     void skipsExportFixedPriceWhenCorrectedTotalPresentWithoutExportApply() throws Exception {
         ObjectNode rules = mapper.createObjectNode();
         ObjectNode special = rules.putObject("specialRules");

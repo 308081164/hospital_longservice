@@ -13,7 +13,7 @@ import java.util.regex.Pattern;
 public final class BillingMonthResolver {
 
     private static final Pattern ISO_PREFIX = Pattern.compile("^(\\d{4})-(\\d{2})");
-    private static final Pattern ISO_DATE = Pattern.compile("(\\d{4})[/-](\\d{1,2})[/-]\\d{1,2}");
+    private static final Pattern ISO_DATE = Pattern.compile("(\\d{4})[/-](\\d{1,2})[/-](\\d{1,2})");
     private static final Pattern CN_FULL_MONTH = Pattern.compile("(\\d{4})年(\\d{1,2})月");
     private static final Pattern CN_MONTH_ONLY = Pattern.compile("(\\d{1,2})月");
     private static final Pattern CN_DATE = Pattern.compile("(\\d{4})年(\\d{1,2})月(\\d{1,2})日");
@@ -66,34 +66,50 @@ public final class BillingMonthResolver {
             return isoPrefix.group(1) + "-" + isoPrefix.group(2);
         }
 
-        // Cross-month ranges: use the last date in the range (billing month = period end).
+        java.util.List<DateParts> dates = new java.util.ArrayList<>();
         Matcher cnDate = CN_DATE.matcher(trimmed);
-        int lastYear = -1;
-        int lastMonth = -1;
         while (cnDate.find()) {
-            lastYear = Integer.parseInt(cnDate.group(1));
-            lastMonth = Integer.parseInt(cnDate.group(2));
+            dates.add(new DateParts(
+                    Integer.parseInt(cnDate.group(1)),
+                    Integer.parseInt(cnDate.group(2)),
+                    Integer.parseInt(cnDate.group(3))));
         }
-        if (lastYear > 0 && lastMonth > 0) {
-            return formatMonth(lastYear, lastMonth);
+        Matcher isoDate = ISO_DATE.matcher(trimmed);
+        while (isoDate.find()) {
+            dates.add(new DateParts(
+                    Integer.parseInt(isoDate.group(1)),
+                    Integer.parseInt(isoDate.group(2)),
+                    Integer.parseInt(isoDate.group(3))));
+        }
+        if (dates.size() >= 2) {
+            DateParts start = dates.get(0);
+            DateParts end = dates.get(dates.size() - 1);
+            if (isMidMonthBillingPeriod(start, end)) {
+                return formatMonth(start.year(), start.month());
+            }
+            return formatMonth(end.year(), end.month());
+        }
+        if (dates.size() == 1) {
+            DateParts only = dates.get(0);
+            return formatMonth(only.year(), only.month());
         }
 
         Matcher cnMonth = CN_FULL_MONTH.matcher(trimmed);
         if (cnMonth.find()) {
             return formatMonth(Integer.parseInt(cnMonth.group(1)), Integer.parseInt(cnMonth.group(2)));
         }
-
-        Matcher isoDate = ISO_DATE.matcher(trimmed);
-        lastYear = -1;
-        lastMonth = -1;
-        while (isoDate.find()) {
-            lastYear = Integer.parseInt(isoDate.group(1));
-            lastMonth = Integer.parseInt(isoDate.group(2));
-        }
-        if (lastYear > 0 && lastMonth > 0) {
-            return formatMonth(lastYear, lastMonth);
-        }
         return null;
+    }
+
+    /** 15 日–次月 14 日账期：结款/override 按起始月（如 6.15–7.14 → 2026-06）。 */
+    private static boolean isMidMonthBillingPeriod(DateParts start, DateParts end) {
+        if (start.year() == end.year() && start.month() == end.month()) {
+            return false;
+        }
+        return start.day() >= 15 && end.day() <= 14;
+    }
+
+    private record DateParts(int year, int month, int day) {
     }
 
     private static String formatMonth(int year, int month) {

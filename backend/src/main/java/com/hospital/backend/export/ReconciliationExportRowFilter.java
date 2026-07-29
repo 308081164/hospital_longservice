@@ -20,6 +20,8 @@ public class ReconciliationExportRowFilter {
     private static final Set<String> SHENG_YY_CODES = Set.of("SHENG-YY-NG", "SHENG-YY-XF");
     /** D2：加急单落在主 sheet 时，按订单号整单排除（与处理后表「加急」独立 sheet 口径一致） */
     private static final Set<String> URGENT_ORDER_FILTER_CODES = Set.of("HRB-HSZ");
+    /** 附三：处理后 bill 含「外来器械」独立 sheet，export 需保留 */
+    private static final Set<String> EXTERNAL_INSTRUMENT_BILL_CODES = Set.of("ZY3-DIANLI");
     private static final Set<String> SETTLEMENT_SHEET_KEYWORDS = Set.of("加急", "结款", "结款函");
     private static final Set<String> HRB_HSZ_URGENT_TWO_PACK =
             Set.of("剖宫包□", "麻杯1换药碗2弯盘1/W6050");
@@ -65,6 +67,9 @@ public class ReconciliationExportRowFilter {
             Map<String, List<HospitalReconciliationRow>> byOrder) {
         if (row == null || "skipped".equalsIgnoreCase(row.getStatus())) {
             return false;
+        }
+        if (isExternalInstrumentBillRow(customerCode, row.getSheetName())) {
+            return true;
         }
         if (Boolean.TRUE.equals(row.getIsUrgent())) {
             return false;
@@ -218,5 +223,12 @@ public class ReconciliationExportRowFilter {
         }
         String lower = rule.toLowerCase(Locale.ROOT);
         return lower.contains("0元") || lower.contains("零价") || lower.contains("仅记录");
+    }
+
+    private static boolean isExternalInstrumentBillRow(String customerCode, String sheetName) {
+        return customerCode != null
+                && EXTERNAL_INSTRUMENT_BILL_CODES.contains(customerCode)
+                && sheetName != null
+                && sheetName.contains("外来器械");
     }
 }

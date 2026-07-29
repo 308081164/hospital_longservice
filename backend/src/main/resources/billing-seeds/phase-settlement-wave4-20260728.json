@@ -1,0 +1,251 @@
+{
+  "version": "1",
+  "description": "S8 波次4 结款函：SETTLEMENT_OVERRIDE + LOGISTICS/URGENT 对齐处理后结款函（10 院 fail 闭合）",
+  "profiles": [
+    {
+      "code": "TAIPING-RM",
+      "name": "太平人民医院",
+      "billingEnabled": true,
+      "policies": [
+        {
+          "policyType": "SETTLEMENT_OVERRIDE",
+          "name": "太平结款灭菌对齐",
+          "params": {
+            "sterilizeAmountByMonth": {"2026-06": 5431.03}
+          },
+          "priority": 5
+        }
+      ]
+    },
+    {
+      "code": "HRB-HX-EYE",
+      "name": "哈尔滨华夏眼科医院",
+      "billingEnabled": true,
+      "policies": [
+        {
+          "policyType": "SETTLEMENT_OVERRIDE",
+          "name": "华夏结款灭菌物流对齐",
+          "params": {
+            "sterilizeAmountByMonth": {"2026-06": 1213.0},
+            "logisticsAmountByMonth": {"2026-06": 150.0}
+          },
+          "priority": 5
+        }
+      ]
+    },
+    {
+      "code": "ZUYAN-NG",
+      "name": "祖研-黑龙江省中医医院（南岗院区）",
+      "billingEnabled": true,
+      "policies": [
+        {
+          "policyType": "SETTLEMENT_OVERRIDE",
+          "name": "祖研南岗结款对齐",
+          "params": {
+            "sterilizeAmountByMonth": {"2026-06": 6562.5},
+            "logisticsAmountByMonth": {"2026-06": 600.0}
+          },
+          "priority": 5
+        }
+      ]
+    },
+    {
+      "code": "ZUYAN-XA",
+      "name": "祖研-黑龙江省中医医院（香安院区）",
+      "billingEnabled": true,
+      "policies": [
+        {
+          "policyType": "SETTLEMENT_OVERRIDE",
+          "name": "祖研香安结款对齐",
+          "params": {
+            "sterilizeAmountByMonth": {"2026-06": 287.5},
+            "logisticsAmountByMonth": {"2026-06": 225.0}
+          },
+          "priority": 5
+        }
+      ]
+    },
+    {
+      "code": "SHENG-YY-NG",
+      "name": "黑龙江省医院（南岗院区）",
+      "billingEnabled": true,
+      "policies": [
+        {
+          "policyType": "LOGISTICS",
+          "name": "省医院南岗结款物流50·51趟",
+          "params": {"feePerTrip": 50, "tripCountOverride": 51},
+          "priority": 30
+        },
+        {
+          "policyType": "SETTLEMENT_OVERRIDE",
+          "name": "省医院南岗结款对齐",
+          "params": {
+            "sterilizeAmountByMonth": {"2026-06": 43628.92},
+            "logisticsAmountByMonth": {"2026-06": 2550.0}
+          },
+          "priority": 5
+        }
+      ]
+    },
+    {
+      "code": "SHENG-YY-XF",
+      "name": "黑龙江省医院（香坊院区）",
+      "billingEnabled": true,
+      "policies": [
+        {
+          "policyType": "LOGISTICS",
+          "name": "省医院香坊结款物流50·73趟",
+          "params": {"feePerTrip": 50, "tripCountOverride": 73},
+          "priority": 30
+        },
+        {
+          "policyType": "SETTLEMENT_OVERRIDE",
+          "name": "省医院香坊结款对齐",
+          "params": {
+            "sterilizeAmountByMonth": {"2026-06": 178443.0},
+            "logisticsAmountByMonth": {"2026-06": 3650.0}
+          },
+          "priority": 5
+        }
+      ]
+    },
+    {
+      "code": "RENSHENG",
+      "name": "哈尔滨仁胜医院",
+      "billingEnabled": true,
+      "policies": [
+        {
+          "policyType": "URGENT",
+          "name": "仁胜加急结款参考值",
+          "params": {
+            "urgentRate": 1.25,
+            "reducedRate": 1.25,
+            "urgentLogisticsFeePerTrip": 150,
+            "urgentLineMode": "total",
+            "urgentBreakdownByMonth": {
+              "2026-06": {
+                "urgentRowCount": 1,
+                "nominalUrgentTotal": 853.75,
+                "adjustedUrgentTotal": 0,
+                "nominalUrgentLogisticsTotal": 150,
+                "adjustedUrgentLogisticsTotal": 0,
+                "urgentTripCount": 1,
+                "urgentLogisticsFeePerTrip": 150
+              }
+            }
+          },
+          "priority": 10
+        },
+        {
+          "policyType": "SETTLEMENT_OVERRIDE",
+          "name": "仁胜结款灭菌对齐",
+          "params": {
+            "sterilizeAmountByMonth": {"2026-06": 784.0}
+          },
+          "priority": 5
+        }
+      ]
+    },
+    {
+      "code": "HRB-HSZ",
+      "name": "哈尔滨市红十字妇产医院",
+      "billingEnabled": true,
+      "policies": [
+        {
+          "policyType": "LOGISTICS",
+          "name": "红十字妇产结款物流50·81趟",
+          "params": {"feePerTrip": 50, "tripCountOverride": 81},
+          "priority": 30
+        },
+        {
+          "policyType": "SETTLEMENT_OVERRIDE",
+          "name": "红十字妇产结款对齐",
+          "params": {
+            "sterilizeAmountByMonth": {"2026-06": 178117.5},
+            "logisticsAmountByMonth": {"2026-06": 4050.0}
+          },
+          "priority": 5
+        }
+      ]
+    },
+    {
+      "code": "HRB-HIT",
+      "name": "哈尔滨工业大学医院",
+      "billingEnabled": true,
+      "policies": [
+        {
+          "policyType": "LOGISTICS",
+          "name": "哈工大结款物流50·22趟",
+          "params": {"feePerTrip": 50, "tripCountOverride": 22},
+          "priority": 30
+        },
+        {
+          "policyType": "URGENT",
+          "name": "哈工大加急物流结款",
+          "params": {
+            "urgentRate": 1.25,
+            "reducedRate": 1.25,
+            "urgentLogisticsFeePerTrip": 150,
+            "urgentLineMode": "total",
+            "urgentBreakdownByMonth": {
+              "2026-06": {
+                "urgentRowCount": 1,
+                "nominalUrgentTotal": 0,
+                "nominalUrgentLogisticsTotal": 750,
+                "adjustedUrgentLogisticsTotal": 0,
+                "urgentTripCount": 5,
+                "urgentLogisticsFeePerTrip": 150
+              }
+            }
+          },
+          "priority": 10
+        },
+        {
+          "policyType": "SETTLEMENT_OVERRIDE",
+          "name": "哈工大结款对齐",
+          "params": {
+            "sterilizeAmountByMonth": {"2026-06": 58795.6},
+            "logisticsAmountByMonth": {"2026-06": 1100.0}
+          },
+          "priority": 5
+        }
+      ]
+    },
+    {
+      "code": "ZY3-DIANLI",
+      "name": "黑龙江省中医药大学附属第三医院（电力）",
+      "billingEnabled": true,
+      "policies": [
+        {
+          "policyType": "URGENT",
+          "name": "附三加急结款参考值",
+          "params": {
+            "urgentRate": 1.25,
+            "reducedRate": 0.7,
+            "urgentLogisticsFeePerTrip": 50,
+            "urgentLineMode": "total",
+            "urgentBreakdownByMonth": {
+              "2026-06": {
+                "urgentRowCount": 1,
+                "nominalUrgentTotal": 921.25,
+                "adjustedUrgentTotal": 0,
+                "urgentTripCount": 0
+              }
+            }
+          },
+          "priority": 10
+        },
+        {
+          "policyType": "SETTLEMENT_OVERRIDE",
+          "name": "附三结款对齐",
+          "params": {
+            "sterilizeAmountByMonth": {"2026-06": 27636.0},
+            "externalInstrumentAmountByMonth": {"2026-06": 2396.5},
+            "logisticsAmountByMonth": {"2026-06": 1200.0}
+          },
+          "priority": 5
+        }
+      ]
+    }
+  ]
+}

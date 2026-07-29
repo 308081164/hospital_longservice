@@ -1,0 +1,30 @@
+{
+  "version": "1",
+  "description": "哈尔滨基准生物科技有限公司：氩氦刀（EO）固定150元",
+  "profiles": [
+    {
+      "code": "JZSW-BIO",
+      "name": "哈尔滨基准生物科技有限公司",
+      "billingEnabled": true,
+      "billingPricingMode": "standard",
+      "aliases": [
+        "基准生物",
+        "哈尔滨基准生物科技有限公司",
+        "基准生物科技有限公司"
+      ]
+    }
+  ],
+  "newRules": [
+    {
+      "code": "JZSW-BIO",
+      "ruleType": "FIXED_PRICE",
+      "name": "氩氦刀（EO）150元",
+      "priority": 5,
+      "price": 150,
+      "keywords": ["氩氦刀"],
+      "temperature": "LT",
+      "skipPackaging": true,
+      "skipDiscount": true
+    }
+  ]
+}

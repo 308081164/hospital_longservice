@@ -39,7 +39,6 @@ public class ExportFixedPriceApplier {
     private BillRowItem applyToRow(BillRowItem row, JsonNode fixedPrices) {
         String combined = safe(row.getType()) + safe(row.getPackName()) + safe(row.getPackageMaterial());
         String department = resolveDepartment(row);
-        int billingPieces = resolveBillingPieces(row);
 
         for (JsonNode rule : fixedPrices) {
             if (!rule.path("exportApply").asBoolean(false)
@@ -55,7 +54,7 @@ public class ExportFixedPriceApplier {
             if (!BillingConditionEvaluator.departmentMatches(rule, department)) {
                 continue;
             }
-            if (!BillingConditionEvaluator.instrumentCountInRange(rule, billingPieces)) {
+            if (!BillingConditionEvaluator.instrumentCountInRange(rule, resolveInstrumentCount(row))) {
                 continue;
             }
             double price = rule.path("price").asDouble(Double.NaN);
@@ -124,6 +123,13 @@ public class ExportFixedPriceApplier {
         int instrumentCount = row.getInstrumentCount() != null ? row.getInstrumentCount() : 1;
         int packCount = row.getPackCount() != null ? Math.max(1, row.getPackCount()) : 1;
         return Math.max(1, (int) Math.round((double) instrumentCount / packCount));
+    }
+
+    private int resolveInstrumentCount(BillRowItem row) {
+        if (row.getInstrumentCount() != null && row.getInstrumentCount() > 0) {
+            return row.getInstrumentCount();
+        }
+        return resolveBillingPieces(row);
     }
 
     private static double round(double value) {

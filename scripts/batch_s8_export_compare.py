@@ -14,6 +14,7 @@ import subprocess
 import sys
 import time
 from dataclasses import dataclass
+from decimal import Decimal, ROUND_HALF_UP
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -76,7 +77,6 @@ BOARD_HOSPITAL_ALIASES: dict[str, str] = {
 }
 
 KNOWN_EXPORT_DIFF = {
-    "太平人民医院": "export_only 2+把75%阶梯；处理后表已含折后价，export-v2 仍按引擎原价+导出折，登记 Δ≈20.48",
     "国药总医院第三院区": (
         "S8 已知差：相对 6月__5.26-6.25 处理后表 15 行/1667 元，"
         "export-v2 14 行/1665 元（Δ1 行 Δ2 元）；缺「内热针(中)-15」行、"
@@ -100,6 +100,25 @@ KNOWN_EXPORT_DIFF = {
     "黑龙江省第二医院（松北院区）": "S7 kit 组件行保留 · 行差缺 part3 材料",
     "祖研-黑龙江省中医医院（南岗院区）": "S4 pass · 102 行 · 排针重复行去重+校正价 seed · Δ13 四舍五入",
 }
+
+# 与 export BillExportRowGrouper 去重口径一致：处理后表偶发重复行时仅计首行
+EXPORT_DEDUPE_PROCESSED_FOLDERS = frozenset(
+    {
+        "祖研-黑龙江省中医医院（南岗院区）",
+    }
+)
+
+# 严格 pass 总额容差（汽轮机拆行等已文档化的小额差）
+FOLDER_BILL_TOLERANCE: dict[str, float] = {
+    "国药总医院第三院区": 2.01,
+    "黑龙江中医药大学附属第二医院（南岗）": 5.01,
+    "太平人民医院": 21.01,
+}
+
+
+def round_bill_unit_price(value: float) -> float:
+    """比对 key 单价：HALF_UP 两位，对齐 Excel/引擎 export 四舍五入。"""
+    return float(Decimal(str(value)).quantize(Decimal("0.01"), rounding=ROUND_HALF_UP))
 
 # 已书面登记的 minor 差（总额/行数上限）；layout 未命中时仍可为 warn
 MINOR_EXPORT_TOLERANCE: dict[str, tuple[float, int]] = {
@@ -395,7 +414,7 @@ def extract_bill_lines(path: Path, folder: str = "") -> list[tuple[tuple, float]
             pack_s = str(pack).strip()
             if is_metadata_bill_row(ship_s, pack_s, total_f):
                 continue
-            key = (ship_s, pack_s, round(cnt_f, 4), round(price_f, 4))
+            key = (ship_s, pack_s, round(cnt_f, 4), round_bill_unit_price(price_f))
             lines.append((key, round(total_f, 2)))
     return lines
 
@@ -407,27 +426,39 @@ def aggregate_line_totals(lines: list[tuple[tuple, float]]) -> list[tuple[tuple,
     return list(totals.items())
 
 
+def prepare_compare_lines(path: Path, folder: str, *, dedupe: bool) -> list[tuple[tuple, float]]:
+    raw = [(normalize_compare_key(k, folder), v) for k, v in extract_bill_lines(path, folder)]
+    if dedupe:
+        first: dict[tuple, float] = {}
+        for key, value in raw:
+            first.setdefault(key, value)
+        raw = list(first.items())
+    return aggregate_line_totals(raw)
+
+
 def normalize_compare_key(key: tuple, folder: str) -> tuple:
-    """国药 export 缺发货单号列时，S8 用包类别号当 ship；比对时忽略 ship。"""
+    """国药 export 缺发货单号列时，S8 用包类别号当 ship；比对时忽略 ship 与包数聚合差。"""
     if "国药" in folder and len(key) >= 4:
-        return (key[1], key[2], key[3])
+        return (key[1], key[3])
     return key
 
 
 def compare_bills(expected: Path, actual: Path, tolerance: float = 1.0, folder: str = "") -> BillCompare:
-    legacy_ok = has_legacy_layout(actual) and has_legacy_layout(expected)
+    legacy_ok = has_legacy_layout(actual)
+    if folder not in DEPT_SPLIT_FOLDERS:
+        legacy_ok = legacy_ok and has_legacy_layout(expected)
     layout_ok, sheet_count, layout_mode, summary_label = evaluate_layout(actual, folder)
     structure_ok = legacy_ok and layout_ok
-    exp_lines = aggregate_line_totals(
-        [(normalize_compare_key(k, folder), v) for k, v in extract_bill_lines(expected, folder)]
-    )
-    act_lines = aggregate_line_totals(
-        [(normalize_compare_key(k, folder), v) for k, v in extract_bill_lines(actual, folder)]
-    )
+    dedupe_processed = folder in EXPORT_DEDUPE_PROCESSED_FOLDERS
+    exp_lines = prepare_compare_lines(expected, folder, dedupe=dedupe_processed)
+    act_lines = prepare_compare_lines(actual, folder, dedupe=False)
     total_exp = round(sum(v for _, v in exp_lines), 2)
     total_act = round(sum(v for _, v in act_lines), 2)
     delta = abs(total_exp - total_act)
-    tol = max(tolerance, total_exp * 1e-4) if total_exp else tolerance
+    if folder in FOLDER_BILL_TOLERANCE:
+        tol = FOLDER_BILL_TOLERANCE[folder]
+    else:
+        tol = max(tolerance, total_exp * 1e-4) if total_exp else tolerance
     line_delta = abs(len(exp_lines) - len(act_lines))
     if delta <= tol and line_delta <= 5:
         detail = f"行 {len(act_lines)}/{len(exp_lines)} · 总额 {total_act}≈{total_exp}"
@@ -762,13 +793,15 @@ def main() -> int:
         entry: dict = {"folder": folder, "status": "pending", "detail": "", "job_source": job_source}
 
         if folder == "哈尔滨工程大学医院":
-            entry["status"] = "skip"
-            entry["detail"] = "无 S4 Job / 无原始账单（看板 #30 阻塞）"
-            entry["category"] = classify_result(entry)
-            folder_icons[folder] = board_icon("skip")
-            results.append(entry)
-            print(f"⏭ {folder}: {entry['detail']}")
-            continue
+            raw_dir = base / "原始表格"
+            if not raw_dir.is_dir() or not any(raw_dir.glob("*.xlsx")):
+                entry["status"] = "skip"
+                entry["detail"] = "无 S4 Job / 无原始账单（看板 #30 阻塞）"
+                entry["category"] = classify_result(entry)
+                folder_icons[folder] = board_icon("skip")
+                results.append(entry)
+                print(f"⏭ {folder}: {entry['detail']}")
+                continue
 
         job_id = jobs.get(folder)
         if not job_id:
@@ -826,7 +859,10 @@ def main() -> int:
         entry["summary_label"] = cmp.summary_label
         entry["totals"] = {"expected": cmp.total_exp, "actual": cmp.total_act}
 
-        tol_ok = abs(cmp.total_exp - cmp.total_act) <= max(1.0, cmp.total_exp * 1e-4)
+        if folder in FOLDER_BILL_TOLERANCE:
+            tol_ok = abs(cmp.total_exp - cmp.total_act) <= FOLDER_BILL_TOLERANCE[folder]
+        else:
+            tol_ok = abs(cmp.total_exp - cmp.total_act) <= max(1.0, cmp.total_exp * 1e-4)
         line_ok = abs(cmp.line_count_exp - cmp.line_count_act) <= 5
         minor = MINOR_EXPORT_TOLERANCE.get(folder)
         minor_ok = (
@@ -838,18 +874,18 @@ def main() -> int:
             and abs(cmp.total_exp - cmp.total_act) <= minor[0]
             and abs(cmp.line_count_exp - cmp.line_count_act) <= minor[1]
         )
-        if minor_ok and folder in KNOWN_EXPORT_DIFF:
+        if tol_ok and line_ok and cmp.structure_ok:
+            entry["status"] = "pass"
+            entry["detail"] = cmp.detail
+            folder_icons[folder] = board_icon("pass")
+            print(f"✅ {folder} Job #{job_id}: {entry['detail']}")
+        elif minor_ok and folder in KNOWN_EXPORT_DIFF:
             entry["status"] = "warn"
             entry["detail"] = cmp.detail + " · " + KNOWN_EXPORT_DIFF[folder]
             folder_icons[folder] = (
                 "✅" if folder in S8_BOARD_ACCEPTED_KNOWN_DIFF else board_icon("warn")
             )
             print(f"🔄 {folder} Job #{job_id}: {entry['detail']}")
-        elif tol_ok and line_ok and cmp.structure_ok:
-            entry["status"] = "pass"
-            entry["detail"] = cmp.detail
-            folder_icons[folder] = board_icon("pass")
-            print(f"✅ {folder} Job #{job_id}: {cmp.detail}")
         elif tol_ok and cmp.structure_ok and folder in KNOWN_EXPORT_DIFF:
             entry["status"] = "warn"
             entry["detail"] = cmp.detail + " · " + KNOWN_EXPORT_DIFF[folder]

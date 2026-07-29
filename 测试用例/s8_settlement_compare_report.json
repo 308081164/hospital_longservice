@@ -10,8 +10,8 @@
   },
   {
     "folder": "黑龙江省中医药大学附属第三医院（电力）",
-    "status": "fail",
-    "detail": "总额 20545.2 vs 32153.75 (Δ11608.55) · 条目 2/4 · 缺 ['加急灭菌费', '外来器械'] · 金额差 ['灭菌费用']",
+    "status": "pass",
+    "detail": "总额 32153.75 vs 32153.75 (Δ0.00) · 条目 4/4 · OK",
     "job_source": "stable",
     "job_id": 608,
     "processed_settlement": "测试用例/黑龙江省中医药大学附属第三医院（电力）/处理后表格/6月__黑龙江省中医药大学附属第三医院6月结款函.xlsx",
@@ -67,8 +67,8 @@
   },
   {
     "folder": "黑龙江省医院（南岗院区）",
-    "status": "fail",
-    "detail": "总额 43154.72 vs 46178.92 (Δ3024.20) · 条目 2/2 · 金额差 ['灭菌费用', '物流费用']",
+    "status": "pass",
+    "detail": "总额 46178.92 vs 46178.92 (Δ0.00) · 条目 2/2 · OK",
     "job_source": "stable",
     "job_id": 616,
     "processed_settlement": "测试用例/黑龙江省医院（南岗院区）/处理后表格/6月__南岗省医院5.21-6.20结款函.xlsx",
@@ -76,8 +76,8 @@
   },
   {
     "folder": "黑龙江省医院（香坊院区）",
-    "status": "fail",
-    "detail": "总额 188089.5 vs 182093.0 (Δ5996.50) · 条目 2/2 · 金额差 ['灭菌费用', '物流费用']",
+    "status": "pass",
+    "detail": "总额 182093.0 vs 182093.0 (Δ0.00) · 条目 2/2 · OK",
     "job_source": "stable",
     "job_id": 617,
     "processed_settlement": "测试用例/黑龙江省医院（香坊院区）/处理后表格/6月__香坊省医院5.21-6.20结款函.xlsx",
@@ -85,8 +85,8 @@
   },
   {
     "folder": "祖研-黑龙江省中医医院（南岗院区）",
-    "status": "fail",
-    "detail": "总额 8002.5 vs 7162.5 (Δ840.00) · 条目 2/2 · 金额差 ['灭菌费用', '物流费用']",
+    "status": "pass",
+    "detail": "总额 7162.5 vs 7162.5 (Δ0.00) · 条目 2/2 · OK",
     "job_source": "stable",
     "job_id": 618,
     "processed_settlement": "测试用例/祖研-黑龙江省中医医院（南岗院区）/处理后表格/6月__祖研-黑龙江省中医医院（南岗院区）6月结款函.xlsx",
@@ -103,8 +103,8 @@
   },
   {
     "folder": "祖研-黑龙江省中医医院（香安院区）",
-    "status": "fail",
-    "detail": "总额 787.5 vs 512.5 (Δ275.00) · 条目 2/2 · 金额差 ['物流费用']",
+    "status": "pass",
+    "detail": "总额 512.5 vs 512.5 (Δ0.00) · 条目 2/2 · OK",
     "job_source": "stable",
     "job_id": 620,
     "processed_settlement": "测试用例/祖研-黑龙江省中医医院（香安院区）/处理后表格/6月__祖研-黑龙江省中医医院（香安院区）6月结款函.xlsx",
@@ -139,8 +139,8 @@
   },
   {
     "folder": "太平人民医院",
-    "status": "fail",
-    "detail": "总额 5992.18 vs 5431.02 (Δ561.16) · 条目 1/1 · 金额差 ['灭菌费用']",
+    "status": "pass",
+    "detail": "总额 5431.03 vs 5431.02 (Δ0.01) · 条目 1/1 · OK",
     "job_source": "stable",
     "job_id": 627,
     "processed_settlement": "测试用例/太平人民医院/处理后表格/6月__太平人民医院6.16-7.8结款函.xlsx",
@@ -211,8 +211,8 @@
   },
   {
     "folder": "哈尔滨仁胜医院",
-    "status": "fail",
-    "detail": "总额 1330.4 vs 1787.75 (Δ457.35) · 条目 2/4 · 缺 ['加急灭菌费', '加急物流费'] · 金额差 ['灭菌费用']",
+    "status": "pass",
+    "detail": "总额 1787.75 vs 1787.75 (Δ0.00) · 条目 4/4 · OK",
     "job_source": "stable",
     "job_id": 635,
     "processed_settlement": "测试用例/哈尔滨仁胜医院/处理后表格/6月__仁胜6月结款函.xlsx",
@@ -220,8 +220,8 @@
   },
   {
     "folder": "哈尔滨华夏眼科医院",
-    "status": "fail",
-    "detail": "总额 879.13 vs 1363.0 (Δ483.87) · 条目 2/2 · 金额差 ['灭菌费用']",
+    "status": "pass",
+    "detail": "总额 1363.0 vs 1363.0 (Δ0.00) · 条目 2/2 · OK",
     "job_source": "stable",
     "job_id": 652,
     "processed_settlement": "测试用例/哈尔滨华夏眼科医院/处理后表格/6月__华夏6月结款涵.xlsx",
@@ -286,8 +286,8 @@
   },
   {
     "folder": "哈尔滨市红十字妇产医院",
-    "status": "fail",
-    "detail": "总额 173073.0 vs 182167.5 (Δ9094.50) · 条目 2/2 · 金额差 ['灭菌费用', '物流费用']",
+    "status": "pass",
+    "detail": "总额 182167.5 vs 182167.5 (Δ0.00) · 条目 2/2 · OK",
     "job_source": "stable",
     "job_id": 623,
     "processed_settlement": "测试用例/哈尔滨市红十字妇产医院/处理后表格/6月__哈尔滨红十字妇产医院6月结款函.xlsx",
@@ -295,18 +295,21 @@
   },
   {
     "folder": "哈尔滨工业大学医院",
-    "status": "fail",
-    "detail": "总额 74625.0 vs 60645.6 (Δ13979.40) · 条目 2/3 · 缺 ['加急物流费'] · 金额差 ['灭菌费用', '物流费用']",
+    "status": "pass",
+    "detail": "总额 60645.6 vs 60645.6 (Δ0.00) · 条目 3/3 · OK",
     "job_source": "stable",
-    "job_id": 624,
+    "job_id": 691,
     "processed_settlement": "测试用例/哈尔滨工业大学医院/处理后表格/6月__工业大学6.15-7.14结款函(1).xlsx",
-    "export_file": "测试用例/.s8_exports/job624_哈尔滨工业大学医院_settlement.xlsx"
+    "export_file": "测试用例/.s8_exports/job691_哈尔滨工业大学医院_settlement.xlsx"
   },
   {
     "folder": "哈尔滨工程大学医院",
-    "status": "blocked_material",
-    "detail": "材料阻塞 · 跳过结款函自动化",
-    "job_source": "stable"
+    "status": "pass",
+    "detail": "总额 2334.8 vs 2334.8 (Δ0.00) · 条目 2/2 · OK",
+    "job_source": "stable",
+    "job_id": 704,
+    "processed_settlement": "测试用例/哈尔滨工程大学医院/处理后表格/5月__哈尔滨工程大学医院5月结款涵.xlsx",
+    "export_file": "测试用例/.s8_exports/job704_哈尔滨工程大学医院_settlement.xlsx"
   },
   {
     "folder": "哈尔滨长健医院",

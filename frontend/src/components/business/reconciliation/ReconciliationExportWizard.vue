@@ -17,13 +17,13 @@
       <ElForm label-width="100px">
         <ElFormItem :label="t('reconciliation.exportWizard.exportType')">
           <ElRadioGroup v-model="exportType">
-            <ElRadio value="bill">{{ t('reconciliation.history.export.bill') }}</ElRadio>
-            <ElRadio value="settlement">{{
-              t('reconciliation.history.export.settlement')
-            }}</ElRadio>
-            <ElRadio value="dept_summary">{{
-              t('reconciliation.history.export.departmentSummary')
-            }}</ElRadio>
+            <ElRadio
+              v-for="type in availableExportTypes"
+              :key="type"
+              :value="type"
+            >
+              {{ t(exportTypeI18nKey(type)) }}
+            </ElRadio>
           </ElRadioGroup>
         </ElFormItem>
         <ElFormItem
@@ -170,11 +170,17 @@
     type ExportValidationResult
   } from '@/api/hospital/exportTemplatesApi'
   import ExportProfileBanner from './ExportProfileBanner.vue'
+  import {
+    DEFAULT_EXPORT_TYPES,
+    exportFilePrefix,
+    exportTypeI18nKey
+  } from '@/utils/hospitalExportCapabilities'
 
   const props = defineProps<{
     jobId?: number | null
     hospitalName?: string
-    initialExportType?: 'bill' | 'settlement' | 'dept_summary'
+    initialExportType?: string
+    allowedExportTypes?: string[]
     monthlyBreakdown?: {
       rawSterilizeTotal?: number
       adjustedTotal?: number
@@ -194,7 +200,7 @@
   const visible = defineModel<boolean>({ default: false })
 
   const step = ref(0)
-  const exportType = ref<'bill' | 'settlement' | 'dept_summary'>('bill')
+  const exportType = ref<string>('bill')
   const templateId = ref<number | undefined>()
   const templates = ref<ExportTemplateRecord[]>([])
   const preview = ref<ExportPreviewResult | null>(null)
@@ -205,6 +211,13 @@
   const templateOptions = computed(() =>
     templates.value.filter((tpl) => tpl.templateType === exportType.value && tpl.isActive !== false)
   )
+
+  const availableExportTypes = computed(() => {
+    const types = props.allowedExportTypes?.length
+      ? props.allowedExportTypes
+      : [...DEFAULT_EXPORT_TYPES]
+    return types
+  })
 
   const monthlyReconcileOk = computed(() => {
     const mb = props.monthlyBreakdown
@@ -329,12 +342,7 @@
         templateId: templateId.value,
         useStrategyEngine: true
       })
-      const prefixMap = {
-        bill: '账单',
-        settlement: '结款函',
-        dept_summary: '分科室汇总'
-      }
-      const fileName = buildFileName(prefixMap[exportType.value])
+      const fileName = buildFileName(exportFilePrefix(exportType.value))
       triggerBlobDownload(blob, fileName)
       emit('exported', { exportType: exportType.value, fileName })
       ElMessage.success(t('reconciliation.exportWizard.downloadSuccess'))
@@ -358,7 +366,9 @@
 
   watch(visible, (open) => {
     if (open) {
-      exportType.value = props.initialExportType ?? 'bill'
+      const types = availableExportTypes.value
+      const initial = props.initialExportType ?? 'bill'
+      exportType.value = types.includes(initial) ? initial : types[0] ?? 'bill'
       templateId.value = undefined
       step.value = 0
       preview.value = null
