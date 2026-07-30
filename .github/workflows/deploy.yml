@@ -129,8 +129,10 @@ jobs:
             deploy/verify-billing-api-on-server.sh \
             deploy/run-prod-verify.sh \
             "${SSH_USER}@${SSH_HOST}:${DEPLOY_PATH}/deploy/"
+          ssh -i ~/.ssh/deploy_key -o StrictHostKeyChecking=no -p "${SSH_PORT}" \
+            "${SSH_USER}@${SSH_HOST}" "mkdir -p '${DEPLOY_PATH}/bin' '${DEPLOY_PATH}/scripts'"
           scp -i ~/.ssh/deploy_key -o StrictHostKeyChecking=no -P "${SSH_PORT}" -r \
-            bin/hospital-cli scripts/hospital_cli.py scripts/lib \
+            bin scripts \
             "${SSH_USER}@${SSH_HOST}:${DEPLOY_PATH}/"
           scp -i ~/.ssh/deploy_key -o StrictHostKeyChecking=no -P "${SSH_PORT}" \
             deploy/sql/p0-6-billing-toggle.sql \
@@ -345,8 +347,10 @@ jobs:
             deploy/verify-billing-api-on-server.sh \
             deploy/run-prod-verify.sh \
             "${SSH_USER}@${SSH_HOST}:${DEPLOY_PATH}/deploy/"
+          ssh -i ~/.ssh/deploy_billing_key -o StrictHostKeyChecking=no -p "${SSH_PORT}" \
+            "${SSH_USER}@${SSH_HOST}" "mkdir -p '${DEPLOY_PATH}/bin' '${DEPLOY_PATH}/scripts'"
           scp -i ~/.ssh/deploy_billing_key -o StrictHostKeyChecking=no -P "${SSH_PORT}" -r \
-            bin/hospital-cli scripts/hospital_cli.py scripts/lib \
+            bin scripts \
             "${SSH_USER}@${SSH_HOST}:${DEPLOY_PATH}/"
           scp -i ~/.ssh/deploy_billing_key -o StrictHostKeyChecking=no -P "${SSH_PORT}" \
             deploy/sql/p0-6-billing-toggle.sql \
