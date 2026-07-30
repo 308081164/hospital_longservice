@@ -1,0 +1,21 @@
+{
+  "version": "1",
+  "description": "附一 ZYY-D1 账单 export_template 补录 billColumnLayout=fuyi_extended_11col",
+  "exportTemplateOverrides": [
+    {
+      "code": "ZYY-D1",
+      "templates": [
+        {
+          "type": "bill",
+          "name": "附一账单（分科室 S7）",
+          "strategyKey": "standard_bill",
+          "columnMapping": {
+            "billLayout": "dept_split",
+            "d8DisplaySource": "hospitalName",
+            "billColumnLayout": "fuyi_extended_11col"
+          }
+        }
+      ]
+    }
+  ]
+}

@@ -20,6 +20,9 @@ public class ColumnMappingConfig {
     /** auto | hospitalName | ruleName — D8 header display source */
     private String d8DisplaySource;
 
+    /** standard_8col | fuyi_extended_11col — bill export column layout */
+    private String billColumnLayout;
+
     private List<String> removeColumns = new ArrayList<>();
     private List<InsertColumnSpec> insertColumns = new ArrayList<>();
     private List<String> keepColumns = new ArrayList<>();

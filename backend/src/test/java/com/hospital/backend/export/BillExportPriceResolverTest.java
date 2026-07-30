@@ -4,7 +4,10 @@ import com.hospital.backend.dto.request.hospital.BillRowItem;
 import com.hospital.backend.entity.HospitalReconciliationRow;
 import org.junit.jupiter.api.Test;
 
+import java.util.Map;
+
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.data.Offset.offset;
 
 class BillExportPriceResolverTest {
 
@@ -59,5 +62,67 @@ class BillExportPriceResolverTest {
         row.setMatchedPriceOption(110.0);
         assertThat(BillExportPriceResolver.resolveTotalPrice(row)).isEqualTo(27.0);
         assertThat(BillExportPriceResolver.resolveUnitPrice(row)).isEqualTo(13.5);
+    }
+
+    @Test
+    void derivesPerPiecePriceFromTotalWhenMultipleInstruments() {
+        BillRowItem row = new BillRowItem();
+        row.setPackCount(2);
+        row.setInstrumentCount(6);
+        row.setCorrectedTotalPrice(105.6);
+        row.setExpectedUnitPrice(52.8);
+        row.setOriginal(Map.of("importUnitPrice", 52.8));
+
+        assertThat(BillExportPriceResolver.resolvePerPiecePrice(row)).isCloseTo(8.8, offset(0.01));
+        assertThat(BillExportPriceResolver.resolveUnitPrice(row)).isCloseTo(52.8, offset(0.01));
+    }
+
+    @Test
+    void derivesPerPiecePriceFromTotalAndInstrumentCount() {
+        BillRowItem row = new BillRowItem();
+        row.setPackCount(2);
+        row.setInstrumentCount(3);
+        row.setCorrectedTotalPrice(105.48);
+        row.setExpectedUnitPrice(52.74);
+
+        assertThat(BillExportPriceResolver.resolveUnitPrice(row)).isCloseTo(52.74, offset(0.01));
+        assertThat(BillExportPriceResolver.resolvePerPiecePrice(row)).isCloseTo(17.58, offset(0.01));
+    }
+
+    @Test
+    void prefersImportUnitPriceForPerPieceColumn() {
+        BillRowItem row = new BillRowItem();
+        row.setPackCount(1);
+        row.setInstrumentCount(1);
+        row.setExpectedUnitPrice(30.4);
+        row.setCorrectedTotalPrice(30.4);
+        row.setOriginal(Map.of("importUnitPrice", 22.4));
+
+        assertThat(BillExportPriceResolver.resolveUnitPrice(row)).isEqualTo(30.4);
+        assertThat(BillExportPriceResolver.resolvePerPiecePrice(row)).isEqualTo(22.4);
+    }
+
+    @Test
+    void singleInstrumentPerPieceEqualsPackPriceWhenNoImport() {
+        BillRowItem row = new BillRowItem();
+        row.setPackCount(1);
+        row.setInstrumentCount(1);
+        row.setCorrectedTotalPrice(28.0);
+
+        assertThat(BillExportPriceResolver.resolvePerPiecePrice(row)).isEqualTo(28.0);
+        assertThat(BillExportPriceResolver.resolveUnitPrice(row)).isEqualTo(28.0);
+    }
+
+    @Test
+    void entityRowPerPieceUsesOriginalUnitPrice() {
+        HospitalReconciliationRow row = new HospitalReconciliationRow();
+        row.setUnitPrice(22.4);
+        row.setExpectedUnitPrice(30.4);
+        row.setPackCount(1);
+        row.setInstrumentCount(1);
+        row.setCorrectedTotalPrice(30.4);
+
+        assertThat(BillExportPriceResolver.resolvePerPiecePrice(row)).isEqualTo(22.4);
+        assertThat(BillExportPriceResolver.resolveUnitPrice(row)).isEqualTo(30.4);
     }
 }

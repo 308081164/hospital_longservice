@@ -40,6 +40,29 @@ public final class BillExportPriceResolver {
         return row.getTotalPrice();
     }
 
+    /**
+     * L 列「单价（把）」：优先保留原始导入把价，否则由校正总价按包数×器械数反推。
+     */
+    public static Double resolvePerPiecePrice(BillRowItem row) {
+        if (row == null) {
+            return null;
+        }
+        int instruments = row.getInstrumentCount() != null ? Math.max(1, row.getInstrumentCount()) : 1;
+        Double derived = derivePerPieceFromTotals(row.getPackCount(), row.getInstrumentCount(),
+                resolveTotalPrice(row));
+        if (instruments > 1 && derived != null) {
+            return derived;
+        }
+        Double importPrice = readImportUnitPrice(row.getOriginal());
+        if (importPrice != null) {
+            return importPrice;
+        }
+        if (derived != null) {
+            return derived;
+        }
+        return resolveUnitPrice(row);
+    }
+
     public static Double resolveUnitPrice(HospitalReconciliationRow row) {
         if (row == null) {
             return null;
@@ -72,6 +95,45 @@ public final class BillExportPriceResolver {
             return round(row.getMatchedPriceOption() * packCount);
         }
         return row.getTotalPrice();
+    }
+
+    public static Double resolvePerPiecePrice(HospitalReconciliationRow row) {
+        if (row == null) {
+            return null;
+        }
+        int instruments = row.getInstrumentCount() != null ? Math.max(1, row.getInstrumentCount()) : 1;
+        Double derived = derivePerPieceFromTotals(row.getPackCount(), row.getInstrumentCount(),
+                resolveTotalPrice(row));
+        if (instruments > 1 && derived != null) {
+            return derived;
+        }
+        if (row.getUnitPrice() != null) {
+            return row.getUnitPrice();
+        }
+        if (derived != null) {
+            return derived;
+        }
+        return resolveUnitPrice(row);
+    }
+
+    private static Double readImportUnitPrice(java.util.Map<String, Object> original) {
+        if (original == null) {
+            return null;
+        }
+        Object value = original.get("importUnitPrice");
+        if (value instanceof Number number) {
+            return round(number.doubleValue());
+        }
+        return null;
+    }
+
+    private static Double derivePerPieceFromTotals(Integer packCount, Integer instrumentCount, Double total) {
+        if (total == null) {
+            return null;
+        }
+        int packs = packCount != null ? Math.max(1, packCount) : 1;
+        int instruments = instrumentCount != null ? Math.max(1, instrumentCount) : 1;
+        return round(total / (packs * instruments));
     }
 
     private static double round(double value) {

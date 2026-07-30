@@ -22,6 +22,7 @@ public class BillExportRequestMapper {
             var mapping = context.getTemplate().getColumnMapping();
             request.setBillLayout(mapping.getBillLayout());
             request.setD8DisplaySource(mapping.getD8DisplaySource());
+            request.setBillColumnLayout(mapping.getBillColumnLayout());
         }
         return request;
     }

@@ -57,6 +57,17 @@ public class BillExportLayoutResolver {
         return normalizeD8DisplaySource(config.getD8DisplaySource());
     }
 
+    public BillColumnLayout resolveBillColumnLayout(ColumnMappingConfig config) {
+        if (config == null) {
+            return BillColumnLayout.STANDARD_8COL;
+        }
+        return BillColumnLayout.fromKey(config.getBillColumnLayout());
+    }
+
+    public BillColumnLayout resolveBillColumnLayout(String raw) {
+        return BillColumnLayout.fromKey(raw);
+    }
+
     /**
      * @return true → {@code createBillTemplateWorkbook}; false → {@code createCombinedBillWorkbook}
      */

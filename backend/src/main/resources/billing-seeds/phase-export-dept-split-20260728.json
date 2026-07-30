@@ -39,7 +39,8 @@
           "strategyKey": "standard_bill",
           "columnMapping": {
             "billLayout": "dept_split",
-            "d8DisplaySource": "hospitalName"
+            "d8DisplaySource": "hospitalName",
+            "billColumnLayout": "fuyi_extended_11col"
           }
         }
       ]

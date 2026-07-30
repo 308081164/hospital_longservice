@@ -2,18 +2,18 @@
   {
     "folder": "黑龙江中医药大学附属第一医院",
     "status": "pass",
-    "detail": "行 1848/1848 · 总额 155448.12≈155448.8 · sheets=42 summary=中医经典病房",
+    "detail": "行 1848/1848 · 总额 155447.4≈155448.8 · sheets=42 summary=中医经典病房",
     "job_source": "stable",
-    "job_id": 607,
+    "job_id": 724,
     "processed_bill": "测试用例/黑龙江中医药大学附属第一医院/处理后表格/6月__附一6月账单__附一6月账单.xlsx",
-    "export_file": "测试用例/.s8_exports/job607_黑龙江中医药大学附属第一医院_bill.xlsx",
+    "export_file": "测试用例/.s8_exports/job724_黑龙江中医药大学附属第一医院_bill.xlsx",
     "structure_ok": true,
     "sheet_count": 42,
     "layout_mode": "dept_split",
     "summary_label": "中医经典病房",
     "totals": {
       "expected": 155448.8,
-      "actual": 155448.12
+      "actual": 155447.4
     },
     "category": "pass"
   },

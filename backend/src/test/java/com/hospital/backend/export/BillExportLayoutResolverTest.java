@@ -48,4 +48,13 @@ class BillExportLayoutResolverTest {
         assertTrue(label.contains("特色导出"));
         assertTrue(label.contains("分科室"));
     }
+
+    @Test
+    void resolveBillColumnLayout_fromSeedConfig() {
+        var config = new com.hospital.backend.export.model.ColumnMappingConfig();
+        config.setBillColumnLayout("fuyi_extended_11col");
+        assertTrue(resolver.resolveBillColumnLayout(config).isExtended());
+        assertFalse(resolver.resolveBillColumnLayout((com.hospital.backend.export.model.ColumnMappingConfig) null).isExtended());
+        assertFalse(resolver.resolveBillColumnLayout("standard_8col").isExtended());
+    }
 }

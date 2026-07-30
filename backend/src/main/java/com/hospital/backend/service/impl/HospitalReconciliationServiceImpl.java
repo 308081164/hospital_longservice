@@ -23,6 +23,7 @@ import com.hospital.backend.service.ExternalInstrumentService;
 import com.hospital.backend.service.HospitalReconciliationService;
 import com.hospital.backend.service.HospitalExportCapabilityService;
 import com.hospital.backend.service.ReconciliationVersionGroup;
+import com.hospital.backend.export.BillColumnLayout;
 import com.hospital.backend.export.BillExportLayoutResolver;
 import com.hospital.backend.export.D8DisplayNameResolver;
 import com.hospital.backend.export.ExportEngineService;
@@ -2621,7 +2622,8 @@ public class HospitalReconciliationServiceImpl implements HospitalReconciliation
                     workbook = new XSSFWorkbook(new FileInputStream(templateFile));
                 } else {
                     log.info("物理模板文件不存在，使用程序化生成的标准模板");
-                    workbook = createProgrammaticBillTemplate();
+                    ExportLayoutSettings layoutSettings = resolveExportLayoutSettings(request);
+                    workbook = createProgrammaticBillTemplate(layoutSettings.billColumnLayout());
                     copyLogoFromOriginalFile(request.getTemplateId(), workbook);
                 }
                 // 判断多工作表还是单表：有多于一个不同的 sheetName 时保留多表结构
@@ -2640,23 +2642,25 @@ public class HospitalReconciliationServiceImpl implements HospitalReconciliation
                         ? request.getRows().stream().filter(r -> !"skipped".equals(r.getStatus())).count()
                         : 0;
                 ExportLayoutSettings layoutSettings = resolveExportLayoutSettings(request);
+                BillColumnLayout columnLayout = layoutSettings.billColumnLayout();
                 boolean deptSplit = billExportLayoutResolver.useDeptSplitWorkbook(
                         layoutSettings.billLayout(), distinctSheets, exportRowCount);
-                if (billExportLayoutResolver.preferProgrammaticTemplate(layoutSettings.billLayout(), exportRowCount)) {
-                    log.info("generateBillExportBytes: {} rows → programmatic template master (dept_split OOM guard)",
-                            exportRowCount);
+                if (columnLayout.isExtended()
+                        || billExportLayoutResolver.preferProgrammaticTemplate(layoutSettings.billLayout(), exportRowCount)) {
+                    log.info("generateBillExportBytes: {} rows → programmatic template master (layout={})",
+                            exportRowCount, columnLayout.getKey());
                     workbook.close();
-                    workbook = createProgrammaticBillTemplate();
+                    workbook = createProgrammaticBillTemplate(columnLayout);
                     copyLogoFromOriginalFile(request.getTemplateId(), workbook);
                 }
                 if (deptSplit) {
                     log.info("generateBillExportBytes: {} rows / {} sheets → dept_split workbook",
                             exportRowCount, distinctSheets);
-                    createBillTemplateWorkbook(workbook, request);
+                    createBillTemplateWorkbook(workbook, request, columnLayout);
                 } else {
                     log.info("generateBillExportBytes: {} rows / {} sheets → combined workbook",
                             exportRowCount, distinctSheets);
-                    createCombinedBillWorkbook(workbook, request);
+                    createCombinedBillWorkbook(workbook, request, columnLayout);
                 }
                 byte[] result = writeWorkbookToBytes(workbook);
                 workbook.close();
@@ -2691,6 +2695,17 @@ public class HospitalReconciliationServiceImpl implements HospitalReconciliation
      *   Row 11+: 数据行（含边框样式供克隆）
      */
     private XSSFWorkbook createProgrammaticBillTemplate() {
+        return createProgrammaticBillTemplate(BillColumnLayout.STANDARD_8COL);
+    }
+
+    private XSSFWorkbook createProgrammaticBillTemplate(BillColumnLayout columnLayout) {
+        return createProgrammaticBillTemplateWorkbook(columnLayout);
+    }
+
+    static XSSFWorkbook createProgrammaticBillTemplateWorkbook(BillColumnLayout columnLayout) {
+        if (columnLayout == null) {
+            columnLayout = BillColumnLayout.STANDARD_8COL;
+        }
         XSSFWorkbook wb = new XSSFWorkbook();
         XSSFSheet sheet = wb.createSheet("结算单");
         sheet.setDisplayGridlines(false);
@@ -2708,8 +2723,16 @@ public class HospitalReconciliationServiceImpl implements HospitalReconciliation
         sheet.setColumnWidth(6, (int) (18.0 * 256));
         sheet.setColumnWidth(7, (int) (30.0 * 256));
         sheet.setColumnWidth(8, (int) (10.0 * 256));   // I列 — 包数
-        sheet.setColumnWidth(9, (int) (12.0 * 256));   // J列 — 单价
-        sheet.setColumnWidth(10, (int) (12.0 * 256));  // K列 — 总价
+        if (columnLayout.isExtended()) {
+            sheet.setColumnWidth(9, (int) (18.0 * 256));   // J列 — 包装材料
+            sheet.setColumnWidth(10, (int) (14.0 * 256));  // K列 — 单包内器械数量/把
+            sheet.setColumnWidth(11, (int) (12.0 * 256));  // L列 — 单价（把）
+            sheet.setColumnWidth(12, (int) (12.0 * 256));  // M列 — 单价
+            sheet.setColumnWidth(13, (int) (12.0 * 256));  // N列 — 总价
+        } else {
+            sheet.setColumnWidth(9, (int) (12.0 * 256));   // J列 — 单价
+            sheet.setColumnWidth(10, (int) (12.0 * 256));  // K列 — 总价
+        }
 
         // -- 字体 --
         XSSFFont font10 = wb.createFont();
@@ -2804,7 +2827,7 @@ public class HospitalReconciliationServiceImpl implements HospitalReconciliation
         emptyBorderedStyle.setBorderLeft(BorderStyle.THIN);
         emptyBorderedStyle.setBorderRight(BorderStyle.THIN);
 
-        final int MAX_COL = 10; // A-K (0-10)
+        final int MAX_COL = columnLayout.getMaxColIndex(); // A-K (8col) or A-N (11col)
 
         int r = 0;
 
@@ -2871,18 +2894,18 @@ public class HospitalReconciliationServiceImpl implements HospitalReconciliation
             if (c != 3) { XSSFCell ec = row8.createCell(c); ec.setCellStyle(emptyStyle); }
         }
 
-        // Row 8: 表头 D9-K9
+        // Row 8: 表头 D9-?9
         XSSFRow row9 = sheet.createRow(r++);
         row9.setHeightInPoints(18);
         for (int c = 0; c < 3; c++) { XSSFCell ec = row9.createCell(c); ec.setCellStyle(emptyStyle); }
-        String[] headers = {"发货日期", "发货单号", "类型", "包类别号", "包名", "包数", "单价", "总价"};
+        String[] headers = columnLayout.getHeaders();
         for (int c = 0; c < headers.length; c++) {
             XSSFCell hc = row9.createCell(c + 3);
             hc.setCellValue(headers[c]);
             hc.setCellStyle(headerStyle);
         }
 
-        // Row 9: D10 科室名（合并 D10:H10），I10 包数汇总，J10 空，K10 总价汇总
+        // Row 9: D10 科室名（合并 D10:H10），I10 包数汇总，总价汇总列
         XSSFRow row10 = sheet.createRow(r++);
         row10.setHeightInPoints(18);
         sheet.addMergedRegion(new CellRangeAddress(9, 9, 3, 7)); // D10:H10
@@ -2891,9 +2914,16 @@ public class HospitalReconciliationServiceImpl implements HospitalReconciliation
         d10Cell.setCellValue("科室占位");
         d10Cell.setCellStyle(summaryLabelStyle);
         for (int c = 4; c <= 7; c++) { XSSFCell ec = row10.createCell(c); ec.setCellStyle(summaryLabelStyle); }
-        { XSSFCell ec = row10.createCell(8); ec.setCellStyle(summaryValStyle); }     // I10 包数汇总
-        { XSSFCell ec = row10.createCell(9); ec.setCellStyle(emptyStyle); }           // J10
-        { XSSFCell ec = row10.createCell(10); ec.setCellStyle(summaryValStyle); }     // K10 总价汇总
+        { XSSFCell ec = row10.createCell(columnLayout.packCountColIndex()); ec.setCellStyle(summaryValStyle); }
+        if (columnLayout.isExtended()) {
+            for (int c = columnLayout.packCountColIndex() + 1; c < columnLayout.totalPriceColIndex(); c++) {
+                XSSFCell ec = row10.createCell(c);
+                ec.setCellStyle(emptyStyle);
+            }
+        } else {
+            { XSSFCell ec = row10.createCell(9); ec.setCellStyle(emptyStyle); }
+        }
+        { XSSFCell ec = row10.createCell(columnLayout.totalPriceColIndex()); ec.setCellStyle(summaryValStyle); }
 
         // Row 10 (1-indexed Row 11): 模板数据行（供 cloneRowStyle 克隆样式）
         XSSFRow dataRow = sheet.createRow(r++);
@@ -2950,6 +2980,7 @@ public class HospitalReconciliationServiceImpl implements HospitalReconciliation
             }
 
             String displayName = resolveD8DisplayName(job, resolveExportLayoutSettingsForJob(jobId).d8DisplaySource());
+            BillColumnLayout columnLayout = resolveExportLayoutSettingsForJob(jobId).billColumnLayout();
             log.info("postProcessBillExport: resolved displayName='{}' for jobId={}", displayName, jobId);
 
             if (displayName.isBlank()) {
@@ -3024,11 +3055,11 @@ public class HospitalReconciliationServiceImpl implements HospitalReconciliation
                                 workbook.getSheetName(i), rowCount, BILL_EXPORT_AUTO_SIZE_ROW_THRESHOLD);
                     }
 
-                    // 4. 第10行（首行数据）灰色底色（仅 D-K 列，不含 L 列及之后）
+                    // 4. 第10行（首行数据）灰色底色（D 至 maxCol）
                     if (shouldApplyBillExportRowDecorations(rowCount)) {
                         Row row10 = sheet.getRow(9); // 0-indexed: row 10 = index 9
                         if (row10 != null) {
-                            for (int c = 3; c <= 10; c++) { // D(3) ~ K(10)
+                            for (int c = 3; c <= columnLayout.getMaxColIndex(); c++) {
                                 Cell cell = row10.getCell(c);
                                 if (cell != null) {
                                     CellStyle cs = workbook.createCellStyle();
@@ -3040,25 +3071,38 @@ public class HospitalReconciliationServiceImpl implements HospitalReconciliation
                             }
                         }
 
-                        // 5. 仅第10行 I 列和 K 列加粗
+                        // 5. 第10行包数列与总价列加粗
                         if (row10 != null) {
                             Font boldFont = workbook.createFont();
                             boldFont.setBold(true);
-                            // I 列 (index 8)
-                            Cell cellI10 = row10.getCell(8);
-                            if (cellI10 != null) {
+                            Cell cellPack10 = row10.getCell(columnLayout.packCountColIndex());
+                            if (cellPack10 != null) {
                                 CellStyle boldStyle = workbook.createCellStyle();
-                                boldStyle.cloneStyleFrom(cellI10.getCellStyle());
+                                boldStyle.cloneStyleFrom(cellPack10.getCellStyle());
                                 boldStyle.setFont(boldFont);
-                                cellI10.setCellStyle(boldStyle);
+                                cellPack10.setCellStyle(boldStyle);
                             }
-                            // K 列 (index 10)
-                            Cell cellK10 = row10.getCell(10);
-                            if (cellK10 != null) {
+                            Integer totalPriceColIdx = null;
+                            if (headerRow != null) {
+                                Map<String, Integer> colMap = new LinkedHashMap<>();
+                                for (int c = 0; c < headerRow.getLastCellNum(); c++) {
+                                    Cell cell = headerRow.getCell(c);
+                                    if (cell != null) {
+                                        String val = getCellStringValue(cell).trim();
+                                        if (!val.isEmpty()) colMap.put(val, c);
+                                    }
+                                }
+                                totalPriceColIdx = colMap.get("总价");
+                            }
+                            if (totalPriceColIdx == null) {
+                                totalPriceColIdx = columnLayout.totalPriceColIndex();
+                            }
+                            Cell cellTotal10 = row10.getCell(totalPriceColIdx);
+                            if (cellTotal10 != null) {
                                 CellStyle boldStyle = workbook.createCellStyle();
-                                boldStyle.cloneStyleFrom(cellK10.getCellStyle());
+                                boldStyle.cloneStyleFrom(cellTotal10.getCellStyle());
                                 boldStyle.setFont(boldFont);
-                                cellK10.setCellStyle(boldStyle);
+                                cellTotal10.setCellStyle(boldStyle);
                             }
                         }
                     } else {
@@ -3107,6 +3151,8 @@ public class HospitalReconciliationServiceImpl implements HospitalReconciliation
         try (FileInputStream fis = new FileInputStream(sourceFile);
              XSSFWorkbook workbook = new XSSFWorkbook(fis)) {
 
+            BillColumnLayout columnLayout = resolveExportLayoutSettings(request).billColumnLayout();
+
             // 按 sheet_name 分组
             Map<String, List<BillRowItem>> groupedRows = groupRowsBySheet(request.getRows());
 
@@ -3142,19 +3188,10 @@ public class HospitalReconciliationServiceImpl implements HospitalReconciliation
                 Integer unitPriceCol = colMap.get("单价");
                 Integer totalPriceCol = colMap.get("总价");
                 Integer packageMaterialCol = colMap.get("包装材料");
-                Integer instrumentCountCol = colMap.get("器械数");
+                Integer instrumentCountCol = findColumnAlias(colMap, "单包内器械数量/把", "器械数");
+                Integer perPiecePriceCol = colMap.get("单价（把）");
 
-                // 覆写表头行为标准列名（对应修正后的导入账单）
-                String[][] headerAliases = {
-                    {"发货日期", "灭菌日期"},
-                    {"发货单号", "灭菌锅次"},
-                    {"包类别号", "病人ID"},
-                    {"包名", "器械名称"},
-                    {"包装材料"},
-                    {"包数"},
-                    {"单价"},
-                    {"总价"},
-                };
+                String[][] headerAliases = columnLayout.getHeaderAliases();
                 for (String[] aliases : headerAliases) {
                     Integer colIdx = null;
                     for (String alias : aliases) {
@@ -3172,7 +3209,8 @@ public class HospitalReconciliationServiceImpl implements HospitalReconciliation
                 unitPriceCol = colMap.get("单价");
                 totalPriceCol = colMap.get("总价");
                 packageMaterialCol = colMap.get("包装材料");
-                instrumentCountCol = colMap.get("器械数");
+                instrumentCountCol = findColumnAlias(colMap, "单包内器械数量/把", "器械数");
+                perPiecePriceCol = colMap.get("单价（把）");
 
                 // 更新 B4 日期范围 / D8 计费规则名称
                 BillSheetMeta meta = metaMap.get(sheetName);
@@ -3236,18 +3274,26 @@ public class HospitalReconciliationServiceImpl implements HospitalReconciliation
                     if (matched.getPackCount() != null && packCountCol != null) {
                         setCellValue(sheet, r + 1, packCountCol + 1, matched.getPackCount());
                     }
-                    // 更新 单价列（优先期望单价）
+                    if (packageMaterialCol != null && matched.getPackageMaterial() != null) {
+                        setCellValue(sheet, r + 1, packageMaterialCol + 1, cleanExcelText(matched.getPackageMaterial()));
+                    }
+                    if (instrumentCountCol != null && matched.getInstrumentCount() != null) {
+                        setCellValue(sheet, r + 1, instrumentCountCol + 1, matched.getInstrumentCount());
+                    }
+                    if (perPiecePriceCol != null) {
+                        Double price = BillExportPriceResolver.resolvePerPiecePrice(matched);
+                        if (price != null) {
+                            setCellValue(sheet, r + 1, perPiecePriceCol + 1, price);
+                        }
+                    }
                     if (unitPriceCol != null) {
-                        Double price = matched.getExpectedUnitPrice() != null
-                                ? matched.getExpectedUnitPrice() : matched.getUnitPrice();
+                        Double price = BillExportPriceResolver.resolveUnitPrice(matched);
                         if (price != null) {
                             setCellValue(sheet, r + 1, unitPriceCol + 1, price);
                         }
                     }
-                    // 更新 总价列（优先校正后总价）
                     if (totalPriceCol != null) {
-                        Double total = matched.getCorrectedTotalPrice() != null
-                                ? matched.getCorrectedTotalPrice() : matched.getTotalPrice();
+                        Double total = BillExportPriceResolver.resolveTotalPrice(matched);
                         if (total != null) {
                             setCellValue(sheet, r + 1, totalPriceCol + 1, total);
                         }
@@ -3293,8 +3339,8 @@ public class HospitalReconciliationServiceImpl implements HospitalReconciliation
                     }
                 }
 
-                // 隐藏导出不需要的列：仅器械数，包装材料列保持可见
-                if (instrumentCountCol != null && instrumentCountCol >= 0) {
+                // 隐藏导出不需要的列：标准布局隐藏器械数；附一 11 列保持可见
+                if (instrumentCountCol != null && instrumentCountCol >= 0 && !columnLayout.isExtended()) {
                     sheet.setColumnHidden(instrumentCountCol, true);
                 }
                 // 总价列（K列）适当收窄
@@ -3340,7 +3386,8 @@ public class HospitalReconciliationServiceImpl implements HospitalReconciliation
      * @param workbook 从标准模板文件加载的 XSSFWorkbook
      * @param request  账单导出请求（含所有行数据）
      */
-    private void createCombinedBillWorkbook(XSSFWorkbook workbook, HospitalBillTemplateExportRequest request) {
+    private void createCombinedBillWorkbook(XSSFWorkbook workbook, HospitalBillTemplateExportRequest request,
+                                            BillColumnLayout columnLayout) {
         XSSFSheet templateSheet = workbook.getSheetAt(0);
 
         // 收集所有非 skipped 行（保留 DB 排序：sheetName → rowNumber）
@@ -3384,7 +3431,7 @@ public class HospitalReconciliationServiceImpl implements HospitalReconciliation
         }
 
         // 写入全部数据到模板第一页（合并模式）
-        writeSheetFromTemplate(workbook, templateSheet, resolvedSheetName, allRows, combinedMetaMap, true);
+        writeSheetFromTemplate(workbook, templateSheet, resolvedSheetName, allRows, combinedMetaMap, true, columnLayout);
 
         // 附加 logo 图片
         attachTemplateLogo(workbook, templateSheet);
@@ -3536,6 +3583,10 @@ public class HospitalReconciliationServiceImpl implements HospitalReconciliation
         return null;
     }
 
+    private static Integer coalesceCol(Integer preferred, Integer fallback) {
+        return preferred != null ? preferred : fallback;
+    }
+
     /**
      * 从表头行构建列名 → 0-indexed 列号的映射
      */
@@ -3641,7 +3692,8 @@ public class HospitalReconciliationServiceImpl implements HospitalReconciliation
      * @param workbook 从模板文件加载的 XSSFWorkbook 对象（可写）
      * @param request  账单导出请求（含 rows, sheetMetas 等）
      */
-    private void createBillTemplateWorkbook(XSSFWorkbook workbook, HospitalBillTemplateExportRequest request) {
+    private void createBillTemplateWorkbook(XSSFWorkbook workbook, HospitalBillTemplateExportRequest request,
+                                            BillColumnLayout columnLayout) {
         // 获取模板的第一个 sheet 作为基准模板
         XSSFSheet templateSheet = workbook.getSheetAt(0);
 
@@ -3683,7 +3735,7 @@ public class HospitalReconciliationServiceImpl implements HospitalReconciliation
         // ===== 处理第一个 sheet =====
         String firstSheetName = orderedSheetNames.get(0);
         writeSheetFromTemplate(workbook, templateSheet, firstSheetName,
-                groupedRows.get(firstSheetName), metaMap, false);
+                groupedRows.get(firstSheetName), metaMap, false, columnLayout);
         workbook.setSheetName(0,
                 resolveUniqueSheetTitle(workbook, firstSheetName, templateSheet.getSheetName()));
         attachTemplateLogo(workbook, templateSheet);
@@ -3696,7 +3748,7 @@ public class HospitalReconciliationServiceImpl implements HospitalReconciliation
             workbook.setSheetName(clonedIdx,
                     resolveUniqueSheetTitle(workbook, sheetName, clonedSheet.getSheetName()));
             writeSheetFromTemplate(workbook, clonedSheet, sheetName,
-                    groupedRows.get(sheetName), metaMap, false);
+                    groupedRows.get(sheetName), metaMap, false, columnLayout);
             attachTemplateLogo(workbook, clonedSheet);
         }
 
@@ -3732,7 +3784,14 @@ public class HospitalReconciliationServiceImpl implements HospitalReconciliation
     private void writeSheetFromTemplate(XSSFWorkbook workbook, XSSFSheet sheet,
                                         String sheetName, List<BillRowItem> sheetRows,
                                         Map<String, BillSheetMeta> metaMap,
-                                        boolean combinedMode) {
+                                        boolean combinedMode,
+                                        BillColumnLayout columnLayout) {
+        if (columnLayout == null) {
+            columnLayout = BillColumnLayout.STANDARD_8COL;
+        }
+        final BillColumnLayout layout = columnLayout;
+        final int maxColIndex = layout.getMaxColIndex();
+        final String maxColLetter = layout.maxColLetter();
         // ===== 第一步：过滤掉被标记为"skipped"的行 =====
         // skipped 行是对账引擎无法匹配规则的行，不参与导出
         List<BillRowItem> exportRows = sheetRows != null
@@ -3793,25 +3852,27 @@ public class HospitalReconciliationServiceImpl implements HospitalReconciliation
         }
         // ===== 第七步：覆写列表头为标准列名（对应修正后的导入账单） =====
         {
-            String[][] headerAliases = {
-                {"发货日期", "灭菌日期"},
-                {"发货单号", "灭菌锅次"},
-                {"类型"},
-                {"包类别号", "病人ID"},
-                {"包名", "器械名称"},
-                {"包数"},
-                {"单价"},
-                {"总价"},
-            };
-            for (String[] aliases : headerAliases) {
-                Integer colIdx = null;
-                for (String alias : aliases) {
-                    colIdx = templateColMap.get(alias);
-                    if (colIdx != null) break;
+            if (layout.isExtended()) {
+                String[] headers = layout.getHeaders();
+                for (int i = 0; i < headers.length; i++) {
+                    setCellValue(sheet, headerRowOneIdx, i + 4, cleanExcelText(headers[i]));
                 }
-                if (colIdx != null) {
-                    setCellValue(sheet, headerRowOneIdx, colIdx + 1, cleanExcelText(aliases[0]));
+            } else {
+                String[][] headerAliases = layout.getHeaderAliases();
+                for (String[] aliases : headerAliases) {
+                    Integer colIdx = null;
+                    for (String alias : aliases) {
+                        colIdx = templateColMap.get(alias);
+                        if (colIdx != null) break;
+                    }
+                    if (colIdx != null) {
+                        setCellValue(sheet, headerRowOneIdx, colIdx + 1, cleanExcelText(aliases[0]));
+                    }
                 }
+            }
+            Row rebuiltHeaderRow = sheet.getRow(headerRowIdx);
+            if (rebuiltHeaderRow != null) {
+                templateColMap = buildColumnIndexMap(rebuiltHeaderRow);
             }
         }
 
@@ -3848,10 +3909,20 @@ public class HospitalReconciliationServiceImpl implements HospitalReconciliation
         Integer catNoCol = findColumnAlias(templateColMap, "病人ID", "包类别号");
         Integer packNameCol = findColumnAlias(templateColMap, "器械名称", "包名");
         Integer packCountCol = findColumnAlias(templateColMap, "包数");
-        Integer instCountCol = findColumnAlias(templateColMap, "器械数");
+        Integer packageMaterialCol = findColumnAlias(templateColMap, "包装材料");
+        Integer instCountCol = findColumnAlias(templateColMap, "单包内器械数量/把", "器械数");
+        Integer perPiecePriceCol = findColumnAlias(templateColMap, "单价（把）");
         Integer unitPriceCol = findColumnAlias(templateColMap, "单价");
         Integer totalPriceCol = findColumnAlias(templateColMap, "总价");
         Integer diffCol = findColumnAlias(templateColMap, "差额");
+        if (layout.isExtended()) {
+            packCountCol = coalesceCol(packCountCol, layout.fixedDataColumnIndex("包数"));
+            packageMaterialCol = coalesceCol(packageMaterialCol, layout.fixedDataColumnIndex("包装材料"));
+            instCountCol = coalesceCol(instCountCol, layout.fixedDataColumnIndex("单包内器械数量/把"));
+            perPiecePriceCol = coalesceCol(perPiecePriceCol, layout.fixedDataColumnIndex("单价（把）"));
+            unitPriceCol = coalesceCol(unitPriceCol, layout.fixedDataColumnIndex("单价"));
+            totalPriceCol = coalesceCol(totalPriceCol, layout.fixedDataColumnIndex("总价"));
+        }
 
         // ===== 第十步：写入汇总行（仅更新模板中存在的汇总列） =====
         int totalPackCount = exportRows.stream()
@@ -3911,12 +3982,23 @@ public class HospitalReconciliationServiceImpl implements HospitalReconciliation
             if (packCountCol != null) {
                 setCellValue(sheet, r, packCountCol + 1, row.getPackCount());
             }
+            if (packageMaterialCol != null) {
+                setCellValue(sheet, r, packageMaterialCol + 1, cleanExcelText(row.getPackageMaterial()));
+            }
             if (instCountCol != null) {
                 setCellValue(sheet, r, instCountCol + 1, row.getInstrumentCount());
             }
+            if (perPiecePriceCol != null) {
+                Double price = BillExportPriceResolver.resolvePerPiecePrice(row);
+                if (price != null) {
+                    setCellValue(sheet, r, perPiecePriceCol + 1, price);
+                }
+            }
             if (unitPriceCol != null) {
                 Double price = BillExportPriceResolver.resolveUnitPrice(row);
-                if (price != null) setCellValue(sheet, r, unitPriceCol + 1, price);
+                if (price != null) {
+                    setCellValue(sheet, r, unitPriceCol + 1, price);
+                }
             }
             if (totalPriceCol != null) {
                 Double total = BillExportPriceResolver.resolveTotalPrice(row);
@@ -3954,7 +4036,7 @@ public class HospitalReconciliationServiceImpl implements HospitalReconciliation
         for (int r = clearStart; r <= clearEnd; r++) {
             int rowZero = r - 1;
             Row rowObj = sheet.getRow(rowZero);
-            for (int c = 3; c < 11; c++) {  // 列 D(4) 到 K(11)，0-indexed 为 3-10
+            for (int c = 3; c <= maxColIndex; c++) {  // 列 D 到 maxCol
                 setCellValue(sheet, r, c + 1, null);
                 if (rowObj != null) {
                     Cell cell = rowObj.getCell(c);
@@ -4000,24 +4082,21 @@ public class HospitalReconciliationServiceImpl implements HospitalReconciliation
 
         // ===== 第十四点五步：统一边框 — 仅有数据的行才加边框，空白行不加 =====
         // 模板中部分行可能缺少竖线，且 setCellValue 自动创建的行没有样式
-        applyUniformBorders(workbook, sheet, summaryRowIdx, dataEndRow, 0, 10); // 列 A-K
+        applyUniformBorders(workbook, sheet, summaryRowIdx, dataEndRow, 0, maxColIndex);
 
         // ===== 第十五步：重新合并单元格 =====
         // 数据写入完毕，恢复合并区域（标题区域固定、数据区域动态）
-        // 合并区域全部结束于 K 列（总价列），L 列及之后保持空白
-        addMergedRegionSafe(sheet, "C1:K2");                // 标题跨列合并
-        addMergedRegionSafe(sheet, "B4:K5");                // 日期范围合并
-        addMergedRegionSafe(sheet, "D8:K8");                // 医院名称跨列合并
-        addMergedRegionSafe(sheet, "A8:B" + dataEndRow);    // 左侧标签区纵向合并（动态行数）
-        addMergedRegionSafe(sheet, "C" + headerRowOneIdx + ":C" + dataEndRow);    // 类别区纵向合并（动态行数）
-        // 汇总标签合并：D 到 包数前一列（包数、总价需保持独立可见）
+        addMergedRegionSafe(sheet, "C1:" + maxColLetter + "2");
+        addMergedRegionSafe(sheet, "B4:" + maxColLetter + "5");
+        addMergedRegionSafe(sheet, "D8:" + maxColLetter + "8");
+        addMergedRegionSafe(sheet, "A8:B" + dataEndRow);
+        addMergedRegionSafe(sheet, "C" + headerRowOneIdx + ":C" + dataEndRow);
         int labelEndCol = packCountCol != null ? packCountCol - 1 : 7;
         addMergedRegionSafe(sheet, "D" + summaryRowIdx + ":" + CellReference.convertNumToColString(labelEndCol) + summaryRowIdx);
 
         // ===== 第十六步：设置自动筛选 =====
-        // 对列标题行和数据行设置 AutoFilter
         try {
-            sheet.setAutoFilter(CellRangeAddress.valueOf("A" + headerRowOneIdx + ":K" + dataEndRow));
+            sheet.setAutoFilter(CellRangeAddress.valueOf("A" + headerRowOneIdx + ":" + maxColLetter + dataEndRow));
         } catch (Exception e) {
             log.warn("设置自动筛选失败: {}", e.getMessage());
         }
@@ -5634,12 +5713,14 @@ public class HospitalReconciliationServiceImpl implements HospitalReconciliation
         }
     }
 
-    private record ExportLayoutSettings(String billLayout, String d8DisplaySource) {}
+    private record ExportLayoutSettings(String billLayout, String d8DisplaySource, BillColumnLayout billColumnLayout) {}
 
     private ExportLayoutSettings resolveExportLayoutSettings(HospitalBillTemplateExportRequest request) {
         String billLayout = request.getBillLayout();
         String d8DisplaySource = request.getD8DisplaySource();
-        if ((billLayout == null || billLayout.isBlank() || d8DisplaySource == null || d8DisplaySource.isBlank())
+        BillColumnLayout billColumnLayout = BillColumnLayout.fromKey(request.getBillColumnLayout());
+        if ((billLayout == null || billLayout.isBlank() || d8DisplaySource == null || d8DisplaySource.isBlank()
+                || request.getBillColumnLayout() == null || request.getBillColumnLayout().isBlank())
                 && request.getTemplateId() != null && !request.getTemplateId().isBlank()) {
             try {
                 Long jobId = Long.parseLong(request.getTemplateId());
@@ -5650,29 +5731,40 @@ public class HospitalReconciliationServiceImpl implements HospitalReconciliation
                 if (d8DisplaySource == null || d8DisplaySource.isBlank()) {
                     d8DisplaySource = fromJob.d8DisplaySource();
                 }
+                if (request.getBillColumnLayout() == null || request.getBillColumnLayout().isBlank()) {
+                    billColumnLayout = fromJob.billColumnLayout();
+                }
             } catch (NumberFormatException ignored) {
                 // templateId not a job id
             }
         }
         return new ExportLayoutSettings(
                 billExportLayoutResolver.normalizeBillLayout(billLayout),
-                billExportLayoutResolver.normalizeD8DisplaySource(d8DisplaySource));
+                billExportLayoutResolver.normalizeD8DisplaySource(d8DisplaySource),
+                billColumnLayout != null ? billColumnLayout : BillColumnLayout.STANDARD_8COL);
     }
 
     private ExportLayoutSettings resolveExportLayoutSettingsForJob(Long jobId) {
         if (jobId == null) {
-            return new ExportLayoutSettings(BillExportLayoutResolver.LAYOUT_AUTO, BillExportLayoutResolver.D8_AUTO);
+            return new ExportLayoutSettings(
+                    BillExportLayoutResolver.LAYOUT_AUTO,
+                    BillExportLayoutResolver.D8_AUTO,
+                    BillColumnLayout.STANDARD_8COL);
         }
         HospitalReconciliationJob job = jobMapper.selectById(jobId);
         if (job == null) {
-            return new ExportLayoutSettings(BillExportLayoutResolver.LAYOUT_AUTO, BillExportLayoutResolver.D8_AUTO);
+            return new ExportLayoutSettings(
+                    BillExportLayoutResolver.LAYOUT_AUTO,
+                    BillExportLayoutResolver.D8_AUTO,
+                    BillColumnLayout.STANDARD_8COL);
         }
         Long customerId = customerResolver.resolveByName(job.getHospitalName()).map(c -> c.getId()).orElse(null);
         ResolvedExportTemplate template = exportTemplateResolver.resolve(customerId, ExportType.BILL, null);
         ColumnMappingConfig mapping = template != null ? template.getColumnMapping() : null;
         return new ExportLayoutSettings(
                 billExportLayoutResolver.resolveBillLayout(mapping),
-                billExportLayoutResolver.resolveD8DisplaySource(mapping));
+                billExportLayoutResolver.resolveD8DisplaySource(mapping),
+                billExportLayoutResolver.resolveBillColumnLayout(mapping));
     }
 
     /**

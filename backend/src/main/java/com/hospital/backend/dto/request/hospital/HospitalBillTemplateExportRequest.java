@@ -20,4 +20,7 @@ public class HospitalBillTemplateExportRequest {
 
     /** auto | hospitalName | ruleName */
     private String d8DisplaySource;
+
+    /** standard_8col | fuyi_extended_11col */
+    private String billColumnLayout;
 }
