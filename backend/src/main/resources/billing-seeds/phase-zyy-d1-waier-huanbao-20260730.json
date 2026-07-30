@@ -1,0 +1,17 @@
+{
+  "version": "1",
+  "description": "附一 ZYY-D1 外二科室：换药包按包数固定价 21.99 元/包",
+  "newRules": [
+    {
+      "code": "ZYY-D1",
+      "ruleType": "FIXED_PRICE",
+      "name": "外二换药包按包21.99",
+      "priority": 4,
+      "price": 21.99,
+      "keywords": ["换药包"],
+      "conditionsJson": "[{\"field\":\"department\",\"value\":[\"外二\"]}]",
+      "skipPackaging": true,
+      "skipDiscount": true
+    }
+  ]
+}

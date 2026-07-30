@@ -53,6 +53,18 @@ class ZyyD1P0PricingRegressionTest {
             }
             fixedPrices.insert(0, compiled);
         }
+
+        JsonNode waierSeed = MAPPER.readTree(getClass().getResourceAsStream(
+                "/billing-seeds/phase-zyy-d1-waier-huanbao-20260730.json"));
+        for (JsonNode ruleNode : waierSeed.path("newRules")) {
+            ObjectNode compiled = (ObjectNode) ruleNode.deepCopy();
+            var departments = BillingConditionEvaluator.parseDepartmentList(
+                    ruleNode.path("conditionsJson").asText(null));
+            if (!departments.isEmpty()) {
+                compiled.set("departments", MAPPER.valueToTree(departments));
+            }
+            fixedPrices.insert(0, compiled);
+        }
         engine = new PricingEngine(rules);
     }
 
@@ -134,6 +146,20 @@ class ZyyD1P0PricingRegressionTest {
     private void assertUnchanged(Map<String, Object> row) {
         PricingEngine.ProcessedResult result = engine.processRow(row);
         assertThat(result.status).isEqualTo("unchanged");
+    }
+
+    @Test
+    void shouldPriceWaierHuanYaoBaoAt2199PerPack() {
+        assertWarning(row("外二", "换药包(120布)", "器械包(ZSD)", "", 3, 3, 22.6, 67.8), 21.99);
+    }
+
+    private Map<String, Object> row(String department, String packName, String type, String material,
+                                    int instrumentCount, int packCount,
+                                    double unitPrice, double totalPrice) {
+        Map<String, Object> row = row(packName, type, material, instrumentCount, packCount, unitPrice, totalPrice);
+        row.put("sheetName", department);
+        row.put("department", department);
+        return row;
     }
 
     private Map<String, Object> row(String packName, String type, String material,
