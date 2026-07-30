@@ -1,0 +1,16 @@
+{
+  "version": "1",
+  "description": "悦美芳华 YUEMEI-FH：眼包器械包(ZSD) 按件 5.5 元（多包按单包器械数×5.5）",
+  "newRules": [
+    {
+      "code": "YUEMEI-FH",
+      "ruleType": "PRICE_PER_INSTRUMENT",
+      "name": "眼包5.5元/件",
+      "priority": 8,
+      "price": 5.5,
+      "keywords": ["眼包"],
+      "skipPackaging": true,
+      "skipDiscount": true
+    }
+  ]
+}

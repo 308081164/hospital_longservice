@@ -1,0 +1,88 @@
+{
+  "version": "1",
+  "description": "黑龙江省社会康复医院 SHKF-YY：口腔器械盒固定价（价目表 8 项）",
+  "newRules": [
+    {
+      "code": "SHKF-YY",
+      "ruleType": "FIXED_PRICE",
+      "name": "社会康复ITI种植盒44",
+      "priority": 5,
+      "price": 44,
+      "keywords": ["ITI种植盒"],
+      "skipPackaging": true,
+      "skipDiscount": true
+    },
+    {
+      "code": "SHKF-YY",
+      "ruleType": "FIXED_PRICE",
+      "name": "社会康复登腾种植盒44",
+      "priority": 6,
+      "price": 44,
+      "keywords": ["登腾种植盒", "DT种植盒"],
+      "skipPackaging": true,
+      "skipDiscount": true
+    },
+    {
+      "code": "SHKF-YY",
+      "ruleType": "FIXED_PRICE",
+      "name": "社会康复梁光强器械盒粉16.5",
+      "priority": 7,
+      "price": 16.5,
+      "keywords": ["梁光强器械盒（粉）", "梁光强器械盒(粉)", "梁光强器械盒粉"],
+      "skipPackaging": true,
+      "skipDiscount": true
+    },
+    {
+      "code": "SHKF-YY",
+      "ruleType": "FIXED_PRICE",
+      "name": "社会康复梁光强器械盒22",
+      "priority": 8,
+      "price": 22,
+      "keywords": ["梁光强器械盒"],
+      "excludeKeywords": ["粉"],
+      "skipPackaging": true,
+      "skipDiscount": true
+    },
+    {
+      "code": "SHKF-YY",
+      "ruleType": "FIXED_PRICE",
+      "name": "社会康复环切器械盒16.5",
+      "priority": 9,
+      "price": 16.5,
+      "keywords": ["环切器械盒"],
+      "skipPackaging": true,
+      "skipDiscount": true
+    },
+    {
+      "code": "SHKF-YY",
+      "ruleType": "FIXED_PRICE",
+      "name": "社会康复抛光车针盒16.5",
+      "priority": 10,
+      "price": 16.5,
+      "keywords": ["抛光车针盒"],
+      "skipPackaging": true,
+      "skipDiscount": true
+    },
+    {
+      "code": "SHKF-YY",
+      "ruleType": "FIXED_PRICE",
+      "name": "社会康复大车针盒22",
+      "priority": 11,
+      "price": 22,
+      "keywords": ["大车针盒"],
+      "skipPackaging": true,
+      "skipDiscount": true
+    },
+    {
+      "code": "SHKF-YY",
+      "ruleType": "FIXED_PRICE",
+      "name": "社会康复种植盒16.5",
+      "priority": 12,
+      "price": 16.5,
+      "keywords": ["种植盒"],
+      "excludeKeywords": ["ITI", "登腾", "DT"],
+      "skipPackaging": true,
+      "skipDiscount": true
+    }
+  ]
+}

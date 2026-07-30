@@ -57,6 +57,11 @@ class ZyyD1P0PricingRegressionTest {
     }
 
     @Test
+    void shouldPriceCottonBallJarAtFuyi25cmBagRate() {
+        assertWarning(row("棉球缸-1/z2530", "敷料包(纸塑袋)", "高温纸塑袋250*300", 1, 1, 12.8, 12.8), 12.79);
+    }
+
+    @Test
     void shouldFlagExpectedPriceCorrections() {
         assertWarning(row("换药包(120布)", "器械包(ZSD)", "", 3, 3, 22.6, 67.8), 21.99);
         assertWarning(row("30°腹腔镜-1/z2060", "器械包(ZSD)", "", 1, 1, 28, 28), 30.4);

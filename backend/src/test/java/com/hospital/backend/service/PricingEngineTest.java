@@ -123,6 +123,15 @@ class PricingEngineTest {
     void yuemeiYanBaoMultiPackZsdUsesPerPackInstrumentCountForHighTempNonWoven() {
         ObjectNode rules = (ObjectNode) defaultRules();
         rules.putObject("billingProfile").put("enabled", true).put("pricingMode", "standard");
+        ArrayNode fixedPrices = (ArrayNode) rules.path("specialRules").path("fixedPrices");
+        ObjectNode rule = fixedPrices.addObject();
+        rule.put("name", "眼包5.5元/件");
+        rule.putArray("hospitals").add("悦美芳华医疗门诊医院");
+        rule.putArray("keywords").add("眼包");
+        rule.put("price", 5.5);
+        rule.put("pricePerInstrument", true);
+        rule.put("skipPackaging", true);
+        rule.put("skipHospitalDiscount", true);
         PricingEngine pricingEngine = new PricingEngine(rules);
 
         PricingEngine.ProcessedResult twoPacks = pricingEngine.processRow(row(
@@ -137,6 +146,7 @@ class PricingEngineTest {
         assertThat(twoPacks.expectedUnitPrice).isEqualTo(77.0);
         assertThat(twoPacks.correctedTotalPrice).isEqualTo(154.0);
         assertThat(twoPacks.status).isEqualTo("unchanged");
+        assertThat(twoPacks.pricingRule).contains("眼包5.5元/件");
 
         PricingEngine.ProcessedResult sixPacks = pricingEngine.processRow(row(
                 "悦美芳华医疗门诊医院",
@@ -150,6 +160,52 @@ class PricingEngineTest {
         assertThat(sixPacks.expectedUnitPrice).isEqualTo(77.0);
         assertThat(sixPacks.correctedTotalPrice).isEqualTo(462.0);
         assertThat(sixPacks.status).isEqualTo("unchanged");
+
+        PricingEngine.ProcessedResult wrongUnit = pricingEngine.processRow(row(
+                "悦美芳华医疗门诊医院",
+                "器械包(ZSD)",
+                "眼包",
+                "",
+                28,
+                2,
+                80,
+                160));
+        assertThat(wrongUnit.status).isEqualTo("warning");
+        assertThat(wrongUnit.expectedUnitPrice).isEqualTo(77.0);
+    }
+
+    @Test
+    void shkfDaCheZhenHeFixedPrice22() {
+        ObjectNode rules = (ObjectNode) defaultRules();
+        rules.putObject("billingProfile").put("enabled", true).put("pricingMode", "standard");
+        ArrayNode fixedPrices = (ArrayNode) rules.path("specialRules").path("fixedPrices");
+        ObjectNode rule = fixedPrices.addObject();
+        rule.put("name", "社会康复大车针盒22");
+        rule.putArray("hospitals").add("黑龙江省社会康复医院");
+        rule.putArray("keywords").add("大车针盒");
+        rule.put("price", 22);
+        rule.put("skipPackaging", true);
+        rule.put("skipHospitalDiscount", true);
+        PricingEngine pricingEngine = new PricingEngine(rules);
+
+        PricingEngine.ProcessedResult ok = pricingEngine.processRow(row(
+                "黑龙江省社会康复医院",
+                "额外包(纸塑袋)",
+                "大车针盒-1/Z1526",
+                "高温纸塑袋150*260",
+                1, 1, 22, 22));
+        assertThat(ok.expectedUnitPrice).isEqualTo(22.0);
+        assertThat(ok.status).isEqualTo("unchanged");
+        assertThat(ok.pricingRule).contains("社会康复大车针盒22");
+
+        PricingEngine.ProcessedResult wrong = pricingEngine.processRow(row(
+                "黑龙江省社会康复医院",
+                "额外包(纸塑袋)",
+                "大车针盒-1/Z1526",
+                "高温纸塑袋150*260",
+                1, 1, 11, 11));
+        assertThat(wrong.status).isEqualTo("warning");
+        assertThat(wrong.expectedUnitPrice).isEqualTo(22.0);
     }
 
     @Test

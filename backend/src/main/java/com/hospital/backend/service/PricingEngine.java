@@ -256,18 +256,15 @@ public class PricingEngine {
             skipHospitalDiscount = specialPrice.skipHospitalDiscount;
         } else if (type.contains("纸塑袋") && packName.contains("棉球")) {
             int bagSize2 = detectBagSize(str(row, "packageMaterial") + str(row, "packName"));
-            JsonNode cottonPricing = rules.path("dressingPack").path("cottonPaperPlastic");
-            if (bagSize2 == 20 && cottonPricing.has("20")) {
-                expectedUnitPrice = cottonPricing.path("20").asDouble();
-                pricingRule = "敷料包(纸塑袋)+棉球——20cm";
-                notes.add("敷料包(纸塑袋)+棉球，纸塑袋规格 20cm，单价为 " + fmt(expectedUnitPrice) + " 元。");
-            } else if (bagSize2 == 15 && cottonPricing.has("15")) {
-                expectedUnitPrice = cottonPricing.path("15").asDouble();
-                pricingRule = "敷料包(纸塑袋)+棉球——15cm";
-                notes.add("敷料包(纸塑袋)+棉球，纸塑袋规格 15cm，单价为 " + fmt(expectedUnitPrice) + " 元。");
+            Double cottonPrice = resolveCottonPaperPlasticUnitPrice(bagSize2);
+            if (cottonPrice != null) {
+                expectedUnitPrice = cottonPrice;
+                pricingRule = "敷料包(纸塑袋)+棉球——" + bagSize2 + "cm";
+                notes.add("敷料包(纸塑袋)+棉球，纸塑袋规格 " + bagSize2 + "cm，单价为 "
+                        + fmt(expectedUnitPrice) + " 元。");
             } else {
                 pricingRule = "敷料包(纸塑袋)+棉球——未识别规格";
-                notes.add("敷料包(纸塑袋)+棉球未能识别纸塑袋规格（20cm/15cm），保留原始价格。");
+                notes.add("敷料包(纸塑袋)+棉球未能识别纸塑袋规格，保留原始价格。");
                 requiresReview = true;
             }
             skipPackaging = true;
@@ -687,9 +684,20 @@ public class PricingEngine {
         }
         if (Double.isNaN(basePrice)) return null;
         boolean pricePerInstrument = rule.path("pricePerInstrument").asBoolean(false);
-        int billingCount = pricePerInstrument
-                ? resolvePricePerInstrumentCount(rule, str(row, "packName"), combined, effectiveCount)
-                : effectiveCount;
+        int billingCount;
+        if (pricePerInstrument) {
+            String rowType = str(row, "type");
+            int rowPackCount = Math.max(1, intVal(row, "packCount"));
+            int rowInstrumentCount = intVal(row, "instrumentCount");
+            if (isZsdInstrumentPackType(rowType) && rowPackCount > 1) {
+                billingCount = Math.max(1, (int) Math.round((double) rowInstrumentCount / rowPackCount));
+            } else {
+                billingCount = resolvePricePerInstrumentCount(
+                        rule, str(row, "packName"), combined, effectiveCount);
+            }
+        } else {
+            billingCount = effectiveCount;
+        }
         result.price = pricePerInstrument ? round(basePrice * Math.max(1, billingCount)) : basePrice;
         result.ruleName = rule.path("name").asText("特殊固定单价");
         result.ruleId = rule.has("ruleId") ? rule.path("ruleId").asLong() : null;
@@ -1054,6 +1062,24 @@ public class PricingEngine {
     // ================================================================
     //  袋尺寸检测（带缓存）
     // ================================================================
+
+    /** 棉球缸等：优先 dressingPack.cottonPaperPlastic，否则回落高温纸塑袋价表（含附一 fuyi 25cm=12.79）。 */
+    private Double resolveCottonPaperPlasticUnitPrice(int bagSizeCm) {
+        if (bagSizeCm <= 0) {
+            return null;
+        }
+        JsonNode cottonPricing = rules.path("dressingPack").path("cottonPaperPlastic");
+        String sizeKey = String.valueOf(bagSizeCm);
+        if (cottonPricing.has(sizeKey)) {
+            return cottonPricing.path(sizeKey).asDouble();
+        }
+        JsonNode bagConfig = findBagConfig(
+                bagSizeCm, rules.path("highTemperature").path("paperPlastic").path("bagSizes"));
+        if (bagConfig != null && bagConfig.has("price")) {
+            return bagConfig.path("price").asDouble();
+        }
+        return null;
+    }
 
     private int detectBagSize(String input) {
         if (input == null || input.isEmpty()) return 0;
