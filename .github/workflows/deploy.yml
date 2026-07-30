@@ -128,13 +128,8 @@ jobs:
             deploy/mysql-hospital-cli.sh \
             deploy/verify-billing-api-on-server.sh \
             deploy/run-prod-verify.sh \
-            deploy/prod-smoke-bash.sh \
+            deploy/prod-smoke-docker.sh \
             "${SSH_USER}@${SSH_HOST}:${DEPLOY_PATH}/deploy/"
-          ssh -i ~/.ssh/deploy_key -o StrictHostKeyChecking=no -p "${SSH_PORT}" \
-            "${SSH_USER}@${SSH_HOST}" "mkdir -p '${DEPLOY_PATH}/bin' '${DEPLOY_PATH}/scripts'"
-          scp -i ~/.ssh/deploy_key -o StrictHostKeyChecking=no -P "${SSH_PORT}" -r \
-            bin scripts \
-            "${SSH_USER}@${SSH_HOST}:${DEPLOY_PATH}/"
           scp -i ~/.ssh/deploy_key -o StrictHostKeyChecking=no -P "${SSH_PORT}" \
             deploy/sql/p0-6-billing-toggle.sql \
             "${SSH_USER}@${SSH_HOST}:${DEPLOY_PATH}/deploy/sql/"
@@ -347,13 +342,8 @@ jobs:
             deploy/mysql-hospital-cli.sh \
             deploy/verify-billing-api-on-server.sh \
             deploy/run-prod-verify.sh \
-            deploy/prod-smoke-bash.sh \
+            deploy/prod-smoke-docker.sh \
             "${SSH_USER}@${SSH_HOST}:${DEPLOY_PATH}/deploy/"
-          ssh -i ~/.ssh/deploy_billing_key -o StrictHostKeyChecking=no -p "${SSH_PORT}" \
-            "${SSH_USER}@${SSH_HOST}" "mkdir -p '${DEPLOY_PATH}/bin' '${DEPLOY_PATH}/scripts'"
-          scp -i ~/.ssh/deploy_billing_key -o StrictHostKeyChecking=no -P "${SSH_PORT}" -r \
-            bin scripts \
-            "${SSH_USER}@${SSH_HOST}:${DEPLOY_PATH}/"
           scp -i ~/.ssh/deploy_billing_key -o StrictHostKeyChecking=no -P "${SSH_PORT}" \
             deploy/sql/p0-6-billing-toggle.sql \
             "${SSH_USER}@${SSH_HOST}:${DEPLOY_PATH}/deploy/sql/"
@@ -401,7 +391,7 @@ jobs:
             set -e
             DPATH="${{ secrets.DEPLOY_PATH || '/mnt/newdisk/app/Hospital' }}"
             cd "$DPATH"
-            chmod +x bin/hospital-cli deploy/run-prod-verify.sh deploy/prod-smoke-bash.sh 2>/dev/null || true
+            chmod +x deploy/run-prod-verify.sh deploy/prod-smoke-docker.sh 2>/dev/null || true
             bash deploy/run-prod-verify.sh smoke --json
 
   post-deploy-parity-gate:

@@ -1,9 +1,10 @@
 #!/usr/bin/env bash
-# 生产机最小 smoke（不依赖 Python 3.9+）：health / version / login / job 读取
+# 生产 Post-deploy smoke：仅在 hospital-backend 容器内 curl，不使用宿主机 Python/CLI
 set -euo pipefail
 
 DEPLOY_PATH="${DEPLOY_PATH:-/mnt/newdisk/app/Hospital}"
-API_BASE="${API_BASE:-http://127.0.0.1:8853}"
+BACKEND_CONTAINER="${BACKEND_CONTAINER:-hospital-backend}"
+API_BASE="${API_BASE:-http://127.0.0.1:8000}"
 SMOKE_JOB_ID="${SMOKE_JOB_ID:-77}"
 JSON_OUT=0
 ADMIN_USER="${ADMIN_USERNAME:-admin}"
@@ -12,14 +13,17 @@ ADMIN_PASS="${ADMIN_PASSWORD:-${APP_ADMIN_PASSWORD:-admin123}}"
 while [ $# -gt 0 ]; do
   case "$1" in
     --json) JSON_OUT=1 ;;
-    --api) API_BASE="$2"; shift ;;
+    --api)
+      # 外部传入 8853 时仍走容器内 8000
+      shift
+      ;;
     --job-id) SMOKE_JOB_ID="$2"; shift ;;
     --mode|--profile)
       shift
       [ $# -gt 0 ] && shift
       ;;
     -h|--help)
-      echo "用法: $0 [--json] [--api URL] [--job-id ID]" >&2
+      echo "用法: $0 [--json] [--job-id ID]" >&2
       exit 0
       ;;
     *) echo "未知参数: $1" >&2; exit 2 ;;
@@ -34,6 +38,15 @@ if [ -f .env ]; then
   ADMIN_USER="${ADMIN_USERNAME:-$ADMIN_USER}"
   ADMIN_PASS="${ADMIN_PASSWORD:-${APP_ADMIN_PASSWORD:-$ADMIN_PASS}}"
 fi
+
+if ! docker ps --format '{{.Names}}' | grep -qx "$BACKEND_CONTAINER"; then
+  echo "错误: 容器 ${BACKEND_CONTAINER} 未运行" >&2
+  exit 1
+fi
+
+api_curl() {
+  docker exec "$BACKEND_CONTAINER" curl -sf "$@"
+}
 
 steps=()
 ok=1
@@ -58,9 +71,9 @@ json_code_ok() {
 }
 
 health_body=""
-if health_body=$(curl -sf --connect-timeout 5 "${API_BASE}/api/v1/base/health" 2>/dev/null); then
+if health_body=$(api_curl --connect-timeout 5 "${API_BASE}/api/v1/base/health" 2>/dev/null); then
   if json_code_ok "$health_body"; then
-    add_step "L0_health" "L0" 1 "OK"
+    add_step "L0_health" "L0" 1 "OK (docker:${BACKEND_CONTAINER})"
   else
     add_step "L0_health" "L0" 0 "health 非 200"
   fi
@@ -69,7 +82,7 @@ else
 fi
 
 version_body=""
-if version_body=$(curl -sf --connect-timeout 5 "${API_BASE}/api/v1/base/version" 2>/dev/null); then
+if version_body=$(api_curl --connect-timeout 5 "${API_BASE}/api/v1/base/version" 2>/dev/null); then
   if json_code_ok "$version_body"; then
     add_step "L1_version" "L1" 1 "$(json_field "$version_body" version || echo ok)"
   else
@@ -81,7 +94,7 @@ fi
 
 token=""
 login_body=""
-if login_body=$(curl -sf --connect-timeout 8 -X POST "${API_BASE}/api/v1/base/access_token" \
+if login_body=$(api_curl --connect-timeout 8 -X POST "${API_BASE}/api/v1/base/access_token" \
   -H 'Content-Type: application/json' \
   -d "{\"username\":\"${ADMIN_USER}\",\"password\":\"${ADMIN_PASS}\"}" 2>/dev/null); then
   token=$(json_field "$login_body" access_token)
@@ -96,7 +109,7 @@ fi
 
 if [ -n "$token" ]; then
   user_body=""
-  if user_body=$(curl -sf --connect-timeout 8 "${API_BASE}/api/v1/base/userinfo" \
+  if user_body=$(api_curl --connect-timeout 8 "${API_BASE}/api/v1/base/userinfo" \
     -H "Authorization: Bearer ${token}" 2>/dev/null); then
     if json_code_ok "$user_body"; then
       add_step "L3_userinfo" "L3" 1 "$(json_field "$user_body" username || echo ok)"
@@ -108,7 +121,7 @@ if [ -n "$token" ]; then
   fi
 
   job_body=""
-  if job_body=$(curl -sf --connect-timeout 10 "${API_BASE}/api/hospital-reconciliations/${SMOKE_JOB_ID}" \
+  if job_body=$(api_curl --connect-timeout 10 "${API_BASE}/api/hospital-reconciliations/${SMOKE_JOB_ID}" \
     -H "Authorization: Bearer ${token}" 2>/dev/null); then
     if json_code_ok "$job_body"; then
       hospital=$(json_field "$job_body" hospitalName)
@@ -127,7 +140,7 @@ duration=$((finished_at - started_at))
 
 if [ "$JSON_OUT" -eq 1 ]; then
   printf '{'
-  printf '"command":"smoke","profile":"prod","mode":"direct","api_base":"%s",' "$API_BASE"
+  printf '"command":"smoke","profile":"prod","mode":"docker","api_base":"%s",' "$API_BASE"
   printf '"ok":%s,"duration_sec":%s,"steps":[' "$([ "$ok" -eq 1 ] && echo true || echo false)" "$duration"
   first=1
   for step in "${steps[@]}"; do
