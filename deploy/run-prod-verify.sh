@@ -39,10 +39,19 @@ fi
 
 run_cli() {
   if [ -n "$CLI_PY" ]; then
-    exec "$CLI_BIN" "$CLI_PY" "$@"
+    if "$CLI_BIN" -c 'import sys; raise SystemExit(0 if sys.version_info >= (3, 9) else 1)' 2>/dev/null; then
+      exec "$CLI_BIN" "$CLI_PY" "$@"
+    fi
+  else
+    exec "$CLI_BIN" "$@"
   fi
-  exec "$CLI_BIN" "$@"
 }
+
+if [ "$LEVEL" = "smoke" ] && [ -x "$(dirname "$0")/prod-smoke-bash.sh" ]; then
+  if [ -z "$CLI_BIN" ] || { [ -n "$CLI_PY" ] && ! "$CLI_BIN" -c 'import sys; raise SystemExit(0 if sys.version_info >= (3, 9) else 1)' 2>/dev/null; }; then
+    exec "$(dirname "$0")/prod-smoke-bash.sh" "$@"
+  fi
+fi
 
 case "$LEVEL" in
   smoke)
