@@ -81,6 +81,22 @@
         </div>
         <div
           v-if="draft.ruleType === 'FIXED_PRICE' || draft.ruleType === 'PRICE_PER_INSTRUMENT'"
+          class="customer-product-rule-form__field customer-product-rule-form__field--full"
+        >
+          <label class="customer-product-rule-form__label">
+            {{ $t('menus.masterData.customerProductRules.billingMode') }}
+          </label>
+          <ElRadioGroup v-model="draft.billingMode" class="billing-mode-group" @change="handleBillingModeChange">
+            <ElRadio value="PER_PACK">{{ $t('menus.masterData.customerProductRules.billingModePerPack') }}</ElRadio>
+            <ElRadio value="PER_INSTRUMENT">{{ $t('menus.masterData.customerProductRules.billingModePerInstrument') }}</ElRadio>
+            <ElRadio value="PACK_NAME_SUFFIX">{{ $t('menus.masterData.customerProductRules.billingModePackNameSuffix') }}</ElRadio>
+          </ElRadioGroup>
+          <p v-if="draft.billingMode === 'PACK_NAME_SUFFIX'" class="customer-product-rule-form__hint">
+            {{ $t('menus.masterData.customerProductRules.billingModePackNameSuffixHint') }}
+          </p>
+        </div>
+        <div
+          v-if="draft.ruleType === 'FIXED_PRICE' || draft.ruleType === 'PRICE_PER_INSTRUMENT'"
           class="customer-product-rule-form__field"
         >
           <label class="customer-product-rule-form__label">
@@ -281,9 +297,11 @@ import RuleKeywordField from '@/components/business/pricing-rules/RuleKeywordFie
 import RuleSwitchField from '@/components/business/pricing-rules/RuleSwitchField.vue'
 import {
   appendKeywordIfMissing,
+  inferBillingModeFromDraft,
   isProductRequired,
   isSettlementRule,
   syncPrimaryKeyword,
+  syncRuleTypeFromBillingMode,
   type CustomerProductRuleDraft,
   type CustomerProductRuleType,
 } from '@/utils/customerProductRule'
@@ -391,8 +409,29 @@ function handleRuleTypeChange(ruleType: CustomerProductRuleType) {
   if (isSettlementRule(ruleType)) {
     props.draft.skipPackaging = false
     props.draft.skipDiscount = false
+    return
   }
+  if (ruleType === 'FIXED_PRICE') {
+    props.draft.billingMode = 'PER_PACK'
+  } else if (ruleType === 'PRICE_PER_INSTRUMENT' && !props.draft.billingMode) {
+    props.draft.billingMode = 'PER_INSTRUMENT'
+  }
+  syncRuleTypeFromBillingMode(props.draft)
 }
+
+function handleBillingModeChange() {
+  syncRuleTypeFromBillingMode(props.draft)
+}
+
+watch(
+  () => props.draft.ruleType,
+  () => {
+    if (!props.draft.billingMode) {
+      props.draft.billingMode = inferBillingModeFromDraft(props.draft)
+    }
+  },
+  { immediate: true },
+)
 
 function handleMatchModeChange(mode: 'first' | 'any_price') {
   if (mode === 'any_price' && props.draft.acceptedPrices.length < 2) {

@@ -29,7 +29,7 @@ public interface HospitalReconciliationService {
 
     Result<ReconciliationJobResponse> getReconciliation(Long jobId);
 
-    Result<Map<String, Object>> getReconciliationRows(Long jobId, int page, int size);
+    Result<Map<String, Object>> getReconciliationRows(Long jobId, int page, int size, String sheetName);
 
     Result<ReconciliationJobResponse> reviewReconciliation(Long jobId, ReconciliationReviewRequest request);
 

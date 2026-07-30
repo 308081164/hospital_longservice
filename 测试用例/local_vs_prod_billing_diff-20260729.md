@@ -1,6 +1,6 @@
 # local vs prod 账单核对差异 · 20260729
 
-> 差异院数：**36** / 38
+> 差异院数：**34** / 38
 
 | 医院 | local bill | prod bill | local settlement | prod settlement | 备注 |
 |------|------------|-----------|------------------|-----------------|------|
@@ -27,10 +27,8 @@
 | 呼兰区红十字医院 | pass | skip | pass | skip | bill pass→skip; settlement pass→skip |
 | 呼兰中医院 | pass | fail | pass | fail | bill pass→fail; settlement pass→fail |
 | 黑龙江中医药大学附属第二医院（南岗） | pass | skip | pass | skip | bill pass→skip; settlement pass→skip |
-| 哈尔滨仁胜医院 | pass | pass | pass | fail | settlement pass→fail |
 | 哈尔滨华夏眼科医院 | pass | fail | pass | fail | bill pass→fail; settlement pass→fail |
 | 哈尔滨冰城医疗美容医院 | pass | fail | pass | fail | bill pass→fail; settlement pass→fail |
-| 香坊中医院 | pass | fail | pass | fail | bill pass→fail; settlement pass→fail |
 | 武警黑龙江省总队医院 | pass | fail | pass | fail | bill pass→fail; settlement pass→fail |
 | 悦美芳华医疗门诊医院 | pass | fail | pass | fail | bill pass→fail; settlement pass→fail |
 | 黑龙江省第二医院（南岗院区） | pass | skip | pass | skip | bill pass→skip; settlement pass→skip |

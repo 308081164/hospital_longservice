@@ -114,6 +114,25 @@
         LIMIT #{size} OFFSET #{offset}
     </select>
 
+    <select id="selectPageByJobIdAndSheetName" resultMap="RowResultMap">
+        SELECT * FROM hospital_reconciliation_row
+        WHERE job_id = #{jobId}
+          AND sheet_name = #{sheetName}
+        ORDER BY `row_number` ASC
+        LIMIT #{size} OFFSET #{offset}
+    </select>
+
+    <select id="countByJobId" resultType="int">
+        SELECT COUNT(*) FROM hospital_reconciliation_row
+        WHERE job_id = #{jobId}
+    </select>
+
+    <select id="countByJobIdAndSheetName" resultType="int">
+        SELECT COUNT(*) FROM hospital_reconciliation_row
+        WHERE job_id = #{jobId}
+          AND sheet_name = #{sheetName}
+    </select>
+
     <delete id="deleteByJobId">
         DELETE FROM hospital_reconciliation_row WHERE job_id = #{jobId}
     </delete>

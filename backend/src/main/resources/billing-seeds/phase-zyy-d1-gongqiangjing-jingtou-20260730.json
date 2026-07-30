@@ -1,0 +1,18 @@
+{
+  "version": "1",
+  "description": "附一 ZYY-D1 宫腔镜科室：镜头-3件 按包 52.74 元/包",
+  "newRules": [
+    {
+      "code": "ZYY-D1",
+      "ruleType": "FIXED_PRICE",
+      "billingMode": "PER_PACK",
+      "name": "宫腔镜镜头-3件按包52.74",
+      "priority": 4,
+      "price": 52.74,
+      "keywords": ["镜头-3件"],
+      "conditionsJson": "[{\"field\":\"department\",\"value\":[\"宫腔镜\"]}]",
+      "skipPackaging": true,
+      "skipDiscount": true
+    }
+  ]
+}

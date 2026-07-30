@@ -9,6 +9,8 @@ import com.hospital.backend.dto.response.customer.CustomerResponse;
 import com.hospital.backend.entity.*;
 import com.hospital.backend.mapper.*;
 import com.hospital.backend.service.CustomerService;
+import com.hospital.backend.service.BillingMode;
+import com.hospital.backend.service.BillingModeInference;
 import com.hospital.backend.service.BillingRuleGroupSyncService;
 import com.hospital.backend.util.ProductRuleNameUtils;
 import lombok.RequiredArgsConstructor;
@@ -49,6 +51,11 @@ public class CustomerServiceImpl implements CustomerService {
     private static final Set<String> TEMPERATURE_SCOPES = Set.of("HT", "LT", "ANY");
 
     private static final Set<String> BILLING_PRICING_MODES = Set.of("standard", "special_only", "hybrid");
+
+    private static final Set<String> BILLING_MODES = Set.of("PER_PACK", "PER_INSTRUMENT", "PACK_NAME_SUFFIX");
+
+    private static final Set<String> PIECE_COUNT_SOURCES = Set.of(
+            "EFFECTIVE_COUNT", "ZSD_PER_PACK", "PACK_NAME_LAST_NUMBER");
 
     @Override
     public Result<List<CustomerResponse>> listCustomers() {
@@ -434,6 +441,10 @@ public class CustomerServiceImpl implements CustomerService {
             } else if (request.getPrice() == null || request.getPrice().compareTo(BigDecimal.ZERO) <= 0) {
                 return "固定价格必须大于 0";
             }
+            String billingModeError = validateBillingModeRequest(request);
+            if (billingModeError != null) {
+                return billingModeError;
+            }
         } else if ("MULTIPLIER".equals(ruleType)) {
             if (request.getMultiplier() == null) {
                 return "倍率不能为空";
@@ -463,6 +474,31 @@ public class CustomerServiceImpl implements CustomerService {
 
     private static boolean requiresProductBinding(String ruleType) {
         return PRODUCT_BOUND_RULE_TYPES.contains(ruleType);
+    }
+
+    private String validateBillingModeRequest(SaveCustomerProductRuleRequest request) {
+        if (request.getBillingMode() != null && !request.getBillingMode().isBlank()
+                && !BILLING_MODES.contains(request.getBillingMode().trim().toUpperCase())) {
+            return "不支持的计价方式: " + request.getBillingMode();
+        }
+        if (request.getPieceCountSource() != null && !request.getPieceCountSource().isBlank()
+                && !PIECE_COUNT_SOURCES.contains(request.getPieceCountSource().trim().toUpperCase())) {
+            return "不支持的件数来源: " + request.getPieceCountSource();
+        }
+        BillingMode mode = BillingMode.fromString(request.getBillingMode());
+        if (mode == null) {
+            mode = BillingModeInference.inferFromRuleTypeAndKeywords(
+                    request.getRuleType(),
+                    request.getKeywords() != null ? request.getKeywords() : List.of());
+        }
+        if (mode == BillingMode.PACK_NAME_SUFFIX) {
+            boolean hasKeywords = request.getKeywords() != null
+                    && request.getKeywords().stream().anyMatch(k -> k != null && !k.isBlank());
+            if (!hasKeywords) {
+                return "按包名后缀数字计价时，匹配关键词不能为空";
+            }
+        }
+        return null;
     }
 
     private CustomerProductRule buildProductRuleEntity(Long customerId, SaveCustomerProductRuleRequest request) {
@@ -502,7 +538,8 @@ public class CustomerServiceImpl implements CustomerService {
         rule.setThreshold(request.getThreshold());
         rule.setFoldRatio(request.getFoldRatio());
         rule.setFee(request.getFee());
-        String ruleType = request.getRuleType();
+        applyBillingModeFields(rule, request);
+        String ruleType = rule.getRuleType();
         if ("FIXED_PRICE".equals(ruleType) || "PRICE_PER_INSTRUMENT".equals(ruleType)) {
             List<BigDecimal> accepted = cleanDecimalList(request.getAcceptedPrices());
             if ("any_price".equalsIgnoreCase(rule.getMatchMode()) && !accepted.isEmpty()) {
@@ -536,6 +573,28 @@ public class CustomerServiceImpl implements CustomerService {
             rule.setSkipPackaging(false);
             rule.setSkipDiscount(false);
         }
+    }
+
+    private void applyBillingModeFields(CustomerProductRule rule, SaveCustomerProductRuleRequest request) {
+        String ruleType = request.getRuleType();
+        if (!"FIXED_PRICE".equals(ruleType) && !"PRICE_PER_INSTRUMENT".equals(ruleType)) {
+            rule.setBillingMode(null);
+            rule.setPieceCountSource(null);
+            return;
+        }
+        BillingMode mode = BillingMode.fromString(request.getBillingMode());
+        if (mode == null) {
+            mode = BillingModeInference.inferFromRuleTypeAndKeywords(
+                    ruleType,
+                    request.getKeywords() != null ? request.getKeywords() : List.of());
+        }
+        rule.setBillingMode(mode.name());
+        rule.setRuleType(BillingModeInference.inferRuleType(mode));
+        String pieceCountSource = request.getPieceCountSource();
+        if (pieceCountSource == null || pieceCountSource.isBlank()) {
+            pieceCountSource = BillingModeInference.defaultPieceCountSource(mode);
+        }
+        rule.setPieceCountSource(pieceCountSource);
     }
 
     private String serializeStringList(List<String> values) {
@@ -612,6 +671,8 @@ public class CustomerServiceImpl implements CustomerService {
                 .fee(rule.getFee())
                 .threshold(rule.getThreshold())
                 .foldRatio(rule.getFoldRatio())
+                .billingMode(rule.getBillingMode())
+                .pieceCountSource(rule.getPieceCountSource())
                 .skipPackaging(rule.getSkipPackaging())
                 .skipDiscount(rule.getSkipDiscount())
                 .isActive(rule.getIsActive())

@@ -73,8 +73,9 @@ public class HospitalReconciliationController {
     public Result<Map<String, Object>> getReconciliationRows(
             @PathVariable Long jobId,
             @RequestParam(defaultValue = "1") int page,
-            @RequestParam(defaultValue = "200") int size) {
-        return hospitalReconciliationService.getReconciliationRows(jobId, page, size);
+            @RequestParam(defaultValue = "200") int size,
+            @RequestParam(required = false) String sheetName) {
+        return hospitalReconciliationService.getReconciliationRows(jobId, page, size, sheetName);
     }
 
     @PatchMapping("/hospital-reconciliations/{jobId}/review")

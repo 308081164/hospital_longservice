@@ -54,18 +54,27 @@ class ZyyD1P0PricingRegressionTest {
             fixedPrices.insert(0, compiled);
         }
 
-        JsonNode waierSeed = MAPPER.readTree(getClass().getResourceAsStream(
-                "/billing-seeds/phase-zyy-d1-waier-huanbao-20260730.json"));
-        for (JsonNode ruleNode : waierSeed.path("newRules")) {
+        appendIncrementalFixedPriceRules(fixedPrices,
+                "/billing-seeds/phase-zyy-d1-waier-huanbao-20260730.json");
+        appendIncrementalFixedPriceRules(fixedPrices,
+                "/billing-seeds/phase-zyy-d1-gongqiangjing-jingtou-20260730.json");
+        engine = new PricingEngine(rules);
+    }
+
+    private void appendIncrementalFixedPriceRules(ArrayNode fixedPrices, String classpath) throws Exception {
+        JsonNode seed = MAPPER.readTree(getClass().getResourceAsStream(classpath));
+        for (JsonNode ruleNode : seed.path("newRules")) {
             ObjectNode compiled = (ObjectNode) ruleNode.deepCopy();
             var departments = BillingConditionEvaluator.parseDepartmentList(
                     ruleNode.path("conditionsJson").asText(null));
             if (!departments.isEmpty()) {
                 compiled.set("departments", MAPPER.valueToTree(departments));
             }
+            if (ruleNode.hasNonNull("billingMode")) {
+                compiled.put("billingMode", ruleNode.path("billingMode").asText());
+            }
             fixedPrices.insert(0, compiled);
         }
-        engine = new PricingEngine(rules);
     }
 
     @Test
@@ -151,6 +160,17 @@ class ZyyD1P0PricingRegressionTest {
     @Test
     void shouldPriceWaierHuanYaoBaoAt2199PerPack() {
         assertWarning(row("外二", "换药包(120布)", "器械包(ZSD)", "", 3, 3, 22.6, 67.8), 21.99);
+    }
+
+    @Test
+    void shouldPriceGongqiangjingJingtou3At5274PerPack() {
+        Map<String, Object> row = row(
+                "宫腔镜", "镜头-3件(盒1)/Z2060", "额外包(低温等离子)", "低温纸塑袋200*300",
+                3, 2, 52.8, 105.6);
+        PricingEngine.ProcessedResult result = engine.processRow(row);
+        assertThat(result.status).isEqualTo("warning");
+        assertThat(result.expectedUnitPrice).isCloseTo(52.74, offset(0.02));
+        assertThat(result.correctedTotalPrice).isCloseTo(105.48, offset(0.02));
     }
 
     private Map<String, Object> row(String department, String packName, String type, String material,

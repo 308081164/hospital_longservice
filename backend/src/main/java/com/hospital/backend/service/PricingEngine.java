@@ -683,54 +683,29 @@ public class PricingEngine {
             basePrice = acceptedPrices.get(0);
         }
         if (Double.isNaN(basePrice)) return null;
-        boolean pricePerInstrument = rule.path("pricePerInstrument").asBoolean(false);
-        int billingCount;
-        if (pricePerInstrument) {
-            String rowType = str(row, "type");
-            int rowPackCount = Math.max(1, intVal(row, "packCount"));
-            int rowInstrumentCount = intVal(row, "instrumentCount");
-            if (isZsdInstrumentPackType(rowType) && rowPackCount > 1) {
-                billingCount = Math.max(1, (int) Math.round((double) rowInstrumentCount / rowPackCount));
-            } else {
-                billingCount = resolvePricePerInstrumentCount(
-                        rule, str(row, "packName"), combined, effectiveCount);
-            }
-        } else {
-            billingCount = effectiveCount;
+        FixedPriceBillingCountResolver.RowInput rowInput = new FixedPriceBillingCountResolver.RowInput(
+                str(row, "type"),
+                str(row, "packName"),
+                combined,
+                Math.max(1, intVal(row, "packCount")),
+                intVal(row, "instrumentCount"));
+        FixedPriceBillingCountResolver.FixedPriceComputation computation =
+                FixedPriceBillingCountResolver.compute(rule, rowInput, effectiveCount);
+        if (computation == null) {
+            return null;
         }
-        result.price = pricePerInstrument ? round(basePrice * Math.max(1, billingCount)) : basePrice;
+        result.price = computation.unitPrice();
         result.ruleName = rule.path("name").asText("特殊固定单价");
         result.ruleId = rule.has("ruleId") ? rule.path("ruleId").asLong() : null;
         result.anyPriceMode = "any_price".equalsIgnoreCase(matchMode) && !acceptedPrices.isEmpty();
         result.acceptedPrices = acceptedPrices;
         result.skipPackaging = rule.path("skipPackaging").asBoolean(false);
         result.skipHospitalDiscount = rule.path("skipHospitalDiscount").asBoolean(false);
-        result.note = pricePerInstrument
-                ? result.ruleName + "，按每件 " + fmt(basePrice) + " 元，单包计费件数 "
-                + Math.max(1, billingCount) + " 件，单价按 " + fmt(result.price) + " 元。"
-                : result.ruleName + "，单价按 " + fmt(result.price) + " 元。";
+        result.note = result.ruleName + computation.noteSuffix();
         if (result.anyPriceMode) {
             result.note += "（多报价候选：" + formatPriceList(acceptedPrices) + "）";
         }
         return result;
-    }
-
-    /** 刮勺探针x：按包名后缀 x 作为按件计价件数（5.5×x） */
-    private int resolvePricePerInstrumentCount(JsonNode rule, String packName, String combined, int effectiveCount) {
-        if (packName == null || !rule.path("keywords").isArray()) {
-            return effectiveCount;
-        }
-        for (JsonNode kwNode : rule.path("keywords")) {
-            if (!"刮勺探针".equals(kwNode.asText())) {
-                continue;
-            }
-            if (!combined.contains("刮勺探针")) {
-                return effectiveCount;
-            }
-            int suffix = extractLastNumber(packName.split("/")[0]);
-            return suffix > 0 ? suffix : effectiveCount;
-        }
-        return effectiveCount;
     }
 
     private List<Double> parseAcceptedPrices(JsonNode acceptedPricesNode) {

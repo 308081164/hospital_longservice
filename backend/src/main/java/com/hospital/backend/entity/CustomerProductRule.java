@@ -58,6 +58,12 @@ public class CustomerProductRule {
     /** 原价匹配条件（FR-M3-15） */
     private BigDecimal originalUnitPrice;
 
+    /** PER_PACK / PER_INSTRUMENT / PACK_NAME_SUFFIX */
+    private String billingMode;
+
+    /** EFFECTIVE_COUNT / ZSD_PER_PACK / PACK_NAME_LAST_NUMBER */
+    private String pieceCountSource;
+
     /** JSON: [{ "field": "department", "value": ["手术室"] }] */
     private String conditionsJson;
 

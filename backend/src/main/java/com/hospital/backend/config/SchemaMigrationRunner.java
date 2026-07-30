@@ -239,6 +239,10 @@ public class SchemaMigrationRunner implements CommandLineRunner {
                 "match_mode VARCHAR(20) NOT NULL DEFAULT 'first' AFTER rule_type");
         addColumnIfMissing("customer_product_rule", "original_unit_price",
                 "original_unit_price DECIMAL(12,4) NULL COMMENT '原价匹配条件' AFTER price");
+        addColumnIfMissing("customer_product_rule", "billing_mode",
+                "billing_mode VARCHAR(32) NULL COMMENT 'PER_PACK|PER_INSTRUMENT|PACK_NAME_SUFFIX' AFTER rule_type");
+        addColumnIfMissing("customer_product_rule", "piece_count_source",
+                "piece_count_source VARCHAR(32) NULL COMMENT 'EFFECTIVE_COUNT|ZSD_PER_PACK|PACK_NAME_LAST_NUMBER' AFTER billing_mode");
         addColumnIfMissing("customer_product_rule", "conditions_json",
                 "conditions_json JSON NULL COMMENT '扩展条件如科室' AFTER materials");
         addColumnIfMissing("hospital_reconciliation_row", "matched_rule_id",

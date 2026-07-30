@@ -17,5 +17,15 @@ public interface HospitalReconciliationRowMapper {
 
     List<HospitalReconciliationRow> selectPageByJobId(@Param("jobId") Long jobId, @Param("offset") int offset, @Param("size") int size);
 
+    List<HospitalReconciliationRow> selectPageByJobIdAndSheetName(
+            @Param("jobId") Long jobId,
+            @Param("sheetName") String sheetName,
+            @Param("offset") int offset,
+            @Param("size") int size);
+
+    int countByJobId(@Param("jobId") Long jobId);
+
+    int countByJobIdAndSheetName(@Param("jobId") Long jobId, @Param("sheetName") String sheetName);
+
     void deleteByJobId(Long jobId);
 }

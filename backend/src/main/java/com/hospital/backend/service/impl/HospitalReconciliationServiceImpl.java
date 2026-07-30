@@ -1056,15 +1056,20 @@ public class HospitalReconciliationServiceImpl implements HospitalReconciliation
     public Result<Map<String, Object>> getReconciliationRows(
             Long jobId,
             int page,
-            int size) {
+            int size,
+            String sheetName) {
         HospitalReconciliationJob job = jobMapper.selectById(jobId);
         if (job == null) {
             return Result.fail(404, "核对任务不存在");
         }
-        int total = job.getTotalRows() != null ? job.getTotalRows() : 0;
+        boolean filterSheet = sheetName != null && !sheetName.isBlank();
+        int total = filterSheet
+                ? rowMapper.countByJobIdAndSheetName(jobId, sheetName.trim())
+                : (job.getTotalRows() != null ? job.getTotalRows() : 0);
         int offset = (page - 1) * size;
-        List<HospitalReconciliationRow> pageRows =
-                rowMapper.selectPageByJobId(jobId, offset, size);
+        List<HospitalReconciliationRow> pageRows = filterSheet
+                ? rowMapper.selectPageByJobIdAndSheetName(jobId, sheetName.trim(), offset, size)
+                : rowMapper.selectPageByJobId(jobId, offset, size);
 
         List<Map<String, Object>> rows = pageRows.stream()
                 .map(this::rowEntityToMap)
@@ -1075,6 +1080,9 @@ public class HospitalReconciliationServiceImpl implements HospitalReconciliation
         result.put("total", total);
         result.put("page", page);
         result.put("size", size);
+        if (filterSheet) {
+            result.put("sheetName", sheetName.trim());
+        }
         return Result.success(result);
     }
 

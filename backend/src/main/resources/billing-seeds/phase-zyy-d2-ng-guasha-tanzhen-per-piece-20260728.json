@@ -11,6 +11,8 @@
     {
       "code": "ZYY-D2-NG",
       "ruleType": "PRICE_PER_INSTRUMENT",
+      "billingMode": "PACK_NAME_SUFFIX",
+      "pieceCountSource": "PACK_NAME_LAST_NUMBER",
       "name": "附二南岗刮勺探针5.5元/把",
       "priority": 8,
       "price": 5.5,

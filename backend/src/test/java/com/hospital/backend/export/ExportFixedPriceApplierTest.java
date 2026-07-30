@@ -111,6 +111,56 @@ class ExportFixedPriceApplierTest {
     }
 
     @Test
+    void appliesPerInstrumentUsingPerPackPieceCountForMultiPack() throws Exception {
+        ObjectNode rules = mapper.createObjectNode();
+        ObjectNode special = rules.putObject("specialRules");
+        ArrayNode fixedPrices = special.putArray("fixedPrices");
+        ObjectNode rule = fixedPrices.addObject();
+        rule.put("name", "挖勺按件");
+        rule.put("price", 5.5);
+        rule.put("billingMode", "PER_INSTRUMENT");
+        rule.put("pricePerInstrument", true);
+        rule.put("exportApply", true);
+        rule.putArray("keywords").add("挖勺");
+
+        BillRowItem row = new BillRowItem();
+        row.setPackName("挖勺-2/z7530");
+        row.setType("额外包(纸塑袋)");
+        row.setPackCount(4);
+        row.setInstrumentCount(8);
+        row.setStatus("unchanged");
+
+        List<BillRowItem> result = applier.apply(rules, List.of(row));
+        assertThat(result.get(0).getUnitPrice()).isEqualTo(11.0);
+        assertThat(result.get(0).getCorrectedTotalPrice()).isEqualTo(44.0);
+    }
+
+    @Test
+    void appliesPackNameSuffixForGuashaTanzhen() throws Exception {
+        ObjectNode rules = mapper.createObjectNode();
+        ObjectNode special = rules.putObject("specialRules");
+        ArrayNode fixedPrices = special.putArray("fixedPrices");
+        ObjectNode rule = fixedPrices.addObject();
+        rule.put("name", "刮勺探针5.5");
+        rule.put("price", 5.5);
+        rule.put("billingMode", "PACK_NAME_SUFFIX");
+        rule.put("pricePerInstrument", true);
+        rule.put("exportApply", true);
+        rule.putArray("keywords").add("刮勺探针");
+
+        BillRowItem row = new BillRowItem();
+        row.setPackName("刮勺探针4/z1035");
+        row.setType("额外包(纸塑袋)");
+        row.setPackCount(1);
+        row.setInstrumentCount(8);
+        row.setStatus("unchanged");
+
+        List<BillRowItem> result = applier.apply(rules, List.of(row));
+        assertThat(result.get(0).getUnitPrice()).isEqualTo(22.0);
+        assertThat(result.get(0).getCorrectedTotalPrice()).isEqualTo(22.0);
+    }
+
+    @Test
     void respectsDepartmentAndExcludeKeywordsForExportApplyRules() throws Exception {
         ObjectNode rules = mapper.createObjectNode();
         ObjectNode special = rules.putObject("specialRules");

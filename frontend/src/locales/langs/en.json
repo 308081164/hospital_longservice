@@ -567,6 +567,11 @@
         "ruleType": "Rule Type",
         "fixedPrice": "Fixed Price",
         "pricePerInstrument": "Per Instrument",
+        "billingMode": "Billing mode",
+        "billingModePerPack": "Per pack",
+        "billingModePerInstrument": "Per instrument",
+        "billingModePackNameSuffix": "Pack name suffix number",
+        "billingModePackNameSuffixHint": "Use the last number before \"/\" in pack name as piece count, e.g. 刮勺探针4 → 4 pieces",
         "multiplier": "Multiplier",
         "foldRule": "Fold Rule",
         "extraFee": "Extra Fee",
@@ -677,7 +682,9 @@
       "empty": "Upload Excel files to see recognition results and review preview here",
       "sheetSummary": "{sheets} sheets · {rows} detail rows detected",
       "parsing": "Parsing...",
-      "remove": "Remove"
+      "remove": "Remove",
+      "allSheets": "All departments",
+      "sheetFilterActive": "Showing department: {sheet}"
     },
     "history": {
       "title": "History & Review",
@@ -799,6 +806,7 @@
     "logisticsAllocation": {
       "title": "Logistics dept allocation",
       "total": "Total logistics",
+      "deptCount": "{count} departments",
       "department": "Department",
       "sterilizeTotal": "Sterilization",
       "ratio": "Ratio",

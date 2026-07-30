@@ -66,5 +66,11 @@ public class SaveCustomerProductRuleRequest {
     /** 科室条件 JSON */
     private List<String> departments;
 
+    /** PER_PACK / PER_INSTRUMENT / PACK_NAME_SUFFIX */
+    private String billingMode;
+
+    /** EFFECTIVE_COUNT / ZSD_PER_PACK / PACK_NAME_LAST_NUMBER */
+    private String pieceCountSource;
+
     private Boolean isActive;
 }

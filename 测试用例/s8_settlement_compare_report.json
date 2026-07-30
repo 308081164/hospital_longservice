@@ -31,9 +31,12 @@
   },
   {
     "folder": "国药总医院第三院区",
-    "status": "skip",
-    "detail": "缺少处理后结款函",
-    "job_source": "stable"
+    "status": "pass",
+    "detail": "总额 1915.0 vs 1474.5 (Δ440.50) · 条目 2/2 · 金额差 ['物流费用', '灭菌费用']",
+    "job_source": "stable",
+    "job_id": 647,
+    "processed_settlement": "测试用例/国药总医院第三院区/处理后表格/6月__国药总医院第三院区5.26-6.25结款函.docx",
+    "export_file": "测试用例/.s8_exports/job647_国药总医院第三院区_settlement.xlsx"
   },
   {
     "folder": "哈尔滨市第二医院",
@@ -52,9 +55,12 @@
   },
   {
     "folder": "哈尔滨市第五医院（二门诊）",
-    "status": "skip",
-    "detail": "缺少处理后结款函",
-    "job_source": "stable"
+    "status": "pass",
+    "detail": "总额 772061.5 vs 772061.5 (Δ0.00) · 条目 3/3 · OK · 合并结款 · 见市五院 Job613",
+    "job_source": "stable",
+    "job_id": 613,
+    "processed_settlement": "测试用例/哈尔滨市第五医院/处理后表格/6月__哈尔滨市第五医院2026年5月9日-2026年6月8日结款函.xlsx",
+    "export_file": "测试用例/.s8_exports/job613_哈尔滨市第五医院（二门诊）_settlement.xlsx"
   },
   {
     "folder": "新发红十字医院",
@@ -238,9 +244,12 @@
   },
   {
     "folder": "香坊中医院",
-    "status": "skip",
-    "detail": "缺少处理后结款函",
-    "job_source": "stable"
+    "status": "pass",
+    "detail": "总额 178.0 vs 178.0 (Δ0.00) · 条目 2/2 · OK",
+    "job_source": "stable",
+    "job_id": 638,
+    "processed_settlement": "测试用例/香坊中医院/处理后表格/6月__三辅社区、香坊中医院6月结款函.xlsx",
+    "export_file": "测试用例/.s8_exports/job638_香坊中医院_settlement.xlsx"
   },
   {
     "folder": "武警黑龙江省总队医院",
@@ -313,8 +322,11 @@
   },
   {
     "folder": "哈尔滨长健医院",
-    "status": "skip",
-    "detail": "缺少处理后结款函",
-    "job_source": "stable"
+    "status": "pass",
+    "detail": "总额 788.5 vs 688.5 (Δ100.00) · 条目 2/2 · 金额差 ['灭菌费用', '物流费用']",
+    "job_source": "stable",
+    "job_id": 654,
+    "processed_settlement": "测试用例/哈尔滨长健医院/处理后表格/6月__长健6月结款涵.xlsx",
+    "export_file": "测试用例/.s8_exports/job654_哈尔滨长健医院_settlement.xlsx"
   }
 ]

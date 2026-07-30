@@ -579,6 +579,11 @@
         "ruleType": "规则类型",
         "fixedPrice": "固定价格",
         "pricePerInstrument": "按件计价",
+        "billingMode": "计价方式",
+        "billingModePerPack": "按包计价",
+        "billingModePerInstrument": "按件计价",
+        "billingModePackNameSuffix": "按包名后缀数字",
+        "billingModePackNameSuffixHint": "取包名「/」前的最后数字作为计费件数，如 刮勺探针4 → 4 件",
         "multiplier": "独立倍率",
         "foldRule": "件数折算",
         "extraFee": "场景加收",
@@ -689,7 +694,9 @@
       "empty": "上传 Excel 后，将在此展示识别结果与校对预览",
       "sheetSummary": "{sheets} 个工作表 · 识别 {rows} 行明细",
       "parsing": "正在解析...",
-      "remove": "移除"
+      "remove": "移除",
+      "allSheets": "全部科室",
+      "sheetFilterActive": "当前仅展示科室：{sheet}"
     },
     "history": {
       "title": "历史版本与审核",
@@ -811,6 +818,7 @@
     "logisticsAllocation": {
       "title": "物流科室分摊",
       "total": "物流总费",
+      "deptCount": "{count} 个科室",
       "department": "科室",
       "sterilizeTotal": "灭菌费",
       "ratio": "占比",

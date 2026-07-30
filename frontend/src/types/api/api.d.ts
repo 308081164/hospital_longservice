@@ -653,6 +653,10 @@ declare namespace Api {
       skip_packaging?: boolean
       skipDiscount?: boolean
       skip_discount?: boolean
+      billingMode?: 'PER_PACK' | 'PER_INSTRUMENT' | 'PACK_NAME_SUFFIX'
+      billing_mode?: 'PER_PACK' | 'PER_INSTRUMENT' | 'PACK_NAME_SUFFIX'
+      pieceCountSource?: string
+      piece_count_source?: string
       isActive?: boolean
       is_active?: boolean
     }
@@ -706,6 +710,10 @@ declare namespace Api {
       maxBagSizeExclusive?: number
       minInstrumentCount?: number
       maxInstrumentCount?: number
+      originalUnitPrice?: number
+      departments?: string[]
+      billingMode?: 'PER_PACK' | 'PER_INSTRUMENT' | 'PACK_NAME_SUFFIX'
+      pieceCountSource?: string
       skipPackaging?: boolean
       skipDiscount?: boolean
       isActive?: boolean

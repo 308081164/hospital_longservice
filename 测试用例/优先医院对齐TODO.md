@@ -1,9 +1,10 @@
 # 优先医院特色账单对齐 TODO
 
-> 最后更新：**2026-07-29（S8 波次5 闭合）**  
-> **S8 稳定基线**（[`job_baseline_stable.json`](job_baseline_stable.json) · Job 607–654 + 工程 **704**）：bill **pass 34 · warn 0 · fail 4 · skip 0** · settlement **pass 30/37** · strict 双 pass **30 院**  
-> **波次5 ✅**：工程大学 5 月 skip→**双 pass** · 太平 warn→**pass** · pricing 漏检闭合（附二南岗/香坊）· [`regression-wave5-triage.md`](regression-wave5-triage.md)  
-> **材料 fail 4 院** 不变（国药主/二、市二、省二松北）· 结款函 skip 4 院见 [`波次5B-材料插拔复测清单.md`](波次5B-材料插拔复测清单.md)
+> 最后更新：**2026-07-29（S8 波次6 材料闭环）**  
+> **S8 稳定基线**（[`job_baseline_stable.json`](job_baseline_stable.json) · Job 607–654 + 工程 **704**）：bill **pass 34 · warn 0 · fail 4 · skip 0** · settlement **pass 34/37** · strict 双 pass **34 院**  
+> **波次6 ✅**：测试账单-6 入库 · settlement skip **4→0**（香坊/国药三/长健/市五二门诊）· [`regression-wave6-triage.md`](regression-wave6-triage.md)  
+> **波次5 ✅**：工程大学 5 月 skip→**双 pass** · 太平 warn→**pass** · pricing 漏检闭合 · [`regression-wave5-triage.md`](regression-wave5-triage.md)  
+> **材料 fail 4 院** 不变（国药主/二、市二、省二松北）· S4 重导后 Δ 无变化
 
 ---
 
@@ -56,10 +57,10 @@ python3 scripts/batch_june_system_test.py "武警黑龙江省总队医院" "…"
 | 2 | 黑龙江省中医药大学附属第三医院（电力） | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | 608 / P694 | bill **pass** · **结款 pass** · wave4b 外来器械 · pricing 零漏检 |
 | 3a | 国药总医院主院区 | ✅ | ✅ | ✅ | 🔄 | ✅ | ✅ | ✅ | ✅ | 645 / P658 | **材料** kit BOM · S8 Δ696 |
 | 3b | 国药总医院第二院区 | ✅ | ✅ | ✅ | 🔄 | ✅ | ✅ | ✅ | ✅ | 646 / P659 | **材料** 同上 · S8 Δ121.5 |
-| 3c | 国药总医院第三院区 | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | 647 / P660 | bill **pass** · 汽轮机拆行净差 ≤2 · 结款 skip 缺表 |
+| 3c | 国药总医院第三院区 | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | 647 / P660 | bill **pass** · **结款 pass**（docx Δ440 登记） |
 | 4 | 哈尔滨市第二医院 | ✅ | ✅ | ✅ | 🔄 | ✅ | ✅ | ✅ | ✅ | 655 / P661 | **材料** vendor 7 sheet · S8 Δ11900 |
 | 5a | 哈尔滨市第五医院 | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | 613 / P662 | bill **pass** · wave4c exportApply · **结款 pass** · 汇总四 type ✅ |
-| 5b | 哈尔滨市第五医院（二门诊） | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | 614 / P663 | 汇总四 type ✅ |
+| 5b | 哈尔滨市第五医院（二门诊） | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | 614 / P663 | **结款 pass** · 合并市五院 Job613 |
 | 6 | 新发红十字医院 | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | 615 / P664 | bill pass · **结款 pass** · XINFA urgentBreakdownByMonth |
 | 7a | 黑龙江省医院（南岗院区） | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | 616 / P665 | bill **pass** · **结款 pass** · 汇总四 type ✅ |
 | 7b | 黑龙江省医院（香坊院区） | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | 617 / P698 | bill **pass** · **结款 pass** · 汇总四 type ✅ |
@@ -80,7 +81,7 @@ python3 scripts/batch_june_system_test.py "武警黑龙江省总队医院" "…"
 | 20 | 哈尔滨仁胜医院 | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | 635 / P681 | bill **pass** · **结款 pass** |
 | 21 | 哈尔滨华夏眼科医院 | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | 652 / P682 | bill **pass** · **结款 pass** |
 | 22 | 哈尔滨冰城医疗美容医院 | ✅ | ✅ | ✅ | 🔄 | ✅ | ✅ | ✅ | ✅ | 648 / P683 | bill+结款 **双 pass** |
-| 23 | 香坊中医院 | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | 638 / P684 | bill pass · 缺处理后结款函 |
+| 23 | 香坊中医院 | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | 638 / P684 | bill+结款 **双 pass** · 合并结款函已收 |
 | 24 | 武警黑龙江省总队医院 | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | 639 / P693 | bill+结款 **双 pass** · tripCountOverride=20 |
 | 25 | 悦美芳华医疗门诊医院 | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | 640 / P686 | bill+结款 **双 pass** · 眼包 warning **清零**（ZSD 多包计价） |
 | 26a | 省二（南岗院区） | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | 641 / P687 | bill **pass** 总额一致（154 vs 86 行聚合差）· 结款 **pass** |
@@ -89,7 +90,7 @@ python3 scripts/batch_june_system_test.py "武警黑龙江省总队医院" "…"
 | 28 | 哈尔滨市红十字妇产医院 | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | 623 / P690 | bill **pass** · **结款 pass** |
 | 29 | 哈尔滨工业大学医院 | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | 691 / P691 | bill **pass** · **结款 pass** · fold 去重 · Job **691** |
 | 30 | 哈尔滨工程大学医院 | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | 704 / P704 | **5 月账期** bill+结款 **双 pass** · Job704 |
-| — | 哈尔滨长健医院 | ✅ | ✅ | ✅ | 🔄 | ✅ | ✅ | ✅ | ✅ | 654 / P699 | bill **pass** · 结款 skip（缺表）· ExportFixedPriceApplier |
+| — | 哈尔滨长健医院 | ✅ | ✅ | ✅ | 🔄 | ✅ | ✅ | ✅ | ✅ | 654 / P699 | bill **pass** · **结款 pass**（Δ100 登记）· ExportFixedPriceApplier |
 
 ### 逐院勾选模板（复制到院文件夹 `验收进度.md` 可选）
 
@@ -192,25 +193,23 @@ python3 scripts/batch_june_system_test.py "武警黑龙江省总队医院" "…"
 | 哈尔滨华夏眼科医院 | 1账单 2结款 | ✅ pass | ✅ pass | **不包含** | ✅ **strict 双 pass** | Job652 |
 | 哈尔滨市红十字妇产医院 | 1账单 2结款 | ✅ pass | ✅ pass | **不包含** | ✅ **strict 双 pass** | Job623 |
 
-**进度汇总（37 院 · 2026-07-29 wave4c）**：
+**进度汇总（37 院 · 2026-07-29 波次6）**：
 
 | 维度 | 数量 | 说明 |
 |------|------|------|
 | 账单 pass / warn / fail / skip | **34 / 0 / 4 / 0** | 波次5：+工程大学、+太平 |
-| settlement pass | **30 / 37** | +工程大学 5 月结款 |
-| strict 双 pass | **30 院** | 波次5 目标达成 |
-| 结款 pass / skip·阻塞 | **29 / 8** | 无 fail；含材料阻塞 5 + 缺参考表 3 |
-| **strict 双 pass** | **28** | bill pass + settlement pass |
-| 看板双 pass（bill pass/warn + settlement pass） | **33** | 含太平 warn |
-| 材料 bill fail | **4** | 国药主/二、市二、省二松北（范围外） |
+| settlement pass | **34 / 37** | 波次6：+香坊/国药三/长健/市五二门诊 |
+| strict 双 pass | **34 院** | 波次6 结款 skip 清零 |
+| 结款 pass / skip·阻塞 | **34 / 3** | 仅材料阻塞 4 院（blocked_material） |
+| 材料 bill fail | **4** | 国药主/二、市二、省二松北（S4 重导 Δ 不变） |
 
-> 完整 37 院明细见上文看板 · 报告 [`s8_export_compare_report.json`](s8_export_compare_report.json) · [`regression-wave4-triage.md`](regression-wave4-triage.md)
+> 完整 37 院明细见上文看板 · 报告 [`s8_export_compare_report.json`](s8_export_compare_report.json) · [`regression-wave6-triage.md`](regression-wave6-triage.md)
 
-### 汇总（wave4c）
+### 汇总（波次6）
 
-- **✅ strict 双 pass 28 院**：波次4 目标 bill 32 pass 已达成；仅太平 bill warn 阻 strict 第 29 院
-- **🚫 bill fail 4 院（材料阻塞，范围外）**：国药主/二 · 市二 · 省二松北
-- **⏭ skip 0 院（材料）**：~~工程大学~~ 5 月原始已归档 · 待 S1→S8 复跑
+- **✅ strict 双 pass 34 院**：结款 skip 4 院全部闭合
+- **🚫 bill fail 4 院（材料阻塞）**：国药主/二 · 市二 · 省二松北 · S4 重导后 Δ 无变化
+- **⏭ settlement blocked 4 院**：同上 bill fail 院 · `blocked_material`
 - **待办**：太平 Δ20.48 阶梯四舍五入统一 · Kit BOM 材料 4 院
 
 **高频缺失表格类型：**

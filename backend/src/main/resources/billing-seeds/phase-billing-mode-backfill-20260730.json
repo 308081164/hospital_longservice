@@ -1,0 +1,24 @@
+{
+  "version": "1",
+  "description": "回填 billing_mode，使规则可读写、可 UI 编辑",
+  "updateRules": [
+    {
+      "code": "ZYY-D2-NG",
+      "ruleName": "附二南岗刮勺探针5.5元/把",
+      "billingMode": "PACK_NAME_SUFFIX",
+      "pieceCountSource": "PACK_NAME_LAST_NUMBER",
+      "force": true
+    }
+  ],
+  "bulkUpdates": [
+    {
+      "ruleType": "FIXED_PRICE",
+      "setBillingMode": "PER_PACK"
+    },
+    {
+      "ruleType": "PRICE_PER_INSTRUMENT",
+      "setBillingMode": "PER_INSTRUMENT",
+      "excludeKeywords": ["刮勺探针"]
+    }
+  ]
+}

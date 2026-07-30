@@ -131,18 +131,52 @@
           </div>
 
           <template v-if="entry.workbook">
-            <div class="mb-3 flex flex-wrap gap-2">
-              <div
+            <div class="mb-3 flex flex-wrap items-center gap-2">
+              <button
+                v-if="entry.savedJobId && entry.selectedSheetFilter"
+                type="button"
+                class="inline-flex items-center rounded-md border border-primary bg-primary/10 px-2.5 py-1 text-xs font-medium text-primary transition hover:bg-primary/15"
+                @click="selectEntrySheet(entry, null)"
+              >
+                {{ t('reconciliation.upload.allSheets') }}
+              </button>
+              <button
                 v-for="sheet in entry.workbook.previews"
                 :key="sheet.name"
-                class="inline-flex items-center gap-2 rounded-md border border-gray-200 bg-gray-50 px-2.5 py-1 text-xs text-gray-600"
+                type="button"
+                class="inline-flex items-center gap-2 rounded-md border px-2.5 py-1 text-xs transition"
+                :class="
+                  entry.selectedSheetFilter === sheet.name
+                    ? 'border-primary bg-primary/10 text-primary'
+                    : entry.savedJobId
+                      ? 'cursor-pointer border-gray-200 bg-gray-50 text-gray-600 hover:border-primary/40 hover:bg-primary/5'
+                      : 'border-gray-200 bg-gray-50 text-gray-600'
+                "
+                :disabled="!entry.savedJobId"
+                @click="entry.savedJobId && selectEntrySheet(entry, sheet.name)"
               >
-                <span class="font-medium text-gray-800">{{ sheet.name }}</span>
+                <span class="font-medium" :class="entry.selectedSheetFilter === sheet.name ? 'text-primary' : 'text-gray-800'">{{
+                  sheet.name
+                }}</span>
                 <span class="text-gray-400">{{ sheet.dataRows }} 行</span>
                 <span class="text-gray-300">·</span>
                 <span class="text-gray-400">表头 {{ sheet.headerRowIndex + 1 }}</span>
-              </div>
+                <span
+                  v-if="entry.savedSheetWarningCounts?.[sheet.name]"
+                  class="rounded bg-orange-100 px-1 text-orange-600"
+                >
+                  {{ entry.savedSheetWarningCounts[sheet.name] }} 待复核
+                </span>
+              </button>
             </div>
+            <p
+              v-if="entry.savedJobId && entry.selectedSheetFilter"
+              class="mb-3 text-xs text-primary"
+            >
+              {{
+                t('reconciliation.upload.sheetFilterActive', { sheet: entry.selectedSheetFilter })
+              }}
+            </p>
 
             <div class="mb-4 flex flex-wrap gap-2">
               <ElButton
@@ -256,7 +290,12 @@
                 <span
                   v-if="entry.onlyShowAbnormal && !entry.anomalyLoading"
                   class="text-xs text-orange-500"
-                  >当前仅显示异常行（全局筛选，共 {{ entry.displayTotal }} 条）</span
+                  >当前仅显示异常行（{{
+                    entry.selectedSheetFilter ? `科室 ${entry.selectedSheetFilter}，` : ''
+                  }}共 {{ entry.displayTotal }} 条）</span
+                >
+                <span v-if="entry.sheetFilterLoading" class="text-xs text-blue-500"
+                  >正在加载科室数据...</span
                 >
                 <span v-if="entry.anomalyLoading" class="text-xs text-blue-500"
                   >正在加载全量数据，请稍候...</span
@@ -832,57 +871,82 @@
           </div>
         </div>
       </div>
-      <div
+      <ElCollapse
         v-if="detailLogisticsAllocation?.deptAllocations?.length"
-        class="mb-4 rounded-lg border border-amber-200 bg-amber-50/60 p-4"
+        v-model="detailLogisticsCollapseActive"
+        class="logistics-allocation-collapse mb-4"
       >
-        <div class="mb-2 flex items-center justify-between gap-2">
-          <span class="text-sm font-semibold text-gray-800">
-            {{ t('reconciliation.logisticsAllocation.title') }}
-          </span>
-          <span class="text-xs text-gray-500">
-            {{ t('reconciliation.logisticsAllocation.total') }}：
-            {{ formatNumber(detailLogisticsAllocation.totalLogisticsFee) }}
-          </span>
-        </div>
-        <ElTable
-          :data="detailLogisticsAllocation.deptAllocations"
-          size="small"
-          border
-          stripe
-          max-height="360"
-        >
-          <ElTableColumn
-            prop="department"
-            :label="t('reconciliation.logisticsAllocation.department')"
-            min-width="140"
-          />
-          <ElTableColumn
-            prop="sterilizeTotal"
-            :label="t('reconciliation.logisticsAllocation.sterilizeTotal')"
-            width="120"
-            align="right"
+        <ElCollapseItem name="logistics-allocation">
+          <template #title>
+            <div class="flex w-full min-w-0 items-center justify-between gap-3 pr-2">
+              <span class="truncate text-sm font-semibold text-gray-800">
+                {{ t('reconciliation.logisticsAllocation.title') }}
+                <span class="ml-1 text-xs font-normal text-gray-500">
+                  {{
+                    t('reconciliation.logisticsAllocation.deptCount', {
+                      count: detailLogisticsAllocation.deptAllocations.length
+                    })
+                  }}
+                </span>
+              </span>
+              <span class="shrink-0 text-xs text-gray-500">
+                {{ t('reconciliation.logisticsAllocation.total') }}：
+                {{ formatNumber(detailLogisticsAllocation.totalLogisticsFee) }}
+              </span>
+            </div>
+          </template>
+          <ElTable
+            :data="detailLogisticsDeptPageData"
+            size="small"
+            border
+            stripe
+            max-height="200"
           >
-            <template #default="{ row }">{{ formatNumber(row.sterilizeTotal) }}</template>
-          </ElTableColumn>
-          <ElTableColumn
-            prop="ratio"
-            :label="t('reconciliation.logisticsAllocation.ratio')"
-            width="100"
-            align="right"
+            <ElTableColumn
+              prop="department"
+              :label="t('reconciliation.logisticsAllocation.department')"
+              min-width="140"
+            />
+            <ElTableColumn
+              prop="sterilizeTotal"
+              :label="t('reconciliation.logisticsAllocation.sterilizeTotal')"
+              width="120"
+              align="right"
+            >
+              <template #default="{ row }">{{ formatNumber(row.sterilizeTotal) }}</template>
+            </ElTableColumn>
+            <ElTableColumn
+              prop="ratio"
+              :label="t('reconciliation.logisticsAllocation.ratio')"
+              width="100"
+              align="right"
+            >
+              <template #default="{ row }">{{ ((row.ratio ?? 0) * 100).toFixed(2) }}%</template>
+            </ElTableColumn>
+            <ElTableColumn
+              prop="allocatedFee"
+              :label="t('reconciliation.logisticsAllocation.allocatedFee')"
+              width="120"
+              align="right"
+            >
+              <template #default="{ row }">{{ formatNumber(row.allocatedFee) }}</template>
+            </ElTableColumn>
+          </ElTable>
+          <div
+            v-if="detailLogisticsAllocation.deptAllocations.length > detailLogisticsPageSize"
+            class="mt-2 flex justify-end"
           >
-            <template #default="{ row }">{{ ((row.ratio ?? 0) * 100).toFixed(2) }}%</template>
-          </ElTableColumn>
-          <ElTableColumn
-            prop="allocatedFee"
-            :label="t('reconciliation.logisticsAllocation.allocatedFee')"
-            width="120"
-            align="right"
-          >
-            <template #default="{ row }">{{ formatNumber(row.allocatedFee) }}</template>
-          </ElTableColumn>
-        </ElTable>
-      </div>
+            <ElPagination
+              v-model:current-page="detailLogisticsPage"
+              :page-size="detailLogisticsPageSize"
+              :total="detailLogisticsAllocation.deptAllocations.length"
+              layout="total, prev, pager, next"
+              size="small"
+              background
+            />
+          </div>
+        </ElCollapseItem>
+      </ElCollapse>
       <div class="mb-4 flex flex-wrap items-center justify-between gap-2">
         <div class="grid grid-cols-2 gap-4 rounded-lg bg-gray-50 p-4 text-sm md:grid-cols-4 flex-1">
           <div>
@@ -1427,6 +1491,14 @@
     anomalyLoading: boolean
     /** 未命中产品数量 */
     unmatchedCount?: number | null
+    /** 保存后按科室筛选（sheetName） */
+    selectedSheetFilter: string | null
+    /** 各科室行数（保存后来自后端） */
+    savedSheetRowCounts: Record<string, number> | null
+    /** 各科室待复核行数（保存后来自后端） */
+    savedSheetWarningCounts: Record<string, number> | null
+    /** 科室筛选切换中 */
+    sheetFilterLoading: boolean
   }
 
   function sanitizeCellText(value: unknown, normalizeFormatting = false): string {
@@ -2372,6 +2444,14 @@
   const detailRosterHints = ref<RosterMatchHint[]>([])
   const detailAllocation = ref<AllocationResult | null>(null)
   const detailLogisticsAllocation = ref<LogisticsAllocationPreview | null>(null)
+  const detailLogisticsCollapseActive = ref<string[]>([])
+  const detailLogisticsPage = ref(1)
+  const detailLogisticsPageSize = 10
+  const detailLogisticsDeptPageData = computed(() => {
+    const rows = detailLogisticsAllocation.value?.deptAllocations ?? []
+    const start = (detailLogisticsPage.value - 1) * detailLogisticsPageSize
+    return rows.slice(start, start + detailLogisticsPageSize)
+  })
   const isRunningAllocation = ref(false)
   const isExportingOrchestrated = ref(false)
 
@@ -2533,7 +2613,12 @@
       savedSummary: null,
       onlyShowAbnormal: false,
       allAnomalyRows: null,
-      anomalyLoading: false
+      anomalyLoading: false,
+      unmatchedCount: null,
+      selectedSheetFilter: null,
+      savedSheetRowCounts: null,
+      savedSheetWarningCounts: null,
+      sheetFilterLoading: false
     })
     uploadEntries.value.push(entry)
     await reparseEntry(entry)
@@ -2626,6 +2711,9 @@
 
       entry.savedJobId = saved.id
       entry.hospitalName = saved.hospitalName || entry.hospitalName
+      entry.savedSheetRowCounts = saved.sheetRowCounts ?? null
+      entry.savedSheetWarningCounts = saved.sheetWarningCounts ?? null
+      entry.selectedSheetFilter = null
       // 使用后端预计算的汇总数据
       entry.savedSummary = {
         total: saved.totalRows ?? 0,
@@ -2658,13 +2746,46 @@
   async function loadEntryPage(entry: UploadEntry, page: number) {
     if (!entry.savedJobId) return
     try {
-      const result = await getReconciliationRows(entry.savedJobId, page, entry.displayPageSize)
+      const result = await getReconciliationRows(
+        entry.savedJobId,
+        page,
+        entry.displayPageSize,
+        entry.selectedSheetFilter ?? undefined
+      )
       const rows = (result.rows ?? []) as unknown as Record<string, unknown>[]
       entry.processedRows = rows.map((row) => mapApiRowToProcessedRow(row))
       entry.displayTotal = result.total
       entry.displayPage = page
     } catch {
       // ignore
+    }
+  }
+
+  /** 保存后按科室筛选明细 */
+  async function selectEntrySheet(entry: UploadEntry, sheetName: string | null) {
+    if (!entry.savedJobId) return
+    if (entry.selectedSheetFilter === sheetName) return
+    entry.selectedSheetFilter = sheetName
+    entry.displayPage = 1
+    entry.sheetFilterLoading = true
+    try {
+      if (entry.onlyShowAbnormal) {
+        entry.anomalyLoading = true
+        const allRows = await fetchAllRowsForExport(entry.savedJobId)
+        let processed = allRows
+          .map((row) => mapApiRowToProcessedRow(row))
+          .filter((row) => row.status !== 'unchanged')
+        if (sheetName) {
+          processed = processed.filter((row) => row.sheetName === sheetName)
+        }
+        entry.allAnomalyRows = processed
+        entry.displayTotal = processed.length
+        entry.anomalyLoading = false
+      } else {
+        await loadEntryPage(entry, 1)
+      }
+    } finally {
+      entry.sheetFilterLoading = false
     }
   }
 
@@ -2747,8 +2868,12 @@
       // 用 requestAnimationFrame 延迟同步处理，避免阻塞 UI
       await new Promise<void>((resolve) => {
         requestAnimationFrame(() => {
-          const processed = allRows.map((row) => mapApiRowToProcessedRow(row))
-          entry.allAnomalyRows = processed.filter((row) => row.status !== 'unchanged')
+          let processed = allRows.map((row) => mapApiRowToProcessedRow(row))
+          processed = processed.filter((row) => row.status !== 'unchanged')
+          if (entry.selectedSheetFilter) {
+            processed = processed.filter((row) => row.sheetName === entry.selectedSheetFilter)
+          }
+          entry.allAnomalyRows = processed
           entry.displayTotal = entry.allAnomalyRows.length
           entry.anomalyLoading = false
           resolve()
@@ -2781,6 +2906,15 @@
   /** 导出单个条目的异常项 */
   /** 条目的摘要统计（优先使用后端汇总，回退到前端按页计算） */
   function entrySummary(entry: UploadEntry) {
+    if (entry.selectedSheetFilter) {
+      const partial = computeSummary(entryDisplayRows(entry))
+      const sheet = entry.selectedSheetFilter
+      return {
+        ...partial,
+        total: entry.savedSheetRowCounts?.[sheet] ?? entry.displayTotal ?? partial.total,
+        warning: entry.savedSheetWarningCounts?.[sheet] ?? partial.warning
+      }
+    }
     if (entry.savedSummary) {
       return {
         total: entry.savedSummary.total,
@@ -2846,6 +2980,8 @@
     detailRosterHints.value = []
     detailAllocation.value = null
     detailLogisticsAllocation.value = null
+    detailLogisticsCollapseActive.value = []
+    detailLogisticsPage.value = 1
     try {
       const data = await getReconciliationDetail(item.id)
       detailData.value = data
@@ -3370,6 +3506,35 @@
     flex: 1 1 auto;
     min-height: 0;
     overflow-y: auto;
+  }
+
+  .logistics-allocation-collapse {
+    border: none;
+  }
+
+  .logistics-allocation-collapse :deep(.el-collapse-item__header) {
+    height: auto;
+    min-height: 40px;
+    padding: 8px 16px;
+    line-height: 1.4;
+    background-color: rgb(255 251 235 / 0.6);
+    border: 1px solid rgb(253 230 138);
+    border-radius: 0.5rem;
+  }
+
+  .logistics-allocation-collapse :deep(.el-collapse-item__wrap) {
+    background-color: rgb(255 251 235 / 0.6);
+    border: 1px solid rgb(253 230 138);
+    border-top: none;
+    border-radius: 0 0 0.5rem 0.5rem;
+  }
+
+  .logistics-allocation-collapse :deep(.el-collapse-item.is-active > .el-collapse-item__header) {
+    border-radius: 0.5rem 0.5rem 0 0;
+  }
+
+  .logistics-allocation-collapse :deep(.el-collapse-item__content) {
+    padding: 0 16px 12px;
   }
 
   :deep(.compact-upload .el-upload) {

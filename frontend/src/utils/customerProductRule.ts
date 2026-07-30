@@ -1,3 +1,5 @@
+export type BillingMode = 'PER_PACK' | 'PER_INSTRUMENT' | 'PACK_NAME_SUFFIX'
+
 export type CustomerProductRuleType =
   | 'FIXED_PRICE'
   | 'PRICE_PER_INSTRUMENT'
@@ -20,6 +22,28 @@ export const CUSTOMER_PRODUCT_RULE_TYPES: CustomerProductRuleType[] = [
 
 /** 后端存库默认值；引擎不读该字段，仅影响同客户多条策略的编译顺序 */
 export const CUSTOMER_PRODUCT_RULE_DEFAULT_PRIORITY = 100
+
+export function inferBillingModeFromDraft(draft: Pick<CustomerProductRuleDraft, 'ruleType' | 'billingMode' | 'keywords'>): BillingMode {
+  if (draft.billingMode) return draft.billingMode
+  if (draft.ruleType === 'PRICE_PER_INSTRUMENT') {
+    if (draft.keywords.some((k) => k.trim() === '刮勺探针')) return 'PACK_NAME_SUFFIX'
+    return 'PER_INSTRUMENT'
+  }
+  return 'PER_PACK'
+}
+
+export function syncRuleTypeFromBillingMode(draft: CustomerProductRuleDraft): void {
+  const mode = inferBillingModeFromDraft(draft)
+  draft.billingMode = mode
+  draft.ruleType = mode === 'PER_PACK' ? 'FIXED_PRICE' : 'PRICE_PER_INSTRUMENT'
+  if (mode === 'PACK_NAME_SUFFIX') {
+    draft.pieceCountSource = draft.pieceCountSource ?? 'PACK_NAME_LAST_NUMBER'
+  } else if (mode === 'PER_INSTRUMENT') {
+    draft.pieceCountSource = draft.pieceCountSource ?? 'EFFECTIVE_COUNT'
+  } else {
+    draft.pieceCountSource = undefined
+  }
+}
 
 export function isProductRequired(ruleType: CustomerProductRuleType): boolean {
   return ruleType === 'FIXED_PRICE' || ruleType === 'PRICE_PER_INSTRUMENT' || ruleType === 'MULTIPLIER'
@@ -51,6 +75,8 @@ export interface CustomerProductRuleDraft {
   maxInstrumentCount?: number
   originalUnitPrice?: number
   departments: string[]
+  billingMode?: BillingMode
+  pieceCountSource?: string
   skipPackaging: boolean
   skipDiscount: boolean
   priority: number
@@ -107,12 +133,27 @@ export function ruleFromRecord(rule: Api.MasterData.CustomerProductRule): Custom
     maxInstrumentCount: rule.maxInstrumentCount ?? rule.max_instrument_count,
     originalUnitPrice: (rule as { originalUnitPrice?: number; original_unit_price?: number }).originalUnitPrice
       ?? (rule as { original_unit_price?: number }).original_unit_price,
+    billingMode: inferBillingModeFromRecord(rule),
+    pieceCountSource: (rule as { pieceCountSource?: string; piece_count_source?: string }).pieceCountSource
+      ?? (rule as { piece_count_source?: string }).piece_count_source,
     departments: parseDepartmentsFromRule(rule),
     skipPackaging: rule.skipPackaging ?? rule.skip_packaging ?? false,
     skipDiscount: rule.skipDiscount ?? rule.skip_discount ?? false,
     priority: rule.priority ?? CUSTOMER_PRODUCT_RULE_DEFAULT_PRIORITY,
     isActive: rule.isActive ?? rule.is_active ?? true,
   }
+}
+
+function inferBillingModeFromRecord(rule: Api.MasterData.CustomerProductRule): BillingMode {
+  const explicit = (rule as { billingMode?: BillingMode; billing_mode?: BillingMode }).billingMode
+    ?? (rule as { billing_mode?: BillingMode }).billing_mode
+  if (explicit) return explicit
+  const ruleType = rule.ruleType ?? (rule as { rule_type?: string }).rule_type
+  if (ruleType === 'PRICE_PER_INSTRUMENT') {
+    if ((rule.keywords ?? []).some((k) => k.trim() === '刮勺探针')) return 'PACK_NAME_SUFFIX'
+    return 'PER_INSTRUMENT'
+  }
+  return 'PER_PACK'
 }
 
 function normalizeList(values?: string[]): string {
@@ -294,6 +335,7 @@ export function draftToSavePayload(
   draft: CustomerProductRuleDraft,
   productName?: string,
 ): Api.MasterData.SaveCustomerProductRulePayload {
+  syncRuleTypeFromBillingMode(draft)
   const isAnyPrice = draft.matchMode === 'any_price'
   return {
     productId: draft.productId,
@@ -318,6 +360,8 @@ export function draftToSavePayload(
     maxInstrumentCount: normalizeOptionalPositiveInt(draft.maxInstrumentCount),
     originalUnitPrice: draft.originalUnitPrice,
     departments: draft.departments?.length ? [...draft.departments] : undefined,
+    billingMode: draft.billingMode ?? inferBillingModeFromDraft(draft),
+    pieceCountSource: draft.pieceCountSource,
     skipPackaging: isSettlementRule(draft.ruleType) ? false : draft.skipPackaging,
     skipDiscount: isSettlementRule(draft.ruleType) ? false : draft.skipDiscount,
     priority: CUSTOMER_PRODUCT_RULE_DEFAULT_PRIORITY,
@@ -344,6 +388,10 @@ export function validateProductRuleDraft(draft: CustomerProductRuleDraft): strin
       if (validPrices.length < 2) return '多报价模式至少需要 2 个有效价格'
     } else if (!draft.price || draft.price <= 0) {
       return '请输入有效的固定价格'
+    }
+    const billingMode = draft.billingMode ?? inferBillingModeFromDraft(draft)
+    if (billingMode === 'PACK_NAME_SUFFIX' && !draft.keywords.some((k) => k.trim())) {
+      return '按包名后缀数字计价时，匹配关键词不能为空'
     }
   } else if (draft.ruleType === 'MULTIPLIER') {
     if (!draft.multiplier || draft.multiplier < 0.01 || draft.multiplier > 99) {
@@ -431,8 +479,15 @@ export function formatRuleValueLabel(
     return t('menus.masterData.customerProductRules.valueExtraFee', { fee: rule.fee ?? 0 })
   }
   const price = rule.price ?? rule.fixed_price ?? 0
-  if (ruleType === 'PRICE_PER_INSTRUMENT') {
+  const billingMode = inferBillingModeFromRecord(rule)
+  if (billingMode === 'PACK_NAME_SUFFIX') {
+    return `${price} 元/件(包名后缀)`
+  }
+  if (billingMode === 'PER_INSTRUMENT' || ruleType === 'PRICE_PER_INSTRUMENT') {
     return `${price} 元/件`
+  }
+  if (billingMode === 'PER_PACK') {
+    return `${price} 元/包`
   }
   return t('menus.masterData.customerProductRules.valueFixed', { price })
 }

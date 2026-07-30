@@ -15,6 +15,7 @@ import org.springframework.stereotype.Component;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 幂等加载 billing-seeds/*.json 客户策略/规则/客户组配置。
@@ -210,7 +211,11 @@ public class BillingSeedMigrationRunner implements CommandLineRunner {
             new IncrementalSeed("billing_seed_shkf_oral_box_pricing_20260730_v1",
                     "billing-seeds/phase-shkf-oral-box-pricing-20260730.json"),
             new IncrementalSeed("billing_seed_zyy_d1_waier_huanbao_20260730_v1",
-                    "billing-seeds/phase-zyy-d1-waier-huanbao-20260730.json")
+                    "billing-seeds/phase-zyy-d1-waier-huanbao-20260730.json"),
+            new IncrementalSeed("billing_seed_billing_mode_backfill_20260730_v1",
+                    "billing-seeds/phase-billing-mode-backfill-20260730.json"),
+            new IncrementalSeed("billing_seed_zyy_d1_gongqiangjing_jingtou_20260730_v1",
+                    "billing-seeds/phase-zyy-d1-gongqiangjing-jingtou-20260730.json")
     );
 
     private static final String ZYY_D1_P0_MARKER = "billing_seed_zyy_d1_p0_v2";
@@ -319,8 +324,14 @@ public class BillingSeedMigrationRunner implements CommandLineRunner {
                     || "billing-seeds/phase-bill-wave4c-close-v2-20260729.json".equals(incremental.classpathFile())
                     || "billing-seeds/phase-wave5-heu-settlement-discount-20260729.json".equals(incremental.classpathFile())
                     || "billing-seeds/phase-wave5-taiping-20260729.json".equals(incremental.classpathFile())
-                    || "billing-seeds/phase-wave5-pricing-20260729.json".equals(incremental.classpathFile())) {
+                    || "billing-seeds/phase-wave5-pricing-20260729.json".equals(incremental.classpathFile())
+                    || "billing-seeds/phase-yuemei-yanbao-20260730.json".equals(incremental.classpathFile())
+                    || "billing-seeds/phase-shkf-oral-box-pricing-20260730.json".equals(incremental.classpathFile())
+                    || "billing-seeds/phase-zyy-d1-waier-huanbao-20260730.json".equals(incremental.classpathFile())
+                    || "billing-seeds/phase-zyy-d1-gongqiangjing-jingtou-20260730.json".equals(incremental.classpathFile())) {
                 applyBatchPatchSeedFile(incremental.classpathFile());
+            } else if ("billing-seeds/phase-billing-mode-backfill-20260730.json".equals(incremental.classpathFile())) {
+                applyBillingModeBackfillSeedFile(incremental.classpathFile());
             } else {
                 applied = loadSeedClasspathFile(incremental.classpathFile());
             }
@@ -905,6 +916,14 @@ public class BillingSeedMigrationRunner implements CommandLineRunner {
                     rule.setFoldRatio(decimal(patch, "setFoldRatio"));
                     changed = true;
                 }
+                if (patch.has("setBillingMode")) {
+                    rule.setBillingMode(text(patch, "setBillingMode"));
+                    changed = true;
+                }
+                if (patch.has("setPieceCountSource")) {
+                    rule.setPieceCountSource(text(patch, "setPieceCountSource"));
+                    changed = true;
+                }
                 if (changed) {
                     customerProductRuleMapper.updateById(rule);
                     log.info("Batch patch updated rule {}/{}", code, ruleName);
@@ -1415,6 +1434,78 @@ public class BillingSeedMigrationRunner implements CommandLineRunner {
         return deactivated + reactivated;
     }
 
+    /** billing_mode 回填：显式写入 PER_PACK / PER_INSTRUMENT / PACK_NAME_SUFFIX */
+    private void applyBillingModeBackfillSeedFile(String file) {
+        try {
+            ClassPathResource resource = new ClassPathResource(file);
+            if (!resource.exists()) {
+                log.warn("Billing mode backfill seed file missing: {}", file);
+                return;
+            }
+            JsonNode root = JsonUtils.getObjectMapper().readTree(resource.getInputStream());
+            for (JsonNode upd : root.path("updateRules")) {
+                String code = text(upd, "code");
+                String ruleName = text(upd, "ruleName");
+                Customer customer = customerMapper.selectByCode(code);
+                if (customer == null) {
+                    log.warn("Billing mode update skipped: customer {} not found", code);
+                    continue;
+                }
+                CustomerProductRule rule = findProductRuleByName(customer.getId(), ruleName);
+                if (rule == null) {
+                    log.warn("Billing mode update skipped: rule {}/{} not found", code, ruleName);
+                    continue;
+                }
+                boolean force = bool(upd, "force", false);
+                if (!force && rule.getBillingMode() != null && !rule.getBillingMode().isBlank()) {
+                    continue;
+                }
+                if (upd.has("billingMode")) {
+                    rule.setBillingMode(text(upd, "billingMode"));
+                }
+                if (upd.has("pieceCountSource")) {
+                    rule.setPieceCountSource(text(upd, "pieceCountSource"));
+                }
+                customerProductRuleMapper.updateById(rule);
+                log.info("Billing mode updated rule {}/{} -> mode={} source={}",
+                        code, ruleName, rule.getBillingMode(), rule.getPieceCountSource());
+            }
+            for (JsonNode bulk : root.path("bulkUpdates")) {
+                String ruleType = text(bulk, "ruleType");
+                String setBillingMode = text(bulk, "setBillingMode");
+                if (ruleType == null || setBillingMode == null) {
+                    continue;
+                }
+                List<String> excludeKeywords = new ArrayList<>();
+                if (bulk.has("excludeKeywords")) {
+                    bulk.path("excludeKeywords").forEach(node -> excludeKeywords.add(node.asText()));
+                }
+                List<Map<String, Object>> rows = jdbcTemplate.queryForList(
+                        "SELECT id, keywords FROM customer_product_rule "
+                                + "WHERE rule_type = ? AND (billing_mode IS NULL OR billing_mode = '')",
+                        ruleType);
+                int updated = 0;
+                for (Map<String, Object> row : rows) {
+                    Object keywordsObj = row.get("keywords");
+                    if (!excludeKeywords.isEmpty() && keywordsObj != null) {
+                        List<String> keywords = parseStringList(String.valueOf(keywordsObj));
+                        if (keywords.stream().anyMatch(excludeKeywords::contains)) {
+                            continue;
+                        }
+                    }
+                    Long ruleId = ((Number) row.get("id")).longValue();
+                    updated += jdbcTemplate.update(
+                            "UPDATE customer_product_rule SET billing_mode = ?, updated_at = NOW() WHERE id = ?",
+                            setBillingMode, ruleId);
+                }
+                log.info("Billing mode bulk updated ruleType={} -> {} ({} rows)", ruleType, setBillingMode, updated);
+            }
+            log.info("Applied billing mode backfill seed: {}", file);
+        } catch (Exception e) {
+            log.error("Failed to apply billing mode backfill seed {}: {}", file, e.getMessage(), e);
+        }
+    }
+
     private void seedProductRules(Long customerId, JsonNode rules) {
         if (!rules.isArray()) {
             return;
@@ -1427,6 +1518,12 @@ public class BillingSeedMigrationRunner implements CommandLineRunner {
             CustomerProductRule rule = new CustomerProductRule();
             rule.setCustomerId(customerId);
             rule.setRuleType(text(ruleNode, "ruleType", "FIXED_PRICE"));
+            if (ruleNode.hasNonNull("billingMode")) {
+                rule.setBillingMode(text(ruleNode, "billingMode"));
+            }
+            if (ruleNode.hasNonNull("pieceCountSource")) {
+                rule.setPieceCountSource(text(ruleNode, "pieceCountSource"));
+            }
             rule.setName(name);
             rule.setPriority(intVal(ruleNode, "priority", 100));
             if (ruleNode.hasNonNull("price")) {

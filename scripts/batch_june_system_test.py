@@ -3,6 +3,7 @@
 
 from __future__ import annotations
 
+import argparse
 import csv
 import json
 import subprocess
@@ -20,8 +21,8 @@ RULE_ID = 1
 OPERATOR = "batch-audit"
 TOLERANCE = 0.05
 
-# Reuse hospital list + june pair finder
 sys.path.insert(0, str(ROOT / "scripts"))
+from lib.api_client import configure_client, get_client  # noqa: E402
 from batch_june_price_reconciliation import (  # noqa: E402
     TODO_HOSPITALS,
     ExpectedPriceRow,
@@ -125,36 +126,53 @@ def merge_partial_results(
     return merged + extras
 
 
+def init_api_from_args(args: argparse.Namespace | None = None) -> None:
+    if args is None:
+        configure_client(api_base=API, mode="docker", backend_container=BACKEND)
+        return
+    configure_client(
+        api_base=getattr(args, "api_base", None) or API,
+        mode=getattr(args, "mode", "docker"),
+        backend_container=BACKEND,
+        username=getattr(args, "username", None),
+        password=getattr(args, "password", None),
+    )
+
+
 def docker_curl(args: list[str]) -> str:
-    cmd = ["docker", "exec", BACKEND, "curl", "-sS", *args]
-    return subprocess.check_output(cmd, text=True)
+    return get_client().curl_raw(args)
 
 
 def get_token() -> str:
-    raw = docker_curl([
-        "-X", "POST", f"{API}/api/v1/base/access_token",
-        "-H", "Content-Type: application/json",
-        "-d", '{"username":"admin","password":"admin123"}',
-    ])
-    data = json.loads(raw)
-    if data.get("code") != 200:
-        raise RuntimeError(f"login failed: {data}")
-    return data["data"]["access_token"]
+    return get_client().login()
 
 
 def import_bill(token: str, hospital: str, file_path: Path) -> dict:
-    # Copy file into container temp path
-    container_path = f"/tmp/batch_{file_path.name}"
-    subprocess.check_call(["docker", "cp", str(file_path), f"{BACKEND}:{container_path}"])
-    raw = docker_curl([
-        "-X", "POST", f"{API}/api/hospital-reconciliations/import",
-        "-H", f"Authorization: Bearer {token}",
-        "-F", f"source_file=@{container_path}",
-        "-F", f"rule_id={RULE_ID}",
-        "-F", f"operator_name={OPERATOR}",
-        "-F", f"hospital_name={hospital}",
-    ])
-    data = json.loads(raw)
+    client = get_client()
+    if client.mode == "docker":
+        container_path = f"/tmp/batch_{file_path.name}"
+        subprocess.check_call(["docker", "cp", str(file_path), f"{BACKEND}:{container_path}"])
+        raw = docker_curl([
+            "-X", "POST", f"{API}/api/hospital-reconciliations/import",
+            "-H", f"Authorization: Bearer {token}",
+            "-F", f"source_file=@{container_path}",
+            "-F", f"rule_id={RULE_ID}",
+            "-F", f"operator_name={OPERATOR}",
+            "-F", f"hospital_name={hospital}",
+        ])
+        data = json.loads(raw)
+    else:
+        data = client.post_multipart(
+            "/api/hospital-reconciliations/import",
+            {
+                "rule_id": str(RULE_ID),
+                "operator_name": OPERATOR,
+                "hospital_name": hospital,
+            },
+            "source_file",
+            file_path,
+            token=token,
+        )
     if data.get("code") != 200:
         raise RuntimeError(f"import failed: {data.get('msg')} ({hospital})")
     return data["data"]
@@ -163,12 +181,14 @@ def import_bill(token: str, hospital: str, file_path: Path) -> dict:
 def fetch_warnings(token: str, job_id: int) -> list[dict]:
     warnings: list[dict] = []
     page = 1
+    client = get_client()
     while True:
-        raw = docker_curl([
-            f"{API}/api/hospital-reconciliations/{job_id}/rows?page={page}&size=500",
-            "-H", f"Authorization: Bearer {token}",
-        ])
-        data = json.loads(raw)
+        path = f"/api/hospital-reconciliations/{job_id}/rows?page={page}&size=500"
+        if client.mode == "docker":
+            raw = docker_curl([f"{API}{path}", "-H", f"Authorization: Bearer {token}"])
+            data = json.loads(raw)
+        else:
+            data = client.request_json("GET", path, token=token)
         if data.get("code") != 200:
             raise RuntimeError(data.get("msg"))
         payload = data["data"]
@@ -361,9 +381,24 @@ def write_pricing_job_json(pricing: dict[str, CompareResult]) -> None:
     PRICING_JOB_JSON.write_text(json.dumps(payload, ensure_ascii=False, indent=2), encoding="utf-8")
 
 
+def parse_args() -> argparse.Namespace:
+    p = argparse.ArgumentParser(description="Batch S4 pricing import + warning compare")
+    p.add_argument("hospitals", nargs="*", help="医院名；默认全量 TODO_HOSPITALS")
+    p.add_argument("--api-base", default=None)
+    p.add_argument("--mode", choices=["docker", "direct"], default="docker")
+    p.add_argument("--username", default=None)
+    p.add_argument("--password", default=None)
+    return p.parse_args()
+
+
 def main() -> int:
-    only = sys.argv[1:] if len(sys.argv) > 1 else list(TODO_HOSPITALS)
-    partial_run = len(sys.argv) > 1
+    args = parse_args()
+    if args.api_base:
+        global API  # noqa: PLW0603
+        API = args.api_base.rstrip("/")
+    init_api_from_args(args)
+    only = args.hospitals if args.hospitals else list(TODO_HOSPITALS)
+    partial_run = bool(args.hospitals)
     token = get_token()
     results: list[CompareResult] = []
     for name in only:

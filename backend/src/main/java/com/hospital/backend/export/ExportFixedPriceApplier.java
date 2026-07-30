@@ -3,6 +3,7 @@ package com.hospital.backend.export;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.hospital.backend.dto.request.hospital.BillRowItem;
 import com.hospital.backend.service.BillingConditionEvaluator;
+import com.hospital.backend.service.FixedPriceBillingCountResolver;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
@@ -57,20 +58,22 @@ public class ExportFixedPriceApplier {
             if (!BillingConditionEvaluator.instrumentCountInRange(rule, resolveInstrumentCount(row))) {
                 continue;
             }
-            double price = rule.path("price").asDouble(Double.NaN);
-            if (Double.isNaN(price)) {
+            int packCount = row.getPackCount() != null ? Math.max(1, row.getPackCount()) : 1;
+            int instrumentCount = row.getInstrumentCount() != null ? row.getInstrumentCount() : packCount;
+            FixedPriceBillingCountResolver.ExportRowInput exportRow =
+                    new FixedPriceBillingCountResolver.ExportRowInput(
+                            safe(row.getType()),
+                            safe(row.getPackName()),
+                            combined,
+                            packCount,
+                            instrumentCount);
+            FixedPriceBillingCountResolver.FixedPriceComputation computation =
+                    FixedPriceBillingCountResolver.computeForExport(rule, exportRow);
+            if (computation == null) {
                 continue;
             }
-            int packCount = row.getPackCount() != null ? Math.max(1, row.getPackCount()) : 1;
-            double total;
-            if (rule.path("pricePerInstrument").asBoolean(false)) {
-                int instruments = row.getInstrumentCount() != null ? Math.max(1, row.getInstrumentCount()) : packCount;
-                total = round(price * instruments);
-                row.setUnitPrice(round(total / packCount));
-            } else {
-                row.setUnitPrice(price);
-                total = round(price * packCount);
-            }
+            row.setUnitPrice(computation.unitPrice());
+            double total = computation.totalPrice();
             row.setExpectedUnitPrice(row.getUnitPrice());
             row.setTotalPrice(total);
             row.setCorrectedTotalPrice(total);

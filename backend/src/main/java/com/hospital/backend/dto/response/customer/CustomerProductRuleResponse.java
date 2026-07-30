@@ -78,6 +78,12 @@ public class CustomerProductRuleResponse {
     @JsonProperty("skip_discount")
     private Boolean skipDiscount;
 
+    @JsonProperty("billing_mode")
+    private String billingMode;
+
+    @JsonProperty("piece_count_source")
+    private String pieceCountSource;
+
     @JsonProperty("is_active")
     private Boolean isActive;
 

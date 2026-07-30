@@ -408,8 +408,17 @@ public class PricingRuleCompiler {
         if (rule.getPrice() != null) {
             node.put("price", rule.getPrice().doubleValue());
         }
-        if ("PRICE_PER_INSTRUMENT".equals(rule.getRuleType())) {
+        BillingMode billingMode = BillingModeInference.inferFromRule(rule);
+        node.put("billingMode", billingMode.name());
+        if (billingMode != BillingMode.PER_PACK) {
             node.put("pricePerInstrument", true);
+        }
+        String pieceCountSource = rule.getPieceCountSource();
+        if (pieceCountSource == null || pieceCountSource.isBlank()) {
+            pieceCountSource = BillingModeInference.defaultPieceCountSource(billingMode);
+        }
+        if (pieceCountSource != null && !pieceCountSource.isBlank()) {
+            node.put("pieceCountSource", pieceCountSource);
         }
         if (Boolean.TRUE.equals(rule.getSkipPackaging())) {
             node.put("skipPackaging", true);

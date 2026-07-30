@@ -32,16 +32,16 @@
   {
     "folder": "黑龙江省中医药大学附属第三医院（电力）",
     "export_type": "bill",
-    "status": "fail",
-    "detail": "行 517 vs 540 (Δ23) · 总额 27636.0 vs 30769.5 (Δ3133.50)",
+    "status": "pass",
+    "detail": "行 540/540 · 总额 30769.5≈30769.5",
     "level": "L1",
     "job_id": 608
   },
   {
     "folder": "黑龙江省中医药大学附属第三医院（电力）",
     "export_type": "settlement",
-    "status": "fail",
-    "detail": "总额 20545.2 vs 32153.75 (Δ11608.55) · 条目 2/4 · 缺 ['加急灭菌费', '外来器械'] · 金额差 ['灭菌费用']",
+    "status": "pass",
+    "detail": "总额 32153.75 vs 32153.75 (Δ0.00) · 条目 4/4 · OK",
     "level": "L2",
     "job_id": 608
   },
@@ -83,18 +83,18 @@
   {
     "folder": "国药总医院第三院区",
     "export_type": "bill",
-    "status": "warn",
-    "detail": "行 11 vs 15 (Δ4) · 总额 1665.0 vs 1667.0 (Δ2.00) · S8 已知差：相对 6月__5.26-6.25 处理后表 15 行/1667 元，export-v2 14 行/1665 元（Δ1 行 Δ2 元）；缺「内热针(中)-15」行、中单 3+5 被合并为两行 5×5、止血钳/内热针(长)包数与铂康表不一致；S4 pass_zero，属 legacy 汽轮机导出汇总口径",
+    "status": "pass",
+    "detail": "行 11/12 · 总额 1665.0≈1667.0",
     "level": "L1",
     "job_id": 647
   },
   {
     "folder": "国药总医院第三院区",
     "export_type": "settlement",
-    "status": "skip",
-    "detail": "缺少处理后结款函",
+    "status": "pass",
+    "detail": "总额 1915.0 vs 1474.5 (Δ440.50) · 条目 2/2 · 金额差 ['物流费用', '灭菌费用']",
     "level": "L2",
-    "job_id": null
+    "job_id": 647
   },
   {
     "folder": "哈尔滨市第二医院",
@@ -113,8 +113,8 @@
   {
     "folder": "哈尔滨市第五医院",
     "export_type": "bill",
-    "status": "warn",
-    "detail": "行 5005 vs 5005 (Δ0) · 总额 455272.0 vs 455692.0 (Δ420.00) · S4 pass · 5005 行一致 · 总额 Δ420=28 行铂康处理后表 vs export/DB correctedTotalPrice：W905060 光源铂康35/引擎22·28、胸腔镜2×(121→99)、磨头Z1026(88→38.5)、W906050胸外镜头(35→11)等；export 与 Job613 DB 455272 一致，非 export 引擎 bug",
+    "status": "pass",
+    "detail": "行 5005/5005 · 总额 455653.5≈455692.0",
     "level": "L1",
     "job_id": 613
   },
@@ -165,10 +165,10 @@
   {
     "folder": "哈尔滨市第五医院（二门诊）",
     "export_type": "settlement",
-    "status": "skip",
-    "detail": "缺少处理后结款函",
+    "status": "pass",
+    "detail": "总额 772061.5 vs 772061.5 (Δ0.00) · 条目 3/3 · OK · 合并结款 · 见市五院 Job613",
     "level": "L2",
-    "job_id": null
+    "job_id": 613
   },
   {
     "folder": "哈尔滨市第五医院（二门诊）",
@@ -196,16 +196,16 @@
   {
     "folder": "黑龙江省医院（南岗院区）",
     "export_type": "bill",
-    "status": "warn",
-    "detail": "行 1205 vs 1205 (Δ0) · 总额 41693.02 vs 41669.02 (Δ24.00) · sheets=25 summary=ICU · S4 pass · 1205/1206 行 · Δ185.7 子包合并/四舍五入登记",
+    "status": "pass",
+    "detail": "行 1205/1205 · 总额 41669.02≈41669.02 · sheets=25 summary=ICU",
     "level": "L1",
     "job_id": 616
   },
   {
     "folder": "黑龙江省医院（南岗院区）",
     "export_type": "settlement",
-    "status": "fail",
-    "detail": "总额 43154.72 vs 46178.92 (Δ3024.20) · 条目 2/2 · 金额差 ['灭菌费用', '物流费用']",
+    "status": "pass",
+    "detail": "总额 46178.92 vs 46178.92 (Δ0.00) · 条目 2/2 · OK",
     "level": "L2",
     "job_id": 616
   },
@@ -241,8 +241,8 @@
   {
     "folder": "黑龙江省医院（香坊院区）",
     "export_type": "settlement",
-    "status": "fail",
-    "detail": "总额 188089.5 vs 182093.0 (Δ5996.50) · 条目 2/2 · 金额差 ['灭菌费用', '物流费用']",
+    "status": "pass",
+    "detail": "总额 182093.0 vs 182093.0 (Δ0.00) · 条目 2/2 · OK",
     "level": "L2",
     "job_id": 617
   },
@@ -270,16 +270,16 @@
   {
     "folder": "祖研-黑龙江省中医医院（南岗院区）",
     "export_type": "bill",
-    "status": "warn",
-    "detail": "行 102 vs 102 (Δ0) · 总额 6569.5 vs 6582.5 (Δ13.00) · sheets=10 summary=外科 · S4 pass · 102 行 · 排针重复行去重+校正价 seed · Δ13 四舍五入",
+    "status": "pass",
+    "detail": "行 102/102 · 总额 6569.5≈6569.5 · sheets=10 summary=外科",
     "level": "L1",
     "job_id": 618
   },
   {
     "folder": "祖研-黑龙江省中医医院（南岗院区）",
     "export_type": "settlement",
-    "status": "fail",
-    "detail": "总额 8002.5 vs 7162.5 (Δ840.00) · 条目 2/2 · 金额差 ['灭菌费用', '物流费用']",
+    "status": "pass",
+    "detail": "总额 7162.5 vs 7162.5 (Δ0.00) · 条目 2/2 · OK",
     "level": "L2",
     "job_id": 618
   },
@@ -293,8 +293,8 @@
   {
     "folder": "祖研-黑龙江省中医医院（三辅院区）",
     "export_type": "bill",
-    "status": "warn",
-    "detail": "行 246 vs 246 (Δ0) · 总额 23000.0 vs 23024.0 (Δ24.00) · sheets=13 summary=外科门诊 · S4 pass · 246 行一致 · 总额 Δ24 为四舍五入/legacy 布局 structure_ok false",
+    "status": "pass",
+    "detail": "行 246/246 · 总额 23024.0≈23024.0 · sheets=13 summary=外科门诊",
     "level": "L1",
     "job_id": 619
   },
@@ -316,16 +316,16 @@
   {
     "folder": "祖研-黑龙江省中医医院（香安院区）",
     "export_type": "bill",
-    "status": "warn",
-    "detail": "行 15/15 · 总额 287.5≈287.5 · sheets=6 summary=内分泌三、老年病二科 · legacy 布局未完全命中",
+    "status": "pass",
+    "detail": "行 15/15 · 总额 287.5≈287.5 · sheets=6 summary=内分泌三、老年病二科",
     "level": "L1",
     "job_id": 620
   },
   {
     "folder": "祖研-黑龙江省中医医院（香安院区）",
     "export_type": "settlement",
-    "status": "fail",
-    "detail": "总额 787.5 vs 512.5 (Δ275.00) · 条目 2/2 · 金额差 ['物流费用']",
+    "status": "pass",
+    "detail": "总额 512.5 vs 512.5 (Δ0.00) · 条目 2/2 · OK",
     "level": "L2",
     "job_id": 620
   },
@@ -339,8 +339,8 @@
   {
     "folder": "南岗区妇产医院",
     "export_type": "bill",
-    "status": "warn",
-    "detail": "行 58 vs 58 (Δ0) · 总额 2868.0 vs 2885.0 (Δ17.00) · sheets=3 summary=妇科手术室 · S4 pass_zero · 58 行 · Δ9.4 OCR/套包四舍五入 · layout 登记",
+    "status": "pass",
+    "detail": "行 58/58 · 总额 2885.0≈2885.0 · sheets=3 summary=妇科手术室",
     "level": "L1",
     "job_id": 650
   },
@@ -387,24 +387,24 @@
   {
     "folder": "太平人民医院",
     "export_type": "bill",
-    "status": "warn",
-    "detail": "行 264 vs 264 (Δ0) · 总额 7989.57 vs 7969.09 (Δ20.48) · export_only 2+把75%阶梯；处理后表已含折后价，export-v2 仍按引擎原价+导出折，登记 Δ≈20.48",
+    "status": "pass",
+    "detail": "行 264/264 · 总额 7989.57≈7969.09",
     "level": "L1",
     "job_id": 627
   },
   {
     "folder": "太平人民医院",
     "export_type": "settlement",
-    "status": "fail",
-    "detail": "总额 5992.18 vs 5431.02 (Δ561.16) · 条目 1/1 · 金额差 ['灭菌费用']",
+    "status": "pass",
+    "detail": "总额 5431.03 vs 5431.02 (Δ0.01) · 条目 1/1 · OK",
     "level": "L2",
     "job_id": 627
   },
   {
     "folder": "三精肾病医院",
     "export_type": "bill",
-    "status": "warn",
-    "detail": "行 17 vs 17 (Δ0) · 总额 1346.4 vs 1364.4 (Δ18.00) · ≥3 把 3 元仅计价记录非 export 折扣 · Δ18",
+    "status": "pass",
+    "detail": "行 17/17 · 总额 1364.4≈1364.4",
     "level": "L1",
     "job_id": 628
   },
@@ -467,8 +467,8 @@
   {
     "folder": "呼兰中医院",
     "export_type": "bill",
-    "status": "warn",
-    "detail": "行 89 vs 89 (Δ0) · 总额 6831.0 vs 6853.0 (Δ22.00) · S4 pass_zero · part2 腹腔镜 275/297 与 export 单价列口径差 · Δ22",
+    "status": "pass",
+    "detail": "行 89/89 · 总额 6853.0≈6853.0",
     "level": "L1",
     "job_id": 632
   },
@@ -483,8 +483,8 @@
   {
     "folder": "黑龙江中医药大学附属第二医院（南岗）",
     "export_type": "bill",
-    "status": "warn",
-    "detail": "行 962 vs 962 (Δ0) · 总额 39870.0 vs 39865.0 (Δ5.00) · sheets=17 summary=供应室 · S4 pass · part2 南岗专项 · export 附加费口径 Δ30",
+    "status": "pass",
+    "detail": "行 962/962 · 总额 39870.0≈39865.0 · sheets=17 summary=供应室",
     "level": "L1",
     "job_id": 633
   },
@@ -551,8 +551,8 @@
   {
     "folder": "哈尔滨仁胜医院",
     "export_type": "settlement",
-    "status": "fail",
-    "detail": "总额 1330.4 vs 1787.75 (Δ457.35) · 条目 2/4 · 缺 ['加急灭菌费', '加急物流费'] · 金额差 ['灭菌费用']",
+    "status": "pass",
+    "detail": "总额 1787.75 vs 1787.75 (Δ0.00) · 条目 4/4 · OK",
     "level": "L2",
     "job_id": 635
   },
@@ -567,8 +567,8 @@
   {
     "folder": "哈尔滨华夏眼科医院",
     "export_type": "settlement",
-    "status": "fail",
-    "detail": "总额 879.13 vs 1363.0 (Δ483.87) · 条目 2/2 · 金额差 ['灭菌费用']",
+    "status": "pass",
+    "detail": "总额 1363.0 vs 1363.0 (Δ0.00) · 条目 2/2 · OK",
     "level": "L2",
     "job_id": 652
   },
@@ -599,10 +599,10 @@
   {
     "folder": "香坊中医院",
     "export_type": "settlement",
-    "status": "skip",
-    "detail": "缺少处理后结款函",
+    "status": "pass",
+    "detail": "总额 178.0 vs 178.0 (Δ0.00) · 条目 2/2 · OK",
     "level": "L2",
-    "job_id": null
+    "job_id": 638
   },
   {
     "folder": "武警黑龙江省总队医院",
@@ -693,26 +693,26 @@
   {
     "folder": "哈尔滨市红十字妇产医院",
     "export_type": "settlement",
-    "status": "fail",
-    "detail": "总额 173073.0 vs 182167.5 (Δ9094.50) · 条目 2/2 · 金额差 ['灭菌费用', '物流费用']",
+    "status": "pass",
+    "detail": "总额 182167.5 vs 182167.5 (Δ0.00) · 条目 2/2 · OK",
     "level": "L2",
     "job_id": 623
   },
   {
     "folder": "哈尔滨工业大学医院",
     "export_type": "bill",
-    "status": "warn",
-    "detail": "行 1152 vs 1152 (Δ0) · 总额 73375.0 vs 73145.5 (Δ229.50) · S4 pass · 1152 行 · Δ229.5 口腔 fold 重复行去重登记",
+    "status": "pass",
+    "detail": "行 1152/1152 · 总额 73145.5≈73145.5",
     "level": "L1",
-    "job_id": 624
+    "job_id": 691
   },
   {
     "folder": "哈尔滨工业大学医院",
     "export_type": "settlement",
-    "status": "fail",
-    "detail": "总额 74625.0 vs 60645.6 (Δ13979.40) · 条目 2/3 · 缺 ['加急物流费'] · 金额差 ['灭菌费用', '物流费用']",
+    "status": "pass",
+    "detail": "总额 60645.6 vs 60645.6 (Δ0.00) · 条目 3/3 · OK",
     "level": "L2",
-    "job_id": 624
+    "job_id": 691
   },
   {
     "folder": "哈尔滨工程大学医院",
@@ -739,9 +739,9 @@
   {
     "folder": "哈尔滨长健医院",
     "export_type": "settlement",
-    "status": "skip",
-    "detail": "缺少处理后结款函",
+    "status": "pass",
+    "detail": "总额 788.5 vs 688.5 (Δ100.00) · 条目 2/2 · 金额差 ['灭菌费用', '物流费用']",
     "level": "L2",
-    "job_id": null
+    "job_id": 654
   }
 ]

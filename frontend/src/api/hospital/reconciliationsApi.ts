@@ -112,13 +112,18 @@ export interface ReconciliationRowsPage {
   total: number
   page: number
   size: number
+  sheetName?: string
 }
 
 /** 分页获取核对明细行（从数据库 table 直接查询，不经过 rowsJson） */
-export function getReconciliationRows(jobId: number, page = 1, size = 200) {
+export function getReconciliationRows(jobId: number, page = 1, size = 200, sheetName?: string) {
   return request.get<ReconciliationRowsPage>({
     url: `/api/hospital-reconciliations/${jobId}/rows`,
-    params: { page, size },
+    params: {
+      page,
+      size,
+      ...(sheetName ? { sheetName } : {})
+    },
   })
 }
 
