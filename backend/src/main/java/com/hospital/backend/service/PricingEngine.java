@@ -444,9 +444,14 @@ public class PricingEngine {
         } else if (anyPriceAccepted) {
             status = "unchanged";
             difference = 0.0;
+        } else if (requiresReview && unitPrice != null && expectedUnitPrice != null
+                && Math.abs(expectedUnitPrice - unitPrice) <= 0.001) {
+            // 保留原价且单价未变：special_only 未命中、未识别规格等不应误报 warning
+            status = "unchanged";
+            difference = 0.0;
         } else if (difference != null && Math.abs(difference) > 0.001) {
             status = "warning";
-        } else if (requiresReview || isUnpricedZeroImport(unitPrice, totalPrice, expectedUnitPrice, specialPrice)) {
+        } else if (isUnpricedZeroImport(unitPrice, totalPrice, expectedUnitPrice, specialPrice)) {
             status = "warning";
         } else {
             status = "unchanged";

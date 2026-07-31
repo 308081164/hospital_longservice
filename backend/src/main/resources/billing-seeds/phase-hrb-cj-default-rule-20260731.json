@@ -1,0 +1,10 @@
+{
+  "version": "1",
+  "description": "哈尔滨长健 HRB-CJ：default_rule_id 由无效 8 修正为系统规则 1",
+  "customerUpdates": [
+    {
+      "code": "HRB-CJ",
+      "defaultRuleId": 1
+    }
+  ]
+}

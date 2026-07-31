@@ -1921,7 +1921,7 @@
     "expected" : {
       "expectedUnitPrice" : 22.0,
       "correctedTotalPrice" : 22.0,
-      "status" : "warning",
+      "status" : "unchanged",
       "notesContains" : [ "仅特色规则" ]
     },
     "rulesOverlay" : {

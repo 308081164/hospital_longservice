@@ -281,16 +281,15 @@ def compare_hospital(token: str, name: str) -> CompareResult:
         result.missed_keys = missed[:10]
 
         if result.expected == 0:
-            result.status = "pass_zero" if result.system_warnings == 0 else "fail_extra"
-            result.message = "零期待" + ("" if result.system_warnings == 0 else f"，但系统有 {result.system_warnings} 条 warning")
+            result.status = "pass_zero" if result.system_warnings == 0 else "fail"
+            result.message = "零期待" + ("" if result.system_warnings == 0 else f"，extra warning {result.system_warnings} 条（P0 bug）")
         elif result.missed == 0 and result.extra == 0:
             result.status = "pass"
             result.message = f"期待 {result.expected} 条，零漏检零多报"
         elif result.missed == 0 and result.extra > 0:
-            result.status = "fail_extra"
+            result.status = "fail"
             result.message = (
-                f"期待 {result.expected} 条零漏检，但多报 {result.extra}"
-                f"（extra_inventory · 不等于规则回归）"
+                f"期待 {result.expected} 条零漏检，extra warning {result.extra} 条（P0 bug · 引擎误报或规则未覆盖）"
             )
         else:
             result.status = "fail"
@@ -343,7 +342,7 @@ def render_dual_index(
     lines.extend(["", "---", "", APPENDIX_MARKER + "（656–692+）", ""])
     lines.append(
         "> 定点重导写入此节。**S4 判定**：期待 CSV **零漏检**（`missed=0`）即 pricing pass；"
-        "`fail_extra` 为 extra_inventory。"
+        "`fail` / 历史 `fail_extra`：extra warning（P0 bug · 引擎误报或规则未覆盖）。"
     )
     lines.append("")
     lines.extend(_render_table(pricing_rows))

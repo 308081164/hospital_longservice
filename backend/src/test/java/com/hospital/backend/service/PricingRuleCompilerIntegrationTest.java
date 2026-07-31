@@ -586,6 +586,59 @@ class PricingRuleCompilerIntegrationTest {
     }
 
     @Test
+    void hrbCjSurgicalPackCustomerRuleCompilesAndMatches() throws Exception {
+        when(ruleSchemaValidator.validateJsonNode(org.mockito.ArgumentMatchers.any(JsonNode.class)))
+                .thenReturn(RuleSchemaValidator.ValidationResult.ok());
+
+        Customer customer = new Customer();
+        customer.setId(11L);
+        customer.setCode("HRB-CJ");
+        customer.setCanonicalName("哈尔滨长健医院");
+        customer.setBillingEnabled(true);
+        customer.setBillingPricingMode("standard");
+        when(customerResolver.resolveByName("哈尔滨长健医院")).thenReturn(Optional.of(customer));
+        when(customerResolver.hospitalNamesForCustomer(customer)).thenReturn(List.of("哈尔滨长健医院"));
+        when(discountMapper.selectByCustomerId(11L)).thenReturn(List.of());
+        when(billingPolicyMapper.selectByCustomerId(11L)).thenReturn(List.of());
+
+        CustomerProductRule surgicalPack = new CustomerProductRule();
+        surgicalPack.setId(315L);
+        surgicalPack.setIsActive(true);
+        surgicalPack.setRuleType("PRICE_PER_INSTRUMENT");
+        surgicalPack.setName("手术包5.5元/件");
+        surgicalPack.setPriority(10);
+        surgicalPack.setKeywords("[\"手术包\"]");
+        surgicalPack.setTemperature("HT");
+        surgicalPack.setPrice(BigDecimal.valueOf(5.5));
+        surgicalPack.setSkipPackaging(true);
+        surgicalPack.setSkipDiscount(true);
+        when(productRuleMapper.selectByCustomerId(11L)).thenReturn(List.of(surgicalPack));
+
+        JsonNode compiled = compiler.compileForCustomer(
+                MAPPER.valueToTree(DefaultPricingTemplate.buildRulesMap()), customer);
+        JsonNode fixedPrices = compiled.path("specialRules").path("fixedPrices");
+        assertThat(fixedPrices).hasSize(1);
+        assertThat(fixedPrices.get(0).path("name").asText()).isEqualTo("手术包5.5元/件");
+
+        PricingEngine engine = new PricingEngine(compiled);
+        PricingEngine.ProcessedResult result = engine.processRow(Map.of(
+                "hospitalName", "哈尔滨长健医院",
+                "type", "器械包(ZSD)",
+                "packName", "手术包（二）",
+                "packageMaterial", "高温灭菌无纺布60*60",
+                "instrumentCount", 43,
+                "packCount", 1,
+                "unitPrice", 231,
+                "totalPrice", 231
+        ));
+
+        assertThat(result.expectedUnitPrice).isEqualTo(236.5);
+        assertThat(result.pricingRule).isEqualTo("手术包5.5元/件");
+        assertThat(result.matchedRuleId).isEqualTo(315L);
+        assertThat(result.status).isEqualTo("warning");
+    }
+
+    @Test
     void compilesPathOverrideAndAppliesInEngine() throws Exception {
         when(ruleSchemaValidator.validateJsonNode(org.mockito.ArgumentMatchers.any(JsonNode.class)))
                 .thenReturn(RuleSchemaValidator.ValidationResult.ok());

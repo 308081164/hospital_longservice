@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""将 6月系统warning.tsv 中尚未列入期待清单的键补进 6月期待价格校正清单.csv（消多报）。"""
+"""[已废弃] 禁止将 warning 手工/sync 进期待清单。期待 CSV 仅由 batch_june_price_reconciliation.py 原始 vs 处理后自动生成。"""
 from __future__ import annotations
 
 import csv

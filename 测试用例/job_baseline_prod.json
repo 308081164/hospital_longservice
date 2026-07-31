@@ -1,11 +1,11 @@
 {
   "version": "1",
   "description": "生产环境 S8/S4 Job 映射（calibrate_prod_job_map.py 自动生成）",
-  "updated": "2026-07-29",
-  "source": "API http://39.102.213.51:8853",
+  "updated": "2026-07-31",
+  "source": "API http://39.102.213.51:8853; 附一闭环 Job 208→223",
   "maintain_note": "校准命令: python3 scripts/calibrate_prod_job_map.py",
   "jobs": {
-    "黑龙江中医药大学附属第一医院": 208,
+    "黑龙江中医药大学附属第一医院": 223,
     "哈尔滨市第二医院": 185,
     "黑龙江省医院（南岗院区）": 153,
     "黑龙江省医院（香坊院区）": 152,

@@ -1,34 +1,3 @@
 sheet	row	orderNo	packName	packCount	unitPrice	ruleUnit	status	pricingRule
-手术室	11	1609398	电刀头-1（高温）/Z7520	1	8.0	8.0	warning	special_only 未命中特色规则
-手术室	12	1609398	换药碗-1/Z2530	3	16.0	16.0	warning	special_only 未命中特色规则
-手术室	14	1609398	皮肤打孔器-1/（保）Z7520	13	8.0	8.0	warning	special_only 未命中特色规则
 手术室	15	1609398	环钻包	2	30.5	27.5	warning	环钻27.5
-手术室	17	1609398	镊子缸-2/z2044	2	16.5	16.5	warning	special_only 未命中特色规则
-手术室	18	1609496	利普刀头-1/Z7520	5	22.0	22.0	warning	special_only 未命中特色规则
-手术室	19	1610392	持物钳罐-2/Z2044	2	16.5	16.5	warning	special_only 未命中特色规则
-手术室	20	1610392	电刀头-1（高温）/Z7520	4	8.0	8.0	warning	special_only 未命中特色规则
-手术室	21	1610392	换药碗-1/Z2530	1	16.0	16.0	warning	special_only 未命中特色规则
-手术室	22	1610392	剪刀-1/Z1026	2	8.0	8.0	warning	special_only 未命中特色规则
-手术室	23	1610392	蚊式-1/Z1026	2	8.0	8.0	warning	special_only 未命中特色规则
-手术室	24	1610392	小剪刀-1/Z7520	1	8.0	8.0	warning	special_only 未命中特色规则
-手术室	25	1610392	有齿镊-1/Z7526	4	8.0	8.0	warning	special_only 未命中特色规则
-手术室	27	1610392	镊子缸-2/z2044	2	16.5	16.5	warning	special_only 未命中特色规则
-手术室	28	1612395	持物钳罐-2/Z2044	1	16.5	16.5	warning	special_only 未命中特色规则
-手术室	29	1612395	电刀头-1（高温）/Z7520	1	8.0	8.0	warning	special_only 未命中特色规则
-手术室	30	1612395	换药碗-1/Z2530	1	16.0	16.0	warning	special_only 未命中特色规则
-手术室	31	1612395	舌钳子，开口器-2件/Z1526	1	16.5	16.5	warning	special_only 未命中特色规则
-手术室	32	1612395	弯盘/z2032	1	13.0	13.0	warning	special_only 未命中特色规则
-手术室	34	1612395	镊子缸-2/z2044	2	16.5	16.5	warning	special_only 未命中特色规则
-手术室	35	1612468	电刀头（蓝）-1/z7520	1	22.0	22.0	warning	special_only 未命中特色规则
-手术室	36	1614554	持物钳罐-2/Z2044	1	16.5	16.5	warning	special_only 未命中特色规则
-手术室	37	1614554	电刀头-1（高温）/Z7520	2	8.0	8.0	warning	special_only 未命中特色规则
-手术室	38	1614554	换药碗-1/Z2530	2	16.0	16.0	warning	special_only 未命中特色规则
-手术室	39	1614554	剪刀-1/Z1026	1	8.0	8.0	warning	special_only 未命中特色规则
-手术室	40	1614554	镊子-1/z7526	1	8.0	8.0	warning	special_only 未命中特色规则
-手术室	41	1614554	皮肤打孔器-1/（保）Z7520	2	8.0	8.0	warning	special_only 未命中特色规则
-手术室	42	1614554	弯盘/z2032	1	13.0	13.0	warning	special_only 未命中特色规则
-手术室	43	1614554	蚊式-1/Z1026	1	8.0	8.0	warning	special_only 未命中特色规则
-手术室	44	1614554	有齿镊-1/Z7526	1	8.0	8.0	warning	special_only 未命中特色规则
 手术室	45	1614554	环钻包	1	30.5	27.5	warning	环钻27.5
-手术室	47	1614554	镊子缸-2/z2044	2	16.5	16.5	warning	special_only 未命中特色规则
-手术室	48	1614607	电刀头（蓝）-1/z7520	2	22.0	22.0	warning	special_only 未命中特色规则

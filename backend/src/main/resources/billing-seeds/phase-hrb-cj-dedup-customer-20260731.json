@@ -1,0 +1,11 @@
+{
+  "version": "1",
+  "description": "哈尔滨长健：停用 legacy CHANGJIAN 重复客户，避免 resolveByName 命中无手术包规则的客户",
+  "customerUpdates": [
+    {
+      "code": "CHANGJIAN",
+      "setStatus": "inactive",
+      "setCanonicalName": "哈尔滨长健医院(旧CHANGJIAN)"
+    }
+  ]
+}

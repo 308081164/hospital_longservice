@@ -1,0 +1,16 @@
+{
+  "version": "1",
+  "description": "冰城医美：环钻包 pricing 阶段 FIXED_PRICE 30.5（与处理后表黄金标准一致）",
+  "newRules": [
+    {
+      "code": "BINGCHENG-YM",
+      "ruleType": "FIXED_PRICE",
+      "name": "环钻包30.5",
+      "priority": 4,
+      "price": 30.5,
+      "keywords": ["环钻包"],
+      "skipPackaging": true,
+      "skipDiscount": true
+    }
+  ]
+}

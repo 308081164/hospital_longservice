@@ -8,12 +8,12 @@
       "addExcludeKeywords": ["-21"]
     },
     {
-      "code": "CHANGJIAN",
+      "code": "HRB-CJ",
       "ruleName": "长健敷料包W12050",
       "conditionsJson": "[{\"field\":\"exportApply\",\"value\":true}]"
     },
     {
-      "code": "CHANGJIAN",
+      "code": "HRB-CJ",
       "ruleName": "长健硅胶珠子22",
       "conditionsJson": "[{\"field\":\"exportApply\",\"value\":true}]"
     },

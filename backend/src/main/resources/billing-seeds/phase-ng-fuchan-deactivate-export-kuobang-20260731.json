@@ -1,0 +1,10 @@
+{
+  "version": "1",
+  "description": "南岗妇产：停用 export 扩棒16.5 在 pricing 阶段误匹配（应走校正价8）",
+  "deactivateRules": [
+    {
+      "code": "NG-FUCHAN",
+      "ruleName": "南岗妇产export 扩棒16.5"
+    }
+  ]
+}

@@ -290,7 +290,9 @@ public class HospitalReconciliationServiceImpl implements HospitalReconciliation
     public static final String DEFAULT_BILL_TEMPLATE_ID = "default_bill";
 
     private PricingEngine buildPricingEngine(JsonNode baseRules, String hospitalName) {
-        JsonNode compiled = pricingRuleCompiler.compile(baseRules, hospitalName);
+        JsonNode compiled = customerResolver.resolveByName(hospitalName)
+                .map(customer -> pricingRuleCompiler.compileForCustomer(baseRules, customer, hospitalName))
+                .orElseGet(() -> pricingRuleCompiler.compile(baseRules, hospitalName));
         PricingEngine engine = new PricingEngine(compiled);
         engine.enableStructuredProductMatch(productMatchService);
         return engine;
@@ -809,7 +811,9 @@ public class HospitalReconciliationServiceImpl implements HospitalReconciliation
                     : (firstSheetHospitalName.isEmpty() ? "未命名医院" : firstSheetHospitalName);
 
             // 4. 逐行处理（含 FOLD 拆行）
-            JsonNode compiledRules = pricingRuleCompiler.compile(rulesJson, hospitalName);
+            JsonNode compiledRules = customerResolver.resolveByName(hospitalName)
+                    .map(customer -> pricingRuleCompiler.compileForCustomer(rulesJson, customer, hospitalName))
+                    .orElseGet(() -> pricingRuleCompiler.compile(rulesJson, hospitalName));
             PricingEngine engine = new PricingEngine(compiledRules);
             engine.enableStructuredProductMatch(productMatchService);
             List<Map<String, Object>> rowsToPrice = new ArrayList<>();
@@ -1317,7 +1321,12 @@ public class HospitalReconciliationServiceImpl implements HospitalReconciliation
                 return Result.fail(500, "规则数据解析失败");
             }
 
-            PricingEngine engine = buildPricingEngine(rulesJson, job.getHospitalName());
+            String hospitalName = job.getHospitalName();
+            JsonNode compiledRules = customerResolver.resolveByName(hospitalName)
+                    .map(customer -> pricingRuleCompiler.compileForCustomer(rulesJson, customer, hospitalName))
+                    .orElseGet(() -> pricingRuleCompiler.compile(rulesJson, hospitalName));
+            PricingEngine engine = new PricingEngine(compiledRules);
+            engine.enableStructuredProductMatch(productMatchService);
             List<HospitalReconciliationRow> rawRows =
                     rowMapper.selectByJobIdOrderBySheetNameAscRowNumberAsc(jobId);
 
@@ -1328,6 +1337,7 @@ public class HospitalReconciliationServiceImpl implements HospitalReconciliation
             for (HospitalReconciliationRow row : rawRows) {
                 Map<String, Object> rowMap = rowEntityToMap(row);
                 rowMap.put("hospitalName", job.getHospitalName());
+                enrichProductMatch(rowMap);
                 PricingEngine.ProcessedResult pr = engine.processRow(rowMap);
                 applyBatchCorrection(rowMap, pr);
                 pricedRows.add(rowMap);

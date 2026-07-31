@@ -1758,6 +1758,56 @@ class PricingEngineTest {
 
         assertThat(result.pricingRule).contains("special_only");
         assertThat(result.notes).anyMatch(n -> n.contains("仅特色规则"));
+        assertThat(result.status).isEqualTo("unchanged");
+        assertThat(result.expectedUnitPrice).isEqualTo(22.0);
+    }
+
+    @Test
+    void hrbCjDressingAndSiliconeFixedPriceAtPricingStage() {
+        ObjectNode rules = (ObjectNode) defaultRules();
+        rules.putObject("billingProfile").put("enabled", true).put("pricingMode", "standard");
+        ArrayNode fixedPrices = (ArrayNode) rules.path("specialRules").path("fixedPrices");
+        ObjectNode dressing = fixedPrices.addObject();
+        dressing.put("name", "长健敷料包W12050");
+        dressing.putArray("hospitals").add("哈尔滨长健医院");
+        dressing.putArray("keywords").add("敷料包/W12050");
+        dressing.put("price", 35);
+        dressing.put("skipPackaging", true);
+        ObjectNode silicone = fixedPrices.addObject();
+        silicone.put("name", "长健硅胶珠子22");
+        silicone.putArray("hospitals").add("哈尔滨长健医院");
+        silicone.putArray("keywords").add("硅胶珠子7号");
+        silicone.put("price", 22);
+        silicone.put("skipPackaging", true);
+
+        PricingEngine engine = new PricingEngine(rules);
+        PricingEngine.ProcessedResult dressingResult = engine.processRow(row(
+                "哈尔滨长健医院", "敷料包(无纺布包)", "包", "W12050", 1, 1, 35, 35));
+        assertThat(dressingResult.expectedUnitPrice).isEqualTo(35.0);
+        assertThat(dressingResult.status).isEqualTo("unchanged");
+
+        PricingEngine.ProcessedResult siliconeResult = engine.processRow(row(
+                "哈尔滨长健医院", "器械包(ZSD)", "硅胶珠子7号-1/z1026", "低温纸塑袋20cm", 10, 10, 22, 220));
+        assertThat(siliconeResult.expectedUnitPrice).isEqualTo(22.0);
+        assertThat(siliconeResult.status).isEqualTo("unchanged");
+    }
+
+    @Test
+    void cottonBallUnrecognizedSpecWithMatchingPriceIsUnchanged() {
+        ObjectNode rules = (ObjectNode) defaultRules();
+        rules.putObject("billingProfile").put("enabled", true).put("pricingMode", "standard");
+
+        PricingEngine engine = new PricingEngine(rules);
+        PricingEngine.ProcessedResult result = engine.processRow(row(
+                "南岗区妇产医院",
+                "敷料包(纸塑袋)",
+                "棉球",
+                "",
+                3, 3, 4, 12));
+
+        assertThat(result.expectedUnitPrice).isEqualTo(4.0);
+        assertThat(result.status).isEqualTo("unchanged");
+        assertThat(result.pricingRule).contains("未识别规格");
     }
 
     @ParameterizedTest(name = "golden row: {0}")

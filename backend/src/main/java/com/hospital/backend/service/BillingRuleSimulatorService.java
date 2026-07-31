@@ -47,18 +47,29 @@ public class BillingRuleSimulatorService {
         }
 
         HospitalPricingRule ruleEntity = pricingRuleMapper.selectById(ruleId);
+        if (ruleEntity == null && customer.getDefaultRuleId() != null
+                && !customer.getDefaultRuleId().equals(ruleId)) {
+            ruleEntity = pricingRuleMapper.selectById(customer.getDefaultRuleId());
+        }
+        if (ruleEntity == null) {
+            ruleEntity = pricingRuleMapper.selectById(1L);
+        }
         if (ruleEntity == null) {
             return Result.fail(404, "计价规则不存在");
         }
 
         try {
             JsonNode baseRules = MAPPER.readTree(ruleEntity.getRulesJson());
-            JsonNode compiled = pricingRuleCompiler.compile(baseRules, request.getHospitalName());
+            String hospitalName = request.getHospitalName();
+            if (hospitalName == null || hospitalName.isBlank()) {
+                hospitalName = customer.getCanonicalName();
+            }
+            JsonNode compiled = pricingRuleCompiler.compileForCustomer(baseRules, customer, hospitalName);
             PricingEngine engine = new PricingEngine(compiled);
             engine.enableStructuredProductMatch(productMatchService);
 
             Map<String, Object> row = new HashMap<>(request.getSampleRow());
-            row.put("hospitalName", request.getHospitalName());
+            row.put("hospitalName", hospitalName);
             productMatchService.matchRow(row).ifPresent(match -> {
                 row.put("matchedProductId", match.getProductId());
                 if (match.getVariantId() != null) {
@@ -74,7 +85,7 @@ public class BillingRuleSimulatorService {
                     str(row, "type"),
                     str(row, "packName"),
                     str(row, "packageMaterial"),
-                    request.getHospitalName(),
+                    hospitalName,
                     false);
 
             BillingRuleSimulateResponse response = BillingRuleSimulateResponse.builder()
@@ -100,6 +111,18 @@ public class BillingRuleSimulatorService {
             Map<String, Object> row,
             PricingEngine.ProcessedResult result) {
         List<Map<String, Object>> chain = new ArrayList<>();
+        JsonNode fixedPrices = compiled.path("specialRules").path("fixedPrices");
+        if (fixedPrices.isArray() && !fixedPrices.isEmpty()) {
+            Map<String, Object> compiledStep = new LinkedHashMap<>();
+            compiledStep.put("step", "compiled_fixed_prices");
+            compiledStep.put("count", fixedPrices.size());
+            List<String> names = new ArrayList<>();
+            for (JsonNode rule : fixedPrices) {
+                names.add(rule.path("name").asText());
+            }
+            compiledStep.put("names", names);
+            chain.add(compiledStep);
+        }
         if (result.matchedRuleId != null) {
             CustomerProductRule rule = productRuleMapper.selectById(result.matchedRuleId);
             if (rule != null) {

@@ -62,8 +62,27 @@ public class PricingRuleCompiler {
         if (customerOpt.isEmpty()) {
             return compiled;
         }
+        return compileForCustomer(compiled, customerOpt.get(), hospitalName);
+    }
 
-        Customer customer = customerOpt.get();
+    /**
+     * 按已解析的 {@link Customer} 编译规则（试算、客户管理等已知 customerId 场景），避免仅 hospitalName 解析失败时漏合并特色规则。
+     */
+    public JsonNode compileForCustomer(JsonNode baseRules, Customer customer) {
+        return compileForCustomer(baseRules, customer,
+                customer != null && customer.getCanonicalName() != null ? customer.getCanonicalName() : "");
+    }
+
+    public JsonNode compileForCustomer(JsonNode baseRules, Customer customer, String hospitalName) {
+        warnIfInvalid(baseRules);
+        ObjectNode compiled = baseRules.deepCopy();
+        if (customer == null) {
+            return compiled;
+        }
+        return compileForCustomer(compiled, customer, hospitalName);
+    }
+
+    public JsonNode compileForCustomer(ObjectNode compiled, Customer customer, String hospitalName) {
         List<String> hospitalNames = customerResolver.hospitalNamesForCustomer(customer);
 
         ObjectNode billingProfile = MAPPER.createObjectNode();
@@ -79,9 +98,8 @@ public class PricingRuleCompiler {
 
         ObjectNode specialRules = ensureObject(compiled, "specialRules");
         if (Boolean.TRUE.equals(customer.getBillingEnabled())) {
-            if (!mergeRuleGroupSnapshot(specialRules, customer)) {
-                mergeCustomerProductRules(specialRules, customer, hospitalNames);
-            }
+            // 快照双写尚未替代 customer_product_rule；始终从 DB 合并完整规则（含 temperature/skip 等字段）
+            mergeCustomerProductRules(specialRules, customer, hospitalNames);
         }
         applyBillingPolicies(compiled, customer);
         applyCustomerOverrides(compiled, customer, hospitalName);
@@ -119,6 +137,7 @@ public class PricingRuleCompiler {
     private void mergeCustomerProductRules(ObjectNode specialRules, Customer customer, List<String> hospitalNames) {
         List<CustomerProductRule> rules = productRuleMapper.selectByCustomerId(customer.getId());
         if (rules.isEmpty()) {
+            log.debug("No customer product rules for customer {} ({})", customer.getCode(), customer.getId());
             return;
         }
 
@@ -147,6 +166,10 @@ public class PricingRuleCompiler {
         prependCustomerRules(specialRules, "foldRules", customerFoldRules);
         prependCustomerRules(specialRules, "extraFees", customerExtraFees);
         prependCustomerRules(specialRules, "priceMultipliers", customerPriceMultipliers);
+        if (!customerFixedPrices.isEmpty()) {
+            log.debug("Compiled {} customer fixed-price rules for {} ({})",
+                    customerFixedPrices.size(), customer.getCode(), customer.getId());
+        }
     }
 
     /** 客户规则在前、通用规则在后，写入 specialRules 对应子数组。 */

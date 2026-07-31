@@ -3,7 +3,7 @@
   "description": "S8 波次3 bill 修复：长健敷料/硅胶珠子 · 附二大衣-无纺布35",
   "profiles": [
     {
-      "code": "CHANGJIAN",
+      "code": "HRB-CJ",
       "name": "哈尔滨长健医院",
       "billingEnabled": true,
       "productRules": [
@@ -13,8 +13,7 @@
           "priority": 3,
           "price": 35,
           "keywords": ["敷料包/W12050"],
-          "skipPackaging": true,
-          "conditionsJson": "[{\"field\":\"exportApply\",\"value\":true}]"
+          "skipPackaging": true
         },
         {
           "ruleType": "FIXED_PRICE",
@@ -22,8 +21,7 @@
           "priority": 3,
           "price": 22,
           "keywords": ["硅胶珠子7号"],
-          "skipPackaging": true,
-          "conditionsJson": "[{\"field\":\"exportApply\",\"value\":true}]"
+          "skipPackaging": true
         }
       ]
     },

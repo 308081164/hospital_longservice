@@ -72,7 +72,7 @@ def classify_status(missed: int, extra: int, expected: int) -> str:
     if missed == 0 and extra == 0:
         return "pass"
     if missed == 0 and extra > 0:
-        return "fail_extra"
+        return "fail"
     return "fail"
 
 
@@ -152,7 +152,7 @@ def main() -> int:
 
     drift = [r for r in rows if r.md_drift]
     missed_fail = [r for r in rows if r.missed > 0]
-    extra_fail = [r for r in rows if r.status == "fail_extra"]
+    extra_fail = [r for r in rows if r.extra > 0 and r.missed == 0]
 
     payload = {
         "generated_at": __import__("datetime").datetime.now().isoformat(timespec="seconds"),
@@ -160,6 +160,7 @@ def main() -> int:
         "summary": {
             "total": len(rows),
             "pass": sum(1 for r in rows if r.status in {"pass", "pass_zero"}),
+            "fail": sum(1 for r in rows if r.status == "fail"),
             "fail_extra": len(extra_fail),
             "fail_missed": len(missed_fail),
             "skip": sum(1 for r in rows if r.status == "skip"),
@@ -171,7 +172,7 @@ def main() -> int:
     args.output.write_text(json.dumps(payload, ensure_ascii=False, indent=2), encoding="utf-8")
     print(json.dumps(payload["summary"], ensure_ascii=False, indent=2))
     print(f"\n已写入: {args.output}")
-    return 1 if missed_fail or drift else 0
+    return 1 if missed_fail or extra_fail or drift else 0
 
 
 if __name__ == "__main__":

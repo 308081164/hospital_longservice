@@ -1,0 +1,9 @@
+{
+  "version": "1",
+  "description": "哈工大：停用 export 规则在 pricing 阶段误匹配（改由 pricing FIXED_PRICE 承担）",
+  "deactivateRules": [
+    {"code": "HRB-HIT", "ruleName": "哈工大export 换药碗13"},
+    {"code": "HRB-HIT", "ruleName": "哈工大export 种植盒23件27.5"},
+    {"code": "HRB-HIT", "ruleName": "哈工大胆囊包10件165"}
+  ]
+}

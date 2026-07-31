@@ -1,0 +1,40 @@
+{
+  "version": "1",
+  "description": "哈工大 HRB-HIT：export 规则转 pricing 阶段 FIXED_PRICE（换药碗/种植盒/胆囊包）",
+  "profiles": [
+    {
+      "code": "HRB-HIT",
+      "name": "哈尔滨工业大学医院",
+      "billingEnabled": true,
+      "productRules": [
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "哈工大换药碗13",
+          "priority": 5,
+          "price": 13.0,
+          "keywords": ["换药碗"],
+          "skipPackaging": true,
+          "skipDiscount": true
+        },
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "哈工大种植盒23件27.5",
+          "priority": 5,
+          "price": 27.5,
+          "keywords": ["种植盒-23件"],
+          "skipPackaging": true,
+          "skipDiscount": true
+        },
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "哈工大胆囊包10件165",
+          "priority": 5,
+          "price": 165.0,
+          "keywords": ["胆囊包10件"],
+          "skipPackaging": true,
+          "skipDiscount": true
+        }
+      ]
+    }
+  ]
+}

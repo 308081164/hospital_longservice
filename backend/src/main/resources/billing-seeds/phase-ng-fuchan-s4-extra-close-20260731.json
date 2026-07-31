@@ -1,0 +1,31 @@
+{
+  "version": "1",
+  "description": "南岗妇产 S4：棉球4 + 扩棒（6.5 7 7.5）套8 pricing 阶段 FIXED_PRICE",
+  "profiles": [
+    {
+      "code": "NG-FUCHAN",
+      "name": "南岗区妇产医院",
+      "billingEnabled": true,
+      "productRules": [
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "南岗妇产棉球4",
+          "priority": 20,
+          "price": 4.0,
+          "keywords": ["棉球/Z2032"],
+          "skipPackaging": true,
+          "skipDiscount": true
+        },
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "校正价扩棒6.5套8",
+          "priority": 20,
+          "price": 8.0,
+          "keywords": ["扩棒（6.5 7 7.5）-3件z7526"],
+          "skipPackaging": true,
+          "skipDiscount": true
+        }
+      ]
+    }
+  ]
+}

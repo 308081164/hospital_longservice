@@ -219,7 +219,23 @@ public class BillingSeedMigrationRunner implements CommandLineRunner {
             new IncrementalSeed("billing_seed_export_fuyi_11col_20260730_v1",
                     "billing-seeds/phase-export-fuyi-11col-20260730.json"),
             new IncrementalSeed("billing_seed_zyy_d1_prod_golden_closeout_20260731_v1",
-                    "billing-seeds/phase-zyy-d1-prod-golden-closeout-20260731.json")
+                    "billing-seeds/phase-zyy-d1-prod-golden-closeout-20260731.json"),
+            new IncrementalSeed("billing_seed_hrb_cj_pricing_fixed_20260731_v1",
+                    "billing-seeds/phase-hrb-cj-pricing-fixed-20260731.json"),
+            new IncrementalSeed("billing_seed_hrb_bc_med_beauty_huanzuan_20260731_v1",
+                    "billing-seeds/phase-hrb-bc-med-beauty-huanzuan-20260731.json"),
+            new IncrementalSeed("billing_seed_ng_fuchan_s4_extra_close_20260731_v2",
+                    "billing-seeds/phase-ng-fuchan-s4-extra-close-20260731.json"),
+            new IncrementalSeed("billing_seed_hrb_hit_pricing_fixed_20260731_v2",
+                    "billing-seeds/phase-hrb-hit-pricing-fixed-20260731.json"),
+            new IncrementalSeed("billing_seed_ng_fuchan_deactivate_export_kuobang_20260731_v1",
+                    "billing-seeds/phase-ng-fuchan-deactivate-export-kuobang-20260731.json"),
+            new IncrementalSeed("billing_seed_hrb_hit_deactivate_export_pricing_20260731_v1",
+                    "billing-seeds/phase-hrb-hit-deactivate-export-pricing-20260731.json"),
+            new IncrementalSeed("billing_seed_hrb_cj_default_rule_20260731_v1",
+                    "billing-seeds/phase-hrb-cj-default-rule-20260731.json"),
+            new IncrementalSeed("billing_seed_hrb_cj_dedup_customer_20260731_v1",
+                    "billing-seeds/phase-hrb-cj-dedup-customer-20260731.json")
     );
 
     private static final String ZYY_D1_P0_MARKER = "billing_seed_zyy_d1_p0_v2";
@@ -334,7 +350,11 @@ public class BillingSeedMigrationRunner implements CommandLineRunner {
                     || "billing-seeds/phase-shkf-oral-box-pricing-20260730.json".equals(incremental.classpathFile())
                     || "billing-seeds/phase-zyy-d1-waier-huanbao-20260730.json".equals(incremental.classpathFile())
                     || "billing-seeds/phase-zyy-d1-gongqiangjing-jingtou-20260730.json".equals(incremental.classpathFile())
-                    || "billing-seeds/phase-zyy-d1-prod-golden-closeout-20260731.json".equals(incremental.classpathFile())) {
+                    || "billing-seeds/phase-zyy-d1-prod-golden-closeout-20260731.json".equals(incremental.classpathFile())
+                    || "billing-seeds/phase-ng-fuchan-deactivate-export-kuobang-20260731.json".equals(incremental.classpathFile())
+                    || "billing-seeds/phase-hrb-hit-deactivate-export-pricing-20260731.json".equals(incremental.classpathFile())
+                    || "billing-seeds/phase-hrb-cj-default-rule-20260731.json".equals(incremental.classpathFile())
+                    || "billing-seeds/phase-hrb-cj-dedup-customer-20260731.json".equals(incremental.classpathFile())) {
                 applyBatchPatchSeedFile(incremental.classpathFile());
             } else if ("billing-seeds/phase-billing-mode-backfill-20260730.json".equals(incremental.classpathFile())) {
                 applyBillingModeBackfillSeedFile(incremental.classpathFile());
@@ -440,6 +460,15 @@ public class BillingSeedMigrationRunner implements CommandLineRunner {
                 if (upd.has("billingEnabled")) {
                     customer.setBillingEnabled(bool(upd, "billingEnabled", false));
                 }
+                if (upd.has("defaultRuleId")) {
+                    customer.setDefaultRuleId(upd.get("defaultRuleId").asLong());
+                }
+                if (upd.has("setStatus")) {
+                    customer.setStatus(text(upd, "setStatus"));
+                }
+                if (upd.has("setCanonicalName")) {
+                    customer.setCanonicalName(text(upd, "setCanonicalName"));
+                }
                 customerMapper.updateById(customer);
                 log.info("P0.1 updated customer {}: mode={} enabled={}",
                         code, customer.getBillingPricingMode(), customer.getBillingEnabled());
@@ -524,6 +553,15 @@ public class BillingSeedMigrationRunner implements CommandLineRunner {
                 }
                 if (upd.has("billingEnabled")) {
                     customer.setBillingEnabled(bool(upd, "billingEnabled", false));
+                }
+                if (upd.has("defaultRuleId")) {
+                    customer.setDefaultRuleId(upd.get("defaultRuleId").asLong());
+                }
+                if (upd.has("setStatus")) {
+                    customer.setStatus(text(upd, "setStatus"));
+                }
+                if (upd.has("setCanonicalName")) {
+                    customer.setCanonicalName(text(upd, "setCanonicalName"));
                 }
                 customerMapper.updateById(customer);
                 log.info("P0.4 updated customer {}: mode={} enabled={}",
@@ -814,6 +852,15 @@ public class BillingSeedMigrationRunner implements CommandLineRunner {
                 }
                 if (upd.has("billingEnabled")) {
                     customer.setBillingEnabled(bool(upd, "billingEnabled", false));
+                }
+                if (upd.has("defaultRuleId")) {
+                    customer.setDefaultRuleId(upd.get("defaultRuleId").asLong());
+                }
+                if (upd.has("setStatus")) {
+                    customer.setStatus(text(upd, "setStatus"));
+                }
+                if (upd.has("setCanonicalName")) {
+                    customer.setCanonicalName(text(upd, "setCanonicalName"));
                 }
                 customerMapper.updateById(customer);
                 log.info("Batch patch updated customer {}: mode={} enabled={}",

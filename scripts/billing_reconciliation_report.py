@@ -51,7 +51,7 @@ KNOWN_S4_FAIL_EXTRA = frozenset(
 )
 
 KNOWN_MD_DRIFT = {
-    "哈尔滨工业大学医院": "MD 主表 Job624 pass_zero 已过期，stable 映射 Job691 · extra_inventory",
+    "哈尔滨工业大学医院": "MD 主表 Job624 pass_zero 已过期，stable 映射 Job691 · extra warning P0",
 }
 
 KNOWN_SETTLEMENT_DIFF = frozenset({"国药总医院第三院区", "哈尔滨长健医院"})
@@ -229,32 +229,32 @@ def classify_deviations(
                     f"漏检 missed={r['missed']} job={r.get('job_id')} keys={r.get('missed_keys', [])[:3]}",
                 )
             )
-        elif r.get("status") == "fail_extra":
+        elif r.get("extra", 0) > 0 and r.get("missed", 0) == 0:
             if is_prod:
-                devs.append(
-                    Deviation(
-                        "P2",
-                        name,
-                        "S4",
-                        f"fail_extra extra={r.get('extra')}（prod Job 数据 · 非漏检）",
-                    )
-                )
-            elif name not in KNOWN_S4_FAIL_EXTRA:
                 devs.append(
                     Deviation(
                         "P0",
                         name,
                         "S4",
-                        f"新 extra_inventory extra={r.get('extra')}（不在已知 6 院）",
+                        f"extra warning {r.get('extra')} 条（P0 bug · prod Job 数据）",
+                    )
+                )
+            elif name in KNOWN_S4_FAIL_EXTRA:
+                devs.append(
+                    Deviation(
+                        "P0",
+                        name,
+                        "S4",
+                        f"extra warning {r.get('extra')} 条（P0 bug · 引擎误报或规则未覆盖）",
                     )
                 )
             else:
                 devs.append(
                     Deviation(
-                        "P2",
+                        "P0",
                         name,
                         "S4",
-                        f"fail_extra extra={r.get('extra')}（已知 extra_inventory）",
+                        f"新 extra warning {r.get('extra')} 条（P0 bug）",
                     )
                 )
         if r.get("md_drift") and not is_prod:
@@ -365,7 +365,7 @@ def build_matrix(
         s = settlement.get(name, {})
         s1_icon = "✅" if m.status == "ok" else ("⏭" if m.status.startswith("skip") else "🔄")
         s4_st = s4.get("status", "—")
-        s4_icon = "✅" if s4_st in {"pass", "pass_zero"} else ("🔄" if s4_st == "fail_extra" else s4_st)
+        s4_icon = "✅" if s4_st in {"pass", "pass_zero"} else ("🚫" if s4.get("extra", 0) > 0 else s4_st)
         b_st = b.get("status", "—")
         s_st = s.get("status", "—")
         note_parts = []
@@ -456,7 +456,7 @@ def render_md(
         lines.append("")
 
     lines.append(
-        f"- S4 live 审计：pass {s4_summary.get('pass', 0)} · fail_extra {s4_summary.get('fail_extra', 0)} · "
+        f"- S4 live 审计：pass {s4_summary.get('pass', 0)} · fail(extra) {s4_summary.get('fail_extra', 0)} · "
         f"漏检 {s4_summary.get('fail_missed', 0)} · skip {s4_summary.get('skip', 0)}"
     )
     if preflight:
@@ -539,7 +539,7 @@ def render_md(
             "",
             "1. **P0**：若有 MD 漂移或新 fail，定点排查 Job 与引擎变更。",
             "2. **P1**：向铂康索要 kit BOM / vendor 7 sheet / part3 补录。",
-            "3. **P2**：S4 fail_extra 为 extra_inventory，非漏检。",
+            "3. **P0**：S4 extra warning 为引擎误报或规则未覆盖，须改规则/引擎清零（禁止 sync 进期待 CSV）。",
             "",
         ]
     )
