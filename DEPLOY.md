@@ -157,7 +157,9 @@ docker volume ls | grep hospital
 
 - `docker`（默认）：`docker exec hospital-backend curl` → 容器内 `127.0.0.1:8000`
 - `direct`：宿主机 HTTP → 生产 `8853` 或本地映射端口
-- 环境变量：`API_BASE`、`API_MODE`、`SMOKE_USER`/`SMOKE_PASS`（或 `ADMIN_PASSWORD`）
+- 环境变量：`API_BASE`（direct 模式）、`API_MODE`、`SMOKE_USER`/`SMOKE_PASS`（或 `ADMIN_PASSWORD`）
+
+**Post-deploy smoke 端口**：CI/SSH 上 `bash deploy/run-prod-verify.sh smoke` 在容器内探测 **8000**（JSON 字段 `api_base`）；宿主机映射 **8853** 仅记录在 `api_base_host`。勿将 `API_BASE=8853` 传入 `prod-smoke-docker.sh`。
 
 **生产 Job 映射**：`测试用例/job_baseline_prod.json` 自 stable 复制，部署后需校准：
 

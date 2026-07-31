@@ -12,12 +12,13 @@ if [ -f .env ]; then
   set -a && source .env && set +a
 fi
 
-export API_BASE="${API_BASE:-http://127.0.0.1:8853}"
-export API_MODE="${API_MODE:-direct}"
+export HOST_API_BASE="${HOST_API_BASE:-http://127.0.0.1:8853}"
 export DEPLOY_PATH="$DEPLOY_PATH"
 
 case "$LEVEL" in
   smoke)
+    # smoke 在容器内 curl :8000；勿传入 API_BASE=8853（宿主机映射端口）
+    unset API_BASE
     exec "$(dirname "$0")/prod-smoke-docker.sh" "$@"
     ;;
   deploy-check|full|verify-full)

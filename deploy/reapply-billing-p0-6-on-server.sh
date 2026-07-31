@@ -64,13 +64,20 @@ echo "==> 重启 backend"
 docker compose -f docker-compose.prod.yml up -d --no-deps --force-recreate backend
 
 echo "==> 等待 backend"
+backend_healthy=0
 for i in $(seq 1 40); do
   if curl -sf --connect-timeout 3 http://127.0.0.1:8853/api/v1/base/health >/dev/null 2>&1; then
-    echo "backend 健康"
+    echo "backend 健康（第 ${i} 轮）"
+    backend_healthy=1
     break
   fi
   sleep 3
 done
+if [ "$backend_healthy" -ne 1 ]; then
+  echo "错误: backend 在 120s 内未通过 health 检查" >&2
+  docker logs --tail 80 hospital-backend 2>&1 || true
+  exit 1
+fi
 
 echo "==> 校验"
 sleep 5

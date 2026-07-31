@@ -76,6 +76,8 @@ bash deploy/run-prod-verify.sh full          # smoke + deploy-check
 bash deploy/run-prod-verify.sh verify-full   # 含 S8/S4（慎用，S4 会写库）
 ```
 
+Post-deploy smoke 在 `hospital-backend` 容器内 curl **8000**（非宿主机 8853）；JSON 含 `api_base`（容器）与 `api_base_host`（宿主机映射）。
+
 ## Job map 维护
 
 1. **双轨基线**：本地 `job_baseline_stable.json` · 生产 `job_baseline_prod.json`（勿混用）
