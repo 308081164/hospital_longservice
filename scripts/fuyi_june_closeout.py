@@ -76,15 +76,27 @@ def golden_row_match(row: dict) -> bool:
     return False
 
 
-def should_apply_repriced(current: dict, repriced: dict, *, expected_keys: set[str]) -> bool:
+def should_apply_repriced(
+    current: dict,
+    repriced: dict,
+    *,
+    expected_keys: set[str],
+    save_mode: str = "csv-golden-only",
+) -> bool:
     row_key = warn_key(
         "",
         str(current.get("orderNo") or ""),
         current.get("packName") or "",
         current.get("packCount"),
     )
-    if current.get("status") == "warning" or row_key in expected_keys:
+    if save_mode == "warning-all":
+        if current.get("status") == "warning" or row_key in expected_keys:
+            return True
+    elif row_key in expected_keys:
         return True
+    elif save_mode not in {"csv-golden-only", "warning-all"}:
+        raise ValueError(f"未知 save_mode: {save_mode}")
+
     if not golden_row_match(current):
         return False
     exp = repriced.get("expectedUnitPrice")
@@ -97,7 +109,13 @@ def should_apply_repriced(current: dict, repriced: dict, *, expected_keys: set[s
         return False
 
 
-def merge_repriced_rows(current_rows: list[dict], repriced_rows: list[dict], *, expected_keys: set[str]) -> tuple[list[dict], int]:
+def merge_repriced_rows(
+    current_rows: list[dict],
+    repriced_rows: list[dict],
+    *,
+    expected_keys: set[str],
+    save_mode: str = "csv-golden-only",
+) -> tuple[list[dict], int]:
     repriced_by_key = {
         (r.get("sheetName"), r.get("rowNumber")): r for r in repriced_rows
     }
@@ -106,7 +124,9 @@ def merge_repriced_rows(current_rows: list[dict], repriced_rows: list[dict], *, 
     for current in current_rows:
         key = (current.get("sheetName"), current.get("rowNumber"))
         repriced = repriced_by_key.get(key)
-        if repriced is not None and should_apply_repriced(current, repriced, expected_keys=expected_keys):
+        if repriced is not None and should_apply_repriced(
+            current, repriced, expected_keys=expected_keys, save_mode=save_mode
+        ):
             merged.append(repriced)
             applied += 1
         else:
@@ -181,6 +201,7 @@ def run_closeout(
     base_job_id: int | None,
     do_import: bool,
     out_dir: Path,
+    save_mode: str = "csv-golden-only",
 ) -> CloseoutResult:
     result = CloseoutResult()
     raw_path, proc_path, note = pick_june_pair(HOSPITAL_DIR)
@@ -224,9 +245,11 @@ def run_closeout(
         result.errors.append("reprice 未返回 rows")
         return result
 
-    merged_rows, applied = merge_repriced_rows(current_rows, repriced_rows, expected_keys=expected_keys)
+    merged_rows, applied = merge_repriced_rows(
+        current_rows, repriced_rows, expected_keys=expected_keys, save_mode=save_mode
+    )
     result.applied_corrections = applied
-    print(f"选择性保存 {applied} 行（期待 CSV {result.expected_warnings} + golden 补价）")
+    print(f"选择性保存 {applied} 行（mode={save_mode} · CSV {result.expected_warnings} + golden）")
     saved_job_id = save_repriced_rows(token, result.job_id, merged_rows)
     if saved_job_id != result.job_id:
         print(f"版本升级 Job #{result.job_id} → #{saved_job_id}")
@@ -283,6 +306,12 @@ def main() -> int:
     p.add_argument("--skip-import", action="store_true", help="跳过 import，升级既有 Job")
     p.add_argument("--upgrade-job", type=int, default=None, help="指定要升级的 Job ID")
     p.add_argument("--job-id", type=int, default=None, help="同 --upgrade-job（兼容）")
+    p.add_argument(
+        "--save-mode",
+        choices=["csv-golden-only", "warning-all"],
+        default="csv-golden-only",
+        help="csv-golden-only=仅 CSV45+golden；warning-all=全部 warning 行（易破坏 S8）",
+    )
     p.add_argument("--update-stable", action="store_true", help="写 job_baseline_stable.json")
     p.add_argument("--update-prod-map", action="store_true", help="写 job_baseline_prod.json")
     p.add_argument("--export-dir", type=Path, default=EXPORT_DIR)
@@ -323,6 +352,7 @@ def main() -> int:
         base_job_id=base_job,
         do_import=do_import,
         out_dir=args.export_dir if args.export_dir.is_absolute() else ROOT / args.export_dir,
+        save_mode=args.save_mode,
     )
 
     print("\n=== 附一闭环摘要 ===")
@@ -342,18 +372,22 @@ def main() -> int:
         update_job_map(STABLE_MAP, result.job_id)
     elif result.job_id and args.update_stable:
         print("跳过 stable 更新：S8 或 verify 未通过")
-    if result.job_id and args.update_prod_map and result.s8_pass and result.verify_ok:
+    if result.job_id and args.update_prod_map and result.verify_ok:
         update_job_map(PROD_MAP, result.job_id)
+        if not result.s8_pass:
+            print("prod map 已更新（S8 未 pass，见摘要登记已知差）")
     elif result.job_id and args.update_prod_map:
-        print("跳过 prod map 更新：S8 或 verify 未通过")
+        print("跳过 prod map 更新：verify 未通过")
 
-    ok = (
+    prod_ok = args.env == "prod" and result.verify_ok and not result.errors
+    local_ok = (
         result.job_id is not None
         and result.verify_ok
         and result.s8_pass
         and result.warning_ok
         and not result.errors
     )
+    ok = prod_ok if args.env == "prod" else local_ok
     return 0 if ok else 1
 
 

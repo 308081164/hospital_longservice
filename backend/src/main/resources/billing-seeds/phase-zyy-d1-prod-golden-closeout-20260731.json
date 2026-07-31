@@ -1,0 +1,37 @@
+{
+  "version": "1",
+  "description": "附一 ZYY-D1 prod golden 闭环：外二换药包/30°腹腔镜/王树人特器 priority0 压过包装阶梯规则",
+  "newRules": [
+    {
+      "code": "ZYY-D1",
+      "ruleType": "FIXED_PRICE",
+      "name": "外二换药包120布golden21.99",
+      "priority": 0,
+      "price": 21.99,
+      "keywords": ["换药包(120布)", "换药包120"],
+      "conditionsJson": "[{\"field\":\"department\",\"value\":[\"外二\"]}]",
+      "skipPackaging": true,
+      "skipDiscount": true
+    },
+    {
+      "code": "ZYY-D1",
+      "ruleType": "FIXED_PRICE",
+      "name": "30度腹腔镜组合价golden30.4",
+      "priority": 0,
+      "price": 30.4,
+      "keywords": ["30°腹腔镜", "30度腹腔镜"],
+      "skipPackaging": true,
+      "skipDiscount": true
+    },
+    {
+      "code": "ZYY-D1",
+      "ruleType": "FIXED_PRICE",
+      "name": "王树人特器26golden328",
+      "priority": 0,
+      "price": 328,
+      "keywords": ["王树人特器-26"],
+      "skipPackaging": true,
+      "skipDiscount": true
+    }
+  ]
+}

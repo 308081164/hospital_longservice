@@ -217,7 +217,9 @@ public class BillingSeedMigrationRunner implements CommandLineRunner {
             new IncrementalSeed("billing_seed_zyy_d1_gongqiangjing_jingtou_20260730_v1",
                     "billing-seeds/phase-zyy-d1-gongqiangjing-jingtou-20260730.json"),
             new IncrementalSeed("billing_seed_export_fuyi_11col_20260730_v1",
-                    "billing-seeds/phase-export-fuyi-11col-20260730.json")
+                    "billing-seeds/phase-export-fuyi-11col-20260730.json"),
+            new IncrementalSeed("billing_seed_zyy_d1_prod_golden_closeout_20260731_v1",
+                    "billing-seeds/phase-zyy-d1-prod-golden-closeout-20260731.json")
     );
 
     private static final String ZYY_D1_P0_MARKER = "billing_seed_zyy_d1_p0_v2";
@@ -331,7 +333,8 @@ public class BillingSeedMigrationRunner implements CommandLineRunner {
                     || "billing-seeds/phase-yuemei-yanbao-20260730.json".equals(incremental.classpathFile())
                     || "billing-seeds/phase-shkf-oral-box-pricing-20260730.json".equals(incremental.classpathFile())
                     || "billing-seeds/phase-zyy-d1-waier-huanbao-20260730.json".equals(incremental.classpathFile())
-                    || "billing-seeds/phase-zyy-d1-gongqiangjing-jingtou-20260730.json".equals(incremental.classpathFile())) {
+                    || "billing-seeds/phase-zyy-d1-gongqiangjing-jingtou-20260730.json".equals(incremental.classpathFile())
+                    || "billing-seeds/phase-zyy-d1-prod-golden-closeout-20260731.json".equals(incremental.classpathFile())) {
                 applyBatchPatchSeedFile(incremental.classpathFile());
             } else if ("billing-seeds/phase-billing-mode-backfill-20260730.json".equals(incremental.classpathFile())) {
                 applyBillingModeBackfillSeedFile(incremental.classpathFile());
