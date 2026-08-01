@@ -23,6 +23,475 @@ sys.path.insert(0, str(SCRIPTS))
 from lib.api_client import ApiClient, ApiError, configure_client, get_client  # noqa: E402
 
 
+HRB_CJ_HOSPITAL = "哈尔滨长健医院"
+HRB_CJ_DIR = TEST_CASE / HRB_CJ_HOSPITAL
+HRB_CJ_SEED_MARKERS = (
+    "billing_seed_hrb_cj_dedup_customer_20260731_v1",
+    "billing_seed_hrb_cj_default_rule_20260731_v1",
+    "billing_seed_hrb_cj_pricing_fixed_20260731_v1",
+)
+SIMULATE_SAMPLE_ROW = {
+    "packName": "手术包（二）",
+    "sheetName": "手术室",
+    "instrumentCount": 43,
+    "unitPrice": 231,
+    "totalPrice": 231,
+    "packType": "器械包(ZSD)",
+    "packageMaterial": "高温灭菌无纺布60*60",
+    "temperature": "HT",
+}
+
+
+def row_field(row: dict[str, Any], *keys: str) -> Any:
+    for key in keys:
+        val = row.get(key)
+        if val is not None:
+            return val
+    return None
+
+
+def mysql_exec(deploy_path: Path, sql: str) -> bool | None:
+    script = deploy_path / "deploy/mysql-hospital-cli.sh"
+    if not script.is_file():
+        script = ROOT / "deploy/mysql-hospital-cli.sh"
+    if not script.is_file():
+        return None
+    db = os.environ.get("MYSQL_DATABASE", "hospital")
+    env = os.environ.copy()
+    env.setdefault("DEPLOY_PATH", str(deploy_path))
+    try:
+        subprocess.check_output(
+            ["bash", str(script), "--exec-root", "-e", sql, db],
+            text=True,
+            cwd=str(deploy_path if (deploy_path / "deploy").is_dir() else ROOT),
+            env=env,
+            stderr=subprocess.DEVNULL,
+        )
+        return True
+    except (subprocess.CalledProcessError, FileNotFoundError):
+        return None
+
+
+def mysql_seed_markers(deploy_path: Path, markers: tuple[str, ...]) -> dict[str, bool] | None:
+    script = deploy_path / "deploy/mysql-hospital-cli.sh"
+    if not script.is_file():
+        script = ROOT / "deploy/mysql-hospital-cli.sh"
+    if not script.is_file():
+        return None
+    db = os.environ.get("MYSQL_DATABASE", "hospital")
+    in_list = ", ".join(f"'{m}'" for m in markers)
+    sql = f"SELECT setting_key FROM sys_setting WHERE setting_key IN ({in_list})"
+    env = os.environ.copy()
+    env.setdefault("DEPLOY_PATH", str(deploy_path))
+    try:
+        out = subprocess.check_output(
+            ["bash", str(script), "--exec-root", "-N", "-e", sql, db],
+            text=True,
+            cwd=str(deploy_path if (deploy_path / "deploy").is_dir() else ROOT),
+            env=env,
+            stderr=subprocess.DEVNULL,
+        )
+        found = {line.strip() for line in out.splitlines() if line.strip()}
+        return {m: m in found for m in markers}
+    except (subprocess.CalledProcessError, FileNotFoundError):
+        return None
+
+
+def mysql_enable_customer_billing(deploy_path: Path, code: str) -> bool | None:
+    return mysql_exec(deploy_path, f"UPDATE customer SET billing_enabled=1 WHERE code='{code}'")
+
+
+HRB_CJ_ENSURE_RULES: list[dict[str, Any]] = [
+    {
+        "ruleType": "PRICE_PER_INSTRUMENT",
+        "name": "手术包5.5元/件",
+        "priority": 10,
+        "price": 5.5,
+        "keywords": ["手术包"],
+        "temperature": "HT",
+        "skipPackaging": True,
+        "skipDiscount": True,
+        "isActive": True,
+    },
+    {
+        "ruleType": "FIXED_PRICE",
+        "name": "长健敷料包W12050",
+        "priority": 2,
+        "price": 35,
+        "keywords": ["敷料包/W12050"],
+        "skipPackaging": True,
+        "isActive": True,
+    },
+    {
+        "ruleType": "FIXED_PRICE",
+        "name": "长健硅胶珠子22",
+        "priority": 2,
+        "price": 22,
+        "keywords": ["硅胶珠子7号"],
+        "skipPackaging": True,
+        "isActive": True,
+    },
+]
+
+
+def find_surgical_pack_row(rows: list[dict[str, Any]]) -> dict[str, Any] | None:
+    for row in rows:
+        pack_name = str(row_field(row, "packName") or "")
+        if "手术包" in pack_name and "（二）" in pack_name:
+            return row
+    for row in rows:
+        pack_name = str(row_field(row, "packName") or "")
+        if pack_name == "手术包（二）":
+            return row
+    return None
+
+
+def update_prod_job_map(hospital: str, job_id: int) -> None:
+    payload: dict[str, Any] = {"version": "1", "jobs": {}}
+    if PROD_JOB_MAP.is_file():
+        payload = json.loads(PROD_JOB_MAP.read_text(encoding="utf-8"))
+    jobs = payload.setdefault("jobs", {})
+    jobs[hospital] = job_id
+    payload["updated"] = time.strftime("%Y-%m-%d")
+    PROD_JOB_MAP.write_text(json.dumps(payload, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+
+
+def find_hrb_cj_june_raw() -> tuple[Path | None, str]:
+    raw_dir = HRB_CJ_DIR / "原始表格"
+    if not raw_dir.is_dir():
+        return None, "缺少原始表格目录"
+    preferred = raw_dir / "哈尔滨长健医院6月.xlsx"
+    if preferred.is_file():
+        return preferred, "6月"
+    for path in sorted(raw_dir.iterdir()):
+        if path.suffix.lower() in {".xlsx", ".xls"}:
+            return path, path.name
+    return None, "无 xlsx 原始账单"
+
+
+def import_reconciliation_bill(client: ApiClient, hospital: str, file_path: Path) -> dict[str, Any]:
+    data = client.post_multipart(
+        "/api/hospital-reconciliations/import",
+        {
+            "rule_id": "1",
+            "operator_name": "billing-verify-cli",
+            "hospital_name": hospital,
+        },
+        "source_file",
+        file_path,
+    )
+    payload = data.get("data")
+    return payload if isinstance(payload, dict) else {}
+
+
+def enable_hrb_cj_billing(client: ApiClient, customer: dict[str, Any], deploy_path: Path) -> bool:
+    if mysql_enable_customer_billing(deploy_path, "HRB-CJ"):
+        return True
+    customer_id = int(row_field(customer, "id"))
+    product_rules = customer.get("product_rules") or customer.get("productRules") or []
+    body = {
+        "code": row_field(customer, "code"),
+        "canonicalName": row_field(customer, "canonical_name", "canonicalName"),
+        "status": row_field(customer, "status") or "active",
+        "defaultRuleId": int(row_field(customer, "default_rule_id", "defaultRuleId") or 1),
+        "billingEnabled": True,
+        "billingPricingMode": row_field(customer, "billing_pricing_mode", "billingPricingMode") or "standard",
+        "productRules": product_rules,
+    }
+    client.update_customer(customer_id, body)
+    return True
+
+
+def ensure_hrb_cj_product_rules(client: ApiClient, customer_id: int) -> list[str]:
+    existing = client.product_rules(customer_id)
+    existing_names = {str(r.get("name") or "") for r in existing}
+    has_surgical = any("手术包" in n for n in existing_names) or any(
+        str(r.get("rule_type") or r.get("ruleType") or "") == "PRICE_PER_INSTRUMENT"
+        and any("手术包" in k for k in (r.get("keywords") or []))
+        for r in existing
+    )
+    created: list[str] = []
+    for spec in HRB_CJ_ENSURE_RULES:
+        if spec["name"] in existing_names:
+            continue
+        if spec["name"] == "手术包5.5元/件" and has_surgical:
+            continue
+        try:
+            client.create_product_rule(customer_id, spec)
+            created.append(str(spec["name"]))
+        except ApiError as exc:
+            if "已配置" in str(exc):
+                continue
+            raise
+    return created
+
+
+def run_billing_verify(
+    client: ApiClient,
+    *,
+    profile: str,
+    reimport: bool,
+    update_prod_map: bool,
+) -> CliReport:
+    report = CliReport("billing verify", profile, client.mode, client.api_base, time.time())
+    deploy_path = Path(os.environ.get("DEPLOY_PATH", ROOT))
+
+    try:
+        health = client.health()
+        report.add(
+            StepResult(
+                "V0_health_login",
+                "V0",
+                health.get("code") == 200,
+                str(health.get("msg") or "ok"),
+            )
+        )
+        client.login(force=True)
+    except Exception as exc:
+        report.add(StepResult("V0_health_login", "V0", False, str(exc)))
+        report.finished_at = time.time()
+        return report
+
+    changjian = client.customer_by_code("CHANGJIAN")
+    cj_status = str(row_field(changjian or {}, "status") or "").lower()
+    report.add(
+        StepResult(
+            "V1_changjian_inactive",
+            "V1",
+            changjian is not None and cj_status == "inactive",
+            f"CHANGJIAN status={cj_status or 'missing'}",
+            {"customer": changjian},
+        )
+    )
+
+    hrb_cj = client.customer_by_code("HRB-CJ")
+    hrb_id = row_field(hrb_cj or {}, "id")
+    billing_enabled = row_field(hrb_cj or {}, "billingEnabled", "billing_enabled")
+
+    if reimport and hrb_cj and billing_enabled is not True:
+        try:
+            enable_hrb_cj_billing(client, hrb_cj, deploy_path)
+            hrb_cj = client.customer_by_code("HRB-CJ") or hrb_cj
+            billing_enabled = row_field(hrb_cj, "billingEnabled", "billing_enabled")
+            report.add(
+                StepResult(
+                    "V1b_enable_billing",
+                    "V1",
+                    billing_enabled is True,
+                    f"已启用 HRB-CJ 特色账单 billing={billing_enabled}",
+                )
+            )
+        except Exception as exc:
+            report.add(StepResult("V1b_enable_billing", "V1", False, str(exc)))
+
+    if reimport and hrb_id:
+        try:
+            created = ensure_hrb_cj_product_rules(client, int(hrb_id))
+            detail = "规则齐全" if not created else f"已补建: {', '.join(created)}"
+            report.add(
+                StepResult(
+                    "V2b_ensure_product_rules",
+                    "V2",
+                    True,
+                    detail,
+                    {"created": created},
+                )
+            )
+        except Exception as exc:
+            report.add(StepResult("V2b_ensure_product_rules", "V2", False, str(exc)))
+
+    default_rule_id = row_field(hrb_cj or {}, "defaultRuleId", "default_rule_id")
+    pricing_mode = row_field(hrb_cj or {}, "billingPricingMode", "billing_pricing_mode")
+    config_ok = (
+        hrb_cj is not None
+        and billing_enabled is True
+        and int(default_rule_id or 0) == 1
+        and str(pricing_mode or "") == "standard"
+    )
+    report.add(
+        StepResult(
+            "V2_hrb_cj_config",
+            "V2",
+            config_ok,
+            f"HRB-CJ billing={billing_enabled} default_rule_id={default_rule_id} mode={pricing_mode}",
+            {"customer_id": hrb_id},
+        )
+    )
+
+    surgical_rule_name = ""
+    if hrb_id:
+        try:
+            rules = client.product_rules(int(hrb_id))
+            surgical = [
+                r
+                for r in rules
+                if "手术包" in str(r.get("name") or "")
+                or (
+                    str(r.get("rule_type") or r.get("ruleType") or "") == "PRICE_PER_INSTRUMENT"
+                    and any("手术包" in k for k in (r.get("keywords") or []))
+                )
+            ]
+            surgical_rule_name = str(surgical[0].get("name")) if surgical else ""
+            report.add(
+                StepResult(
+                    "V3_surgical_pack_rule",
+                    "V3",
+                    bool(surgical),
+                    surgical_rule_name or f"未找到手术包5.5规则（共 {len(rules)} 条）",
+                    {"rules": [r.get("name") for r in rules]},
+                )
+            )
+        except Exception as exc:
+            report.add(StepResult("V3_surgical_pack_rule", "V3", False, str(exc)))
+    else:
+        report.add(StepResult("V3_surgical_pack_rule", "V3", False, "HRB-CJ 不存在"))
+
+    marker_status = mysql_seed_markers(deploy_path, HRB_CJ_SEED_MARKERS)
+    if marker_status is None:
+        report.add(
+            StepResult(
+                "V4_seed_markers",
+                "V4",
+                True,
+                "跳过 MySQL seed marker 检查（无 mysql-hospital-cli.sh 或非部署机）",
+            )
+        )
+    else:
+        missing = [k for k, ok in marker_status.items() if not ok]
+        report.add(
+            StepResult(
+                "V4_seed_markers",
+                "V4",
+                not missing,
+                "全部存在" if not missing else f"缺失: {', '.join(missing)}",
+                {"markers": marker_status},
+            )
+        )
+
+    if hrb_id:
+        try:
+            sim = client.simulate_billing(
+                customer_id=int(hrb_id),
+                hospital_name=HRB_CJ_HOSPITAL,
+                sample_row=SIMULATE_SAMPLE_ROW,
+            )
+            status = str(row_field(sim, "status") or "")
+            diff = row_field(sim, "difference")
+            pricing_rule = str(row_field(sim, "pricingRule", "pricing_rule") or "")
+            try:
+                diff_val = float(diff)
+            except (TypeError, ValueError):
+                diff_val = None
+            sim_ok = (
+                status == "warning"
+                and diff_val is not None
+                and abs(diff_val - 5.5) < 0.01
+                and "手术包" in pricing_rule
+            )
+            report.add(
+                StepResult(
+                    "V5_simulate_231_warning",
+                    "V5",
+                    sim_ok,
+                    f"status={status} diff={diff} rule={pricing_rule}",
+                    {"simulate": sim},
+                )
+            )
+        except Exception as exc:
+            report.add(StepResult("V5_simulate_231_warning", "V5", False, str(exc)))
+    else:
+        report.add(StepResult("V5_simulate_231_warning", "V5", False, "HRB-CJ 不存在"))
+
+    job_id: int | None = None
+    if reimport:
+        raw_path, label = find_hrb_cj_june_raw()
+        if raw_path is None or not raw_path.is_file():
+            report.add(StepResult("V6_reimport_june", "V6", False, f"缺少 6 月原始账单 ({label})"))
+        else:
+            try:
+                job = import_reconciliation_bill(client, HRB_CJ_HOSPITAL, raw_path)
+                job_id = int(job.get("id") or job.get("jobId") or job.get("job_id"))
+                report.add(
+                    StepResult(
+                        "V6_reimport_june",
+                        "V6",
+                        True,
+                        f"Job #{job_id} 导入 {raw_path.name} ({label})",
+                        {"job_id": job_id, "file": str(raw_path)},
+                    )
+                )
+            except Exception as exc:
+                report.add(StepResult("V6_reimport_june", "V6", False, str(exc)))
+    else:
+        report.add(StepResult("V6_reimport_june", "V6", True, "跳过（未指定 --reimport）"))
+
+    if reimport and job_id:
+        try:
+            rows = client.reconciliation_rows(job_id)
+            golden = find_surgical_pack_row(rows)
+            if golden is None:
+                report.add(StepResult("V7_golden_row", "V7", False, "未找到手术包（二）行"))
+            else:
+                status = str(row_field(golden, "status") or "")
+                expected = row_field(golden, "expectedUnitPrice", "expected_unit_price")
+                pricing_rule = str(row_field(golden, "pricingRule", "pricing_rule") or "")
+                try:
+                    expected_val = float(expected)
+                except (TypeError, ValueError):
+                    expected_val = None
+                golden_ok = (
+                    status == "unchanged"
+                    and expected_val is not None
+                    and abs(expected_val - 236.5) < 0.01
+                    and "手术包" in pricing_rule
+                )
+                report.add(
+                    StepResult(
+                        "V7_golden_row",
+                        "V7",
+                        golden_ok,
+                        f"status={status} expected={expected} rule={pricing_rule}",
+                        {"row": golden},
+                    )
+                )
+        except Exception as exc:
+            report.add(StepResult("V7_golden_row", "V7", False, str(exc)))
+
+        if update_prod_map and job_id:
+            try:
+                update_prod_job_map(HRB_CJ_HOSPITAL, job_id)
+                report.add(
+                    StepResult(
+                        "V8_update_prod_map",
+                        "V8",
+                        True,
+                        f"job_baseline_prod.json → {HRB_CJ_HOSPITAL}={job_id}",
+                        {"job_id": job_id},
+                    )
+                )
+            except Exception as exc:
+                report.add(StepResult("V8_update_prod_map", "V8", False, str(exc)))
+        elif update_prod_map:
+            report.add(StepResult("V8_update_prod_map", "V8", False, "无 Job ID，未更新 prod map"))
+    elif update_prod_map:
+        report.add(StepResult("V8_update_prod_map", "V8", True, "跳过（需 --reimport 成功）"))
+
+    report.finished_at = time.time()
+    return report
+
+
+def cmd_billing_verify(args: argparse.Namespace) -> int:
+    client = resolve_client(args)
+    report = run_billing_verify(
+        client,
+        profile=args.profile,
+        reimport=args.reimport,
+        update_prod_map=args.update_prod_map,
+    )
+    print_report(report, as_json=args.json)
+    return 0 if report.ok else 1
+
+
 @dataclass
 class StepResult:
     name: str
@@ -462,6 +931,14 @@ def build_parser() -> argparse.ArgumentParser:
     p_verify.add_argument("--skip-mysql", action="store_true")
     p_verify.add_argument("--allow-import", action="store_true", help="full 时允许 S4 import 副作用")
     p_verify.set_defaults(func=cmd_verify)
+
+    p_billing = sub.add_parser("billing", help="特色账单验收")
+    billing_sub = p_billing.add_subparsers(dest="billing_cmd", required=True)
+    p_bv = billing_sub.add_parser("verify", help="长健 HRB-CJ 生产验收")
+    add_common_flags(p_bv)
+    p_bv.add_argument("--reimport", action="store_true", help="重新导入 6 月账单并校验 golden row")
+    p_bv.add_argument("--update-prod-map", action="store_true", help="将新 Job ID 写回 job_baseline_prod.json")
+    p_bv.set_defaults(func=cmd_billing_verify)
 
     p_report = sub.add_parser("report", help="占位：请用各子命令 --json")
     p_report.set_defaults(func=lambda _a: (print("使用 smoke/deploy-check/verify --json", file=sys.stderr) or 2))

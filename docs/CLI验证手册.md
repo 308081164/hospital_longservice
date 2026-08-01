@@ -12,6 +12,7 @@ Hospital 部署与回归的统一命令行入口：`./bin/hospital-cli`。
 | `s8` | 透传 `batch_s8_export_compare.py` |
 | `s4` | 透传 `batch_june_system_test.py`（会 import，有副作用） |
 | `verify` | 顺序执行 smoke + deploy-check；`--level full` 追加 S8/S4 |
+| `billing verify` | 长健 HRB-CJ 验收：客户 dedup、seed marker、试算 warning、可选 reimport |
 
 ## 通用参数
 
@@ -87,3 +88,20 @@ Post-deploy smoke 在 `hospital-backend` 容器内 curl **8000**（非宿主机 
 > **⚠️ 禁止用 stable Job ID 跑 prod S8/S4**（例：stable 691 哈工大 ≠ prod 77）。误用会导致大量 fail 误报。
 
 S8/S4 在生产上 Job ID 不一致会导致误报 fail，务必先 `calibrate_prod_job_map.py`。
+
+## 长健 HRB-CJ 生产验收
+
+```bash
+# 只读（客户配置 + 试算，不写库）
+./bin/hospital-cli billing verify \
+  --mode direct --profile prod \
+  --api http://39.102.213.51:8853 --json
+
+# 含重新导入 6 月账单 + 更新 prod Job map
+./bin/hospital-cli billing verify \
+  --mode direct --profile prod \
+  --api http://39.102.213.51:8853 \
+  --reimport --update-prod-map --json
+```
+
+验证步骤：`V0` health/login → `V1` CHANGJIAN inactive → `V2` HRB-CJ 配置 → `V3` 手术包5.5 规则 → `V4` seed marker（MySQL 可用时）→ `V5` 43×231 simulate warning → `V6/V7` reimport golden row → `V8` 更新 `job_baseline_prod.json`。

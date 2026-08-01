@@ -1,7 +1,7 @@
 {
   "version": "1",
   "description": "生产环境 S8/S4 Job 映射（calibrate_prod_job_map.py 自动生成）",
-  "updated": "2026-07-31",
+  "updated": "2026-08-01",
   "source": "API http://39.102.213.51:8853; 附一闭环 Job 208→223",
   "maintain_note": "校准命令: python3 scripts/calibrate_prod_job_map.py",
   "jobs": {
@@ -24,6 +24,6 @@
     "武警黑龙江省总队医院": 205,
     "悦美芳华医疗门诊医院": 212,
     "哈尔滨工业大学医院": 77,
-    "哈尔滨长健医院": 162
+    "哈尔滨长健医院": 232
   }
 }

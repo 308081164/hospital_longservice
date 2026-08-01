@@ -326,6 +326,80 @@ class ApiClient:
         rows = data.get("data")
         return rows if isinstance(rows, list) else []
 
+    def customer_by_code(self, code: str, *, token: str | None = None) -> dict[str, Any] | None:
+        target = code.strip().upper()
+        for row in self.customers(token=token):
+            row_code = str(row.get("code") or "").strip().upper()
+            if row_code == target:
+                return row
+        return None
+
+    def product_rules(self, customer_id: int, *, token: str | None = None) -> list[dict[str, Any]]:
+        tok = token or self._token or self.login()
+        data = self.request_json("GET", f"/api/v1/customers/{customer_id}/product-rules", token=tok)
+        assert_api_ok(data, context="product-rules")
+        rows = data.get("data")
+        return rows if isinstance(rows, list) else []
+
+    def simulate_billing(
+        self,
+        *,
+        customer_id: int,
+        hospital_name: str,
+        sample_row: dict[str, Any],
+        rule_id: int | None = None,
+        token: str | None = None,
+    ) -> dict[str, Any]:
+        tok = token or self._token or self.login()
+        body: dict[str, Any] = {
+            "customerId": customer_id,
+            "hospitalName": hospital_name,
+            "sampleRow": sample_row,
+        }
+        if rule_id is not None:
+            body["ruleId"] = rule_id
+        data = self.request_json("POST", "/api/v1/billing-rules/simulate", token=tok, json_body=body)
+        assert_api_ok(data, context="simulate")
+        payload = data.get("data")
+        return payload if isinstance(payload, dict) else {}
+
+    def reconciliation_rows(self, job_id: int, *, token: str | None = None) -> list[dict[str, Any]]:
+        tok = token or self._token or self.login()
+        rows: list[dict[str, Any]] = []
+        page = 1
+        while True:
+            path = f"/api/hospital-reconciliations/{job_id}/rows?page={page}&size=500"
+            data = self.request_json("GET", path, token=tok)
+            assert_api_ok(data, context=f"rows job {job_id}")
+            payload = data.get("data") or {}
+            batch = payload.get("rows") or payload.get("items") or []
+            rows.extend(batch)
+            total = payload.get("total") or payload.get("totalElements") or len(batch)
+            if page * 500 >= total or not batch:
+                break
+            page += 1
+        return rows
+
+    def update_customer(
+        self, customer_id: int, body: dict[str, Any], *, token: str | None = None
+    ) -> dict[str, Any]:
+        tok = token or self._token or self.login()
+        data = self.request_json("PUT", f"/api/v1/customers/{customer_id}", token=tok, json_body=body)
+        assert_api_ok(data, context="update customer")
+        payload = data.get("data")
+        return payload if isinstance(payload, dict) else {}
+
+    def create_product_rule(
+        self, customer_id: int, body: dict[str, Any], *, token: str | None = None
+    ) -> dict[str, Any]:
+        tok = token or self._token or self.login()
+        data = self.request_json(
+            "POST", f"/api/v1/customers/{customer_id}/product-rules", token=tok, json_body=body
+        )
+        assert_api_ok(data, context="create product rule")
+        payload = data.get("data")
+        return payload if isinstance(payload, dict) else {}
+
 
 _default_client: ApiClient | None = None
 
