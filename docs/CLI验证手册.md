@@ -34,6 +34,8 @@ Hospital 部署与回归的统一命令行入口：`./bin/hospital-cli`。
 | `EXPECTED_BILLING_ENABLED` | deploy-check 期望计数（默认 36） |
 | `DEPLOY_PATH` | 部署目录，用于加载 `.env` 与 `mysql-hospital-cli.sh` |
 
+CI `post-deploy-parity-gate`：未配置 GitHub Secrets `SMOKE_USER`/`SMOKE_PASS` 时，`run_prod_parity_gate.sh` 通过 SSH 只读生产机 `$DEPLOY_PATH/.env` 加载凭证；可选配置 Secrets 覆盖。
+
 **禁止**在仓库写死生产密码。
 
 ## Exit code

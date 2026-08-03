@@ -38,6 +38,13 @@ def assert_api_ok(data: dict[str, Any], *, context: str = "API") -> dict[str, An
     return data
 
 
+def _env_nonempty(key: str, default: str | None = None) -> str | None:
+    val = os.environ.get(key)
+    if val is None or not str(val).strip():
+        return default
+    return str(val).strip()
+
+
 class ApiClient:
     def __init__(
         self,
@@ -58,14 +65,17 @@ class ApiClient:
         self.backend_container = backend_container or os.environ.get(
             "BACKEND_CONTAINER", "hospital-backend"
         )
-        self.username = username or os.environ.get("SMOKE_USER") or os.environ.get(
-            "ADMIN_USERNAME", "admin"
+        self.username = (
+            (username.strip() if username and str(username).strip() else None)
+            or _env_nonempty("SMOKE_USER")
+            or _env_nonempty("ADMIN_USERNAME")
+            or "admin"
         )
         self.password = (
-            password
-            or os.environ.get("SMOKE_PASS")
-            or os.environ.get("ADMIN_PASSWORD")
-            or os.environ.get("APP_ADMIN_PASSWORD")
+            (password.strip() if password and str(password).strip() else None)
+            or _env_nonempty("SMOKE_PASS")
+            or _env_nonempty("ADMIN_PASSWORD")
+            or _env_nonempty("APP_ADMIN_PASSWORD")
             or "admin123"
         )
         self._token: str | None = None
@@ -90,10 +100,10 @@ class ApiClient:
             self.mode = mode
         if backend_container is not None:
             self.backend_container = backend_container
-        if username is not None:
-            self.username = username
-        if password is not None:
-            self.password = password
+        if username is not None and str(username).strip():
+            self.username = str(username).strip()
+        if password is not None and str(password).strip():
+            self.password = str(password).strip()
         self._token = None
 
     def curl_raw(self, curl_args: list[str]) -> str:

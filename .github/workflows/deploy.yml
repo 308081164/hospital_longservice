@@ -411,10 +411,13 @@ jobs:
       - name: Prod parity gate (read-only)
         env:
           PROD_HOST: ${{ secrets.SSH_HOST }}
+          SSH_HOST: ${{ secrets.SSH_HOST }}
+          SSH_USER: ${{ secrets.SSH_USER }}
+          SSH_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+          SSH_PORT: ${{ secrets.SSH_PORT || 22 }}
+          DEPLOY_PATH: ${{ secrets.DEPLOY_PATH || '/mnt/newdisk/app/Hospital' }}
           SMOKE_USER: ${{ secrets.SMOKE_USER }}
           SMOKE_PASS: ${{ secrets.SMOKE_PASS }}
-          ADMIN_USERNAME: ${{ secrets.SMOKE_USER }}
-          ADMIN_PASSWORD: ${{ secrets.SMOKE_PASS }}
         run: |
           chmod +x bin/hospital-cli scripts/run_prod_parity_gate.sh
           bash scripts/run_prod_parity_gate.sh
