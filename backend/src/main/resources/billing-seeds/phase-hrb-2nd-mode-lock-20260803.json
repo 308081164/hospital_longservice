@@ -1,0 +1,10 @@
+{
+  "version": "1",
+  "description": "市二院计价模式锁定：special_only（防止导出类 seed 误覆盖）",
+  "customerUpdates": [
+    {
+      "code": "HRB-2ND",
+      "billingPricingMode": "special_only"
+    }
+  ]
+}

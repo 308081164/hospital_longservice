@@ -22,7 +22,7 @@
       "priority": 7,
       "price": 8,
       "keywords": ["正畸去胶车针", "正畸去版车针"],
-      "conditionsJson": "[{\"field\":\"department\",\"value\":[\"口腔科\"]}]",
+      "conditionsJson": "[{\"field\":\"department\",\"value\":[\"口腔科\",\"口腔科(内)\",\"口腔科（正）\",\"口腔修复诊室\"]}]",
       "skipPackaging": true,
       "skipDiscount": true
     },
@@ -33,7 +33,7 @@
       "priority": 8,
       "price": 8,
       "keywords": ["调刀"],
-      "conditionsJson": "[{\"field\":\"department\",\"value\":[\"口腔科\"]}]",
+      "conditionsJson": "[{\"field\":\"department\",\"value\":[\"口腔科\",\"口腔科(内)\",\"口腔科（正）\",\"口腔修复诊室\"]}]",
       "skipPackaging": true,
       "skipDiscount": true
     },

@@ -20,7 +20,6 @@
       "code": "HRB-2ND",
       "name": "哈尔滨市第二医院",
       "billingEnabled": true,
-      "billingPricingMode": "hybrid",
       "aliases": ["市二院", "哈尔滨市第二医院"]
     },
     {

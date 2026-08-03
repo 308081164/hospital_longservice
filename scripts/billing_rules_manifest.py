@@ -46,13 +46,21 @@ def _normalize_rule(rule: dict[str, Any]) -> dict[str, Any]:
     return out
 
 
-def _merge_profile_rules(existing: dict[str, dict[str, Any]], incoming: list[dict[str, Any]]) -> None:
+def _merge_profile_rules(
+    existing: dict[str, dict[str, Any]],
+    incoming: list[dict[str, Any]],
+    *,
+    code: str,
+    deactivated: set[tuple[str, str]],
+) -> None:
     for raw in incoming or []:
         rule = _normalize_rule(raw)
         name = _rule_name(rule)
         if not name:
             continue
         rule["name"] = name
+        if (code, name) in deactivated:
+            rule["isActive"] = False
         existing[name] = rule
 
 
@@ -126,6 +134,7 @@ def _apply_customer_update(customers: dict[str, dict[str, Any]], patch: dict[str
         entry["name"] = patch["name"]
     if patch.get("billingPricingMode"):
         entry["billingPricingMode"] = patch["billingPricingMode"]
+        entry["_mode_from_customer_update"] = True
     if "standardPricingOverride" in patch:
         entry["standardPricingOverride"] = patch["standardPricingOverride"]
     if patch.get("billingEnabled") is not None:
@@ -134,6 +143,7 @@ def _apply_customer_update(customers: dict[str, dict[str, Any]], patch: dict[str
 
 def build_manifest() -> dict[str, Any]:
     customers: dict[str, dict[str, Any]] = {}
+    deactivated: set[tuple[str, str]] = set()
 
     for path in sorted(SEED_DIR.glob("*.json")):
         if path.name in SKIP_FILES:
@@ -147,12 +157,14 @@ def build_manifest() -> dict[str, Any]:
             entry = customers.setdefault(code, {"code": code, "productRules": {}})
             if profile.get("name"):
                 entry["name"] = profile["name"]
+            profile_rules = profile.get("productRules") or []
             if profile.get("billingPricingMode"):
-                entry["billingPricingMode"] = profile["billingPricingMode"]
+                if profile_rules or not entry.get("_mode_from_customer_update"):
+                    entry["billingPricingMode"] = profile["billingPricingMode"]
             if "standardPricingOverride" in profile:
                 entry["standardPricingOverride"] = profile["standardPricingOverride"]
             rules: dict[str, dict[str, Any]] = entry.setdefault("productRules", {})
-            _merge_profile_rules(rules, profile.get("productRules") or [])
+            _merge_profile_rules(rules, profile_rules, code=code, deactivated=deactivated)
 
         for patch in data.get("customerUpdates") or []:
             _apply_customer_update(customers, patch)
@@ -175,6 +187,8 @@ def build_manifest() -> dict[str, Any]:
             if not name:
                 continue
             rule["name"] = name
+            if (code, name) in deactivated:
+                rule["isActive"] = False
             entry.setdefault("productRules", {})[name] = rule
 
         for deact in data.get("deactivateRules") or []:
@@ -182,6 +196,7 @@ def build_manifest() -> dict[str, Any]:
             rule_name = _text(deact, "ruleName")
             if not code or not rule_name:
                 continue
+            deactivated.add((code, rule_name))
             entry = customers.setdefault(code, {"code": code, "productRules": {}})
             rules = entry.setdefault("productRules", {})
             if rule_name in rules:

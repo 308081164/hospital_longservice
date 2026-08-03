@@ -1,7 +1,7 @@
 {
   "version": 1,
-  "generated_at": "2026-08-03T01:30:01.755069+00:00",
-  "manifest_hash": "875f6d8466cc86eac48325c2e3af76a7df55f309ab4a7b548cba5e2283e6d840",
+  "generated_at": "2026-08-03T08:46:53.181208+00:00",
+  "manifest_hash": "adad0a3317f843c96c03097f3b95227f4a2023affe07039dcb2e6f07e47bc235",
   "customers": {
     "AL-YY": {
       "code": "AL-YY",
@@ -338,7 +338,7 @@
     "ERYY-NG": {
       "code": "ERYY-NG",
       "name": "黑龙江省第二医院（南岗院区）",
-      "billingPricingMode": "standard",
+      "billingPricingMode": "special_only",
       "standardPricingOverride": null,
       "billingEnabled": true,
       "productRules": [
@@ -648,7 +648,7 @@
     "HRB-2ND": {
       "code": "HRB-2ND",
       "name": "哈尔滨市第二医院",
-      "billingPricingMode": "hybrid",
+      "billingPricingMode": "special_only",
       "standardPricingOverride": null,
       "billingEnabled": null,
       "productRules": [
@@ -674,7 +674,7 @@
             "正畸去胶车针",
             "正畸去版车针"
           ],
-          "conditionsJson": "[{\"field\":\"department\",\"value\":[\"口腔科\"]}]",
+          "conditionsJson": "[{\"field\":\"department\",\"value\":[\"口腔科\",\"口腔科(内)\",\"口腔科（正）\",\"口腔修复诊室\"]}]",
           "skipPackaging": true,
           "skipDiscount": true,
           "isActive": true,
@@ -688,7 +688,7 @@
           "keywords": [
             "调刀"
           ],
-          "conditionsJson": "[{\"field\":\"department\",\"value\":[\"口腔科\"]}]",
+          "conditionsJson": "[{\"field\":\"department\",\"value\":[\"口腔科\",\"口腔科(内)\",\"口腔科（正）\",\"口腔修复诊室\"]}]",
           "skipPackaging": true,
           "skipDiscount": true,
           "isActive": true,
@@ -745,7 +745,7 @@
           ],
           "skipPackaging": true,
           "skipDiscount": true,
-          "isActive": true,
+          "isActive": false,
           "matchMode": "first"
         },
         {
@@ -764,7 +764,7 @@
         }
       ],
       "rule_count": 8,
-      "active_rule_count": 8
+      "active_rule_count": 7
     },
     "HRB-CJ": {
       "code": "HRB-CJ",
@@ -968,7 +968,7 @@
           ],
           "skipPackaging": true,
           "skipDiscount": true,
-          "isActive": true,
+          "isActive": false,
           "matchMode": "first"
         },
         {
@@ -995,7 +995,7 @@
           ],
           "skipPackaging": true,
           "skipDiscount": true,
-          "isActive": true,
+          "isActive": false,
           "matchMode": "first"
         },
         {
@@ -1021,7 +1021,7 @@
           ],
           "skipPackaging": true,
           "skipDiscount": true,
-          "isActive": true,
+          "isActive": false,
           "matchMode": "first"
         },
         {
@@ -1044,7 +1044,7 @@
         }
       ],
       "rule_count": 14,
-      "active_rule_count": 12
+      "active_rule_count": 9
     },
     "HRB-HSZ": {
       "code": "HRB-HSZ",
@@ -1683,7 +1683,7 @@
     "HULAN-RM": {
       "code": "HULAN-RM",
       "name": "呼兰区第一人民医院",
-      "billingPricingMode": "hybrid",
+      "billingPricingMode": "special_only",
       "standardPricingOverride": null,
       "billingEnabled": true,
       "productRules": [
@@ -1981,7 +1981,7 @@
     "NG-FUCHAN": {
       "code": "NG-FUCHAN",
       "name": "南岗区妇产医院",
-      "billingPricingMode": "hybrid",
+      "billingPricingMode": "standard",
       "standardPricingOverride": null,
       "billingEnabled": false,
       "productRules": [
@@ -2935,7 +2935,7 @@
     "TAIPING-RM": {
       "code": "TAIPING-RM",
       "name": "太平人民医院",
-      "billingPricingMode": "hybrid",
+      "billingPricingMode": "special_only",
       "standardPricingOverride": null,
       "billingEnabled": false,
       "productRules": [
@@ -3246,7 +3246,7 @@
           "conditionsJson": "[{\"field\":\"department\",\"value\":[\"手术室\"]}]",
           "skipPackaging": true,
           "skipDiscount": true,
-          "isActive": true,
+          "isActive": false,
           "matchMode": "first"
         },
         {
@@ -3260,7 +3260,7 @@
           "conditionsJson": "[{\"field\":\"department\",\"value\":[\"手术室\"]}]",
           "skipPackaging": true,
           "skipDiscount": true,
-          "isActive": true,
+          "isActive": false,
           "matchMode": "first"
         },
         {
@@ -3335,7 +3335,7 @@
         }
       ],
       "rule_count": 11,
-      "active_rule_count": 11
+      "active_rule_count": 9
     },
     "WJ-HLJ-ZD": {
       "code": "WJ-HLJ-ZD",

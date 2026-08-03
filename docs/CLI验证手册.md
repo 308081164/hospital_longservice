@@ -13,7 +13,10 @@ Hospital 部署与回归的统一命令行入口：`./bin/hospital-cli`。
 | `s4` | 透传 `batch_june_system_test.py`（会 import，有副作用） |
 | `verify` | 顺序执行 smoke + deploy-check；`--level full` 追加 S8/S4 |
 | `billing verify` | 长健 HRB-CJ 验收：客户 dedup、seed marker、试算 warning、可选 reimport |
-| `rules compare` | classpath manifest vs API `productRules`（单院 `--code` / 全院 `--all`） |
+| `rules compare` | classpath manifest vs API `productRules`（单院 `--code` / 全院 `--all`）；含计价模式比对 |
+| `rules doc` | 生成 [`docs/医院特色计价规则清单.md`](docs/医院特色计价规则清单.md)（`--write`） |
+| `rules spot-check` | 定点试算（simulate API），如市二院 4 条 golden row |
+| `rules verify-deploy` | compare + MySQL reconcile hash + 可选 spot-check |
 
 ## 通用参数
 
@@ -132,4 +135,24 @@ docker compose up -d --force-recreate backend
 ./bin/hospital-cli rules compare --code ZYY-D1 --profile local
 ```
 
-回滚 reconcile：`BILLING_SEED_RECONCILE_ENABLED=false` 或 `billing.seed.reconcile-enabled: false`。
+# 市二院 HRB-2ND 定点验收（部署后）
+
+```bash
+./bin/hospital-cli rules compare --code HRB-2ND --profile prod \
+  --mode direct --api http://HOST:8853 --fail-on-drift --json
+
+./bin/hospital-cli rules spot-check --code HRB-2ND --profile prod \
+  --mode direct --api http://HOST:8853
+
+./bin/hospital-cli rules verify-deploy --code HRB-2ND --profile prod \
+  --mode direct --api http://HOST:8853 --fail-on-drift
+```
+
+`verify-deploy` 组合：manifest vs API 规则 + 计价模式 + MySQL `billing_rules_manifest_hash` + spot-check。
+
+生成客户核对文档：
+
+```bash
+./bin/hospital-cli rules doc --write
+```
+

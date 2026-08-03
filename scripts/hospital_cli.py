@@ -26,6 +26,13 @@ from rules_compare import (  # noqa: E402
     format_human,
     run_rules_compare,
 )
+from rules_spot_check import (  # noqa: E402
+    MANIFEST_HASH_KEY,
+    format_spot_check_human,
+    format_verify_deploy_human,
+    run_spot_check,
+    run_verify_deploy,
+)
 
 
 HRB_CJ_HOSPITAL = "哈尔滨长健医院"
@@ -53,6 +60,36 @@ def row_field(row: dict[str, Any], *keys: str) -> Any:
         if val is not None:
             return val
     return None
+
+
+def mysql_query(deploy_path: Path, sql: str) -> str | None:
+    script = deploy_path / "deploy/mysql-hospital-cli.sh"
+    if not script.is_file():
+        script = ROOT / "deploy/mysql-hospital-cli.sh"
+    if not script.is_file():
+        return None
+    db = os.environ.get("MYSQL_DATABASE", "hospital")
+    env = os.environ.copy()
+    env.setdefault("DEPLOY_PATH", str(deploy_path))
+    try:
+        out = subprocess.check_output(
+            ["bash", str(script), "--exec-root", "-N", "-e", sql, db],
+            text=True,
+            cwd=str(deploy_path if (deploy_path / "deploy").is_dir() else ROOT),
+            env=env,
+            stderr=subprocess.DEVNULL,
+        )
+        lines = [line.strip() for line in out.splitlines() if line.strip()]
+        return lines[-1] if lines else ""
+    except (subprocess.CalledProcessError, FileNotFoundError):
+        return None
+
+
+def mysql_manifest_hash(deploy_path: Path) -> str | None:
+    return mysql_query(
+        deploy_path,
+        f"SELECT setting_value FROM sys_setting WHERE setting_key='{MANIFEST_HASH_KEY}' LIMIT 1",
+    )
 
 
 def mysql_exec(deploy_path: Path, sql: str) -> bool | None:
@@ -811,6 +848,72 @@ def cmd_rules_compare(args: argparse.Namespace) -> int:
     return 0
 
 
+def cmd_rules_doc(args: argparse.Namespace) -> int:
+    sys.path.insert(0, str(SCRIPTS))
+    from billing_rules_catalog import build_catalog_md  # noqa: E402
+
+    out = args.out or (ROOT / "docs/医院特色计价规则清单.md")
+    md = build_catalog_md()
+    if args.write:
+        out.parent.mkdir(parents=True, exist_ok=True)
+        out.write_text(md, encoding="utf-8")
+        print(f"wrote {out}")
+        return 0
+    print(md)
+    return 0
+
+
+def cmd_rules_spot_check(args: argparse.Namespace) -> int:
+    if not args.code:
+        print("需要 --code", file=sys.stderr)
+        return 2
+    client = resolve_client(args)
+    try:
+        report = run_spot_check(client, code=args.code, hospital_name=args.hospital)
+    except Exception as exc:
+        print(f"rules spot-check 失败: {exc}", file=sys.stderr)
+        return 1
+    if args.json:
+        print(json.dumps(report, ensure_ascii=False, indent=2))
+    else:
+        print(format_spot_check_human(report))
+    return 0 if report.get("ok") else 1
+
+
+def cmd_rules_verify_deploy(args: argparse.Namespace) -> int:
+    if not args.code and not args.all:
+        print("需要 --code 或 --all", file=sys.stderr)
+        return 2
+    client = resolve_client(args)
+    deploy_path = Path(os.environ.get("DEPLOY_PATH", ROOT))
+
+    def hash_reader() -> str | None:
+        if args.skip_mysql:
+            return None
+        return mysql_manifest_hash(deploy_path)
+
+    spot_code = args.spot_check or (args.code if args.code else None)
+    try:
+        report = run_verify_deploy(
+            client,
+            code=args.code,
+            compare_all=args.all,
+            manifest_path=args.manifest,
+            mysql_hash_reader=hash_reader,
+            spot_check_code=spot_code,
+        )
+    except Exception as exc:
+        print(f"rules verify-deploy 失败: {exc}", file=sys.stderr)
+        return 1
+    if args.json:
+        print(json.dumps(report, ensure_ascii=False, indent=2))
+    else:
+        print(format_verify_deploy_human(report))
+    if args.fail_on_drift and not report.get("ok"):
+        return 1
+    return 0 if report.get("ok") else 1
+
+
 def cmd_smoke(args: argparse.Namespace) -> int:
     client = resolve_client(args)
     report = run_smoke(client, profile=args.profile)
@@ -988,6 +1091,30 @@ def build_parser() -> argparse.ArgumentParser:
         help=f"写入 JSON 报告（默认 {PARITY_REPORT.name}）",
     )
     p_rc.set_defaults(func=cmd_rules_compare)
+
+    p_rd = rules_sub.add_parser("doc", help="生成 docs/医院特色计价规则清单.md")
+    p_rd.add_argument("--write", action="store_true", help="写入 markdown 文件")
+    p_rd.add_argument("--out", type=Path, help="输出路径")
+    p_rd.set_defaults(func=cmd_rules_doc)
+
+    p_rsc = rules_sub.add_parser("spot-check", help="定点试算验证（simulate API）")
+    add_common_flags(p_rsc)
+    p_rsc.add_argument("--code", required=True, help="customer code，如 HRB-2ND")
+    p_rsc.add_argument("--hospital", help="hospitalName 覆盖（默认取客户名）")
+    p_rsc.set_defaults(func=cmd_rules_spot_check)
+
+    p_rvd = rules_sub.add_parser("verify-deploy", help="compare + reconcile hash + 可选 spot-check")
+    add_common_flags(p_rvd)
+    p_rvd.add_argument("--code", help="单院 customer code")
+    p_rvd.add_argument("--all", action="store_true", help="全部 billing_enabled 客户 compare")
+    p_rvd.add_argument("--fail-on-drift", action="store_true", help="有 drift 时 exit 1")
+    p_rvd.add_argument("--manifest", type=Path, help="manifest JSON")
+    p_rvd.add_argument("--skip-mysql", action="store_true", help="跳过 reconcile hash MySQL 查询")
+    p_rvd.add_argument(
+        "--spot-check",
+        help="额外跑 spot-check 的 code（默认 --code 时同 code）",
+    )
+    p_rvd.set_defaults(func=cmd_rules_verify_deploy)
 
     p_report = sub.add_parser("report", help="占位：请用各子命令 --json")
     p_report.set_defaults(func=lambda _a: (print("使用 smoke/deploy-check/verify --json", file=sys.stderr) or 2))

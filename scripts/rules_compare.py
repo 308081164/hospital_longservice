@@ -15,7 +15,17 @@ MANIFEST_PATH = ROOT / "backend/src/main/resources/billing-seeds/billing-rules-m
 FALLBACK_MANIFEST = ROOT / "测试用例/billing_rules_manifest.json"
 PARITY_REPORT = ROOT / "测试用例/billing_rules_parity_report.json"
 
-COMPARE_FIELDS = ("ruleType", "price", "keywords", "priority", "foldRatio", "threshold", "isActive")
+COMPARE_FIELDS = (
+    "ruleType",
+    "price",
+    "keywords",
+    "priority",
+    "foldRatio",
+    "threshold",
+    "isActive",
+    "conditionsJson",
+    "billingMode",
+)
 
 
 def load_manifest(path: Path | None = None) -> dict[str, Any]:
@@ -44,6 +54,21 @@ def _normalize_keywords(val: Any) -> list[str]:
     return []
 
 
+def _normalize_conditions_json(val: Any) -> str | None:
+    if val is None or val == "":
+        return None
+    if isinstance(val, (dict, list)):
+        return json.dumps(val, ensure_ascii=False, sort_keys=True, separators=(",", ":"))
+    text = str(val).strip()
+    if not text:
+        return None
+    try:
+        parsed = json.loads(text)
+        return json.dumps(parsed, ensure_ascii=False, sort_keys=True, separators=(",", ":"))
+    except json.JSONDecodeError:
+        return text
+
+
 def normalize_rule(rule: dict[str, Any]) -> dict[str, Any]:
     price = rule.get("price")
     if price is None:
@@ -59,6 +84,8 @@ def normalize_rule(rule: dict[str, Any]) -> dict[str, Any]:
         is_active = True
     rule_type = rule.get("ruleType") or rule.get("rule_type") or "FIXED_PRICE"
     keywords = rule.get("keywords")
+    billing_mode = rule.get("billingMode") or rule.get("billing_mode")
+    conditions = rule.get("conditionsJson") or rule.get("conditions_json")
     return {
         "name": str(rule.get("name") or "").strip(),
         "ruleType": str(rule_type),
@@ -68,6 +95,8 @@ def normalize_rule(rule: dict[str, Any]) -> dict[str, Any]:
         "foldRatio": _as_float(fold),
         "threshold": int(threshold) if threshold is not None else None,
         "isActive": bool(is_active),
+        "conditionsJson": _normalize_conditions_json(conditions),
+        "billingMode": str(billing_mode) if billing_mode else None,
     }
 
 
@@ -105,6 +134,10 @@ def diff_rule(expected: dict[str, Any], actual: dict[str, Any]) -> list[str]:
         diffs.append(f"threshold {act['threshold']}!={exp['threshold']}")
     if exp["isActive"] != act["isActive"]:
         diffs.append(f"isActive {act['isActive']}!={exp['isActive']}")
+    if exp["conditionsJson"] != act["conditionsJson"]:
+        diffs.append(f"conditionsJson {act['conditionsJson']!r}!={exp['conditionsJson']!r}")
+    if exp["billingMode"] is not None and exp["billingMode"] != act["billingMode"]:
+        diffs.append(f"billingMode {act['billingMode']!r}!={exp['billingMode']!r}")
     return diffs
 
 
@@ -113,6 +146,8 @@ def compare_customer(
     code: str,
     expected_rules: list[dict[str, Any]],
     prod_rules: list[dict[str, Any]],
+    expected_mode: str | None = None,
+    prod_mode: str | None = None,
 ) -> dict[str, Any]:
     exp_by_name = {normalize_rule(r)["name"]: r for r in expected_rules if normalize_rule(r)["name"]}
     prod_by_name = {normalize_rule(r)["name"]: r for r in prod_rules if normalize_rule(r)["name"]}
@@ -125,13 +160,19 @@ def compare_customer(
             changed.append({"name": name, "diffs": diffs})
     active_expected = sum(1 for r in expected_rules if normalize_rule(r)["isActive"])
     active_prod = sum(1 for r in prod_rules if normalize_rule(r)["isActive"])
-    ok = not missing and not extra and not changed
+    mode_expected = (expected_mode or "standard").strip().lower()
+    mode_prod = (prod_mode or "standard").strip().lower()
+    mode_drift = mode_expected != mode_prod
+    ok = not missing and not extra and not changed and not mode_drift
     return {
         "code": code,
         "expected_count": len(expected_rules),
         "prod_count": len(prod_rules),
         "active_expected": active_expected,
         "active_prod": active_prod,
+        "mode_expected": mode_expected,
+        "mode_prod": mode_prod,
+        "mode_drift": mode_drift,
         "missing": missing,
         "extra": extra,
         "changed": changed,
@@ -198,8 +239,19 @@ def run_rules_compare(
         customer_id = int(customer.get("id") or customer.get("customerId") or 0)
         prod_rules = client.product_rules(customer_id)
         expected_rules = list(entry.get("productRules") or [])
+        prod_mode = (
+            customer.get("billingPricingMode")
+            or customer.get("billing_pricing_mode")
+            or "standard"
+        )
         results.append(
-            compare_customer(code=target, expected_rules=expected_rules, prod_rules=prod_rules)
+            compare_customer(
+                code=target,
+                expected_rules=expected_rules,
+                prod_rules=prod_rules,
+                expected_mode=entry.get("billingPricingMode"),
+                prod_mode=str(prod_mode),
+            )
         )
 
     ok = all(r.get("ok") for r in results)
@@ -210,6 +262,7 @@ def run_rules_compare(
         "total_missing": sum(int(r.get("missing_count") or 0) for r in results),
         "total_extra": sum(int(r.get("extra_count") or 0) for r in results),
         "total_changed": sum(int(r.get("changed_count") or 0) for r in results),
+        "mode_drift_count": sum(1 for r in results if r.get("mode_drift")),
     }
     return {
         "command": "rules compare",
@@ -228,7 +281,8 @@ def format_human(report: dict[str, Any]) -> str:
         f"OK {report['summary']['ok_count']} · drift {report['summary']['drift_count']}",
         f"missing {report['summary']['total_missing']} · "
         f"extra {report['summary']['total_extra']} · "
-        f"changed {report['summary']['total_changed']}",
+        f"changed {report['summary']['total_changed']} · "
+        f"mode_drift {report['summary'].get('mode_drift_count', 0)}",
     ]
     for row in report.get("results") or []:
         code = row.get("code")
@@ -236,11 +290,14 @@ def format_human(report: dict[str, Any]) -> str:
             lines.append(f"  {code}: ERROR {row['error']}")
             continue
         status = "OK" if row.get("ok") else "DRIFT"
+        mode_note = ""
+        if row.get("mode_drift"):
+            mode_note = f" · mode {row.get('mode_prod')}!={row.get('mode_expected')}"
         lines.append(
             f"  {code}: {status} · expected {row.get('expected_count')} · "
             f"prod {row.get('prod_count')} · "
             f"missing {row.get('missing_count')} · extra {row.get('extra_count')} · "
-            f"changed {row.get('changed_count')}"
+            f"changed {row.get('changed_count')}{mode_note}"
         )
         if row.get("missing"):
             lines.append(f"    missing: {', '.join(row['missing'][:8])}"
