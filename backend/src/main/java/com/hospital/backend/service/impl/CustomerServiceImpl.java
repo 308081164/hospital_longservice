@@ -673,6 +673,7 @@ public class CustomerServiceImpl implements CustomerService {
                 .foldRatio(rule.getFoldRatio())
                 .billingMode(rule.getBillingMode())
                 .pieceCountSource(rule.getPieceCountSource())
+                .conditionsJson(rule.getConditionsJson())
                 .skipPackaging(rule.getSkipPackaging())
                 .skipDiscount(rule.getSkipDiscount())
                 .isActive(rule.getIsActive())

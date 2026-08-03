@@ -84,6 +84,9 @@ public class CustomerProductRuleResponse {
     @JsonProperty("piece_count_source")
     private String pieceCountSource;
 
+    @JsonProperty("conditions_json")
+    private String conditionsJson;
+
     @JsonProperty("is_active")
     private Boolean isActive;
 

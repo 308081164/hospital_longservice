@@ -109,6 +109,15 @@ def run_spot_check(
         }
 
     customer_id = int(customer.get("id") or customer.get("customerId") or 0)
+    rule_id = (
+        customer.get("defaultRuleId")
+        or customer.get("default_rule_id")
+    )
+    if rule_id is not None:
+        rule_id = int(rule_id)
+    else:
+        rule_id = 1
+
     hospital = hospital_name or customer.get("name") or customer.get("canonicalName") or code
     if code == "HRB-2ND":
         hospital = HRB_2ND_HOSPITAL
@@ -122,6 +131,7 @@ def run_spot_check(
                 customer_id=customer_id,
                 hospital_name=hospital,
                 sample_row=sample,
+                rule_id=rule_id,
             )
             actual = _row_field(sim, "expectedUnitPrice", "expected_unit_price")
             expected = float(case["expectedUnitPrice"])
