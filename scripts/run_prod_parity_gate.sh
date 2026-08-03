@@ -20,7 +20,10 @@ _strip() {
 _env_val_nonempty() {
   local val
   val="$(_strip "${1:-}")"
-  [ -n "$val" ] && printf '%s' "$val"
+  if [ -n "$val" ]; then
+    printf '%s' "$val"
+  fi
+  return 0
 }
 
 _parse_dotenv_value() {
