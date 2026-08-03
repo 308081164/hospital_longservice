@@ -426,3 +426,11 @@ jobs:
           name: job_baseline_prod_calibration
           path: 测试用例/job_baseline_prod_calibration.json
           if-no-files-found: warn
+
+      - name: Upload rules parity report
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: billing_rules_parity_report
+          path: 测试用例/billing_rules_parity_report.json
+          if-no-files-found: warn

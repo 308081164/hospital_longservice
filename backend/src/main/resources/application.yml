@@ -19,6 +19,10 @@ spring:
       max-file-size: 50MB
       max-request-size: 60MB
 
+billing:
+  seed:
+    reconcile-enabled: ${BILLING_SEED_RECONCILE_ENABLED:true}
+
 app:
   jwt:
     secret: ${APP_JWT_SECRET}

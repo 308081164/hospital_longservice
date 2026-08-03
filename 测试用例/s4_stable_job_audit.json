@@ -1,43 +1,32 @@
 {
-  "generated_at": "2026-07-31T11:07:44",
+  "generated_at": "2026-08-01T09:48:31",
   "job_map": "/Users/yangxinghui/CODE/My_Projects/hospital_longservice/测试用例/job_baseline_stable.json",
   "summary": {
     "total": 38,
-    "pass": 34,
-    "fail": 4,
-    "fail_extra": 3,
-    "fail_missed": 1,
+    "pass": 36,
+    "fail": 2,
+    "fail_extra": 2,
+    "fail_missed": 0,
     "skip": 0,
     "error": 0,
-    "md_drift": 8
+    "md_drift": 6
   },
   "rows": [
     {
       "hospital": "黑龙江中医药大学附属第一医院",
-      "job_id": 724,
+      "job_id": 607,
       "expected": 45,
-      "system_warnings": 0,
-      "matched": 0,
-      "missed": 45,
+      "system_warnings": 45,
+      "matched": 45,
+      "missed": 0,
       "extra": 0,
-      "status": "fail",
-      "message": "与 MD 主表漂移: live missed=45 extra=0 status=fail vs md missed=0 extra=0 status=pass",
+      "status": "pass",
+      "message": "",
       "md_missed": 0,
       "md_extra": 0,
       "md_status": "pass",
-      "md_drift": true,
-      "missed_keys": [
-        "1608317|换药包(120布)|3",
-        "1609424|换药包(120布)|1",
-        "1610417|换药包(120布)|3",
-        "1610851|换药包(120布)|1",
-        "1611151|换药包(120布)|1",
-        "1611895|换药包(120布)|1",
-        "1612794|换药包(120布)|1",
-        "1614190|换药包(120布)|3",
-        "1614548|换药包(120布)|1",
-        "1616127|换药包(120布)|1"
-      ]
+      "md_drift": false,
+      "missed_keys": []
     },
     {
       "hospital": "黑龙江省中医药大学附属第三医院（电力）",
@@ -585,18 +574,18 @@
     },
     {
       "hospital": "哈尔滨工业大学医院",
-      "job_id": 739,
+      "job_id": 747,
       "expected": 0,
-      "system_warnings": 5,
+      "system_warnings": 0,
       "matched": 0,
       "missed": 0,
-      "extra": 5,
-      "status": "fail",
-      "message": "与 MD 主表漂移: live missed=0 extra=5 status=fail vs md missed=0 extra=0 status=pass_zero",
+      "extra": 0,
+      "status": "pass_zero",
+      "message": "",
       "md_missed": 0,
       "md_extra": 0,
       "md_status": "pass_zero",
-      "md_drift": true,
+      "md_drift": false,
       "missed_keys": []
     },
     {

@@ -1,0 +1,20 @@
+[
+  {
+    "folder": "国药总医院主院区",
+    "status": "fail",
+    "detail": "行 131 vs 139 (Δ8) · 总额 21343.0 vs 21989.0 (Δ646.00)",
+    "job_source": "recon_md",
+    "job_id": 711,
+    "processed_bill": "测试用例/国药总医院主院区/处理后表格/6月__国药总医院主院区5.26-6.25账单.xlsx",
+    "export_file": "测试用例/.s8_exports/job711_国药总医院主院区_bill.xlsx",
+    "structure_ok": true,
+    "sheet_count": 11,
+    "layout_mode": "auto",
+    "summary_label": "",
+    "totals": {
+      "expected": 21989.0,
+      "actual": 21343.0
+    },
+    "category": "material_mismatch"
+  }
+]

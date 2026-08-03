@@ -1,0 +1,306 @@
+[
+  {
+    "hospital": "黑龙江中医药大学附属第一医院",
+    "has_raw": true,
+    "has_processed": true,
+    "has_settlement": true,
+    "status": "ok",
+    "message": "材料齐全"
+  },
+  {
+    "hospital": "黑龙江省中医药大学附属第三医院（电力）",
+    "has_raw": true,
+    "has_processed": true,
+    "has_settlement": true,
+    "status": "ok",
+    "message": "材料齐全"
+  },
+  {
+    "hospital": "国药总医院主院区",
+    "has_raw": true,
+    "has_processed": true,
+    "has_settlement": true,
+    "status": "ok",
+    "message": "材料齐全"
+  },
+  {
+    "hospital": "国药总医院第二院区",
+    "has_raw": true,
+    "has_processed": true,
+    "has_settlement": true,
+    "status": "ok",
+    "message": "材料齐全"
+  },
+  {
+    "hospital": "国药总医院第三院区",
+    "has_raw": true,
+    "has_processed": true,
+    "has_settlement": true,
+    "status": "ok",
+    "message": "材料齐全"
+  },
+  {
+    "hospital": "哈尔滨市第二医院",
+    "has_raw": true,
+    "has_processed": true,
+    "has_settlement": true,
+    "status": "ok",
+    "message": "材料齐全"
+  },
+  {
+    "hospital": "哈尔滨市第五医院",
+    "has_raw": true,
+    "has_processed": true,
+    "has_settlement": true,
+    "status": "ok",
+    "message": "材料齐全"
+  },
+  {
+    "hospital": "哈尔滨市第五医院（二门诊）",
+    "has_raw": true,
+    "has_processed": true,
+    "has_settlement": false,
+    "status": "warn_no_settlement",
+    "message": "无缺结款函参考（S8 settlement 可能 skip）"
+  },
+  {
+    "hospital": "新发红十字医院",
+    "has_raw": true,
+    "has_processed": true,
+    "has_settlement": true,
+    "status": "ok",
+    "message": "材料齐全"
+  },
+  {
+    "hospital": "黑龙江省医院（南岗院区）",
+    "has_raw": true,
+    "has_processed": true,
+    "has_settlement": true,
+    "status": "ok",
+    "message": "材料齐全"
+  },
+  {
+    "hospital": "黑龙江省医院（香坊院区）",
+    "has_raw": true,
+    "has_processed": true,
+    "has_settlement": true,
+    "status": "ok",
+    "message": "材料齐全"
+  },
+  {
+    "hospital": "祖研-黑龙江省中医医院（南岗院区）",
+    "has_raw": true,
+    "has_processed": true,
+    "has_settlement": true,
+    "status": "ok",
+    "message": "材料齐全"
+  },
+  {
+    "hospital": "祖研-黑龙江省中医医院（三辅院区）",
+    "has_raw": true,
+    "has_processed": true,
+    "has_settlement": true,
+    "status": "ok",
+    "message": "材料齐全"
+  },
+  {
+    "hospital": "祖研-黑龙江省中医医院（香安院区）",
+    "has_raw": true,
+    "has_processed": true,
+    "has_settlement": true,
+    "status": "ok",
+    "message": "材料齐全"
+  },
+  {
+    "hospital": "南岗区妇产医院",
+    "has_raw": true,
+    "has_processed": true,
+    "has_settlement": true,
+    "status": "ok",
+    "message": "材料齐全"
+  },
+  {
+    "hospital": "黑龙江省社会康复医院",
+    "has_raw": true,
+    "has_processed": true,
+    "has_settlement": true,
+    "status": "ok",
+    "message": "材料齐全"
+  },
+  {
+    "hospital": "道外区人民医院",
+    "has_raw": true,
+    "has_processed": true,
+    "has_settlement": true,
+    "status": "ok",
+    "message": "材料齐全"
+  },
+  {
+    "hospital": "太平人民医院",
+    "has_raw": true,
+    "has_processed": true,
+    "has_settlement": true,
+    "status": "ok",
+    "message": "材料齐全"
+  },
+  {
+    "hospital": "三精肾病医院",
+    "has_raw": true,
+    "has_processed": true,
+    "has_settlement": true,
+    "status": "ok",
+    "message": "材料齐全"
+  },
+  {
+    "hospital": "黑龙江维多利亚妇产医院",
+    "has_raw": true,
+    "has_processed": true,
+    "has_settlement": true,
+    "status": "ok",
+    "message": "材料齐全"
+  },
+  {
+    "hospital": "黑龙江九洲妇科医院",
+    "has_raw": true,
+    "has_processed": true,
+    "has_settlement": true,
+    "status": "ok",
+    "message": "材料齐全"
+  },
+  {
+    "hospital": "呼兰区红十字医院",
+    "has_raw": true,
+    "has_processed": true,
+    "has_settlement": true,
+    "status": "ok",
+    "message": "材料齐全"
+  },
+  {
+    "hospital": "呼兰中医院",
+    "has_raw": true,
+    "has_processed": true,
+    "has_settlement": true,
+    "status": "ok",
+    "message": "材料齐全"
+  },
+  {
+    "hospital": "黑龙江中医药大学附属第二医院（南岗）",
+    "has_raw": true,
+    "has_processed": true,
+    "has_settlement": true,
+    "status": "ok",
+    "message": "材料齐全"
+  },
+  {
+    "hospital": "黑龙江中医药大学附属第二医院（哈南分院）",
+    "has_raw": true,
+    "has_processed": true,
+    "has_settlement": true,
+    "status": "ok",
+    "message": "材料齐全"
+  },
+  {
+    "hospital": "哈尔滨仁胜医院",
+    "has_raw": true,
+    "has_processed": true,
+    "has_settlement": true,
+    "status": "ok",
+    "message": "材料齐全"
+  },
+  {
+    "hospital": "哈尔滨华夏眼科医院",
+    "has_raw": true,
+    "has_processed": true,
+    "has_settlement": true,
+    "status": "ok",
+    "message": "材料齐全"
+  },
+  {
+    "hospital": "哈尔滨冰城医疗美容医院",
+    "has_raw": true,
+    "has_processed": true,
+    "has_settlement": true,
+    "status": "ok",
+    "message": "材料齐全"
+  },
+  {
+    "hospital": "香坊中医院",
+    "has_raw": true,
+    "has_processed": true,
+    "has_settlement": true,
+    "status": "ok",
+    "message": "材料齐全"
+  },
+  {
+    "hospital": "武警黑龙江省总队医院",
+    "has_raw": true,
+    "has_processed": true,
+    "has_settlement": true,
+    "status": "ok",
+    "message": "材料齐全"
+  },
+  {
+    "hospital": "悦美芳华医疗门诊医院",
+    "has_raw": true,
+    "has_processed": true,
+    "has_settlement": true,
+    "status": "ok",
+    "message": "材料齐全"
+  },
+  {
+    "hospital": "黑龙江省第二医院（南岗院区）",
+    "has_raw": true,
+    "has_processed": true,
+    "has_settlement": true,
+    "status": "ok",
+    "message": "材料齐全"
+  },
+  {
+    "hospital": "黑龙江省第二医院（松北院区）",
+    "has_raw": true,
+    "has_processed": true,
+    "has_settlement": true,
+    "status": "ok",
+    "message": "材料齐全"
+  },
+  {
+    "hospital": "哈尔滨市呼兰区第一人民医院",
+    "has_raw": true,
+    "has_processed": true,
+    "has_settlement": true,
+    "status": "ok",
+    "message": "材料齐全"
+  },
+  {
+    "hospital": "哈尔滨市红十字妇产医院",
+    "has_raw": true,
+    "has_processed": true,
+    "has_settlement": true,
+    "status": "ok",
+    "message": "材料齐全"
+  },
+  {
+    "hospital": "哈尔滨工业大学医院",
+    "has_raw": true,
+    "has_processed": true,
+    "has_settlement": true,
+    "status": "ok",
+    "message": "材料齐全"
+  },
+  {
+    "hospital": "哈尔滨工程大学医院",
+    "has_raw": true,
+    "has_processed": true,
+    "has_settlement": true,
+    "status": "ok",
+    "message": "材料齐全"
+  },
+  {
+    "hospital": "哈尔滨长健医院",
+    "has_raw": true,
+    "has_processed": true,
+    "has_settlement": true,
+    "status": "ok",
+    "message": "材料齐全"
+  }
+]

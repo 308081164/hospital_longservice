@@ -13,6 +13,7 @@ Hospital 部署与回归的统一命令行入口：`./bin/hospital-cli`。
 | `s4` | 透传 `batch_june_system_test.py`（会 import，有副作用） |
 | `verify` | 顺序执行 smoke + deploy-check；`--level full` 追加 S8/S4 |
 | `billing verify` | 长健 HRB-CJ 验收：客户 dedup、seed marker、试算 warning、可选 reimport |
+| `rules compare` | classpath manifest vs API `productRules`（单院 `--code` / 全院 `--all`） |
 
 ## 通用参数
 
@@ -105,3 +106,28 @@ S8/S4 在生产上 Job ID 不一致会导致误报 fail，务必先 `calibrate_p
 ```
 
 验证步骤：`V0` health/login → `V1` CHANGJIAN inactive → `V2` HRB-CJ 配置 → `V3` 手术包5.5 规则 → `V4` seed marker（MySQL 可用时）→ `V5` 43×231 simulate warning → `V6/V7` reimport golden row → `V8` 更新 `job_baseline_prod.json`。
+
+## 特色账单规则 parity（manifest vs prod）
+
+backend 启动时会按 `billing-seeds/billing-rules-manifest.json` 全量 upsert `productRules`（`billing.seed.reconcile-enabled`，默认 true）。部署后 CI 与手动验收：
+
+```bash
+# 附一单院（期望 active rules ≥40，missing/extra/changed=0）
+./bin/hospital-cli rules compare --code ZYY-D1 --profile prod \
+  --api http://HOST:8853 --fail-on-drift
+
+# 全部 billing_enabled 客户（CI post-deploy parity gate）
+./bin/hospital-cli rules compare --all --profile prod \
+  --api http://HOST:8853 --fail-on-drift --json
+```
+
+manifest 由 `python3 scripts/billing_rules_manifest.py --write` 从全部 `billing-seeds/*.json` 合并生成；`--json` 写入 `测试用例/billing_rules_parity_report.json`。
+
+本地 Docker 自检：
+
+```bash
+docker compose up -d --force-recreate backend
+./bin/hospital-cli rules compare --code ZYY-D1 --profile local
+```
+
+回滚 reconcile：`BILLING_SEED_RECONCILE_ENABLED=false` 或 `billing.seed.reconcile-enabled: false`。

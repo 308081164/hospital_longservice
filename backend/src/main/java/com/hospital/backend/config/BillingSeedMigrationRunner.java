@@ -235,7 +235,9 @@ public class BillingSeedMigrationRunner implements CommandLineRunner {
             new IncrementalSeed("billing_seed_hrb_cj_default_rule_20260731_v1",
                     "billing-seeds/phase-hrb-cj-default-rule-20260731.json"),
             new IncrementalSeed("billing_seed_hrb_cj_dedup_customer_20260731_v1",
-                    "billing-seeds/phase-hrb-cj-dedup-customer-20260731.json")
+                    "billing-seeds/phase-hrb-cj-dedup-customer-20260731.json"),
+            new IncrementalSeed("billing_seed_hrb_hit_pricing_fix_20260801_v1",
+                    "billing-seeds/phase-hrb-hit-pricing-fix-20260801.json")
     );
 
     private static final String ZYY_D1_P0_MARKER = "billing_seed_zyy_d1_p0_v2";
@@ -354,7 +356,8 @@ public class BillingSeedMigrationRunner implements CommandLineRunner {
                     || "billing-seeds/phase-ng-fuchan-deactivate-export-kuobang-20260731.json".equals(incremental.classpathFile())
                     || "billing-seeds/phase-hrb-hit-deactivate-export-pricing-20260731.json".equals(incremental.classpathFile())
                     || "billing-seeds/phase-hrb-cj-default-rule-20260731.json".equals(incremental.classpathFile())
-                    || "billing-seeds/phase-hrb-cj-dedup-customer-20260731.json".equals(incremental.classpathFile())) {
+                    || "billing-seeds/phase-hrb-cj-dedup-customer-20260731.json".equals(incremental.classpathFile())
+                    || "billing-seeds/phase-hrb-hit-pricing-fix-20260801.json".equals(incremental.classpathFile())) {
                 applyBatchPatchSeedFile(incremental.classpathFile());
             } else if ("billing-seeds/phase-billing-mode-backfill-20260730.json".equals(incremental.classpathFile())) {
                 applyBillingModeBackfillSeedFile(incremental.classpathFile());

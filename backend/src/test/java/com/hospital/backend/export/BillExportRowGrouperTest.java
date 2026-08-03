@@ -111,18 +111,18 @@ class BillExportRowGrouperTest {
     }
 
     @Test
-    void aggregatesGuoyaoDuplicatesBeforeSplit() {
+    void aggregatesGuoyaoDuplicatesWithoutSplitting() {
         HospitalReconciliationRow r1 = row("1574303", "止血钳-1/z1029", 27.5);
         r1.setPackCount(5);
+        r1.setCategoryNo("20303908");
         HospitalReconciliationRow r2 = row("1574303", "止血钳-1/z1029", 27.5);
         r2.setPackCount(5);
+        r2.setCategoryNo("20303908");
 
         List<HospitalReconciliationRow> aggregated = grouper.aggregateGuoyaoDuplicateRows(List.of(r1, r2));
-        List<HospitalReconciliationRow> split = grouper.splitGuoyaoPlatinumRows(aggregated);
 
         assertThat(aggregated).hasSize(1);
         assertThat(aggregated.get(0).getPackCount()).isEqualTo(10);
-        assertThat(split).hasSize(10);
     }
 
     private static HospitalReconciliationRow row(String orderNo, String packName, double total) {

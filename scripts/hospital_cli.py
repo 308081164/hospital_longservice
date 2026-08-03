@@ -21,6 +21,11 @@ PROD_JOB_MAP = TEST_CASE / "job_baseline_prod.json"
 
 sys.path.insert(0, str(SCRIPTS))
 from lib.api_client import ApiClient, ApiError, configure_client, get_client  # noqa: E402
+from rules_compare import (  # noqa: E402
+    PARITY_REPORT,
+    format_human,
+    run_rules_compare,
+)
 
 
 HRB_CJ_HOSPITAL = "哈尔滨长健医院"
@@ -778,6 +783,34 @@ def print_report(report: CliReport, *, as_json: bool) -> None:
     print(f"结果: {'PASS' if report.ok else 'FAIL'} ({report.to_dict()['duration_sec']}s)")
 
 
+def cmd_rules_compare(args: argparse.Namespace) -> int:
+    if not args.code and not args.all:
+        print("需要 --code 或 --all", file=sys.stderr)
+        return 2
+    client = resolve_client(args)
+    try:
+        report = run_rules_compare(
+            client,
+            code=args.code,
+            compare_all=args.all,
+            manifest_path=args.manifest,
+        )
+    except Exception as exc:
+        print(f"rules compare 失败: {exc}", file=sys.stderr)
+        return 1
+    if args.json:
+        payload = json.dumps(report, ensure_ascii=False, indent=2)
+        out_path = args.json_output or PARITY_REPORT
+        out_path.parent.mkdir(parents=True, exist_ok=True)
+        out_path.write_text(payload + "\n", encoding="utf-8")
+        print(payload)
+    else:
+        print(format_human(report))
+    if args.fail_on_drift and not report.get("ok"):
+        return 1
+    return 0
+
+
 def cmd_smoke(args: argparse.Namespace) -> int:
     client = resolve_client(args)
     report = run_smoke(client, profile=args.profile)
@@ -939,6 +972,22 @@ def build_parser() -> argparse.ArgumentParser:
     p_bv.add_argument("--reimport", action="store_true", help="重新导入 6 月账单并校验 golden row")
     p_bv.add_argument("--update-prod-map", action="store_true", help="将新 Job ID 写回 job_baseline_prod.json")
     p_bv.set_defaults(func=cmd_billing_verify)
+
+    p_rules = sub.add_parser("rules", help="特色账单规则比对")
+    rules_sub = p_rules.add_subparsers(dest="rules_cmd", required=True)
+    p_rc = rules_sub.add_parser("compare", help="manifest vs API productRules")
+    add_common_flags(p_rc)
+    p_rc.add_argument("--code", help="单院 customer code，如 ZYY-D1")
+    p_rc.add_argument("--all", action="store_true", help="全部 billing_enabled 客户")
+    p_rc.add_argument("--fail-on-drift", action="store_true", help="有 drift 时 exit 1")
+    p_rc.add_argument("--manifest", type=Path, help="manifest JSON（默认 classpath 生成物）")
+    p_rc.add_argument(
+        "--json-output",
+        type=Path,
+        default=PARITY_REPORT,
+        help=f"写入 JSON 报告（默认 {PARITY_REPORT.name}）",
+    )
+    p_rc.set_defaults(func=cmd_rules_compare)
 
     p_report = sub.add_parser("report", help="占位：请用各子命令 --json")
     p_report.set_defaults(func=lambda _a: (print("使用 smoke/deploy-check/verify --json", file=sys.stderr) or 2))

@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# CI / 手动：部署后 prod 只读 parity gate（smoke + calibrate + coverage warn）
+# CI / 手动：部署后 prod 只读 parity gate（smoke + rules compare + calibrate + coverage warn）
 set -euo pipefail
 
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
@@ -38,6 +38,13 @@ if grep -q '"ok": false' /tmp/parity_smoke.json 2>/dev/null; then
   exit 1
 fi
 
+echo ">> rules compare (--all --fail-on-drift)"
+if ! ./bin/hospital-cli rules compare --all --mode direct --profile prod \
+  --api "$API_BASE" --fail-on-drift --json; then
+  echo "rules parity 失败（manifest vs prod productRules drift）" >&2
+  exit 1
+fi
+
 echo ">> calibrate (--dry-run，只写 calibration 日志)"
 python3 scripts/calibrate_prod_job_map.py --api "$API_BASE" --mode direct --dry-run || true
 
@@ -65,5 +72,5 @@ if [ "$MISSING" -gt 0 ]; then
   echo "::warning::prod coverage_gap $MISSING hospitals missing Job (expected, non-blocking)"
 fi
 
-echo "parity gate PASS (smoke ok, coverage logged)"
+echo "parity gate PASS (smoke + rules ok, coverage logged)"
 exit 0

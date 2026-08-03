@@ -1,0 +1,6 @@
+{
+  "smoke_ok": true,
+  "deploy_check_ok": false,
+  "deploy_check_detail": "L8_billing_enabled_api: API billing_enabled=1 共 47 家，脚本期望 36（计数口径差异，后端可达）",
+  "checked_at": "2026-07-29T18:30:00"
+}

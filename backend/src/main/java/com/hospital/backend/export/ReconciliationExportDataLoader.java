@@ -45,7 +45,6 @@ public class ReconciliationExportDataLoader {
         if (ExportTemplateResolverKeys.GUOYAO_BILL.equals(template.getStrategyKey())) {
             rows = exportRowGrouper.aggregateGuoyaoDuplicateRows(rows);
             rows.forEach(guoyaoQuantityAlgorithm::applyToRow);
-            rows = exportRowGrouper.splitGuoyaoPlatinumRows(rows);
         }
         return ExportContext.builder()
                 .jobId(jobId)

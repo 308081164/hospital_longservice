@@ -1,0 +1,43 @@
+{
+  "source": "/Users/yangxinghui/CODE/My_Projects/hospital_longservice/铂康/测试账单-6",
+  "copied": 5,
+  "skipped": 2,
+  "missing_sources": [],
+  "details": [
+    {
+      "src": "/Users/yangxinghui/CODE/My_Projects/hospital_longservice/铂康/工业大学6.15-7.14账单-原始(1).xlsx",
+      "dest": "/Users/yangxinghui/CODE/My_Projects/hospital_longservice/测试用例/哈尔滨工业大学医院/原始表格/6月__工业大学6.15-7.14原始账单.xlsx",
+      "action": "copied"
+    },
+    {
+      "src": "/Users/yangxinghui/CODE/My_Projects/hospital_longservice/铂康/测试账单-6/工业大学6.15-7.14账单-原始.xlsx",
+      "dest": "/Users/yangxinghui/CODE/My_Projects/hospital_longservice/测试用例/哈尔滨工业大学医院/原始表格/6月__工业大学6.15-7.14原始账单.xlsx",
+      "action": "skip_same_size"
+    },
+    {
+      "src": "/Users/yangxinghui/CODE/My_Projects/hospital_longservice/铂康/测试账单-6/三辅社区、香坊中医院6月结款函.xlsx",
+      "dest": "/Users/yangxinghui/CODE/My_Projects/hospital_longservice/测试用例/香坊中医院/处理后表格/6月__三辅社区、香坊中医院6月结款函.xlsx",
+      "action": "copied"
+    },
+    {
+      "src": "/Users/yangxinghui/CODE/My_Projects/hospital_longservice/铂康/测试账单-6/三辅社区、香坊中医院6月结款函.xlsx",
+      "dest": "/Users/yangxinghui/CODE/My_Projects/hospital_longservice/测试用例/祖研-黑龙江省中医医院（三辅院区）/处理后表格/6月__三辅社区、香坊中医院6月结款函.xlsx",
+      "action": "copied"
+    },
+    {
+      "src": "/Users/yangxinghui/CODE/My_Projects/hospital_longservice/铂康/测试账单-6/长健6月结款涵.xlsx",
+      "dest": "/Users/yangxinghui/CODE/My_Projects/hospital_longservice/测试用例/哈尔滨长健医院/处理后表格/6月__长健6月结款涵.xlsx",
+      "action": "copied"
+    },
+    {
+      "src": "/Users/yangxinghui/CODE/My_Projects/hospital_longservice/铂康/测试账单-6/哈尔滨市第五医院2026年5月9日-2026年6月8日结款函.xlsx",
+      "dest": "/Users/yangxinghui/CODE/My_Projects/hospital_longservice/测试用例/哈尔滨市第五医院/处理后表格/6月__哈尔滨市第五医院2026年5月9日-2026年6月8日结款函.xlsx",
+      "action": "skip_same_size"
+    },
+    {
+      "src": "/Users/yangxinghui/CODE/My_Projects/hospital_longservice/铂康/测试账单-6/国药总医院第三院区5.26-6.25结款函.docx",
+      "dest": "/Users/yangxinghui/CODE/My_Projects/hospital_longservice/测试用例/国药总医院第三院区/处理后表格/6月__国药总医院第三院区5.26-6.25结款函.docx",
+      "action": "copied_docx_only"
+    }
+  ]
+}

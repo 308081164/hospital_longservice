@@ -301,9 +301,8 @@
                   >正在加载全量数据，请稍候...</span
                 >
               </div>
-              <div
-                class="entry-group-scroll"
-                :style="{ maxHeight: entry.onlyShowAbnormal ? '70vh' : '500px', overflowY: 'auto' }"
+              <HorizontalScrollPanel
+                :max-height="entry.onlyShowAbnormal ? '70vh' : '500px'"
               >
                 <div
                   v-if="entry.anomalyLoading"
@@ -366,7 +365,7 @@
                       >
                     </div>
                   </div>
-                  <div class="overflow-x-auto">
+                  <HorizontalScrollBody>
                   <ElTable
                     :data="group.rows"
                     border
@@ -478,10 +477,10 @@
                       </template>
                     </ElTableColumn>
                   </ElTable>
-                  </div>
+                  </HorizontalScrollBody>
                 </div>
                 </template>
-              </div>
+              </HorizontalScrollPanel>
               <div class="mt-3 flex items-center justify-between">
                 <span class="text-xs text-gray-400"
                   >{{ entry.onlyShowAbnormal ? '异常模式' : '当前显示' }}
@@ -2109,6 +2108,8 @@
   } from '@/api/billing-config/logisticsApi'
   import { quickOnboardProduct } from '@/api/master-data/productsApi'
   import { buildReconciliationVersionGroupKey } from '@/utils/reconciliationVersionGroup'
+  import HorizontalScrollBody from '@/components/business/reconciliation/HorizontalScrollBody.vue'
+  import HorizontalScrollPanel from '@/components/business/reconciliation/HorizontalScrollPanel.vue'
   import ReconciliationBillingDetail from '@/components/business/reconciliation/ReconciliationBillingDetail.vue'
   import ReconciliationExportWizard from '@/components/business/reconciliation/ReconciliationExportWizard.vue'
   import ReconciliationAllocationPanel from '@/components/business/reconciliation/ReconciliationAllocationPanel.vue'

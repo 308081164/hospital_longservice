@@ -3243,10 +3243,10 @@ public class HospitalReconciliationServiceImpl implements HospitalReconciliation
                     }
                 }
 
-                // 按关键字段构建查找索引
-                Map<String, BillRowItem> lookup = new LinkedHashMap<>();
+                // 按关键字段构建查找索引（同 key 多行 FIFO，避免 last-wins 贴错包数）
+                Map<String, java.util.ArrayDeque<BillRowItem>> lookup = new LinkedHashMap<>();
                 for (BillRowItem r : sheetRows) {
-                    lookup.put(buildRowMatchKey(r), r);
+                    lookup.computeIfAbsent(buildRowMatchKey(r), k -> new java.util.ArrayDeque<>()).addLast(r);
                 }
 
                 // 汇总统计
@@ -3267,9 +3267,10 @@ public class HospitalReconciliationServiceImpl implements HospitalReconciliation
                     String key = buildRowMatchKeyFromRow(row, colMap);
                     if (key == null) continue;
 
-                    BillRowItem matched = lookup.get(key);
-                    if (matched == null) continue;
+                    java.util.ArrayDeque<BillRowItem> candidates = lookup.get(key);
+                    if (candidates == null || candidates.isEmpty()) continue;
 
+                    BillRowItem matched = candidates.pollFirst();
                     lastDataRowIdx = r;
                     // 汇总
                     if (matched.getPackCount() != null) totalPackCount += matched.getPackCount();
@@ -3615,10 +3616,15 @@ public class HospitalReconciliationServiceImpl implements HospitalReconciliation
     }
 
     /**
-     * 为 BillRowItem 构建匹配 key（发货单号 + 类型 + 包名 + 包装材料）
+     * 为 BillRowItem 构建匹配 key（发货单号 + 包类别号 + 类型 + 包名 + 包装材料）
      */
     private String buildRowMatchKey(BillRowItem item) {
-        return joinFields(item.getOrderNo(), item.getType(), item.getPackName(), item.getPackageMaterial());
+        return joinFields(
+                item.getOrderNo(),
+                item.getCategoryNo(),
+                item.getType(),
+                item.getPackName(),
+                item.getPackageMaterial());
     }
 
     /**
@@ -3626,11 +3632,15 @@ public class HospitalReconciliationServiceImpl implements HospitalReconciliation
      */
     private String buildRowMatchKeyFromRow(Row row, Map<String, Integer> colMap) {
         String orderNo = getCellStringAtCol(row, colMap, "发货单号");
+        String categoryNo = getCellStringAtCol(row, colMap, "包类别号");
+        if (categoryNo.isEmpty()) {
+            categoryNo = getCellStringAtCol(row, colMap, "病人ID");
+        }
         String type = getCellStringAtCol(row, colMap, "类型");
         String packName = getCellStringAtCol(row, colMap, "包名");
         String packageMaterial = getCellStringAtCol(row, colMap, "包装材料");
         if (orderNo.isEmpty() && type.isEmpty() && packName.isEmpty()) return null;
-        return joinFields(orderNo, type, packName, packageMaterial);
+        return joinFields(orderNo, categoryNo, type, packName, packageMaterial);
     }
 
     private String joinFields(String... fields) {

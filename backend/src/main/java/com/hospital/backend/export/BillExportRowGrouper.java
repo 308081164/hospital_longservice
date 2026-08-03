@@ -61,7 +61,7 @@ public class BillExportRowGrouper {
         Map<String, HospitalReconciliationRow> unique = new LinkedHashMap<>();
         for (HospitalReconciliationRow row : rows) {
             String packName = row.getPackName() != null ? row.getPackName().trim() : "";
-            String key = groupKey(row.getOrderNo(), packName, row.getType(), row.getDeliveryDate())
+            String key = groupKey(row.getOrderNo(), row.getCategoryNo(), packName, row.getType(), row.getDeliveryDate())
                     + "|" + safeInt(row.getPackCount())
                     + "|" + BillExportPriceResolver.resolveTotalPrice(row);
             unique.putIfAbsent(key, row);
@@ -80,7 +80,7 @@ public class BillExportRowGrouper {
                 continue;
             }
             String baseName = match.baseName();
-            String key = groupKey(row.getOrderNo(), baseName, row.getType(), row.getDeliveryDate());
+            String key = groupKey(row.getOrderNo(), row.getCategoryNo(), baseName, row.getType(), row.getDeliveryDate());
             merged.merge(key, cloneWithPackName(row, baseName), this::mergeRows);
         }
         List<HospitalReconciliationRow> result = new ArrayList<>(passthrough.size() + merged.size());
@@ -129,20 +129,19 @@ public class BillExportRowGrouper {
         Map<String, HospitalReconciliationRow> merged = new LinkedHashMap<>();
         for (HospitalReconciliationRow row : rows) {
             String packName = row.getPackName() != null ? row.getPackName().trim() : "";
-            String key = groupKey(row.getOrderNo(), packName, row.getType(), row.getDeliveryDate());
+            String key = groupKey(row.getOrderNo(), row.getCategoryNo(), packName, row.getType(), row.getDeliveryDate());
             merged.merge(key, cloneRow(row), this::mergeRows);
         }
         return new ArrayList<>(merged.values());
     }
 
-    /** D1：国药 export 前先合并重复 key，便于汽轮机核算后再按 packCount=1 拆行对齐铂康表。 */
+    /** 国药 export 前合并完全重复 key（同单号/类别/包名/类型/日期）。 */
     List<HospitalReconciliationRow> aggregateGuoyaoDuplicateRows(List<HospitalReconciliationRow> rows) {
         return aggregateByOrderAndPackName(rows);
     }
 
     /**
-     * D1：国药铂康处理后表每行 packCount=1；export 聚合后 packCount&gt;1 的行拆成 N 行，
-     * 单价不变，每行总价=单价。
+     * 历史 D1：铂康处理后表 packCount=1 拆行；客户口径改为导出与导入包数一致，默认不再调用。
      */
     List<HospitalReconciliationRow> splitGuoyaoPlatinumRows(List<HospitalReconciliationRow> rows) {
         List<HospitalReconciliationRow> result = new ArrayList<>();
@@ -240,9 +239,10 @@ public class BillExportRowGrouper {
         return value != null ? value : 0;
     }
 
-    private static String groupKey(String orderNo, String packName, String type, String deliveryDate) {
+    private static String groupKey(String orderNo, String categoryNo, String packName, String type, String deliveryDate) {
         return String.join("|",
                 normalize(orderNo),
+                normalize(categoryNo),
                 normalize(packName),
                 normalize(type),
                 normalize(deliveryDate));

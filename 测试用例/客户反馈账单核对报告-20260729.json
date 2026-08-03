@@ -1,0 +1,476 @@
+{
+  "generated_at": "2026-07-29T18:32:46",
+  "wave6_baseline": {
+    "s8_bill_pass": 34,
+    "s8_bill_fail": 4,
+    "s8_bill_skip": 0,
+    "s8_settlement_pass": 34,
+    "s8_settlement_skip": 0,
+    "strict_dual_pass": 34
+  },
+  "preflight": {
+    "smoke_ok": true,
+    "deploy_check_ok": false,
+    "deploy_check_detail": "L8_billing_enabled_api: API billing_enabled=1 共 47 家，脚本期望 36（计数口径差异，后端可达）",
+    "checked_at": "2026-07-29T18:30:00"
+  },
+  "s1_summary": {
+    "ok": 37,
+    "warn_no_settlement": 1,
+    "skip": 0
+  },
+  "s4_summary": {
+    "total": 38,
+    "pass": 31,
+    "fail_extra": 7,
+    "fail_missed": 0,
+    "skip": 0,
+    "error": 0,
+    "md_drift": 1
+  },
+  "s8_bill_counts": {
+    "pass": 34,
+    "fail": 4
+  },
+  "s8_settlement_counts": {
+    "pass": 34,
+    "blocked_material": 4
+  },
+  "strict_dual_pass": 34,
+  "deviations": [
+    {
+      "priority": "P1",
+      "hospital": "哈尔滨市第二医院",
+      "step": "S8 bill",
+      "detail": "材料阻塞 fail Δ11900.00 · 行 1922 vs 1958 (Δ36) · 总额 93483.0 vs 105383.0 (Δ11900.00) · sheets=23 summary=供应室"
+    },
+    {
+      "priority": "P1",
+      "hospital": "国药总医院主院区",
+      "step": "S8 bill",
+      "detail": "材料阻塞 fail Δ696.00 · 行 131 vs 139 (Δ8) · 总额 21293.0 vs 21989.0 (Δ696.00)"
+    },
+    {
+      "priority": "P1",
+      "hospital": "国药总医院第二院区",
+      "step": "S8 bill",
+      "detail": "材料阻塞 fail Δ121.50 · 行 43 vs 54 (Δ11) · 总额 4569.0 vs 4447.5 (Δ121.50)"
+    },
+    {
+      "priority": "P1",
+      "hospital": "黑龙江省第二医院（松北院区）",
+      "step": "S8 bill",
+      "detail": "材料阻塞 fail Δ8742.95 · 行 1278 vs 1426 (Δ148) · 总额 65256.1 vs 73999.05 (Δ8742.95) · sheets=22 summary=ICU · S7 kit 组件行保留 · 行差缺 part3 材料"
+    },
+    {
+      "priority": "P2",
+      "hospital": "南岗区妇产医院",
+      "step": "S4",
+      "detail": "fail_extra extra=6（已知 extra_inventory）"
+    },
+    {
+      "priority": "P2",
+      "hospital": "哈尔滨冰城医疗美容医院",
+      "step": "S4",
+      "detail": "fail_extra extra=31（已知 extra_inventory）"
+    },
+    {
+      "priority": "P2",
+      "hospital": "哈尔滨工业大学医院",
+      "step": "S4",
+      "detail": "fail_extra extra=1095（已知 extra_inventory）"
+    },
+    {
+      "priority": "P2",
+      "hospital": "哈尔滨市第二医院",
+      "step": "S4",
+      "detail": "fail_extra extra=1887（已知 extra_inventory）"
+    },
+    {
+      "priority": "P2",
+      "hospital": "哈尔滨长健医院",
+      "step": "S4",
+      "detail": "fail_extra extra=2（已知 extra_inventory）"
+    },
+    {
+      "priority": "P2",
+      "hospital": "哈尔滨长健医院",
+      "step": "S8 settlement",
+      "detail": "登记已知差 · 总额 788.5 vs 688.5 (Δ100.00) · 条目 2/2 · 金额差 ['灭菌费用', '物流费用']"
+    },
+    {
+      "priority": "P2",
+      "hospital": "国药总医院主院区",
+      "step": "S4",
+      "detail": "fail_extra extra=375（已知 extra_inventory）"
+    },
+    {
+      "priority": "P2",
+      "hospital": "国药总医院第三院区",
+      "step": "S8 settlement",
+      "detail": "登记已知差 · 总额 1915.0 vs 1474.5 (Δ440.50) · 条目 2/2 · 金额差 ['物流费用', '灭菌费用']"
+    },
+    {
+      "priority": "P2",
+      "hospital": "国药总医院第二院区",
+      "step": "S4",
+      "detail": "fail_extra extra=1（已知 extra_inventory）"
+    },
+    {
+      "priority": "P3",
+      "hospital": "—",
+      "step": "环境",
+      "detail": "L8_billing_enabled_api: API billing_enabled=1 共 47 家，脚本期望 36（计数口径差异，后端可达）"
+    },
+    {
+      "priority": "P3",
+      "hospital": "哈尔滨工业大学医院",
+      "step": "S4",
+      "detail": "MD 主表 Job624 pass_zero 已过期，stable 映射 Job691 · extra_inventory"
+    }
+  ],
+  "matrix": [
+    {
+      "hospital": "黑龙江中医药大学附属第一医院",
+      "s1": "✅",
+      "s4": "✅",
+      "s8_bill": "pass",
+      "s8_settlement": "pass",
+      "job_id": 607,
+      "note": ""
+    },
+    {
+      "hospital": "黑龙江省中医药大学附属第三医院（电力）",
+      "s1": "✅",
+      "s4": "✅",
+      "s8_bill": "pass",
+      "s8_settlement": "pass",
+      "job_id": 608,
+      "note": ""
+    },
+    {
+      "hospital": "国药总医院主院区",
+      "s1": "✅",
+      "s4": "🔄",
+      "s8_bill": "fail",
+      "s8_settlement": "blocked_material",
+      "job_id": 645,
+      "note": "行 131 vs 139 (Δ8) · 总额 21293.0 vs 21989.0 (Δ696.00)"
+    },
+    {
+      "hospital": "国药总医院第二院区",
+      "s1": "✅",
+      "s4": "🔄",
+      "s8_bill": "fail",
+      "s8_settlement": "blocked_material",
+      "job_id": 646,
+      "note": "行 43 vs 54 (Δ11) · 总额 4569.0 vs 4447.5 (Δ121.50)"
+    },
+    {
+      "hospital": "国药总医院第三院区",
+      "s1": "✅",
+      "s4": "✅",
+      "s8_bill": "pass",
+      "s8_settlement": "pass",
+      "job_id": 647,
+      "note": ""
+    },
+    {
+      "hospital": "哈尔滨市第二医院",
+      "s1": "✅",
+      "s4": "🔄",
+      "s8_bill": "fail",
+      "s8_settlement": "blocked_material",
+      "job_id": 655,
+      "note": "行 1922 vs 1958 (Δ36) · 总额 93483.0 vs 105383.0 (Δ11900.00) · sheets=23 summary=供应"
+    },
+    {
+      "hospital": "哈尔滨市第五医院",
+      "s1": "✅",
+      "s4": "✅",
+      "s8_bill": "pass",
+      "s8_settlement": "pass",
+      "job_id": 613,
+      "note": ""
+    },
+    {
+      "hospital": "哈尔滨市第五医院（二门诊）",
+      "s1": "🔄",
+      "s4": "✅",
+      "s8_bill": "pass",
+      "s8_settlement": "pass",
+      "job_id": 614,
+      "note": "无缺结款函参考（S8 settlement 可能 skip）"
+    },
+    {
+      "hospital": "新发红十字医院",
+      "s1": "✅",
+      "s4": "✅",
+      "s8_bill": "pass",
+      "s8_settlement": "pass",
+      "job_id": 615,
+      "note": ""
+    },
+    {
+      "hospital": "黑龙江省医院（南岗院区）",
+      "s1": "✅",
+      "s4": "✅",
+      "s8_bill": "pass",
+      "s8_settlement": "pass",
+      "job_id": 616,
+      "note": ""
+    },
+    {
+      "hospital": "黑龙江省医院（香坊院区）",
+      "s1": "✅",
+      "s4": "✅",
+      "s8_bill": "pass",
+      "s8_settlement": "pass",
+      "job_id": 617,
+      "note": ""
+    },
+    {
+      "hospital": "祖研-黑龙江省中医医院（南岗院区）",
+      "s1": "✅",
+      "s4": "✅",
+      "s8_bill": "pass",
+      "s8_settlement": "pass",
+      "job_id": 618,
+      "note": ""
+    },
+    {
+      "hospital": "祖研-黑龙江省中医医院（三辅院区）",
+      "s1": "✅",
+      "s4": "✅",
+      "s8_bill": "pass",
+      "s8_settlement": "pass",
+      "job_id": 619,
+      "note": ""
+    },
+    {
+      "hospital": "祖研-黑龙江省中医医院（香安院区）",
+      "s1": "✅",
+      "s4": "✅",
+      "s8_bill": "pass",
+      "s8_settlement": "pass",
+      "job_id": 620,
+      "note": ""
+    },
+    {
+      "hospital": "南岗区妇产医院",
+      "s1": "✅",
+      "s4": "🔄",
+      "s8_bill": "pass",
+      "s8_settlement": "pass",
+      "job_id": 650,
+      "note": ""
+    },
+    {
+      "hospital": "黑龙江省社会康复医院",
+      "s1": "✅",
+      "s4": "✅",
+      "s8_bill": "pass",
+      "s8_settlement": "pass",
+      "job_id": 625,
+      "note": ""
+    },
+    {
+      "hospital": "道外区人民医院",
+      "s1": "✅",
+      "s4": "✅",
+      "s8_bill": "pass",
+      "s8_settlement": "pass",
+      "job_id": 626,
+      "note": ""
+    },
+    {
+      "hospital": "太平人民医院",
+      "s1": "✅",
+      "s4": "✅",
+      "s8_bill": "pass",
+      "s8_settlement": "pass",
+      "job_id": 627,
+      "note": ""
+    },
+    {
+      "hospital": "三精肾病医院",
+      "s1": "✅",
+      "s4": "✅",
+      "s8_bill": "pass",
+      "s8_settlement": "pass",
+      "job_id": 628,
+      "note": ""
+    },
+    {
+      "hospital": "黑龙江维多利亚妇产医院",
+      "s1": "✅",
+      "s4": "✅",
+      "s8_bill": "pass",
+      "s8_settlement": "pass",
+      "job_id": 629,
+      "note": ""
+    },
+    {
+      "hospital": "黑龙江九洲妇科医院",
+      "s1": "✅",
+      "s4": "✅",
+      "s8_bill": "pass",
+      "s8_settlement": "pass",
+      "job_id": 630,
+      "note": ""
+    },
+    {
+      "hospital": "呼兰区红十字医院",
+      "s1": "✅",
+      "s4": "✅",
+      "s8_bill": "pass",
+      "s8_settlement": "pass",
+      "job_id": 631,
+      "note": ""
+    },
+    {
+      "hospital": "呼兰中医院",
+      "s1": "✅",
+      "s4": "✅",
+      "s8_bill": "pass",
+      "s8_settlement": "pass",
+      "job_id": 632,
+      "note": ""
+    },
+    {
+      "hospital": "黑龙江中医药大学附属第二医院（南岗）",
+      "s1": "✅",
+      "s4": "✅",
+      "s8_bill": "pass",
+      "s8_settlement": "pass",
+      "job_id": 633,
+      "note": ""
+    },
+    {
+      "hospital": "黑龙江中医药大学附属第二医院（哈南分院）",
+      "s1": "✅",
+      "s4": "✅",
+      "s8_bill": "pass",
+      "s8_settlement": "pass",
+      "job_id": 634,
+      "note": ""
+    },
+    {
+      "hospital": "哈尔滨仁胜医院",
+      "s1": "✅",
+      "s4": "✅",
+      "s8_bill": "pass",
+      "s8_settlement": "pass",
+      "job_id": 635,
+      "note": ""
+    },
+    {
+      "hospital": "哈尔滨华夏眼科医院",
+      "s1": "✅",
+      "s4": "✅",
+      "s8_bill": "pass",
+      "s8_settlement": "pass",
+      "job_id": 652,
+      "note": ""
+    },
+    {
+      "hospital": "哈尔滨冰城医疗美容医院",
+      "s1": "✅",
+      "s4": "🔄",
+      "s8_bill": "pass",
+      "s8_settlement": "pass",
+      "job_id": 648,
+      "note": ""
+    },
+    {
+      "hospital": "香坊中医院",
+      "s1": "✅",
+      "s4": "✅",
+      "s8_bill": "pass",
+      "s8_settlement": "pass",
+      "job_id": 638,
+      "note": ""
+    },
+    {
+      "hospital": "武警黑龙江省总队医院",
+      "s1": "✅",
+      "s4": "✅",
+      "s8_bill": "pass",
+      "s8_settlement": "pass",
+      "job_id": 639,
+      "note": ""
+    },
+    {
+      "hospital": "悦美芳华医疗门诊医院",
+      "s1": "✅",
+      "s4": "✅",
+      "s8_bill": "pass",
+      "s8_settlement": "pass",
+      "job_id": 640,
+      "note": ""
+    },
+    {
+      "hospital": "黑龙江省第二医院（南岗院区）",
+      "s1": "✅",
+      "s4": "✅",
+      "s8_bill": "pass",
+      "s8_settlement": "pass",
+      "job_id": 641,
+      "note": ""
+    },
+    {
+      "hospital": "黑龙江省第二医院（松北院区）",
+      "s1": "✅",
+      "s4": "✅",
+      "s8_bill": "fail",
+      "s8_settlement": "blocked_material",
+      "job_id": 642,
+      "note": "行 1278 vs 1426 (Δ148) · 总额 65256.1 vs 73999.05 (Δ8742.95) · sheets=22 summary=IC"
+    },
+    {
+      "hospital": "哈尔滨市呼兰区第一人民医院",
+      "s1": "✅",
+      "s4": "✅",
+      "s8_bill": "pass",
+      "s8_settlement": "pass",
+      "job_id": 643,
+      "note": ""
+    },
+    {
+      "hospital": "哈尔滨市红十字妇产医院",
+      "s1": "✅",
+      "s4": "✅",
+      "s8_bill": "pass",
+      "s8_settlement": "pass",
+      "job_id": 623,
+      "note": ""
+    },
+    {
+      "hospital": "哈尔滨工业大学医院",
+      "s1": "✅",
+      "s4": "🔄",
+      "s8_bill": "pass",
+      "s8_settlement": "pass",
+      "job_id": 691,
+      "note": ""
+    },
+    {
+      "hospital": "哈尔滨工程大学医院",
+      "s1": "✅",
+      "s4": "✅",
+      "s8_bill": "pass",
+      "s8_settlement": "pass",
+      "job_id": 704,
+      "note": ""
+    },
+    {
+      "hospital": "哈尔滨长健医院",
+      "s1": "✅",
+      "s4": "🔄",
+      "s8_bill": "pass",
+      "s8_settlement": "pass",
+      "job_id": 654,
+      "note": ""
+    }
+  ]
+}
