@@ -125,7 +125,15 @@ def main() -> int:
     print(f"==> import {args.original.name}")
     t0 = time.time()
     job = import_bill(token, HOSPITAL, args.original)
-    job_id = int(job["jobId"] or job["id"])
+    job_id = int(
+        job.get("jobId")
+        or job.get("job_id")
+        or job.get("id")
+        or (job.get("job") or {}).get("id")
+        or 0
+    )
+    if job_id <= 0:
+        raise RuntimeError(f"import 未返回 jobId: {job}")
     print(f"    Job #{job_id} ({time.time() - t0:.1f}s)")
 
     args.out_dir.mkdir(parents=True, exist_ok=True)

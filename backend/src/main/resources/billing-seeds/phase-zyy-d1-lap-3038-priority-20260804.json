@@ -1,0 +1,16 @@
+{
+  "version": "1",
+  "description": "附一 ZYY-D1：30°腹腔镜 ground truth 30.38（priority -1 压过 golden30.4）",
+  "newRules": [
+    {
+      "code": "ZYY-D1",
+      "ruleType": "FIXED_PRICE",
+      "name": "30度腹腔镜ground30.38",
+      "priority": -1,
+      "price": 30.38,
+      "keywords": ["30°腹腔镜", "30度腹腔镜"],
+      "skipPackaging": true,
+      "skipDiscount": true
+    }
+  ]
+}
