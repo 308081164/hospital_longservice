@@ -1,0 +1,53 @@
+{
+  "version": "1",
+  "description": "附一 ZYY-D1：补跑 p0-2/july-parity/lap 种子（此前误走 loadSeedClasspathFile 未写入 ruleUpdates/newRules）",
+  "ruleUpdates": [
+    {
+      "code": "ZYY-D1",
+      "ruleName": "30°腹腔镜组合价",
+      "setPrice": 30.38
+    },
+    {
+      "code": "ZYY-D1",
+      "ruleName": "30度腹腔镜组合价golden30.4",
+      "setPrice": 30.38
+    },
+    {
+      "code": "ZYY-D1",
+      "ruleName": "保温杯-1Z2044",
+      "setPrice": 17.6
+    },
+    {
+      "code": "ZYY-D1",
+      "ruleName": "低温袋15cm",
+      "setPrice": 20
+    },
+    {
+      "code": "ZYY-D1",
+      "ruleName": "辅料包整包价",
+      "setPrice": 27.97
+    },
+    {
+      "code": "ZYY-D1",
+      "ruleName": "孔巾包整包价",
+      "setPrice": 27.97
+    },
+    {
+      "code": "ZYY-D1",
+      "ruleName": "腔镜包整包价",
+      "setPrice": 27.97
+    }
+  ],
+  "newRules": [
+    {
+      "code": "ZYY-D1",
+      "ruleType": "FIXED_PRICE",
+      "name": "30度腹腔镜ground30.38",
+      "priority": -1,
+      "price": 30.38,
+      "keywords": ["30°腹腔镜", "30度腹腔镜"],
+      "skipPackaging": true,
+      "skipDiscount": true
+    }
+  ]
+}
