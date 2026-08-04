@@ -91,6 +91,19 @@ class ZyyD1JulyExportParityTest {
         applyRuleUpdate(fixedPrices, "辅料包整包价", 27.97);
         applyRuleUpdate(fixedPrices, "孔巾包整包价", 27.97);
         applyRuleUpdate(fixedPrices, "腔镜包整包价", 27.97);
+        applyRuleUpdate(fixedPrices, "保温杯-1Z2044", 22.38);
+
+        ObjectNode z3095Rule = MAPPER.createObjectNode();
+        z3095Rule.put("ruleType", "FIXED_PRICE");
+        z3095Rule.put("name", "输尿管镜z3095两件35.16");
+        z3095Rule.put("priority", 35);
+        z3095Rule.put("price", 35.16);
+        z3095Rule.putArray("keywords").add("z3095");
+        z3095Rule.put("minInstrumentCount", 2);
+        z3095Rule.put("maxInstrumentCount", 2);
+        z3095Rule.put("skipPackaging", true);
+        z3095Rule.put("skipDiscount", true);
+        fixedPrices.insert(0, z3095Rule);
 
         JsonNode foldFix = MAPPER.readTree(ZyyD1P0PricingRegressionTest.class.getResourceAsStream(
                 "/billing-seeds/phase-zyy-d1-fold-ganlan-chongxi-fix-20260728.json"));

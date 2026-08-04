@@ -1,0 +1,25 @@
+{
+  "version": "1",
+  "description": "附一 ZYY-D1：睿思 import 包材归一化配套 — 保温杯 22.38、z3095 两件 35.16",
+  "ruleUpdates": [
+    {
+      "code": "ZYY-D1",
+      "ruleName": "保温杯-1Z2044",
+      "setPrice": 22.38
+    }
+  ],
+  "newRules": [
+    {
+      "code": "ZYY-D1",
+      "ruleType": "FIXED_PRICE",
+      "name": "输尿管镜z3095两件35.16",
+      "priority": 35,
+      "price": 35.16,
+      "keywords": ["z3095"],
+      "minInstrumentCount": 2,
+      "maxInstrumentCount": 2,
+      "skipPackaging": true,
+      "skipDiscount": true
+    }
+  ]
+}

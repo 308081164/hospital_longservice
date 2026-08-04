@@ -70,6 +70,7 @@ public class PricingEngine {
         String packageMaterial = str(row, "packageMaterial");
         String hospitalName = str(row, "hospitalName");
         packageMaterial = inferPricingPackageMaterial(type, packageMaterial, notes);
+        packageMaterial = normalizeFuyiImportMaterial(type, packName, packageMaterial, notes);
         row.put("packageMaterial", packageMaterial);
         int instrumentCount = intVal(row, "instrumentCount");
         int packCount = Math.max(1, intVal(row, "packCount"));
@@ -347,7 +348,8 @@ public class PricingEngine {
                             + materialBillingCount + " 件 = " + fmt(expectedUnitPrice) + " 元。");
                 } else {
                     Double dressingMeasure = extractDressingPackMeasure(packageMaterial);
-                    if (dressingMeasure != null && materialBillingCount <= 1) {
+                    boolean dressingPackRow = type.contains("敷料包") || packName.contains("敷料");
+                    if (dressingMeasure != null && materialBillingCount <= 1 && dressingPackRow) {
                         double dressPrice = computeDressingPackPrice(dressingMeasure);
                         if (dressPrice > 0) {
                             expectedUnitPrice = dressPrice;
@@ -1879,12 +1881,77 @@ public class PricingEngine {
         if (type == null || type.isBlank()) {
             return packageMaterial == null ? "" : packageMaterial;
         }
-        String normalized = type.replaceAll("\\s+", "");
         if (isZsdInstrumentPackType(type)) {
             notes.add("器械包(ZSD)未填写包装材料，按高温无纺布标准阶梯计费。");
             return "无纺布";
         }
         return packageMaterial == null ? "" : packageMaterial;
+    }
+
+    /**
+     * 附一睿思 export 导入：包材列为「无纺布-60×60」「高温纸塑袋200*440」等编码，
+     * 人工核对版使用「无纺布」「低温灭菌 30cm」等计费语义。
+     */
+    private String normalizeFuyiImportMaterial(String type, String packName, String packageMaterial,
+                                               List<String> notes) {
+        if (!"fuyi".equalsIgnoreCase(
+                rules.path("highTemperature").path("paperPlastic").path("capMode").asText(""))) {
+            return packageMaterial;
+        }
+        String mat = packageMaterial == null ? "" : packageMaterial.trim();
+        String packLower = packName == null ? "" : packName.toLowerCase();
+        String typeNorm = type == null ? "" : type;
+
+        if (typeNorm.contains("额外包") && typeNorm.contains("无纺布") && !typeNorm.contains("敷料")) {
+            Double measure = extractDressingPackMeasure(mat);
+            if (measure != null && measure >= 50) {
+                notes.add("附一睿思 export：额外包(无纺布)大包材归一化为「无纺布」，按高温无纺布最低收费。");
+                return "无纺布";
+            }
+        }
+
+        if (typeNorm.contains("敷料包") && packLower.contains("w15050") && mat.isEmpty()) {
+            notes.add("附一 W15050 敷料包补全包材为敷料大（30cm*30cm*50cm）。");
+            return "敷料大（30cm*30cm*50cm）";
+        }
+
+        boolean lowTempRow = typeNorm.contains("ETO") || typeNorm.contains("低温") || typeNorm.contains("EO");
+        if (lowTempRow && packLower.contains("w12050")
+                && mat.contains("无纺布") && mat.contains("×")) {
+            notes.add("附一 w12050 睿思无纺布包材归一化为低温灭菌 30cm。");
+            return "低温灭菌 30cm";
+        }
+
+        if (lowTempRow) {
+            String inferred = inferFuyiLowTempSterilizeMaterial(packName, mat);
+            if (inferred != null && !inferred.equals(mat)) {
+                notes.add("附一睿思 export 包材「" + mat + "」归一化为「" + inferred + "」。");
+                return inferred;
+            }
+        }
+
+        return packageMaterial;
+    }
+
+    /** 附一：包名 Z/w 后缀 → 人工核对版「低温灭菌 Ncm」包材。 */
+    private String inferFuyiLowTempSterilizeMaterial(String packName, String material) {
+        if (packName == null || packName.isBlank() || material == null || material.isBlank()) {
+            return null;
+        }
+        if (!material.contains("纸塑袋") && !material.contains("无纺布")) {
+            return null;
+        }
+        String packLower = packName.toLowerCase();
+        if (packLower.contains("z2044")) {
+            return "低温灭菌 20cm";
+        }
+        if (packLower.contains("z1550") || packLower.contains("z2060") || packLower.contains("w12050")) {
+            return "低温灭菌 30cm";
+        }
+        if (packLower.contains("z3095")) {
+            return "低温灭菌 10cm";
+        }
+        return null;
     }
 
     private boolean isZsdInstrumentPackType(String type) {
