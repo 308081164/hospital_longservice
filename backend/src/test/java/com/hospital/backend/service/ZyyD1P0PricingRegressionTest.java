@@ -85,8 +85,8 @@ class ZyyD1P0PricingRegressionTest {
     @Test
     void shouldFlagExpectedPriceCorrections() {
         assertWarning(row("换药包(120布)", "器械包(ZSD)", "", 3, 3, 22.6, 67.8), 21.99);
-        assertWarning(row("30°腹腔镜-1/z2060", "器械包(ZSD)", "", 1, 1, 28, 28), 30.4);
-        assertWarning(row("辅料包", "敷料包(无纺布包)", "无纺布-150×150-50g", 0, 2, 0, 0), 28);
+        assertWarning(row("30°腹腔镜-1/z2060", "器械包(ZSD)", "", 1, 1, 28, 28), 30.38);
+        assertWarning(row("辅料包", "敷料包(无纺布包)", "无纺布-150×150-50g", 0, 2, 0, 0), 27.97);
         assertWarning(row("球内注药-3件/Z1526", "额外包(纸塑袋)", "高温纸塑袋150*260", 24, 8, 17.6, 140.8), 13.2);
         assertWarning(row("保温杯-1Z2044", "额外包(ETO)", "高温纸塑袋200*440", 2, 2, 10.4, 20.8), 17.6);
         assertWarning(row("膀胱取石钳-1/z1560", "额外包(ETO)", "高温纸塑袋150*600", 1, 1, 8.8, 8.8), 20);
@@ -97,9 +97,9 @@ class ZyyD1P0PricingRegressionTest {
     @Test
     void shouldNotFlagStandardNonwovenRows() {
         assertUnchanged(row("持物钳罐-2/w6050", "额外包(无纺布)", "无纺布-60×60-50g", 2, 1, 13.2, 13.2));
-        assertUnchanged(row("洗手服（XL号）/W15050", "敷料包(无纺布包)", "无纺布-150×150-50g", 0, 1, 28, 28));
-        assertUnchanged(row("洗手服（L号）/W15050", "敷料包(无纺布包)", "无纺布-150×150-50g", 0, 1, 28, 28));
-        assertUnchanged(row("手术衣/W15050", "敷料包(无纺布包)", "无纺布-150×150-50g", 0, 1, 28, 28));
+        assertWarning(row("洗手服（XL号）/W15050", "敷料包(无纺布包)", "无纺布-150×150-50g", 0, 1, 28, 28), 27.97);
+        assertWarning(row("洗手服（L号）/W15050", "敷料包(无纺布包)", "无纺布-150×150-50g", 0, 1, 28, 28), 27.97);
+        assertWarning(row("手术衣/W15050", "敷料包(无纺布包)", "无纺布-150×150-50g", 0, 1, 28, 28), 27.97);
         assertUnchanged(row("腹腔镜包", "器械包", "", 1, 1, 154, 154));
         assertUnchanged(row("王树人特器-1件/z2060", "额外包(ETO)", "高温纸塑袋200*440", 1, 1, 22.38, 22.38));
         assertUnchanged(row("保温杯(高温)-1Z2044", "额外包(纸塑袋)", "高温纸塑袋200*440", 1, 1, 10.39, 10.39));
@@ -130,11 +130,11 @@ class ZyyD1P0PricingRegressionTest {
         assertWarning(row("手术室(一区)", "张景欣特器-10盒1/w12050", "额外包(ETO)", "无纺布-120×120-50g",
                 10, 1, 44, 44), 132);
         assertWarning(row("手术室(二区)", "辅料包", "敷料包(无纺布包)", "无纺布-150×150-50g",
-                0, 1, 0, 0), 28);
+                0, 1, 0, 0), 27.97);
         assertWarning(row("手术室(二区)", "孔巾包", "敷料包(无纺布包)", "无纺布-150×150-50g",
-                0, 1, 0, 0), 28);
+                0, 1, 0, 0), 27.97);
         assertWarning(row("手术室(二区)", "腔镜包", "器械包(ZSD)", "",
-                1, 1, 0, 0), 28);
+                1, 1, 0, 0), 27.97);
     }
 
     @Test
@@ -151,12 +151,15 @@ class ZyyD1P0PricingRegressionTest {
     @Test
     void shouldFoldGanlanAndChongxiHeadFivePiecesIntoOne() {
         PricingEngine.ProcessedResult ganlan20 = engine.processRow(row(
-                "橄榄头-20/Z2030", "额外包(低温等离子)", "低温纸塑袋200*300", 20, 1, 70.4, 1408));
+                "橄榄头-20/Z2030", "额外包(低温等离子)", "低温纸塑袋200*300", 100, 5, 70.4, 352.0));
         assertThat(ganlan20.notes).anyMatch(n -> n.contains("橄榄头5件算1件") && n.contains("折算为 4 件"));
+        assertThat(ganlan20.expectedUnitPrice).isCloseTo(70.33, offset(0.02));
+        assertThat(ganlan20.correctedTotalPrice).isCloseTo(351.65, offset(0.02));
 
         PricingEngine.ProcessedResult chongxi5 = engine.processRow(row(
                 "冲洗头-50/z2030", "额外包(低温等离子)", "低温纸塑袋200*300", 5, 1, 240, 240));
         assertThat(chongxi5.notes).anyMatch(n -> n.contains("冲洗头5件算1件") && n.contains("折算为 1 件"));
+        assertThat(chongxi5.expectedUnitPrice).isCloseTo(70.33, offset(0.02));
 
         PricingEngine.ProcessedResult chongxi120Fixed = engine.processRow(row(
                 "冲洗头-120/z2030", "额外包(低温等离子)", "低温纸塑袋200*300", 120, 1, 328, 328));

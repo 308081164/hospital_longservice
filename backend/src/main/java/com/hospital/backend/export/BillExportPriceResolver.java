@@ -30,14 +30,12 @@ public final class BillExportPriceResolver {
         if (row == null) {
             return null;
         }
-        if (row.getCorrectedTotalPrice() != null) {
-            return row.getCorrectedTotalPrice();
-        }
-        if (row.getExpectedUnitPrice() != null) {
-            int packCount = row.getPackCount() != null ? Math.max(1, row.getPackCount()) : 1;
-            return round(row.getExpectedUnitPrice() * packCount);
-        }
-        return row.getTotalPrice();
+        return resolveExportTotal(
+                row.getExpectedUnitPrice(),
+                row.getUnitPrice(),
+                row.getPackCount(),
+                row.getCorrectedTotalPrice(),
+                row.getTotalPrice());
     }
 
     /**
@@ -82,13 +80,14 @@ public final class BillExportPriceResolver {
         if (row == null) {
             return null;
         }
-        if (row.getCorrectedTotalPrice() != null) {
-            return row.getCorrectedTotalPrice();
-        }
-        // D2/D6/D8：计价引擎 expectedUnitPrice 优先于 matchedPriceOption（后者常为原始器械单价）
-        if (row.getExpectedUnitPrice() != null) {
-            int packCount = row.getPackCount() != null ? Math.max(1, row.getPackCount()) : 1;
-            return round(row.getExpectedUnitPrice() * packCount);
+        Double fromExpected = resolveExportTotal(
+                row.getExpectedUnitPrice(),
+                row.getUnitPrice(),
+                row.getPackCount(),
+                row.getCorrectedTotalPrice(),
+                row.getTotalPrice());
+        if (fromExpected != null) {
+            return fromExpected;
         }
         if (row.getMatchedPriceOption() != null) {
             int packCount = row.getPackCount() != null ? Math.max(1, row.getPackCount()) : 1;
@@ -133,7 +132,43 @@ public final class BillExportPriceResolver {
         }
         int packs = packCount != null ? Math.max(1, packCount) : 1;
         int instruments = instrumentCount != null ? Math.max(1, instrumentCount) : 1;
-        return round(total / (packs * instruments));
+        int perPackInstruments = packs > 1
+                ? Math.max(1, (int) Math.round((double) instruments / packs))
+                : instruments;
+        return round(total / (packs * perPackInstruments));
+    }
+
+    /**
+     * 导出总价：当 import 阶段未重算 correctedTotal（仍等于原价）但 expectedUnit 已校正时，
+     * 用 expectedUnit × packCount，避免 FOLD / fuyi override 行 export 回退原价（附一 7 月 P0）。
+     */
+    static Double resolveExportTotal(Double expectedUnitPrice,
+                                     Double unitPrice,
+                                     Integer packCount,
+                                     Double correctedTotalPrice,
+                                     Double totalPrice) {
+        if (expectedUnitPrice == null) {
+            if (correctedTotalPrice != null) {
+                return correctedTotalPrice;
+            }
+            return totalPrice;
+        }
+        int packs = packCount != null ? Math.max(1, packCount) : 1;
+        Double recomputed = round(expectedUnitPrice * packs);
+        if (correctedTotalPrice == null) {
+            return recomputed;
+        }
+        if (Math.abs(correctedTotalPrice - recomputed) <= 0.001) {
+            return correctedTotalPrice;
+        }
+        boolean correctedMatchesOriginal = totalPrice != null
+                && Math.abs(correctedTotalPrice - totalPrice) <= 0.001;
+        boolean unitChanged = unitPrice != null
+                && Math.abs(expectedUnitPrice - unitPrice) > 0.001;
+        if (correctedMatchesOriginal && unitChanged) {
+            return recomputed;
+        }
+        return correctedTotalPrice;
     }
 
     private static double round(double value) {

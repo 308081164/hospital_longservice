@@ -1,6 +1,6 @@
 {
   "version": "1",
-  "description": "附一 ZYY-D1：校正价与 6 月处理后账单/收费规则 Sheet1 四舍五入对齐",
+  "description": "附一 ZYY-D1：7 月人工核对版 ground truth 精确价对齐（零容差 export parity）",
   "ruleUpdates": [
     {
       "code": "ZYY-D1",
@@ -9,13 +9,8 @@
     },
     {
       "code": "ZYY-D1",
-      "ruleName": "保温杯-1Z2044",
-      "setPrice": 17.6
-    },
-    {
-      "code": "ZYY-D1",
-      "ruleName": "低温袋15cm",
-      "setPrice": 20
+      "ruleName": "30度腹腔镜组合价golden30.4",
+      "setPrice": 30.38
     },
     {
       "code": "ZYY-D1",

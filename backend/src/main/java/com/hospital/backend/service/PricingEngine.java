@@ -282,9 +282,6 @@ public class PricingEngine {
                     expectedUnitPrice = dressPrice;
                     pricingRule = "敷料包(无纺布包)——" + measure;
                     notes.add("敷料包规格 " + measure + "，按敷料包定价表计算单价为 " + fmt(expectedUnitPrice) + " 元。");
-                    if (unitPrice != null && Math.abs(dressPrice - unitPrice) <= 0.05) {
-                        expectedUnitPrice = unitPrice;
-                    }
                 } else {
                     pricingRule = "敷料包(无纺布包)——未匹配定价";
                     notes.add("敷料包规格 " + measure + " 未命中定价表（<90→25, =90→30, 1.2~1.5→35），保留原始价格。");
@@ -347,8 +344,22 @@ public class PricingEngine {
                     notes.add("按路径覆盖高温单价 " + fmt(forceHighTempPerItem) + " 元/件 × "
                             + materialBillingCount + " 件 = " + fmt(expectedUnitPrice) + " 元。");
                 } else {
-                    pricingRule = "高温无纺布计费";
-                    expectedUnitPrice = computeHighTempNonWoven(materialBillingCount);
+                    Double dressingMeasure = extractDressingPackMeasure(packageMaterial);
+                    if (dressingMeasure != null && materialBillingCount <= 1) {
+                        double dressPrice = computeDressingPackPrice(dressingMeasure);
+                        if (dressPrice > 0) {
+                            expectedUnitPrice = dressPrice;
+                            pricingRule = "高温无纺布(敷料规格)——" + dressingMeasure;
+                            notes.add("无纺布材料识别为敷料规格 " + dressingMeasure
+                                    + "，单件按敷料包定价 " + fmt(dressPrice) + " 元。");
+                        } else {
+                            pricingRule = "高温无纺布计费";
+                            expectedUnitPrice = computeHighTempNonWoven(materialBillingCount);
+                        }
+                    } else {
+                        pricingRule = "高温无纺布计费";
+                        expectedUnitPrice = computeHighTempNonWoven(materialBillingCount);
+                    }
                 }
             }
         } else {
@@ -403,7 +414,7 @@ public class PricingEngine {
         }
 
         // 校正总价
-        boolean recomputeTotals = rules.path("cleaning").path("recomputeTotalsWhenPriceChanges").asBoolean(false);
+        boolean recomputeTotals = rules.path("cleaning").path("recomputeTotalsWhenPriceChanges").asBoolean(true);
         Double correctedTotalPrice = expectedUnitPrice == null
             ? totalPrice
             : recomputeTotals
@@ -1296,15 +1307,12 @@ public class PricingEngine {
             }
             double price = bagConfig.path("price").asDouble();
             if (isDouble && zBagSize > 0) {
-                JsonNode zBagConfig = findBagConfig(zBagSize > 25 ? 25 : zBagSize, config.path("bagSizes"));
-                double zFee = zBagConfig != null ? zBagConfig.path("price").asDouble() : 0;
-                double doublePrice = round(price + zFee);
-                notes.add("低温单件纸塑袋 " + bagConfig.path("size").asInt() + "cm，包名含\"双\"追加 " + zBagSize + "cm袋费，单价 " +
-                        fmt(doublePrice) + " 元（袋费 " + fmt(price) + " + " + fmt(zFee) + "）。");
-                return doublePrice;
+                notes.add("低温单件纸塑袋 " + bagConfig.path("size").asInt() + "cm，单件计费忽略包名「双」追加袋费，单价 "
+                        + fmt(price) + " 元。");
+            } else {
+                notes.add("低温单件纸塑袋 " + bagConfig.path("size").asInt() + "cm，单价 "
+                        + fmt(price) + " 元。");
             }
-            notes.add("低温单件纸塑袋 " + bagConfig.path("size").asInt() + "cm，单价 " +
-                    fmt(price) + " 元。");
             return price;
         }
 

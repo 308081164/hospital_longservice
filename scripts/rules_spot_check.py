@@ -65,8 +65,84 @@ HRB_2ND_SPOT_CHECKS: list[dict[str, Any]] = [
     },
 ]
 
+ZYY_D1_HOSPITAL = "黑龙江中医药大学附属第一医院"
+
+ZYY_D1_SPOT_CHECKS: list[dict[str, Any]] = [
+    {
+        "name": "橄榄头FOLD 70.33",
+        "department": "耳鼻喉门诊",
+        "packName": "橄榄头-20/Z2030",
+        "type": "额外包(低温等离子)",
+        "packageMaterial": "低温纸塑袋200*300",
+        "instrumentCount": 100,
+        "packCount": 5,
+        "unitPrice": 70.4,
+        "totalPrice": 352.0,
+        "expectedUnitPrice": 70.33,
+        "expectedCorrectedTotal": 351.65,
+        "priceTol": 0.001,
+    },
+    {
+        "name": "30°腹腔镜 30.38",
+        "department": "手术室(一区)",
+        "packName": "30°腹腔镜-1/z2060",
+        "type": "器械包(ZSD)",
+        "packageMaterial": "",
+        "instrumentCount": 1,
+        "packCount": 1,
+        "unitPrice": 28.0,
+        "totalPrice": 28.0,
+        "expectedUnitPrice": 30.38,
+        "expectedCorrectedTotal": 30.38,
+        "priceTol": 0.001,
+    },
+    {
+        "name": "W15050 手术衣 27.97",
+        "department": "手术室(一区)",
+        "packName": "手术衣/W15050",
+        "type": "敷料包(无纺布包)",
+        "packageMaterial": "无纺布-150×150-50g",
+        "instrumentCount": 0,
+        "packCount": 1,
+        "unitPrice": 28.0,
+        "totalPrice": 28.0,
+        "expectedUnitPrice": 27.97,
+        "expectedCorrectedTotal": 27.97,
+        "priceTol": 0.001,
+    },
+    {
+        "name": "W9050 枪状镊 4.4×40",
+        "department": "手术室(二区)",
+        "packName": "枪状镊11弯针6吸引管12喉镜10盘1/w9050",
+        "type": "器械包",
+        "packageMaterial": "无纺布",
+        "instrumentCount": 40,
+        "packCount": 1,
+        "unitPrice": 110.0,
+        "totalPrice": 110.0,
+        "expectedUnitPrice": 176.0,
+        "expectedCorrectedTotal": 176.0,
+        "priceTol": 0.001,
+    },
+    {
+        "name": "冲洗头-79 固定价220",
+        "department": "耳鼻喉病房",
+        "packName": "冲洗头-79/z2030",
+        "type": "额外包(低温等离子)",
+        "packageMaterial": "低温纸塑袋200*300",
+        "instrumentCount": 79,
+        "packCount": 1,
+        "unitPrice": 202.4,
+        "totalPrice": 202.4,
+        "expectedUnitPrice": 220.0,
+        "expectedCorrectedTotal": 220.0,
+        "priceTol": 0.001,
+    },
+]
+
 SPOT_CHECK_PRESETS: dict[str, list[dict[str, Any]]] = {
     "HRB-2ND": HRB_2ND_SPOT_CHECKS,
+    "ZYY-D1": ZYY_D1_SPOT_CHECKS,
 }
 
 
@@ -121,11 +197,15 @@ def run_spot_check(
     hospital = hospital_name or customer.get("name") or customer.get("canonicalName") or code
     if code == "HRB-2ND":
         hospital = HRB_2ND_HOSPITAL
+    if code == "ZYY-D1":
+        hospital = ZYY_D1_HOSPITAL
 
     results: list[dict[str, Any]] = []
     for case in preset:
-        sample = {k: v for k, v in case.items() if k not in {"name", "expectedUnitPrice"}}
+        skip = {"name", "expectedUnitPrice", "expectedCorrectedTotal", "priceTol"}
+        sample = {k: v for k, v in case.items() if k not in skip}
         sample.setdefault("sheetName", sample.get("department"))
+        tol = float(case.get("priceTol", 0.02))
         try:
             sim = client.simulate_billing(
                 customer_id=customer_id,
@@ -135,13 +215,20 @@ def run_spot_check(
             )
             actual = _row_field(sim, "expectedUnitPrice", "expected_unit_price")
             expected = float(case["expectedUnitPrice"])
-            ok = _price_close(actual, expected)
+            ok = _price_close(actual, expected, tol=tol)
+            actual_total = _row_field(sim, "correctedTotalPrice", "corrected_total_price")
+            expected_total = case.get("expectedCorrectedTotal")
+            if expected_total is not None:
+                total_ok = _price_close(actual_total, float(expected_total), tol=tol)
+                ok = ok and total_ok
             results.append(
                 {
                     "name": case["name"],
                     "ok": ok,
                     "expectedUnitPrice": expected,
                     "actualUnitPrice": actual,
+                    "expectedCorrectedTotal": expected_total,
+                    "actualCorrectedTotal": actual_total,
                     "status": _row_field(sim, "status"),
                     "pricingRule": _row_field(sim, "pricingRule", "pricing_rule"),
                 }

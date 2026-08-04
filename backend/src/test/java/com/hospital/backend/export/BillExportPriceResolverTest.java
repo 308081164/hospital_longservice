@@ -12,6 +12,32 @@ import static org.assertj.core.data.Offset.offset;
 class BillExportPriceResolverTest {
 
     @Test
+    void resolvesExportTotalWhenCorrectedTotalStillOriginal() {
+        BillRowItem row = new BillRowItem();
+        row.setPackCount(5);
+        row.setUnitPrice(239.76);
+        row.setTotalPrice(1198.8);
+        row.setExpectedUnitPrice(70.33);
+        row.setCorrectedTotalPrice(1198.8);
+
+        assertThat(BillExportPriceResolver.resolveTotalPrice(row)).isEqualTo(351.65);
+        assertThat(BillExportPriceResolver.resolveUnitPrice(row)).isEqualTo(70.33);
+    }
+
+    @Test
+    void derivesPerPieceUsingPerPackInstrumentCount() {
+        BillRowItem row = new BillRowItem();
+        row.setPackCount(2);
+        row.setInstrumentCount(10);
+        row.setExpectedUnitPrice(22.0);
+        row.setCorrectedTotalPrice(44.0);
+
+        assertThat(BillExportPriceResolver.resolveTotalPrice(row)).isEqualTo(44.0);
+        assertThat(BillExportPriceResolver.resolveUnitPrice(row)).isEqualTo(22.0);
+        assertThat(BillExportPriceResolver.resolvePerPiecePrice(row)).isEqualTo(4.4);
+    }
+
+    @Test
     void prefersCorrectedTotalForBillRow() {
         BillRowItem row = new BillRowItem();
         row.setUnitPrice(22.0);

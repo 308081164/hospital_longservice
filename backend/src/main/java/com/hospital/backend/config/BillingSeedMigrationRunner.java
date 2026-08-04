@@ -156,6 +156,8 @@ public class BillingSeedMigrationRunner implements CommandLineRunner {
                     "billing-seeds/phase-ng-fuchan-kuobang-bundle-24-fix-20260728-v2.json"),
             new IncrementalSeed("billing_seed_zyy_d1_fold_ganlan_chongxi_fix_20260728_v1",
                     "billing-seeds/phase-zyy-d1-fold-ganlan-chongxi-fix-20260728.json"),
+            new IncrementalSeed("billing_seed_zyy_d1_july_export_parity_20260804_v1",
+                    "billing-seeds/phase-zyy-d1-july-export-parity-20260804.json"),
             new IncrementalSeed("billing_seed_zyy_d2_ng_special_pricing_fix_20260728_v1",
                     "billing-seeds/phase-zyy-d2-ng-special-pricing-fix-20260728.json"),
             new IncrementalSeed("billing_seed_zyy_d2_ng_guasha_tanzhen_per_piece_20260728_v1",
