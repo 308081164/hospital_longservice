@@ -195,6 +195,17 @@ class ZyyD1P0PricingRegressionTest {
     }
 
     @Test
+    void shouldPriceW9050ComplexPackWithoutNeedleSplit() {
+        Map<String, Object> row = row(
+                "枪状镊11弯针6吸引管12喉镜10盘1/w9050", "器械包", "无纺布", 40, 1, 110.0, 110.0);
+        row.put("department", "手术室(二区)");
+        PricingEngine.ProcessedResult result = engine.processRow(row);
+        assertThat(result.expectedUnitPrice).isCloseTo(176.0, offset(0.01));
+        assertThat(result.correctedTotalPrice).isCloseTo(176.0, offset(0.01));
+        assertThat(result.notes).noneMatch(n -> n.contains("针6"));
+    }
+
+    @Test
     void shouldPriceWaierHuanYaoBaoAt2199PerPack() {
         assertWarning(row("外二", "换药包(120布)", "器械包(ZSD)", "", 3, 3, 22.6, 67.8), 21.99);
     }

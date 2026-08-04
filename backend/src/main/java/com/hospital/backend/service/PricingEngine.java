@@ -175,7 +175,9 @@ public class PricingEngine {
         java.util.regex.Pattern needleQtyPattern = java.util.regex.Pattern.compile("针(\\d+)");
         java.util.regex.Matcher needleQtyMatcher = needleQtyPattern.matcher(packName);
         boolean appliedNeedleRule = false;
-        if (preMatchedSpecialPrice == null && !appliedSpecialFoldRule && !isZsdInstrumentPack && needleQtyMatcher.find()) {
+        boolean skipNeedleRuleForFuyiW9050 = packName.toLowerCase().contains("w9050");
+        if (preMatchedSpecialPrice == null && !appliedSpecialFoldRule && !isZsdInstrumentPack
+                && !skipNeedleRuleForFuyiW9050 && needleQtyMatcher.find()) {
             String[] parts = packName.split("针\\d+", 2);
             String beforeNeedle = parts[0];
             String afterNeedle = parts.length > 1 ? parts[1] : "";
@@ -1318,8 +1320,12 @@ public class PricingEngine {
 
         JsonNode tiers = config.path("tierPrices");
         if (instrumentCount <= 5) {
-            double total = round(instrumentCount * remainderPrice);
             double cap = findTierCap(tiers, 5, 88);
+            if (instrumentCount >= 4) {
+                notes.add("低温纸塑袋 " + instrumentCount + " 件按 " + fmt(cap) + " 元（≤5 件 tier）计费。");
+                return cap;
+            }
+            double total = round(instrumentCount * remainderPrice);
             if (total > cap) {
                 notes.add("低温纸塑袋 " + instrumentCount + " 件封顶 " + fmt(cap) + " 元（原计 " + fmt(total) + " 元）。");
                 total = cap;

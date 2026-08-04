@@ -1,0 +1,31 @@
+{
+  "version": "1",
+  "description": "附一 ZYY-D1：7月 parity v2 — golden30.4→30.38、辅料28→27.97（prod 补跑）",
+  "ruleUpdates": [
+    {
+      "code": "ZYY-D1",
+      "ruleName": "30°腹腔镜组合价",
+      "setPrice": 30.38
+    },
+    {
+      "code": "ZYY-D1",
+      "ruleName": "30度腹腔镜组合价golden30.4",
+      "setPrice": 30.38
+    },
+    {
+      "code": "ZYY-D1",
+      "ruleName": "辅料包整包价",
+      "setPrice": 27.97
+    },
+    {
+      "code": "ZYY-D1",
+      "ruleName": "孔巾包整包价",
+      "setPrice": 27.97
+    },
+    {
+      "code": "ZYY-D1",
+      "ruleName": "腔镜包整包价",
+      "setPrice": 27.97
+    }
+  ]
+}
