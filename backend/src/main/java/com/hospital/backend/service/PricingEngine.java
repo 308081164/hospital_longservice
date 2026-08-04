@@ -1933,7 +1933,7 @@ public class PricingEngine {
         return packageMaterial;
     }
 
-    /** 附一：包名 Z/w 后缀 → 人工核对版「低温灭菌 Ncm」包材。 */
+    /** 附一：睿思纸塑袋编码 + 包名语义 → 人工核对版「低温灭菌 Ncm」包材（非泛匹配 z2044）。 */
     private String inferFuyiLowTempSterilizeMaterial(String packName, String material) {
         if (packName == null || packName.isBlank() || material == null || material.isBlank()) {
             return null;
@@ -1942,7 +1942,13 @@ public class PricingEngine {
             return null;
         }
         String packLower = packName.toLowerCase();
-        if (packLower.contains("z2044")) {
+        if (packLower.contains("保温杯") || packLower.contains("保温瓶")) {
+            return "低温灭菌 20cm";
+        }
+        if (packLower.contains("宫腔镜") && packLower.contains("z2044")) {
+            return "低温灭菌 10cm";
+        }
+        if (packLower.contains("特殊钳") && packLower.contains("z2044")) {
             return "低温灭菌 20cm";
         }
         if (packLower.contains("z1550") || packLower.contains("z2060") || packLower.contains("w12050")) {

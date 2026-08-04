@@ -1,0 +1,11 @@
+{
+  "version": "1",
+  "description": "附一 ZYY-D1：z2044 归一化收窄 + 保温杯 22.38 补跑",
+  "ruleUpdates": [
+    {
+      "code": "ZYY-D1",
+      "ruleName": "保温杯-1Z2044",
+      "setPrice": 22.38
+    }
+  ]
+}

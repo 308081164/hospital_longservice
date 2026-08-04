@@ -258,5 +258,18 @@
     "totalPrice": 35.16,
     "expectedExportUnit": 35.16,
     "expectedExportTotal": 35.16
+  },
+  {
+    "label": "宫腔镜 双/z2044 10cm 35.16",
+    "department": "宫腔镜",
+    "packName": "宫腔镜-2/双/z2044",
+    "type": "额外包(ETO)",
+    "packageMaterial": "高温纸塑袋200*440",
+    "instrumentCount": 2,
+    "packCount": 5,
+    "unitPrice": 35.16,
+    "totalPrice": 175.8,
+    "expectedExportUnit": 35.16,
+    "expectedExportTotal": 175.8
   }
 ]
