@@ -880,6 +880,78 @@ def cmd_rules_spot_check(args: argparse.Namespace) -> int:
     return 0 if report.get("ok") else 1
 
 
+def cmd_rules_audit_names(args: argparse.Namespace) -> int:
+    client = resolve_client(args)
+    try:
+        client.login(force=True)
+        rows = client.customers()
+    except Exception as exc:
+        print(f"rules audit-names 失败: {exc}", file=sys.stderr)
+        return 1
+
+    from collections import defaultdict
+
+    by_name: dict[str, list[dict[str, Any]]] = defaultdict(list)
+    for row in rows:
+        name = str(row_field(row, "canonical_name", "canonicalName") or "").strip()
+        if not name:
+            name = str(row_field(row, "code") or "").strip()
+        by_name[name].append(row)
+
+    dupes = {name: group for name, group in by_name.items() if len(group) > 1}
+    active_dupes = {
+        name: group
+        for name, group in dupes.items()
+        if any(str(row_field(r, "status") or "active").lower() != "inactive" for r in group)
+    }
+
+    def row_summary(row: dict[str, Any]) -> dict[str, Any]:
+        return {
+            "code": row_field(row, "code"),
+            "canonicalName": row_field(row, "canonical_name", "canonicalName"),
+            "status": row_field(row, "status") or "active",
+            "billingEnabled": bool(row_field(row, "billingEnabled", "billing_enabled")),
+        }
+
+    report = {
+        "ok": len(active_dupes) == 0,
+        "customer_count": len(rows),
+        "duplicate_name_groups": len(dupes),
+        "active_duplicate_name_groups": len(active_dupes),
+        "duplicates": {
+            name: [row_summary(r) for r in sorted(group, key=lambda x: str(row_field(x, "code") or ""))]
+            for name in sorted(active_dupes)
+        },
+        "inactive_only_duplicates": {
+            name: [row_summary(r) for r in sorted(group, key=lambda x: str(row_field(x, "code") or ""))]
+            for name in sorted(dupes.keys() - active_dupes.keys())
+        },
+    }
+
+    if args.json:
+        print(json.dumps(report, ensure_ascii=False, indent=2))
+    else:
+        if not active_dupes:
+            print("规范名重复审计：无（启用客户规范名均唯一）")
+            if dupes and not args.strict:
+                print(f"（另有 {len(dupes) - len(active_dupes)} 组仅 inactive legacy 同名，见 --json）")
+        else:
+            print("规范名重复审计：发现重复（含非 inactive 客户）")
+            print("")
+            print("| 规范名 | 客户码 | status | billingEnabled |")
+            print("|--------|--------|--------|----------------|")
+            for name in sorted(active_dupes):
+                for row in active_dupes[name]:
+                    code = row_field(row, "code")
+                    status = row_field(row, "status") or "active"
+                    billing = bool(row_field(row, "billingEnabled", "billing_enabled"))
+                    print(f"| {name} | {code} | {status} | {billing} |")
+
+    if args.fail_on_dup and not report["ok"]:
+        return 1
+    return 0
+
+
 def cmd_rules_verify_deploy(args: argparse.Namespace) -> int:
     if not args.code and not args.all:
         print("需要 --code 或 --all", file=sys.stderr)
@@ -1102,6 +1174,16 @@ def build_parser() -> argparse.ArgumentParser:
     p_rsc.add_argument("--code", required=True, help="customer code，如 HRB-2ND")
     p_rsc.add_argument("--hospital", help="hospitalName 覆盖（默认取客户名）")
     p_rsc.set_defaults(func=cmd_rules_spot_check)
+
+    p_ran = rules_sub.add_parser("audit-names", help="按规范名审计重复客户")
+    add_common_flags(p_ran)
+    p_ran.add_argument("--fail-on-dup", action="store_true", help="存在非 inactive 重复规范名时 exit 1")
+    p_ran.add_argument(
+        "--strict",
+        action="store_true",
+        help="stdout 摘要也提示 inactive-only 重复组数量（默认仅在无 active 重复时提示）",
+    )
+    p_ran.set_defaults(func=cmd_rules_audit_names)
 
     p_rvd = rules_sub.add_parser("verify-deploy", help="compare + reconcile hash + 可选 spot-check")
     add_common_flags(p_rvd)

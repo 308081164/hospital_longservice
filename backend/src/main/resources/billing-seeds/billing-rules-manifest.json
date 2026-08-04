@@ -1,11 +1,12 @@
 {
   "version": 1,
-  "generated_at": "2026-08-03T08:46:53.181208+00:00",
-  "manifest_hash": "adad0a3317f843c96c03097f3b95227f4a2023affe07039dcb2e6f07e47bc235",
+  "generated_at": "2026-08-04T13:23:28.384139+00:00",
+  "manifest_hash": "8d71f0eb2bf91e8071ce0f033cf53d261bb01179b6df637a2f945d66725384fb",
   "customers": {
     "AL-YY": {
       "code": "AL-YY",
       "name": "奥兰医院",
+      "status": null,
       "billingPricingMode": null,
       "standardPricingOverride": null,
       "billingEnabled": null,
@@ -16,6 +17,7 @@
     "BINGCHENG-YM": {
       "code": "BINGCHENG-YM",
       "name": "哈尔滨冰城医疗美容医院",
+      "status": null,
       "billingPricingMode": "special_only",
       "standardPricingOverride": null,
       "billingEnabled": true,
@@ -98,31 +100,19 @@
     },
     "CHANGJIAN": {
       "code": "CHANGJIAN",
-      "name": "哈尔滨长健医院",
+      "name": "哈尔滨长健医院(旧CHANGJIAN)",
+      "status": "inactive",
       "billingPricingMode": null,
       "standardPricingOverride": null,
       "billingEnabled": null,
-      "productRules": [
-        {
-          "ruleType": "FIXED_PRICE",
-          "name": "长健结款单行对齐",
-          "priority": 5,
-          "price": 50,
-          "keywords": [
-            "刀柄"
-          ],
-          "skipPackaging": true,
-          "skipDiscount": true,
-          "isActive": true,
-          "matchMode": "first"
-        }
-      ],
-      "rule_count": 1,
-      "active_rule_count": 1
+      "productRules": [],
+      "rule_count": 0,
+      "active_rule_count": 0
     },
     "DAOWAI-RM": {
       "code": "DAOWAI-RM",
       "name": "道外区人民医院",
+      "status": null,
       "billingPricingMode": "standard",
       "standardPricingOverride": null,
       "billingEnabled": null,
@@ -328,6 +318,7 @@
     "DD-DC": {
       "code": "DD-DC",
       "name": "黑龙江东大肛肠",
+      "status": null,
       "billingPricingMode": null,
       "standardPricingOverride": null,
       "billingEnabled": null,
@@ -338,6 +329,7 @@
     "ERYY-NG": {
       "code": "ERYY-NG",
       "name": "黑龙江省第二医院（南岗院区）",
+      "status": null,
       "billingPricingMode": "special_only",
       "standardPricingOverride": null,
       "billingEnabled": true,
@@ -362,6 +354,7 @@
     "ERYY-SB": {
       "code": "ERYY-SB",
       "name": "ERYY-SB",
+      "status": null,
       "billingPricingMode": "special_only",
       "standardPricingOverride": null,
       "billingEnabled": true,
@@ -499,6 +492,7 @@
     "GUOYAO-2": {
       "code": "GUOYAO-2",
       "name": "国药总医院第二院区",
+      "status": null,
       "billingPricingMode": "hybrid",
       "standardPricingOverride": null,
       "billingEnabled": null,
@@ -524,6 +518,7 @@
     "GUOYAO-3": {
       "code": "GUOYAO-3",
       "name": "国药总医院第三院区",
+      "status": null,
       "billingPricingMode": "hybrid",
       "standardPricingOverride": null,
       "billingEnabled": null,
@@ -548,6 +543,7 @@
     "GUOYAO-MAIN": {
       "code": "GUOYAO-MAIN",
       "name": "国药总医院主院区",
+      "status": null,
       "billingPricingMode": "hybrid",
       "standardPricingOverride": null,
       "billingEnabled": null,
@@ -600,6 +596,7 @@
     "HLFB-SF": {
       "code": "HLFB-SF",
       "name": "HLFB-SF",
+      "status": null,
       "billingPricingMode": "standard",
       "standardPricingOverride": null,
       "billingEnabled": true,
@@ -624,6 +621,7 @@
     "HLJ-JYGLJ-YY": {
       "code": "HLJ-JYGLJ-YY",
       "name": "省监狱管理局医院",
+      "status": null,
       "billingPricingMode": "standard",
       "standardPricingOverride": null,
       "billingEnabled": null,
@@ -648,6 +646,7 @@
     "HRB-2ND": {
       "code": "HRB-2ND",
       "name": "哈尔滨市第二医院",
+      "status": null,
       "billingPricingMode": "special_only",
       "standardPricingOverride": null,
       "billingEnabled": null,
@@ -769,6 +768,7 @@
     "HRB-CJ": {
       "code": "HRB-CJ",
       "name": "哈尔滨长健医院",
+      "status": null,
       "billingPricingMode": "standard",
       "standardPricingOverride": null,
       "billingEnabled": true,
@@ -812,14 +812,28 @@
           "isActive": true,
           "matchMode": "first",
           "skipDiscount": false
+        },
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "长健结款单行对齐",
+          "priority": 5,
+          "price": 50,
+          "keywords": [
+            "刀柄"
+          ],
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": true,
+          "matchMode": "first"
         }
       ],
-      "rule_count": 3,
-      "active_rule_count": 3
+      "rule_count": 4,
+      "active_rule_count": 4
     },
     "HRB-GUSHANG": {
       "code": "HRB-GUSHANG",
       "name": "哈尔滨市骨伤科医院",
+      "status": null,
       "billingPricingMode": null,
       "standardPricingOverride": null,
       "billingEnabled": null,
@@ -830,6 +844,7 @@
     "HRB-HEU": {
       "code": "HRB-HEU",
       "name": "哈尔滨工程大学医院",
+      "status": null,
       "billingPricingMode": "standard",
       "standardPricingOverride": null,
       "billingEnabled": null,
@@ -840,6 +855,7 @@
     "HRB-HIT": {
       "code": "HRB-HIT",
       "name": "哈尔滨工业大学医院",
+      "status": null,
       "billingPricingMode": "special_only",
       "standardPricingOverride": null,
       "billingEnabled": true,
@@ -1049,6 +1065,7 @@
     "HRB-HSZ": {
       "code": "HRB-HSZ",
       "name": "哈尔滨市红十字妇产医院",
+      "status": null,
       "billingPricingMode": "hybrid",
       "standardPricingOverride": null,
       "billingEnabled": true,
@@ -1115,6 +1132,7 @@
     "HRB-HX-EYE": {
       "code": "HRB-HX-EYE",
       "name": "哈尔滨华夏眼科医院",
+      "status": null,
       "billingPricingMode": "standard",
       "standardPricingOverride": null,
       "billingEnabled": true,
@@ -1138,6 +1156,7 @@
     "HRB-MHM": {
       "code": "HRB-MHM",
       "name": "HRB-MHM",
+      "status": null,
       "billingPricingMode": null,
       "standardPricingOverride": null,
       "billingEnabled": null,
@@ -1164,6 +1183,7 @@
     "HRB-NGJY": {
       "code": "HRB-NGJY",
       "name": "哈尔滨市南岗区人民医院（九院）",
+      "status": null,
       "billingPricingMode": "standard",
       "standardPricingOverride": null,
       "billingEnabled": true,
@@ -1188,6 +1208,7 @@
     "HRB-SD-MB": {
       "code": "HRB-SD-MB",
       "name": "HRB-SD-MB",
+      "status": null,
       "billingPricingMode": "standard",
       "standardPricingOverride": null,
       "billingEnabled": true,
@@ -1236,6 +1257,7 @@
     "HRB-SH": {
       "code": "HRB-SH",
       "name": "哈尔滨森海医院",
+      "status": null,
       "billingPricingMode": "special_only",
       "standardPricingOverride": null,
       "billingEnabled": null,
@@ -1273,6 +1295,7 @@
     "HRB-WY": {
       "code": "HRB-WY",
       "name": "哈尔滨市第五医院",
+      "status": null,
       "billingPricingMode": "hybrid",
       "standardPricingOverride": null,
       "billingEnabled": null,
@@ -1564,6 +1587,7 @@
     "HRB-WY-EM": {
       "code": "HRB-WY-EM",
       "name": "哈尔滨市第五医院（二门诊）",
+      "status": null,
       "billingPricingMode": "hybrid",
       "standardPricingOverride": null,
       "billingEnabled": null,
@@ -1659,6 +1683,7 @@
     "HULAN-HSZ": {
       "code": "HULAN-HSZ",
       "name": "呼兰区红十字医院",
+      "status": null,
       "billingPricingMode": "standard",
       "standardPricingOverride": null,
       "billingEnabled": false,
@@ -1683,6 +1708,7 @@
     "HULAN-RM": {
       "code": "HULAN-RM",
       "name": "呼兰区第一人民医院",
+      "status": null,
       "billingPricingMode": "special_only",
       "standardPricingOverride": null,
       "billingEnabled": true,
@@ -1820,6 +1846,7 @@
     "HULAN-TCM": {
       "code": "HULAN-TCM",
       "name": "呼兰中医院",
+      "status": null,
       "billingPricingMode": "hybrid",
       "standardPricingOverride": null,
       "billingEnabled": false,
@@ -1884,6 +1911,7 @@
     "JIUZHOU-FK": {
       "code": "JIUZHOU-FK",
       "name": "黑龙江九洲妇科医院",
+      "status": null,
       "billingPricingMode": "standard",
       "standardPricingOverride": null,
       "billingEnabled": false,
@@ -1908,6 +1936,7 @@
     "JZSW-BIO": {
       "code": "JZSW-BIO",
       "name": "哈尔滨基准生物科技有限公司",
+      "status": null,
       "billingPricingMode": "standard",
       "standardPricingOverride": null,
       "billingEnabled": null,
@@ -1933,6 +1962,7 @@
     "NEAU-YY": {
       "code": "NEAU-YY",
       "name": "NEAU-YY",
+      "status": null,
       "billingPricingMode": "standard",
       "standardPricingOverride": null,
       "billingEnabled": true,
@@ -1981,6 +2011,7 @@
     "NG-FUCHAN": {
       "code": "NG-FUCHAN",
       "name": "南岗区妇产医院",
+      "status": null,
       "billingPricingMode": "standard",
       "standardPricingOverride": null,
       "billingEnabled": false,
@@ -2254,6 +2285,7 @@
     "NG-XFX-SQ": {
       "code": "NG-XFX-SQ",
       "name": "南岗区先锋路社区卫生服务中心",
+      "status": null,
       "billingPricingMode": null,
       "standardPricingOverride": null,
       "billingEnabled": null,
@@ -2264,6 +2296,7 @@
     "RENSHENG": {
       "code": "RENSHENG",
       "name": "哈尔滨仁胜医院",
+      "status": null,
       "billingPricingMode": "standard",
       "standardPricingOverride": null,
       "billingEnabled": null,
@@ -2274,6 +2307,7 @@
     "SANJING-SB": {
       "code": "SANJING-SB",
       "name": "三精肾病医院",
+      "status": null,
       "billingPricingMode": "standard",
       "standardPricingOverride": null,
       "billingEnabled": null,
@@ -2441,6 +2475,7 @@
     "SHENG-YY-NG": {
       "code": "SHENG-YY-NG",
       "name": "黑龙江省医院（南岗院区）",
+      "status": null,
       "billingPricingMode": "hybrid",
       "standardPricingOverride": null,
       "billingEnabled": null,
@@ -2598,6 +2633,7 @@
     "SHENG-YY-XF": {
       "code": "SHENG-YY-XF",
       "name": "黑龙江省医院（香坊院区）",
+      "status": null,
       "billingPricingMode": "hybrid",
       "standardPricingOverride": null,
       "billingEnabled": null,
@@ -2796,6 +2832,7 @@
     "SHKF-YY": {
       "code": "SHKF-YY",
       "name": "黑龙江省社会康复医院",
+      "status": null,
       "billingPricingMode": "standard",
       "standardPricingOverride": null,
       "billingEnabled": false,
@@ -2935,6 +2972,7 @@
     "TAIPING-RM": {
       "code": "TAIPING-RM",
       "name": "太平人民医院",
+      "status": null,
       "billingPricingMode": "special_only",
       "standardPricingOverride": null,
       "billingEnabled": false,
@@ -3125,6 +3163,7 @@
     "VICTORIA": {
       "code": "VICTORIA",
       "name": "黑龙江维多利亚妇产医院",
+      "status": null,
       "billingPricingMode": "standard",
       "standardPricingOverride": null,
       "billingEnabled": false,
@@ -3162,6 +3201,7 @@
     "WCSRMYY": {
       "code": "WCSRMYY",
       "name": "WCSRMYY",
+      "status": null,
       "billingPricingMode": "standard",
       "standardPricingOverride": null,
       "billingEnabled": true,
@@ -3340,6 +3380,7 @@
     "WJ-HLJ-ZD": {
       "code": "WJ-HLJ-ZD",
       "name": "武警黑龙江省总队医院",
+      "status": null,
       "billingPricingMode": "standard",
       "standardPricingOverride": null,
       "billingEnabled": null,
@@ -3406,6 +3447,7 @@
     "XF-ZYY": {
       "code": "XF-ZYY",
       "name": "香坊中医院",
+      "status": null,
       "billingPricingMode": null,
       "standardPricingOverride": null,
       "billingEnabled": null,
@@ -3416,6 +3458,7 @@
     "XINFA-HSZ": {
       "code": "XINFA-HSZ",
       "name": "新发红十字医院",
+      "status": null,
       "billingPricingMode": "hybrid",
       "standardPricingOverride": null,
       "billingEnabled": null,
@@ -3453,6 +3496,7 @@
     "YUANDONG-XN": {
       "code": "YUANDONG-XN",
       "name": "黑龙江省远东心脑血管医院",
+      "status": null,
       "billingPricingMode": "standard",
       "standardPricingOverride": null,
       "billingEnabled": null,
@@ -3463,6 +3507,7 @@
     "YUEMEI-FH": {
       "code": "YUEMEI-FH",
       "name": "悦美芳华医疗门诊医院",
+      "status": null,
       "billingPricingMode": "standard",
       "standardPricingOverride": null,
       "billingEnabled": null,
@@ -3487,6 +3532,7 @@
     "ZUYAN-NG": {
       "code": "ZUYAN-NG",
       "name": "祖研-黑龙江省中医医院（南岗院区）",
+      "status": null,
       "billingPricingMode": "hybrid",
       "standardPricingOverride": null,
       "billingEnabled": true,
@@ -3601,6 +3647,7 @@
     "ZUYAN-SF": {
       "code": "ZUYAN-SF",
       "name": "祖研-黑龙江省中医医院（三辅院区）",
+      "status": null,
       "billingPricingMode": "hybrid",
       "standardPricingOverride": null,
       "billingEnabled": null,
@@ -3726,6 +3773,7 @@
     "ZUYAN-XA": {
       "code": "ZUYAN-XA",
       "name": "祖研-黑龙江省中医医院（香安院区）",
+      "status": null,
       "billingPricingMode": "hybrid",
       "standardPricingOverride": null,
       "billingEnabled": null,
@@ -3777,6 +3825,7 @@
     "ZY3-DIANLI": {
       "code": "ZY3-DIANLI",
       "name": "黑龙江省中医药大学附属第三医院（电力）",
+      "status": null,
       "billingPricingMode": "hybrid",
       "standardPricingOverride": null,
       "billingEnabled": null,
@@ -3868,6 +3917,7 @@
     "ZYY-D1": {
       "code": "ZYY-D1",
       "name": "黑龙江中医药大学附属第一医院",
+      "status": null,
       "billingPricingMode": "hybrid",
       "standardPricingOverride": {
         "highTemperature": {
@@ -4018,7 +4068,21 @@
           "ruleType": "FIXED_PRICE",
           "name": "30°腹腔镜组合价",
           "priority": 5,
-          "price": 30.4,
+          "price": 30.38,
+          "keywords": [
+            "30°腹腔镜",
+            "30度腹腔镜"
+          ],
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": true,
+          "matchMode": "first"
+        },
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "30度腹腔镜ground30.38",
+          "priority": -1,
+          "price": 30.38,
           "keywords": [
             "30°腹腔镜",
             "30度腹腔镜"
@@ -4032,7 +4096,7 @@
           "ruleType": "FIXED_PRICE",
           "name": "30度腹腔镜组合价golden30.4",
           "priority": 0,
-          "price": 30.4,
+          "price": 30.38,
           "keywords": [
             "30°腹腔镜",
             "30度腹腔镜"
@@ -4168,7 +4232,7 @@
           "ruleType": "FIXED_PRICE",
           "name": "保温杯-1Z2044",
           "priority": 39,
-          "price": 17.6,
+          "price": 22.38,
           "keywords": [
             "保温杯-1Z2044"
           ],
@@ -4302,7 +4366,7 @@
           "ruleType": "FIXED_PRICE",
           "name": "孔巾包整包价",
           "priority": 11,
-          "price": 28,
+          "price": 27.97,
           "keywords": [
             "孔巾包"
           ],
@@ -4580,7 +4644,7 @@
           "ruleType": "FIXED_PRICE",
           "name": "腔镜包整包价",
           "priority": 11,
-          "price": 28,
+          "price": 27.97,
           "keywords": [
             "腔镜包"
           ],
@@ -4596,7 +4660,7 @@
           "ruleType": "FIXED_PRICE",
           "name": "辅料包整包价",
           "priority": 11,
-          "price": 28,
+          "price": 27.97,
           "keywords": [
             "辅料包"
           ],
@@ -4604,14 +4668,30 @@
           "skipDiscount": true,
           "isActive": true,
           "matchMode": "first"
+        },
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "输尿管镜z3095两件35.16",
+          "priority": 35,
+          "price": 35.16,
+          "keywords": [
+            "z3095"
+          ],
+          "minInstrumentCount": 2,
+          "maxInstrumentCount": 2,
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": true,
+          "matchMode": "first"
         }
       ],
-      "rule_count": 43,
-      "active_rule_count": 43
+      "rule_count": 45,
+      "active_rule_count": 45
     },
     "ZYY-D2-HN": {
       "code": "ZYY-D2-HN",
       "name": "黑龙江中医药大学附属第二医院（哈南分院）",
+      "status": null,
       "billingPricingMode": "hybrid",
       "standardPricingOverride": null,
       "billingEnabled": null,
@@ -4636,6 +4716,7 @@
     "ZYY-D2-NG": {
       "code": "ZYY-D2-NG",
       "name": "黑龙江中医药大学附属第二医院（南岗）",
+      "status": null,
       "billingPricingMode": "hybrid",
       "standardPricingOverride": null,
       "billingEnabled": null,

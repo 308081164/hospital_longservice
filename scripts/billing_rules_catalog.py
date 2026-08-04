@@ -141,9 +141,47 @@ def render_customer(code: str, entry: dict[str, Any]) -> str:
     return "\n".join(lines)
 
 
+def _is_inactive_customer(entry: dict[str, Any]) -> bool:
+    status = str(entry.get("status") or "").strip().lower()
+    return status == "inactive"
+
+
+def _audit_duplicate_names(active_entries: list[tuple[str, dict[str, Any]]]) -> list[str]:
+    """Return markdown lines for duplicate canonical names among active customers."""
+    from collections import defaultdict
+
+    by_name: dict[str, list[str]] = defaultdict(list)
+    for code, entry in active_entries:
+        name = (entry.get("name") or code).strip()
+        if name:
+            by_name[name].append(code)
+    dupes = {n: codes for n, codes in by_name.items() if len(codes) > 1}
+    if not dupes:
+        return ["- **规范名重复审计**：无（启用客户规范名均唯一）", ""]
+    lines = [
+        "- **规范名重复审计**：以下规范名对应多个启用客户码，请合并或更名：",
+        "",
+        "| 规范名 | 客户码 |",
+        "|--------|--------|",
+    ]
+    for name in sorted(dupes):
+        lines.append(f"| {name} | {', '.join(sorted(dupes[name]))} |")
+    lines.append("")
+    return lines
+
+
 def build_catalog_md(manifest: dict[str, Any] | None = None) -> str:
     manifest = manifest or build_manifest()
     customers: dict[str, Any] = manifest.get("customers") or {}
+
+    with_rules = [
+        (code, customers[code])
+        for code in sorted(customers)
+        if customers[code].get("productRules")
+    ]
+    active_entries = [(c, e) for c, e in with_rules if not _is_inactive_customer(e)]
+    inactive_entries = [(c, e) for c, e in with_rules if _is_inactive_customer(e)]
+
     total_rules = sum(int(c.get("rule_count") or 0) for c in customers.values())
     active_rules = sum(int(c.get("active_rule_count") or 0) for c in customers.values())
     generated = datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M UTC")
@@ -158,24 +196,36 @@ def build_catalog_md(manifest: dict[str, Any] | None = None) -> str:
         f"- **生成时间**：{generated}",
         f"- **Manifest hash**：`{mhash}…`",
         f"- **客户数**：{len(customers)} · **规则总数**：{total_rules}（启用 {active_rules}）",
-        "",
-        "## 计价模式说明",
-        "",
-        "| 模式 | 含义 |",
-        "|------|------|",
-        "| `special_only` | 仅特色规则；未命中则保留原价 |",
-        "| `hybrid` | 混合；未命中则走标准灭菌价 |",
-        "| `standard` | 标准灭菌定价表 |",
-        "",
-        "---",
+        f"- **清单收录**：{len(active_entries)} 家启用客户"
+        + (f"，{len(inactive_entries)} 家已停用见附录" if inactive_entries else ""),
         "",
     ]
+    lines.extend(_audit_duplicate_names(active_entries))
+    lines.extend(
+        [
+            "## 计价模式说明",
+            "",
+            "| 模式 | 含义 |",
+            "|------|------|",
+            "| `special_only` | 仅特色规则；未命中则保留原价 |",
+            "| `hybrid` | 混合；未命中则走标准灭菌价 |",
+            "| `standard` | 标准灭菌定价表 |",
+            "",
+            "---",
+            "",
+        ]
+    )
 
-    for code in sorted(customers):
-        entry = customers[code]
-        if not entry.get("productRules"):
-            continue
+    for code, entry in active_entries:
         lines.append(render_customer(code, entry))
+
+    if inactive_entries:
+        lines.append("<details><summary>已停用客户（legacy，不纳入对外核对）</summary>")
+        lines.append("")
+        for code, entry in inactive_entries:
+            lines.append(render_customer(code, entry))
+        lines.append("</details>")
+        lines.append("")
 
     return "\n".join(lines) + "\n"
 

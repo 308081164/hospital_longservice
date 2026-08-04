@@ -1,0 +1,22 @@
+{
+  "version": "1",
+  "description": "长健：结款单行对齐规则迁移 HRB-CJ，停用 CHANGJIAN legacy 规则",
+  "newRules": [
+    {
+      "code": "HRB-CJ",
+      "ruleType": "FIXED_PRICE",
+      "name": "长健结款单行对齐",
+      "priority": 5,
+      "price": 50,
+      "keywords": ["刀柄"],
+      "skipPackaging": true,
+      "skipDiscount": true
+    }
+  ],
+  "deactivateRules": [
+    {
+      "code": "CHANGJIAN",
+      "ruleName": "长健结款单行对齐"
+    }
+  ]
+}

@@ -82,6 +82,10 @@ public class BillingRulesManifestReconciler implements CommandLineRunner {
                     log.debug("Reconcile skipped unknown customer: {}", code);
                     continue;
                 }
+                if (isInactiveCustomer(customer)) {
+                    log.info("Reconcile skipped inactive customer: {}", code);
+                    continue;
+                }
                 if (applyCustomerManifestFields(customer, customerNode)) {
                     customersUpdated++;
                 }
@@ -197,6 +201,11 @@ public class BillingRulesManifestReconciler implements CommandLineRunner {
                 .filter(r -> ruleName.equals(r.getName()))
                 .findFirst()
                 .orElse(null);
+    }
+
+    private static boolean isInactiveCustomer(Customer customer) {
+        String status = customer.getStatus();
+        return status != null && "inactive".equalsIgnoreCase(status.trim());
     }
 
     private void upsertManifestHash(String hash) {

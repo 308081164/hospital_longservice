@@ -139,6 +139,10 @@ def _apply_customer_update(customers: dict[str, dict[str, Any]], patch: dict[str
         entry["standardPricingOverride"] = patch["standardPricingOverride"]
     if patch.get("billingEnabled") is not None:
         entry["billingEnabled"] = bool(patch["billingEnabled"])
+    if patch.get("setCanonicalName"):
+        entry["name"] = patch["setCanonicalName"]
+    if patch.get("setStatus"):
+        entry["status"] = patch["setStatus"]
 
 
 def build_manifest() -> dict[str, Any]:
@@ -211,6 +215,7 @@ def build_manifest() -> dict[str, Any]:
         manifest_customers[code] = {
             "code": code,
             "name": entry.get("name", code),
+            "status": entry.get("status"),
             "billingPricingMode": entry.get("billingPricingMode"),
             "standardPricingOverride": entry.get("standardPricingOverride"),
             "billingEnabled": entry.get("billingEnabled"),
