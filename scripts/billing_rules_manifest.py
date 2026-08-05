@@ -163,7 +163,7 @@ def build_manifest() -> dict[str, Any]:
                 entry["name"] = profile["name"]
             profile_rules = profile.get("productRules") or []
             if profile.get("billingPricingMode"):
-                if profile_rules or not entry.get("_mode_from_customer_update"):
+                if not entry.get("_mode_from_customer_update"):
                     entry["billingPricingMode"] = profile["billingPricingMode"]
             if "standardPricingOverride" in profile:
                 entry["standardPricingOverride"] = profile["standardPricingOverride"]

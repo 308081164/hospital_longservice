@@ -1,0 +1,20 @@
+{
+  "version": "1",
+  "description": "红十字妇产 HRB-HSZ：强制分科室导出，避免 >1000 行走 combined 单表",
+  "exportTemplates": [
+    {
+      "code": "HRB-HSZ",
+      "templates": [
+        {
+          "type": "bill",
+          "name": "红十字妇产账单（分科室 S7）",
+          "strategyKey": "standard_bill",
+          "columnMapping": {
+            "billLayout": "dept_split",
+            "d8DisplaySource": "hospitalName"
+          }
+        }
+      ]
+    }
+  ]
+}

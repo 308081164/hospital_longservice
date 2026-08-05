@@ -1,7 +1,7 @@
 {
   "version": 1,
-  "generated_at": "2026-08-04T13:23:28.384139+00:00",
-  "manifest_hash": "8d71f0eb2bf91e8071ce0f033cf53d261bb01179b6df637a2f945d66725384fb",
+  "generated_at": "2026-08-05T00:32:38.396562+00:00",
+  "manifest_hash": "d02b4ad7e4ae69f9205ee334b2b5b14532690b87c1820134a95f8e96cea5048f",
   "customers": {
     "AL-YY": {
       "code": "AL-YY",
@@ -544,7 +544,7 @@
       "code": "GUOYAO-MAIN",
       "name": "国药总医院主院区",
       "status": null,
-      "billingPricingMode": "hybrid",
+      "billingPricingMode": "special_only",
       "standardPricingOverride": null,
       "billingEnabled": null,
       "productRules": [
@@ -1066,7 +1066,7 @@
       "code": "HRB-HSZ",
       "name": "哈尔滨市红十字妇产医院",
       "status": null,
-      "billingPricingMode": "hybrid",
+      "billingPricingMode": "special_only",
       "standardPricingOverride": null,
       "billingEnabled": true,
       "productRules": [
@@ -1684,7 +1684,7 @@
       "code": "HULAN-HSZ",
       "name": "呼兰区红十字医院",
       "status": null,
-      "billingPricingMode": "standard",
+      "billingPricingMode": "special_only",
       "standardPricingOverride": null,
       "billingEnabled": false,
       "productRules": [
@@ -1847,7 +1847,7 @@
       "code": "HULAN-TCM",
       "name": "呼兰中医院",
       "status": null,
-      "billingPricingMode": "hybrid",
+      "billingPricingMode": "special_only",
       "standardPricingOverride": null,
       "billingEnabled": false,
       "productRules": [
@@ -2012,7 +2012,7 @@
       "code": "NG-FUCHAN",
       "name": "南岗区妇产医院",
       "status": null,
-      "billingPricingMode": "standard",
+      "billingPricingMode": "special_only",
       "standardPricingOverride": null,
       "billingEnabled": false,
       "productRules": [
@@ -2833,7 +2833,7 @@
       "code": "SHKF-YY",
       "name": "黑龙江省社会康复医院",
       "status": null,
-      "billingPricingMode": "standard",
+      "billingPricingMode": "special_only",
       "standardPricingOverride": null,
       "billingEnabled": false,
       "productRules": [
@@ -3381,7 +3381,7 @@
       "code": "WJ-HLJ-ZD",
       "name": "武警黑龙江省总队医院",
       "status": null,
-      "billingPricingMode": "standard",
+      "billingPricingMode": "special_only",
       "standardPricingOverride": null,
       "billingEnabled": null,
       "productRules": [
@@ -3639,16 +3639,29 @@
           "skipDiscount": true,
           "isActive": true,
           "matchMode": "first"
+        },
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "祖研南岗弯盘13",
+          "priority": 4,
+          "price": 13,
+          "keywords": [
+            "弯盘-1/Z2032"
+          ],
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": true,
+          "matchMode": "first"
         }
       ],
-      "rule_count": 6,
-      "active_rule_count": 6
+      "rule_count": 7,
+      "active_rule_count": 7
     },
     "ZUYAN-SF": {
       "code": "ZUYAN-SF",
       "name": "祖研-黑龙江省中医医院（三辅院区）",
       "status": null,
-      "billingPricingMode": "hybrid",
+      "billingPricingMode": "special_only",
       "standardPricingOverride": null,
       "billingEnabled": null,
       "productRules": [
@@ -3826,7 +3839,7 @@
       "code": "ZY3-DIANLI",
       "name": "黑龙江省中医药大学附属第三医院（电力）",
       "status": null,
-      "billingPricingMode": "hybrid",
+      "billingPricingMode": "special_only",
       "standardPricingOverride": null,
       "billingEnabled": null,
       "productRules": [
@@ -4717,7 +4730,7 @@
       "code": "ZYY-D2-NG",
       "name": "黑龙江中医药大学附属第二医院（南岗）",
       "status": null,
-      "billingPricingMode": "hybrid",
+      "billingPricingMode": "special_only",
       "standardPricingOverride": null,
       "billingEnabled": null,
       "productRules": [

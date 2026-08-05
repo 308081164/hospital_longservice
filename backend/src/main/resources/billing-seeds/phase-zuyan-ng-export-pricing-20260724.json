@@ -4,7 +4,7 @@
   "customerUpdates": [
     {
       "code": "ZUYAN-NG",
-      "billingPricingMode": "special_only",
+      "billingPricingMode": "hybrid",
       "billingEnabled": true
     }
   ],

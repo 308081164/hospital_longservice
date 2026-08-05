@@ -1,0 +1,23 @@
+{
+  "version": "1",
+  "description": "祖研南岗 ZUYAN-NG：锁定 hybrid 计价 + 弯盘 pricing 阶段 13 元（非仅 exportApply）",
+  "customerUpdates": [
+    {
+      "code": "ZUYAN-NG",
+      "billingPricingMode": "hybrid",
+      "billingEnabled": true
+    }
+  ],
+  "newRules": [
+    {
+      "code": "ZUYAN-NG",
+      "ruleType": "FIXED_PRICE",
+      "name": "祖研南岗弯盘13",
+      "priority": 4,
+      "price": 13,
+      "keywords": ["弯盘-1/Z2032"],
+      "skipPackaging": true,
+      "skipDiscount": true
+    }
+  ]
+}

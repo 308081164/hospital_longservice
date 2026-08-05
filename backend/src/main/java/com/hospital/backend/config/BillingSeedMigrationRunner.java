@@ -251,7 +251,11 @@ public class BillingSeedMigrationRunner implements CommandLineRunner {
             new IncrementalSeed("billing_seed_hrb_cj_dedup_customer_20260731_v1",
                     "billing-seeds/phase-hrb-cj-dedup-customer-20260731.json"),
             new IncrementalSeed("billing_seed_hrb_hit_pricing_fix_20260801_v1",
-                    "billing-seeds/phase-hrb-hit-pricing-fix-20260801.json")
+                    "billing-seeds/phase-hrb-hit-pricing-fix-20260801.json"),
+            new IncrementalSeed("billing_seed_hrb_hsz_dept_split_20260805_v1",
+                    "billing-seeds/phase-hrb-hsz-dept-split-20260805.json"),
+            new IncrementalSeed("billing_seed_zuyan_ng_pricing_fix_20260805_v1",
+                    "billing-seeds/phase-zuyan-ng-pricing-fix-20260805.json")
     );
 
     private static final String ZYY_D1_P0_MARKER = "billing_seed_zyy_d1_p0_v2";
@@ -303,7 +307,8 @@ public class BillingSeedMigrationRunner implements CommandLineRunner {
                 applied = applyCustomerStandardPricingSeedFile(incremental.classpathFile());
             } else if ("billing-seeds/phase-export-rules-20260723.json".equals(incremental.classpathFile())
                     || "billing-seeds/phase-export-dept-split-20260728.json".equals(incremental.classpathFile())
-                    || "billing-seeds/phase-export-fuyi-11col-20260730.json".equals(incremental.classpathFile())) {
+                    || "billing-seeds/phase-export-fuyi-11col-20260730.json".equals(incremental.classpathFile())
+                    || "billing-seeds/phase-hrb-hsz-dept-split-20260805.json".equals(incremental.classpathFile())) {
                 applied = applyExportRulesSeedFile(incremental.classpathFile());
             } else if ("billing-seeds/phase-batch-p0.2.json".equals(incremental.classpathFile())
                     || "billing-seeds/phase-batch-p0.3.json".equals(incremental.classpathFile())
@@ -379,7 +384,8 @@ public class BillingSeedMigrationRunner implements CommandLineRunner {
                     || "billing-seeds/phase-zyy-d1-july-parity-reapply-20260804.json".equals(incremental.classpathFile())
                     || "billing-seeds/phase-zyy-d1-import-material-parity-20260804.json".equals(incremental.classpathFile())
                     || "billing-seeds/phase-zyy-d1-z2044-infer-fix-20260804.json".equals(incremental.classpathFile())
-                    || "billing-seeds/phase-changjian-rule-migrate-20260804.json".equals(incremental.classpathFile())) {
+                    || "billing-seeds/phase-changjian-rule-migrate-20260804.json".equals(incremental.classpathFile())
+                    || "billing-seeds/phase-zuyan-ng-pricing-fix-20260805.json".equals(incremental.classpathFile())) {
                 applyBatchPatchSeedFile(incremental.classpathFile());
             } else if ("billing-seeds/phase-billing-mode-backfill-20260730.json".equals(incremental.classpathFile())) {
                 applyBillingModeBackfillSeedFile(incremental.classpathFile());
