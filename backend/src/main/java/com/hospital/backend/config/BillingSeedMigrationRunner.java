@@ -254,6 +254,8 @@ public class BillingSeedMigrationRunner implements CommandLineRunner {
                     "billing-seeds/phase-hrb-hit-pricing-fix-20260801.json"),
             new IncrementalSeed("billing_seed_hrb_hsz_dept_split_20260805_v1",
                     "billing-seeds/phase-hrb-hsz-dept-split-20260805.json"),
+            new IncrementalSeed("billing_seed_hrb_hsz_dept_split_v2_20260805_v1",
+                    "billing-seeds/phase-hrb-hsz-dept-split-v2-20260805.json"),
             new IncrementalSeed("billing_seed_zuyan_ng_pricing_fix_20260805_v1",
                     "billing-seeds/phase-zuyan-ng-pricing-fix-20260805.json")
     );
@@ -308,7 +310,8 @@ public class BillingSeedMigrationRunner implements CommandLineRunner {
             } else if ("billing-seeds/phase-export-rules-20260723.json".equals(incremental.classpathFile())
                     || "billing-seeds/phase-export-dept-split-20260728.json".equals(incremental.classpathFile())
                     || "billing-seeds/phase-export-fuyi-11col-20260730.json".equals(incremental.classpathFile())
-                    || "billing-seeds/phase-hrb-hsz-dept-split-20260805.json".equals(incremental.classpathFile())) {
+                    || "billing-seeds/phase-hrb-hsz-dept-split-20260805.json".equals(incremental.classpathFile())
+                    || "billing-seeds/phase-hrb-hsz-dept-split-v2-20260805.json".equals(incremental.classpathFile())) {
                 applied = applyExportRulesSeedFile(incremental.classpathFile());
             } else if ("billing-seeds/phase-batch-p0.2.json".equals(incremental.classpathFile())
                     || "billing-seeds/phase-batch-p0.3.json".equals(incremental.classpathFile())

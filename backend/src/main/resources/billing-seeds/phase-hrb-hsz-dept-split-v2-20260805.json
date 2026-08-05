@@ -1,6 +1,6 @@
 {
   "version": "1",
-  "description": "红十字妇产 HRB-HSZ：强制分科室导出，避免 >1000 行走 combined 单表",
+  "description": "红十字妇产 HRB-HSZ：修正 exportTemplateOverrides 键名，强制 dept_split",
   "exportTemplateOverrides": [
     {
       "code": "HRB-HSZ",
