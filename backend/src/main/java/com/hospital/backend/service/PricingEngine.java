@@ -22,6 +22,8 @@ public class PricingEngine {
 
     private static final ObjectMapper mapper = new ObjectMapper();
     private static final int MAX_CACHE_SIZE = 2000;
+    /** 账单展示价与规则价在标准路径下的容差（元），与 S4 TOLERANCE 一致 */
+    private static final double DISPLAY_PRICE_TOLERANCE = 0.05;
 
     // ---- 缓存：袋尺寸检测器（线程安全，有限容量） ----
     private final JsonNode rules;
@@ -465,7 +467,15 @@ public class PricingEngine {
             status = "unchanged";
             difference = 0.0;
         } else if (difference != null && Math.abs(difference) > 0.001) {
-            status = "warning";
+            if (specialPrice == null && unitPrice != null && expectedUnitPrice != null
+                    && Math.abs(expectedUnitPrice - unitPrice) <= DISPLAY_PRICE_TOLERANCE) {
+                status = "unchanged";
+                difference = 0.0;
+                notes.add("账单单价与规则价相差不超过 "
+                        + fmt(DISPLAY_PRICE_TOLERANCE) + " 元，按展示精度视为一致。");
+            } else {
+                status = "warning";
+            }
         } else if (isUnpricedZeroImport(unitPrice, totalPrice, expectedUnitPrice, specialPrice)) {
             status = "warning";
         } else {

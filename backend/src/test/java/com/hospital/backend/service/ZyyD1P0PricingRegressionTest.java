@@ -138,6 +138,12 @@ class ZyyD1P0PricingRegressionTest {
     }
 
     @Test
+    void shouldTreatFuyiDisplayRoundingWithinToleranceAsUnchanged() {
+        assertUnchanged(row("开口器-1/Z1026", "额外包(纸塑袋)", "高温纸塑袋100*200", 1, 1, 6.4, 6.4));
+        assertUnchanged(row("舌钳子-1/Z1526", "额外包(纸塑袋)", "高温纸塑袋150*260", 1, 1, 8.8, 8.8));
+    }
+
+    @Test
     void shouldPriceStandardHighTempPaperPlasticWithFuyiTable() {
         assertWarning(row("示例包", "额外包(纸塑袋)", "高温纸塑袋150*260", 8, 1, 10.4, 83.2), 35.2);
         assertUnchanged(row("单件包", "额外包(纸塑袋)", "高温纸塑袋150*260", 1, 1, 8.79, 8.79));
