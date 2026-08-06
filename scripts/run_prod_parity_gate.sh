@@ -159,12 +159,18 @@ summary = data.get("summary") or {}
 missing = int(summary.get("total_missing") or 0)
 changed = int(summary.get("total_changed") or 0)
 extra = int(summary.get("total_extra") or 0)
+override_drift = int(summary.get("override_drift_count") or 0)
+billing_drift = int(summary.get("billing_enabled_drift_count") or 0)
 print(json.dumps(data, ensure_ascii=False, indent=2))
 Path("测试用例/billing_rules_parity_report.json").write_text(
     json.dumps(data, ensure_ascii=False, indent=2) + "\n", encoding="utf-8"
 )
-if missing or changed:
-    print(f"rules parity FAIL: missing={missing} changed={changed} extra={extra}", file=sys.stderr)
+if missing or changed or override_drift or billing_drift:
+    print(
+        f"rules parity FAIL: missing={missing} changed={changed} extra={extra} "
+        f"override_drift={override_drift} billing_enabled_drift={billing_drift}",
+        file=sys.stderr,
+    )
     sys.exit(1)
 if extra:
     print(f"::warning::rules extra={extra} (legacy/UI rules, non-blocking)")

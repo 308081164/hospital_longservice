@@ -3,6 +3,7 @@
 
 from __future__ import annotations
 
+import hashlib
 import json
 import math
 from pathlib import Path
@@ -116,6 +117,23 @@ def _fold_equal(a: float | None, b: float | None) -> bool:
     return math.isclose(a, b, abs_tol=0.0001)
 
 
+def canonical_json_hash(val: Any) -> str | None:
+    if val is None:
+        return None
+    if isinstance(val, str):
+        text = val.strip()
+        if not text:
+            return None
+        try:
+            val = json.loads(text)
+        except json.JSONDecodeError:
+            return hashlib.sha256(text.encode("utf-8")).hexdigest()
+    if isinstance(val, (dict, list)):
+        canonical = json.dumps(val, ensure_ascii=False, sort_keys=True, separators=(",", ":"))
+        return hashlib.sha256(canonical.encode("utf-8")).hexdigest()
+    return hashlib.sha256(str(val).encode("utf-8")).hexdigest()
+
+
 def diff_rule(expected: dict[str, Any], actual: dict[str, Any]) -> list[str]:
     diffs: list[str] = []
     exp = normalize_rule(expected)
@@ -148,6 +166,10 @@ def compare_customer(
     prod_rules: list[dict[str, Any]],
     expected_mode: str | None = None,
     prod_mode: str | None = None,
+    expected_override: Any = None,
+    prod_override: Any = None,
+    expected_billing_enabled: bool | None = None,
+    prod_billing_enabled: bool | None = None,
 ) -> dict[str, Any]:
     exp_by_name = {normalize_rule(r)["name"]: r for r in expected_rules if normalize_rule(r)["name"]}
     prod_by_name = {normalize_rule(r)["name"]: r for r in prod_rules if normalize_rule(r)["name"]}
@@ -163,7 +185,22 @@ def compare_customer(
     mode_expected = (expected_mode or "standard").strip().lower()
     mode_prod = (prod_mode or "standard").strip().lower()
     mode_drift = mode_expected != mode_prod
-    ok = not missing and not extra and not changed and not mode_drift
+    exp_override_hash = canonical_json_hash(expected_override)
+    prod_override_hash = canonical_json_hash(prod_override)
+    override_drift = False
+    if exp_override_hash is not None:
+        override_drift = exp_override_hash != prod_override_hash
+    billing_enabled_drift = False
+    if expected_billing_enabled is not None and prod_billing_enabled is not None:
+        billing_enabled_drift = bool(expected_billing_enabled) != bool(prod_billing_enabled)
+    ok = (
+        not missing
+        and not extra
+        and not changed
+        and not mode_drift
+        and not override_drift
+        and not billing_enabled_drift
+    )
     return {
         "code": code,
         "expected_count": len(expected_rules),
@@ -173,6 +210,12 @@ def compare_customer(
         "mode_expected": mode_expected,
         "mode_prod": mode_prod,
         "mode_drift": mode_drift,
+        "override_drift": override_drift,
+        "override_hash_expected": exp_override_hash,
+        "override_hash_prod": prod_override_hash,
+        "billing_enabled_expected": expected_billing_enabled,
+        "billing_enabled_prod": prod_billing_enabled,
+        "billing_enabled_drift": billing_enabled_drift,
         "missing": missing,
         "extra": extra,
         "changed": changed,
@@ -244,6 +287,13 @@ def run_rules_compare(
             or customer.get("billing_pricing_mode")
             or "standard"
         )
+        prod_override = customer.get("standardPricingOverride") or customer.get(
+            "standard_pricing_override"
+        )
+        prod_billing_enabled = customer.get("billingEnabled")
+        if prod_billing_enabled is None:
+            prod_billing_enabled = customer.get("billing_enabled")
+        expected_billing_enabled = entry.get("billingEnabled")
         results.append(
             compare_customer(
                 code=target,
@@ -251,6 +301,10 @@ def run_rules_compare(
                 prod_rules=prod_rules,
                 expected_mode=entry.get("billingPricingMode"),
                 prod_mode=str(prod_mode),
+                expected_override=entry.get("standardPricingOverride"),
+                prod_override=prod_override,
+                expected_billing_enabled=expected_billing_enabled,
+                prod_billing_enabled=prod_billing_enabled,
             )
         )
 
@@ -263,6 +317,8 @@ def run_rules_compare(
         "total_extra": sum(int(r.get("extra_count") or 0) for r in results),
         "total_changed": sum(int(r.get("changed_count") or 0) for r in results),
         "mode_drift_count": sum(1 for r in results if r.get("mode_drift")),
+        "override_drift_count": sum(1 for r in results if r.get("override_drift")),
+        "billing_enabled_drift_count": sum(1 for r in results if r.get("billing_enabled_drift")),
     }
     return {
         "command": "rules compare",
@@ -282,7 +338,9 @@ def format_human(report: dict[str, Any]) -> str:
         f"missing {report['summary']['total_missing']} · "
         f"extra {report['summary']['total_extra']} · "
         f"changed {report['summary']['total_changed']} · "
-        f"mode_drift {report['summary'].get('mode_drift_count', 0)}",
+        f"mode_drift {report['summary'].get('mode_drift_count', 0)} · "
+        f"override_drift {report['summary'].get('override_drift_count', 0)} · "
+        f"billing_enabled_drift {report['summary'].get('billing_enabled_drift_count', 0)}",
     ]
     for row in report.get("results") or []:
         code = row.get("code")
@@ -293,6 +351,13 @@ def format_human(report: dict[str, Any]) -> str:
         mode_note = ""
         if row.get("mode_drift"):
             mode_note = f" · mode {row.get('mode_prod')}!={row.get('mode_expected')}"
+        if row.get("override_drift"):
+            mode_note += " · override drift"
+        if row.get("billing_enabled_drift"):
+            mode_note += (
+                f" · billingEnabled {row.get('billing_enabled_prod')}"
+                f"!={row.get('billing_enabled_expected')}"
+            )
         lines.append(
             f"  {code}: {status} · expected {row.get('expected_count')} · "
             f"prod {row.get('prod_count')} · "

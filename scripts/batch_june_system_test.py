@@ -421,13 +421,19 @@ def main() -> int:
         write_pricing_job_json(pricing)
         text = render_dual_index(stable, pricing, preamble)
     else:
-        stable = {r.hospital: r for r in results}
-        pricing = dict(stable)
+        # Full run updates pricing track only; preserve stable baseline main table.
+        text = OUTPUT_INDEX.read_text(encoding="utf-8") if OUTPUT_INDEX.is_file() else ""
+        preamble, _, _ = _split_md_sections(text)
+        if not preamble.strip():
+            preamble = (
+                "# 批量 6 月系统对账结果\n\n"
+                "> **S8 稳定基线**：见 `job_baseline_stable.json`。\n"
+            )
+        stable = parse_existing_results()
+        if not stable:
+            stable = {h: CompareResult(hospital=h) for h in TODO_HOSPITALS}
+        pricing = {r.hospital: r for r in results}
         write_pricing_job_json(pricing)
-        preamble = (
-            "# 批量 6 月系统对账结果\n\n"
-            "> **S8 稳定基线**：见 `job_baseline_stable.json`。\n"
-        )
         text = render_dual_index(stable, pricing, preamble)
 
     OUTPUT_INDEX.write_text(text, encoding="utf-8")
