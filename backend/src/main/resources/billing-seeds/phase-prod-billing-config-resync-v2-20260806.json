@@ -1,0 +1,83 @@
+{
+  "version": "1",
+  "description": "生产配置重同步 v2：P0.6 修正后重放别名 + 附一 hybrid 价表",
+  "customerUpdates": [
+    {
+      "code": "ZYY-D1",
+      "billingPricingMode": "hybrid",
+      "standardPricingOverride": {
+        "highTemperature": {
+          "paperPlastic": {
+            "capMode": "fuyi",
+            "perPackagePrice": 4.4,
+            "minCharge": 13.2,
+            "bagSizes": [
+              {"size": 25, "price": 12.79, "keywords": ["25cm", "25", "特大"]},
+              {"size": 20, "price": 10.39, "keywords": ["20cm", "20", "大"]},
+              {"size": 15, "price": 8.79, "keywords": ["15cm", "15", "中"]},
+              {"size": 10, "price": 6.39, "keywords": ["10cm", "10", "小"]}
+            ]
+          },
+          "nonWoven": {
+            "minCharge": 13.2,
+            "flatPerPackagePrice": 4.4,
+            "flatRateThreshold": 3
+          }
+        },
+        "lowTemperature": {
+          "paperPlastic": {
+            "bagSizes": [
+              {"size": 30, "price": 27.97, "keywords": ["30cm", "30", "低温灭菌 30cm"]},
+              {"size": 25, "price": 23.98, "keywords": ["25cm", "25", "低温灭菌 25cm"]},
+              {"size": 20, "price": 22.38, "keywords": ["20cm", "20", "低温灭菌 20cm"]},
+              {"size": 15, "price": 19.98, "keywords": ["15cm", "15", "低温灭菌 15cm"]},
+              {"size": 10, "price": 17.58, "keywords": ["10cm", "10", "低温灭菌 10cm"]}
+            ],
+            "tierPrices": [
+              {"count": 20, "price": 239.76},
+              {"count": 10, "price": 131.87},
+              {"count": 5, "price": 70.33}
+            ],
+            "remainderPerPiecePrice": 17.58
+          },
+          "nonWoven": {
+            "tierPrices": [
+              {"count": 20, "price": 239.76},
+              {"count": 10, "price": 131.87},
+              {"count": 5, "price": 70.33}
+            ],
+            "remainderPerPiecePrice": 17.58,
+            "minSingleCharge": 17.58
+          }
+        },
+        "dressingPack": {
+          "nonWoven": {
+            "below90": 19.98,
+            "equals90": 23.98,
+            "range12to15": 27.97
+          }
+        }
+      }
+    },
+    {"code": "SHENG-YY-NG", "billingPricingMode": "hybrid"},
+    {"code": "SHENG-YY-XF", "billingPricingMode": "hybrid"},
+    {"code": "ERYY-NG", "billingPricingMode": "special_only", "billingEnabled": false},
+    {"code": "ERYY-SB", "billingPricingMode": "special_only", "billingEnabled": false},
+    {"code": "HULAN-RM", "billingPricingMode": "special_only", "billingEnabled": false},
+    {"code": "HRB-HSZ", "billingPricingMode": "special_only", "billingEnabled": false},
+    {"code": "HRB-HIT", "billingPricingMode": "special_only", "billingEnabled": false},
+    {"code": "HRB-HEU", "billingPricingMode": "special_only", "billingEnabled": false}
+  ],
+  "customerAliases": [
+    {"code": "ERYY-NG", "alias": "黑龙江省第二医院（南岗院区）", "matchType": "exact"},
+    {"code": "ERYY-SB", "alias": "黑龙江省第二医院（松北院区）", "matchType": "exact"},
+    {"code": "HRB-HIT", "alias": "哈尔滨工业大学医院", "matchType": "exact"},
+    {"code": "HRB-HIT", "alias": "哈尔滨工业大学", "matchType": "contains"},
+    {"code": "HRB-HEU", "alias": "哈尔滨工程大学医院", "matchType": "exact"},
+    {"code": "HULAN-RM", "alias": "哈尔滨市呼兰区第一人民医院", "matchType": "exact"},
+    {"code": "HRB-HSZ", "alias": "哈尔滨市红十字妇产医院", "matchType": "exact"},
+    {"code": "ZYY-D1", "alias": "黑龙江中医药大学附属第一医院", "matchType": "exact"},
+    {"code": "SHENG-YY-NG", "alias": "黑龙江省医院（南岗院区）", "matchType": "exact"},
+    {"code": "SHENG-YY-XF", "alias": "黑龙江省医院（香坊院区）", "matchType": "exact"}
+  ]
+}
