@@ -1,6 +1,6 @@
 {
   "version": "1",
-  "description": "P0.6 验收通过院（pass/pass_zero）启用 billing，其余客户停用",
+  "description": "P0.6 验收通过院启用 billing（31 院）；L9-L61 pass_zero 院（ERYY/HULAN/HRB-HSZ/HRB-HIT/HRB-HEU）保持 billing_enabled=0",
   "enableBilling": [
     "ZYY-D1",
     "ZY3-DIANLI",

@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# 在生产服务器上重新应用 P0.6（36 院启用 billing，其余停用）
+# 在生产服务器上重新应用 P0.6（31 院启用 billing，L9-L61 pass_zero 院除外）
 set -euo pipefail
 
 DEPLOY_PATH="${DEPLOY_PATH:-/mnt/newdisk/app/Hospital}"
@@ -53,8 +53,9 @@ import_p0_6_sql() {
     ENABLED=$(docker exec "$CONTAINER" mysql -uroot -p"${MYSQL_ROOT_PASSWORD}" -N "$DB" -e \
       "SELECT COUNT(*) FROM customer WHERE billing_enabled=1")
   fi
-  echo "billing_enabled=1: ${ENABLED}（期望 36）"
-  [ "${ENABLED}" = "36" ] || { echo "P0.6 SQL 后启用数不对" >&2; exit 1; }
+  EXPECTED="${EXPECTED_BILLING_ENABLED:-31}"
+  echo "billing_enabled=1: ${ENABLED}（期望 ${EXPECTED}）"
+  [ "${ENABLED}" = "${EXPECTED}" ] || { echo "P0.6 SQL 后启用数不对" >&2; exit 1; }
 }
 
 echo "==> 导入 P0.6 SQL"

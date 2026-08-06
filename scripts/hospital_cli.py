@@ -1105,7 +1105,7 @@ def build_parser() -> argparse.ArgumentParser:
 
     p_deploy = sub.add_parser("deploy-check", help="L7-L8 billing_enabled API vs MySQL")
     add_common_flags(p_deploy)
-    p_deploy.add_argument("--expected", type=int, default=int(os.environ.get("EXPECTED_BILLING_ENABLED", "36")))
+    p_deploy.add_argument("--expected", type=int, default=int(os.environ.get("EXPECTED_BILLING_ENABLED", "31")))
     p_deploy.add_argument("--skip-mysql", action="store_true")
     p_deploy.set_defaults(func=cmd_deploy_check)
 
@@ -1135,7 +1135,7 @@ def build_parser() -> argparse.ArgumentParser:
     p_verify.add_argument("--level", choices=["basic", "full"], default="basic")
     p_verify.add_argument("--hospitals", help="逗号分隔医院名（full 时 S8/S4 白名单）")
     p_verify.add_argument("--job-map", type=Path)
-    p_verify.add_argument("--expected", type=int, default=int(os.environ.get("EXPECTED_BILLING_ENABLED", "36")))
+    p_verify.add_argument("--expected", type=int, default=int(os.environ.get("EXPECTED_BILLING_ENABLED", "31")))
     p_verify.add_argument("--skip-mysql", action="store_true")
     p_verify.add_argument("--allow-import", action="store_true", help="full 时允许 S4 import 副作用")
     p_verify.set_defaults(func=cmd_verify)
