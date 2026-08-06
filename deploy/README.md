@@ -26,8 +26,8 @@
 
 脚本 `deploy/verify-billing-on-server.sh` + `deploy/verify-billing-api-on-server.sh`：
 
-- MySQL（与 backend **同一连库目标**）：`billing_enabled=1` 为 **31**，P0.6 marker `billing_seed_batch_p0_6_v1` 存在。
-- API：`GET /api/v1/customers` 统计 `billing_enabled=1` 为 **31**，且 **与 MySQL 计数一致**（UI 客户管理读此接口）。
+- MySQL（与 backend **同一连库目标**）：`billing_enabled=1` 为 **24**，P0.6 marker `billing_seed_batch_p0_6_v1` 存在。
+- API：`GET /api/v1/customers` 统计 `billing_enabled=1` 为 **24**，且 **与 MySQL 计数一致**（UI 客户管理读此接口）。
 
 ### 2.2 GitHub Actions 重跑失败 job 的注意点
 
@@ -38,13 +38,13 @@
 
 ---
 
-## 3. P0.6 特色账单开关（31 院）
+## 3. P0.6 特色账单开关（24 院）
 
 | 文件 | 说明 |
 |------|------|
-| `deploy/sql/p0-6-billing-toggle.sql` | 幂等 SQL：31 院 `billing_enabled=1`，其余 `0`，写入 marker |
+| `deploy/sql/p0-6-billing-toggle.sql` | 幂等 SQL：24 院 `billing_enabled=1`，其余 `0`，写入 marker |
 | `deploy/mysql-hospital-cli.sh` | 按 **运行中 backend 的 MYSQL_* ** 或 `.env` 执行 SQL/查询（避免 docker exec 打错库） |
-| `deploy/apply-p0-6-billing-sql.sh` | 仅导入 P0.6 SQL 并检查 31 |
+| `deploy/apply-p0-6-billing-sql.sh` | 仅导入 P0.6 SQL 并检查 24 |
 | `deploy/reapply-billing-p0-6-on-server.sh` | 导入 SQL → 重启 backend → MySQL + API 校验 |
 | `deploy/verify-billing-on-server.sh` | MySQL 统计 + 调用 API 校验 |
 
@@ -61,7 +61,7 @@ P0.6 **只改客户开关**，**不会**同步全部 `customer_product_rule`；�
 
 ## 4. 故障现象 → 原因 → 处理
 
-### 4.1 CI 显示 MySQL 31 院启用，浏览器仍约 10 院
+### 4.1 CI 显示 MySQL 24 院启用，浏览器仍约 10 院
 
 | 原因 | 处理 |
 |------|------|
@@ -95,7 +95,7 @@ docker inspect hospital-backend --format '{{range .Config.Env}}{{println .}}{{en
 bash deploy/verify-billing-on-server.sh
 ```
 
-浏览器：`http://39.102.213.51:8854` → 客户管理 → **特色账单已启用 31 / …**。
+浏览器：`http://39.102.213.51:8854` → 客户管理 → **特色账单已启用 24 / …**。
 
 ---
 

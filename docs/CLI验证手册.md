@@ -7,7 +7,7 @@ Hospital 部署与回归的统一命令行入口：`./bin/hospital-cli`。
 | 子命令 | 说明 |
 |--------|------|
 | `smoke` | L0–L5：health → version → login → userinfo → GET job → export-v2(bill) |
-| `deploy-check` | L7–L8：`billing_enabled` API 计数 vs 期望（默认 31）及 MySQL |
+| `deploy-check` | L7–L8：`billing_enabled` API 计数 vs 期望（默认 24）及 MySQL |
 | `jobs list` | 按 `--hospital` 过滤 reconciliation Job |
 | `s8` | 透传 `batch_s8_export_compare.py` |
 | `s4` | 透传 `batch_june_system_test.py`（会 import，有副作用） |
@@ -34,7 +34,7 @@ Hospital 部署与回归的统一命令行入口：`./bin/hospital-cli`。
 |------|------|
 | `SMOKE_USER` / `SMOKE_PASS` | smoke 登录 |
 | `ADMIN_PASSWORD` / `APP_ADMIN_PASSWORD` | 生产 admin 密码（`.env`） |
-| `EXPECTED_BILLING_ENABLED` | deploy-check 期望计数（默认 31） |
+| `EXPECTED_BILLING_ENABLED` | deploy-check 期望计数（默认 24） |
 | `DEPLOY_PATH` | 部署目录，用于加载 `.env` 与 `mysql-hospital-cli.sh` |
 
 CI `post-deploy-parity-gate`：未配置 GitHub Secrets `SMOKE_USER`/`SMOKE_PASS` 时，`run_prod_parity_gate.sh` 通过 SSH 只读生产机 `$DEPLOY_PATH/.env` 加载凭证；可选配置 Secrets 覆盖。

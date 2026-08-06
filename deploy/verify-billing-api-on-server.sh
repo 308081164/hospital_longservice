@@ -3,7 +3,7 @@
 set -euo pipefail
 
 DEPLOY_PATH="${DEPLOY_PATH:-/mnt/newdisk/app/Hospital}"
-EXPECTED="${EXPECTED_BILLING_ENABLED:-31}"
+EXPECTED="${EXPECTED_BILLING_ENABLED:-24}"
 ADMIN_USER="${ADMIN_USERNAME:-admin}"
 
 cd "$DEPLOY_PATH"

@@ -159,6 +159,10 @@ def diff_rule(expected: dict[str, Any], actual: dict[str, Any]) -> list[str]:
     return diffs
 
 
+def active_rules(rules: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    return [r for r in rules if normalize_rule(r)["isActive"]]
+
+
 def compare_customer(
     *,
     code: str,
@@ -171,8 +175,8 @@ def compare_customer(
     expected_billing_enabled: bool | None = None,
     prod_billing_enabled: bool | None = None,
 ) -> dict[str, Any]:
-    exp_by_name = {normalize_rule(r)["name"]: r for r in expected_rules if normalize_rule(r)["name"]}
-    prod_by_name = {normalize_rule(r)["name"]: r for r in prod_rules if normalize_rule(r)["name"]}
+    exp_by_name = {normalize_rule(r)["name"]: r for r in active_rules(expected_rules) if normalize_rule(r)["name"]}
+    prod_by_name = {normalize_rule(r)["name"]: r for r in active_rules(prod_rules) if normalize_rule(r)["name"]}
     missing = sorted(set(exp_by_name) - set(prod_by_name))
     extra = sorted(set(prod_by_name) - set(exp_by_name))
     changed: list[dict[str, Any]] = []

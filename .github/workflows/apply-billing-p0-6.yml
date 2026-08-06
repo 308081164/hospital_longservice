@@ -1,4 +1,4 @@
-# 手动触发：在生产服务器重新应用 P0.6 billing 开关（31 院启用，L9-L61 pass_zero 院除外）
+# 手动触发：在生产服务器重新应用 P0.6 billing 开关（24 院启用，billingEnabled=false 院除外）
 name: Apply Billing P0.6 on Production
 
 on:

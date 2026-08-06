@@ -1,0 +1,10 @@
+{
+  "version": "1",
+  "description": "停用 prod 遗留短名规则（与 manifest 正式规则名重复，parity extra）",
+  "deactivateRules": [
+    {"code": "ZYY-D1", "ruleName": "冲洗头"},
+    {"code": "ZYY-D1", "ruleName": "橄榄头"},
+    {"code": "ZUYAN-NG", "ruleName": "排针"},
+    {"code": "ZUYAN-XA", "ruleName": "排针"}
+  ]
+}
