@@ -1961,7 +1961,7 @@ public class PricingEngine {
         if (packLower.contains("特殊钳") && packLower.contains("z2044")) {
             return "低温灭菌 20cm";
         }
-        if (packLower.contains("z1550") || packLower.contains("z2060") || packLower.contains("w12050")) {
+        if (packLower.contains("w12050")) {
             return "低温灭菌 30cm";
         }
         if (packLower.contains("z3095")) {

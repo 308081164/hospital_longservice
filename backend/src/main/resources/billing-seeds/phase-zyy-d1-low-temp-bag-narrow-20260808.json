@@ -1,0 +1,18 @@
+{
+  "version": "1",
+  "description": "附一 ZYY-D1：停用 material 泛匹配低温袋规则（仅保留膀胱取石钳→低温袋15cm）",
+  "deactivateRules": [
+    {"code": "ZYY-D1", "ruleName": "低温袋10cm"},
+    {"code": "ZYY-D1", "ruleName": "低温袋20cm"},
+    {"code": "ZYY-D1", "ruleName": "低温袋25cm"},
+    {"code": "ZYY-D1", "ruleName": "低温袋30cm"},
+    {"code": "ZYY-D1", "ruleName": "王树人特器26golden328"}
+  ],
+  "ruleUpdates": [
+    {
+      "code": "ZYY-D1",
+      "ruleName": "低温袋15cm",
+      "setKeywords": ["膀胱取石钳"]
+    }
+  ]
+}

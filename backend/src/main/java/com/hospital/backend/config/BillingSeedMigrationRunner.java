@@ -263,7 +263,15 @@ public class BillingSeedMigrationRunner implements CommandLineRunner {
             new IncrementalSeed("billing_seed_prod_billing_config_resync_v2_20260806_v1",
                     "billing-seeds/phase-prod-billing-config-resync-v2-20260806.json"),
             new IncrementalSeed("billing_seed_parity_legacy_rule_cleanup_20260806_v1",
-                    "billing-seeds/phase-parity-legacy-rule-cleanup-20260806.json")
+                    "billing-seeds/phase-parity-legacy-rule-cleanup-20260806.json"),
+            new IncrementalSeed("billing_seed_zyy_d1_golden_deactivate_20260808_v1",
+                    "billing-seeds/phase-zyy-d1-golden-deactivate-20260808.json"),
+            new IncrementalSeed("billing_seed_xinfa_lens_cotton_close_20260808_v1",
+                    "billing-seeds/phase-xinfa-lens-cotton-close-20260808.json"),
+            new IncrementalSeed("billing_seed_zyy_d1_low_temp_bag_narrow_20260808_v1",
+                    "billing-seeds/phase-zyy-d1-low-temp-bag-narrow-20260808.json"),
+            new IncrementalSeed("billing_seed_zyy_d1_pricing_align_close_20260808_v1",
+                    "billing-seeds/phase-zyy-d1-pricing-align-close-20260808.json")
     );
 
     private static final String ZYY_D1_P0_MARKER = "billing_seed_zyy_d1_p0_v2";

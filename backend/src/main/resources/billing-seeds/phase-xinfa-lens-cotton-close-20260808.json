@@ -1,0 +1,51 @@
+{
+  "version": "1",
+  "description": "新发红十字 XINFA-HSZ：低温镜头固定价 + 棉球 any_price，闭合 S4 extra",
+  "newRules": [
+    {
+      "code": "XINFA-HSZ",
+      "ruleType": "FIXED_PRICE",
+      "name": "新发镜头12度28",
+      "priority": 5,
+      "price": 28,
+      "keywords": ["12度镜头", "镜头-1/双"],
+      "temperature": "LT",
+      "skipPackaging": true,
+      "skipDiscount": true
+    },
+    {
+      "code": "XINFA-HSZ",
+      "ruleType": "FIXED_PRICE",
+      "name": "新发镜头0度35",
+      "priority": 5,
+      "price": 35,
+      "keywords": ["0度镜头"],
+      "temperature": "LT",
+      "skipPackaging": true,
+      "skipDiscount": true
+    },
+    {
+      "code": "XINFA-HSZ",
+      "ruleType": "FIXED_PRICE",
+      "name": "新发镜头30度35",
+      "priority": 5,
+      "price": 35,
+      "keywords": ["30度镜头", "30°镜头"],
+      "temperature": "LT",
+      "skipPackaging": true,
+      "skipDiscount": true
+    },
+    {
+      "code": "XINFA-HSZ",
+      "ruleType": "FIXED_PRICE",
+      "name": "新发棉球纸塑袋",
+      "priority": 10,
+      "price": 4.0,
+      "keywords": ["棉球/Z", "带线棉球"],
+      "matchMode": "any_price",
+      "acceptedPrices": [4.0, 2.5, 7.5, 5.5],
+      "skipPackaging": true,
+      "skipDiscount": true
+    }
+  ]
+}

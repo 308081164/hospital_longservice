@@ -1,0 +1,13 @@
+{
+  "version": "1",
+  "description": "附一 ZYY-D1：换药包/宫腔镜/腹腔镜价对齐 CSV + 停用重复外二换药包规则",
+  "deactivateRules": [
+    {"code": "ZYY-D1", "ruleName": "外二换药包按包21.99"}
+  ],
+  "ruleUpdates": [
+    {"code": "ZYY-D1", "ruleName": "换药包120布组合价", "setPrice": 22.0},
+    {"code": "ZYY-D1", "ruleName": "宫腔镜镜头-3件按包52.74", "setPrice": 52.8},
+    {"code": "ZYY-D1", "ruleName": "30°腹腔镜组合价", "setPrice": 30.4},
+    {"code": "ZYY-D1", "ruleName": "30度腹腔镜ground30.38", "setPrice": 30.4}
+  ]
+}

@@ -1,0 +1,14 @@
+{
+  "version": "1",
+  "description": "附一 ZYY-D1：停用 prod golden 规则，恢复换药包/腹腔镜正式 FIXED_PRICE 优先级",
+  "deactivateRules": [
+    {
+      "code": "ZYY-D1",
+      "ruleName": "外二换药包120布golden21.99"
+    },
+    {
+      "code": "ZYY-D1",
+      "ruleName": "30度腹腔镜组合价golden30.4"
+    }
+  ]
+}

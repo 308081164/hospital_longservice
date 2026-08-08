@@ -3084,4 +3084,26 @@ class PricingEngineTest {
 
         return rules;
     }
+
+    @Test
+    void xinfaLowTempLensFixedPriceMatchesBill() throws Exception {
+        ObjectNode rules = (ObjectNode) defaultRules();
+        ObjectNode specialRules = (ObjectNode) rules.path("specialRules");
+        ArrayNode fixedPrices = specialRules.withArray("fixedPrices");
+        ObjectNode lens30 = fixedPrices.addObject();
+        lens30.put("ruleId", 901L);
+        lens30.put("name", "新发镜头30度35");
+        lens30.put("price", 35.0);
+        lens30.put("temperature", "LT");
+        lens30.put("skipPackaging", true);
+        lens30.putArray("hospitals").add("新发红十字医院");
+        lens30.putArray("keywords").add("30度镜头");
+
+        PricingEngine engine = new PricingEngine(rules);
+        PricingEngine.ProcessedResult result = engine.processRow(row(
+                "新发红十字医院", "低温灭菌（纸塑袋）", "30度镜头-1/双/Z1550", "低温灭菌 20cm",
+                1, 1, 35.0, 35.0));
+        assertThat(result.status).isEqualTo("unchanged");
+        assertThat(result.pricingRule).contains("新发镜头30度35");
+    }
 }
