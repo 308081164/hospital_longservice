@@ -1,7 +1,7 @@
 {
   "version": 1,
-  "generated_at": "2026-08-08T08:36:20.821797+00:00",
-  "manifest_hash": "b79eb79bd3dd4d6adc636fe3536bf79a26aa4defb5a4cb699b1dd7ff48a4392e",
+  "generated_at": "2026-08-09T08:09:15.845796+00:00",
+  "manifest_hash": "c18207f2ea8cdc1efda77688ba7c7b6d2f25c401f8dc45f5e6fd74c76f9346a1",
   "customers": {
     "AL-YY": {
       "code": "AL-YY",
@@ -488,6 +488,17 @@
       ],
       "rule_count": 8,
       "active_rule_count": 8
+    },
+    "FNN-YY": {
+      "code": "FNN-YY",
+      "name": "方南南医院",
+      "status": null,
+      "billingPricingMode": "standard",
+      "standardPricingOverride": null,
+      "billingEnabled": null,
+      "productRules": [],
+      "rule_count": 0,
+      "active_rule_count": 0
     },
     "GUOYAO-2": {
       "code": "GUOYAO-2",
@@ -1908,6 +1919,17 @@
       "rule_count": 4,
       "active_rule_count": 4
     },
+    "JIAYI-YL": {
+      "code": "JIAYI-YL",
+      "name": "佳医医疗",
+      "status": null,
+      "billingPricingMode": "standard",
+      "standardPricingOverride": null,
+      "billingEnabled": null,
+      "productRules": [],
+      "rule_count": 0,
+      "active_rule_count": 0
+    },
     "JIUZHOU-FK": {
       "code": "JIUZHOU-FK",
       "name": "黑龙江九洲妇科医院",
@@ -1958,6 +1980,17 @@
       ],
       "rule_count": 1,
       "active_rule_count": 1
+    },
+    "MEIYI-YL": {
+      "code": "MEIYI-YL",
+      "name": "美意医疗",
+      "status": null,
+      "billingPricingMode": "standard",
+      "standardPricingOverride": null,
+      "billingEnabled": null,
+      "productRules": [],
+      "rule_count": 0,
+      "active_rule_count": 0
     },
     "NEAU-YY": {
       "code": "NEAU-YY",
@@ -3556,6 +3589,17 @@
       ],
       "rule_count": 6,
       "active_rule_count": 6
+    },
+    "YILI-YL": {
+      "code": "YILI-YL",
+      "name": "易丽医疗",
+      "status": null,
+      "billingPricingMode": "standard",
+      "standardPricingOverride": null,
+      "billingEnabled": null,
+      "productRules": [],
+      "rule_count": 0,
+      "active_rule_count": 0
     },
     "YUANDONG-XN": {
       "code": "YUANDONG-XN",

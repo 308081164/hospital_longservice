@@ -1,7 +1,7 @@
 {
   "version": 1,
-  "generated_at": "2026-08-05T00:32:38.396562+00:00",
-  "manifest_hash": "d02b4ad7e4ae69f9205ee334b2b5b14532690b87c1820134a95f8e96cea5048f",
+  "generated_at": "2026-08-09T08:09:15.845796+00:00",
+  "manifest_hash": "c18207f2ea8cdc1efda77688ba7c7b6d2f25c401f8dc45f5e6fd74c76f9346a1",
   "customers": {
     "AL-YY": {
       "code": "AL-YY",
@@ -332,7 +332,7 @@
       "status": null,
       "billingPricingMode": "special_only",
       "standardPricingOverride": null,
-      "billingEnabled": true,
+      "billingEnabled": false,
       "productRules": [
         {
           "ruleType": "PRICE_PER_INSTRUMENT",
@@ -357,7 +357,7 @@
       "status": null,
       "billingPricingMode": "special_only",
       "standardPricingOverride": null,
-      "billingEnabled": true,
+      "billingEnabled": false,
       "productRules": [
         {
           "ruleType": "FIXED_PRICE",
@@ -488,6 +488,17 @@
       ],
       "rule_count": 8,
       "active_rule_count": 8
+    },
+    "FNN-YY": {
+      "code": "FNN-YY",
+      "name": "方南南医院",
+      "status": null,
+      "billingPricingMode": "standard",
+      "standardPricingOverride": null,
+      "billingEnabled": null,
+      "productRules": [],
+      "rule_count": 0,
+      "active_rule_count": 0
     },
     "GUOYAO-2": {
       "code": "GUOYAO-2",
@@ -845,9 +856,9 @@
       "code": "HRB-HEU",
       "name": "哈尔滨工程大学医院",
       "status": null,
-      "billingPricingMode": "standard",
+      "billingPricingMode": "special_only",
       "standardPricingOverride": null,
-      "billingEnabled": null,
+      "billingEnabled": false,
       "productRules": [],
       "rule_count": 0,
       "active_rule_count": 0
@@ -858,7 +869,7 @@
       "status": null,
       "billingPricingMode": "special_only",
       "standardPricingOverride": null,
-      "billingEnabled": true,
+      "billingEnabled": false,
       "productRules": [
         {
           "ruleType": "FIXED_PRICE",
@@ -1068,7 +1079,7 @@
       "status": null,
       "billingPricingMode": "special_only",
       "standardPricingOverride": null,
-      "billingEnabled": true,
+      "billingEnabled": false,
       "productRules": [
         {
           "ruleType": "FIXED_PRICE",
@@ -1711,7 +1722,7 @@
       "status": null,
       "billingPricingMode": "special_only",
       "standardPricingOverride": null,
-      "billingEnabled": true,
+      "billingEnabled": false,
       "productRules": [
         {
           "ruleType": "FIXED_PRICE",
@@ -1908,6 +1919,17 @@
       "rule_count": 4,
       "active_rule_count": 4
     },
+    "JIAYI-YL": {
+      "code": "JIAYI-YL",
+      "name": "佳医医疗",
+      "status": null,
+      "billingPricingMode": "standard",
+      "standardPricingOverride": null,
+      "billingEnabled": null,
+      "productRules": [],
+      "rule_count": 0,
+      "active_rule_count": 0
+    },
     "JIUZHOU-FK": {
       "code": "JIUZHOU-FK",
       "name": "黑龙江九洲妇科医院",
@@ -1958,6 +1980,17 @@
       ],
       "rule_count": 1,
       "active_rule_count": 1
+    },
+    "MEIYI-YL": {
+      "code": "MEIYI-YL",
+      "name": "美意医疗",
+      "status": null,
+      "billingPricingMode": "standard",
+      "standardPricingOverride": null,
+      "billingEnabled": null,
+      "productRules": [],
+      "rule_count": 0,
+      "active_rule_count": 0
     },
     "NEAU-YY": {
       "code": "NEAU-YY",
@@ -3465,6 +3498,70 @@
       "productRules": [
         {
           "ruleType": "FIXED_PRICE",
+          "name": "新发棉球纸塑袋",
+          "priority": 10,
+          "price": 4.0,
+          "keywords": [
+            "棉球/Z",
+            "带线棉球"
+          ],
+          "matchMode": "any_price",
+          "acceptedPrices": [
+            4.0,
+            2.5,
+            7.5,
+            5.5
+          ],
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": true
+        },
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "新发镜头0度35",
+          "priority": 5,
+          "price": 35,
+          "keywords": [
+            "0度镜头"
+          ],
+          "temperature": "LT",
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": true,
+          "matchMode": "first"
+        },
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "新发镜头12度28",
+          "priority": 5,
+          "price": 28,
+          "keywords": [
+            "12度镜头",
+            "镜头-1/双"
+          ],
+          "temperature": "LT",
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": true,
+          "matchMode": "first"
+        },
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "新发镜头30度35",
+          "priority": 5,
+          "price": 35,
+          "keywords": [
+            "30度镜头",
+            "30°镜头"
+          ],
+          "temperature": "LT",
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": true,
+          "matchMode": "first"
+        },
+        {
+          "ruleType": "FIXED_PRICE",
           "name": "校正价66.0",
           "priority": 10,
           "price": 66.0,
@@ -3490,8 +3587,19 @@
           "matchMode": "first"
         }
       ],
-      "rule_count": 2,
-      "active_rule_count": 2
+      "rule_count": 6,
+      "active_rule_count": 6
+    },
+    "YILI-YL": {
+      "code": "YILI-YL",
+      "name": "易丽医疗",
+      "status": null,
+      "billingPricingMode": "standard",
+      "standardPricingOverride": null,
+      "billingEnabled": null,
+      "productRules": [],
+      "rule_count": 0,
+      "active_rule_count": 0
     },
     "YUANDONG-XN": {
       "code": "YUANDONG-XN",
@@ -4081,7 +4189,7 @@
           "ruleType": "FIXED_PRICE",
           "name": "30°腹腔镜组合价",
           "priority": 5,
-          "price": 30.38,
+          "price": 30.4,
           "keywords": [
             "30°腹腔镜",
             "30度腹腔镜"
@@ -4095,7 +4203,7 @@
           "ruleType": "FIXED_PRICE",
           "name": "30度腹腔镜ground30.38",
           "priority": -1,
-          "price": 30.38,
+          "price": 30.4,
           "keywords": [
             "30°腹腔镜",
             "30度腹腔镜"
@@ -4116,7 +4224,7 @@
           ],
           "skipPackaging": true,
           "skipDiscount": true,
-          "isActive": true,
+          "isActive": false,
           "matchMode": "first"
         },
         {
@@ -4185,7 +4293,7 @@
           ],
           "skipPackaging": true,
           "skipDiscount": true,
-          "isActive": true,
+          "isActive": false,
           "matchMode": "first"
         },
         {
@@ -4194,7 +4302,6 @@
           "priority": 41,
           "price": 20,
           "keywords": [
-            "低温灭菌 15cm",
             "膀胱取石钳"
           ],
           "skipPackaging": true,
@@ -4212,7 +4319,7 @@
           ],
           "skipPackaging": true,
           "skipDiscount": true,
-          "isActive": true,
+          "isActive": false,
           "matchMode": "first"
         },
         {
@@ -4225,7 +4332,7 @@
           ],
           "skipPackaging": true,
           "skipDiscount": true,
-          "isActive": true,
+          "isActive": false,
           "matchMode": "first"
         },
         {
@@ -4238,7 +4345,7 @@
           ],
           "skipPackaging": true,
           "skipDiscount": true,
-          "isActive": true,
+          "isActive": false,
           "matchMode": "first"
         },
         {
@@ -4319,7 +4426,7 @@
           "conditionsJson": "[{\"field\":\"department\",\"value\":[\"外二\"]}]",
           "skipPackaging": true,
           "skipDiscount": true,
-          "isActive": true,
+          "isActive": false,
           "matchMode": "first"
         },
         {
@@ -4333,7 +4440,7 @@
           "conditionsJson": "[{\"field\":\"department\",\"value\":[\"外二\"]}]",
           "skipPackaging": true,
           "skipDiscount": true,
-          "isActive": true,
+          "isActive": false,
           "matchMode": "first"
         },
         {
@@ -4393,7 +4500,7 @@
           "billingMode": "PER_PACK",
           "name": "宫腔镜镜头-3件按包52.74",
           "priority": 4,
-          "price": 52.74,
+          "price": 52.8,
           "keywords": [
             "镜头-3件"
           ],
@@ -4420,7 +4527,7 @@
           "ruleType": "FIXED_PRICE",
           "name": "换药包120布组合价",
           "priority": 10,
-          "price": 21.99,
+          "price": 22.0,
           "keywords": [
             "换药包(120布)",
             "换药包120"
@@ -4534,7 +4641,7 @@
           ],
           "skipPackaging": true,
           "skipDiscount": true,
-          "isActive": true,
+          "isActive": false,
           "matchMode": "first"
         },
         {
@@ -4699,7 +4806,7 @@
         }
       ],
       "rule_count": 45,
-      "active_rule_count": 45
+      "active_rule_count": 37
     },
     "ZYY-D2-HN": {
       "code": "ZYY-D2-HN",

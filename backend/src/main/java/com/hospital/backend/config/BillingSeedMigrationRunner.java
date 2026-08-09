@@ -271,7 +271,9 @@ public class BillingSeedMigrationRunner implements CommandLineRunner {
             new IncrementalSeed("billing_seed_zyy_d1_low_temp_bag_narrow_20260808_v1",
                     "billing-seeds/phase-zyy-d1-low-temp-bag-narrow-20260808.json"),
             new IncrementalSeed("billing_seed_zyy_d1_pricing_align_close_20260808_v1",
-                    "billing-seeds/phase-zyy-d1-pricing-align-close-20260808.json")
+                    "billing-seeds/phase-zyy-d1-pricing-align-close-20260808.json"),
+            new IncrementalSeed("billing_seed_customer_onboard_4clinics_20260809_v1",
+                    "billing-seeds/phase-customer-onboard-4clinics-20260809.json")
     );
 
     private static final String ZYY_D1_P0_MARKER = "billing_seed_zyy_d1_p0_v2";
