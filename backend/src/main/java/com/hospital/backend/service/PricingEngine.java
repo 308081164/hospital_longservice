@@ -167,10 +167,13 @@ public class PricingEngine {
         // 甲方测试中补充的小件折算规则，例如：机扩针/镍钛锉 5 件算 1 件。
         // 器械包(ZSD) 按单包器械总数阶梯计费，包名含「克氏针」等小件词也不折算。
         boolean appliedSpecialFoldRule = false;
+        boolean foldSkipPackaging = false;
         if (preMatchedSpecialPrice == null && !isZsdInstrumentPack) {
             int countBeforeSpecialFold = effectiveCount;
-            effectiveCount = applySpecialFoldRules(row, bagSize, effectiveCount, notes);
+            FoldApplyResult foldResult = applySpecialFoldRules(row, bagSize, effectiveCount, notes);
+            effectiveCount = foldResult.effectiveCount();
             appliedSpecialFoldRule = effectiveCount != countBeforeSpecialFold;
+            foldSkipPackaging = foldResult.skipPackaging();
         }
 
         // 针数量规则 + 小件器械折算（针数量规则优先：包名含"针+数字"时按公式拆分）
@@ -246,7 +249,7 @@ public class PricingEngine {
                 : effectiveCount;
 
         Double expectedUnitPrice = unitPrice;
-        boolean skipPackaging = false;
+        boolean skipPackaging = foldSkipPackaging;
         boolean skipHospitalDiscount = false;
         SpecialPriceResult specialPrice = preMatchedSpecialPrice != null
                 ? preMatchedSpecialPrice
@@ -581,15 +584,17 @@ public class PricingEngine {
         return null;
     }
 
-    private int applySpecialFoldRules(Map<String, Object> row, int bagSize, int effectiveCount, List<String> notes) {
+    private FoldApplyResult applySpecialFoldRules(Map<String, Object> row, int bagSize, int effectiveCount, List<String> notes) {
         String combined = combinedText(row);
         JsonNode foldRules = rules.path("specialRules").path("foldRules");
         return applyFoldRuleList(row, foldRules, combined, bagSize, effectiveCount, notes);
     }
 
-    private int applyFoldRuleList(Map<String, Object> row, JsonNode foldRules, String combined, int bagSize,
-                                  int effectiveCount, List<String> notes) {
-        if (!foldRules.isArray()) return effectiveCount;
+    private FoldApplyResult applyFoldRuleList(Map<String, Object> row, JsonNode foldRules, String combined, int bagSize,
+                                              int effectiveCount, List<String> notes) {
+        if (!foldRules.isArray()) {
+            return new FoldApplyResult(effectiveCount, false);
+        }
         BillingConditionEvaluator.RowContext ctx = new BillingConditionEvaluator.RowContext(
                 str(row, "type"),
                 str(row, "packName"),
@@ -611,10 +616,13 @@ public class PricingEngine {
             int result = foldCount(effectiveCount, threshold, foldRatio);
             String name = rule.path("name").asText("特殊小件折算");
             notes.add(name + "，原器械数 " + effectiveCount + " 件，折算为 " + result + " 件。");
-            return result;
+            boolean skipPackaging = rule.path("skipPackaging").asBoolean(false);
+            return new FoldApplyResult(result, skipPackaging);
         }
-        return effectiveCount;
+        return new FoldApplyResult(effectiveCount, false);
     }
+
+    private record FoldApplyResult(int effectiveCount, boolean skipPackaging) {}
 
     private SpecialPriceResult findSpecialFixedPrice(
             Map<String, Object> row, int bagSize, int effectiveCount,

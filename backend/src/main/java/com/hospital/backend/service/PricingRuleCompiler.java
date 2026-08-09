@@ -419,6 +419,9 @@ public class PricingRuleCompiler {
         if (rule.getBagSizeEquals() != null) {
             node.put("bagSizeEquals", rule.getBagSizeEquals());
         }
+        if (rule.getMinBagSizeInclusive() != null) {
+            node.put("minBagSizeInclusive", rule.getMinBagSizeInclusive());
+        }
         if (rule.getMaxBagSizeExclusive() != null) {
             node.put("maxBagSizeExclusive", rule.getMaxBagSizeExclusive());
         }
@@ -613,8 +616,17 @@ public class PricingRuleCompiler {
         if (rule.getMaxBagSizeExclusive() != null) {
             node.put("maxBagSizeExclusive", rule.getMaxBagSizeExclusive());
         }
+        if (rule.getMinInstrumentCount() != null) {
+            node.put("minInstrumentCount", rule.getMinInstrumentCount());
+        }
+        if (rule.getMaxInstrumentCount() != null) {
+            node.put("maxInstrumentCount", rule.getMaxInstrumentCount());
+        }
         node.put("threshold", rule.getThreshold() != null ? rule.getThreshold() : 5);
         node.put("foldRatio", rule.getFoldRatio() != null ? rule.getFoldRatio().doubleValue() : 5.0);
+        if (Boolean.TRUE.equals(rule.getSkipPackaging())) {
+            node.put("skipPackaging", true);
+        }
         appendRuleConditions(node, rule);
         return node;
     }

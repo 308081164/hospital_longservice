@@ -32,6 +32,7 @@ public class SchemaMigrationRunner implements CommandLineRunner {
         migrateBillingProfileColumns();
         migrateCustomerBillingPolicyTable();
         migrateCustomerProductRuleTemperatureColumn();
+        migrateCustomerProductRuleMinBagSizeColumn();
         migrateExportTemplateTable();
         migrateRuleGroupTables();
         migratePhase7L3Tables();
@@ -302,6 +303,11 @@ public class SchemaMigrationRunner implements CommandLineRunner {
     private void migrateCustomerProductRuleTemperatureColumn() {
         addColumnIfMissing("customer_product_rule", "temperature",
                 "temperature VARCHAR(10) NULL COMMENT 'HT/LT/ANY 温度条件' AFTER materials");
+    }
+
+    private void migrateCustomerProductRuleMinBagSizeColumn() {
+        addColumnIfMissing("customer_product_rule", "min_bag_size_inclusive",
+                "min_bag_size_inclusive INT NULL COMMENT '纸塑袋宽度下限(含)' AFTER max_bag_size_exclusive");
     }
 
     private void migrateExportTemplateTable() {

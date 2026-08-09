@@ -65,11 +65,17 @@ public final class BillingConditionEvaluator {
     }
 
     public static boolean bagSizeMatches(JsonNode rule, int bagSize) {
-        if (rule.has("bagSizeEquals")) {
-            return bagSize == rule.path("bagSizeEquals").asInt(-1);
+        if (rule.has("bagSizeEquals") && bagSize != rule.path("bagSizeEquals").asInt(-1)) {
+            return false;
         }
-        if (rule.has("maxBagSizeExclusive")) {
-            return bagSize < rule.path("maxBagSizeExclusive").asInt(Integer.MAX_VALUE);
+        if (rule.has("minBagSizeInclusive") && bagSize < rule.path("minBagSizeInclusive").asInt()) {
+            return false;
+        }
+        if (rule.has("maxBagSizeInclusive") && bagSize > rule.path("maxBagSizeInclusive").asInt()) {
+            return false;
+        }
+        if (rule.has("maxBagSizeExclusive") && bagSize >= rule.path("maxBagSizeExclusive").asInt()) {
+            return false;
         }
         return true;
     }

@@ -669,4 +669,149 @@ class PricingRuleCompilerIntegrationTest {
         assertThat(result.expectedUnitPrice).isEqualTo(12.0);
         assertThat(result.notes).anyMatch(note -> note.contains("路径覆盖"));
     }
+
+    @Test
+    void fnnFoldRuleAppliesPackagingAtOrBelowTenInstruments() throws Exception {
+        when(ruleSchemaValidator.validateJsonNode(org.mockito.ArgumentMatchers.any(JsonNode.class)))
+                .thenReturn(RuleSchemaValidator.ValidationResult.ok());
+
+        Customer customer = new Customer();
+        customer.setId(101L);
+        customer.setCanonicalName("方南南医院");
+        customer.setBillingEnabled(true);
+        when(customerResolver.resolveByName("方南南医院")).thenReturn(Optional.of(customer));
+        when(customerResolver.hospitalNamesForCustomer(customer)).thenReturn(List.of("方南南医院"));
+        when(discountMapper.selectByCustomerId(101L)).thenReturn(List.of());
+
+        CustomerProductRule foldWithPackaging = foldRule(101L, "方南南小件5合1含包材", null, 10, false);
+        CustomerProductRule foldSkipPackaging = foldRule(101L, "方南南小件5合1免包材", 11, null, true);
+        when(productRuleMapper.selectByCustomerId(101L)).thenReturn(List.of(foldWithPackaging, foldSkipPackaging));
+
+        JsonNode compiled = compiler.compile(packagingEnabledTemplate(), "方南南医院");
+        PricingEngine engine = new PricingEngine(compiled);
+        JsonNode compiledNoPackaging = compiler.compile(MAPPER.valueToTree(DefaultPricingTemplate.buildRulesMap()), "方南南医院");
+        PricingEngine engineNoPackaging = new PricingEngine(compiledNoPackaging);
+
+        Map<String, Object> smallBatchRow = Map.of(
+                "hospitalName", "方南南医院",
+                "type", "额外包(纸塑袋)",
+                "packName", "机扩针-8/Z7520",
+                "packageMaterial", "高温纸塑袋75*200",
+                "instrumentCount", 8,
+                "packCount", 1,
+                "unitPrice", 22,
+                "totalPrice", 22
+        );
+        Map<String, Object> largeBatchRow = Map.of(
+                "hospitalName", "方南南医院",
+                "type", "额外包(纸塑袋)",
+                "packName", "机扩针-20/Z7520",
+                "packageMaterial", "高温纸塑袋75*200",
+                "instrumentCount", 20,
+                "packCount", 1,
+                "unitPrice", 22,
+                "totalPrice", 22
+        );
+
+        PricingEngine.ProcessedResult smallBatch = engine.processRow(smallBatchRow);
+        PricingEngine.ProcessedResult largeBatch = engine.processRow(largeBatchRow);
+        PricingEngine.ProcessedResult smallWithoutPackaging = engineNoPackaging.processRow(smallBatchRow);
+        PricingEngine.ProcessedResult largeWithoutPackaging = engineNoPackaging.processRow(largeBatchRow);
+
+        assertThat(smallBatch.notes).anyMatch(note -> note.contains("方南南小件5合1含包材"));
+        assertThat(largeBatch.notes).anyMatch(note -> note.contains("方南南小件5合1免包材"));
+        assertThat(largeBatch.expectedUnitPrice).isEqualTo(22.0);
+        assertThat(smallBatch.expectedUnitPrice).isGreaterThan(smallWithoutPackaging.expectedUnitPrice);
+        assertThat(largeBatch.expectedUnitPrice).isEqualTo(largeWithoutPackaging.expectedUnitPrice);
+        assertThat(smallBatch.notes).anyMatch(note -> note.contains("包装收费"));
+        assertThat(largeBatch.notes).noneMatch(note -> note.contains("包装收费"));
+    }
+
+    @Test
+    void meiyiDressingFixedPriceRequiresBagSizeAtLeastTwenty() throws Exception {
+        when(ruleSchemaValidator.validateJsonNode(org.mockito.ArgumentMatchers.any(JsonNode.class)))
+                .thenReturn(RuleSchemaValidator.ValidationResult.ok());
+
+        Customer customer = new Customer();
+        customer.setId(102L);
+        customer.setCanonicalName("美意医疗");
+        customer.setBillingEnabled(true);
+        when(customerResolver.resolveByName("美意医疗")).thenReturn(Optional.of(customer));
+        when(customerResolver.hospitalNamesForCustomer(customer)).thenReturn(List.of("美意医疗"));
+        when(discountMapper.selectByCustomerId(102L)).thenReturn(List.of());
+
+        CustomerProductRule fixed = new CustomerProductRule();
+        fixed.setId(1021L);
+        fixed.setIsActive(true);
+        fixed.setRuleType("FIXED_PRICE");
+        fixed.setName("美意敷料纸塑4元");
+        fixed.setKeywords("[\"洞巾\", \"治疗巾\"]");
+        fixed.setPrice(BigDecimal.valueOf(4.0));
+        fixed.setMinBagSizeInclusive(20);
+        fixed.setSkipPackaging(true);
+        fixed.setSkipDiscount(true);
+        when(productRuleMapper.selectByCustomerId(102L)).thenReturn(List.of(fixed));
+
+        JsonNode compiled = compiler.compile(MAPPER.valueToTree(DefaultPricingTemplate.buildRulesMap()), "美意医疗");
+        PricingEngine engine = new PricingEngine(compiled);
+
+        PricingEngine.ProcessedResult matched = engine.processRow(Map.of(
+                "hospitalName", "美意医疗",
+                "type", "敷料包(纸塑袋)",
+                "packName", "洞巾",
+                "packageMaterial", "高温纸塑袋250*200",
+                "instrumentCount", 1,
+                "packCount", 1,
+                "unitPrice", 4,
+                "totalPrice", 4
+        ));
+        assertThat(matched.expectedUnitPrice).isEqualTo(4.0);
+        assertThat(matched.pricingRule).isEqualTo("美意敷料纸塑4元");
+
+        PricingEngine.ProcessedResult tooSmall = engine.processRow(Map.of(
+                "hospitalName", "美意医疗",
+                "type", "敷料包(纸塑袋)",
+                "packName", "洞巾",
+                "packageMaterial", "高温纸塑袋150*200",
+                "instrumentCount", 1,
+                "packCount", 1,
+                "unitPrice", 4,
+                "totalPrice", 4
+        ));
+        assertThat(tooSmall.pricingRule).isNotEqualTo("美意敷料纸塑4元");
+    }
+
+    private CustomerProductRule foldRule(Long customerId, String name, Integer minCount, Integer maxCount,
+                                         boolean skipPackaging) {
+        CustomerProductRule rule = new CustomerProductRule();
+        rule.setId((long) name.hashCode());
+        rule.setIsActive(true);
+        rule.setRuleType("FOLD");
+        rule.setName(name);
+        rule.setKeywords("[\"P钻\", \"根管锉\", \"光滑针\", \"机扩针\"]");
+        rule.setThreshold(5);
+        rule.setFoldRatio(BigDecimal.valueOf(5));
+        rule.setMinInstrumentCount(minCount);
+        rule.setMaxInstrumentCount(maxCount);
+        rule.setSkipPackaging(skipPackaging);
+        return rule;
+    }
+
+    private JsonNode packagingEnabledTemplate() throws Exception {
+        ObjectNode base = MAPPER.valueToTree(DefaultPricingTemplate.buildRulesMap());
+        ObjectNode packaging = (ObjectNode) base.get("packaging");
+        packaging.put("enabled", true);
+        ArrayNode items = MAPPER.createArrayNode();
+        ObjectNode item = MAPPER.createObjectNode();
+        item.put("name", "纸塑袋");
+        item.put("chargePerPack", false);
+        item.set("keywords", MAPPER.createArrayNode().add("纸塑袋"));
+        ObjectNode option = MAPPER.createObjectNode();
+        option.put("label", "20cm");
+        option.put("price", 3.0);
+        option.set("keywords", MAPPER.createArrayNode().add("200"));
+        item.set("options", MAPPER.createArrayNode().add(option));
+        packaging.set("items", MAPPER.createArrayNode().add(item));
+        return base;
+    }
 }

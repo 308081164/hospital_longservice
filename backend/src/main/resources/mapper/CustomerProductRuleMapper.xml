@@ -17,6 +17,7 @@
         <result property="conditionsJson" column="conditions_json"/>
         <result property="temperature" column="temperature"/>
         <result property="bagSizeEquals" column="bag_size_equals"/>
+        <result property="minBagSizeInclusive" column="min_bag_size_inclusive"/>
         <result property="maxBagSizeExclusive" column="max_bag_size_exclusive"/>
         <result property="minInstrumentCount" column="min_instrument_count"/>
         <result property="maxInstrumentCount" column="max_instrument_count"/>
@@ -38,12 +39,12 @@
 
     <insert id="insert" parameterType="com.hospital.backend.entity.CustomerProductRule" useGeneratedKeys="true" keyProperty="id">
         INSERT INTO customer_product_rule (customer_id, rule_type, billing_mode, piece_count_source, match_mode, name, priority, product_id, variant_id, keywords,
-                                           exclude_keywords, materials, conditions_json, temperature, bag_size_equals, max_bag_size_exclusive,
+                                           exclude_keywords, materials, conditions_json, temperature, bag_size_equals, min_bag_size_inclusive, max_bag_size_exclusive,
                                            min_instrument_count, max_instrument_count, price, original_unit_price, accepted_prices, fee,
                                            multiplier, threshold, fold_ratio, skip_packaging, skip_discount, is_active,
                                            created_at, updated_at)
         VALUES (#{customerId}, #{ruleType}, #{billingMode}, #{pieceCountSource}, #{matchMode}, #{name}, #{priority}, #{productId}, #{variantId}, #{keywords},
-                #{excludeKeywords}, #{materials}, #{conditionsJson}, #{temperature}, #{bagSizeEquals}, #{maxBagSizeExclusive},
+                #{excludeKeywords}, #{materials}, #{conditionsJson}, #{temperature}, #{bagSizeEquals}, #{minBagSizeInclusive}, #{maxBagSizeExclusive},
                 #{minInstrumentCount}, #{maxInstrumentCount}, #{price}, #{originalUnitPrice}, #{acceptedPrices}, #{fee},
                 #{multiplier}, #{threshold}, #{foldRatio}, #{skipPackaging}, #{skipDiscount}, #{isActive},
                 NOW(), NOW())
@@ -83,6 +84,7 @@
             conditions_json = #{conditionsJson},
             temperature = #{temperature},
             bag_size_equals = #{bagSizeEquals},
+            min_bag_size_inclusive = #{minBagSizeInclusive},
             max_bag_size_exclusive = #{maxBagSizeExclusive},
             min_instrument_count = #{minInstrumentCount},
             max_instrument_count = #{maxInstrumentCount},

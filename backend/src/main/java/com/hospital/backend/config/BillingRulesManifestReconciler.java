@@ -169,6 +169,12 @@ public class BillingRulesManifestReconciler implements CommandLineRunner {
         if (ruleNode.hasNonNull("bagSizeEquals")) {
             rule.setBagSizeEquals(intVal(ruleNode, "bagSizeEquals", null));
         }
+        if (ruleNode.hasNonNull("minBagSizeInclusive")) {
+            rule.setMinBagSizeInclusive(intVal(ruleNode, "minBagSizeInclusive", null));
+        }
+        if (ruleNode.hasNonNull("maxBagSizeExclusive")) {
+            rule.setMaxBagSizeExclusive(intVal(ruleNode, "maxBagSizeExclusive", null));
+        }
         if (ruleNode.hasNonNull("minInstrumentCount")) {
             rule.setMinInstrumentCount(intVal(ruleNode, "minInstrumentCount", null));
         }

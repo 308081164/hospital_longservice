@@ -273,7 +273,9 @@ public class BillingSeedMigrationRunner implements CommandLineRunner {
             new IncrementalSeed("billing_seed_zyy_d1_pricing_align_close_20260808_v1",
                     "billing-seeds/phase-zyy-d1-pricing-align-close-20260808.json"),
             new IncrementalSeed("billing_seed_customer_onboard_4clinics_20260809_v1",
-                    "billing-seeds/phase-customer-onboard-4clinics-20260809.json")
+                    "billing-seeds/phase-customer-onboard-4clinics-20260809.json"),
+            new IncrementalSeed("billing_seed_4clinics_special_rules_20260809_v1",
+                    "billing-seeds/phase-4clinics-special-rules-20260809.json")
     );
 
     private static final String ZYY_D1_P0_MARKER = "billing_seed_zyy_d1_p0_v2";
@@ -1654,10 +1656,16 @@ public class BillingSeedMigrationRunner implements CommandLineRunner {
             if (ruleNode.hasNonNull("temperature")) {
                 rule.setTemperature(text(ruleNode, "temperature"));
             }
-            if (ruleNode.hasNonNull("bagSizeEquals")) {
-                rule.setBagSizeEquals(intVal(ruleNode, "bagSizeEquals", null));
-            }
-            if (ruleNode.hasNonNull("minInstrumentCount")) {
+        if (ruleNode.hasNonNull("bagSizeEquals")) {
+            rule.setBagSizeEquals(intVal(ruleNode, "bagSizeEquals", null));
+        }
+        if (ruleNode.hasNonNull("minBagSizeInclusive")) {
+            rule.setMinBagSizeInclusive(intVal(ruleNode, "minBagSizeInclusive", null));
+        }
+        if (ruleNode.hasNonNull("maxBagSizeExclusive")) {
+            rule.setMaxBagSizeExclusive(intVal(ruleNode, "maxBagSizeExclusive", null));
+        }
+        if (ruleNode.hasNonNull("minInstrumentCount")) {
                 rule.setMinInstrumentCount(intVal(ruleNode, "minInstrumentCount", null));
             }
             if (ruleNode.hasNonNull("maxInstrumentCount")) {

@@ -37,6 +37,8 @@ public class CustomerProductRule {
 
     private Integer bagSizeEquals;
 
+    private Integer minBagSizeInclusive;
+
     private Integer maxBagSizeExclusive;
 
     private Integer minInstrumentCount;

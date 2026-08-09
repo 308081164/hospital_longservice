@@ -9,3 +9,4 @@ schema_006_migration_export_template.sql
 schema_007_migration_logistics.sql
 schema_007_migration_rule_group.sql
 schema_008_migration_dept_physician.sql
+schema_009_migration_min_bag_size.sql

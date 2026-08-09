@@ -1,0 +1,61 @@
+{
+  "version": "1",
+  "description": "方南南/美意/易丽/佳医 特色收费规则",
+  "newRules": [
+    {
+      "code": "FNN-YY",
+      "ruleType": "FOLD",
+      "name": "方南南小件5合1含包材",
+      "priority": 10,
+      "keywords": ["P钻", "根管锉", "光滑针", "机扩针"],
+      "threshold": 5,
+      "foldRatio": 5,
+      "maxInstrumentCount": 10,
+      "skipPackaging": false
+    },
+    {
+      "code": "FNN-YY",
+      "ruleType": "FOLD",
+      "name": "方南南小件5合1免包材",
+      "priority": 11,
+      "keywords": ["P钻", "根管锉", "光滑针", "机扩针"],
+      "threshold": 5,
+      "foldRatio": 5,
+      "minInstrumentCount": 11,
+      "skipPackaging": true
+    },
+    {
+      "code": "MEIYI-YL",
+      "ruleType": "FIXED_PRICE",
+      "name": "美意敷料纸塑4元",
+      "priority": 10,
+      "keywords": ["洞巾", "治疗巾"],
+      "price": 4.0,
+      "minBagSizeInclusive": 20,
+      "skipPackaging": true,
+      "skipDiscount": true
+    },
+    {
+      "code": "YILI-YL",
+      "ruleType": "FIXED_PRICE",
+      "name": "易丽敷料纸塑4元",
+      "priority": 10,
+      "keywords": ["孔巾", "包布", "大单", "治疗巾"],
+      "price": 4.0,
+      "minBagSizeInclusive": 20,
+      "skipPackaging": true,
+      "skipDiscount": true
+    },
+    {
+      "code": "JIAYI-YL",
+      "ruleType": "FIXED_PRICE",
+      "name": "佳医敷料纸塑4元",
+      "priority": 10,
+      "keywords": ["孔巾", "眼包敷料"],
+      "price": 4.0,
+      "minBagSizeInclusive": 20,
+      "skipPackaging": true,
+      "skipDiscount": true
+    }
+  ]
+}
