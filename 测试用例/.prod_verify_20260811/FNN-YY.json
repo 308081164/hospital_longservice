@@ -1,0 +1,80 @@
+{
+  "command": "rules verify-deploy",
+  "ok": false,
+  "manifest_hash_expected": "0f49ffaa7858744d9031ba9ecda732ebe27004969f637824fb5a2e6822612ff1",
+  "manifest_hash_prod": null,
+  "manifest_hash_ok": null,
+  "compare": {
+    "command": "rules compare",
+    "manifest_hash": "0f49ffaa7858744d9031ba9ecda732ebe27004969f637824fb5a2e6822612ff1",
+    "api_base": "http://39.102.213.51:8853",
+    "ok": true,
+    "summary": {
+      "customers": 1,
+      "ok_count": 1,
+      "drift_count": 0,
+      "total_missing": 0,
+      "total_extra": 0,
+      "total_changed": 0,
+      "mode_drift_count": 0,
+      "override_drift_count": 0,
+      "billing_enabled_drift_count": 0
+    },
+    "results": [
+      {
+        "code": "FNN-YY",
+        "expected_count": 2,
+        "prod_count": 2,
+        "active_expected": 2,
+        "active_prod": 2,
+        "mode_expected": "standard",
+        "mode_prod": "standard",
+        "mode_drift": false,
+        "override_drift": false,
+        "override_hash_expected": null,
+        "override_hash_prod": null,
+        "billing_enabled_expected": null,
+        "billing_enabled_prod": false,
+        "billing_enabled_drift": false,
+        "missing": [],
+        "extra": [],
+        "changed": [],
+        "missing_count": 0,
+        "extra_count": 0,
+        "changed_count": 0,
+        "ok": true
+      }
+    ]
+  },
+  "spot_check": {
+    "command": "rules spot-check",
+    "code": "FNN-YY",
+    "hospital_name": "方南南医院",
+    "api_base": "http://39.102.213.51:8853",
+    "ok": false,
+    "passed": 1,
+    "total": 2,
+    "results": [
+      {
+        "name": "方南南机扩针8件含包材",
+        "ok": false,
+        "expectedUnitPrice": 16.5,
+        "actualUnitPrice": 22.0,
+        "expectedCorrectedTotal": null,
+        "actualCorrectedTotal": 22.0,
+        "status": "unchanged",
+        "pricingRule": "特色账单已关闭"
+      },
+      {
+        "name": "方南南机扩针20件免包材",
+        "ok": true,
+        "expectedUnitPrice": 22.0,
+        "actualUnitPrice": 22.0,
+        "expectedCorrectedTotal": null,
+        "actualCorrectedTotal": 22.0,
+        "status": "unchanged",
+        "pricingRule": "特色账单已关闭"
+      }
+    ]
+  }
+}

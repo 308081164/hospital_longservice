@@ -1,0 +1,110 @@
+{
+  "command": "rules verify-deploy",
+  "ok": true,
+  "manifest_hash_expected": "0f49ffaa7858744d9031ba9ecda732ebe27004969f637824fb5a2e6822612ff1",
+  "manifest_hash_prod": null,
+  "manifest_hash_ok": null,
+  "compare": {
+    "command": "rules compare",
+    "manifest_hash": "0f49ffaa7858744d9031ba9ecda732ebe27004969f637824fb5a2e6822612ff1",
+    "api_base": "http://39.102.213.51:8853",
+    "ok": true,
+    "summary": {
+      "customers": 1,
+      "ok_count": 1,
+      "drift_count": 0,
+      "total_missing": 0,
+      "total_extra": 0,
+      "total_changed": 0,
+      "mode_drift_count": 0,
+      "override_drift_count": 0,
+      "billing_enabled_drift_count": 0
+    },
+    "results": [
+      {
+        "code": "GUOYAO-2",
+        "expected_count": 8,
+        "prod_count": 8,
+        "active_expected": 5,
+        "active_prod": 5,
+        "mode_expected": "hybrid",
+        "mode_prod": "hybrid",
+        "mode_drift": false,
+        "override_drift": false,
+        "override_hash_expected": null,
+        "override_hash_prod": null,
+        "billing_enabled_expected": null,
+        "billing_enabled_prod": true,
+        "billing_enabled_drift": false,
+        "missing": [],
+        "extra": [],
+        "changed": [],
+        "missing_count": 0,
+        "extra_count": 0,
+        "changed_count": 0,
+        "ok": true
+      }
+    ]
+  },
+  "spot_check": {
+    "command": "rules spot-check",
+    "code": "GUOYAO-2",
+    "hospital_name": "国药总医院第二院区",
+    "api_base": "http://39.102.213.51:8853",
+    "ok": true,
+    "passed": 5,
+    "total": 5,
+    "results": [
+      {
+        "name": "电机厂缝合针8元",
+        "ok": true,
+        "expectedUnitPrice": 8.0,
+        "actualUnitPrice": 8.0,
+        "expectedCorrectedTotal": null,
+        "actualCorrectedTotal": 8.0,
+        "status": "unchanged",
+        "pricingRule": "电机厂缝合针8元"
+      },
+      {
+        "name": "电机厂指针10件5合1",
+        "ok": true,
+        "expectedUnitPrice": 13.5,
+        "actualUnitPrice": 13.5,
+        "expectedCorrectedTotal": null,
+        "actualCorrectedTotal": 13.5,
+        "status": "unchanged",
+        "pricingRule": "高温纸塑袋10cm计费"
+      },
+      {
+        "name": "电机厂指针12件免袋",
+        "ok": true,
+        "expectedUnitPrice": 16.5,
+        "actualUnitPrice": 16.5,
+        "expectedCorrectedTotal": null,
+        "actualCorrectedTotal": 16.5,
+        "status": "unchanged",
+        "pricingRule": "高温纸塑袋10cm计费"
+      },
+      {
+        "name": "电机厂双1件纸塑袋",
+        "ok": true,
+        "expectedUnitPrice": 8.0,
+        "actualUnitPrice": 8.0,
+        "expectedCorrectedTotal": null,
+        "actualCorrectedTotal": 8.0,
+        "status": "unchanged",
+        "pricingRule": "电机厂双按件5.5外层袋 + 纸塑袋费"
+      },
+      {
+        "name": "电机厂双3件内层袋",
+        "ok": true,
+        "expectedUnitPrice": 20.5,
+        "actualUnitPrice": 20.5,
+        "expectedCorrectedTotal": null,
+        "actualCorrectedTotal": 20.5,
+        "status": "warning",
+        "pricingRule": "电机厂双按件5.5内层袋 + 纸塑袋费"
+      }
+    ]
+  }
+}

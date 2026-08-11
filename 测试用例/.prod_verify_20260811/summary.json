@@ -1,0 +1,64 @@
+{
+  "generated_at": "2026-08-11T20:50:00+08:00",
+  "deploy": {
+    "commit": "1e7f122",
+    "gha_run": "31490641176",
+    "parity_gate": "success",
+    "api_base": "http://39.102.213.51:8853"
+  },
+  "rollback": {
+    "hospital": "BINGCHENG-YM",
+    "action": "撤回按件×5.5，恢复环钻27.5/脂充包54.5/整形包58",
+    "seed": "phase-bingcheng-ym-rollback-per-piece-20260811.json"
+  },
+  "hospitals": {
+    "GUOYAO-2": {
+      "compare": "PASS",
+      "spot": "5/5 PASS",
+      "verdict": "更优（已上生产）"
+    },
+    "HRB-WY-EM": {
+      "compare": "PASS",
+      "spot": "2/2 PASS",
+      "verdict": "更优（已上生产）"
+    },
+    "BINGCHENG-YM": {
+      "compare": "PASS",
+      "spot": "1/1 PASS（环钻27.5）",
+      "verdict": "已撤回更差方案，恢复固定价"
+    },
+    "HRB-HEU": {
+      "compare": "PASS",
+      "spot": "1/1 PASS（孔巾4元）",
+      "verdict": "持平"
+    },
+    "NEAU-YY": {
+      "compare": "DRIFT（billing_enabled=false，新FOLD规则未同步）",
+      "spot": "1/1 PASS（标准价路径）",
+      "verdict": "规则种子已发布，待生产开启 billing_enabled 后 reconcile"
+    },
+    "HRB-SD-MB": {
+      "compare": "DRIFT（billing_enabled=false）",
+      "spot": "1/1 PASS",
+      "verdict": "同上"
+    },
+    "HRB-HTFH": {
+      "compare": "DRIFT（旧规则未停用）",
+      "spot": "1/1 PASS",
+      "verdict": "同上"
+    },
+    "FNN-YY": {
+      "compare": "PASS",
+      "spot": "1/2（8件含包材：billing关闭走标准22）",
+      "verdict": "持平"
+    },
+    "ZYY-D1": {
+      "compare": "PASS",
+      "spot": "4/5（30°腹腔镜 30.38 vs 30.4 进位）",
+      "verdict": "全局锚点更优"
+    }
+  },
+  "pass_count": 4,
+  "fail_count": 5,
+  "note": "verify-deploy 使用 --skip-mysql；核心反馈院 GUOYAO-2/HRB-WY-EM/BINGCHENG-YM/HRB-HEU 生产 compare+spot 全部通过"
+}

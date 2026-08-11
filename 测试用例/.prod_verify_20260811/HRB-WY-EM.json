@@ -1,0 +1,80 @@
+{
+  "command": "rules verify-deploy",
+  "ok": true,
+  "manifest_hash_expected": "0f49ffaa7858744d9031ba9ecda732ebe27004969f637824fb5a2e6822612ff1",
+  "manifest_hash_prod": null,
+  "manifest_hash_ok": null,
+  "compare": {
+    "command": "rules compare",
+    "manifest_hash": "0f49ffaa7858744d9031ba9ecda732ebe27004969f637824fb5a2e6822612ff1",
+    "api_base": "http://39.102.213.51:8853",
+    "ok": true,
+    "summary": {
+      "customers": 1,
+      "ok_count": 1,
+      "drift_count": 0,
+      "total_missing": 0,
+      "total_extra": 0,
+      "total_changed": 0,
+      "mode_drift_count": 0,
+      "override_drift_count": 0,
+      "billing_enabled_drift_count": 0
+    },
+    "results": [
+      {
+        "code": "HRB-WY-EM",
+        "expected_count": 6,
+        "prod_count": 6,
+        "active_expected": 0,
+        "active_prod": 0,
+        "mode_expected": "hybrid",
+        "mode_prod": "hybrid",
+        "mode_drift": false,
+        "override_drift": false,
+        "override_hash_expected": null,
+        "override_hash_prod": null,
+        "billing_enabled_expected": null,
+        "billing_enabled_prod": true,
+        "billing_enabled_drift": false,
+        "missing": [],
+        "extra": [],
+        "changed": [],
+        "missing_count": 0,
+        "extra_count": 0,
+        "changed_count": 0,
+        "ok": true
+      }
+    ]
+  },
+  "spot_check": {
+    "command": "rules spot-check",
+    "code": "HRB-WY-EM",
+    "hospital_name": "HRB-WY-EM",
+    "api_base": "http://39.102.213.51:8853",
+    "ok": true,
+    "passed": 2,
+    "total": 2,
+    "results": [
+      {
+        "name": "市五二门诊驱血带W50",
+        "ok": true,
+        "expectedUnitPrice": 25.0,
+        "actualUnitPrice": 25.0,
+        "expectedCorrectedTotal": null,
+        "actualCorrectedTotal": 25.0,
+        "status": "unchanged",
+        "pricingRule": "敷料包(无纺布包)驱血带——50.0"
+      },
+      {
+        "name": "市五二门诊驱血带W90",
+        "ok": true,
+        "expectedUnitPrice": 30.0,
+        "actualUnitPrice": 30.0,
+        "expectedCorrectedTotal": null,
+        "actualCorrectedTotal": 30.0,
+        "status": "unchanged",
+        "pricingRule": "敷料包(无纺布包)驱血带——90.0"
+      }
+    ]
+  }
+}

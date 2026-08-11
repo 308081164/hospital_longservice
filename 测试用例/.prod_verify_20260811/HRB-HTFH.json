@@ -1,0 +1,77 @@
+{
+  "command": "rules verify-deploy",
+  "ok": false,
+  "manifest_hash_expected": "0f49ffaa7858744d9031ba9ecda732ebe27004969f637824fb5a2e6822612ff1",
+  "manifest_hash_prod": null,
+  "manifest_hash_ok": null,
+  "compare": {
+    "command": "rules compare",
+    "manifest_hash": "0f49ffaa7858744d9031ba9ecda732ebe27004969f637824fb5a2e6822612ff1",
+    "api_base": "http://39.102.213.51:8853",
+    "ok": false,
+    "summary": {
+      "customers": 1,
+      "ok_count": 0,
+      "drift_count": 1,
+      "total_missing": 2,
+      "total_extra": 3,
+      "total_changed": 0,
+      "mode_drift_count": 0,
+      "override_drift_count": 0,
+      "billing_enabled_drift_count": 0
+    },
+    "results": [
+      {
+        "code": "HRB-HTFH",
+        "expected_count": 2,
+        "prod_count": 3,
+        "active_expected": 2,
+        "active_prod": 3,
+        "mode_expected": "standard",
+        "mode_prod": "standard",
+        "mode_drift": false,
+        "override_drift": false,
+        "override_hash_expected": null,
+        "override_hash_prod": null,
+        "billing_enabled_expected": null,
+        "billing_enabled_prod": false,
+        "billing_enabled_drift": false,
+        "missing": [
+          "航天风华镍钛锉5合1免包材",
+          "航天风华镍钛锉5合1含包材"
+        ],
+        "extra": [
+          "航天风华挖勺每件 5.5 元",
+          "航天风华镍钛锉 5 件算 1 件",
+          "镍钛锉"
+        ],
+        "changed": [],
+        "missing_count": 2,
+        "extra_count": 3,
+        "changed_count": 0,
+        "ok": false
+      }
+    ]
+  },
+  "spot_check": {
+    "command": "rules spot-check",
+    "code": "HRB-HTFH",
+    "hospital_name": "HRB-HTFH",
+    "api_base": "http://39.102.213.51:8853",
+    "ok": true,
+    "passed": 1,
+    "total": 1,
+    "results": [
+      {
+        "name": "航天镍钛锉8件含包材",
+        "ok": true,
+        "expectedUnitPrice": 16.5,
+        "actualUnitPrice": 16.5,
+        "expectedCorrectedTotal": null,
+        "actualCorrectedTotal": 16.5,
+        "status": "unchanged",
+        "pricingRule": "特色账单已关闭"
+      }
+    ]
+  }
+}

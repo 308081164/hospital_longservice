@@ -1,0 +1,77 @@
+{
+  "command": "rules verify-deploy",
+  "ok": false,
+  "manifest_hash_expected": "0f49ffaa7858744d9031ba9ecda732ebe27004969f637824fb5a2e6822612ff1",
+  "manifest_hash_prod": null,
+  "manifest_hash_ok": null,
+  "compare": {
+    "command": "rules compare",
+    "manifest_hash": "0f49ffaa7858744d9031ba9ecda732ebe27004969f637824fb5a2e6822612ff1",
+    "api_base": "http://39.102.213.51:8853",
+    "ok": false,
+    "summary": {
+      "customers": 1,
+      "ok_count": 0,
+      "drift_count": 1,
+      "total_missing": 2,
+      "total_extra": 3,
+      "total_changed": 0,
+      "mode_drift_count": 0,
+      "override_drift_count": 0,
+      "billing_enabled_drift_count": 1
+    },
+    "results": [
+      {
+        "code": "HRB-SD-MB",
+        "expected_count": 4,
+        "prod_count": 4,
+        "active_expected": 2,
+        "active_prod": 3,
+        "mode_expected": "standard",
+        "mode_prod": "standard",
+        "mode_drift": false,
+        "override_drift": false,
+        "override_hash_expected": null,
+        "override_hash_prod": null,
+        "billing_enabled_expected": true,
+        "billing_enabled_prod": false,
+        "billing_enabled_drift": true,
+        "missing": [
+          "松电机扩针5合1免包材",
+          "松电机扩针5合1含包材"
+        ],
+        "extra": [
+          "机扩针",
+          "松电口腔科针类5件算1件",
+          "松电车针5件算1件"
+        ],
+        "changed": [],
+        "missing_count": 2,
+        "extra_count": 3,
+        "changed_count": 0,
+        "ok": false
+      }
+    ]
+  },
+  "spot_check": {
+    "command": "rules spot-check",
+    "code": "HRB-SD-MB",
+    "hospital_name": "HRB-SD-MB",
+    "api_base": "http://39.102.213.51:8853",
+    "ok": true,
+    "passed": 1,
+    "total": 1,
+    "results": [
+      {
+        "name": "松电机扩针8件含包材",
+        "ok": true,
+        "expectedUnitPrice": 16.5,
+        "actualUnitPrice": 16.5,
+        "expectedCorrectedTotal": null,
+        "actualCorrectedTotal": 16.5,
+        "status": "unchanged",
+        "pricingRule": "特色账单已关闭"
+      }
+    ]
+  }
+}

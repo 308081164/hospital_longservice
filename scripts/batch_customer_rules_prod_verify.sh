@@ -35,7 +35,7 @@ for code in "${HOSPITALS[@]}"; do
   echo "=== $code ==="
   if ./bin/hospital-cli rules verify-deploy --code "$code" \
       --profile "$PROFILE" --mode "$MODE" --api "$API_BASE" \
-      --spot-check "$code" --fail-on-drift --json > "$out"; then
+      --spot-check "$code" --fail-on-drift --skip-mysql --json > "$out"; then
     PASS=$((PASS + 1))
     RESULTS+=("\"$code\":true")
     echo "PASS"

@@ -1,0 +1,70 @@
+{
+  "command": "rules verify-deploy",
+  "ok": true,
+  "manifest_hash_expected": "0f49ffaa7858744d9031ba9ecda732ebe27004969f637824fb5a2e6822612ff1",
+  "manifest_hash_prod": null,
+  "manifest_hash_ok": null,
+  "compare": {
+    "command": "rules compare",
+    "manifest_hash": "0f49ffaa7858744d9031ba9ecda732ebe27004969f637824fb5a2e6822612ff1",
+    "api_base": "http://39.102.213.51:8853",
+    "ok": true,
+    "summary": {
+      "customers": 1,
+      "ok_count": 1,
+      "drift_count": 0,
+      "total_missing": 0,
+      "total_extra": 0,
+      "total_changed": 0,
+      "mode_drift_count": 0,
+      "override_drift_count": 0,
+      "billing_enabled_drift_count": 0
+    },
+    "results": [
+      {
+        "code": "BINGCHENG-YM",
+        "expected_count": 12,
+        "prod_count": 12,
+        "active_expected": 4,
+        "active_prod": 4,
+        "mode_expected": "special_only",
+        "mode_prod": "special_only",
+        "mode_drift": false,
+        "override_drift": false,
+        "override_hash_expected": null,
+        "override_hash_prod": null,
+        "billing_enabled_expected": true,
+        "billing_enabled_prod": true,
+        "billing_enabled_drift": false,
+        "missing": [],
+        "extra": [],
+        "changed": [],
+        "missing_count": 0,
+        "extra_count": 0,
+        "changed_count": 0,
+        "ok": true
+      }
+    ]
+  },
+  "spot_check": {
+    "command": "rules spot-check",
+    "code": "BINGCHENG-YM",
+    "hospital_name": "哈尔滨冰城医疗美容医院",
+    "api_base": "http://39.102.213.51:8853",
+    "ok": true,
+    "passed": 1,
+    "total": 1,
+    "results": [
+      {
+        "name": "冰城环钻包27.5",
+        "ok": true,
+        "expectedUnitPrice": 27.5,
+        "actualUnitPrice": 27.5,
+        "expectedCorrectedTotal": null,
+        "actualCorrectedTotal": 27.5,
+        "status": "warning",
+        "pricingRule": "环钻27.5"
+      }
+    ]
+  }
+}

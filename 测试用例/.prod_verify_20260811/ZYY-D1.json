@@ -1,0 +1,110 @@
+{
+  "command": "rules verify-deploy",
+  "ok": false,
+  "manifest_hash_expected": "0f49ffaa7858744d9031ba9ecda732ebe27004969f637824fb5a2e6822612ff1",
+  "manifest_hash_prod": null,
+  "manifest_hash_ok": null,
+  "compare": {
+    "command": "rules compare",
+    "manifest_hash": "0f49ffaa7858744d9031ba9ecda732ebe27004969f637824fb5a2e6822612ff1",
+    "api_base": "http://39.102.213.51:8853",
+    "ok": true,
+    "summary": {
+      "customers": 1,
+      "ok_count": 1,
+      "drift_count": 0,
+      "total_missing": 0,
+      "total_extra": 0,
+      "total_changed": 0,
+      "mode_drift_count": 0,
+      "override_drift_count": 0,
+      "billing_enabled_drift_count": 0
+    },
+    "results": [
+      {
+        "code": "ZYY-D1",
+        "expected_count": 48,
+        "prod_count": 50,
+        "active_expected": 40,
+        "active_prod": 40,
+        "mode_expected": "hybrid",
+        "mode_prod": "hybrid",
+        "mode_drift": false,
+        "override_drift": false,
+        "override_hash_expected": "4c0d90af96488f67c66cc1bf023b2f203d0f8abf48bded6a7bbb8cdfcb52ae20",
+        "override_hash_prod": "4c0d90af96488f67c66cc1bf023b2f203d0f8abf48bded6a7bbb8cdfcb52ae20",
+        "billing_enabled_expected": null,
+        "billing_enabled_prod": true,
+        "billing_enabled_drift": false,
+        "missing": [],
+        "extra": [],
+        "changed": [],
+        "missing_count": 0,
+        "extra_count": 0,
+        "changed_count": 0,
+        "ok": true
+      }
+    ]
+  },
+  "spot_check": {
+    "command": "rules spot-check",
+    "code": "ZYY-D1",
+    "hospital_name": "黑龙江中医药大学附属第一医院",
+    "api_base": "http://39.102.213.51:8853",
+    "ok": false,
+    "passed": 4,
+    "total": 5,
+    "results": [
+      {
+        "name": "橄榄头FOLD 70.33",
+        "ok": true,
+        "expectedUnitPrice": 70.33,
+        "actualUnitPrice": 70.33,
+        "expectedCorrectedTotal": 351.65,
+        "actualCorrectedTotal": 351.65,
+        "status": "warning",
+        "pricingRule": "低温纸塑袋20cm阶梯计费"
+      },
+      {
+        "name": "30°腹腔镜 30.38",
+        "ok": false,
+        "expectedUnitPrice": 30.38,
+        "actualUnitPrice": 30.4,
+        "expectedCorrectedTotal": 30.38,
+        "actualCorrectedTotal": 30.4,
+        "status": "warning",
+        "pricingRule": "30度腹腔镜ground30.38"
+      },
+      {
+        "name": "W15050 手术衣 27.97",
+        "ok": true,
+        "expectedUnitPrice": 27.97,
+        "actualUnitPrice": 27.97,
+        "expectedCorrectedTotal": 27.97,
+        "actualCorrectedTotal": 27.97,
+        "status": "unchanged",
+        "pricingRule": "敷料包(无纺布包)——1.5"
+      },
+      {
+        "name": "W9050 枪状镊 4.4×40",
+        "ok": true,
+        "expectedUnitPrice": 176.0,
+        "actualUnitPrice": 176.0,
+        "expectedCorrectedTotal": 176.0,
+        "actualCorrectedTotal": 176.0,
+        "status": "warning",
+        "pricingRule": "高温无纺布计费"
+      },
+      {
+        "name": "冲洗头-79 固定价220",
+        "ok": true,
+        "expectedUnitPrice": 220.0,
+        "actualUnitPrice": 220.0,
+        "expectedCorrectedTotal": 220.0,
+        "actualCorrectedTotal": 220.0,
+        "status": "warning",
+        "pricingRule": "冲洗头-79固定价"
+      }
+    ]
+  }
+}
