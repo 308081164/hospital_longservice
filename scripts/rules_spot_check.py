@@ -140,9 +140,279 @@ ZYY_D1_SPOT_CHECKS: list[dict[str, Any]] = [
     },
 ]
 
+FNN_YY_HOSPITAL = "方南南医院"
+MEIYI_YL_HOSPITAL = "美意医疗"
+YILI_YL_HOSPITAL = "易丽医疗"
+JIAYI_YL_HOSPITAL = "佳医医疗"
+
+FNN_YY_SPOT_CHECKS: list[dict[str, Any]] = [
+    {
+        "name": "方南南机扩针8件含包材",
+        "department": "口腔科",
+        "packName": "机扩针-8/Z7520",
+        "type": "额外包(纸塑袋)",
+        "packageMaterial": "高温纸塑袋250*200",
+        "instrumentCount": 8,
+        "packCount": 1,
+        "unitPrice": 22,
+        "totalPrice": 22,
+        "expectedUnitPrice": 16.5,
+        "priceTol": 0.02,
+    },
+    {
+        "name": "方南南机扩针20件免包材",
+        "department": "口腔科",
+        "packName": "机扩针-20/Z7520",
+        "type": "额外包(纸塑袋)",
+        "packageMaterial": "高温纸塑袋250*200",
+        "instrumentCount": 20,
+        "packCount": 1,
+        "unitPrice": 22,
+        "totalPrice": 22,
+        "expectedUnitPrice": 22.0,
+        "priceTol": 0.02,
+    },
+]
+
+MEIYI_YL_SPOT_CHECKS: list[dict[str, Any]] = [
+    {
+        "name": "美意洞巾纸塑25cm4元",
+        "department": "手术室",
+        "packName": "洞巾",
+        "type": "敷料包(纸塑袋)",
+        "packageMaterial": "高温纸塑袋250*200",
+        "instrumentCount": 1,
+        "packCount": 1,
+        "unitPrice": 4,
+        "totalPrice": 4,
+        "expectedUnitPrice": 4.0,
+        "priceTol": 0.02,
+    },
+]
+
+YILI_YL_SPOT_CHECKS: list[dict[str, Any]] = [
+    {
+        "name": "易丽孔巾纸塑25cm4元",
+        "department": "手术室",
+        "packName": "孔巾",
+        "type": "敷料包(纸塑袋)",
+        "packageMaterial": "高温纸塑袋250*200",
+        "instrumentCount": 1,
+        "packCount": 1,
+        "unitPrice": 4,
+        "totalPrice": 4,
+        "expectedUnitPrice": 4.0,
+        "priceTol": 0.02,
+    },
+]
+
+JIAYI_YL_SPOT_CHECKS: list[dict[str, Any]] = [
+    {
+        "name": "佳医眼包敷料纸塑25cm4元",
+        "department": "手术室",
+        "packName": "眼包敷料",
+        "type": "敷料包(纸塑袋)",
+        "packageMaterial": "高温纸塑袋250*200",
+        "instrumentCount": 1,
+        "packCount": 1,
+        "unitPrice": 4,
+        "totalPrice": 4,
+        "expectedUnitPrice": 4.0,
+        "priceTol": 0.02,
+    },
+]
+
+GUOYAO_2_HOSPITAL = "国药总医院第二院区"
+BINGCHENG_YM_HOSPITAL = "哈尔滨冰城医疗美容医院"
+
+BINGCHENG_YM_SPOT_CHECKS: list[dict[str, Any]] = [
+    {
+        "name": "冰城环钻包27.5",
+        "department": "手术室",
+        "packName": "环钻包",
+        "type": "器械包(ZSD)",
+        "packageMaterial": "高温灭菌无纺布60*60",
+        "instrumentCount": 2,
+        "packCount": 1,
+        "unitPrice": 30.5,
+        "totalPrice": 61.0,
+        "expectedUnitPrice": 27.5,
+        "priceTol": 0.02,
+    },
+]
+
+GUOYAO_2_SPOT_CHECKS: list[dict[str, Any]] = [
+    {
+        "name": "电机厂缝合针8元",
+        "department": "手术室",
+        "packName": "缝合针-6/Z7520",
+        "type": "额外包(纸塑袋)",
+        "packageMaterial": "高温纸塑袋75*200",
+        "instrumentCount": 1,
+        "packCount": 1,
+        "unitPrice": 8,
+        "totalPrice": 8,
+        "expectedUnitPrice": 8.0,
+    },
+    {
+        "name": "电机厂指针10件5合1",
+        "department": "手术室",
+        "packName": "指针-10/z7537",
+        "type": "额外包(纸塑袋)",
+        "packageMaterial": "高温纸塑袋75*370",
+        "instrumentCount": 10,
+        "packCount": 1,
+        "unitPrice": 13.5,
+        "totalPrice": 13.5,
+        "expectedUnitPrice": 13.5,
+        "priceTol": 0.02,
+    },
+    {
+        "name": "电机厂指针12件免袋",
+        "department": "手术室",
+        "packName": "指针-12/z7537",
+        "type": "额外包(纸塑袋)",
+        "packageMaterial": "高温纸塑袋75*370",
+        "instrumentCount": 12,
+        "packCount": 1,
+        "unitPrice": 16.5,
+        "totalPrice": 16.5,
+        "expectedUnitPrice": 16.5,
+        "priceTol": 0.02,
+    },
+    {
+        "name": "电机厂双1件纸塑袋",
+        "department": "手术室",
+        "packName": "双-1/z2060",
+        "type": "额外包(纸塑袋)",
+        "packageMaterial": "高温纸塑袋75*200",
+        "instrumentCount": 1,
+        "packCount": 1,
+        "unitPrice": 8.0,
+        "totalPrice": 8.0,
+        "expectedUnitPrice": 8.0,
+        "priceTol": 0.02,
+    },
+    {
+        "name": "电机厂双3件内层袋",
+        "department": "手术室",
+        "packName": "双-3/z2060",
+        "type": "额外包(纸塑袋)",
+        "packageMaterial": "高温纸塑袋75*200",
+        "instrumentCount": 3,
+        "packCount": 1,
+        "unitPrice": 19.0,
+        "totalPrice": 19.0,
+        "expectedUnitPrice": 20.5,
+        "priceTol": 0.5,
+    },
+]
+
+HRB_WY_EM_SPOT_CHECKS: list[dict[str, Any]] = [
+    {
+        "name": "市五二门诊驱血带W50",
+        "department": "手术室",
+        "packName": "驱血带/W5050",
+        "type": "敷料包(无纺布包)",
+        "packageMaterial": "无纺布W50*50",
+        "instrumentCount": 1,
+        "packCount": 1,
+        "unitPrice": 25.0,
+        "totalPrice": 25.0,
+        "expectedUnitPrice": 25.0,
+    },
+    {
+        "name": "市五二门诊驱血带W90",
+        "department": "手术室",
+        "packName": "驱血带/W9090",
+        "type": "敷料包(无纺布包)",
+        "packageMaterial": "无纺布W90*90",
+        "instrumentCount": 1,
+        "packCount": 1,
+        "unitPrice": 30.0,
+        "totalPrice": 30.0,
+        "expectedUnitPrice": 30.0,
+    },
+]
+
+HRB_HEU_SPOT_CHECKS: list[dict[str, Any]] = [
+    {
+        "name": "孔巾20cm4元",
+        "department": "五官科",
+        "packName": "孔巾/Z2032",
+        "type": "敷料包(纸塑袋)",
+        "packageMaterial": "高温纸塑袋200*320",
+        "instrumentCount": 1,
+        "packCount": 1,
+        "unitPrice": 4.0,
+        "totalPrice": 4.0,
+        "expectedUnitPrice": 4.0,
+        "priceTol": 0.02,
+    },
+]
+
+NEAU_YY_SPOT_CHECKS: list[dict[str, Any]] = [
+    {
+        "name": "农大根管锉8件含包材",
+        "department": "口腔科",
+        "packName": "根管锉",
+        "type": "额外包(纸塑袋)",
+        "packageMaterial": "高温纸塑袋75*200",
+        "instrumentCount": 8,
+        "packCount": 1,
+        "unitPrice": 16.5,
+        "totalPrice": 16.5,
+        "expectedUnitPrice": 16.5,
+        "priceTol": 0.5,
+    },
+]
+
+HRB_SD_MB_SPOT_CHECKS: list[dict[str, Any]] = [
+    {
+        "name": "松电机扩针8件含包材",
+        "department": "口腔科",
+        "packName": "机扩针",
+        "type": "额外包(纸塑袋)",
+        "packageMaterial": "高温纸塑袋75*200",
+        "instrumentCount": 8,
+        "packCount": 1,
+        "unitPrice": 16.5,
+        "totalPrice": 16.5,
+        "expectedUnitPrice": 16.5,
+        "priceTol": 0.5,
+    },
+]
+
+HRB_HTFH_SPOT_CHECKS: list[dict[str, Any]] = [
+    {
+        "name": "航天镍钛锉8件含包材",
+        "department": "口腔科",
+        "packName": "镍钛锉",
+        "type": "额外包(纸塑袋)",
+        "packageMaterial": "高温纸塑袋75*200",
+        "instrumentCount": 8,
+        "packCount": 1,
+        "unitPrice": 16.5,
+        "totalPrice": 16.5,
+        "expectedUnitPrice": 16.5,
+        "priceTol": 0.5,
+    },
+]
+
 SPOT_CHECK_PRESETS: dict[str, list[dict[str, Any]]] = {
     "HRB-2ND": HRB_2ND_SPOT_CHECKS,
     "ZYY-D1": ZYY_D1_SPOT_CHECKS,
+    "FNN-YY": FNN_YY_SPOT_CHECKS,
+    "MEIYI-YL": MEIYI_YL_SPOT_CHECKS,
+    "YILI-YL": YILI_YL_SPOT_CHECKS,
+    "JIAYI-YL": JIAYI_YL_SPOT_CHECKS,
+    "GUOYAO-2": GUOYAO_2_SPOT_CHECKS,
+    "BINGCHENG-YM": BINGCHENG_YM_SPOT_CHECKS,
+    "HRB-WY-EM": HRB_WY_EM_SPOT_CHECKS,
+    "HRB-HEU": HRB_HEU_SPOT_CHECKS,
+    "NEAU-YY": NEAU_YY_SPOT_CHECKS,
+    "HRB-SD-MB": HRB_SD_MB_SPOT_CHECKS,
+    "HRB-HTFH": HRB_HTFH_SPOT_CHECKS,
 }
 
 
@@ -199,6 +469,18 @@ def run_spot_check(
         hospital = HRB_2ND_HOSPITAL
     if code == "ZYY-D1":
         hospital = ZYY_D1_HOSPITAL
+    if code == "FNN-YY":
+        hospital = FNN_YY_HOSPITAL
+    if code == "MEIYI-YL":
+        hospital = MEIYI_YL_HOSPITAL
+    if code == "YILI-YL":
+        hospital = YILI_YL_HOSPITAL
+    if code == "JIAYI-YL":
+        hospital = JIAYI_YL_HOSPITAL
+    if code == "GUOYAO-2":
+        hospital = GUOYAO_2_HOSPITAL
+    if code == "BINGCHENG-YM":
+        hospital = BINGCHENG_YM_HOSPITAL
 
     results: list[dict[str, Any]] = []
     for case in preset:

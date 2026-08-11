@@ -1,0 +1,12 @@
+{
+  "version": "1",
+  "description": "市五二门诊（HRB-WY-EM）客户反馈20260811：停用总院校正价，驱血带走敷料包无纺布分档（引擎路由）",
+  "deactivateRules": [
+    { "code": "HRB-WY-EM", "ruleName": "校正价132.0" },
+    { "code": "HRB-WY-EM", "ruleName": "校正价16.5" },
+    { "code": "HRB-WY-EM", "ruleName": "校正价22.0" },
+    { "code": "HRB-WY-EM", "ruleName": "校正价44.0" },
+    { "code": "HRB-WY-EM", "ruleName": "校正价88.0" },
+    { "code": "HRB-WY-EM", "ruleName": "校正价99.0" }
+  ]
+}

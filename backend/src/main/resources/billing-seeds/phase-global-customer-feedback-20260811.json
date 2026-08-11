@@ -1,0 +1,42 @@
+{
+  "version": "1",
+  "description": "全局客户反馈20260811：ZYY-D1克氏针/卷棉子>10免袋（spot验证锚点）",
+  "newRules": [
+    {
+      "code": "ZYY-D1",
+      "ruleType": "FOLD",
+      "name": "附一克氏针5合1含包材",
+      "priority": 5,
+      "keywords": ["克氏针", "银质针", "内热针", "车针", "拔髓针", "扩大针", "卷棉子"],
+      "threshold": 5,
+      "foldRatio": 5,
+      "maxInstrumentCount": 10,
+      "skipPackaging": false
+    },
+    {
+      "code": "ZYY-D1",
+      "ruleType": "FOLD",
+      "name": "附一克氏针5合1免包材",
+      "priority": 6,
+      "keywords": ["克氏针", "银质针", "内热针", "车针", "拔髓针", "扩大针", "卷棉子"],
+      "threshold": 5,
+      "foldRatio": 5,
+      "minInstrumentCount": 11,
+      "skipPackaging": true
+    },
+    {
+      "code": "ZYY-D1",
+      "ruleType": "FIXED_PRICE",
+      "name": "附一低温双1件35元",
+      "priority": 4,
+      "price": 35.0,
+      "keywords": ["双"],
+      "excludeKeywords": ["(双)", "/(双)", "双极", "双极线"],
+      "temperature": "LT",
+      "maxInstrumentCount": 1,
+      "minInstrumentCount": 1,
+      "skipPackaging": true,
+      "skipDiscount": true
+    }
+  ]
+}

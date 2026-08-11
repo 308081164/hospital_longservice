@@ -1,0 +1,48 @@
+{
+  "version": "1",
+  "description": "冰城医美20260811撤回：停用按件×5.5规则，恢复环钻27.5/整形包58/脂充包54.5固定价",
+  "deactivateRules": [
+    { "code": "BINGCHENG-YM", "ruleName": "冰城环钻包按件5.5" },
+    { "code": "BINGCHENG-YM", "ruleName": "冰城环钻包无纺布加价3" },
+    { "code": "BINGCHENG-YM", "ruleName": "冰城整形手术包按件5.5" },
+    { "code": "BINGCHENG-YM", "ruleName": "冰城整形手术包无纺布加价3" },
+    { "code": "BINGCHENG-YM", "ruleName": "冰城脂充包按件5.5" },
+    { "code": "BINGCHENG-YM", "ruleName": "冰城脂充包无纺布加价5" }
+  ],
+  "ruleUpdates": [
+    {
+      "code": "BINGCHENG-YM",
+      "ruleName": "≥3件按件5.5元",
+      "setExcludeKeywords": []
+    },
+    {
+      "code": "BINGCHENG-YM",
+      "ruleName": "整形包54.5",
+      "setName": "脂充包54.5",
+      "setIsActive": true
+    },
+    {
+      "code": "BINGCHENG-YM",
+      "ruleName": "脂充包54.5",
+      "setIsActive": true
+    }
+  ],
+  "activateRules": [
+    { "code": "BINGCHENG-YM", "ruleName": "环钻27.5" },
+    { "code": "BINGCHENG-YM", "ruleName": "整形包58" },
+    { "code": "BINGCHENG-YM", "ruleName": "脂充包54.5" }
+  ],
+  "newRules": [
+    {
+      "code": "BINGCHENG-YM",
+      "ruleType": "FIXED_PRICE",
+      "name": "脂充包54.5",
+      "priority": 10,
+      "price": 54.5,
+      "keywords": ["脂充包"],
+      "excludeKeywords": ["整形包", "整形手术包"],
+      "skipPackaging": true,
+      "skipDiscount": true
+    }
+  ]
+}

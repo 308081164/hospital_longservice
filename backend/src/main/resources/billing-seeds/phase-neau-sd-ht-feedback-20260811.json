@@ -1,0 +1,103 @@
+{
+  "version": "1",
+  "description": "东北农大/松电/航天 客户反馈20260811：全院FOLD+>10免袋，农大根管锉5.6",
+  "deactivateRules": [
+    { "code": "NEAU-YY", "ruleName": "东北农大口腔科针类5件算1件" },
+    { "code": "NEAU-YY", "ruleName": "东北农大车针5件算1件" },
+    { "code": "HRB-SD-MB", "ruleName": "松电口腔科针类5件算1件" },
+    { "code": "HRB-SD-MB", "ruleName": "松电车针5件算1件" },
+    { "code": "HRB-HTFH", "ruleName": "航天风华镍钛锉 5 件算 1 件" }
+  ],
+  "newRules": [
+    {
+      "code": "NEAU-YY",
+      "ruleType": "FOLD",
+      "name": "东北农大小件5合1含包材",
+      "priority": 10,
+      "keywords": ["根管针", "机锉", "牙探针", "机扩针", "车针", "扩大针", "拔髓针", "探针", "球钻"],
+      "threshold": 5,
+      "foldRatio": 5,
+      "maxInstrumentCount": 10,
+      "skipPackaging": false
+    },
+    {
+      "code": "NEAU-YY",
+      "ruleType": "FOLD",
+      "name": "东北农大小件5合1免包材",
+      "priority": 11,
+      "keywords": ["根管针", "机锉", "牙探针", "机扩针", "车针", "扩大针", "拔髓针", "探针", "球钻"],
+      "threshold": 5,
+      "foldRatio": 5,
+      "minInstrumentCount": 11,
+      "skipPackaging": true
+    },
+    {
+      "code": "NEAU-YY",
+      "ruleType": "FOLD",
+      "name": "东北农大根管锉5.6含包材",
+      "priority": 8,
+      "keywords": ["根管锉"],
+      "threshold": 5,
+      "foldRatio": 5,
+      "price": 5.6,
+      "maxInstrumentCount": 10,
+      "skipPackaging": false
+    },
+    {
+      "code": "NEAU-YY",
+      "ruleType": "FOLD",
+      "name": "东北农大根管锉5.6免包材",
+      "priority": 9,
+      "keywords": ["根管锉"],
+      "threshold": 5,
+      "foldRatio": 5,
+      "price": 5.6,
+      "minInstrumentCount": 11,
+      "skipPackaging": true
+    },
+    {
+      "code": "HRB-SD-MB",
+      "ruleType": "FOLD",
+      "name": "松电机扩针5合1含包材",
+      "priority": 10,
+      "keywords": ["机扩针", "车针", "扩大针", "根管针", "根管锉", "镍钛锉", "探针", "球钻", "拔髓针"],
+      "threshold": 5,
+      "foldRatio": 5,
+      "maxInstrumentCount": 10,
+      "skipPackaging": false
+    },
+    {
+      "code": "HRB-SD-MB",
+      "ruleType": "FOLD",
+      "name": "松电机扩针5合1免包材",
+      "priority": 11,
+      "keywords": ["机扩针", "车针", "扩大针", "根管针", "根管锉", "镍钛锉", "探针", "球钻", "拔髓针"],
+      "threshold": 5,
+      "foldRatio": 5,
+      "minInstrumentCount": 11,
+      "skipPackaging": true
+    },
+    {
+      "code": "HRB-HTFH",
+      "ruleType": "FOLD",
+      "name": "航天风华镍钛锉5合1含包材",
+      "priority": 18,
+      "keywords": ["镍钛锉"],
+      "threshold": 5,
+      "foldRatio": 5,
+      "maxInstrumentCount": 10,
+      "skipPackaging": false
+    },
+    {
+      "code": "HRB-HTFH",
+      "ruleType": "FOLD",
+      "name": "航天风华镍钛锉5合1免包材",
+      "priority": 19,
+      "keywords": ["镍钛锉"],
+      "threshold": 5,
+      "foldRatio": 5,
+      "minInstrumentCount": 11,
+      "skipPackaging": true
+    }
+  ]
+}

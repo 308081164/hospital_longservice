@@ -168,12 +168,17 @@ public class PricingEngine {
         // 器械包(ZSD) 按单包器械总数阶梯计费，包名含「克氏针」等小件词也不折算。
         boolean appliedSpecialFoldRule = false;
         boolean foldSkipPackaging = false;
+        Double foldUnitPriceOverride = null;
         if (preMatchedSpecialPrice == null && !isZsdInstrumentPack) {
             int countBeforeSpecialFold = effectiveCount;
             FoldApplyResult foldResult = applySpecialFoldRules(row, bagSize, effectiveCount, notes);
             effectiveCount = foldResult.effectiveCount();
-            appliedSpecialFoldRule = effectiveCount != countBeforeSpecialFold;
+            appliedSpecialFoldRule = foldResult.matched();
             foldSkipPackaging = foldResult.skipPackaging();
+            foldUnitPriceOverride = foldResult.unitPriceOverride();
+        }
+        if (foldUnitPriceOverride != null && !Double.isNaN(foldUnitPriceOverride)) {
+            forceHighTempPerItem = foldUnitPriceOverride;
         }
 
         // 针数量规则 + 小件器械折算（针数量规则优先：包名含"针+数字"时按公式拆分）
@@ -276,6 +281,32 @@ public class PricingEngine {
                 requiresReview = true;
             }
             skipPackaging = true;
+        } else if (packName.contains("驱血带")
+                || (type.contains("敷料") && packName.contains("驱血带"))) {
+            Double measure = extractDressingPackMeasure(packageMaterial, packName);
+            if (measure != null) {
+                double dressPrice = computeDressingPackPrice(measure);
+                if (dressPrice > 0) {
+                    expectedUnitPrice = dressPrice;
+                    pricingRule = "敷料包(无纺布包)驱血带——" + measure;
+                    notes.add("驱血带按无纺布敷料包规格 " + measure + " 计价，单价 " + fmt(expectedUnitPrice) + " 元。");
+                } else {
+                    pricingRule = "敷料包(无纺布包)驱血带——未匹配定价";
+                    notes.add("驱血带未能匹配无纺布敷料分档，保留原始价格。");
+                    requiresReview = true;
+                }
+            } else if (isZeroImport(unitPrice, totalPrice)) {
+                double defaultPrice = defaultDressingPackPrice();
+                expectedUnitPrice = defaultPrice;
+                pricingRule = "敷料包(无纺布包)驱血带——默认价";
+                notes.add("驱血带未能识别 W 码规格，0 元导入按默认小敷料包 " + fmt(defaultPrice) + " 元。");
+                requiresReview = true;
+            } else {
+                pricingRule = "敷料包(无纺布包)驱血带——未识别规格";
+                notes.add("驱血带未能识别无纺布 W 码规格，保留原始价格。");
+                requiresReview = true;
+            }
+            skipPackaging = true;
         } else if (type.contains("敷料包") && type.contains("纸塑袋")) {
             // 敷料包(纸塑袋)（棉球已在上方单独定价）：按账单原单价，勿把纸塑袋 75*200 尺寸误当无纺布敷料包
             pricingRule = "敷料包(纸塑袋)——保留原单价";
@@ -283,7 +314,7 @@ public class PricingEngine {
             skipPackaging = true;
         } else if (type.contains("敷料包")) {
             // 敷料包(无纺布包)
-            Double measure = extractDressingPackMeasure(packageMaterial);
+            Double measure = extractDressingPackMeasure(packageMaterial, packName);
             if (measure != null) {
                 double dressPrice = computeDressingPackPrice(measure);
                 if (dressPrice > 0) {
@@ -325,7 +356,8 @@ public class PricingEngine {
             if (isLowTemp) {
                 String ltPrefix = isDouble ? "低温纸塑袋(双)" : "低温纸塑袋";
                 pricingRule = ltPrefix + (bagSize > 0 ? bagSize + "cm" : "") + "阶梯计费";
-                expectedUnitPrice = computeLowTempPaperPlastic(materialBillingCount, bagSize, zBagSize, notes, isDouble);
+                expectedUnitPrice = computeLowTempPaperPlastic(
+                        materialBillingCount, bagSize, zBagSize, notes, isDouble, hospitalName);
             } else {
                 Double forcedPrice = computeForceHighTempUnitPrice(forceHighTempPerItem, materialBillingCount);
                 if (forcedPrice != null) {
@@ -352,7 +384,7 @@ public class PricingEngine {
                     notes.add("按路径覆盖高温单价 " + fmt(forceHighTempPerItem) + " 元/件 × "
                             + materialBillingCount + " 件 = " + fmt(expectedUnitPrice) + " 元。");
                 } else {
-                    Double dressingMeasure = extractDressingPackMeasure(packageMaterial);
+                    Double dressingMeasure = extractDressingPackMeasure(packageMaterial, packName);
                     boolean dressingPackRow = type.contains("敷料包") || packName.contains("敷料");
                     if (dressingMeasure != null && materialBillingCount <= 1 && dressingPackRow) {
                         double dressPrice = computeDressingPackPrice(dressingMeasure);
@@ -398,6 +430,22 @@ public class PricingEngine {
             expectedUnitPrice = round(expectedUnitPrice + specialFee.fee);
             pricingRule = pricingRule + " + " + specialFee.ruleName;
             notes.add(specialFee.note);
+        }
+
+        if (!skipPackaging && instrumentCount > 10
+                && matchesKeywordsBoundary(packName, needle.path("keywords"))
+                && !appliedSpecialFoldRule) {
+            skipPackaging = true;
+            notes.add("小件器械超过 10 件，按客户标准不加袋子钱。");
+        }
+
+        if (specialPrice != null && !skipPackaging && isPaperPlastic && !isLowTemp && expectedUnitPrice != null) {
+            Double bagAddon = computeHighTempBagAddon(bagSize, zBagSize, isDouble, instrumentCount);
+            if (bagAddon != null && bagAddon > 0) {
+                expectedUnitPrice = round(expectedUnitPrice + bagAddon);
+                pricingRule = pricingRule + " + 纸塑袋费";
+                notes.add("按件计价叠加纸塑袋费 " + fmt(bagAddon) + " 元。");
+            }
         }
 
         // 包装收费
@@ -593,7 +641,7 @@ public class PricingEngine {
     private FoldApplyResult applyFoldRuleList(Map<String, Object> row, JsonNode foldRules, String combined, int bagSize,
                                               int effectiveCount, List<String> notes) {
         if (!foldRules.isArray()) {
-            return new FoldApplyResult(effectiveCount, false);
+            return new FoldApplyResult(effectiveCount, false, false, null);
         }
         BillingConditionEvaluator.RowContext ctx = new BillingConditionEvaluator.RowContext(
                 str(row, "type"),
@@ -617,12 +665,19 @@ public class PricingEngine {
             String name = rule.path("name").asText("特殊小件折算");
             notes.add(name + "，原器械数 " + effectiveCount + " 件，折算为 " + result + " 件。");
             boolean skipPackaging = rule.path("skipPackaging").asBoolean(false);
-            return new FoldApplyResult(result, skipPackaging);
+            Double unitPriceOverride = rule.has("unitPrice")
+                    ? rule.path("unitPrice").asDouble(Double.NaN)
+                    : Double.NaN;
+            if (Double.isNaN(unitPriceOverride)) {
+                unitPriceOverride = null;
+            }
+            return new FoldApplyResult(result, skipPackaging, true, unitPriceOverride);
         }
-        return new FoldApplyResult(effectiveCount, false);
+        return new FoldApplyResult(effectiveCount, false, false, null);
     }
 
-    private record FoldApplyResult(int effectiveCount, boolean skipPackaging) {}
+    private record FoldApplyResult(int effectiveCount, boolean skipPackaging, boolean matched,
+                                   Double unitPriceOverride) {}
 
     private SpecialPriceResult findSpecialFixedPrice(
             Map<String, Object> row, int bagSize, int effectiveCount,
@@ -1094,6 +1149,25 @@ public class PricingEngine {
         return null;
     }
 
+    /** 按件计价叠加纸塑袋费：优先 cottonPaperPlastic 分档，否则客户确认 <20cm=2.5 / ≥20cm=4。 */
+    private Double resolvePerPiecePaperPlasticBagAddon(int bagSizeCm) {
+        if (bagSizeCm <= 0) {
+            return null;
+        }
+        JsonNode cottonPricing = rules.path("dressingPack").path("cottonPaperPlastic");
+        String sizeKey = String.valueOf(bagSizeCm);
+        if (cottonPricing.has(sizeKey)) {
+            return cottonPricing.path(sizeKey).asDouble();
+        }
+        if (bagSizeCm >= 20) {
+            return 4.0;
+        }
+        if (bagSizeCm >= 15) {
+            return 2.5;
+        }
+        return null;
+    }
+
     private int detectBagSize(String input) {
         if (input == null || input.isEmpty()) return 0;
         String key = input.replaceAll("\\s+", "");
@@ -1317,7 +1391,12 @@ public class PricingEngine {
     //  低温纸塑袋
     // ================================================================
 
-    private Double computeLowTempPaperPlastic(int instrumentCount, int bagSize, int zBagSize, List<String> notes, boolean isDouble) {
+    private Double computeLowTempPaperPlastic(int instrumentCount, int bagSize, int zBagSize, List<String> notes,
+                                              boolean isDouble, String hospitalName) {
+        if (instrumentCount == 1 && isDouble && !isHrb2ndHospital(hospitalName)) {
+            notes.add("低温单件纸塑袋包名含「双」，按客户标准固定 35 元计费（市二院除外）。");
+            return 35.0;
+        }
         JsonNode config = rules.path("lowTemperature").path("paperPlastic");
         double remainderPrice = config.path("remainderPerPiecePrice").asDouble(22.0);
 
@@ -1508,18 +1587,72 @@ public class PricingEngine {
     //  敷料包
     // ================================================================
 
-    private Double extractDressingPackMeasure(String material) {
+    private Double extractDressingPackMeasure(String material, String packName) {
+        String combined = (material == null ? "" : material) + " " + (packName == null ? "" : packName);
+        java.util.regex.Matcher wCode = java.util.regex.Pattern
+                .compile("[/＿_]?W\\s*(\\d{2,3})", java.util.regex.Pattern.CASE_INSENSITIVE)
+                .matcher(combined);
+        if (wCode.find()) {
+            double w = Double.parseDouble(wCode.group(1));
+            if (w >= 120) {
+                return w / 100.0;
+            }
+            return w;
+        }
         java.util.regex.Matcher m = java.util.regex.Pattern.compile("(\\d+(?:\\.\\d+)?)\\s*[×x*]\\s*\\d+")
-                .matcher(material);
+                .matcher(material == null ? "" : material);
         if (m.find()) {
             double measure = Double.parseDouble(m.group(1));
-            // 150×150 等填写为 cm，定价表 1.2~1.5 为米
             if (measure >= 100) {
                 measure = measure / 100.0;
             }
             return measure;
         }
         return null;
+    }
+
+    private Double extractDressingPackMeasure(String material) {
+        return extractDressingPackMeasure(material, "");
+    }
+
+    private Double computeHighTempBagAddon(int bagSize, int zBagSize, boolean isDouble, int rawInstrumentCount) {
+        int effectiveSize = bagSize > 25 ? 25 : bagSize;
+        JsonNode config = rules.path("highTemperature").path("paperPlastic");
+        JsonNode bagConfig = findBagConfig(effectiveSize, config.path("bagSizes"));
+        if (bagConfig == null) {
+            return null;
+        }
+        double bagFee1 = bagConfig.path("price").asDouble();
+        double bagFee2 = 0;
+        int innerBagSize = 0;
+        if (isDouble && zBagSize > 0) {
+            int effZSize = zBagSize > 25 ? 25 : zBagSize;
+            innerBagSize = effZSize;
+            JsonNode zBagConfig = findBagConfig(effZSize, config.path("bagSizes"));
+            if (zBagConfig != null) {
+                bagFee2 = zBagConfig.path("price").asDouble();
+            }
+        }
+        if (rawInstrumentCount >= 3 && isDouble) {
+            Double cottonInner = resolvePerPiecePaperPlasticBagAddon(innerBagSize > 0 ? innerBagSize : effectiveSize);
+            if (cottonInner != null) {
+                return cottonInner;
+            }
+            if (bagFee2 > 0) {
+                return bagFee2;
+            }
+            Double cottonOuter = resolvePerPiecePaperPlasticBagAddon(effectiveSize);
+            return cottonOuter != null ? cottonOuter : bagFee1;
+        }
+        Double cottonOuter = resolvePerPiecePaperPlasticBagAddon(effectiveSize);
+        return cottonOuter != null ? cottonOuter : bagFee1;
+    }
+
+    private static boolean isHrb2ndHospital(String hospitalName) {
+        if (hospitalName == null || hospitalName.isBlank()) {
+            return false;
+        }
+        return hospitalName.contains("第二医院") || hospitalName.contains("市二院");
     }
 
     private double defaultDressingPackPrice() {

@@ -1,0 +1,60 @@
+{
+  "version": "1",
+  "description": "电机厂（GUOYAO-2）客户反馈20260811：双改纸塑袋路径、指针>10免袋",
+  "deactivateRules": [
+    { "code": "GUOYAO-2", "ruleName": "电机厂指针5合1" },
+    { "code": "GUOYAO-2", "ruleName": "电机厂双按件5.5" }
+  ],
+  "newRules": [
+    {
+      "code": "GUOYAO-2",
+      "ruleType": "PRICE_PER_INSTRUMENT",
+      "name": "电机厂双按件5.5外层袋",
+      "priority": 11,
+      "price": 5.5,
+      "keywords": ["双"],
+      "excludeKeywords": ["(双)", "/(双)", "双极", "双极线"],
+      "materials": ["纸塑袋"],
+      "temperature": "HT",
+      "maxInstrumentCount": 2,
+      "skipPackaging": false,
+      "skipDiscount": true
+    },
+    {
+      "code": "GUOYAO-2",
+      "ruleType": "PRICE_PER_INSTRUMENT",
+      "name": "电机厂双按件5.5内层袋",
+      "priority": 12,
+      "price": 5.5,
+      "keywords": ["双"],
+      "excludeKeywords": ["(双)", "/(双)", "双极", "双极线"],
+      "materials": ["纸塑袋"],
+      "temperature": "HT",
+      "minInstrumentCount": 3,
+      "skipPackaging": false,
+      "skipDiscount": true
+    },
+    {
+      "code": "GUOYAO-2",
+      "ruleType": "FOLD",
+      "name": "电机厂指针5合1含包材",
+      "priority": 14,
+      "keywords": ["指针"],
+      "threshold": 5,
+      "foldRatio": 5,
+      "maxInstrumentCount": 10,
+      "skipPackaging": false
+    },
+    {
+      "code": "GUOYAO-2",
+      "ruleType": "FOLD",
+      "name": "电机厂指针5合1免包材",
+      "priority": 15,
+      "keywords": ["指针"],
+      "threshold": 5,
+      "foldRatio": 5,
+      "minInstrumentCount": 11,
+      "skipPackaging": true
+    }
+  ]
+}

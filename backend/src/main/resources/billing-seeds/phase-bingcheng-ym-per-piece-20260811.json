@@ -1,0 +1,80 @@
+{
+  "version": "1",
+  "description": "冰城医美客户反馈20260811：环钻/整形/脂充包改按件×5.5+无纺布加价",
+  "deactivateRules": [
+    { "code": "BINGCHENG-YM", "ruleName": "环钻27.5" },
+    { "code": "BINGCHENG-YM", "ruleName": "整形包58" },
+    { "code": "BINGCHENG-YM", "ruleName": "整形包54.5" }
+  ],
+  "ruleUpdates": [
+    {
+      "code": "BINGCHENG-YM",
+      "ruleName": "≥3件按件5.5元",
+      "addExcludeKeywords": ["环钻", "环钻包", "整形手术包", "整形包", "脂充包"]
+    }
+  ],
+  "newRules": [
+    {
+      "code": "BINGCHENG-YM",
+      "ruleType": "PRICE_PER_INSTRUMENT",
+      "name": "冰城环钻包按件5.5",
+      "priority": 6,
+      "price": 5.5,
+      "keywords": ["环钻包", "环钻"],
+      "skipPackaging": true,
+      "skipDiscount": true
+    },
+    {
+      "code": "BINGCHENG-YM",
+      "ruleType": "EXTRA_FEE",
+      "name": "冰城环钻包无纺布加价3",
+      "priority": 7,
+      "fee": 3.0,
+      "keywords": ["环钻包", "环钻"],
+      "skipPackaging": true,
+      "skipDiscount": true
+    },
+    {
+      "code": "BINGCHENG-YM",
+      "ruleType": "PRICE_PER_INSTRUMENT",
+      "name": "冰城整形手术包按件5.5",
+      "priority": 6,
+      "price": 5.5,
+      "keywords": ["整形手术包", "整形包"],
+      "excludeKeywords": ["脂充包"],
+      "skipPackaging": true,
+      "skipDiscount": true
+    },
+    {
+      "code": "BINGCHENG-YM",
+      "ruleType": "EXTRA_FEE",
+      "name": "冰城整形手术包无纺布加价3",
+      "priority": 7,
+      "fee": 3.0,
+      "keywords": ["整形手术包", "整形包"],
+      "excludeKeywords": ["脂充包"],
+      "skipPackaging": true,
+      "skipDiscount": true
+    },
+    {
+      "code": "BINGCHENG-YM",
+      "ruleType": "PRICE_PER_INSTRUMENT",
+      "name": "冰城脂充包按件5.5",
+      "priority": 6,
+      "price": 5.5,
+      "keywords": ["脂充包"],
+      "skipPackaging": true,
+      "skipDiscount": true
+    },
+    {
+      "code": "BINGCHENG-YM",
+      "ruleType": "EXTRA_FEE",
+      "name": "冰城脂充包无纺布加价5",
+      "priority": 7,
+      "fee": 5.0,
+      "keywords": ["脂充包"],
+      "skipPackaging": true,
+      "skipDiscount": true
+    }
+  ]
+}

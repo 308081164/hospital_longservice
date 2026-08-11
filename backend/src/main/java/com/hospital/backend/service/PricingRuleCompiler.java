@@ -624,6 +624,9 @@ public class PricingRuleCompiler {
         }
         node.put("threshold", rule.getThreshold() != null ? rule.getThreshold() : 5);
         node.put("foldRatio", rule.getFoldRatio() != null ? rule.getFoldRatio().doubleValue() : 5.0);
+        if (rule.getPrice() != null) {
+            node.put("unitPrice", rule.getPrice().doubleValue());
+        }
         if (Boolean.TRUE.equals(rule.getSkipPackaging())) {
             node.put("skipPackaging", true);
         }

@@ -1,0 +1,43 @@
+{
+  "version": "1",
+  "description": "电机厂（GUOYAO-2）客户特色规则：缝合针泛匹配8元、双按件、指针5合1",
+  "deactivateRules": [
+    {
+      "code": "GUOYAO-2",
+      "ruleName": "校正价8.0"
+    }
+  ],
+  "newRules": [
+    {
+      "code": "GUOYAO-2",
+      "ruleType": "FIXED_PRICE",
+      "name": "电机厂缝合针8元",
+      "priority": 10,
+      "price": 8.0,
+      "keywords": ["缝合针"],
+      "skipPackaging": true,
+      "skipDiscount": true
+    },
+    {
+      "code": "GUOYAO-2",
+      "ruleType": "PRICE_PER_INSTRUMENT",
+      "name": "电机厂双按件5.5",
+      "priority": 12,
+      "price": 5.5,
+      "keywords": ["双"],
+      "excludeKeywords": ["(双)", "/(双)", "双极", "双极线"],
+      "skipPackaging": false,
+      "skipDiscount": true
+    },
+    {
+      "code": "GUOYAO-2",
+      "ruleType": "FOLD",
+      "name": "电机厂指针5合1",
+      "priority": 14,
+      "keywords": ["指针"],
+      "threshold": 5,
+      "foldRatio": 5,
+      "skipPackaging": false
+    }
+  ]
+}

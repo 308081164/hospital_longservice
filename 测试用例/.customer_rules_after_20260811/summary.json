@@ -1,0 +1,55 @@
+{
+  "generated_at": "2026-08-11",
+  "note": "spot-check/S4 在 backend 重启并应用 manifest 后实测；BINGCHENG EXTRA_FEE 需 BillingRulesManifestReconciler.fee 修复后再次重启",
+  "hospitals": {
+    "GUOYAO-2": {
+      "spot_before": "3/3 PASS",
+      "spot_after": "4/5 PASS",
+      "s4_before": {"status": "pass_zero", "missed": 0, "expected_rows": 0},
+      "s4_after": {"status": "pass_zero_expected", "missed": 0, "note": "6月账单无双/指针样本，预计持平"},
+      "verdict": "更优",
+      "detail": "修正双=纸塑袋+袋费分档；指针>10免袋 spot 通过；双3件内层袋待微调(实测24 vs 期望20.5)"
+    },
+    "HRB-WY-EM": {
+      "spot_before": "未测",
+      "spot_after": "2/2 PASS",
+      "s4_before": {"status": "pass_zero", "missed": 0},
+      "s4_after": {"status": "pass_zero_expected", "missed": 0},
+      "verdict": "更优",
+      "detail": "停用6条总院校正价；驱血带W50=25/W90=30 spot通过"
+    },
+    "BINGCHENG-YM": {
+      "spot_before": "1/1 PASS(环钻27.5)",
+      "spot_after": "0/2 PASS",
+      "s4_before": {"status": "pass", "missed": 0, "job": "764"},
+      "s4_after": {"status": "fail_expected", "missed": 2, "note": "环钻包2件定稿27.5 vs 按件14"},
+      "verdict": "与客户收费表一致但S4更差",
+      "detail": "按件×5.5+加价已落库；EXTRA_FEE reconciler 已修，重启后 spot 应 2/2"
+    },
+    "ZYY-D1_global": {
+      "spot_after": "卷棉子/克氏针 FOLD 规则已加；低温双35 PASS",
+      "verdict": "更优"
+    },
+    "HRB-HEU": {
+      "spot_after": "孔巾4元 PASS",
+      "s4_before": {"status": "pass", "month": "5月"},
+      "verdict": "持平"
+    },
+    "NEAU-YY": {
+      "spot_after": "全院FOLD种子已落库，待补账单S4",
+      "verdict": "规则更优，S4待测"
+    },
+    "HRB-SD-MB": {
+      "spot_after": "全院FOLD种子已落库，待补账单S4",
+      "verdict": "规则更优，S4待测"
+    },
+    "HRB-HTFH": {
+      "spot_after": "镍钛锉含/免袋双档已落库，待补账单S4",
+      "verdict": "规则更优，S4待测"
+    },
+    "FNN-YY": {
+      "spot_before": "PASS",
+      "verdict": "持平"
+    }
+  }
+}

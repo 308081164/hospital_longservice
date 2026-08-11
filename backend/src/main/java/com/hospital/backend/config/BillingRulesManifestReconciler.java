@@ -151,6 +151,12 @@ public class BillingRulesManifestReconciler implements CommandLineRunner {
         if (ruleNode.hasNonNull("price")) {
             rule.setPrice(decimal(ruleNode, "price"));
         }
+        if (ruleNode.hasNonNull("fee")) {
+            rule.setFee(decimal(ruleNode, "fee"));
+        }
+        if (ruleNode.has("materials")) {
+            rule.setMaterials(toJsonArray(ruleNode.get("materials")));
+        }
         if (ruleNode.hasNonNull("foldRatio")) {
             rule.setFoldRatio(decimal(ruleNode, "foldRatio"));
         }

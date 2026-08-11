@@ -1,7 +1,7 @@
 {
   "version": 1,
-  "generated_at": "2026-08-09T09:26:41.371325+00:00",
-  "manifest_hash": "bc1bf85b758cf11ae84299a6068312c744aa845d345d7956bd4d698f518f433d",
+  "generated_at": "2026-08-11T12:11:00.101641+00:00",
+  "manifest_hash": "0f49ffaa7858744d9031ba9ecda732ebe27004969f637824fb5a2e6822612ff1",
   "customers": {
     "AL-YY": {
       "code": "AL-YY",
@@ -35,6 +35,94 @@
           "matchMode": "first"
         },
         {
+          "ruleType": "PRICE_PER_INSTRUMENT",
+          "name": "冰城整形手术包按件5.5",
+          "priority": 6,
+          "price": 5.5,
+          "keywords": [
+            "整形手术包",
+            "整形包"
+          ],
+          "excludeKeywords": [
+            "脂充包"
+          ],
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": false,
+          "matchMode": "first"
+        },
+        {
+          "ruleType": "EXTRA_FEE",
+          "name": "冰城整形手术包无纺布加价3",
+          "priority": 7,
+          "fee": 3.0,
+          "keywords": [
+            "整形手术包",
+            "整形包"
+          ],
+          "excludeKeywords": [
+            "脂充包"
+          ],
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": false,
+          "matchMode": "first"
+        },
+        {
+          "ruleType": "PRICE_PER_INSTRUMENT",
+          "name": "冰城环钻包按件5.5",
+          "priority": 6,
+          "price": 5.5,
+          "keywords": [
+            "环钻包",
+            "环钻"
+          ],
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": false,
+          "matchMode": "first"
+        },
+        {
+          "ruleType": "EXTRA_FEE",
+          "name": "冰城环钻包无纺布加价3",
+          "priority": 7,
+          "fee": 3.0,
+          "keywords": [
+            "环钻包",
+            "环钻"
+          ],
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": false,
+          "matchMode": "first"
+        },
+        {
+          "ruleType": "PRICE_PER_INSTRUMENT",
+          "name": "冰城脂充包按件5.5",
+          "priority": 6,
+          "price": 5.5,
+          "keywords": [
+            "脂充包"
+          ],
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": false,
+          "matchMode": "first"
+        },
+        {
+          "ruleType": "EXTRA_FEE",
+          "name": "冰城脂充包无纺布加价5",
+          "priority": 7,
+          "fee": 5.0,
+          "keywords": [
+            "脂充包"
+          ],
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": false,
+          "matchMode": "first"
+        },
+        {
           "ruleType": "FIXED_PRICE",
           "name": "整形包54.5",
           "priority": 10,
@@ -48,7 +136,7 @@
           ],
           "skipPackaging": true,
           "skipDiscount": true,
-          "isActive": true,
+          "isActive": false,
           "matchMode": "first"
         },
         {
@@ -91,12 +179,29 @@
           ],
           "skipPackaging": true,
           "skipDiscount": true,
+          "isActive": false,
+          "matchMode": "first"
+        },
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "脂充包54.5",
+          "priority": 10,
+          "price": 54.5,
+          "keywords": [
+            "脂充包"
+          ],
+          "excludeKeywords": [
+            "整形包",
+            "整形手术包"
+          ],
+          "skipPackaging": true,
+          "skipDiscount": true,
           "isActive": true,
           "matchMode": "first"
         }
       ],
-      "rule_count": 5,
-      "active_rule_count": 5
+      "rule_count": 12,
+      "active_rule_count": 4
     },
     "CHANGJIAN": {
       "code": "CHANGJIAN",
@@ -556,12 +661,136 @@
           ],
           "skipPackaging": true,
           "skipDiscount": true,
+          "isActive": false,
+          "matchMode": "first"
+        },
+        {
+          "ruleType": "PRICE_PER_INSTRUMENT",
+          "name": "电机厂双按件5.5",
+          "priority": 12,
+          "price": 5.5,
+          "keywords": [
+            "双"
+          ],
+          "excludeKeywords": [
+            "(双)",
+            "/(双)",
+            "双极",
+            "双极线"
+          ],
+          "skipPackaging": false,
+          "skipDiscount": true,
+          "isActive": false,
+          "matchMode": "first"
+        },
+        {
+          "ruleType": "PRICE_PER_INSTRUMENT",
+          "name": "电机厂双按件5.5内层袋",
+          "priority": 12,
+          "price": 5.5,
+          "keywords": [
+            "双"
+          ],
+          "excludeKeywords": [
+            "(双)",
+            "/(双)",
+            "双极",
+            "双极线"
+          ],
+          "materials": [
+            "纸塑袋"
+          ],
+          "temperature": "HT",
+          "minInstrumentCount": 3,
+          "skipPackaging": false,
+          "skipDiscount": true,
+          "isActive": true,
+          "matchMode": "first"
+        },
+        {
+          "ruleType": "PRICE_PER_INSTRUMENT",
+          "name": "电机厂双按件5.5外层袋",
+          "priority": 11,
+          "price": 5.5,
+          "keywords": [
+            "双"
+          ],
+          "excludeKeywords": [
+            "(双)",
+            "/(双)",
+            "双极",
+            "双极线"
+          ],
+          "materials": [
+            "纸塑袋"
+          ],
+          "temperature": "HT",
+          "maxInstrumentCount": 2,
+          "skipPackaging": false,
+          "skipDiscount": true,
+          "isActive": true,
+          "matchMode": "first"
+        },
+        {
+          "ruleType": "FOLD",
+          "name": "电机厂指针5合1",
+          "priority": 14,
+          "keywords": [
+            "指针"
+          ],
+          "threshold": 5,
+          "foldRatio": 5,
+          "skipPackaging": false,
+          "isActive": false,
+          "matchMode": "first",
+          "skipDiscount": false
+        },
+        {
+          "ruleType": "FOLD",
+          "name": "电机厂指针5合1免包材",
+          "priority": 15,
+          "keywords": [
+            "指针"
+          ],
+          "threshold": 5,
+          "foldRatio": 5,
+          "minInstrumentCount": 11,
+          "skipPackaging": true,
+          "isActive": true,
+          "matchMode": "first",
+          "skipDiscount": false
+        },
+        {
+          "ruleType": "FOLD",
+          "name": "电机厂指针5合1含包材",
+          "priority": 14,
+          "keywords": [
+            "指针"
+          ],
+          "threshold": 5,
+          "foldRatio": 5,
+          "maxInstrumentCount": 10,
+          "skipPackaging": false,
+          "isActive": true,
+          "matchMode": "first",
+          "skipDiscount": false
+        },
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "电机厂缝合针8元",
+          "priority": 10,
+          "price": 8.0,
+          "keywords": [
+            "缝合针"
+          ],
+          "skipPackaging": true,
+          "skipDiscount": true,
           "isActive": true,
           "matchMode": "first"
         }
       ],
-      "rule_count": 1,
-      "active_rule_count": 1
+      "rule_count": 8,
+      "active_rule_count": 5
     },
     "GUOYAO-3": {
       "code": "GUOYAO-3",
@@ -1177,6 +1406,48 @@
       "rule_count": 4,
       "active_rule_count": 4
     },
+    "HRB-HTFH": {
+      "code": "HRB-HTFH",
+      "name": "HRB-HTFH",
+      "status": null,
+      "billingPricingMode": null,
+      "standardPricingOverride": null,
+      "billingEnabled": null,
+      "productRules": [
+        {
+          "ruleType": "FOLD",
+          "name": "航天风华镍钛锉5合1免包材",
+          "priority": 19,
+          "keywords": [
+            "镍钛锉"
+          ],
+          "threshold": 5,
+          "foldRatio": 5,
+          "minInstrumentCount": 11,
+          "skipPackaging": true,
+          "isActive": true,
+          "matchMode": "first",
+          "skipDiscount": false
+        },
+        {
+          "ruleType": "FOLD",
+          "name": "航天风华镍钛锉5合1含包材",
+          "priority": 18,
+          "keywords": [
+            "镍钛锉"
+          ],
+          "threshold": 5,
+          "foldRatio": 5,
+          "maxInstrumentCount": 10,
+          "skipPackaging": false,
+          "isActive": true,
+          "matchMode": "first",
+          "skipDiscount": false
+        }
+      ],
+      "rule_count": 2,
+      "active_rule_count": 2
+    },
     "HRB-HX-EYE": {
       "code": "HRB-HX-EYE",
       "name": "哈尔滨华夏眼科医院",
@@ -1279,9 +1550,55 @@
           "threshold": 5,
           "foldRatio": 5,
           "conditionsJson": "[{\"field\":\"department\",\"value\":[\"口腔科\"]}]",
-          "isActive": true,
+          "isActive": false,
           "matchMode": "first",
           "skipPackaging": false,
+          "skipDiscount": false
+        },
+        {
+          "ruleType": "FOLD",
+          "name": "松电机扩针5合1免包材",
+          "priority": 11,
+          "keywords": [
+            "机扩针",
+            "车针",
+            "扩大针",
+            "根管针",
+            "根管锉",
+            "镍钛锉",
+            "探针",
+            "球钻",
+            "拔髓针"
+          ],
+          "threshold": 5,
+          "foldRatio": 5,
+          "minInstrumentCount": 11,
+          "skipPackaging": true,
+          "isActive": true,
+          "matchMode": "first",
+          "skipDiscount": false
+        },
+        {
+          "ruleType": "FOLD",
+          "name": "松电机扩针5合1含包材",
+          "priority": 10,
+          "keywords": [
+            "机扩针",
+            "车针",
+            "扩大针",
+            "根管针",
+            "根管锉",
+            "镍钛锉",
+            "探针",
+            "球钻",
+            "拔髓针"
+          ],
+          "threshold": 5,
+          "foldRatio": 5,
+          "maxInstrumentCount": 10,
+          "skipPackaging": false,
+          "isActive": true,
+          "matchMode": "first",
           "skipDiscount": false
         },
         {
@@ -1293,13 +1610,13 @@
           ],
           "threshold": 5,
           "foldRatio": 5,
-          "isActive": true,
+          "isActive": false,
           "matchMode": "first",
           "skipPackaging": false,
           "skipDiscount": false
         }
       ],
-      "rule_count": 2,
+      "rule_count": 4,
       "active_rule_count": 2
     },
     "HRB-SH": {
@@ -1650,7 +1967,7 @@
           ],
           "skipPackaging": true,
           "skipDiscount": true,
-          "isActive": true,
+          "isActive": false,
           "matchMode": "first"
         },
         {
@@ -1669,7 +1986,7 @@
           ],
           "skipPackaging": true,
           "skipDiscount": true,
-          "isActive": true,
+          "isActive": false,
           "matchMode": "first"
         },
         {
@@ -1682,7 +1999,7 @@
           ],
           "skipPackaging": true,
           "skipDiscount": true,
-          "isActive": true,
+          "isActive": false,
           "matchMode": "first"
         },
         {
@@ -1695,7 +2012,7 @@
           ],
           "skipPackaging": true,
           "skipDiscount": true,
-          "isActive": true,
+          "isActive": false,
           "matchMode": "first"
         },
         {
@@ -1708,7 +2025,7 @@
           ],
           "skipPackaging": true,
           "skipDiscount": true,
-          "isActive": true,
+          "isActive": false,
           "matchMode": "first"
         },
         {
@@ -1721,12 +2038,12 @@
           ],
           "skipPackaging": true,
           "skipDiscount": true,
-          "isActive": true,
+          "isActive": false,
           "matchMode": "first"
         }
       ],
       "rule_count": 6,
-      "active_rule_count": 6
+      "active_rule_count": 0
     },
     "HULAN-HSZ": {
       "code": "HULAN-HSZ",
@@ -2087,9 +2404,87 @@
           "threshold": 5,
           "foldRatio": 5,
           "conditionsJson": "[{\"field\":\"department\",\"value\":[\"口腔科\"]}]",
-          "isActive": true,
+          "isActive": false,
           "matchMode": "first",
           "skipPackaging": false,
+          "skipDiscount": false
+        },
+        {
+          "ruleType": "FOLD",
+          "name": "东北农大小件5合1免包材",
+          "priority": 11,
+          "keywords": [
+            "根管针",
+            "机锉",
+            "牙探针",
+            "机扩针",
+            "车针",
+            "扩大针",
+            "拔髓针",
+            "探针",
+            "球钻"
+          ],
+          "threshold": 5,
+          "foldRatio": 5,
+          "minInstrumentCount": 11,
+          "skipPackaging": true,
+          "isActive": true,
+          "matchMode": "first",
+          "skipDiscount": false
+        },
+        {
+          "ruleType": "FOLD",
+          "name": "东北农大小件5合1含包材",
+          "priority": 10,
+          "keywords": [
+            "根管针",
+            "机锉",
+            "牙探针",
+            "机扩针",
+            "车针",
+            "扩大针",
+            "拔髓针",
+            "探针",
+            "球钻"
+          ],
+          "threshold": 5,
+          "foldRatio": 5,
+          "maxInstrumentCount": 10,
+          "skipPackaging": false,
+          "isActive": true,
+          "matchMode": "first",
+          "skipDiscount": false
+        },
+        {
+          "ruleType": "FOLD",
+          "name": "东北农大根管锉5.6免包材",
+          "priority": 9,
+          "keywords": [
+            "根管锉"
+          ],
+          "threshold": 5,
+          "foldRatio": 5,
+          "price": 5.6,
+          "minInstrumentCount": 11,
+          "skipPackaging": true,
+          "isActive": true,
+          "matchMode": "first",
+          "skipDiscount": false
+        },
+        {
+          "ruleType": "FOLD",
+          "name": "东北农大根管锉5.6含包材",
+          "priority": 8,
+          "keywords": [
+            "根管锉"
+          ],
+          "threshold": 5,
+          "foldRatio": 5,
+          "price": 5.6,
+          "maxInstrumentCount": 10,
+          "skipPackaging": false,
+          "isActive": true,
+          "matchMode": "first",
           "skipDiscount": false
         },
         {
@@ -2101,14 +2496,14 @@
           ],
           "threshold": 5,
           "foldRatio": 5,
-          "isActive": true,
+          "isActive": false,
           "matchMode": "first",
           "skipPackaging": false,
           "skipDiscount": false
         }
       ],
-      "rule_count": 2,
-      "active_rule_count": 2
+      "rule_count": 6,
+      "active_rule_count": 4
     },
     "NG-FUCHAN": {
       "code": "NG-FUCHAN",
@@ -4890,10 +5285,74 @@
           "skipDiscount": true,
           "isActive": true,
           "matchMode": "first"
+        },
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "附一低温双1件35元",
+          "priority": 4,
+          "price": 35.0,
+          "keywords": [
+            "双"
+          ],
+          "excludeKeywords": [
+            "(双)",
+            "/(双)",
+            "双极",
+            "双极线"
+          ],
+          "temperature": "LT",
+          "maxInstrumentCount": 1,
+          "minInstrumentCount": 1,
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": true,
+          "matchMode": "first"
+        },
+        {
+          "ruleType": "FOLD",
+          "name": "附一克氏针5合1免包材",
+          "priority": 6,
+          "keywords": [
+            "克氏针",
+            "银质针",
+            "内热针",
+            "车针",
+            "拔髓针",
+            "扩大针",
+            "卷棉子"
+          ],
+          "threshold": 5,
+          "foldRatio": 5,
+          "minInstrumentCount": 11,
+          "skipPackaging": true,
+          "isActive": true,
+          "matchMode": "first",
+          "skipDiscount": false
+        },
+        {
+          "ruleType": "FOLD",
+          "name": "附一克氏针5合1含包材",
+          "priority": 5,
+          "keywords": [
+            "克氏针",
+            "银质针",
+            "内热针",
+            "车针",
+            "拔髓针",
+            "扩大针",
+            "卷棉子"
+          ],
+          "threshold": 5,
+          "foldRatio": 5,
+          "maxInstrumentCount": 10,
+          "skipPackaging": false,
+          "isActive": true,
+          "matchMode": "first",
+          "skipDiscount": false
         }
       ],
-      "rule_count": 45,
-      "active_rule_count": 37
+      "rule_count": 48,
+      "active_rule_count": 40
     },
     "ZYY-D2-HN": {
       "code": "ZYY-D2-HN",

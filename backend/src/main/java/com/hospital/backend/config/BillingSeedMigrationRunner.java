@@ -275,7 +275,23 @@ public class BillingSeedMigrationRunner implements CommandLineRunner {
             new IncrementalSeed("billing_seed_customer_onboard_4clinics_20260809_v1",
                     "billing-seeds/phase-customer-onboard-4clinics-20260809.json"),
             new IncrementalSeed("billing_seed_4clinics_special_rules_20260809_v1",
-                    "billing-seeds/phase-4clinics-special-rules-20260809.json")
+                    "billing-seeds/phase-4clinics-special-rules-20260809.json"),
+            new IncrementalSeed("billing_seed_guoyao_2_customer_rules_20260809_v1",
+                    "billing-seeds/phase-guoyao-2-customer-rules-20260809.json"),
+            new IncrementalSeed("billing_seed_bingcheng_ym_huanzuan_s4_20260809_v1",
+                    "billing-seeds/phase-bingcheng-ym-huanzuan-s4-20260809.json"),
+            new IncrementalSeed("billing_seed_guoyao_2_feedback_20260811_v1",
+                    "billing-seeds/phase-guoyao-2-feedback-20260811.json"),
+            new IncrementalSeed("billing_seed_hrb_wy_em_feedback_20260811_v1",
+                    "billing-seeds/phase-hrb-wy-em-feedback-20260811.json"),
+            new IncrementalSeed("billing_seed_neau_sd_ht_feedback_20260811_v1",
+                    "billing-seeds/phase-neau-sd-ht-feedback-20260811.json"),
+            new IncrementalSeed("billing_seed_bingcheng_ym_per_piece_20260811_v1",
+                    "billing-seeds/phase-bingcheng-ym-per-piece-20260811.json"),
+            new IncrementalSeed("billing_seed_global_customer_feedback_20260811_v1",
+                    "billing-seeds/phase-global-customer-feedback-20260811.json"),
+            new IncrementalSeed("billing_seed_bingcheng_ym_rollback_per_piece_20260811_v1",
+                    "billing-seeds/phase-bingcheng-ym-rollback-per-piece-20260811.json")
     );
 
     private static final String ZYY_D1_P0_MARKER = "billing_seed_zyy_d1_p0_v2";
@@ -992,6 +1008,10 @@ public class BillingSeedMigrationRunner implements CommandLineRunner {
                     rule.setName(text(patch, "setName"));
                     changed = true;
                 }
+                if (patch.has("setIsActive")) {
+                    rule.setIsActive(bool(patch, "setIsActive", true));
+                    changed = true;
+                }
                 if (patch.has("setSkipDiscount")) {
                     rule.setSkipDiscount(bool(patch, "setSkipDiscount", false));
                     changed = true;
@@ -1062,6 +1082,15 @@ public class BillingSeedMigrationRunner implements CommandLineRunner {
                     continue;
                 }
                 deactivateProductRule(customer.getId(), ruleName);
+            }
+            for (JsonNode act : root.path("activateRules")) {
+                String code = text(act, "code");
+                String ruleName = text(act, "ruleName");
+                Customer customer = customerMapper.selectByCode(code);
+                if (customer == null) {
+                    continue;
+                }
+                activateProductRule(customer.getId(), ruleName);
             }
             seedExternalInstruments(root.path("externalInstruments"));
             for (JsonNode discNode : root.path("discountUpdates")) {
@@ -1465,6 +1494,16 @@ public class BillingSeedMigrationRunner implements CommandLineRunner {
         log.info("Deactivated customer product rule: {} (customerId={})", ruleName, customerId);
     }
 
+    private void activateProductRule(Long customerId, String ruleName) {
+        CustomerProductRule rule = findProductRuleByName(customerId, ruleName);
+        if (rule == null || Boolean.TRUE.equals(rule.getIsActive())) {
+            return;
+        }
+        rule.setIsActive(true);
+        customerProductRuleMapper.updateById(rule);
+        log.info("Activated customer product rule: {} (customerId={})", ruleName, customerId);
+    }
+
     private void updateRuleKeywords(Long customerId, String ruleName, List<String> keywords) {
         CustomerProductRule rule = findProductRuleByName(customerId, ruleName);
         if (rule == null) {
@@ -1640,6 +1679,12 @@ public class BillingSeedMigrationRunner implements CommandLineRunner {
             rule.setPriority(intVal(ruleNode, "priority", 100));
             if (ruleNode.hasNonNull("price")) {
                 rule.setPrice(decimal(ruleNode, "price"));
+            }
+            if (ruleNode.hasNonNull("fee")) {
+                rule.setFee(decimal(ruleNode, "fee"));
+            }
+            if (ruleNode.has("materials")) {
+                rule.setMaterials(toJsonArray(ruleNode.get("materials")));
             }
             if (ruleNode.hasNonNull("foldRatio")) {
                 rule.setFoldRatio(decimal(ruleNode, "foldRatio"));

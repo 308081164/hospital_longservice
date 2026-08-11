@@ -1,0 +1,10 @@
+{
+  "version": "1",
+  "description": "冰城医美 S4：停用环钻包30.5，使环钻包走环钻27.5（与6月处理后表一致）",
+  "deactivateRules": [
+    {
+      "code": "BINGCHENG-YM",
+      "ruleName": "环钻包30.5"
+    }
+  ]
+}

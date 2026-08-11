@@ -206,6 +206,17 @@ def build_manifest() -> dict[str, Any]:
             if rule_name in rules:
                 rules[rule_name]["isActive"] = False
 
+        for act in data.get("activateRules") or []:
+            code = _text(act, "code")
+            rule_name = _text(act, "ruleName")
+            if not code or not rule_name:
+                continue
+            deactivated.discard((code, rule_name))
+            entry = customers.setdefault(code, {"code": code, "productRules": {}})
+            rules = entry.setdefault("productRules", {})
+            if rule_name in rules:
+                rules[rule_name]["isActive"] = True
+
     manifest_customers: dict[str, Any] = {}
     for code in sorted(customers):
         entry = customers[code]
