@@ -1,6 +1,7 @@
 package com.hospital.backend.config;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.hospital.backend.common.JsonUtils;
 import com.hospital.backend.entity.*;
 import com.hospital.backend.mapper.*;
@@ -291,7 +292,9 @@ public class BillingSeedMigrationRunner implements CommandLineRunner {
             new IncrementalSeed("billing_seed_global_customer_feedback_20260811_v1",
                     "billing-seeds/phase-global-customer-feedback-20260811.json"),
             new IncrementalSeed("billing_seed_bingcheng_ym_rollback_per_piece_20260811_v1",
-                    "billing-seeds/phase-bingcheng-ym-rollback-per-piece-20260811.json")
+                    "billing-seeds/phase-bingcheng-ym-rollback-per-piece-20260811.json"),
+            new IncrementalSeed("billing_seed_global_cotton_paper_plastic_20260812_v1",
+                    "billing-seeds/phase-global-cotton-paper-plastic-20260812.json")
     );
 
     private static final String ZYY_D1_P0_MARKER = "billing_seed_zyy_d1_p0_v2";
@@ -314,6 +317,7 @@ public class BillingSeedMigrationRunner implements CommandLineRunner {
     private final ExportTemplateMapper exportTemplateMapper;
     private final LogisticsCardMapper logisticsCardMapper;
     private final ExternalInstrumentMapper externalInstrumentMapper;
+    private final HospitalPricingRuleMapper pricingRuleMapper;
     private final JdbcTemplate jdbcTemplate;
 
     @Override
@@ -433,6 +437,8 @@ public class BillingSeedMigrationRunner implements CommandLineRunner {
                 applyBatchPatchSeedFile(incremental.classpathFile());
             } else if ("billing-seeds/phase-billing-mode-backfill-20260730.json".equals(incremental.classpathFile())) {
                 applyBillingModeBackfillSeedFile(incremental.classpathFile());
+            } else if ("billing-seeds/phase-global-cotton-paper-plastic-20260812.json".equals(incremental.classpathFile())) {
+                applied = applyPricingRulePatchSeedFile(incremental.classpathFile());
             } else {
                 applied = loadSeedClasspathFile(incremental.classpathFile());
             }
@@ -900,6 +906,69 @@ public class BillingSeedMigrationRunner implements CommandLineRunner {
             log.error("Failed to apply standard pricing seed {}: {}", file, e.getMessage(), e);
             return false;
         }
+    }
+
+    /** 标准 hospital_pricing_rule.rules_json 深合并补丁（如棉球纸塑袋分档） */
+    private boolean applyPricingRulePatchSeedFile(String file) {
+        try {
+            ClassPathResource resource = new ClassPathResource(file);
+            if (!resource.exists()) {
+                log.warn("Pricing rule patch seed file missing: {}", file);
+                return false;
+            }
+            JsonNode root = JsonUtils.getObjectMapper().readTree(resource.getInputStream());
+            JsonNode patches = root.path("pricingRulePatches");
+            if (!patches.isArray() || patches.isEmpty()) {
+                log.warn("Pricing rule patch seed has no pricingRulePatches: {}", file);
+                return false;
+            }
+            boolean anyApplied = false;
+            for (JsonNode patch : patches) {
+                Long ruleId = patch.has("ruleId") ? patch.get("ruleId").asLong() : null;
+                HospitalPricingRule rule = ruleId != null
+                        ? pricingRuleMapper.selectById(ruleId)
+                        : pricingRuleMapper.selectByIsActiveTrue();
+                if (rule == null) {
+                    log.warn("Pricing rule patch skipped: rule not found (ruleId={})", ruleId);
+                    continue;
+                }
+                JsonNode mergeRules = patch.path("mergeRules");
+                if (!mergeRules.isObject()) {
+                    log.warn("Pricing rule patch skipped: mergeRules missing for rule id={}", rule.getId());
+                    continue;
+                }
+                ObjectNode rulesNode = (ObjectNode) JsonUtils.getObjectMapper().readTree(
+                        rule.getRulesJson() == null || rule.getRulesJson().isBlank()
+                                ? "{}"
+                                : rule.getRulesJson());
+                deepMergeObject(rulesNode, (ObjectNode) mergeRules);
+                rule.setRulesJson(JsonUtils.toJson(rulesNode));
+                pricingRuleMapper.updateById(rule);
+                anyApplied = true;
+                log.info("Pricing rule patch applied: ruleId={} file={}", rule.getId(), file);
+            }
+            return anyApplied;
+        } catch (Exception e) {
+            log.error("Failed to apply pricing rule patch seed {}: {}", file, e.getMessage(), e);
+            return false;
+        }
+    }
+
+    private void deepMergeObject(ObjectNode target, ObjectNode patch) {
+        patch.fields().forEachRemaining(entry -> {
+            String key = entry.getKey();
+            JsonNode patchVal = entry.getValue();
+            if (patchVal.isObject()) {
+                JsonNode existing = target.get(key);
+                if (existing instanceof ObjectNode existingObj) {
+                    deepMergeObject(existingObj, (ObjectNode) patchVal);
+                } else {
+                    target.set(key, patchVal.deepCopy());
+                }
+            } else {
+                target.set(key, patchVal.deepCopy());
+            }
+        });
     }
 
     /** P0.2+ 补丁种子：规则更新 / 新增 / 停用 */

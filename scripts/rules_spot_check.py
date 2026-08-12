@@ -399,6 +399,35 @@ HRB_HTFH_SPOT_CHECKS: list[dict[str, Any]] = [
     },
 ]
 
+STANDARD_COTTON_SPOT_CHECKS: list[dict[str, Any]] = [
+    {
+        "name": "棉球15cm纸塑袋2.5",
+        "department": "生殖手术室",
+        "packName": "棉球/Z1526",
+        "type": "敷料包(纸塑袋)",
+        "packageMaterial": "高温纸塑袋 150*260",
+        "instrumentCount": 0,
+        "packCount": 1,
+        "unitPrice": 2.5,
+        "totalPrice": 2.5,
+        "expectedUnitPrice": 2.5,
+        "expectedStatus": "unchanged",
+    },
+    {
+        "name": "棉球缸25cm纸塑袋10.5",
+        "department": "生殖手术室",
+        "packName": "棉球缸-1/z2530",
+        "type": "额外包(纸塑袋)",
+        "packageMaterial": "高温纸塑袋 250*300",
+        "instrumentCount": 1,
+        "packCount": 1,
+        "unitPrice": 16.0,
+        "totalPrice": 16.0,
+        "expectedUnitPrice": 10.5,
+        "expectedStatus": "warning",
+    },
+]
+
 SPOT_CHECK_PRESETS: dict[str, list[dict[str, Any]]] = {
     "HRB-2ND": HRB_2ND_SPOT_CHECKS,
     "ZYY-D1": ZYY_D1_SPOT_CHECKS,
@@ -413,6 +442,12 @@ SPOT_CHECK_PRESETS: dict[str, list[dict[str, Any]]] = {
     "NEAU-YY": NEAU_YY_SPOT_CHECKS,
     "HRB-SD-MB": HRB_SD_MB_SPOT_CHECKS,
     "HRB-HTFH": HRB_HTFH_SPOT_CHECKS,
+    "STANDARD": STANDARD_COTTON_SPOT_CHECKS,
+}
+
+# spot-check code → 实际客户 code（用于全局标准规则验证）
+SPOT_CHECK_CUSTOMER_ALIAS: dict[str, str] = {
+    "STANDARD": "DAOWAI-RM",
 }
 
 
@@ -444,13 +479,14 @@ def run_spot_check(
         raise ValueError(f"无 spot-check 预设: {code}")
 
     client.login(force=True)
-    customer = client.customer_by_code(code)
+    lookup_code = SPOT_CHECK_CUSTOMER_ALIAS.get(code, code)
+    customer = client.customer_by_code(lookup_code)
     if customer is None:
         return {
             "command": "rules spot-check",
             "code": code,
             "ok": False,
-            "error": "customer not found",
+            "error": f"customer not found: {lookup_code}",
             "results": [],
         }
 
@@ -481,10 +517,12 @@ def run_spot_check(
         hospital = GUOYAO_2_HOSPITAL
     if code == "BINGCHENG-YM":
         hospital = BINGCHENG_YM_HOSPITAL
+    if code == "STANDARD":
+        hospital = hospital_name or "黑龙江菁华上德生殖妇产医院"
 
     results: list[dict[str, Any]] = []
     for case in preset:
-        skip = {"name", "expectedUnitPrice", "expectedCorrectedTotal", "priceTol"}
+        skip = {"name", "expectedUnitPrice", "expectedCorrectedTotal", "priceTol", "expectedStatus"}
         sample = {k: v for k, v in case.items() if k not in skip}
         sample.setdefault("sheetName", sample.get("department"))
         tol = float(case.get("priceTol", 0.02))
@@ -503,6 +541,9 @@ def run_spot_check(
             if expected_total is not None:
                 total_ok = _price_close(actual_total, float(expected_total), tol=tol)
                 ok = ok and total_ok
+            expected_status = case.get("expectedStatus")
+            if expected_status is not None:
+                ok = ok and str(_row_field(sim, "status") or "") == str(expected_status)
             results.append(
                 {
                     "name": case["name"],

@@ -1793,6 +1793,34 @@ class PricingEngineTest {
     }
 
     @Test
+    void cottonBallPaperPlastic15cmShouldBe2_5() {
+        PricingEngine.ProcessedResult result = engine.processRow(row(
+                "道外区人民医院",
+                "敷料包(纸塑袋)",
+                "棉球/Z1526",
+                "高温纸塑袋150*260",
+                0, 1, 2.5, 2.5));
+
+        assertThat(result.expectedUnitPrice).isEqualTo(2.5);
+        assertThat(result.status).isEqualTo("unchanged");
+        assertThat(result.pricingRule).contains("15cm");
+    }
+
+    @Test
+    void cottonBallJar25cmShouldFallbackTo10_5() {
+        PricingEngine.ProcessedResult result = engine.processRow(row(
+                "道外区人民医院",
+                "额外包(纸塑袋)",
+                "棉球缸-1/z2530",
+                "高温纸塑袋250*300",
+                1, 1, 16.0, 16.0));
+
+        assertThat(result.expectedUnitPrice).isEqualTo(10.5);
+        assertThat(result.status).isEqualTo("warning");
+        assertThat(result.pricingRule).contains("25cm");
+    }
+
+    @Test
     void cottonBallUnrecognizedSpecWithMatchingPriceIsUnchanged() {
         ObjectNode rules = (ObjectNode) defaultRules();
         rules.putObject("billingProfile").put("enabled", true).put("pricingMode", "standard");
