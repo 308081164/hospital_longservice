@@ -176,6 +176,49 @@ if extra:
     print(f"::warning::rules extra={extra} (legacy/UI rules, non-blocking)")
 PY
 
+echo ">> rules spot-check STANDARD (棉球纸塑袋分档)"
+if ! ./bin/hospital-cli rules spot-check --code STANDARD --mode direct --profile prod \
+    --api "$API_BASE" --json > /tmp/parity_standard_spot.json; then
+  cat /tmp/parity_standard_spot.json 2>/dev/null || true
+  echo "STANDARD spot-check 执行失败" >&2
+  exit 1
+fi
+python3 - <<'PY'
+import json
+from pathlib import Path
+
+data = json.loads(Path("/tmp/parity_standard_spot.json").read_text(encoding="utf-8"))
+if not data.get("ok"):
+    print(json.dumps(data, ensure_ascii=False, indent=2))
+    raise SystemExit("STANDARD spot-check 未通过")
+passed = data.get("passed") or 0
+total = data.get("total") or 0
+print(f"STANDARD spot-check PASS ({passed}/{total})")
+for row in data.get("results") or []:
+    mark = "OK" if row.get("ok") else "FAIL"
+    print(f"  [{mark}] {row.get('name')}: expected={row.get('expectedUnitPrice')} actual={row.get('actualUnitPrice')}")
+PY
+
+echo ">> rules spot-check (STANDARD cotton paper plastic)"
+if ! ./bin/hospital-cli rules spot-check --code STANDARD --mode direct --profile prod \
+    --api "$API_BASE" --json > /tmp/parity_standard_spot.json; then
+  cat /tmp/parity_standard_spot.json 2>/dev/null || true
+  echo "STANDARD spot-check 执行失败" >&2
+  exit 1
+fi
+python3 - <<'PY'
+import json
+from pathlib import Path
+
+data = json.loads(Path("/tmp/parity_standard_spot.json").read_text(encoding="utf-8"))
+if not data.get("ok"):
+    print(json.dumps(data, ensure_ascii=False, indent=2))
+    raise SystemExit("STANDARD spot-check 未通过")
+passed = sum(1 for r in data.get("results") or [] if r.get("ok"))
+total = len(data.get("results") or [])
+print(f"STANDARD spot-check PASS ({passed}/{total})")
+PY
+
 echo ">> calibrate (--dry-run，只写 calibration 日志)"
 python3 scripts/calibrate_prod_job_map.py --api "$API_BASE" --mode direct --dry-run || true
 
@@ -203,5 +246,5 @@ if [ "$MISSING" -gt 0 ]; then
   echo "::warning::prod coverage_gap $MISSING hospitals missing Job (expected, non-blocking)"
 fi
 
-echo "parity gate PASS (smoke + rules ok, coverage logged)"
+echo "parity gate PASS (smoke + rules + STANDARD spot-check ok, coverage logged)"
 exit 0
