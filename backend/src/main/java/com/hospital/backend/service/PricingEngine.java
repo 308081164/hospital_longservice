@@ -267,7 +267,8 @@ public class PricingEngine {
             notes.add(specialPrice.note);
             skipPackaging = specialPrice.skipPackaging;
             skipHospitalDiscount = specialPrice.skipHospitalDiscount;
-        } else if (type.contains("纸塑袋") && packName.contains("棉球")) {
+        } else if (type.contains("纸塑袋") && packName.contains("棉球")
+                && shouldUseDressingCottonPaperPlasticPrice(packName, type, instrumentCount, packCount)) {
             int bagSize2 = detectBagSize(str(row, "packageMaterial") + str(row, "packName"));
             Double cottonPrice = resolveCottonPaperPlasticUnitPrice(bagSize2);
             if (cottonPrice != null) {
@@ -307,8 +308,8 @@ public class PricingEngine {
                 requiresReview = true;
             }
             skipPackaging = true;
-        } else if (type.contains("敷料包") && type.contains("纸塑袋")) {
-            // 敷料包(纸塑袋)（棉球已在上方单独定价）：按账单原单价，勿把纸塑袋 75*200 尺寸误当无纺布敷料包
+        } else if (type.contains("敷料包") && type.contains("纸塑袋") && !packName.contains("棉球缸")) {
+            // 敷料包(纸塑袋)（棉球已在上方单独定价；棉球缸走高温纸塑件费+袋费/附一 fuyi 袋规）
             pricingRule = "敷料包(纸塑袋)——保留原单价";
             notes.add("敷料包(纸塑袋)按账单原单价计费，不套用无纺布敷料包尺寸价或高温纸塑袋阶梯。");
             skipPackaging = true;
@@ -1131,7 +1132,22 @@ public class PricingEngine {
     //  袋尺寸检测（带缓存）
     // ================================================================
 
-    /** 棉球缸等：优先 dressingPack.cottonPaperPlastic，否则回落高温纸塑袋价表（含附一 fuyi 25cm=12.79）。 */
+    /** 棉球/纱布纸塑袋敷料价：纯敷料棉球；棉球缸等容器走高温纸塑「件费+袋费」。 */
+    private boolean shouldUseDressingCottonPaperPlasticPrice(
+            String packName, String type, int instrumentCount, int packCount) {
+        if (packName.contains("棉球缸")) {
+            return false;
+        }
+        if (type.contains("敷料包") && type.contains("纸塑袋")) {
+            return true;
+        }
+        int perPack = packCount > 1
+                ? (int) Math.round((double) instrumentCount / Math.max(1, packCount))
+                : instrumentCount;
+        return perPack <= 0;
+    }
+
+    /** 棉球敷料：优先 dressingPack.cottonPaperPlastic，否则回落高温纸塑袋价表（含附一 fuyi 25cm=12.79）。 */
     private Double resolveCottonPaperPlasticUnitPrice(int bagSizeCm) {
         if (bagSizeCm <= 0) {
             return null;
@@ -1350,20 +1366,20 @@ public class PricingEngine {
             return totalWithBag;
         }
 
-        if (instrumentCount >= 3 && packageFee > capPrice) {
+        if (instrumentCount >= 3) {
             boolean chargeDoubleBagWhenCapped = config.path("chargeDoubleBagWhenCapped").asBoolean(false);
             if (chargeDoubleBagWhenCapped && isDouble && bagFee2 > 0) {
                 double total = round(packageFee + bagFee2);
-                notes.add("大于等于 3 件且件数总价 " + fmt(packageFee) + " > " + fmt(capPrice)
-                        + " 元，基础袋费免收，但双层纸塑袋追加第二层袋费 " + fmt(bagFee2)
-                        + " 元，合计 " + fmt(total) + " 元。");
+                notes.add("大于等于 3 件，按 " + fmt(perPackagePrice) + " 元/件 × " + instrumentCount
+                        + " = " + fmt(packageFee) + " 元计费，基础袋费免收，但双层纸塑袋追加第二层袋费 "
+                        + fmt(bagFee2) + " 元，合计 " + fmt(total) + " 元。");
                 return total;
             }
             String doubleNote = isDouble && bagFee2 > 0
-                ? "（包名含\"双\"，但 ≥3 件且件数总价超封顶，袋费免收）"
+                ? "（包名含\"双\"，但 ≥3 件袋费免收）"
                 : "";
-            notes.add("大于等于 3 件且件数总价 " + fmt(packageFee) + " > " + fmt(capPrice) +
-                    " 元，按 " + fmt(perPackagePrice) + " 元/件计费，不再计袋费。" + doubleNote);
+            notes.add("大于等于 3 件，按 " + fmt(perPackagePrice) + " 元/件 × " + instrumentCount
+                    + " = " + fmt(packageFee) + " 元计费，不再计袋费。" + doubleNote);
             return packageFee;
         }
 

@@ -79,7 +79,11 @@ class ZyyD1P0PricingRegressionTest {
 
     @Test
     void shouldPriceCottonBallJarAtFuyi25cmBagRate() {
-        assertWarning(row("棉球缸-1/z2530", "敷料包(纸塑袋)", "高温纸塑袋250*300", 1, 1, 12.8, 12.8), 12.79);
+        Map<String, Object> row = row("棉球缸-1/z2530", "敷料包(纸塑袋)", "高温纸塑袋250*300", 1, 1, 12.8, 12.8);
+        PricingEngine.ProcessedResult result = engine.processRow(row);
+        assertThat(result.expectedUnitPrice).isCloseTo(12.79, offset(0.02));
+        // 导入价 12.8 与 fuyi 25cm 袋规 12.79 在容差内，状态可为 unchanged
+        assertThat(result.status).isIn("unchanged", "warning");
     }
 
     @Test

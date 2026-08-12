@@ -1807,7 +1807,7 @@ class PricingEngineTest {
     }
 
     @Test
-    void cottonBallJar25cmShouldFallbackTo10_5() {
+    void cottonBallJar25cmShouldChargeInstrumentFeePlusBag() {
         PricingEngine.ProcessedResult result = engine.processRow(row(
                 "道外区人民医院",
                 "额外包(纸塑袋)",
@@ -1815,9 +1815,35 @@ class PricingEngineTest {
                 "高温纸塑袋250*300",
                 1, 1, 16.0, 16.0));
 
-        assertThat(result.expectedUnitPrice).isEqualTo(10.5);
-        assertThat(result.status).isEqualTo("warning");
+        assertThat(result.expectedUnitPrice).isEqualTo(16.0);
+        assertThat(result.status).isEqualTo("unchanged");
         assertThat(result.pricingRule).contains("25cm");
+    }
+
+    @Test
+    void highTempPaperPlasticThreePiecesShouldWaiveBagFee() {
+        PricingEngine.ProcessedResult result = engine.processRow(row(
+                "道外区人民医院",
+                "额外包(纸塑袋)",
+                "普通器械-3/Z7520",
+                "高温纸塑袋150*260",
+                3, 1, 16.5, 16.5));
+
+        assertThat(result.expectedUnitPrice).isEqualTo(16.5);
+        assertThat(result.pricingRule).contains("高温纸塑袋");
+    }
+
+    @Test
+    void highTempPaperPlasticFourPiecesShouldChargePerPieceOnly() {
+        PricingEngine.ProcessedResult result = engine.processRow(row(
+                "道外区人民医院",
+                "额外包(纸塑袋)",
+                "普通器械-4/Z7520",
+                "高温纸塑袋150*260",
+                4, 1, 22.0, 22.0));
+
+        assertThat(result.expectedUnitPrice).isEqualTo(22.0);
+        assertThat(result.status).isEqualTo("unchanged");
     }
 
     @Test
