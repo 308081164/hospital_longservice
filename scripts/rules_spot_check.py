@@ -473,8 +473,8 @@ SPOT_CHECK_PRESETS: dict[str, list[dict[str, Any]]] = {
 
 # spot-check code → 实际客户 code（用于全局标准规则验证）
 SPOT_CHECK_CUSTOMER_ALIAS: dict[str, str] = {
-    # HLFB-SF：billing_enabled、无 pathOverride、仅「车针」特色规则，不干扰标准价用例
-    "STANDARD": "HLFB-SF",
+    # GUOYAO-2：billing_enabled、无 pathOverride、特色规则不干扰标准价用例
+    "STANDARD": "GUOYAO-2",
 }
 
 
@@ -548,7 +548,7 @@ def run_spot_check(
     simulate_rule_id = rule_id
     if code == "STANDARD":
         simulate_rule_id = 1
-        hospital = hospital_name or customer.get("name") or customer.get("canonicalName") or code
+        hospital = hospital_name or GUOYAO_2_HOSPITAL
 
     results: list[dict[str, Any]] = []
     for case in preset:
