@@ -473,7 +473,8 @@ SPOT_CHECK_PRESETS: dict[str, list[dict[str, Any]]] = {
 
 # spot-check code → 实际客户 code（用于全局标准规则验证）
 SPOT_CHECK_CUSTOMER_ALIAS: dict[str, str] = {
-    "STANDARD": "DAOWAI-RM",
+    # HLFB-SF：billing_enabled、无 pathOverride、仅「车针」特色规则，不干扰标准价用例
+    "STANDARD": "HLFB-SF",
 }
 
 
@@ -543,8 +544,11 @@ def run_spot_check(
         hospital = GUOYAO_2_HOSPITAL
     if code == "BINGCHENG-YM":
         hospital = BINGCHENG_YM_HOSPITAL
+
+    simulate_rule_id = rule_id
     if code == "STANDARD":
-        hospital = hospital_name or "黑龙江菁华上德生殖妇产医院"
+        simulate_rule_id = 1
+        hospital = hospital_name or customer.get("name") or customer.get("canonicalName") or code
 
     results: list[dict[str, Any]] = []
     for case in preset:
@@ -557,7 +561,7 @@ def run_spot_check(
                 customer_id=customer_id,
                 hospital_name=hospital,
                 sample_row=sample,
-                rule_id=rule_id,
+                rule_id=simulate_rule_id,
             )
             actual = _row_field(sim, "expectedUnitPrice", "expected_unit_price")
             expected = float(case["expectedUnitPrice"])
