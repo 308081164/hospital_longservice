@@ -1807,6 +1807,53 @@ class PricingEngineTest {
     }
 
     @Test
+    void shangdeCottonBall119PacksShouldChargePerPackNotPerInstrument() {
+        PricingEngine.ProcessedResult result = engine.processRow(row(
+                "黑龙江菁华上德生殖妇产医院",
+                "敷料包(纸塑袋)",
+                "棉球/Z1526",
+                "高温纸塑袋 150*260",
+                0, 119, 2.5, 297.5));
+
+        assertThat(result.expectedUnitPrice).isEqualTo(2.5);
+        assertThat(result.correctedTotalPrice).isEqualTo(297.5);
+        assertThat(result.status).isEqualTo("unchanged");
+        assertThat(result.notes).anyMatch(n -> n.contains("按包计价"));
+    }
+
+    @Test
+    void cottonBallFallsBackToTierNotHighTempBagFeeWhenCottonConfigMissing() {
+        ObjectNode rules = (ObjectNode) defaultRules();
+        ((ObjectNode) rules.path("dressingPack")).remove("cottonPaperPlastic");
+
+        PricingEngine engineWithoutCottonConfig = new PricingEngine(rules);
+        PricingEngine.ProcessedResult result = engineWithoutCottonConfig.processRow(row(
+                "黑龙江菁华上德生殖妇产医院",
+                "敷料包(纸塑袋)",
+                "棉球/Z1526",
+                "高温纸塑袋 150*260",
+                0, 119, 2.5, 297.5));
+
+        assertThat(result.expectedUnitPrice).isEqualTo(2.5);
+        assertThat(result.correctedTotalPrice).isEqualTo(297.5);
+        assertThat(result.status).isEqualTo("unchanged");
+    }
+
+    @Test
+    void cottonBallPackAliasShouldChargePerPack() {
+        PricingEngine.ProcessedResult result = engine.processRow(row(
+                "黑龙江菁华上德生殖妇产医院",
+                "敷料包(纸塑袋)",
+                "棉球包/Z1526",
+                "高温纸塑袋150*260",
+                0, 1, 2.5, 2.5));
+
+        assertThat(result.expectedUnitPrice).isEqualTo(2.5);
+        assertThat(result.status).isEqualTo("unchanged");
+        assertThat(result.pricingRule).contains("15cm");
+    }
+
+    @Test
     void cottonBallJar25cmShouldChargeInstrumentFeePlusBag() {
         PricingEngine.ProcessedResult result = engine.processRow(row(
                 "道外区人民医院",

@@ -102,11 +102,15 @@ public class PricingEngine {
                 && (type.contains("低温") || type.contains("ETO") || type.contains("EO"));
         boolean isZsdInstrumentPack = isZsdInstrumentPackType(type);
 
+        boolean dressingPerPack = isDressingPerPackRow(packName, type, instrumentCount);
         int effectiveCount = instrumentCount;
         if (packCount > 1 && !isZsdInstrumentPack) {
-            effectiveCount = Math.max(1, (int) Math.round((double) effectiveCount / packCount));
+            int divided = (int) Math.round((double) effectiveCount / packCount);
+            effectiveCount = dressingPerPack ? Math.max(0, divided) : Math.max(1, divided);
         }
-        if (effectiveCount == 0) effectiveCount = 1;
+        if (effectiveCount == 0 && !dressingPerPack) {
+            effectiveCount = 1;
+        }
         int perPackInstrumentCount = packCount > 1
                 ? Math.max(1, (int) Math.round((double) instrumentCount / packCount))
                 : Math.max(1, instrumentCount);
@@ -267,15 +271,15 @@ public class PricingEngine {
             notes.add(specialPrice.note);
             skipPackaging = specialPrice.skipPackaging;
             skipHospitalDiscount = specialPrice.skipHospitalDiscount;
-        } else if (type.contains("纸塑袋") && packName.contains("棉球")
+        } else if (type.contains("纸塑袋") && isCottonDressingPackName(packName)
                 && shouldUseDressingCottonPaperPlasticPrice(packName, type, instrumentCount, packCount)) {
             int bagSize2 = detectBagSize(str(row, "packageMaterial") + str(row, "packName"));
             Double cottonPrice = resolveCottonPaperPlasticUnitPrice(bagSize2);
             if (cottonPrice != null) {
                 expectedUnitPrice = cottonPrice;
                 pricingRule = "敷料包(纸塑袋)+棉球——" + bagSize2 + "cm";
-                notes.add("敷料包(纸塑袋)+棉球，纸塑袋规格 " + bagSize2 + "cm，单价为 "
-                        + fmt(expectedUnitPrice) + " 元。");
+                notes.add("敷料包(纸塑袋)+棉球，纸塑袋规格 " + bagSize2 + "cm，按包计价 "
+                        + fmt(expectedUnitPrice) + " 元/包，总价=单价×包数(" + packCount + ")。");
             } else {
                 pricingRule = "敷料包(纸塑袋)+棉球——未识别规格";
                 notes.add("敷料包(纸塑袋)+棉球未能识别纸塑袋规格，保留原始价格。");
@@ -1132,10 +1136,32 @@ public class PricingEngine {
     //  袋尺寸检测（带缓存）
     // ================================================================
 
+    /** 棉球/棉球包敷料名；棉球缸是容器，走高温纸塑件费+袋费。 */
+    private boolean isCottonDressingPackName(String packName) {
+        return packName.contains("棉球") && !packName.contains("棉球缸");
+    }
+
+    /** 器械数为 0 的敷料按包行：不要把 0 件强制当成 1 件。 */
+    private boolean isDressingPerPackRow(String packName, String type, int instrumentCount) {
+        if (instrumentCount > 0) {
+            return false;
+        }
+        if (packName.contains("棉球缸")) {
+            return false;
+        }
+        if (isCottonDressingPackName(packName) && type.contains("纸塑袋")) {
+            return true;
+        }
+        if (packName.contains("驱血带")) {
+            return true;
+        }
+        return type.contains("敷料包") && type.contains("纸塑袋");
+    }
+
     /** 棉球/纱布纸塑袋敷料价：纯敷料棉球；棉球缸等容器走高温纸塑「件费+袋费」。 */
     private boolean shouldUseDressingCottonPaperPlasticPrice(
             String packName, String type, int instrumentCount, int packCount) {
-        if (packName.contains("棉球缸")) {
+        if (!isCottonDressingPackName(packName)) {
             return false;
         }
         if (type.contains("敷料包") && type.contains("纸塑袋")) {
@@ -1147,22 +1173,27 @@ public class PricingEngine {
         return perPack <= 0;
     }
 
-    /** 棉球敷料：优先 dressingPack.cottonPaperPlastic，否则回落高温纸塑袋价表（含附一 fuyi 25cm=12.79）。 */
-    private Double resolveCottonPaperPlasticUnitPrice(int bagSizeCm) {
+    /**
+     * 棉球敷料单价：精确 key → 档位 ≤15=2.5 / ≥20=4.0。
+     * 禁止回落到高温纸塑袋材费（15cm=5.5），避免按包棉球被当成按件器械费。
+     */
+    private Double resolveCottonPaperPlasticUnitPriceByTier(int bagSizeCm) {
         if (bagSizeCm <= 0) {
             return null;
         }
         JsonNode cottonPricing = rules.path("dressingPack").path("cottonPaperPlastic");
         String sizeKey = String.valueOf(bagSizeCm);
-        if (cottonPricing.has(sizeKey)) {
+        if (cottonPricing.has(sizeKey) && cottonPricing.path(sizeKey).isNumber()) {
             return cottonPricing.path(sizeKey).asDouble();
         }
-        JsonNode bagConfig = findBagConfig(
-                bagSizeCm, rules.path("highTemperature").path("paperPlastic").path("bagSizes"));
-        if (bagConfig != null && bagConfig.has("price")) {
-            return bagConfig.path("price").asDouble();
+        if (bagSizeCm >= 20) {
+            return 4.0;
         }
-        return null;
+        return 2.5;
+    }
+
+    private Double resolveCottonPaperPlasticUnitPrice(int bagSizeCm) {
+        return resolveCottonPaperPlasticUnitPriceByTier(bagSizeCm);
     }
 
     /** 按件计价叠加纸塑袋费：优先 cottonPaperPlastic 分档，否则客户确认 <20cm=2.5 / ≥20cm=4。 */
