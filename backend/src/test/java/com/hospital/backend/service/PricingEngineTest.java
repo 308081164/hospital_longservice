@@ -1854,6 +1854,65 @@ class PricingEngineTest {
     }
 
     @Test
+    void hrbWyDoubleBagTwoPiecesShouldCapAt16_5() {
+        PricingEngine.ProcessedResult result = engine.processRow(row(
+                "哈尔滨市第五医院",
+                "额外包(纸塑袋)",
+                "德芙新3水管-2件/双/Z2035",
+                "高温纸塑袋 200*350",
+                2, 1, 57.0, 57.0));
+
+        assertThat(result.expectedUnitPrice).isEqualTo(16.5);
+        assertThat(result.correctedTotalPrice).isEqualTo(16.5);
+        assertThat(result.status).isEqualTo("warning");
+    }
+
+    @Test
+    void hrbWyNonWovenMislabeledTypeShouldCharge16_5PerPack() {
+        PricingEngine.ProcessedResult result = engine.processRow(row(
+                "哈尔滨市第五医院",
+                "额外包(纸塑袋)",
+                "钢丝钳-1/W505060",
+                "无纺布-50×50-60g",
+                2, 2, 16.5, 33.0));
+
+        assertThat(result.expectedUnitPrice).isEqualTo(16.5);
+        assertThat(result.correctedTotalPrice).isEqualTo(33.0);
+        assertThat(result.status).isEqualTo("unchanged");
+        assertThat(result.pricingRule).contains("无纺布");
+    }
+
+    @Test
+    void hrbWyFivePiecePaperPlasticShouldUseBillInstrumentCount() {
+        PricingEngine.ProcessedResult result = engine.processRow(row(
+                "哈尔滨市第五医院",
+                "额外包(纸塑袋)",
+                "吸脂针3刮勺2 /Z7535",
+                "高温纸塑袋 75*370",
+                5, 1, 27.5, 27.5));
+
+        assertThat(result.expectedUnitPrice).isEqualTo(27.5);
+        assertThat(result.correctedTotalPrice).isEqualTo(27.5);
+        assertThat(result.status).isEqualTo("unchanged");
+        assertThat(result.notes).noneMatch(n -> n.contains("针3") && n.contains("= 3 件"));
+    }
+
+    @Test
+    void hrbWyAnchorageScrewThreePiecesShouldNotFoldToOne() {
+        PricingEngine.ProcessedResult result = engine.processRow(row(
+                "哈尔滨市第五医院",
+                "额外包(纸塑袋)",
+                "支抗钉-3/z7520",
+                "高温纸塑袋 75*200",
+                3, 1, 16.5, 16.5));
+
+        assertThat(result.expectedUnitPrice).isEqualTo(16.5);
+        assertThat(result.correctedTotalPrice).isEqualTo(16.5);
+        assertThat(result.status).isEqualTo("unchanged");
+        assertThat(result.notes).noneMatch(n -> n.contains("按 1 件计费"));
+    }
+
+    @Test
     void cottonBallJar25cmShouldChargeInstrumentFeePlusBag() {
         PricingEngine.ProcessedResult result = engine.processRow(row(
                 "道外区人民医院",

@@ -156,6 +156,20 @@ public class PricingEngine {
                 || type.contains("纸塑袋")
                 || packageMaterial.contains("低温灭菌");
         boolean isNonWoven = packageMaterial.contains("无纺布") || type.contains("无纺布");
+        // 包材优先于类型标签：账单 type 误标纸塑袋但包材为无纺布时仍走无纺布计价
+        if (packageMaterial.contains("无纺布") && !packageMaterial.contains("纸塑袋")) {
+            isNonWoven = true;
+            isPaperPlastic = false;
+        } else if (packageMaterial.contains("纸塑袋") || packageMaterial.contains("低温灭菌")) {
+            isPaperPlastic = true;
+        }
+        int perPackRawInstrumentCount = packCount > 1
+                ? (int) Math.round((double) instrumentCount / Math.max(1, packCount))
+                : instrumentCount;
+        if (perPackRawInstrumentCount <= 0 && !dressingPerPack) {
+            perPackRawInstrumentCount = Math.max(1, instrumentCount);
+        }
+        boolean highTempPaperPlasticRow = isPaperPlastic && !isNonWoven;
         boolean isLowTemp = !disableLowTemp && ((type + packName + packageMaterial).contains("低温")
                 || type.contains("ETO") || type.contains("EO")
                 || packageMaterial.contains("低温灭菌"));
@@ -185,14 +199,21 @@ public class PricingEngine {
             forceHighTempPerItem = foldUnitPriceOverride;
         }
 
+        // 高温纸塑 ≥3 件：按账单器械数×5.5，不应用全局针数拆分/小件折算（院级 FOLD 特色规则仍保留）
+        boolean skipGlobalNeedleAndSmallFold = highTempPaperPlasticRow && !isLowTemp
+                && perPackRawInstrumentCount >= 3;
+        if (skipGlobalNeedleAndSmallFold && !appliedSpecialFoldRule) {
+            effectiveCount = Math.max(1, perPackRawInstrumentCount);
+        }
+
         // 针数量规则 + 小件器械折算（针数量规则优先：包名含"针+数字"时按公式拆分）
         JsonNode needle = rules.path("needle");
         java.util.regex.Pattern needleQtyPattern = java.util.regex.Pattern.compile("针(\\d+)");
         java.util.regex.Matcher needleQtyMatcher = needleQtyPattern.matcher(packName);
         boolean appliedNeedleRule = false;
         boolean skipNeedleRuleForFuyiW9050 = packName.toLowerCase().contains("w9050");
-        if (preMatchedSpecialPrice == null && !appliedSpecialFoldRule && !isZsdInstrumentPack
-                && !skipNeedleRuleForFuyiW9050 && needleQtyMatcher.find()) {
+        if (!skipGlobalNeedleAndSmallFold && preMatchedSpecialPrice == null && !appliedSpecialFoldRule
+                && !isZsdInstrumentPack && !skipNeedleRuleForFuyiW9050 && needleQtyMatcher.find()) {
             String[] parts = packName.split("针\\d+", 2);
             String beforeNeedle = parts[0];
             String afterNeedle = parts.length > 1 ? parts[1] : "";
@@ -221,8 +242,8 @@ public class PricingEngine {
                 appliedNeedleRule = true;
             }
         }
-        if (preMatchedSpecialPrice == null && !appliedSpecialFoldRule && !appliedNeedleRule
-                && !isLiposuctionNeedleLongVariant(packName) && !isZsdInstrumentPack) {
+        if (!skipGlobalNeedleAndSmallFold && preMatchedSpecialPrice == null && !appliedSpecialFoldRule
+                && !appliedNeedleRule && !isLiposuctionNeedleLongVariant(packName) && !isZsdInstrumentPack) {
             SmallItemSplit smallSplit = findSmallItemSplit(packName, needle.path("keywords"));
             if (smallSplit != null) {
                 int threshold = needle.path("threshold").asInt(5);

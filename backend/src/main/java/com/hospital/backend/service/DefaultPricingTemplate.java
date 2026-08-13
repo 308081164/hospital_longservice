@@ -69,7 +69,7 @@ public final class DefaultPricingTemplate {
                 "threshold", 5,
                 "foldRatio", 5,
                 "keywords", List.of("针", "小件", "探针", "穿刺针", "缝合针", "车针", "拔髓针",
-                        "成型片", "根管针", "根管锉", "支抗钉", "洁牙机尖", "球钻", "挖勺", "手术针", "卷棉子")
+                        "成型片", "根管针", "根管锉", "洁牙机尖", "球钻", "挖勺", "手术针", "卷棉子")
         ));
         rules.put("cleaning", Map.of(
                 "removeFirstRow", false,

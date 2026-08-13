@@ -308,6 +308,67 @@ GUOYAO_2_SPOT_CHECKS: list[dict[str, Any]] = [
     },
 ]
 
+HRB_WY_HOSPITAL = "哈尔滨市第五医院"
+
+HRB_WY_SPOT_CHECKS: list[dict[str, Any]] = [
+    {
+        "name": "德芙新3水管双袋2件封顶16.5",
+        "department": "手术室",
+        "packName": "德芙新3水管-2件/双/Z2035",
+        "type": "额外包(纸塑袋)",
+        "packageMaterial": "高温纸塑袋 200*350",
+        "instrumentCount": 2,
+        "packCount": 1,
+        "unitPrice": 57.0,
+        "totalPrice": 57.0,
+        "expectedUnitPrice": 16.5,
+        "expectedCorrectedTotal": 16.5,
+        "expectedStatus": "warning",
+    },
+    {
+        "name": "钢丝钳W505060无纺布2包16.5",
+        "department": "手术室",
+        "packName": "钢丝钳-1/W505060",
+        "type": "额外包(纸塑袋)",
+        "packageMaterial": "无纺布-50×50-60g",
+        "instrumentCount": 2,
+        "packCount": 2,
+        "unitPrice": 16.5,
+        "totalPrice": 33.0,
+        "expectedUnitPrice": 16.5,
+        "expectedCorrectedTotal": 33.0,
+        "expectedStatus": "unchanged",
+    },
+    {
+        "name": "吸脂针3刮勺2五件27.5",
+        "department": "手术室",
+        "packName": "吸脂针3刮勺2 /Z7535",
+        "type": "额外包(纸塑袋)",
+        "packageMaterial": "高温纸塑袋 75*370",
+        "instrumentCount": 5,
+        "packCount": 1,
+        "unitPrice": 27.5,
+        "totalPrice": 27.5,
+        "expectedUnitPrice": 27.5,
+        "expectedCorrectedTotal": 27.5,
+        "expectedStatus": "unchanged",
+    },
+    {
+        "name": "支抗钉3件16.5",
+        "department": "口外",
+        "packName": "支抗钉-3/z7520",
+        "type": "额外包(纸塑袋)",
+        "packageMaterial": "高温纸塑袋 75*200",
+        "instrumentCount": 3,
+        "packCount": 1,
+        "unitPrice": 16.5,
+        "totalPrice": 16.5,
+        "expectedUnitPrice": 16.5,
+        "expectedCorrectedTotal": 16.5,
+        "expectedStatus": "unchanged",
+    },
+]
+
 HRB_WY_EM_SPOT_CHECKS: list[dict[str, Any]] = [
     {
         "name": "市五二门诊驱血带W50",
@@ -477,6 +538,7 @@ SPOT_CHECK_PRESETS: dict[str, list[dict[str, Any]]] = {
     "JIAYI-YL": JIAYI_YL_SPOT_CHECKS,
     "GUOYAO-2": GUOYAO_2_SPOT_CHECKS,
     "BINGCHENG-YM": BINGCHENG_YM_SPOT_CHECKS,
+    "HRB-WY": HRB_WY_SPOT_CHECKS,
     "HRB-WY-EM": HRB_WY_EM_SPOT_CHECKS,
     "HRB-HEU": HRB_HEU_SPOT_CHECKS,
     "NEAU-YY": NEAU_YY_SPOT_CHECKS,
@@ -556,6 +618,8 @@ def run_spot_check(
         hospital = JIAYI_YL_HOSPITAL
     if code == "GUOYAO-2":
         hospital = GUOYAO_2_HOSPITAL
+    if code == "HRB-WY":
+        hospital = HRB_WY_HOSPITAL
     if code == "BINGCHENG-YM":
         hospital = BINGCHENG_YM_HOSPITAL
 
