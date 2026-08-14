@@ -1,7 +1,7 @@
 {
   "version": 1,
-  "generated_at": "2026-08-11T12:11:00.101641+00:00",
-  "manifest_hash": "0f49ffaa7858744d9031ba9ecda732ebe27004969f637824fb5a2e6822612ff1",
+  "generated_at": "2026-08-14T08:51:05.292926+00:00",
+  "manifest_hash": "a54feef3a484bc1626d0c508f336379b92d7a9e35e1375803d2ac3e0d47fe282",
   "customers": {
     "AL-YY": {
       "code": "AL-YY",
@@ -31,7 +31,7 @@
           "temperature": "HT",
           "skipPackaging": true,
           "skipDiscount": true,
-          "isActive": true,
+          "isActive": false,
           "matchMode": "first"
         },
         {
@@ -48,7 +48,7 @@
           ],
           "skipPackaging": true,
           "skipDiscount": true,
-          "isActive": false,
+          "isActive": true,
           "matchMode": "first"
         },
         {
@@ -65,7 +65,7 @@
           ],
           "skipPackaging": true,
           "skipDiscount": true,
-          "isActive": false,
+          "isActive": true,
           "matchMode": "first"
         },
         {
@@ -79,7 +79,7 @@
           ],
           "skipPackaging": true,
           "skipDiscount": true,
-          "isActive": false,
+          "isActive": true,
           "matchMode": "first"
         },
         {
@@ -93,7 +93,23 @@
           ],
           "skipPackaging": true,
           "skipDiscount": true,
-          "isActive": false,
+          "isActive": true,
+          "matchMode": "first"
+        },
+        {
+          "ruleType": "EXTRA_FEE",
+          "name": "冰城环钻包小件包装加价3",
+          "priority": 8,
+          "fee": 3.0,
+          "minInstrumentCount": 2,
+          "maxInstrumentCount": 5,
+          "keywords": [
+            "环钻包",
+            "环钻"
+          ],
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": true,
           "matchMode": "first"
         },
         {
@@ -106,7 +122,7 @@
           ],
           "skipPackaging": true,
           "skipDiscount": true,
-          "isActive": false,
+          "isActive": true,
           "matchMode": "first"
         },
         {
@@ -119,7 +135,7 @@
           ],
           "skipPackaging": true,
           "skipDiscount": true,
-          "isActive": false,
+          "isActive": true,
           "matchMode": "first"
         },
         {
@@ -153,7 +169,7 @@
           ],
           "skipPackaging": true,
           "skipDiscount": true,
-          "isActive": true,
+          "isActive": false,
           "matchMode": "first"
         },
         {
@@ -166,7 +182,7 @@
           ],
           "skipPackaging": true,
           "skipDiscount": true,
-          "isActive": true,
+          "isActive": false,
           "matchMode": "first"
         },
         {
@@ -196,11 +212,80 @@
           ],
           "skipPackaging": true,
           "skipDiscount": true,
-          "isActive": true,
+          "isActive": false,
           "matchMode": "first"
         }
       ],
       "rule_count": 12,
+      "active_rule_count": 6
+    },
+    "BOSHANG-YY": {
+      "code": "BOSHANG-YY",
+      "name": "博尚医院",
+      "status": null,
+      "billingPricingMode": "special_only",
+      "standardPricingOverride": null,
+      "billingEnabled": null,
+      "productRules": [
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "博尚旋切器44",
+          "priority": 11,
+          "price": 44.0,
+          "keywords": [
+            "旋切器1胶帽4/Z2045",
+            "旋切器1胶帽4"
+          ],
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": true,
+          "matchMode": "first"
+        },
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "博尚旋切器戳卡66",
+          "priority": 10,
+          "price": 66.0,
+          "keywords": [
+            "旋切器1戳卡1胶帽4/Z2045",
+            "旋切器1戳卡1胶帽4"
+          ],
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": true,
+          "matchMode": "first"
+        },
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "博尚旋切器线66",
+          "priority": 12,
+          "price": 66.0,
+          "keywords": [
+            "旋切器1线1胶帽4/Z2045",
+            "旋切器1线1胶帽4"
+          ],
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": true,
+          "matchMode": "first"
+        },
+        {
+          "ruleType": "FOLD",
+          "name": "博尚胶帽5合1",
+          "priority": 20,
+          "keywords": [
+            "胶帽"
+          ],
+          "threshold": 5,
+          "foldRatio": 5,
+          "temperature": "LT",
+          "skipPackaging": false,
+          "isActive": true,
+          "matchMode": "first",
+          "skipDiscount": false
+        }
+      ],
+      "rule_count": 4,
       "active_rule_count": 4
     },
     "CHANGJIAN": {
@@ -213,6 +298,53 @@
       "productRules": [],
       "rule_count": 0,
       "active_rule_count": 0
+    },
+    "CHUNYU-YL": {
+      "code": "CHUNYU-YL",
+      "name": "春语医疗美容医院",
+      "status": null,
+      "billingPricingMode": "hybrid",
+      "standardPricingOverride": null,
+      "billingEnabled": null,
+      "productRules": [
+        {
+          "ruleType": "FOLD",
+          "name": "春语塑料管>10折算22",
+          "priority": 11,
+          "keywords": [
+            "塑料管",
+            "管子"
+          ],
+          "threshold": 10,
+          "foldRatio": 10,
+          "price": 22.0,
+          "minInstrumentCount": 11,
+          "temperature": "LT",
+          "skipPackaging": true,
+          "isActive": true,
+          "matchMode": "first",
+          "skipDiscount": false
+        },
+        {
+          "ruleType": "FOLD",
+          "name": "春语塑料管≤10按1件",
+          "priority": 10,
+          "keywords": [
+            "塑料管",
+            "管子"
+          ],
+          "threshold": 10,
+          "foldRatio": 10,
+          "maxInstrumentCount": 10,
+          "temperature": "LT",
+          "skipPackaging": false,
+          "isActive": true,
+          "matchMode": "first",
+          "skipDiscount": false
+        }
+      ],
+      "rule_count": 2,
+      "active_rule_count": 2
     },
     "DAOWAI-RM": {
       "code": "DAOWAI-RM",
@@ -430,6 +562,78 @@
       "productRules": [],
       "rule_count": 0,
       "active_rule_count": 0
+    },
+    "DL-FUCHAN": {
+      "code": "DL-FUCHAN",
+      "name": "哈尔滨市道里区妇幼保健院",
+      "status": null,
+      "billingPricingMode": "hybrid",
+      "standardPricingOverride": null,
+      "billingEnabled": null,
+      "productRules": [
+        {
+          "ruleType": "FOLD",
+          "name": "道里妇幼棉花针5合1免包材",
+          "priority": 11,
+          "keywords": [
+            "棉花针"
+          ],
+          "threshold": 5,
+          "foldRatio": 5,
+          "minInstrumentCount": 11,
+          "skipPackaging": true,
+          "isActive": true,
+          "matchMode": "first",
+          "skipDiscount": false
+        },
+        {
+          "ruleType": "FOLD",
+          "name": "道里妇幼棉花针5合1含包材",
+          "priority": 10,
+          "keywords": [
+            "棉花针"
+          ],
+          "threshold": 5,
+          "foldRatio": 5,
+          "maxInstrumentCount": 10,
+          "skipPackaging": false,
+          "isActive": true,
+          "matchMode": "first",
+          "skipDiscount": false
+        },
+        {
+          "ruleType": "FOLD",
+          "name": "道里妇幼洗髓针5合1免包材",
+          "priority": 13,
+          "keywords": [
+            "洗髓针"
+          ],
+          "threshold": 5,
+          "foldRatio": 5,
+          "minInstrumentCount": 11,
+          "skipPackaging": true,
+          "isActive": true,
+          "matchMode": "first",
+          "skipDiscount": false
+        },
+        {
+          "ruleType": "FOLD",
+          "name": "道里妇幼洗髓针5合1含包材",
+          "priority": 12,
+          "keywords": [
+            "洗髓针"
+          ],
+          "threshold": 5,
+          "foldRatio": 5,
+          "maxInstrumentCount": 10,
+          "skipPackaging": false,
+          "isActive": true,
+          "matchMode": "first",
+          "skipDiscount": false
+        }
+      ],
+      "rule_count": 4,
+      "active_rule_count": 4
     },
     "ERYY-NG": {
       "code": "ERYY-NG",
@@ -870,6 +1074,78 @@
       "rule_count": 3,
       "active_rule_count": 3
     },
+    "HAIYUAN-SB": {
+      "code": "HAIYUAN-SB",
+      "name": "黑龙江省海员总医院（松北）",
+      "status": null,
+      "billingPricingMode": "hybrid",
+      "standardPricingOverride": null,
+      "billingEnabled": null,
+      "productRules": [
+        {
+          "ruleType": "FOLD",
+          "name": "海员胶帽>5折算22",
+          "priority": 11,
+          "keywords": [
+            "胶帽"
+          ],
+          "threshold": 5,
+          "foldRatio": 5,
+          "price": 22.0,
+          "minInstrumentCount": 6,
+          "temperature": "LT",
+          "skipPackaging": true,
+          "isActive": true,
+          "matchMode": "first",
+          "skipDiscount": false
+        },
+        {
+          "ruleType": "FOLD",
+          "name": "海员胶帽≤5按1件",
+          "priority": 10,
+          "keywords": [
+            "胶帽"
+          ],
+          "threshold": 5,
+          "foldRatio": 5,
+          "maxInstrumentCount": 5,
+          "temperature": "LT",
+          "skipPackaging": false,
+          "isActive": true,
+          "matchMode": "first",
+          "skipDiscount": false
+        }
+      ],
+      "rule_count": 2,
+      "active_rule_count": 2
+    },
+    "HL-ZGH": {
+      "code": "HL-ZGH",
+      "name": "黑龙江总工会医院",
+      "status": null,
+      "billingPricingMode": "hybrid",
+      "standardPricingOverride": null,
+      "billingEnabled": null,
+      "productRules": [
+        {
+          "ruleType": "EXTRA_FEE",
+          "name": "总工会镜头铂康盒加收8",
+          "priority": 10,
+          "fee": 8.0,
+          "keywords": [
+            "12°镜头",
+            "12度镜头",
+            "镜头"
+          ],
+          "skipPackaging": false,
+          "skipDiscount": true,
+          "isActive": true,
+          "matchMode": "first"
+        }
+      ],
+      "rule_count": 1,
+      "active_rule_count": 1
+    },
     "HLFB-SF": {
       "code": "HLFB-SF",
       "name": "HLFB-SF",
@@ -895,6 +1171,53 @@
       "rule_count": 1,
       "active_rule_count": 1
     },
+    "HLJ-FY-RK": {
+      "code": "HLJ-FY-RK",
+      "name": "黑龙江省妇幼保健院（人口）",
+      "status": null,
+      "billingPricingMode": "hybrid",
+      "standardPricingOverride": null,
+      "billingEnabled": null,
+      "productRules": [
+        {
+          "ruleType": "FOLD",
+          "name": "妇幼人口密封件>5折算22",
+          "priority": 11,
+          "keywords": [
+            "密封件",
+            "密封胶圈"
+          ],
+          "threshold": 5,
+          "foldRatio": 5,
+          "price": 22.0,
+          "minInstrumentCount": 6,
+          "temperature": "LT",
+          "skipPackaging": true,
+          "isActive": true,
+          "matchMode": "first",
+          "skipDiscount": false
+        },
+        {
+          "ruleType": "FOLD",
+          "name": "妇幼人口密封件≤5按1件",
+          "priority": 10,
+          "keywords": [
+            "密封件",
+            "密封胶圈"
+          ],
+          "threshold": 5,
+          "foldRatio": 5,
+          "maxInstrumentCount": 5,
+          "temperature": "LT",
+          "skipPackaging": false,
+          "isActive": true,
+          "matchMode": "first",
+          "skipDiscount": false
+        }
+      ],
+      "rule_count": 2,
+      "active_rule_count": 2
+    },
     "HLJ-JYGLJ-YY": {
       "code": "HLJ-JYGLJ-YY",
       "name": "省监狱管理局医院",
@@ -915,10 +1238,45 @@
           "skipDiscount": true,
           "isActive": true,
           "matchMode": "first"
+        },
+        {
+          "ruleType": "FOLD",
+          "name": "监狱密封件>5折算22",
+          "priority": 11,
+          "keywords": [
+            "密封件",
+            "密封胶圈"
+          ],
+          "threshold": 5,
+          "foldRatio": 5,
+          "price": 22.0,
+          "minInstrumentCount": 6,
+          "temperature": "LT",
+          "skipPackaging": true,
+          "isActive": true,
+          "matchMode": "first",
+          "skipDiscount": false
+        },
+        {
+          "ruleType": "FOLD",
+          "name": "监狱密封件≤5按1件",
+          "priority": 10,
+          "keywords": [
+            "密封件",
+            "密封胶圈"
+          ],
+          "threshold": 5,
+          "foldRatio": 5,
+          "maxInstrumentCount": 5,
+          "temperature": "LT",
+          "skipPackaging": false,
+          "isActive": true,
+          "matchMode": "first",
+          "skipDiscount": false
         }
       ],
-      "rule_count": 1,
-      "active_rule_count": 1
+      "rule_count": 3,
+      "active_rule_count": 3
     },
     "HRB-2ND": {
       "code": "HRB-2ND",
@@ -3362,6 +3720,19 @@
         },
         {
           "ruleType": "FIXED_PRICE",
+          "name": "社会康复内提工具盒44",
+          "priority": 4,
+          "price": 44.0,
+          "keywords": [
+            "内提工具盒"
+          ],
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": true,
+          "matchMode": "first"
+        },
+        {
+          "ruleType": "FIXED_PRICE",
           "name": "社会康复大车针盒22",
           "priority": 11,
           "price": 22,
@@ -3446,6 +3817,19 @@
         },
         {
           "ruleType": "FIXED_PRICE",
+          "name": "社会康复百诺工具盒44",
+          "priority": 5,
+          "price": 44.0,
+          "keywords": [
+            "百诺工具盒"
+          ],
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": true,
+          "matchMode": "first"
+        },
+        {
+          "ruleType": "FIXED_PRICE",
           "name": "社会康复种植盒16.5",
           "priority": 12,
           "price": 16.5,
@@ -3463,8 +3847,19 @@
           "matchMode": "first"
         }
       ],
-      "rule_count": 9,
-      "active_rule_count": 9
+      "rule_count": 11,
+      "active_rule_count": 11
+    },
+    "SUOFEI-YL": {
+      "code": "SUOFEI-YL",
+      "name": "索菲医疗美容门诊",
+      "status": null,
+      "billingPricingMode": "standard",
+      "standardPricingOverride": null,
+      "billingEnabled": null,
+      "productRules": [],
+      "rule_count": 0,
+      "active_rule_count": 0
     },
     "TAIPING-RM": {
       "code": "TAIPING-RM",
@@ -4136,7 +4531,7 @@
           ],
           "threshold": 10,
           "foldRatio": 5.5,
-          "isActive": true,
+          "isActive": false,
           "matchMode": "first",
           "skipPackaging": false,
           "skipDiscount": false
@@ -4213,7 +4608,7 @@
           ],
           "skipPackaging": true,
           "skipDiscount": true,
-          "isActive": true,
+          "isActive": false,
           "matchMode": "first"
         },
         {
@@ -4227,7 +4622,7 @@
           "conditionsJson": "[{\"field\":\"exportApply\",\"value\":true}]",
           "skipPackaging": true,
           "skipDiscount": true,
-          "isActive": true,
+          "isActive": false,
           "matchMode": "first"
         },
         {
@@ -4240,12 +4635,42 @@
           ],
           "skipPackaging": true,
           "skipDiscount": true,
-          "isActive": true,
+          "isActive": false,
           "matchMode": "first"
+        },
+        {
+          "ruleType": "FOLD",
+          "name": "祖研排针10合1免包材",
+          "priority": 11,
+          "keywords": [
+            "排针"
+          ],
+          "threshold": 10,
+          "foldRatio": 10,
+          "minInstrumentCount": 21,
+          "skipPackaging": true,
+          "isActive": true,
+          "matchMode": "first",
+          "skipDiscount": false
+        },
+        {
+          "ruleType": "FOLD",
+          "name": "祖研排针10合1含包材",
+          "priority": 10,
+          "keywords": [
+            "排针"
+          ],
+          "threshold": 10,
+          "foldRatio": 10,
+          "maxInstrumentCount": 20,
+          "skipPackaging": false,
+          "isActive": true,
+          "matchMode": "first",
+          "skipDiscount": false
         }
       ],
-      "rule_count": 7,
-      "active_rule_count": 7
+      "rule_count": 9,
+      "active_rule_count": 5
     },
     "ZUYAN-SF": {
       "code": "ZUYAN-SF",

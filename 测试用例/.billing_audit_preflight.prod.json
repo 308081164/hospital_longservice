@@ -1,8 +1,7 @@
 {
   "smoke_ok": true,
   "deploy_check_ok": true,
-  "deploy_check_detail": "post-deploy smoke PASS · Job #77 export OK",
+  "deploy_check_detail": "ok",
   "api_base": "http://39.102.213.51:8853",
-  "deploy_run": "https://github.com/308081164/hospital_longservice/actions/runs/30449774940",
-  "checked_at": "2026-07-29T20:45:00"
+  "checked_at": "2026-08-08T09:20:23"
 }

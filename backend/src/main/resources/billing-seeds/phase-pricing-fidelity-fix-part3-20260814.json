@@ -1,0 +1,13 @@
+{
+  "version": "1",
+  "description": "计价贴合 part3：冰城环钻小件包装加价限定 2–5 件",
+  "strictRuleOps": true,
+  "ruleUpdates": [
+    {
+      "code": "BINGCHENG-YM",
+      "ruleName": "冰城环钻包小件包装加价3",
+      "setMinInstrumentCount": 2,
+      "setMaxInstrumentCount": 5
+    }
+  ]
+}

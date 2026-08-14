@@ -1,233 +1,354 @@
 [
   {
     "folder": "黑龙江中医药大学附属第一医院",
-    "status": "fail",
-    "detail": "行 1848 vs 1848 (Δ0) · 总额 170789.31 vs 155448.8 (Δ15340.51) · sheets=42 summary=中医经典病房",
-    "job_source": "override",
-    "job_id": 223,
+    "status": "pass",
+    "detail": "行 1848/1848 · 总额 155448.12≈155448.8 · sheets=42 summary=中医经典病房",
+    "job_source": "stable",
+    "job_id": 378,
     "processed_bill": "测试用例/黑龙江中医药大学附属第一医院/处理后表格/6月__附一6月账单__附一6月账单.xlsx",
-    "export_file": "测试用例/.s8_exports_prod/job223_黑龙江中医药大学附属第一医院_bill.xlsx",
+    "export_file": "测试用例/.s8_exports_prod/job378_黑龙江中医药大学附属第一医院_bill.xlsx",
     "structure_ok": true,
     "sheet_count": 42,
     "layout_mode": "dept_split",
     "summary_label": "中医经典病房",
     "totals": {
       "expected": 155448.8,
-      "actual": 170789.31
+      "actual": 155448.12
+    },
+    "category": "pass"
+  },
+  {
+    "folder": "黑龙江省中医药大学附属第三医院（电力）",
+    "status": "pass",
+    "detail": "行 540/540 · 总额 30769.5≈30769.5",
+    "job_source": "stable",
+    "job_id": 364,
+    "processed_bill": "测试用例/黑龙江省中医药大学附属第三医院（电力）/处理后表格/6月__黑龙江省中医药大学附属第三医院（电力）6月账单.xlsx",
+    "export_file": "测试用例/.s8_exports_prod/job364_黑龙江省中医药大学附属第三医院（电力）_bill.xlsx",
+    "structure_ok": true,
+    "sheet_count": 13,
+    "layout_mode": "auto",
+    "summary_label": "口腔科",
+    "totals": {
+      "expected": 30769.5,
+      "actual": 30769.5
+    },
+    "category": "pass"
+  },
+  {
+    "folder": "国药总医院主院区",
+    "status": "fail",
+    "detail": "行 131 vs 139 (Δ8) · 总额 21383.5 vs 21989.0 (Δ605.50)",
+    "job_source": "stable",
+    "job_id": 270,
+    "processed_bill": "测试用例/国药总医院主院区/处理后表格/6月__国药总医院主院区5.26-6.25账单.xlsx",
+    "export_file": "测试用例/.s8_exports_prod/job270_国药总医院主院区_bill.xlsx",
+    "structure_ok": true,
+    "sheet_count": 11,
+    "layout_mode": "auto",
+    "summary_label": "",
+    "totals": {
+      "expected": 21989.0,
+      "actual": 21383.5
     },
     "category": "material_mismatch"
   },
   {
-    "folder": "黑龙江省中医药大学附属第三医院（电力）",
-    "status": "skip",
-    "detail": "测试用例/job_baseline_prod.json 无 Job 映射",
-    "job_source": "stable",
-    "category": "skip"
-  },
-  {
-    "folder": "国药总医院主院区",
-    "status": "skip",
-    "detail": "测试用例/job_baseline_prod.json 无 Job 映射",
-    "job_source": "stable",
-    "category": "skip"
-  },
-  {
     "folder": "国药总医院第二院区",
-    "status": "skip",
-    "detail": "测试用例/job_baseline_prod.json 无 Job 映射",
+    "status": "fail",
+    "detail": "行 43 vs 54 (Δ11) · 总额 4618.5 vs 4447.5 (Δ171.00)",
     "job_source": "stable",
-    "category": "skip"
+    "job_id": 271,
+    "processed_bill": "测试用例/国药总医院第二院区/处理后表格/6月__国药总医院第二院区5.26-6.25账单.xlsx",
+    "export_file": "测试用例/.s8_exports_prod/job271_国药总医院第二院区_bill.xlsx",
+    "structure_ok": true,
+    "sheet_count": 4,
+    "layout_mode": "auto",
+    "summary_label": "",
+    "totals": {
+      "expected": 4447.5,
+      "actual": 4618.5
+    },
+    "category": "material_mismatch"
   },
   {
     "folder": "国药总医院第三院区",
-    "status": "skip",
-    "detail": "测试用例/job_baseline_prod.json 无 Job 映射",
+    "status": "pass",
+    "detail": "行 11/12 · 总额 1665.0≈1667.0",
     "job_source": "stable",
-    "category": "skip"
+    "job_id": 377,
+    "processed_bill": "测试用例/国药总医院第三院区/处理后表格/6月__国药总医院第三院区5.26-6.25账单.xlsx",
+    "export_file": "测试用例/.s8_exports_prod/job377_国药总医院第三院区_bill.xlsx",
+    "structure_ok": true,
+    "sheet_count": 5,
+    "layout_mode": "auto",
+    "summary_label": "",
+    "totals": {
+      "expected": 1667.0,
+      "actual": 1665.0
+    },
+    "category": "pass"
   },
   {
     "folder": "哈尔滨市第二医院",
     "status": "fail",
-    "detail": "行 1853 vs 1958 (Δ105) · 总额 86465.0 vs 105383.0 (Δ18918.00) · sheets=24 summary=供应室",
+    "detail": "行 1922 vs 1958 (Δ36) · 总额 93490.5 vs 105383.0 (Δ11892.50) · sheets=23 summary=供应室",
     "job_source": "stable",
-    "job_id": 185,
+    "job_id": 273,
     "processed_bill": "测试用例/哈尔滨市第二医院/处理后表格/6月__2026年6月市二院账单(1).xlsx",
-    "export_file": "测试用例/.s8_exports_prod/job185_哈尔滨市第二医院_bill.xlsx",
+    "export_file": "测试用例/.s8_exports_prod/job273_哈尔滨市第二医院_bill.xlsx",
     "structure_ok": true,
-    "sheet_count": 24,
+    "sheet_count": 23,
     "layout_mode": "dept_split",
     "summary_label": "供应室",
     "totals": {
       "expected": 105383.0,
-      "actual": 86465.0
+      "actual": 93490.5
     },
     "category": "material_mismatch"
   },
   {
     "folder": "哈尔滨市第五医院",
-    "status": "skip",
-    "detail": "测试用例/job_baseline_prod.json 无 Job 映射",
+    "status": "pass",
+    "detail": "行 5005/5005 · 总额 455653.5≈455692.0",
     "job_source": "stable",
-    "category": "skip"
+    "job_id": 376,
+    "processed_bill": "测试用例/哈尔滨市第五医院/处理后表格/5月__哈尔滨市第五医院2026年5月9日-2026年6月8日账单.xlsx",
+    "export_file": "测试用例/.s8_exports_prod/job376_哈尔滨市第五医院_bill.xlsx",
+    "structure_ok": true,
+    "sheet_count": 1,
+    "layout_mode": "auto",
+    "summary_label": "合计",
+    "totals": {
+      "expected": 455692.0,
+      "actual": 455653.5
+    },
+    "category": "pass"
   },
   {
     "folder": "哈尔滨市第五医院（二门诊）",
-    "status": "skip",
-    "detail": "测试用例/job_baseline_prod.json 无 Job 映射",
+    "status": "pass",
+    "detail": "行 39/39 · 总额 943.0≈943.0",
     "job_source": "stable",
-    "category": "skip"
+    "job_id": 275,
+    "processed_bill": "测试用例/哈尔滨市第五医院（二门诊）/处理后表格/5月__市五院__哈尔滨市第五医院（二门诊）2026年5月9日-2026年6月8日账单.xlsx",
+    "export_file": "测试用例/.s8_exports_prod/job275_哈尔滨市第五医院（二门诊）_bill.xlsx",
+    "structure_ok": true,
+    "sheet_count": 1,
+    "layout_mode": "auto",
+    "summary_label": "手术室",
+    "totals": {
+      "expected": 943.0,
+      "actual": 943.0
+    },
+    "category": "pass"
   },
   {
     "folder": "新发红十字医院",
-    "status": "skip",
-    "detail": "测试用例/job_baseline_prod.json 无 Job 映射",
+    "status": "pass",
+    "detail": "行 375/375 · 总额 21866.0≈21866.0",
     "job_source": "stable",
-    "category": "skip"
+    "job_id": 379,
+    "processed_bill": "测试用例/新发红十字医院/处理后表格/6月__新发红十字医院6月账单.xlsx",
+    "export_file": "测试用例/.s8_exports_prod/job379_新发红十字医院_bill.xlsx",
+    "structure_ok": true,
+    "sheet_count": 4,
+    "layout_mode": "auto",
+    "summary_label": "口腔",
+    "totals": {
+      "expected": 21866.0,
+      "actual": 21866.0
+    },
+    "category": "pass"
   },
   {
     "folder": "黑龙江省医院（南岗院区）",
-    "status": "warn",
-    "detail": "行 1205 vs 1205 (Δ0) · 总额 41729.02 vs 41669.02 (Δ60.00) · sheets=25 summary=ICU · S4 pass · 1205/1206 行 · Δ185.7 子包合并/四舍五入登记",
+    "status": "pass",
+    "detail": "行 1205/1205 · 总额 41669.02≈41669.02 · sheets=25 summary=ICU",
     "job_source": "stable",
-    "job_id": 153,
+    "job_id": 374,
     "processed_bill": "测试用例/黑龙江省医院（南岗院区）/处理后表格/6月__南岗省医院5.21-6.20账单.xlsx",
-    "export_file": "测试用例/.s8_exports_prod/job153_黑龙江省医院（南岗院区）_bill.xlsx",
+    "export_file": "测试用例/.s8_exports_prod/job374_黑龙江省医院（南岗院区）_bill.xlsx",
     "structure_ok": true,
     "sheet_count": 25,
     "layout_mode": "dept_split",
     "summary_label": "ICU",
     "totals": {
       "expected": 41669.02,
-      "actual": 41729.02
+      "actual": 41669.02
     },
-    "category": "layout_or_known_diff"
+    "category": "pass"
   },
   {
     "folder": "黑龙江省医院（香坊院区）",
-    "status": "fail",
-    "detail": "行 2975 vs 2975 (Δ0) · 总额 179427.9 vs 178518.9 (Δ909.00) · sheets=56 summary=NICU（9楼 新生儿）",
+    "status": "pass",
+    "detail": "行 2975/2975 · 总额 178505.7≈178518.9 · sheets=56 summary=NICU（9楼 新生儿）",
     "job_source": "stable",
-    "job_id": 152,
+    "job_id": 375,
     "processed_bill": "测试用例/黑龙江省医院（香坊院区）/处理后表格/6月__香坊省医院5.21-6.20账单(2).xlsx",
-    "export_file": "测试用例/.s8_exports_prod/job152_黑龙江省医院（香坊院区）_bill.xlsx",
+    "export_file": "测试用例/.s8_exports_prod/job375_黑龙江省医院（香坊院区）_bill.xlsx",
     "structure_ok": true,
     "sheet_count": 56,
     "layout_mode": "dept_split",
     "summary_label": "NICU（9楼 新生儿）",
     "totals": {
       "expected": 178518.9,
-      "actual": 179427.9
+      "actual": 178505.7
     },
-    "category": "material_mismatch"
+    "category": "pass"
   },
   {
     "folder": "祖研-黑龙江省中医医院（南岗院区）",
-    "status": "skip",
-    "detail": "测试用例/job_baseline_prod.json 无 Job 映射",
+    "status": "warn",
+    "detail": "行 102 vs 102 (Δ0) · 总额 6558.5 vs 6569.5 (Δ11.00) · sheets=10 summary=外科 · S4 pass · 102 行 · 排针重复行去重+校正价 seed · Δ13 四舍五入",
     "job_source": "stable",
-    "category": "skip"
+    "job_id": 279,
+    "processed_bill": "测试用例/祖研-黑龙江省中医医院（南岗院区）/处理后表格/6月__祖研-黑龙江省中医医院（南岗院区）6月账单.xlsx",
+    "export_file": "测试用例/.s8_exports_prod/job279_祖研-黑龙江省中医医院（南岗院区）_bill.xlsx",
+    "structure_ok": true,
+    "sheet_count": 10,
+    "layout_mode": "dept_split",
+    "summary_label": "外科",
+    "totals": {
+      "expected": 6569.5,
+      "actual": 6558.5
+    },
+    "category": "layout_or_known_diff"
   },
   {
     "folder": "祖研-黑龙江省中医医院（三辅院区）",
-    "status": "skip",
-    "detail": "测试用例/job_baseline_prod.json 无 Job 映射",
+    "status": "pass",
+    "detail": "行 246/246 · 总额 23024.0≈23024.0 · sheets=13 summary=外科门诊",
     "job_source": "stable",
-    "category": "skip"
+    "job_id": 380,
+    "processed_bill": "测试用例/祖研-黑龙江省中医医院（三辅院区）/处理后表格/6月__祖研-黑龙江省中医医院（三辅院区）6月账单.xlsx",
+    "export_file": "测试用例/.s8_exports_prod/job380_祖研-黑龙江省中医医院（三辅院区）_bill.xlsx",
+    "structure_ok": true,
+    "sheet_count": 13,
+    "layout_mode": "dept_split",
+    "summary_label": "外科门诊",
+    "totals": {
+      "expected": 23024.0,
+      "actual": 23024.0
+    },
+    "category": "pass"
   },
   {
     "folder": "祖研-黑龙江省中医医院（香安院区）",
-    "status": "skip",
-    "detail": "测试用例/job_baseline_prod.json 无 Job 映射",
+    "status": "pass",
+    "detail": "行 15/15 · 总额 287.5≈287.5 · sheets=6 summary=内分泌三、老年病二科",
     "job_source": "stable",
-    "category": "skip"
+    "job_id": 281,
+    "processed_bill": "测试用例/祖研-黑龙江省中医医院（香安院区）/处理后表格/6月__祖研-黑龙江省中医医院（香安院区）6月账单.xlsx",
+    "export_file": "测试用例/.s8_exports_prod/job281_祖研-黑龙江省中医医院（香安院区）_bill.xlsx",
+    "structure_ok": true,
+    "sheet_count": 6,
+    "layout_mode": "dept_split",
+    "summary_label": "内分泌三、老年病二科",
+    "totals": {
+      "expected": 287.5,
+      "actual": 287.5
+    },
+    "category": "pass"
   },
   {
     "folder": "南岗区妇产医院",
-    "status": "fail",
-    "detail": "行 59 vs 58 (Δ1) · 总额 3508.5 vs 2885.0 (Δ623.50) · sheets=5 summary=化验室 · S4 pass_zero · 58 行 · Δ9.4 OCR/套包四舍五入 · layout 登记",
+    "status": "warn",
+    "detail": "行 58 vs 58 (Δ0) · 总额 2885.0 vs 2883.0 (Δ2.00) · sheets=3 summary=妇科手术室 · S4 pass_zero · 58 行 · Δ9.4 OCR/套包四舍五入 · layout 登记",
     "job_source": "stable",
-    "job_id": 193,
+    "job_id": 356,
     "processed_bill": "测试用例/南岗区妇产医院/处理后表格/6月__南岗妇产6月账单.xlsx",
-    "export_file": "测试用例/.s8_exports_prod/job193_南岗区妇产医院_bill.xlsx",
+    "export_file": "测试用例/.s8_exports_prod/job356_南岗区妇产医院_bill.xlsx",
     "structure_ok": true,
-    "sheet_count": 5,
+    "sheet_count": 3,
     "layout_mode": "dept_split",
-    "summary_label": "化验室",
+    "summary_label": "妇科手术室",
     "totals": {
-      "expected": 2885.0,
-      "actual": 3508.5
+      "expected": 2883.0,
+      "actual": 2885.0
     },
-    "category": "material_mismatch"
+    "category": "layout_or_known_diff"
   },
   {
     "folder": "黑龙江省社会康复医院",
-    "status": "fail",
-    "detail": "行 28 vs 26 (Δ2) · 总额 827.5 vs 761.5 (Δ66.00) · Job 625 与 6月__省康复6月账单 成对（非监狱单表）",
+    "status": "pass",
+    "detail": "行 26/26 · 总额 761.5≈761.5",
     "job_source": "stable",
-    "job_id": 213,
+    "job_id": 357,
     "processed_bill": "测试用例/黑龙江省社会康复医院/处理后表格/6月__省康复6月账单.xlsx",
-    "export_file": "测试用例/.s8_exports_prod/job213_黑龙江省社会康复医院_bill.xlsx",
+    "export_file": "测试用例/.s8_exports_prod/job357_黑龙江省社会康复医院_bill.xlsx",
     "structure_ok": true,
     "sheet_count": 3,
     "layout_mode": "auto",
-    "summary_label": "口腔科",
+    "summary_label": "中西医结合",
     "totals": {
       "expected": 761.5,
-      "actual": 827.5
+      "actual": 761.5
     },
-    "category": "material_mismatch"
+    "category": "pass"
   },
   {
     "folder": "道外区人民医院",
-    "status": "fail",
-    "detail": "行 64 vs 34 (Δ30) · 总额 668.0 vs 821.0 (Δ153.00)",
+    "status": "pass",
+    "detail": "行 34/34 · 总额 821.0≈821.0",
     "job_source": "stable",
-    "job_id": 207,
+    "job_id": 284,
     "processed_bill": "测试用例/道外区人民医院/处理后表格/6月__道外区人民医院6月账单.xlsx",
-    "export_file": "测试用例/.s8_exports_prod/job207_道外区人民医院_bill.xlsx",
+    "export_file": "测试用例/.s8_exports_prod/job284_道外区人民医院_bill.xlsx",
     "structure_ok": true,
     "sheet_count": 4,
     "layout_mode": "auto",
     "summary_label": "外科",
     "totals": {
       "expected": 821.0,
-      "actual": 668.0
+      "actual": 821.0
     },
-    "category": "material_mismatch"
+    "category": "pass"
   },
   {
     "folder": "太平人民医院",
-    "status": "skip",
-    "detail": "测试用例/job_baseline_prod.json 无 Job 映射",
+    "status": "pass",
+    "detail": "行 264/264 · 总额 7989.57≈7969.09",
     "job_source": "stable",
-    "category": "skip"
+    "job_id": 285,
+    "processed_bill": "测试用例/太平人民医院/处理后表格/5月__太平人民2026.5.13-2026.6.15账单.xlsx",
+    "export_file": "测试用例/.s8_exports_prod/job285_太平人民医院_bill.xlsx",
+    "structure_ok": true,
+    "sheet_count": 6,
+    "layout_mode": "auto",
+    "summary_label": "中西医结合",
+    "totals": {
+      "expected": 7969.09,
+      "actual": 7989.57
+    },
+    "category": "pass"
   },
   {
     "folder": "三精肾病医院",
-    "status": "fail",
-    "detail": "行 17 vs 17 (Δ0) · 总额 1529.4 vs 1364.4 (Δ165.00) · ≥3 把 3 元仅计价记录非 export 折扣 · Δ18",
+    "status": "pass",
+    "detail": "行 17/17 · 总额 1364.4≈1364.4",
     "job_source": "stable",
-    "job_id": 198,
+    "job_id": 286,
     "processed_bill": "测试用例/三精肾病医院/处理后表格/6月__三精6月账单.xlsx",
-    "export_file": "测试用例/.s8_exports_prod/job198_三精肾病医院_bill.xlsx",
+    "export_file": "测试用例/.s8_exports_prod/job286_三精肾病医院_bill.xlsx",
     "structure_ok": true,
     "sheet_count": 1,
     "layout_mode": "auto",
     "summary_label": "手术室",
     "totals": {
       "expected": 1364.4,
-      "actual": 1529.4
+      "actual": 1364.4
     },
-    "category": "material_mismatch"
+    "category": "pass"
   },
   {
     "folder": "黑龙江维多利亚妇产医院",
     "status": "pass",
     "detail": "行 117/117 · 总额 17025.5≈17025.5",
     "job_source": "stable",
-    "job_id": 50,
+    "job_id": 348,
     "processed_bill": "测试用例/黑龙江维多利亚妇产医院/处理后表格/6月__黑龙江维多利亚妇产医院6月.xlsx",
-    "export_file": "测试用例/.s8_exports_prod/job50_黑龙江维多利亚妇产医院_bill.xlsx",
+    "export_file": "测试用例/.s8_exports_prod/job348_黑龙江维多利亚妇产医院_bill.xlsx",
     "structure_ok": true,
     "sheet_count": 4,
     "layout_mode": "auto",
@@ -240,62 +361,84 @@
   },
   {
     "folder": "黑龙江九洲妇科医院",
-    "status": "fail",
-    "detail": "行 18 vs 11 (Δ7) · 总额 4103.5 vs 6132.5 (Δ2029.00)",
+    "status": "pass",
+    "detail": "行 11/11 · 总额 6132.5≈6132.5",
     "job_source": "stable",
-    "job_id": 84,
+    "job_id": 349,
     "processed_bill": "测试用例/黑龙江九洲妇科医院/处理后表格/6月__黑龙江九洲妇科医院6月账单.xlsx",
-    "export_file": "测试用例/.s8_exports_prod/job84_黑龙江九洲妇科医院_bill.xlsx",
+    "export_file": "测试用例/.s8_exports_prod/job349_黑龙江九洲妇科医院_bill.xlsx",
     "structure_ok": true,
     "sheet_count": 1,
     "layout_mode": "auto",
     "summary_label": "手术室",
     "totals": {
       "expected": 6132.5,
-      "actual": 4103.5
+      "actual": 6132.5
     },
-    "category": "material_mismatch"
+    "category": "pass"
   },
   {
     "folder": "呼兰区红十字医院",
-    "status": "skip",
-    "detail": "测试用例/job_baseline_prod.json 无 Job 映射",
+    "status": "pass",
+    "detail": "行 22/22 · 总额 2144.5≈2144.5",
     "job_source": "stable",
-    "category": "skip"
+    "job_id": 351,
+    "processed_bill": "测试用例/呼兰区红十字医院/处理后表格/6月__呼兰区红十字医院6月账单.xlsx",
+    "export_file": "测试用例/.s8_exports_prod/job351_呼兰区红十字医院_bill.xlsx",
+    "structure_ok": true,
+    "sheet_count": 2,
+    "layout_mode": "auto",
+    "summary_label": "口腔科",
+    "totals": {
+      "expected": 2144.5,
+      "actual": 2144.5
+    },
+    "category": "pass"
   },
   {
     "folder": "呼兰中医院",
-    "status": "fail",
-    "detail": "行 61 vs 89 (Δ28) · 总额 4779.0 vs 6853.0 (Δ2074.00) · S4 pass_zero · part2 腹腔镜 275/297 与 export 单价列口径差 · Δ22",
+    "status": "pass",
+    "detail": "行 89/89 · 总额 6853.0≈6853.0",
     "job_source": "stable",
-    "job_id": 38,
+    "job_id": 290,
     "processed_bill": "测试用例/呼兰中医院/处理后表格/6月__呼兰中医院6月账单.xlsx",
-    "export_file": "测试用例/.s8_exports_prod/job38_呼兰中医院_bill.xlsx",
+    "export_file": "测试用例/.s8_exports_prod/job290_呼兰中医院_bill.xlsx",
     "structure_ok": true,
-    "sheet_count": 5,
+    "sheet_count": 4,
     "layout_mode": "auto",
     "summary_label": "处置室",
     "totals": {
       "expected": 6853.0,
-      "actual": 4779.0
+      "actual": 6853.0
     },
-    "category": "material_mismatch"
+    "category": "pass"
   },
   {
     "folder": "黑龙江中医药大学附属第二医院（南岗）",
-    "status": "skip",
-    "detail": "测试用例/job_baseline_prod.json 无 Job 映射",
+    "status": "warn",
+    "detail": "行 962 vs 962 (Δ0) · 总额 39854.0 vs 39865.0 (Δ11.00) · sheets=17 summary=供应室 · S4 pass · part2 南岗专项 · export 附加费口径 Δ30",
     "job_source": "stable",
-    "category": "skip"
+    "job_id": 291,
+    "processed_bill": "测试用例/黑龙江中医药大学附属第二医院（南岗）/处理后表格/6月__中医附二6月账单.xlsx",
+    "export_file": "测试用例/.s8_exports_prod/job291_黑龙江中医药大学附属第二医院（南岗）_bill.xlsx",
+    "structure_ok": true,
+    "sheet_count": 17,
+    "layout_mode": "dept_split",
+    "summary_label": "供应室",
+    "totals": {
+      "expected": 39865.0,
+      "actual": 39854.0
+    },
+    "category": "layout_or_known_diff"
   },
   {
     "folder": "黑龙江中医药大学附属第二医院（哈南分院）",
     "status": "pass",
     "detail": "行 252/252 · 总额 8880.0≈8880.0 · sheets=9 summary=口腔",
     "job_source": "stable",
-    "job_id": 159,
+    "job_id": 381,
     "processed_bill": "测试用例/黑龙江中医药大学附属第二医院（哈南分院）/处理后表格/6月__中医附二（哈南）6月账单.xlsx",
-    "export_file": "测试用例/.s8_exports_prod/job159_黑龙江中医药大学附属第二医院（哈南分院）_bill.xlsx",
+    "export_file": "测试用例/.s8_exports_prod/job381_黑龙江中医药大学附属第二医院（哈南分院）_bill.xlsx",
     "structure_ok": true,
     "sheet_count": 9,
     "layout_mode": "dept_split",
@@ -311,9 +454,9 @@
     "status": "pass",
     "detail": "行 14/14 · 总额 1663.0≈1663.0",
     "job_source": "stable",
-    "job_id": 45,
+    "job_id": 293,
     "processed_bill": "测试用例/哈尔滨仁胜医院/处理后表格/6月__仁胜6月账单.xlsx",
-    "export_file": "测试用例/.s8_exports_prod/job45_哈尔滨仁胜医院_bill.xlsx",
+    "export_file": "测试用例/.s8_exports_prod/job293_哈尔滨仁胜医院_bill.xlsx",
     "structure_ok": true,
     "sheet_count": 1,
     "layout_mode": "auto",
@@ -326,48 +469,48 @@
   },
   {
     "folder": "哈尔滨华夏眼科医院",
-    "status": "fail",
-    "detail": "行 16 vs 16 (Δ0) · 总额 692.0 vs 767.5 (Δ75.50)",
+    "status": "pass",
+    "detail": "行 16/16 · 总额 767.5≈767.5",
     "job_source": "stable",
-    "job_id": 197,
+    "job_id": 294,
     "processed_bill": "测试用例/哈尔滨华夏眼科医院/处理后表格/6月__华夏6月账单.xlsx",
-    "export_file": "测试用例/.s8_exports_prod/job197_哈尔滨华夏眼科医院_bill.xlsx",
+    "export_file": "测试用例/.s8_exports_prod/job294_哈尔滨华夏眼科医院_bill.xlsx",
     "structure_ok": true,
     "sheet_count": 1,
     "layout_mode": "auto",
     "summary_label": "手术室",
     "totals": {
       "expected": 767.5,
-      "actual": 692.0
+      "actual": 767.5
     },
-    "category": "material_mismatch"
+    "category": "pass"
   },
   {
     "folder": "哈尔滨冰城医疗美容医院",
-    "status": "fail",
-    "detail": "行 32 vs 38 (Δ6) · 总额 1751.0 vs 1559.0 (Δ192.00)",
+    "status": "pass",
+    "detail": "行 38/38 · 总额 1559.0≈1559.0",
     "job_source": "stable",
-    "job_id": 211,
+    "job_id": 382,
     "processed_bill": "测试用例/哈尔滨冰城医疗美容医院/处理后表格/6月__冰城6月账单.xlsx",
-    "export_file": "测试用例/.s8_exports_prod/job211_哈尔滨冰城医疗美容医院_bill.xlsx",
+    "export_file": "测试用例/.s8_exports_prod/job382_哈尔滨冰城医疗美容医院_bill.xlsx",
     "structure_ok": true,
     "sheet_count": 1,
     "layout_mode": "auto",
     "summary_label": "手术室",
     "totals": {
       "expected": 1559.0,
-      "actual": 1751.0
+      "actual": 1559.0
     },
-    "category": "material_mismatch"
+    "category": "pass"
   },
   {
     "folder": "香坊中医院",
     "status": "pass",
     "detail": "行 7/7 · 总额 128.0≈128.0",
     "job_source": "stable",
-    "job_id": 53,
+    "job_id": 296,
     "processed_bill": "测试用例/香坊中医院/处理后表格/6月__香坊中医院6月账单.xlsx",
-    "export_file": "测试用例/.s8_exports_prod/job53_香坊中医院_bill.xlsx",
+    "export_file": "测试用例/.s8_exports_prod/job296_香坊中医院_bill.xlsx",
     "structure_ok": true,
     "sheet_count": 1,
     "layout_mode": "auto",
@@ -380,109 +523,164 @@
   },
   {
     "folder": "武警黑龙江省总队医院",
-    "status": "fail",
-    "detail": "行 226 vs 217 (Δ9) · 总额 13243.0 vs 13815.5 (Δ572.50)",
+    "status": "pass",
+    "detail": "行 217/217 · 总额 13815.5≈13815.5",
     "job_source": "stable",
-    "job_id": 205,
+    "job_id": 297,
     "processed_bill": "测试用例/武警黑龙江省总队医院/处理后表格/6月__武警黑龙江省总队医院6月账单.xlsx",
-    "export_file": "测试用例/.s8_exports_prod/job205_武警黑龙江省总队医院_bill.xlsx",
+    "export_file": "测试用例/.s8_exports_prod/job297_武警黑龙江省总队医院_bill.xlsx",
     "structure_ok": true,
     "sheet_count": 2,
     "layout_mode": "auto",
     "summary_label": "供应室",
     "totals": {
       "expected": 13815.5,
-      "actual": 13243.0
+      "actual": 13815.5
     },
-    "category": "material_mismatch"
+    "category": "pass"
   },
   {
     "folder": "悦美芳华医疗门诊医院",
-    "status": "fail",
-    "detail": "行 8 vs 8 (Δ0) · 总额 3296.0 vs 832.0 (Δ2464.00)",
+    "status": "pass",
+    "detail": "行 8/8 · 总额 832.0≈832.0",
     "job_source": "stable",
-    "job_id": 212,
+    "job_id": 298,
     "processed_bill": "测试用例/悦美芳华医疗门诊医院/处理后表格/6月__悦美芳华6月账单.xlsx",
-    "export_file": "测试用例/.s8_exports_prod/job212_悦美芳华医疗门诊医院_bill.xlsx",
+    "export_file": "测试用例/.s8_exports_prod/job298_悦美芳华医疗门诊医院_bill.xlsx",
     "structure_ok": true,
     "sheet_count": 1,
     "layout_mode": "auto",
     "summary_label": "手术室",
     "totals": {
       "expected": 832.0,
-      "actual": 3296.0
+      "actual": 832.0
+    },
+    "category": "pass"
+  },
+  {
+    "folder": "黑龙江省第二医院（南岗院区）",
+    "status": "pass",
+    "detail": "行 44 vs 86 (Δ42) · 总额 956.2 vs 956.2 (Δ0.00) · 总额一致，行 key 聚合口径差",
+    "job_source": "stable",
+    "job_id": 360,
+    "processed_bill": "测试用例/黑龙江省第二医院（南岗院区）/处理后表格/6月__黑龙江省第二医院（南岗区）6月.xlsx",
+    "export_file": "测试用例/.s8_exports_prod/job360_黑龙江省第二医院（南岗院区）_bill.xlsx",
+    "structure_ok": true,
+    "sheet_count": 1,
+    "layout_mode": "auto",
+    "summary_label": "",
+    "totals": {
+      "expected": 956.2,
+      "actual": 956.2
+    },
+    "category": "pass"
+  },
+  {
+    "folder": "黑龙江省第二医院（松北院区）",
+    "status": "fail",
+    "detail": "行 1278 vs 1426 (Δ148) · 总额 65781.1 vs 73999.05 (Δ8217.95) · sheets=22 summary=ICU · S7 kit 组件行保留 · 行差缺 part3 材料",
+    "job_source": "stable",
+    "job_id": 300,
+    "processed_bill": "测试用例/黑龙江省第二医院（松北院区）/处理后表格/6月__黑龙江省第二医院（松北区）6月账单(1).xlsx",
+    "export_file": "测试用例/.s8_exports_prod/job300_黑龙江省第二医院（松北院区）_bill.xlsx",
+    "structure_ok": true,
+    "sheet_count": 22,
+    "layout_mode": "dept_split",
+    "summary_label": "ICU",
+    "totals": {
+      "expected": 73999.05,
+      "actual": 65781.1
     },
     "category": "material_mismatch"
   },
   {
-    "folder": "黑龙江省第二医院（南岗院区）",
-    "status": "skip",
-    "detail": "测试用例/job_baseline_prod.json 无 Job 映射",
-    "job_source": "stable",
-    "category": "skip"
-  },
-  {
-    "folder": "黑龙江省第二医院（松北院区）",
-    "status": "skip",
-    "detail": "测试用例/job_baseline_prod.json 无 Job 映射",
-    "job_source": "stable",
-    "category": "skip"
-  },
-  {
     "folder": "哈尔滨市呼兰区第一人民医院",
-    "status": "skip",
-    "detail": "测试用例/job_baseline_prod.json 无 Job 映射",
+    "status": "pass",
+    "detail": "行 154 vs 423 (Δ269) · 总额 10194.1 vs 10194.1 (Δ0.00) · 总额一致，行 key 聚合口径差",
     "job_source": "stable",
-    "category": "skip"
+    "job_id": 361,
+    "processed_bill": "测试用例/哈尔滨市呼兰区第一人民医院/处理后表格/6月__呼兰区第一人民医院6月账单.xlsx",
+    "export_file": "测试用例/.s8_exports_prod/job361_哈尔滨市呼兰区第一人民医院_bill.xlsx",
+    "structure_ok": true,
+    "sheet_count": 10,
+    "layout_mode": "auto",
+    "summary_label": "",
+    "totals": {
+      "expected": 10194.1,
+      "actual": 10194.1
+    },
+    "category": "pass"
   },
   {
     "folder": "哈尔滨市红十字妇产医院",
-    "status": "skip",
-    "detail": "测试用例/job_baseline_prod.json 无 Job 映射",
+    "status": "pass",
+    "detail": "行 1723/1723 · 总额 159033.0≈159033.0",
     "job_source": "stable",
-    "category": "skip"
+    "job_id": 362,
+    "processed_bill": "测试用例/哈尔滨市红十字妇产医院/处理后表格/6月__哈尔滨红十字妇产医院6月账单.xlsx",
+    "export_file": "测试用例/.s8_exports_prod/job362_哈尔滨市红十字妇产医院_bill.xlsx",
+    "structure_ok": true,
+    "sheet_count": 26,
+    "layout_mode": "auto",
+    "summary_label": "ICU病房",
+    "totals": {
+      "expected": 159033.0,
+      "actual": 159033.0
+    },
+    "category": "pass"
   },
   {
     "folder": "哈尔滨工业大学医院",
-    "status": "fail",
-    "detail": "行 2139 vs 1152 (Δ987) · 总额 102165.0 vs 73145.5 (Δ29019.50) · S4 pass · 1152 行 · Δ229.5 口腔 fold 重复行去重登记",
+    "status": "warn",
+    "detail": "行 1152 vs 1152 (Δ0) · 总额 73250.0 vs 73145.5 (Δ104.50) · S4 pass · 1152 行 · Δ229.5 口腔 fold 重复行去重登记",
     "job_source": "stable",
-    "job_id": 77,
+    "job_id": 303,
     "processed_bill": "测试用例/哈尔滨工业大学医院/处理后表格/6月__哈尔滨工业大学医院6.15-7.14月账单.xlsx",
-    "export_file": "测试用例/.s8_exports_prod/job77_哈尔滨工业大学医院_bill.xlsx",
+    "export_file": "测试用例/.s8_exports_prod/job303_哈尔滨工业大学医院_bill.xlsx",
     "structure_ok": true,
     "sheet_count": 1,
     "layout_mode": "combined",
     "summary_label": "合计",
     "totals": {
       "expected": 73145.5,
-      "actual": 102165.0
+      "actual": 73250.0
     },
-    "category": "material_mismatch"
+    "category": "layout_or_known_diff"
   },
   {
     "folder": "哈尔滨工程大学医院",
-    "status": "skip",
-    "detail": "测试用例/job_baseline_prod.json 无 Job 映射",
+    "status": "pass",
+    "detail": "行 60/60 · 总额 2372.0≈2372.0",
     "job_source": "stable",
-    "category": "blocked"
+    "job_id": 304,
+    "processed_bill": "测试用例/哈尔滨工程大学医院/处理后表格/5月__哈尔滨工程大学医院5月账单.xlsx",
+    "export_file": "测试用例/.s8_exports_prod/job304_哈尔滨工程大学医院_bill.xlsx",
+    "structure_ok": true,
+    "sheet_count": 3,
+    "layout_mode": "auto",
+    "summary_label": "五官科",
+    "totals": {
+      "expected": 2372.0,
+      "actual": 2372.0
+    },
+    "category": "pass"
   },
   {
     "folder": "哈尔滨长健医院",
-    "status": "fail",
-    "detail": "行 6 vs 6 (Δ0) · 总额 633.0 vs 638.5 (Δ5.50)",
+    "status": "pass",
+    "detail": "行 6/6 · 总额 638.5≈638.5",
     "job_source": "stable",
-    "job_id": 162,
+    "job_id": 305,
     "processed_bill": "测试用例/哈尔滨长健医院/处理后表格/6月__长健6月账单.xlsx",
-    "export_file": "测试用例/.s8_exports_prod/job162_哈尔滨长健医院_bill.xlsx",
+    "export_file": "测试用例/.s8_exports_prod/job305_哈尔滨长健医院_bill.xlsx",
     "structure_ok": true,
     "sheet_count": 1,
     "layout_mode": "auto",
     "summary_label": "手术室",
     "totals": {
       "expected": 638.5,
-      "actual": 633.0
+      "actual": 638.5
     },
-    "category": "minor_total_delta"
+    "category": "pass"
   }
 ]

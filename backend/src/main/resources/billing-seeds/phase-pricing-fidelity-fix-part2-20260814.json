@@ -1,0 +1,10 @@
+{
+  "version": "1",
+  "description": "计价贴合修复 part2：祖研恢复校正价规则（v8 误停用）",
+  "strictRuleOps": true,
+  "activateRules": [
+    { "code": "ZUYAN-NG", "ruleName": "校正价13.5" },
+    { "code": "ZUYAN-NG", "ruleName": "校正价16.5" },
+    { "code": "ZUYAN-NG", "ruleName": "校正价22.0" }
+  ]
+}

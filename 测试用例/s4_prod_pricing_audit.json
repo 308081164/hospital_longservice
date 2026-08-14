@@ -1,0 +1,79 @@
+{
+  "generated_at": "2026-08-08T09:20:42",
+  "job_map": "测试用例/job_baseline_prod.json",
+  "api_base": "http://39.102.213.51:8853",
+  "scope": "prod_readonly_4hospital",
+  "summary": {
+    "total": 4,
+    "pass": 0,
+    "fail": 4,
+    "missed_total": 0,
+    "extra_total": 3368
+  },
+  "rows": [
+    {
+      "hospital": "黑龙江中医药大学附属第一医院",
+      "job_id": 339,
+      "expected": 45,
+      "system_warnings": 309,
+      "matched": 45,
+      "missed": 0,
+      "extra": 256,
+      "status": "fail",
+      "message": "与 MD 主表漂移: live missed=0 extra=256 status=fail vs md missed=0 extra=0 status=pass",
+      "md_missed": 0,
+      "md_extra": 0,
+      "md_status": "pass",
+      "md_drift": true,
+      "missed_keys": []
+    },
+    {
+      "hospital": "新发红十字医院",
+      "job_id": 276,
+      "expected": 1,
+      "system_warnings": 22,
+      "matched": 1,
+      "missed": 0,
+      "extra": 21,
+      "status": "fail",
+      "message": "与 MD 主表漂移: live missed=0 extra=21 status=fail vs md missed=0 extra=0 status=pass",
+      "md_missed": 0,
+      "md_extra": 0,
+      "md_status": "pass",
+      "md_drift": true,
+      "missed_keys": []
+    },
+    {
+      "hospital": "黑龙江省医院（香坊院区）",
+      "job_id": 340,
+      "expected": 219,
+      "system_warnings": 3015,
+      "matched": 219,
+      "missed": 0,
+      "extra": 2796,
+      "status": "fail",
+      "message": "与 MD 主表漂移: live missed=0 extra=2796 status=fail vs md missed=0 extra=0 status=pass",
+      "md_missed": 0,
+      "md_extra": 0,
+      "md_status": "pass",
+      "md_drift": true,
+      "missed_keys": []
+    },
+    {
+      "hospital": "哈尔滨市呼兰区第一人民医院",
+      "job_id": 341,
+      "expected": 0,
+      "system_warnings": 295,
+      "matched": 0,
+      "missed": 0,
+      "extra": 295,
+      "status": "fail",
+      "message": "与 MD 主表漂移: live missed=0 extra=295 status=fail vs md missed=0 extra=0 status=pass_zero",
+      "md_missed": 0,
+      "md_extra": 0,
+      "md_status": "pass_zero",
+      "md_drift": true,
+      "missed_keys": []
+    }
+  ]
+}

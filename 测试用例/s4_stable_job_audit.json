@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-08-01T09:48:31",
+  "generated_at": "2026-08-08T09:29:21",
   "job_map": "/Users/yangxinghui/CODE/My_Projects/hospital_longservice/测试用例/job_baseline_stable.json",
   "summary": {
     "total": 38,
@@ -9,7 +9,7 @@
     "fail_missed": 0,
     "skip": 0,
     "error": 0,
-    "md_drift": 6
+    "md_drift": 4
   },
   "rows": [
     {
@@ -21,11 +21,11 @@
       "missed": 0,
       "extra": 0,
       "status": "pass",
-      "message": "",
+      "message": "与 MD 主表漂移: live missed=0 extra=0 status=pass vs md missed=0 extra=1082 status=fail",
       "md_missed": 0,
-      "md_extra": 0,
-      "md_status": "pass",
-      "md_drift": false,
+      "md_extra": 1082,
+      "md_status": "fail",
+      "md_drift": true,
       "missed_keys": []
     },
     {
@@ -53,11 +53,11 @@
       "missed": 0,
       "extra": 375,
       "status": "fail",
-      "message": "与 MD 主表漂移: live missed=0 extra=375 status=fail vs md missed=0 extra=375 status=fail_extra",
+      "message": "",
       "md_missed": 0,
       "md_extra": 375,
-      "md_status": "fail_extra",
-      "md_drift": true,
+      "md_status": "fail",
+      "md_drift": false,
       "missed_keys": []
     },
     {
@@ -69,11 +69,11 @@
       "missed": 0,
       "extra": 0,
       "status": "pass_zero",
-      "message": "与 MD 主表漂移: live missed=0 extra=0 status=pass_zero vs md missed=0 extra=1 status=fail_extra",
+      "message": "",
       "md_missed": 0,
-      "md_extra": 1,
-      "md_status": "fail_extra",
-      "md_drift": true,
+      "md_extra": 0,
+      "md_status": "pass_zero",
+      "md_drift": false,
       "missed_keys": []
     },
     {
@@ -101,11 +101,11 @@
       "missed": 0,
       "extra": 1887,
       "status": "fail",
-      "message": "与 MD 主表漂移: live missed=0 extra=1887 status=fail vs md missed=0 extra=1887 status=fail_extra",
+      "message": "",
       "md_missed": 0,
       "md_extra": 1887,
-      "md_status": "fail_extra",
-      "md_drift": true,
+      "md_status": "fail",
+      "md_drift": false,
       "missed_keys": []
     },
     {
@@ -149,11 +149,11 @@
       "missed": 0,
       "extra": 0,
       "status": "pass",
-      "message": "",
+      "message": "与 MD 主表漂移: live missed=0 extra=0 status=pass vs md missed=0 extra=25 status=fail",
       "md_missed": 0,
-      "md_extra": 0,
-      "md_status": "pass",
-      "md_drift": false,
+      "md_extra": 25,
+      "md_status": "fail",
+      "md_drift": true,
       "missed_keys": []
     },
     {
@@ -181,11 +181,11 @@
       "missed": 0,
       "extra": 0,
       "status": "pass",
-      "message": "",
+      "message": "与 MD 主表漂移: live missed=0 extra=0 status=pass vs md missed=0 extra=41 status=fail",
       "md_missed": 0,
-      "md_extra": 0,
-      "md_status": "pass",
-      "md_drift": false,
+      "md_extra": 41,
+      "md_status": "fail",
+      "md_drift": true,
       "missed_keys": []
     },
     {
@@ -245,11 +245,11 @@
       "missed": 0,
       "extra": 0,
       "status": "pass",
-      "message": "与 MD 主表漂移: live missed=0 extra=0 status=pass vs md missed=0 extra=6 status=fail_extra",
+      "message": "",
       "md_missed": 0,
-      "md_extra": 6,
-      "md_status": "fail_extra",
-      "md_drift": true,
+      "md_extra": 0,
+      "md_status": "pass",
+      "md_drift": false,
       "missed_keys": []
     },
     {
@@ -453,11 +453,11 @@
       "missed": 0,
       "extra": 0,
       "status": "pass",
-      "message": "与 MD 主表漂移: live missed=0 extra=0 status=pass vs md missed=0 extra=31 status=fail_extra",
+      "message": "",
       "md_missed": 0,
-      "md_extra": 31,
-      "md_status": "fail_extra",
-      "md_drift": true,
+      "md_extra": 0,
+      "md_status": "pass",
+      "md_drift": false,
       "missed_keys": []
     },
     {
@@ -549,11 +549,11 @@
       "missed": 0,
       "extra": 0,
       "status": "pass_zero",
-      "message": "",
+      "message": "与 MD 主表漂移: live missed=0 extra=0 status=pass_zero vs md missed=0 extra=423 status=fail",
       "md_missed": 0,
-      "md_extra": 0,
-      "md_status": "pass_zero",
-      "md_drift": false,
+      "md_extra": 423,
+      "md_status": "fail",
+      "md_drift": true,
       "missed_keys": []
     },
     {
@@ -598,9 +598,9 @@
       "extra": 0,
       "status": "pass_zero",
       "message": "",
-      "md_missed": null,
-      "md_extra": null,
-      "md_status": null,
+      "md_missed": 0,
+      "md_extra": 0,
+      "md_status": "pass_zero",
       "md_drift": false,
       "missed_keys": []
     },
@@ -613,11 +613,11 @@
       "missed": 0,
       "extra": 0,
       "status": "pass_zero",
-      "message": "与 MD 主表漂移: live missed=0 extra=0 status=pass_zero vs md missed=0 extra=2 status=fail_extra",
+      "message": "",
       "md_missed": 0,
-      "md_extra": 2,
-      "md_status": "fail_extra",
-      "md_drift": true,
+      "md_extra": 0,
+      "md_status": "pass_zero",
+      "md_drift": false,
       "missed_keys": []
     }
   ]

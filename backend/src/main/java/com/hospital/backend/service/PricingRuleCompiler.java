@@ -60,6 +60,10 @@ public class PricingRuleCompiler {
         ObjectNode compiled = baseRules.deepCopy();
         Optional<Customer> customerOpt = customerResolver.resolveByName(hospitalName);
         if (customerOpt.isEmpty()) {
+            ObjectNode billingProfile = MAPPER.createObjectNode();
+            billingProfile.put("enabled", false);
+            billingProfile.put("pricingMode", "standard");
+            compiled.set("billingProfile", billingProfile);
             return compiled;
         }
         return compileForCustomer(compiled, customerOpt.get(), hospitalName);
@@ -627,6 +631,11 @@ public class PricingRuleCompiler {
         if (rule.getPrice() != null) {
             node.put("unitPrice", rule.getPrice().doubleValue());
         }
+        if (rule.getTemperature() != null && !rule.getTemperature().isBlank()) {
+            node.put("temperature", rule.getTemperature().trim().toUpperCase());
+        }
+        appendJsonArray(node, "materials", rule.getMaterials());
+        appendJsonArray(node, "excludeKeywords", rule.getExcludeKeywords());
         if (Boolean.TRUE.equals(rule.getSkipPackaging())) {
             node.put("skipPackaging", true);
         }
@@ -639,8 +648,30 @@ public class PricingRuleCompiler {
         node.put("name", rule.getName());
         node.set("hospitals", MAPPER.valueToTree(hospitalNames));
         appendJsonArray(node, "keywords", rule.getKeywords());
+        appendJsonArray(node, "excludeKeywords", rule.getExcludeKeywords());
         if (rule.getFee() != null) {
             node.put("fee", rule.getFee().doubleValue());
+        }
+        if (rule.getMinInstrumentCount() != null) {
+            node.put("minInstrumentCount", rule.getMinInstrumentCount());
+        }
+        if (rule.getMaxInstrumentCount() != null) {
+            node.put("maxInstrumentCount", rule.getMaxInstrumentCount());
+        }
+        if (rule.getBagSizeEquals() != null) {
+            node.put("bagSizeEquals", rule.getBagSizeEquals());
+        }
+        if (rule.getMinBagSizeInclusive() != null) {
+            node.put("minBagSizeInclusive", rule.getMinBagSizeInclusive());
+        }
+        if (rule.getMaxBagSizeExclusive() != null) {
+            node.put("maxBagSizeExclusive", rule.getMaxBagSizeExclusive());
+        }
+        if (Boolean.TRUE.equals(rule.getSkipPackaging())) {
+            node.put("skipPackaging", true);
+        }
+        if (Boolean.TRUE.equals(rule.getSkipDiscount())) {
+            node.put("skipHospitalDiscount", true);
         }
         return node;
     }

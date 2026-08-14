@@ -1,0 +1,10 @@
+{
+  "hospital": "哈尔滨冰城医疗美容医院",
+  "code": "BINGCHENG-YM",
+  "job_id_before": 761,
+  "expected_correction_rows": 2,
+  "s4_status_before": "fail",
+  "missed_before": 2,
+  "matched_before": 0,
+  "note": "环钻包30.5 priority=4 抢先于环钻27.5"
+}

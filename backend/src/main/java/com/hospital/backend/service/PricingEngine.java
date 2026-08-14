@@ -97,6 +97,8 @@ public class PricingEngine {
         double forceHighTempPerItem = pathOverride.path("forceHighTempUnitPrice").asDouble(Double.NaN);
         String pricingMode = billingProfile.path("pricingMode").asText("standard");
         boolean specialOnly = "special_only".equalsIgnoreCase(pricingMode);
+        boolean hybrid = "hybrid".equalsIgnoreCase(pricingMode);
+        boolean preserveOriginalOnMiss = specialOnly || hybrid;
 
         boolean isLowTempType = !disableLowTemp
                 && (type.contains("低温") || type.contains("ETO") || type.contains("EO"));
@@ -292,6 +294,21 @@ public class PricingEngine {
             notes.add(specialPrice.note);
             skipPackaging = specialPrice.skipPackaging;
             skipHospitalDiscount = specialPrice.skipHospitalDiscount;
+        } else if (preserveOriginalOnMiss) {
+            Double forcedPrice = computeForceHighTempUnitPrice(forceHighTempPerItem, materialBillingCount);
+            if (forcedPrice != null) {
+                expectedUnitPrice = forcedPrice;
+                pricingRule = "路径覆盖：高温固定单价";
+                notes.add("计价模式为" + (specialOnly ? "仅特色规则" : "特色+保留原价")
+                        + "，按路径覆盖高温单价 "
+                        + fmt(forceHighTempPerItem) + " 元/件 × " + materialBillingCount + " 件 = "
+                        + fmt(expectedUnitPrice) + " 元。");
+            } else {
+                pricingRule = specialOnly ? "special_only 未命中特色规则" : "hybrid 未命中特色规则";
+                notes.add("计价模式为" + (specialOnly ? "仅特色规则" : "特色+保留原价")
+                        + "，未命中客户特色规则，保留原始价格。");
+                requiresReview = true;
+            }
         } else if (type.contains("纸塑袋") && isCottonDressingPackName(packName)
                 && shouldUseDressingCottonPaperPlasticPrice(packName, type, instrumentCount, packCount)) {
             int bagSize2 = detectBagSize(str(row, "packageMaterial") + str(row, "packName"));
@@ -365,25 +382,20 @@ public class PricingEngine {
                 requiresReview = true;
             }
             skipPackaging = true;
-        } else if (specialOnly) {
-            Double forcedPrice = computeForceHighTempUnitPrice(forceHighTempPerItem, materialBillingCount);
-            if (forcedPrice != null) {
-                expectedUnitPrice = forcedPrice;
-                pricingRule = "路径覆盖：高温固定单价";
-                notes.add("计价模式为仅特色规则，按路径覆盖高温单价 "
-                        + fmt(forceHighTempPerItem) + " 元/件 × " + materialBillingCount + " 件 = "
-                        + fmt(expectedUnitPrice) + " 元。");
-            } else {
-                pricingRule = "special_only 未命中特色规则";
-                notes.add("计价模式为仅特色规则，未命中固定价且非敷料，保留原始价格。");
-                requiresReview = true;
-            }
         } else if (isPaperPlastic) {
             if (isLowTemp) {
-                String ltPrefix = isDouble ? "低温纸塑袋(双)" : "低温纸塑袋";
-                pricingRule = ltPrefix + (bagSize > 0 ? bagSize + "cm" : "") + "阶梯计费";
-                expectedUnitPrice = computeLowTempPaperPlastic(
-                        materialBillingCount, bagSize, zBagSize, notes, isDouble, hospitalName);
+                Double forcedLt = computeForceHighTempUnitPrice(forceHighTempPerItem, materialBillingCount);
+                if (forcedLt != null && appliedSpecialFoldRule) {
+                    expectedUnitPrice = forcedLt;
+                    pricingRule = "低温特色折算单价";
+                    notes.add("按特色规则低温折算单价 " + fmt(forceHighTempPerItem) + " 元/件 × "
+                            + materialBillingCount + " 件 = " + fmt(expectedUnitPrice) + " 元。");
+                } else {
+                    String ltPrefix = isDouble ? "低温纸塑袋(双)" : "低温纸塑袋";
+                    pricingRule = ltPrefix + (bagSize > 0 ? bagSize + "cm" : "") + "阶梯计费";
+                    expectedUnitPrice = computeLowTempPaperPlastic(
+                            materialBillingCount, bagSize, zBagSize, notes, isDouble, hospitalName);
+                }
             } else {
                 Double forcedPrice = computeForceHighTempUnitPrice(forceHighTempPerItem, materialBillingCount);
                 if (forcedPrice != null) {
@@ -400,8 +412,16 @@ public class PricingEngine {
             }
         } else if (isNonWoven) {
             if (isLowTemp) {
-                pricingRule = "低温无纺布阶梯计费";
-                expectedUnitPrice = computeLowTempNonWoven(materialBillingCount, notes);
+                Double forcedLt = computeForceHighTempUnitPrice(forceHighTempPerItem, materialBillingCount);
+                if (forcedLt != null && appliedSpecialFoldRule) {
+                    expectedUnitPrice = forcedLt;
+                    pricingRule = "低温特色折算单价";
+                    notes.add("按特色规则低温折算单价 " + fmt(forceHighTempPerItem) + " 元/件 × "
+                            + materialBillingCount + " 件 = " + fmt(expectedUnitPrice) + " 元。");
+                } else {
+                    pricingRule = "低温无纺布阶梯计费";
+                    expectedUnitPrice = computeLowTempNonWoven(materialBillingCount, notes);
+                }
             } else {
                 Double forcedPrice = computeForceHighTempUnitPrice(forceHighTempPerItem, materialBillingCount);
                 if (forcedPrice != null) {
@@ -451,11 +471,13 @@ public class PricingEngine {
             }
         }
 
-        SpecialFeeResult specialFee = computeSpecialExtraFee(row, bagSize, effectiveCount);
-        if (specialFee != null && expectedUnitPrice != null) {
-            expectedUnitPrice = round(expectedUnitPrice + specialFee.fee);
-            pricingRule = pricingRule + " + " + specialFee.ruleName;
-            notes.add(specialFee.note);
+        List<SpecialFeeResult> specialFees = computeSpecialExtraFees(row, bagSize, materialBillingCount);
+        for (SpecialFeeResult specialFee : specialFees) {
+            if (expectedUnitPrice != null) {
+                expectedUnitPrice = round(expectedUnitPrice + specialFee.fee);
+                pricingRule = pricingRule + " + " + specialFee.ruleName;
+                notes.add(specialFee.note);
+            }
         }
 
         if (!skipPackaging && instrumentCount > 10
@@ -880,17 +902,21 @@ public class PricingEngine {
         return result;
     }
 
-    private SpecialFeeResult computeSpecialExtraFee(Map<String, Object> row, int bagSize, int effectiveCount) {
+    private List<SpecialFeeResult> computeSpecialExtraFees(
+            Map<String, Object> row, int bagSize, int billingCount) {
         String combined = combinedText(row);
         String hospitalName = str(row, "hospitalName");
         JsonNode extraFees = rules.path("specialRules").path("extraFees");
+        List<SpecialFeeResult> matchedFees = new ArrayList<>();
         if (extraFees.isArray()) {
             for (JsonNode rule : extraFees) {
-                SpecialFeeResult matched = matchExtraFeeRule(rule, combined, hospitalName, bagSize, effectiveCount);
-                if (matched != null) return matched;
+                SpecialFeeResult matched = matchExtraFeeRule(rule, combined, hospitalName, bagSize, billingCount);
+                if (matched != null) {
+                    matchedFees.add(matched);
+                }
             }
         }
-        return null;
+        return matchedFees;
     }
 
     private SpecialFeeResult matchExtraFeeRule(JsonNode rule, String combined, String hospitalName, int bagSize, int effectiveCount) {

@@ -98,4 +98,35 @@ class CustomerResolverTest {
         assertThat(resolved).isPresent();
         assertThat(resolved.get().getCode()).isEqualTo("HRB-CJ");
     }
+
+    @Test
+    void resolvesGuoyao2ByMotorFactoryAlias() {
+        when(customerMapper.selectAll()).thenReturn(List.of());
+
+        CustomerAlias motorAlias = new CustomerAlias();
+        motorAlias.setCustomerId(22L);
+        motorAlias.setAlias("电机厂");
+        motorAlias.setMatchType("contains");
+        motorAlias.setPriority(10);
+        motorAlias.setIsActive(true);
+
+        CustomerAlias campusAlias = new CustomerAlias();
+        campusAlias.setCustomerId(22L);
+        campusAlias.setAlias("国药总医院第二院区");
+        campusAlias.setMatchType("exact");
+        campusAlias.setPriority(20);
+        campusAlias.setIsActive(true);
+
+        Customer guoyao2 = new Customer();
+        guoyao2.setId(22L);
+        guoyao2.setCode("GUOYAO-2");
+        guoyao2.setCanonicalName("国药总医院第二院区");
+        guoyao2.setBillingEnabled(true);
+
+        when(customerAliasMapper.selectAllActive()).thenReturn(List.of(motorAlias, campusAlias));
+        when(customerMapper.selectById(22L)).thenReturn(guoyao2);
+
+        assertThat(customerResolver.resolveByName("电机厂").orElseThrow().getCode()).isEqualTo("GUOYAO-2");
+        assertThat(customerResolver.resolveByName("国药总医院第二院区").orElseThrow().getCode()).isEqualTo("GUOYAO-2");
+    }
 }

@@ -1,0 +1,31 @@
+{
+  "command": "rules spot-check",
+  "code": "STANDARD",
+  "hospital_name": "黑龙江菁华上德生殖妇产医院",
+  "api_base": "http://127.0.0.1:8000",
+  "ok": true,
+  "passed": 2,
+  "total": 2,
+  "results": [
+    {
+      "name": "棉球15cm纸塑袋2.5",
+      "ok": true,
+      "expectedUnitPrice": 2.5,
+      "actualUnitPrice": 2.5,
+      "expectedCorrectedTotal": null,
+      "actualCorrectedTotal": 2.5,
+      "status": "unchanged",
+      "pricingRule": "敷料包(纸塑袋)+棉球——15cm"
+    },
+    {
+      "name": "棉球缸25cm纸塑袋10.5",
+      "ok": true,
+      "expectedUnitPrice": 10.5,
+      "actualUnitPrice": 10.5,
+      "expectedCorrectedTotal": null,
+      "actualCorrectedTotal": 10.5,
+      "status": "warning",
+      "pricingRule": "敷料包(纸塑袋)+棉球——25cm"
+    }
+  ]
+}

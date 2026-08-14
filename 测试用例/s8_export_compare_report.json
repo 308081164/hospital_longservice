@@ -620,9 +620,9 @@
     "processed_bill": "测试用例/哈尔滨市红十字妇产医院/处理后表格/6月__哈尔滨红十字妇产医院6月账单.xlsx",
     "export_file": "测试用例/.s8_exports/job623_哈尔滨市红十字妇产医院_bill.xlsx",
     "structure_ok": true,
-    "sheet_count": 1,
+    "sheet_count": 26,
     "layout_mode": "auto",
-    "summary_label": "合计",
+    "summary_label": "ICU病房",
     "totals": {
       "expected": 159033.0,
       "actual": 159033.0

@@ -4,6 +4,7 @@
 > **S4 stable 审计**（[`s4_stable_job_audit.json`](s4_stable_job_audit.json)）：**pass 36 · fail 2**（仅国药主/市二材料 extra）  
 > **S8 稳定基线**（[`job_baseline_stable.json`](job_baseline_stable.json)）：bill **pass 33 · warn 1 · fail 4** · settlement **pass 34/37**（4 院 blocked_material）  
 > **2026-08-01 闭合**：附一 S4+S8 Job607 · 哈工大 S4 pass_zero Job747（raw 单价/总价校正）· 附一 dept_summary structure_ok  
+> **2026-08-08 部署验收**：parity 24/24 ✅ · prod S4 定点 4 院 missed=0 · pricing 修复：红十字 pass · 呼兰 pass_zero · 附一 extra 1082→118
 > **波次6 ✅**：测试账单-6 入库 · settlement skip **4→0**（香坊/国药三/长健/市五二门诊）· [`regression-wave6-triage.md`](regression-wave6-triage.md)  
 > **波次5 ✅**：工程大学 5 月 skip→**双 pass** · 太平 warn→**pass** · pricing 漏检闭合 · [`regression-wave5-triage.md`](regression-wave5-triage.md)  
 > **材料 fail 4 院** 不变（国药主/二、市二、省二松北）· S4 重导后 Δ 无变化
@@ -93,6 +94,10 @@ python3 scripts/batch_june_system_test.py "武警黑龙江省总队医院" "…"
 | 29 | 哈尔滨工业大学医院 | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | 🔄 | 747 | **S4 pass_zero** Job747 · S8 bill **warn** Δ104.5 · settlement pass |
 | 30 | 哈尔滨工程大学医院 | ✅ | ✅ | ✅ | ✅ | ⏭ | ✅ | ✅ | ✅ | 704 | **5 月账期** bill+结款 **双 pass** · 6 月主矩阵例外 · S5 待补 |
 | — | 哈尔滨长健医院 | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | 735 / P735 | **S4 pass_zero** · HRB-CJ 敷料35/硅胶22 · bill pass |
+| 31 | 方南南医院 | 🚫 | ⬜ | ✅ | 🚫 | ⬜ | ⬜ | ⬜ | ⬜ | — | 有 6 月处理后表；缺原始；FOLD 两档包材 |
+| 32 | 美意医疗 | 🚫 | ⬜ | ✅ | 🚫 | ⬜ | ⬜ | ⬜ | ⬜ | — | 敷料纸塑 ≥20cm 固定 4 元 |
+| 33 | 易丽医疗 | 🚫 | ⬜ | ✅ | 🚫 | ⬜ | ⬜ | ⬜ | ⬜ | — | 敷料纸塑 ≥20cm 固定 4 元 |
+| 34 | 佳医医疗 | 🚫 | ⬜ | ✅ | 🚫 | ⬜ | ⬜ | ⬜ | ⬜ | — | **无历史账单**；仅规则 spot-check |
 
 ### 逐院勾选模板（复制到院文件夹 `验收进度.md` 可选）
 

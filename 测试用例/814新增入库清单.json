@@ -1,0 +1,316 @@
+{
+  "source_dir": "铂康/8.14新增",
+  "strict_july_folders": [
+    "哈尔滨冰城医疗美容医院",
+    "国药总医院第二院区",
+    "黑龙江菁华上德生殖妇产医院"
+  ],
+  "entries": [
+    {
+      "source": "铂康/8.14新增/特殊收费/4家医院(1).xlsx#冰城医美",
+      "dest": "测试用例/哈尔滨冰城医疗美容医院/处理后表格/7月__冰城医美账单.xlsx",
+      "hospital": "哈尔滨冰城医疗美容医院",
+      "kind": "split",
+      "month": 7,
+      "strict_eligible": true,
+      "note": "4家 workbook 拆分"
+    },
+    {
+      "source": "铂康/8.14新增/特殊收费/4家医院(1).xlsx#电机厂",
+      "dest": "测试用例/国药总医院第二院区/处理后表格/7月__电机厂账单.xlsx",
+      "hospital": "国药总医院第二院区",
+      "kind": "split",
+      "month": 7,
+      "strict_eligible": true,
+      "note": "4家 workbook 拆分"
+    },
+    {
+      "source": "铂康/8.14新增/特殊收费/4家医院(1).xlsx#方南南",
+      "dest": "测试用例/方南南医院/处理后表格/7月__方南南账单.xlsx",
+      "hospital": "方南南医院",
+      "kind": "split",
+      "month": 7,
+      "strict_eligible": false,
+      "note": "4家 workbook 拆分"
+    },
+    {
+      "source": "铂康/8.14新增/特殊收费/4家医院(1).xlsx#东北农大",
+      "dest": "测试用例/东北农业大学/处理后表格/7月__东北农大账单.xlsx",
+      "hospital": "东北农业大学",
+      "kind": "split",
+      "month": 7,
+      "strict_eligible": false,
+      "note": "4家 workbook 拆分"
+    },
+    {
+      "source": "铂康/8.14新增/新建文件夹 (3)/冰成7月.xlsx",
+      "dest": "测试用例/哈尔滨冰城医疗美容医院/原始表格/7月__冰城原始.xlsx",
+      "hospital": "哈尔滨冰城医疗美容医院",
+      "kind": "raw",
+      "month": 7,
+      "strict_eligible": true,
+      "note": "7月 strict 成对"
+    },
+    {
+      "source": "铂康/8.14新增/新建文件夹 (3)/电机厂.xlsx",
+      "dest": "测试用例/国药总医院第二院区/原始表格/7月__电机厂原始.xlsx",
+      "hospital": "国药总医院第二院区",
+      "kind": "raw",
+      "month": 7,
+      "strict_eligible": true,
+      "note": "7月 strict 成对"
+    },
+    {
+      "source": "铂康/8.14新增/新建文件夹 (3)/上德7月.xlsx",
+      "dest": "测试用例/黑龙江菁华上德生殖妇产医院/原始表格/7月__上德原始.xlsx",
+      "hospital": "黑龙江菁华上德生殖妇产医院",
+      "kind": "raw",
+      "month": 7,
+      "strict_eligible": true,
+      "note": "7月 strict 成对"
+    },
+    {
+      "source": "铂康/8.14新增/新建文件夹 (3)/祖研7月.xlsx",
+      "dest": "测试用例/祖研-黑龙江省中医医院（南岗院区）/原始表格/7月__祖研南岗原始.xlsx",
+      "hospital": "祖研-黑龙江省中医医院（南岗院区）",
+      "kind": "raw",
+      "month": 7,
+      "strict_eligible": false,
+      "note": "缺 7 月处理后"
+    },
+    {
+      "source": "铂康/8.14新增/新建文件夹 (3)/五.xlsx",
+      "dest": "测试用例/哈尔滨市第五医院/原始表格/7月__市五院原始.xlsx",
+      "hospital": "哈尔滨市第五医院",
+      "kind": "raw",
+      "month": 7,
+      "strict_eligible": false,
+      "note": "主院区原始，无二门诊 proc"
+    },
+    {
+      "source": "铂康/8.14新增/新建文件夹 (3)/人口.xlsx",
+      "dest": "测试用例/黑龙江省妇幼保健院（人口）/原始表格/7月__人口原始.xlsx",
+      "hospital": "黑龙江省妇幼保健院（人口）",
+      "kind": "raw",
+      "month": 7,
+      "strict_eligible": false,
+      "note": "v8 省妇幼人口，缺 7 月处理后"
+    },
+    {
+      "source": "铂康/8.14新增/标准计费/三精肾病-1.xlsx",
+      "dest": "测试用例/三精肾病医院/处理后表格/7月__三精肾病账单.xlsx",
+      "hospital": "三精肾病医院",
+      "kind": "proc_standard",
+      "month": 7,
+      "strict_eligible": false,
+      "note": "标准计费 -1"
+    },
+    {
+      "source": "铂康/8.14新增/标准计费/上德-1.xlsx",
+      "dest": "测试用例/黑龙江菁华上德生殖妇产医院/处理后表格/7月__上德账单.xlsx",
+      "hospital": "黑龙江菁华上德生殖妇产医院",
+      "kind": "proc_standard",
+      "month": 7,
+      "strict_eligible": true,
+      "note": "标准计费 -1"
+    },
+    {
+      "source": "铂康/8.14新增/标准计费/东大肛肠-1.xlsx",
+      "dest": "测试用例/黑龙江东大肛肠/处理后表格/7月__东大肛肠账单.xlsx",
+      "hospital": "黑龙江东大肛肠",
+      "kind": "proc_standard",
+      "month": 7,
+      "strict_eligible": false,
+      "note": "标准计费 -1"
+    },
+    {
+      "source": "铂康/8.14新增/标准计费/中医附四-1.xlsx",
+      "dest": "测试用例/黑龙江中医药大学附属第四医院/处理后表格/7月__中医附四账单.xlsx",
+      "hospital": "黑龙江中医药大学附属第四医院",
+      "kind": "proc_standard",
+      "month": 7,
+      "strict_eligible": false,
+      "note": "标准计费 -1"
+    },
+    {
+      "source": "铂康/8.14新增/标准计费/仁胜-1.xlsx",
+      "dest": "测试用例/哈尔滨仁胜医院/处理后表格/7月__仁胜账单.xlsx",
+      "hospital": "哈尔滨仁胜医院",
+      "kind": "proc_standard",
+      "month": 7,
+      "strict_eligible": false,
+      "note": "标准计费 -1"
+    },
+    {
+      "source": "铂康/8.14新增/标准计费/先锋社区-1.xlsx",
+      "dest": "测试用例/南岗区先锋路社区卫生服务中心/处理后表格/7月__先锋社区账单.xlsx",
+      "hospital": "南岗区先锋路社区卫生服务中心",
+      "kind": "proc_standard",
+      "month": 7,
+      "strict_eligible": false,
+      "note": "标准计费 -1"
+    },
+    {
+      "source": "铂康/8.14新增/标准计费/公安-1.xlsx",
+      "dest": "测试用例/哈尔滨市公安医院/处理后表格/7月__公安账单.xlsx",
+      "hospital": "哈尔滨市公安医院",
+      "kind": "proc_standard",
+      "month": 7,
+      "strict_eligible": false,
+      "note": "标准计费 -1"
+    },
+    {
+      "source": "铂康/8.14新增/标准计费/南岗人民-1.xlsx",
+      "dest": "测试用例/哈尔滨市南岗区人民医院（九院）/处理后表格/7月__南岗人民账单.xlsx",
+      "hospital": "哈尔滨市南岗区人民医院（九院）",
+      "kind": "proc_standard",
+      "month": 7,
+      "strict_eligible": false,
+      "note": "标准计费 -1"
+    },
+    {
+      "source": "铂康/8.14新增/标准计费/南岗妇产-1.xlsx",
+      "dest": "测试用例/南岗区妇产医院/处理后表格/7月__南岗妇产账单.xlsx",
+      "hospital": "南岗区妇产医院",
+      "kind": "proc_standard",
+      "month": 7,
+      "strict_eligible": false,
+      "note": "标准计费 -1"
+    },
+    {
+      "source": "铂康/8.14新增/标准计费/和平社区-1.xlsx",
+      "dest": "测试用例/和平社区/处理后表格/7月__和平社区账单.xlsx",
+      "hospital": "和平社区",
+      "kind": "proc_standard",
+      "month": 7,
+      "strict_eligible": false,
+      "note": "标准计费 -1"
+    },
+    {
+      "source": "铂康/8.14新增/标准计费/国药总医院第三医院-1.xlsx",
+      "dest": "测试用例/国药总医院第三院区/处理后表格/7月__国药三院账单.xlsx",
+      "hospital": "国药总医院第三院区",
+      "kind": "proc_standard",
+      "month": 7,
+      "strict_eligible": false,
+      "note": "标准计费 -1"
+    },
+    {
+      "source": "铂康/8.14新增/标准计费/奥美-1.xlsx",
+      "dest": "测试用例/奥美/处理后表格/7月__奥美账单.xlsx",
+      "hospital": "奥美",
+      "kind": "proc_standard",
+      "month": 7,
+      "strict_eligible": false,
+      "note": "标准计费 -1"
+    },
+    {
+      "source": "铂康/8.14新增/标准计费/媛尚美-1.xlsx",
+      "dest": "测试用例/媛尚美/处理后表格/7月__媛尚美账单.xlsx",
+      "hospital": "媛尚美",
+      "kind": "proc_standard",
+      "month": 7,
+      "strict_eligible": false,
+      "note": "标准计费 -1"
+    },
+    {
+      "source": "铂康/8.14新增/标准计费/悦美芳华-1.xlsx",
+      "dest": "测试用例/悦美芳华医疗门诊医院/处理后表格/7月__悦美芳华账单.xlsx",
+      "hospital": "悦美芳华医疗门诊医院",
+      "kind": "proc_standard",
+      "month": 7,
+      "strict_eligible": false,
+      "note": "标准计费 -1"
+    },
+    {
+      "source": "铂康/8.14新增/标准计费/维多利亚-1.xlsx",
+      "dest": "测试用例/黑龙江维多利亚妇产医院/处理后表格/7月__维多利亚账单.xlsx",
+      "hospital": "黑龙江维多利亚妇产医院",
+      "kind": "proc_standard",
+      "month": 7,
+      "strict_eligible": false,
+      "note": "标准计费 -1"
+    },
+    {
+      "source": "铂康/8.14新增/标准计费/香坊中医院-1.xlsx",
+      "dest": "测试用例/香坊中医院/处理后表格/7月__香坊中医院账单.xlsx",
+      "hospital": "香坊中医院",
+      "kind": "proc_standard",
+      "month": 7,
+      "strict_eligible": false,
+      "note": "标准计费 -1"
+    },
+    {
+      "source": "铂康/8.14新增/特殊收费/电机厂-2.xlsx",
+      "dest": "测试用例/国药总医院第二院区/处理后表格/7月__电机厂特殊账单.xlsx",
+      "hospital": "国药总医院第二院区",
+      "kind": "proc_special",
+      "month": 7,
+      "strict_eligible": false,
+      "note": "6-7月跨期，备选 proc"
+    },
+    {
+      "source": "铂康/8.14新增/特殊收费/市五院二门诊-2.xlsx",
+      "dest": "测试用例/哈尔滨市第五医院（二门诊）/处理后表格/6月__市五院二门诊特殊账单.xlsx",
+      "hospital": "哈尔滨市第五医院（二门诊）",
+      "kind": "proc_special",
+      "month": 6,
+      "strict_eligible": false,
+      "note": "6 月特殊 proc"
+    },
+    {
+      "source": "铂康/8.14新增/特殊收费/九州-2.xlsx",
+      "dest": "测试用例/黑龙江九洲妇科医院/处理后表格/6月__九州特殊账单.xlsx",
+      "hospital": "黑龙江九洲妇科医院",
+      "kind": "proc_special",
+      "month": 6,
+      "strict_eligible": false,
+      "note": "3-4 月 proc"
+    },
+    {
+      "source": "铂康/8.14新增/特殊收费/工程大学-2.xlsx",
+      "dest": "测试用例/哈尔滨工程大学医院/处理后表格/6月__工程大学特殊账单.xlsx",
+      "hospital": "哈尔滨工程大学医院",
+      "kind": "proc_special",
+      "month": 6,
+      "strict_eligible": false,
+      "note": "6 月 proc"
+    },
+    {
+      "source": "铂康/8.14新增/特殊收费/松电慢病-2.xlsx",
+      "dest": "测试用例/松电慢病/处理后表格/6月__松电慢病特殊账单.xlsx",
+      "hospital": "松电慢病",
+      "kind": "proc_special",
+      "month": 6,
+      "strict_eligible": false,
+      "note": "3 月 proc"
+    },
+    {
+      "source": "铂康/8.14新增/特殊收费/海员松北-2.xlsx",
+      "dest": "测试用例/黑龙江省海员总医院（松北）/处理后表格/6月__海员松北特殊账单.xlsx",
+      "hospital": "黑龙江省海员总医院（松北）",
+      "kind": "proc_special",
+      "month": 6,
+      "strict_eligible": false,
+      "note": "3-4 月 proc"
+    },
+    {
+      "source": "铂康/8.14新增/特殊收费/航天风华-2.xlsx",
+      "dest": "测试用例/航天风华/处理后表格/8月__航天风华特殊账单.xlsx",
+      "hospital": "航天风华",
+      "kind": "proc_special",
+      "month": 8,
+      "strict_eligible": false,
+      "note": "8 月 proc"
+    },
+    {
+      "source": "铂康/8.14新增/特殊收费/东北农大-2.xlsx",
+      "dest": "测试用例/东北农业大学/处理后表格/6月__东北农大特殊账单.xlsx",
+      "hospital": "东北农业大学",
+      "kind": "proc_special",
+      "month": 6,
+      "strict_eligible": false,
+      "note": "6-7 月 proc"
+    }
+  ]
+}

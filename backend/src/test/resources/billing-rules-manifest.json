@@ -1,0 +1,6126 @@
+{
+  "version": 1,
+  "generated_at": "2026-08-14T08:51:05.292926+00:00",
+  "manifest_hash": "a54feef3a484bc1626d0c508f336379b92d7a9e35e1375803d2ac3e0d47fe282",
+  "customers": {
+    "AL-YY": {
+      "code": "AL-YY",
+      "name": "奥兰医院",
+      "status": null,
+      "billingPricingMode": null,
+      "standardPricingOverride": null,
+      "billingEnabled": null,
+      "productRules": [],
+      "rule_count": 0,
+      "active_rule_count": 0
+    },
+    "BINGCHENG-YM": {
+      "code": "BINGCHENG-YM",
+      "name": "哈尔滨冰城医疗美容医院",
+      "status": null,
+      "billingPricingMode": "special_only",
+      "standardPricingOverride": null,
+      "billingEnabled": true,
+      "productRules": [
+        {
+          "ruleType": "PRICE_PER_INSTRUMENT",
+          "name": "≥3件按件5.5元",
+          "priority": 50,
+          "price": 5.5,
+          "minInstrumentCount": 3,
+          "temperature": "HT",
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": false,
+          "matchMode": "first"
+        },
+        {
+          "ruleType": "PRICE_PER_INSTRUMENT",
+          "name": "冰城整形手术包按件5.5",
+          "priority": 6,
+          "price": 5.5,
+          "keywords": [
+            "整形手术包",
+            "整形包"
+          ],
+          "excludeKeywords": [
+            "脂充包"
+          ],
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": true,
+          "matchMode": "first"
+        },
+        {
+          "ruleType": "EXTRA_FEE",
+          "name": "冰城整形手术包无纺布加价3",
+          "priority": 7,
+          "fee": 3.0,
+          "keywords": [
+            "整形手术包",
+            "整形包"
+          ],
+          "excludeKeywords": [
+            "脂充包"
+          ],
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": true,
+          "matchMode": "first"
+        },
+        {
+          "ruleType": "PRICE_PER_INSTRUMENT",
+          "name": "冰城环钻包按件5.5",
+          "priority": 6,
+          "price": 5.5,
+          "keywords": [
+            "环钻包",
+            "环钻"
+          ],
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": true,
+          "matchMode": "first"
+        },
+        {
+          "ruleType": "EXTRA_FEE",
+          "name": "冰城环钻包无纺布加价3",
+          "priority": 7,
+          "fee": 3.0,
+          "keywords": [
+            "环钻包",
+            "环钻"
+          ],
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": true,
+          "matchMode": "first"
+        },
+        {
+          "ruleType": "EXTRA_FEE",
+          "name": "冰城环钻包小件包装加价3",
+          "priority": 8,
+          "fee": 3.0,
+          "minInstrumentCount": 2,
+          "maxInstrumentCount": 5,
+          "keywords": [
+            "环钻包",
+            "环钻"
+          ],
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": true,
+          "matchMode": "first"
+        },
+        {
+          "ruleType": "PRICE_PER_INSTRUMENT",
+          "name": "冰城脂充包按件5.5",
+          "priority": 6,
+          "price": 5.5,
+          "keywords": [
+            "脂充包"
+          ],
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": true,
+          "matchMode": "first"
+        },
+        {
+          "ruleType": "EXTRA_FEE",
+          "name": "冰城脂充包无纺布加价5",
+          "priority": 7,
+          "fee": 5.0,
+          "keywords": [
+            "脂充包"
+          ],
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": true,
+          "matchMode": "first"
+        },
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "整形包54.5",
+          "priority": 10,
+          "price": 54.5,
+          "keywords": [
+            "整形包",
+            "脂充包"
+          ],
+          "excludeKeywords": [
+            "整形手术包"
+          ],
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": false,
+          "matchMode": "first"
+        },
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "整形包58",
+          "priority": 8,
+          "price": 58,
+          "keywords": [
+            "整形包",
+            "整形手术包"
+          ],
+          "excludeKeywords": [
+            "脂充包"
+          ],
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": false,
+          "matchMode": "first"
+        },
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "环钻27.5",
+          "priority": 20,
+          "price": 27.5,
+          "keywords": [
+            "环钻"
+          ],
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": false,
+          "matchMode": "first"
+        },
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "环钻包30.5",
+          "priority": 4,
+          "price": 30.5,
+          "keywords": [
+            "环钻包"
+          ],
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": false,
+          "matchMode": "first"
+        },
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "脂充包54.5",
+          "priority": 10,
+          "price": 54.5,
+          "keywords": [
+            "脂充包"
+          ],
+          "excludeKeywords": [
+            "整形包",
+            "整形手术包"
+          ],
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": false,
+          "matchMode": "first"
+        }
+      ],
+      "rule_count": 12,
+      "active_rule_count": 6
+    },
+    "BOSHANG-YY": {
+      "code": "BOSHANG-YY",
+      "name": "博尚医院",
+      "status": null,
+      "billingPricingMode": "special_only",
+      "standardPricingOverride": null,
+      "billingEnabled": null,
+      "productRules": [
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "博尚旋切器44",
+          "priority": 11,
+          "price": 44.0,
+          "keywords": [
+            "旋切器1胶帽4/Z2045",
+            "旋切器1胶帽4"
+          ],
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": true,
+          "matchMode": "first"
+        },
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "博尚旋切器戳卡66",
+          "priority": 10,
+          "price": 66.0,
+          "keywords": [
+            "旋切器1戳卡1胶帽4/Z2045",
+            "旋切器1戳卡1胶帽4"
+          ],
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": true,
+          "matchMode": "first"
+        },
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "博尚旋切器线66",
+          "priority": 12,
+          "price": 66.0,
+          "keywords": [
+            "旋切器1线1胶帽4/Z2045",
+            "旋切器1线1胶帽4"
+          ],
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": true,
+          "matchMode": "first"
+        },
+        {
+          "ruleType": "FOLD",
+          "name": "博尚胶帽5合1",
+          "priority": 20,
+          "keywords": [
+            "胶帽"
+          ],
+          "threshold": 5,
+          "foldRatio": 5,
+          "temperature": "LT",
+          "skipPackaging": false,
+          "isActive": true,
+          "matchMode": "first",
+          "skipDiscount": false
+        }
+      ],
+      "rule_count": 4,
+      "active_rule_count": 4
+    },
+    "CHANGJIAN": {
+      "code": "CHANGJIAN",
+      "name": "哈尔滨长健医院(旧CHANGJIAN)",
+      "status": "inactive",
+      "billingPricingMode": null,
+      "standardPricingOverride": null,
+      "billingEnabled": null,
+      "productRules": [],
+      "rule_count": 0,
+      "active_rule_count": 0
+    },
+    "CHUNYU-YL": {
+      "code": "CHUNYU-YL",
+      "name": "春语医疗美容医院",
+      "status": null,
+      "billingPricingMode": "hybrid",
+      "standardPricingOverride": null,
+      "billingEnabled": null,
+      "productRules": [
+        {
+          "ruleType": "FOLD",
+          "name": "春语塑料管>10折算22",
+          "priority": 11,
+          "keywords": [
+            "塑料管",
+            "管子"
+          ],
+          "threshold": 10,
+          "foldRatio": 10,
+          "price": 22.0,
+          "minInstrumentCount": 11,
+          "temperature": "LT",
+          "skipPackaging": true,
+          "isActive": true,
+          "matchMode": "first",
+          "skipDiscount": false
+        },
+        {
+          "ruleType": "FOLD",
+          "name": "春语塑料管≤10按1件",
+          "priority": 10,
+          "keywords": [
+            "塑料管",
+            "管子"
+          ],
+          "threshold": 10,
+          "foldRatio": 10,
+          "maxInstrumentCount": 10,
+          "temperature": "LT",
+          "skipPackaging": false,
+          "isActive": true,
+          "matchMode": "first",
+          "skipDiscount": false
+        }
+      ],
+      "rule_count": 2,
+      "active_rule_count": 2
+    },
+    "DAOWAI-RM": {
+      "code": "DAOWAI-RM",
+      "name": "道外区人民医院",
+      "status": null,
+      "billingPricingMode": "standard",
+      "standardPricingOverride": null,
+      "billingEnabled": null,
+      "productRules": [
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "PDF/期待价2",
+          "priority": 200,
+          "price": 2.0,
+          "keywords": [
+            "棉球"
+          ],
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": true,
+          "matchMode": "first"
+        },
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "PDF/期待价6.5",
+          "priority": 201,
+          "price": 6.5,
+          "keywords": [
+            "敷料",
+            "敷料包"
+          ],
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": true,
+          "matchMode": "first"
+        },
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "PDF外来器械钉盒37.5",
+          "priority": 41,
+          "price": 37.5,
+          "keywords": [
+            "外来器械（钉盒）"
+          ],
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": true,
+          "matchMode": "first"
+        },
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "PDF外来器械骨电钻12.5",
+          "priority": 40,
+          "price": 12.5,
+          "keywords": [
+            "外来器械（骨电钻）"
+          ],
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": true,
+          "matchMode": "first"
+        },
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "校正价12.0",
+          "priority": 15,
+          "price": 12.0,
+          "keywords": [
+            "止血钳-4件"
+          ],
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": true,
+          "matchMode": "first"
+        },
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "校正价126.0",
+          "priority": 19,
+          "price": 126.0,
+          "keywords": [
+            "阑尾器械-41件（筐1）"
+          ],
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": true,
+          "matchMode": "first"
+        },
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "校正价18.0",
+          "priority": 16,
+          "price": 18.0,
+          "keywords": [
+            "美容包-6件"
+          ],
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": true,
+          "matchMode": "first"
+        },
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "校正价2.0",
+          "priority": 10,
+          "price": 2.0,
+          "keywords": [
+            "棉球"
+          ],
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": true,
+          "matchMode": "first"
+        },
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "校正价3.0",
+          "priority": 11,
+          "price": 3.0,
+          "keywords": [
+            "剪刀-1",
+            "剪刀小-1",
+            "卵圆钳-1",
+            "弯盘-1",
+            "持针器-1",
+            "止血钳-1",
+            "盆-1",
+            "镊子-1",
+            "长弯-1"
+          ],
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": true,
+          "matchMode": "first"
+        },
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "校正价30.0",
+          "priority": 17,
+          "price": 30.0,
+          "keywords": [
+            "取环包-10件",
+            "外伤包-10件"
+          ],
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": true,
+          "matchMode": "first"
+        },
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "校正价33.0",
+          "priority": 18,
+          "price": 33.0,
+          "keywords": [
+            "取环包-11件"
+          ],
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": true,
+          "matchMode": "first"
+        },
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "校正价6.0",
+          "priority": 12,
+          "price": 6.0,
+          "keywords": [
+            "持物钳罐-2/持物钳放外面W6050"
+          ],
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": true,
+          "matchMode": "first"
+        },
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "校正价6.5",
+          "priority": 13,
+          "price": 6.5,
+          "keywords": [
+            "敷料",
+            "敷料包"
+          ],
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": true,
+          "matchMode": "first"
+        },
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "校正价9.0",
+          "priority": 14,
+          "price": 9.0,
+          "keywords": [
+            "美容包-3件",
+            "美容小包-3件"
+          ],
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": true,
+          "matchMode": "first"
+        }
+      ],
+      "rule_count": 14,
+      "active_rule_count": 14
+    },
+    "DD-DC": {
+      "code": "DD-DC",
+      "name": "黑龙江东大肛肠",
+      "status": null,
+      "billingPricingMode": null,
+      "standardPricingOverride": null,
+      "billingEnabled": null,
+      "productRules": [],
+      "rule_count": 0,
+      "active_rule_count": 0
+    },
+    "DL-FUCHAN": {
+      "code": "DL-FUCHAN",
+      "name": "哈尔滨市道里区妇幼保健院",
+      "status": null,
+      "billingPricingMode": "hybrid",
+      "standardPricingOverride": null,
+      "billingEnabled": null,
+      "productRules": [
+        {
+          "ruleType": "FOLD",
+          "name": "道里妇幼棉花针5合1免包材",
+          "priority": 11,
+          "keywords": [
+            "棉花针"
+          ],
+          "threshold": 5,
+          "foldRatio": 5,
+          "minInstrumentCount": 11,
+          "skipPackaging": true,
+          "isActive": true,
+          "matchMode": "first",
+          "skipDiscount": false
+        },
+        {
+          "ruleType": "FOLD",
+          "name": "道里妇幼棉花针5合1含包材",
+          "priority": 10,
+          "keywords": [
+            "棉花针"
+          ],
+          "threshold": 5,
+          "foldRatio": 5,
+          "maxInstrumentCount": 10,
+          "skipPackaging": false,
+          "isActive": true,
+          "matchMode": "first",
+          "skipDiscount": false
+        },
+        {
+          "ruleType": "FOLD",
+          "name": "道里妇幼洗髓针5合1免包材",
+          "priority": 13,
+          "keywords": [
+            "洗髓针"
+          ],
+          "threshold": 5,
+          "foldRatio": 5,
+          "minInstrumentCount": 11,
+          "skipPackaging": true,
+          "isActive": true,
+          "matchMode": "first",
+          "skipDiscount": false
+        },
+        {
+          "ruleType": "FOLD",
+          "name": "道里妇幼洗髓针5合1含包材",
+          "priority": 12,
+          "keywords": [
+            "洗髓针"
+          ],
+          "threshold": 5,
+          "foldRatio": 5,
+          "maxInstrumentCount": 10,
+          "skipPackaging": false,
+          "isActive": true,
+          "matchMode": "first",
+          "skipDiscount": false
+        }
+      ],
+      "rule_count": 4,
+      "active_rule_count": 4
+    },
+    "ERYY-NG": {
+      "code": "ERYY-NG",
+      "name": "黑龙江省第二医院（南岗院区）",
+      "status": null,
+      "billingPricingMode": "special_only",
+      "standardPricingOverride": null,
+      "billingEnabled": false,
+      "productRules": [
+        {
+          "ruleType": "PRICE_PER_INSTRUMENT",
+          "name": "省二南岗挖勺每件5.5元",
+          "priority": 15,
+          "price": 5.5,
+          "keywords": [
+            "挖勺"
+          ],
+          "skipPackaging": true,
+          "skipDiscount": false,
+          "isActive": true,
+          "matchMode": "first"
+        }
+      ],
+      "rule_count": 1,
+      "active_rule_count": 1
+    },
+    "ERYY-SB": {
+      "code": "ERYY-SB",
+      "name": "ERYY-SB",
+      "status": null,
+      "billingPricingMode": "special_only",
+      "standardPricingOverride": null,
+      "billingEnabled": false,
+      "productRules": [
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "儿童头钉现价",
+          "priority": 5,
+          "price": 15.4,
+          "keywords": [
+            "儿童头钉"
+          ],
+          "matchMode": "any_price",
+          "acceptedPrices": [
+            15.4
+          ],
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": true
+        },
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "取钉包多报价",
+          "priority": 5,
+          "price": 207.9,
+          "keywords": [
+            "取钉包"
+          ],
+          "matchMode": "first",
+          "acceptedPrices": [
+            207.9
+          ],
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": true
+        },
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "手术衣无纺布现价",
+          "priority": 4,
+          "price": 26.6,
+          "keywords": [
+            "手术衣"
+          ],
+          "matchMode": "any_price",
+          "acceptedPrices": [
+            26.6,
+            28,
+            38,
+            40
+          ],
+          "materials": [
+            "无纺布"
+          ],
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": true
+        },
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "手术衣纸塑袋现价",
+          "priority": 4,
+          "price": 28,
+          "keywords": [
+            "手术衣"
+          ],
+          "matchMode": "any_price",
+          "acceptedPrices": [
+            28,
+            40
+          ],
+          "materials": [
+            "纸塑袋"
+          ],
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": true
+        },
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "省二松北取钉包",
+          "priority": 13,
+          "price": 207.9,
+          "keywords": [
+            "取钉包"
+          ],
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": true,
+          "matchMode": "first"
+        },
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "省二松北宫腔检查镜30度3件",
+          "priority": 9,
+          "price": 30.8,
+          "keywords": [
+            "宫腔检查镜30度"
+          ],
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": true,
+          "matchMode": "first"
+        },
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "省二松北扩棒7-10",
+          "priority": 11,
+          "price": 26.95,
+          "keywords": [
+            "扩棒（7-10）"
+          ],
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": true,
+          "matchMode": "first"
+        },
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "省二松北扩棒7.5-10",
+          "priority": 12,
+          "price": 23.1,
+          "keywords": [
+            "扩棒（7.5-10）"
+          ],
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": true,
+          "matchMode": "first"
+        }
+      ],
+      "rule_count": 8,
+      "active_rule_count": 8
+    },
+    "FNN-YY": {
+      "code": "FNN-YY",
+      "name": "方南南医院",
+      "status": null,
+      "billingPricingMode": "standard",
+      "standardPricingOverride": null,
+      "billingEnabled": null,
+      "productRules": [
+        {
+          "ruleType": "FOLD",
+          "name": "方南南小件5合1免包材",
+          "priority": 11,
+          "keywords": [
+            "P钻",
+            "根管锉",
+            "光滑针",
+            "机扩针"
+          ],
+          "threshold": 5,
+          "foldRatio": 5,
+          "minInstrumentCount": 11,
+          "skipPackaging": true,
+          "isActive": true,
+          "matchMode": "first",
+          "skipDiscount": false
+        },
+        {
+          "ruleType": "FOLD",
+          "name": "方南南小件5合1含包材",
+          "priority": 10,
+          "keywords": [
+            "P钻",
+            "根管锉",
+            "光滑针",
+            "机扩针"
+          ],
+          "threshold": 5,
+          "foldRatio": 5,
+          "maxInstrumentCount": 10,
+          "skipPackaging": false,
+          "isActive": true,
+          "matchMode": "first",
+          "skipDiscount": false
+        }
+      ],
+      "rule_count": 2,
+      "active_rule_count": 2
+    },
+    "GUOYAO-2": {
+      "code": "GUOYAO-2",
+      "name": "国药总医院第二院区",
+      "status": null,
+      "billingPricingMode": "hybrid",
+      "standardPricingOverride": null,
+      "billingEnabled": null,
+      "productRules": [
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "校正价8.0",
+          "priority": 10,
+          "price": 8.0,
+          "keywords": [
+            "缝合针-6",
+            "缝合针-8"
+          ],
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": false,
+          "matchMode": "first"
+        },
+        {
+          "ruleType": "PRICE_PER_INSTRUMENT",
+          "name": "电机厂双按件5.5",
+          "priority": 12,
+          "price": 5.5,
+          "keywords": [
+            "双"
+          ],
+          "excludeKeywords": [
+            "(双)",
+            "/(双)",
+            "双极",
+            "双极线"
+          ],
+          "skipPackaging": false,
+          "skipDiscount": true,
+          "isActive": false,
+          "matchMode": "first"
+        },
+        {
+          "ruleType": "PRICE_PER_INSTRUMENT",
+          "name": "电机厂双按件5.5内层袋",
+          "priority": 12,
+          "price": 5.5,
+          "keywords": [
+            "双"
+          ],
+          "excludeKeywords": [
+            "(双)",
+            "/(双)",
+            "双极",
+            "双极线"
+          ],
+          "materials": [
+            "纸塑袋"
+          ],
+          "temperature": "HT",
+          "minInstrumentCount": 3,
+          "skipPackaging": false,
+          "skipDiscount": true,
+          "isActive": true,
+          "matchMode": "first"
+        },
+        {
+          "ruleType": "PRICE_PER_INSTRUMENT",
+          "name": "电机厂双按件5.5外层袋",
+          "priority": 11,
+          "price": 5.5,
+          "keywords": [
+            "双"
+          ],
+          "excludeKeywords": [
+            "(双)",
+            "/(双)",
+            "双极",
+            "双极线"
+          ],
+          "materials": [
+            "纸塑袋"
+          ],
+          "temperature": "HT",
+          "maxInstrumentCount": 2,
+          "skipPackaging": false,
+          "skipDiscount": true,
+          "isActive": true,
+          "matchMode": "first"
+        },
+        {
+          "ruleType": "FOLD",
+          "name": "电机厂指针5合1",
+          "priority": 14,
+          "keywords": [
+            "指针"
+          ],
+          "threshold": 5,
+          "foldRatio": 5,
+          "skipPackaging": false,
+          "isActive": false,
+          "matchMode": "first",
+          "skipDiscount": false
+        },
+        {
+          "ruleType": "FOLD",
+          "name": "电机厂指针5合1免包材",
+          "priority": 15,
+          "keywords": [
+            "指针"
+          ],
+          "threshold": 5,
+          "foldRatio": 5,
+          "minInstrumentCount": 11,
+          "skipPackaging": true,
+          "isActive": true,
+          "matchMode": "first",
+          "skipDiscount": false
+        },
+        {
+          "ruleType": "FOLD",
+          "name": "电机厂指针5合1含包材",
+          "priority": 14,
+          "keywords": [
+            "指针"
+          ],
+          "threshold": 5,
+          "foldRatio": 5,
+          "maxInstrumentCount": 10,
+          "skipPackaging": false,
+          "isActive": true,
+          "matchMode": "first",
+          "skipDiscount": false
+        },
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "电机厂缝合针8元",
+          "priority": 10,
+          "price": 8.0,
+          "keywords": [
+            "缝合针"
+          ],
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": true,
+          "matchMode": "first"
+        }
+      ],
+      "rule_count": 8,
+      "active_rule_count": 5
+    },
+    "GUOYAO-3": {
+      "code": "GUOYAO-3",
+      "name": "国药总医院第三院区",
+      "status": null,
+      "billingPricingMode": "hybrid",
+      "standardPricingOverride": null,
+      "billingEnabled": null,
+      "productRules": [
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "校正价35.0",
+          "priority": 10,
+          "price": 35.0,
+          "keywords": [
+            "辅料包"
+          ],
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": true,
+          "matchMode": "first"
+        }
+      ],
+      "rule_count": 1,
+      "active_rule_count": 1
+    },
+    "GUOYAO-MAIN": {
+      "code": "GUOYAO-MAIN",
+      "name": "国药总医院主院区",
+      "status": null,
+      "billingPricingMode": "special_only",
+      "standardPricingOverride": null,
+      "billingEnabled": null,
+      "productRules": [
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "10mm30度镜固定价",
+          "priority": 10,
+          "price": 28,
+          "keywords": [
+            "30度镜",
+            "10mm"
+          ],
+          "temperature": "HT",
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": true,
+          "matchMode": "first"
+        },
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "校正价35.0",
+          "priority": 10,
+          "price": 35.0,
+          "keywords": [
+            "辅料包"
+          ],
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": true,
+          "matchMode": "first"
+        },
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "驱血带固定价",
+          "priority": 20,
+          "price": 13,
+          "keywords": [
+            "驱血带"
+          ],
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": true,
+          "matchMode": "first"
+        }
+      ],
+      "rule_count": 3,
+      "active_rule_count": 3
+    },
+    "HAIYUAN-SB": {
+      "code": "HAIYUAN-SB",
+      "name": "黑龙江省海员总医院（松北）",
+      "status": null,
+      "billingPricingMode": "hybrid",
+      "standardPricingOverride": null,
+      "billingEnabled": null,
+      "productRules": [
+        {
+          "ruleType": "FOLD",
+          "name": "海员胶帽>5折算22",
+          "priority": 11,
+          "keywords": [
+            "胶帽"
+          ],
+          "threshold": 5,
+          "foldRatio": 5,
+          "price": 22.0,
+          "minInstrumentCount": 6,
+          "temperature": "LT",
+          "skipPackaging": true,
+          "isActive": true,
+          "matchMode": "first",
+          "skipDiscount": false
+        },
+        {
+          "ruleType": "FOLD",
+          "name": "海员胶帽≤5按1件",
+          "priority": 10,
+          "keywords": [
+            "胶帽"
+          ],
+          "threshold": 5,
+          "foldRatio": 5,
+          "maxInstrumentCount": 5,
+          "temperature": "LT",
+          "skipPackaging": false,
+          "isActive": true,
+          "matchMode": "first",
+          "skipDiscount": false
+        }
+      ],
+      "rule_count": 2,
+      "active_rule_count": 2
+    },
+    "HL-ZGH": {
+      "code": "HL-ZGH",
+      "name": "黑龙江总工会医院",
+      "status": null,
+      "billingPricingMode": "hybrid",
+      "standardPricingOverride": null,
+      "billingEnabled": null,
+      "productRules": [
+        {
+          "ruleType": "EXTRA_FEE",
+          "name": "总工会镜头铂康盒加收8",
+          "priority": 10,
+          "fee": 8.0,
+          "keywords": [
+            "12°镜头",
+            "12度镜头",
+            "镜头"
+          ],
+          "skipPackaging": false,
+          "skipDiscount": true,
+          "isActive": true,
+          "matchMode": "first"
+        }
+      ],
+      "rule_count": 1,
+      "active_rule_count": 1
+    },
+    "HLFB-SF": {
+      "code": "HLFB-SF",
+      "name": "HLFB-SF",
+      "status": null,
+      "billingPricingMode": "standard",
+      "standardPricingOverride": null,
+      "billingEnabled": true,
+      "productRules": [
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "校正价13.5",
+          "priority": 10,
+          "price": 13.5,
+          "keywords": [
+            "车针"
+          ],
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": true,
+          "matchMode": "first"
+        }
+      ],
+      "rule_count": 1,
+      "active_rule_count": 1
+    },
+    "HLJ-FY-RK": {
+      "code": "HLJ-FY-RK",
+      "name": "黑龙江省妇幼保健院（人口）",
+      "status": null,
+      "billingPricingMode": "hybrid",
+      "standardPricingOverride": null,
+      "billingEnabled": null,
+      "productRules": [
+        {
+          "ruleType": "FOLD",
+          "name": "妇幼人口密封件>5折算22",
+          "priority": 11,
+          "keywords": [
+            "密封件",
+            "密封胶圈"
+          ],
+          "threshold": 5,
+          "foldRatio": 5,
+          "price": 22.0,
+          "minInstrumentCount": 6,
+          "temperature": "LT",
+          "skipPackaging": true,
+          "isActive": true,
+          "matchMode": "first",
+          "skipDiscount": false
+        },
+        {
+          "ruleType": "FOLD",
+          "name": "妇幼人口密封件≤5按1件",
+          "priority": 10,
+          "keywords": [
+            "密封件",
+            "密封胶圈"
+          ],
+          "threshold": 5,
+          "foldRatio": 5,
+          "maxInstrumentCount": 5,
+          "temperature": "LT",
+          "skipPackaging": false,
+          "isActive": true,
+          "matchMode": "first",
+          "skipDiscount": false
+        }
+      ],
+      "rule_count": 2,
+      "active_rule_count": 2
+    },
+    "HLJ-JYGLJ-YY": {
+      "code": "HLJ-JYGLJ-YY",
+      "name": "省监狱管理局医院",
+      "status": null,
+      "billingPricingMode": "standard",
+      "standardPricingOverride": null,
+      "billingEnabled": null,
+      "productRules": [
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "微克夹钳35元",
+          "priority": 10,
+          "price": 35.0,
+          "keywords": [
+            "微克夹钳"
+          ],
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": true,
+          "matchMode": "first"
+        },
+        {
+          "ruleType": "FOLD",
+          "name": "监狱密封件>5折算22",
+          "priority": 11,
+          "keywords": [
+            "密封件",
+            "密封胶圈"
+          ],
+          "threshold": 5,
+          "foldRatio": 5,
+          "price": 22.0,
+          "minInstrumentCount": 6,
+          "temperature": "LT",
+          "skipPackaging": true,
+          "isActive": true,
+          "matchMode": "first",
+          "skipDiscount": false
+        },
+        {
+          "ruleType": "FOLD",
+          "name": "监狱密封件≤5按1件",
+          "priority": 10,
+          "keywords": [
+            "密封件",
+            "密封胶圈"
+          ],
+          "threshold": 5,
+          "foldRatio": 5,
+          "maxInstrumentCount": 5,
+          "temperature": "LT",
+          "skipPackaging": false,
+          "isActive": true,
+          "matchMode": "first",
+          "skipDiscount": false
+        }
+      ],
+      "rule_count": 3,
+      "active_rule_count": 3
+    },
+    "HRB-2ND": {
+      "code": "HRB-2ND",
+      "name": "哈尔滨市第二医院",
+      "status": null,
+      "billingPricingMode": "special_only",
+      "standardPricingOverride": null,
+      "billingEnabled": null,
+      "productRules": [
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "PDF/期待价8",
+          "priority": 200,
+          "price": 8.0,
+          "keywords": [
+            "市二院止血带14个（只消毒）"
+          ],
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": true,
+          "matchMode": "first"
+        },
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "口腔科正畸车针8元",
+          "priority": 7,
+          "price": 8,
+          "keywords": [
+            "正畸去胶车针",
+            "正畸去版车针"
+          ],
+          "conditionsJson": "[{\"field\":\"department\",\"value\":[\"口腔科\",\"口腔科(内)\",\"口腔科（正）\",\"口腔修复诊室\"]}]",
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": true,
+          "matchMode": "first"
+        },
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "口腔科调刀8元",
+          "priority": 8,
+          "price": 8,
+          "keywords": [
+            "调刀"
+          ],
+          "conditionsJson": "[{\"field\":\"department\",\"value\":[\"口腔科\",\"口腔科(内)\",\"口腔科（正）\",\"口腔修复诊室\"]}]",
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": true,
+          "matchMode": "first"
+        },
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "手术室止血带8元",
+          "priority": 8,
+          "price": 8,
+          "keywords": [
+            "市二院止血带"
+          ],
+          "conditionsJson": "[{\"field\":\"department\",\"value\":[\"手术室\"]}]",
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": true,
+          "matchMode": "first"
+        },
+        {
+          "ruleType": "PRICE_PER_INSTRUMENT",
+          "name": "手术室电凝钩22元/件",
+          "priority": 9,
+          "price": 22,
+          "keywords": [
+            "电凝钩吸引器"
+          ],
+          "conditionsJson": "[{\"field\":\"department\",\"value\":[\"手术室\"]}]",
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": true,
+          "matchMode": "first"
+        },
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "校正价16.5",
+          "priority": 12,
+          "price": 16.5,
+          "keywords": [
+            "骨科拉钩-2"
+          ],
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": true,
+          "matchMode": "first"
+        },
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "校正价5.5",
+          "priority": 10,
+          "price": 5.5,
+          "keywords": [
+            "正畸去胶车针-1"
+          ],
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": false,
+          "matchMode": "first"
+        },
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "校正价8.0",
+          "priority": 11,
+          "price": 8.0,
+          "keywords": [
+            "市二院止血带14个（只消毒）",
+            "洁牙尖（保护）1抛光杯1"
+          ],
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": true,
+          "matchMode": "first"
+        }
+      ],
+      "rule_count": 8,
+      "active_rule_count": 7
+    },
+    "HRB-CJ": {
+      "code": "HRB-CJ",
+      "name": "哈尔滨长健医院",
+      "status": null,
+      "billingPricingMode": "standard",
+      "standardPricingOverride": null,
+      "billingEnabled": true,
+      "productRules": [
+        {
+          "ruleType": "PRICE_PER_INSTRUMENT",
+          "name": "手术包5.5元/件",
+          "priority": 10,
+          "price": 5.5,
+          "keywords": [
+            "手术包"
+          ],
+          "temperature": "HT",
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": true,
+          "matchMode": "first"
+        },
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "长健敷料包W12050",
+          "priority": 2,
+          "price": 35,
+          "keywords": [
+            "敷料包/W12050"
+          ],
+          "skipPackaging": true,
+          "isActive": true,
+          "matchMode": "first",
+          "skipDiscount": false
+        },
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "长健硅胶珠子22",
+          "priority": 2,
+          "price": 22,
+          "keywords": [
+            "硅胶珠子7号"
+          ],
+          "skipPackaging": true,
+          "isActive": true,
+          "matchMode": "first",
+          "skipDiscount": false
+        },
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "长健结款单行对齐",
+          "priority": 5,
+          "price": 50,
+          "keywords": [
+            "刀柄"
+          ],
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": true,
+          "matchMode": "first"
+        }
+      ],
+      "rule_count": 4,
+      "active_rule_count": 4
+    },
+    "HRB-GUSHANG": {
+      "code": "HRB-GUSHANG",
+      "name": "哈尔滨市骨伤科医院",
+      "status": null,
+      "billingPricingMode": null,
+      "standardPricingOverride": null,
+      "billingEnabled": null,
+      "productRules": [],
+      "rule_count": 0,
+      "active_rule_count": 0
+    },
+    "HRB-HEU": {
+      "code": "HRB-HEU",
+      "name": "哈尔滨工程大学医院",
+      "status": null,
+      "billingPricingMode": "special_only",
+      "standardPricingOverride": null,
+      "billingEnabled": false,
+      "productRules": [],
+      "rule_count": 0,
+      "active_rule_count": 0
+    },
+    "HRB-HIT": {
+      "code": "HRB-HIT",
+      "name": "哈尔滨工业大学医院",
+      "status": null,
+      "billingPricingMode": "special_only",
+      "standardPricingOverride": null,
+      "billingEnabled": false,
+      "productRules": [
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "克氏针5.5",
+          "priority": 8,
+          "price": 5.5,
+          "keywords": [
+            "克氏针-3/z7534"
+          ],
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": true,
+          "matchMode": "first"
+        },
+        {
+          "ruleType": "FOLD",
+          "name": "口腔小件5件计1",
+          "priority": 20,
+          "keywords": [
+            "洁牙尖",
+            "成型片"
+          ],
+          "threshold": 5,
+          "foldRatio": 5,
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": true,
+          "matchMode": "first"
+        },
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "口腔针类5.5",
+          "priority": 10,
+          "price": 5.5,
+          "keywords": [
+            "洁牙尖",
+            "成型片"
+          ],
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": true,
+          "matchMode": "any_price",
+          "excludeKeywords": [
+            "泪道探针",
+            "探针包"
+          ]
+        },
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "哈工大export 换药碗13",
+          "priority": 3,
+          "price": 13,
+          "keywords": [
+            "换药碗-1/z2032"
+          ],
+          "conditionsJson": "[{\"field\":\"exportApply\",\"value\":true}]",
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": false,
+          "matchMode": "first"
+        },
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "哈工大export 种植盒23件27.5",
+          "priority": 3,
+          "price": 27.5,
+          "keywords": [
+            "种植盒-23件 盒1/w6050"
+          ],
+          "conditionsJson": "[{\"field\":\"exportApply\",\"value\":true}]",
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": false,
+          "matchMode": "first"
+        },
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "哈工大export 胆囊包10件165",
+          "priority": 3,
+          "price": 165,
+          "keywords": [
+            "胆囊包10件（盒1）"
+          ],
+          "conditionsJson": "[{\"field\":\"exportApply\",\"value\":true}]",
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": true,
+          "matchMode": "first"
+        },
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "哈工大换药碗-1 13",
+          "priority": 4,
+          "price": 13.0,
+          "keywords": [
+            "换药碗-1"
+          ],
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": true,
+          "matchMode": "first"
+        },
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "哈工大换药碗-2 16.5",
+          "priority": 4,
+          "price": 16.5,
+          "keywords": [
+            "换药碗-2"
+          ],
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": true,
+          "matchMode": "first"
+        },
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "哈工大换药碗13",
+          "priority": 5,
+          "price": 13.0,
+          "keywords": [
+            "换药碗"
+          ],
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": false,
+          "matchMode": "first"
+        },
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "哈工大棉球不带线2.5",
+          "priority": 4,
+          "price": 2.5,
+          "keywords": [
+            "棉球（不带线）",
+            "棉球(不带线)"
+          ],
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": true,
+          "matchMode": "first"
+        },
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "哈工大种植盒23件27.5",
+          "priority": 5,
+          "price": 27.5,
+          "keywords": [
+            "种植盒-23件"
+          ],
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": false,
+          "matchMode": "first"
+        },
+        {
+          "ruleType": "PRICE_PER_INSTRUMENT",
+          "name": "哈工大种植盒23件5.5/件",
+          "priority": 4,
+          "price": 5.5,
+          "keywords": [
+            "种植盒-23件"
+          ],
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": true,
+          "matchMode": "first"
+        },
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "哈工大胆囊包10件165",
+          "priority": 5,
+          "price": 165.0,
+          "keywords": [
+            "胆囊包10件"
+          ],
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": false,
+          "matchMode": "first"
+        },
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "车针多报价",
+          "priority": 9,
+          "price": 13.5,
+          "keywords": [
+            "车针"
+          ],
+          "matchMode": "any_price",
+          "acceptedPrices": [
+            8,
+            13.5,
+            16.5
+          ],
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": true
+        }
+      ],
+      "rule_count": 14,
+      "active_rule_count": 9
+    },
+    "HRB-HSZ": {
+      "code": "HRB-HSZ",
+      "name": "哈尔滨市红十字妇产医院",
+      "status": null,
+      "billingPricingMode": "special_only",
+      "standardPricingOverride": null,
+      "billingEnabled": false,
+      "productRules": [
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "T型管25",
+          "priority": 40,
+          "price": 25,
+          "keywords": [
+            "T型管"
+          ],
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": true,
+          "matchMode": "first"
+        },
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "低温1件22元",
+          "priority": 10,
+          "price": 22,
+          "keywords": [],
+          "temperature": "LT",
+          "bagSizeEquals": 1,
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": true,
+          "matchMode": "first"
+        },
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "湿化瓶2件22元",
+          "priority": 20,
+          "price": 22,
+          "keywords": [
+            "湿化瓶"
+          ],
+          "bagSizeEquals": 2,
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": true,
+          "matchMode": "first"
+        },
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "纤维喉镜300",
+          "priority": 30,
+          "price": 300,
+          "keywords": [
+            "纤维喉镜",
+            "气管镜",
+            "软管"
+          ],
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": true,
+          "matchMode": "first"
+        }
+      ],
+      "rule_count": 4,
+      "active_rule_count": 4
+    },
+    "HRB-HTFH": {
+      "code": "HRB-HTFH",
+      "name": "HRB-HTFH",
+      "status": null,
+      "billingPricingMode": null,
+      "standardPricingOverride": null,
+      "billingEnabled": null,
+      "productRules": [
+        {
+          "ruleType": "FOLD",
+          "name": "航天风华镍钛锉5合1免包材",
+          "priority": 19,
+          "keywords": [
+            "镍钛锉"
+          ],
+          "threshold": 5,
+          "foldRatio": 5,
+          "minInstrumentCount": 11,
+          "skipPackaging": true,
+          "isActive": true,
+          "matchMode": "first",
+          "skipDiscount": false
+        },
+        {
+          "ruleType": "FOLD",
+          "name": "航天风华镍钛锉5合1含包材",
+          "priority": 18,
+          "keywords": [
+            "镍钛锉"
+          ],
+          "threshold": 5,
+          "foldRatio": 5,
+          "maxInstrumentCount": 10,
+          "skipPackaging": false,
+          "isActive": true,
+          "matchMode": "first",
+          "skipDiscount": false
+        }
+      ],
+      "rule_count": 2,
+      "active_rule_count": 2
+    },
+    "HRB-HX-EYE": {
+      "code": "HRB-HX-EYE",
+      "name": "哈尔滨华夏眼科医院",
+      "status": null,
+      "billingPricingMode": "standard",
+      "standardPricingOverride": null,
+      "billingEnabled": true,
+      "productRules": [
+        {
+          "ruleType": "PRICE_PER_INSTRUMENT",
+          "name": "≥3件器械包单价2.75",
+          "priority": 10,
+          "price": 2.75,
+          "minInstrumentCount": 3,
+          "temperature": "HT",
+          "skipPackaging": true,
+          "skipDiscount": false,
+          "isActive": true,
+          "matchMode": "first"
+        }
+      ],
+      "rule_count": 1,
+      "active_rule_count": 1
+    },
+    "HRB-MHM": {
+      "code": "HRB-MHM",
+      "name": "HRB-MHM",
+      "status": null,
+      "billingPricingMode": null,
+      "standardPricingOverride": null,
+      "billingEnabled": null,
+      "productRules": [
+        {
+          "ruleType": "FOLD",
+          "name": "美涵吸脂针20cm以下5件算1件",
+          "priority": 10,
+          "keywords": [
+            "型号20cm以下",
+            "20cm以下"
+          ],
+          "threshold": 5,
+          "foldRatio": 5,
+          "isActive": true,
+          "matchMode": "first",
+          "skipPackaging": false,
+          "skipDiscount": false
+        }
+      ],
+      "rule_count": 1,
+      "active_rule_count": 1
+    },
+    "HRB-NGJY": {
+      "code": "HRB-NGJY",
+      "name": "哈尔滨市南岗区人民医院（九院）",
+      "status": null,
+      "billingPricingMode": "standard",
+      "standardPricingOverride": null,
+      "billingEnabled": true,
+      "productRules": [
+        {
+          "ruleType": "ZERO_PRICE_OVERRIDE",
+          "name": "九院敷料包0元覆盖15",
+          "priority": 10,
+          "keywords": [
+            "敷料包"
+          ],
+          "price": 15.0,
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": true,
+          "matchMode": "first"
+        }
+      ],
+      "rule_count": 1,
+      "active_rule_count": 1
+    },
+    "HRB-SD-MB": {
+      "code": "HRB-SD-MB",
+      "name": "HRB-SD-MB",
+      "status": null,
+      "billingPricingMode": "standard",
+      "standardPricingOverride": null,
+      "billingEnabled": true,
+      "productRules": [
+        {
+          "ruleType": "FOLD",
+          "name": "松电口腔科针类5件算1件",
+          "priority": 10,
+          "keywords": [
+            "车针",
+            "扩大针",
+            "机扩针",
+            "根管针",
+            "根管锉",
+            "镍钛锉",
+            "探针",
+            "球钻",
+            "拔髓针"
+          ],
+          "threshold": 5,
+          "foldRatio": 5,
+          "conditionsJson": "[{\"field\":\"department\",\"value\":[\"口腔科\"]}]",
+          "isActive": false,
+          "matchMode": "first",
+          "skipPackaging": false,
+          "skipDiscount": false
+        },
+        {
+          "ruleType": "FOLD",
+          "name": "松电机扩针5合1免包材",
+          "priority": 11,
+          "keywords": [
+            "机扩针",
+            "车针",
+            "扩大针",
+            "根管针",
+            "根管锉",
+            "镍钛锉",
+            "探针",
+            "球钻",
+            "拔髓针"
+          ],
+          "threshold": 5,
+          "foldRatio": 5,
+          "minInstrumentCount": 11,
+          "skipPackaging": true,
+          "isActive": true,
+          "matchMode": "first",
+          "skipDiscount": false
+        },
+        {
+          "ruleType": "FOLD",
+          "name": "松电机扩针5合1含包材",
+          "priority": 10,
+          "keywords": [
+            "机扩针",
+            "车针",
+            "扩大针",
+            "根管针",
+            "根管锉",
+            "镍钛锉",
+            "探针",
+            "球钻",
+            "拔髓针"
+          ],
+          "threshold": 5,
+          "foldRatio": 5,
+          "maxInstrumentCount": 10,
+          "skipPackaging": false,
+          "isActive": true,
+          "matchMode": "first",
+          "skipDiscount": false
+        },
+        {
+          "ruleType": "FOLD",
+          "name": "松电车针5件算1件",
+          "priority": 9,
+          "keywords": [
+            "车针"
+          ],
+          "threshold": 5,
+          "foldRatio": 5,
+          "isActive": false,
+          "matchMode": "first",
+          "skipPackaging": false,
+          "skipDiscount": false
+        }
+      ],
+      "rule_count": 4,
+      "active_rule_count": 2
+    },
+    "HRB-SH": {
+      "code": "HRB-SH",
+      "name": "哈尔滨森海医院",
+      "status": null,
+      "billingPricingMode": "special_only",
+      "standardPricingOverride": null,
+      "billingEnabled": null,
+      "productRules": [
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "纱布4元",
+          "priority": 11,
+          "price": 4,
+          "keywords": [
+            "纱布"
+          ],
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": true,
+          "matchMode": "first"
+        },
+        {
+          "ruleType": "PRICE_PER_INSTRUMENT",
+          "name": "胶帽22元/件",
+          "priority": 10,
+          "price": 22,
+          "keywords": [
+            "胶帽"
+          ],
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": true,
+          "matchMode": "first"
+        }
+      ],
+      "rule_count": 2,
+      "active_rule_count": 2
+    },
+    "HRB-WY": {
+      "code": "HRB-WY",
+      "name": "哈尔滨市第五医院",
+      "status": null,
+      "billingPricingMode": "hybrid",
+      "standardPricingOverride": null,
+      "billingEnabled": null,
+      "productRules": [
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "市五W605060 export11",
+          "priority": 8,
+          "price": 11,
+          "keywords": [
+            "W605060"
+          ],
+          "conditionsJson": "[{\"field\":\"exportApply\",\"value\":true}]",
+          "isActive": false,
+          "matchMode": "first",
+          "skipPackaging": false,
+          "skipDiscount": false
+        },
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "市五W705060 export16.5",
+          "priority": 8,
+          "price": 16.5,
+          "keywords": [
+            "W705060"
+          ],
+          "conditionsJson": "[{\"field\":\"exportApply\",\"value\":true}]",
+          "isActive": false,
+          "matchMode": "first",
+          "skipPackaging": false,
+          "skipDiscount": false
+        },
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "市五W905060 export35",
+          "priority": 8,
+          "price": 35,
+          "keywords": [
+            "W905060"
+          ],
+          "conditionsJson": "[{\"field\":\"exportApply\",\"value\":true}]",
+          "isActive": false,
+          "matchMode": "first",
+          "skipPackaging": false,
+          "skipDiscount": false
+        },
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "市五W906050 export35",
+          "priority": 8,
+          "price": 35,
+          "keywords": [
+            "W906050"
+          ],
+          "conditionsJson": "[{\"field\":\"exportApply\",\"value\":true}]",
+          "isActive": false,
+          "matchMode": "first",
+          "skipPackaging": false,
+          "skipDiscount": false
+        },
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "市五Z1026 export88",
+          "priority": 8,
+          "price": 88,
+          "keywords": [
+            "Z1026"
+          ],
+          "conditionsJson": "[{\"field\":\"exportApply\",\"value\":true}]",
+          "isActive": false,
+          "matchMode": "first",
+          "skipPackaging": false,
+          "skipDiscount": false
+        },
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "市五export DMD光源1号35",
+          "priority": 3,
+          "price": 35,
+          "keywords": [
+            "DMD光源1号-1/W905060"
+          ],
+          "conditionsJson": "[{\"field\":\"exportApply\",\"value\":true}]",
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": true,
+          "matchMode": "first"
+        },
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "市五export DMD光源3号35",
+          "priority": 3,
+          "price": 35,
+          "keywords": [
+            "DMD光源3号-1/W905060"
+          ],
+          "conditionsJson": "[{\"field\":\"exportApply\",\"value\":true}]",
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": true,
+          "matchMode": "first"
+        },
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "市五export 磨头Z102688",
+          "priority": 3,
+          "price": 88,
+          "keywords": [
+            "骨四（2）邹天彪磨头-4件/Z1026"
+          ],
+          "conditionsJson": "[{\"field\":\"exportApply\",\"value\":true}]",
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": true,
+          "matchMode": "first"
+        },
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "市五export 胸外镜头W90605035",
+          "priority": 3,
+          "price": 35,
+          "keywords": [
+            "胸外镜头-1（盒1）/W906050"
+          ],
+          "conditionsJson": "[{\"field\":\"exportApply\",\"value\":true}]",
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": true,
+          "matchMode": "first"
+        },
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "市五export 胸腔镜121",
+          "priority": 3,
+          "price": 121,
+          "keywords": [
+            "胸腔镜-17件（筐1）"
+          ],
+          "conditionsJson": "[{\"field\":\"exportApply\",\"value\":true}]",
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": false,
+          "matchMode": "first"
+        },
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "市五export 胸腔镜99",
+          "priority": 3,
+          "price": 99,
+          "keywords": [
+            "胸腔镜-17件（筐1）"
+          ],
+          "conditionsJson": "[{\"field\":\"exportApply\",\"value\":true}]",
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": true,
+          "matchMode": "first"
+        },
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "市五export 骨六电钻16.5",
+          "priority": 3,
+          "price": 16.5,
+          "keywords": [
+            "骨六业皋电钻-2件/W705060"
+          ],
+          "conditionsJson": "[{\"field\":\"exportApply\",\"value\":true}]",
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": true,
+          "matchMode": "first"
+        },
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "市五export 骨四咬钳16.5",
+          "priority": 3,
+          "price": 16.5,
+          "keywords": [
+            "骨四1 宋晓辉韧带咬钳 2件/W605060"
+          ],
+          "conditionsJson": "[{\"field\":\"exportApply\",\"value\":true}]",
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": false,
+          "matchMode": "first"
+        },
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "市五胸腔镜121",
+          "priority": 8,
+          "price": 121,
+          "keywords": [
+            "胸腔镜-17件"
+          ],
+          "conditionsJson": "[{\"field\":\"exportApply\",\"value\":true}]",
+          "isActive": false,
+          "matchMode": "first",
+          "skipPackaging": false,
+          "skipDiscount": false
+        },
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "校正价132.0",
+          "priority": 15,
+          "price": 132.0,
+          "keywords": [
+            "骨六房玉利肩钩常备器械"
+          ],
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": true,
+          "matchMode": "first"
+        },
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "校正价16.5",
+          "priority": 10,
+          "price": 16.5,
+          "keywords": [
+            "AR水管-2件/双",
+            "德美2号刨刀-1/双",
+            "德美4K1号刨刀-1",
+            "旧轧皮机（2号）-2件盒1",
+            "西山骨动力1号-1/双",
+            "试用肩镜-2件/双",
+            "骨四1 宋晓辉韧带咬钳 2件"
+          ],
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": true,
+          "matchMode": "first"
+        },
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "校正价22.0",
+          "priority": 11,
+          "price": 22.0,
+          "keywords": [
+            "半月板缝合器械-4"
+          ],
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": true,
+          "matchMode": "first"
+        },
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "校正价44.0",
+          "priority": 12,
+          "price": 44.0,
+          "keywords": [
+            "张长青超声刀线-2件"
+          ],
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": true,
+          "matchMode": "first"
+        },
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "校正价88.0",
+          "priority": 13,
+          "price": 88.0,
+          "keywords": [
+            "创伤1号机器人-4件（盒1）"
+          ],
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": true,
+          "matchMode": "first"
+        },
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "校正价99.0",
+          "priority": 14,
+          "price": 99.0,
+          "keywords": [
+            "胸腔镜-17件（筐1）"
+          ],
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": true,
+          "matchMode": "first"
+        }
+      ],
+      "rule_count": 20,
+      "active_rule_count": 12
+    },
+    "HRB-WY-EM": {
+      "code": "HRB-WY-EM",
+      "name": "哈尔滨市第五医院（二门诊）",
+      "status": null,
+      "billingPricingMode": "hybrid",
+      "standardPricingOverride": null,
+      "billingEnabled": null,
+      "productRules": [
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "校正价132.0",
+          "priority": 15,
+          "price": 132.0,
+          "keywords": [
+            "骨六房玉利肩钩常备器械"
+          ],
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": false,
+          "matchMode": "first"
+        },
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "校正价16.5",
+          "priority": 10,
+          "price": 16.5,
+          "keywords": [
+            "AR水管-2件/双",
+            "德美2号刨刀-1/双",
+            "德美4K1号刨刀-1",
+            "旧轧皮机（2号）-2件盒1",
+            "西山骨动力1号-1/双",
+            "试用肩镜-2件/双",
+            "骨四1 宋晓辉韧带咬钳 2件"
+          ],
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": false,
+          "matchMode": "first"
+        },
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "校正价22.0",
+          "priority": 11,
+          "price": 22.0,
+          "keywords": [
+            "半月板缝合器械-4"
+          ],
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": false,
+          "matchMode": "first"
+        },
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "校正价44.0",
+          "priority": 12,
+          "price": 44.0,
+          "keywords": [
+            "张长青超声刀线-2件"
+          ],
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": false,
+          "matchMode": "first"
+        },
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "校正价88.0",
+          "priority": 13,
+          "price": 88.0,
+          "keywords": [
+            "创伤1号机器人-4件（盒1）"
+          ],
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": false,
+          "matchMode": "first"
+        },
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "校正价99.0",
+          "priority": 14,
+          "price": 99.0,
+          "keywords": [
+            "胸腔镜-17件（筐1）"
+          ],
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": false,
+          "matchMode": "first"
+        }
+      ],
+      "rule_count": 6,
+      "active_rule_count": 0
+    },
+    "HULAN-HSZ": {
+      "code": "HULAN-HSZ",
+      "name": "呼兰区红十字医院",
+      "status": null,
+      "billingPricingMode": "special_only",
+      "standardPricingOverride": null,
+      "billingEnabled": false,
+      "productRules": [
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "校正价8.0",
+          "priority": 10,
+          "price": 8.0,
+          "keywords": [
+            "车针"
+          ],
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": true,
+          "matchMode": "first"
+        }
+      ],
+      "rule_count": 1,
+      "active_rule_count": 1
+    },
+    "HULAN-RM": {
+      "code": "HULAN-RM",
+      "name": "呼兰区第一人民医院",
+      "status": null,
+      "billingPricingMode": "special_only",
+      "standardPricingOverride": null,
+      "billingEnabled": false,
+      "productRules": [
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "PDF低温器械柜保护套5.6",
+          "priority": 31,
+          "price": 5.6,
+          "keywords": [
+            "保护套",
+            "器械柜"
+          ],
+          "temperature": "LT",
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": true,
+          "matchMode": "first"
+        },
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "PDF外来器械植入物3.85",
+          "priority": 26,
+          "price": 3.85,
+          "keywords": [
+            "外来器械（植入物）"
+          ],
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": true,
+          "matchMode": "first"
+        },
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "PDF外来器械骨电钻11.55",
+          "priority": 25,
+          "price": 11.55,
+          "keywords": [
+            "外来器械（骨电钻）"
+          ],
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": true,
+          "matchMode": "first"
+        },
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "PDF敷料中20x30x30",
+          "priority": 11,
+          "price": 14,
+          "keywords": [
+            "敷料",
+            "20cm*30cm*30cm"
+          ],
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": true,
+          "matchMode": "first"
+        },
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "PDF敷料小20x20x15",
+          "priority": 10,
+          "price": 10.5,
+          "keywords": [
+            "敷料",
+            "20cm*20cm*15cm"
+          ],
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": true,
+          "matchMode": "first"
+        },
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "PDF纱布棉球大20x20x15",
+          "priority": 15,
+          "price": 28,
+          "keywords": [
+            "纱布",
+            "棉球"
+          ],
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": true,
+          "matchMode": "first"
+        },
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "PDF纸塑袋10cm",
+          "priority": 21,
+          "price": 3.56,
+          "keywords": [
+            "纸塑袋"
+          ],
+          "bagSizeEquals": 10,
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": true,
+          "matchMode": "first"
+        },
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "PDF纸塑袋15cm",
+          "priority": 20,
+          "price": 3.85,
+          "keywords": [
+            "纸塑袋"
+          ],
+          "bagSizeEquals": 15,
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": true,
+          "matchMode": "first"
+        },
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "PDF高温器械柜保护套3.5",
+          "priority": 30,
+          "price": 3.5,
+          "keywords": [
+            "保护套",
+            "器械柜"
+          ],
+          "temperature": "HT",
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": true,
+          "matchMode": "first"
+        }
+      ],
+      "rule_count": 9,
+      "active_rule_count": 9
+    },
+    "HULAN-TCM": {
+      "code": "HULAN-TCM",
+      "name": "呼兰中医院",
+      "status": null,
+      "billingPricingMode": "special_only",
+      "standardPricingOverride": null,
+      "billingEnabled": false,
+      "productRules": [
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "呼兰中医export 腹腔镜297",
+          "priority": 3,
+          "price": 297,
+          "keywords": [
+            "外科腹腔镜-16件筐1/W12050"
+          ],
+          "conditionsJson": "[{\"field\":\"exportApply\",\"value\":true}]",
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": true,
+          "matchMode": "first"
+        },
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "外科包固定价",
+          "priority": 10,
+          "price": 249.5,
+          "keywords": [
+            "外科包"
+          ],
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": true,
+          "matchMode": "first"
+        },
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "校正价275.0",
+          "priority": 10,
+          "price": 275.0,
+          "keywords": [
+            "外科腹腔镜-16件筐1"
+          ],
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": true,
+          "matchMode": "any_price"
+        },
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "阑尾包固定价",
+          "priority": 20,
+          "price": 288,
+          "keywords": [
+            "阑尾包"
+          ],
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": true,
+          "matchMode": "first"
+        }
+      ],
+      "rule_count": 4,
+      "active_rule_count": 4
+    },
+    "JIAYI-YL": {
+      "code": "JIAYI-YL",
+      "name": "佳医医疗",
+      "status": null,
+      "billingPricingMode": "standard",
+      "standardPricingOverride": null,
+      "billingEnabled": null,
+      "productRules": [
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "佳医敷料纸塑4元",
+          "priority": 10,
+          "keywords": [
+            "孔巾",
+            "眼包敷料"
+          ],
+          "price": 4.0,
+          "minBagSizeInclusive": 20,
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": true,
+          "matchMode": "first"
+        }
+      ],
+      "rule_count": 1,
+      "active_rule_count": 1
+    },
+    "JIUZHOU-FK": {
+      "code": "JIUZHOU-FK",
+      "name": "黑龙江九洲妇科医院",
+      "status": null,
+      "billingPricingMode": "standard",
+      "standardPricingOverride": null,
+      "billingEnabled": false,
+      "productRules": [
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "方盘5.5",
+          "priority": 10,
+          "price": 5.5,
+          "keywords": [
+            "方盘"
+          ],
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": true,
+          "matchMode": "first"
+        }
+      ],
+      "rule_count": 1,
+      "active_rule_count": 1
+    },
+    "JZSW-BIO": {
+      "code": "JZSW-BIO",
+      "name": "哈尔滨基准生物科技有限公司",
+      "status": null,
+      "billingPricingMode": "standard",
+      "standardPricingOverride": null,
+      "billingEnabled": null,
+      "productRules": [
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "氩氦刀（EO）150元",
+          "priority": 5,
+          "price": 150,
+          "keywords": [
+            "氩氦刀"
+          ],
+          "temperature": "LT",
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": true,
+          "matchMode": "first"
+        }
+      ],
+      "rule_count": 1,
+      "active_rule_count": 1
+    },
+    "MEIYI-YL": {
+      "code": "MEIYI-YL",
+      "name": "美意医疗",
+      "status": null,
+      "billingPricingMode": "standard",
+      "standardPricingOverride": null,
+      "billingEnabled": null,
+      "productRules": [
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "美意敷料纸塑4元",
+          "priority": 10,
+          "keywords": [
+            "洞巾",
+            "治疗巾"
+          ],
+          "price": 4.0,
+          "minBagSizeInclusive": 20,
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": true,
+          "matchMode": "first"
+        }
+      ],
+      "rule_count": 1,
+      "active_rule_count": 1
+    },
+    "NEAU-YY": {
+      "code": "NEAU-YY",
+      "name": "NEAU-YY",
+      "status": null,
+      "billingPricingMode": "standard",
+      "standardPricingOverride": null,
+      "billingEnabled": true,
+      "productRules": [
+        {
+          "ruleType": "FOLD",
+          "name": "东北农大口腔科针类5件算1件",
+          "priority": 10,
+          "keywords": [
+            "车针",
+            "扩大针",
+            "机扩针",
+            "根管针",
+            "根管锉",
+            "镍钛锉",
+            "探针",
+            "球钻",
+            "拔髓针"
+          ],
+          "threshold": 5,
+          "foldRatio": 5,
+          "conditionsJson": "[{\"field\":\"department\",\"value\":[\"口腔科\"]}]",
+          "isActive": false,
+          "matchMode": "first",
+          "skipPackaging": false,
+          "skipDiscount": false
+        },
+        {
+          "ruleType": "FOLD",
+          "name": "东北农大小件5合1免包材",
+          "priority": 11,
+          "keywords": [
+            "根管针",
+            "机锉",
+            "牙探针",
+            "机扩针",
+            "车针",
+            "扩大针",
+            "拔髓针",
+            "探针",
+            "球钻"
+          ],
+          "threshold": 5,
+          "foldRatio": 5,
+          "minInstrumentCount": 11,
+          "skipPackaging": true,
+          "isActive": true,
+          "matchMode": "first",
+          "skipDiscount": false
+        },
+        {
+          "ruleType": "FOLD",
+          "name": "东北农大小件5合1含包材",
+          "priority": 10,
+          "keywords": [
+            "根管针",
+            "机锉",
+            "牙探针",
+            "机扩针",
+            "车针",
+            "扩大针",
+            "拔髓针",
+            "探针",
+            "球钻"
+          ],
+          "threshold": 5,
+          "foldRatio": 5,
+          "maxInstrumentCount": 10,
+          "skipPackaging": false,
+          "isActive": true,
+          "matchMode": "first",
+          "skipDiscount": false
+        },
+        {
+          "ruleType": "FOLD",
+          "name": "东北农大根管锉5.6免包材",
+          "priority": 9,
+          "keywords": [
+            "根管锉"
+          ],
+          "threshold": 5,
+          "foldRatio": 5,
+          "price": 5.6,
+          "minInstrumentCount": 11,
+          "skipPackaging": true,
+          "isActive": true,
+          "matchMode": "first",
+          "skipDiscount": false
+        },
+        {
+          "ruleType": "FOLD",
+          "name": "东北农大根管锉5.6含包材",
+          "priority": 8,
+          "keywords": [
+            "根管锉"
+          ],
+          "threshold": 5,
+          "foldRatio": 5,
+          "price": 5.6,
+          "maxInstrumentCount": 10,
+          "skipPackaging": false,
+          "isActive": true,
+          "matchMode": "first",
+          "skipDiscount": false
+        },
+        {
+          "ruleType": "FOLD",
+          "name": "东北农大车针5件算1件",
+          "priority": 9,
+          "keywords": [
+            "车针"
+          ],
+          "threshold": 5,
+          "foldRatio": 5,
+          "isActive": false,
+          "matchMode": "first",
+          "skipPackaging": false,
+          "skipDiscount": false
+        }
+      ],
+      "rule_count": 6,
+      "active_rule_count": 4
+    },
+    "NG-FUCHAN": {
+      "code": "NG-FUCHAN",
+      "name": "南岗区妇产医院",
+      "status": null,
+      "billingPricingMode": "special_only",
+      "standardPricingOverride": null,
+      "billingEnabled": false,
+      "productRules": [
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "PDF上环包33",
+          "priority": 23,
+          "price": 33,
+          "keywords": [
+            "上环包"
+          ],
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": true,
+          "matchMode": "first"
+        },
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "PDF人工流产33",
+          "priority": 25,
+          "price": 33,
+          "keywords": [
+            "人工流产"
+          ],
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": true,
+          "matchMode": "first"
+        },
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "PDF人流包33",
+          "priority": 26,
+          "price": 33,
+          "keywords": [
+            "人流包"
+          ],
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": true,
+          "matchMode": "first"
+        },
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "PDF取环包33",
+          "priority": 22,
+          "price": 33,
+          "keywords": [
+            "取环包"
+          ],
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": true,
+          "matchMode": "first"
+        },
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "PDF大领子8",
+          "priority": 28,
+          "price": 8,
+          "keywords": [
+            "大领子"
+          ],
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": true,
+          "matchMode": "first"
+        },
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "PDF小治疗16",
+          "priority": 21,
+          "price": 16,
+          "keywords": [
+            "小治疗"
+          ],
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": true,
+          "matchMode": "first"
+        },
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "PDF带架治疗盘16.5",
+          "priority": 20,
+          "price": 16.5,
+          "keywords": [
+            "带架治疗"
+          ],
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": true,
+          "matchMode": "first"
+        },
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "PDF药流包27.5",
+          "priority": 24,
+          "price": 27.5,
+          "keywords": [
+            "药流包"
+          ],
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": true,
+          "matchMode": "first"
+        },
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "PDF诊刮包8",
+          "priority": 27,
+          "price": 8,
+          "keywords": [
+            "诊刮"
+          ],
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": true,
+          "matchMode": "first"
+        },
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "南岗妇产export 扩棒16.5",
+          "priority": 3,
+          "price": 16.5,
+          "keywords": [
+            "扩棒（6.5 7 7.5）-3件z7526"
+          ],
+          "conditionsJson": "[{\"field\":\"exportApply\",\"value\":true}]",
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": false,
+          "matchMode": "first"
+        },
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "南岗妇产棉球4",
+          "priority": 20,
+          "price": 4.0,
+          "keywords": [
+            "棉球/Z2032"
+          ],
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": true,
+          "matchMode": "first"
+        },
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "校正价16.0",
+          "priority": 12,
+          "price": 16.0,
+          "keywords": [
+            "弯盘-2"
+          ],
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": true,
+          "matchMode": "first"
+        },
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "校正价170.5",
+          "priority": 15,
+          "price": 170.5,
+          "keywords": [
+            "宫腔镜"
+          ],
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": true,
+          "matchMode": "first"
+        },
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "校正价2.3",
+          "priority": 10,
+          "price": 2.3,
+          "keywords": [
+            "纱布"
+          ],
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": true,
+          "matchMode": "any_price"
+        },
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "校正价24.0",
+          "priority": 13,
+          "price": 24.0,
+          "keywords": [
+            "扩棒（4 4.5 5）-3"
+          ],
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": true,
+          "matchMode": "any_price"
+        },
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "校正价32.0",
+          "priority": 14,
+          "price": 32.0,
+          "keywords": [
+            "盆2盘1杯1(腹腔镜里的)"
+          ],
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": true,
+          "matchMode": "first"
+        },
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "校正价8.0",
+          "priority": 11,
+          "price": 8.0,
+          "keywords": [
+            "取环器-1",
+            "宫颈钳-1"
+          ],
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": true,
+          "matchMode": "first"
+        },
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "校正价弯盘8",
+          "priority": 13,
+          "price": 8.0,
+          "keywords": [
+            "弯盘"
+          ],
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": true,
+          "matchMode": "first"
+        },
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "校正价扩棒6.5套8",
+          "priority": 20,
+          "price": 8.0,
+          "keywords": [
+            "扩棒（6.5 7 7.5）-3件z7526"
+          ],
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": true,
+          "matchMode": "first"
+        },
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "校正价扩棒8",
+          "priority": 13,
+          "price": 8.0,
+          "keywords": [
+            "扩棒"
+          ],
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": true,
+          "matchMode": "first"
+        }
+      ],
+      "rule_count": 20,
+      "active_rule_count": 19
+    },
+    "NG-XFX-SQ": {
+      "code": "NG-XFX-SQ",
+      "name": "南岗区先锋路社区卫生服务中心",
+      "status": null,
+      "billingPricingMode": null,
+      "standardPricingOverride": null,
+      "billingEnabled": null,
+      "productRules": [],
+      "rule_count": 0,
+      "active_rule_count": 0
+    },
+    "RENSHENG": {
+      "code": "RENSHENG",
+      "name": "哈尔滨仁胜医院",
+      "status": null,
+      "billingPricingMode": "standard",
+      "standardPricingOverride": null,
+      "billingEnabled": null,
+      "productRules": [],
+      "rule_count": 0,
+      "active_rule_count": 0
+    },
+    "SANJING-SB": {
+      "code": "SANJING-SB",
+      "name": "三精肾病医院",
+      "status": null,
+      "billingPricingMode": "standard",
+      "standardPricingOverride": null,
+      "billingEnabled": null,
+      "productRules": [
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "PDF外来器械4.4",
+          "priority": 40,
+          "price": 4.4,
+          "keywords": [
+            "外来器械"
+          ],
+          "excludeKeywords": [
+            "钉盒",
+            "骨电钻",
+            "植入物"
+          ],
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": true,
+          "matchMode": "first"
+        },
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "PDF外来器械钉盒40",
+          "priority": 41,
+          "price": 40,
+          "keywords": [
+            "外来器械（钉盒）"
+          ],
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": true,
+          "matchMode": "first"
+        },
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "PDF外来器械骨电钻13.2",
+          "priority": 42,
+          "price": 13.2,
+          "keywords": [
+            "外来器械（骨电钻）"
+          ],
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": true,
+          "matchMode": "first"
+        },
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "三精export 内瘘68件102",
+          "priority": 3,
+          "price": 102,
+          "keywords": [
+            "内瘘器械包（一）"
+          ],
+          "minInstrumentCount": 68,
+          "maxInstrumentCount": 68,
+          "conditionsJson": "[{\"field\":\"exportApply\",\"value\":true}]",
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": true,
+          "matchMode": "first"
+        },
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "校正价102.0",
+          "priority": 15,
+          "price": 102.0,
+          "keywords": [
+            "腹透包-34件（临时）"
+          ],
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": true,
+          "matchMode": "first"
+        },
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "校正价102.0-内瘘68件",
+          "priority": 15,
+          "price": 102.0,
+          "keywords": [
+            "内瘘器械包（一）"
+          ],
+          "minInstrumentCount": 68,
+          "maxInstrumentCount": 68,
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": true,
+          "matchMode": "first"
+        },
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "校正价30.0",
+          "priority": 12,
+          "price": 30.0,
+          "keywords": [
+            "插管包二"
+          ],
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": true,
+          "matchMode": "first"
+        },
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "校正价42.0",
+          "priority": 13,
+          "price": 42.0,
+          "keywords": [
+            "插管包"
+          ],
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": true,
+          "matchMode": "first"
+        },
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "校正价6.4",
+          "priority": 10,
+          "price": 6.4,
+          "keywords": [
+            "哈巴狗止血夹-1"
+          ],
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": true,
+          "matchMode": "first"
+        },
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "校正价9.0",
+          "priority": 11,
+          "price": 9.0,
+          "keywords": [
+            "开口器1 舌钳子1 压舌板1",
+            "持物钳罐-3件"
+          ],
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": true,
+          "matchMode": "first"
+        },
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "校正价99.0",
+          "priority": 14,
+          "price": 99.0,
+          "keywords": [
+            "内瘘器械包（一）"
+          ],
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": true,
+          "matchMode": "first",
+          "minInstrumentCount": 66,
+          "maxInstrumentCount": 66
+        }
+      ],
+      "rule_count": 11,
+      "active_rule_count": 11
+    },
+    "SHENG-YY-NG": {
+      "code": "SHENG-YY-NG",
+      "name": "黑龙江省医院（南岗院区）",
+      "status": null,
+      "billingPricingMode": "hybrid",
+      "standardPricingOverride": null,
+      "billingEnabled": null,
+      "productRules": [
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "W9050纺织现价",
+          "priority": 5,
+          "price": 18.0,
+          "keywords": [
+            "床单/W9050",
+            "刷手服/W9050",
+            "敷布包/W9050",
+            "敷料/W9050",
+            "手术衣-1件/W9050"
+          ],
+          "matchMode": "any_price",
+          "acceptedPrices": [
+            15,
+            18,
+            30
+          ],
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": true
+        },
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "校正价22.01",
+          "priority": 11,
+          "price": 22.01,
+          "keywords": [
+            "手术包-6件（双信封包装",
+            "门皮 手术包-6件（双信封包装"
+          ],
+          "conditionsJson": "[{\"field\":\"department\",\"value\":[\"美容整形外科\",\"皮肤门诊\"]}]",
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": true,
+          "matchMode": "first"
+        },
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "校正价26.4",
+          "priority": 12,
+          "price": 26.4,
+          "keywords": [
+            "乐奥"
+          ],
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": true,
+          "matchMode": "first"
+        },
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "校正价8.1",
+          "priority": 10,
+          "price": 8.1,
+          "keywords": [
+            "小圆针-10"
+          ],
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": true,
+          "matchMode": "first"
+        },
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "省医院南岗export 取环勾4.8",
+          "priority": 3,
+          "price": 4.8,
+          "keywords": [
+            "取环勾-1/7530"
+          ],
+          "conditionsJson": "[{\"field\":\"exportApply\",\"value\":true}]",
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": true,
+          "matchMode": "first"
+        },
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "省医院南岗export 手术衣15",
+          "priority": 3,
+          "price": 15,
+          "keywords": [
+            "手术衣-1件/W9050"
+          ],
+          "conditionsJson": "[{\"field\":\"exportApply\",\"value\":true}]",
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": true,
+          "matchMode": "first"
+        },
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "省医院南岗export 舌钳子6.6",
+          "priority": 3,
+          "price": 6.6,
+          "keywords": [
+            "舌钳子-1/1526"
+          ],
+          "conditionsJson": "[{\"field\":\"exportApply\",\"value\":true}]",
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": true,
+          "matchMode": "first"
+        },
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "省医院南岗export 间盘A75.9",
+          "priority": 3,
+          "price": 75.9,
+          "keywords": [
+            "间盘A（52件）2/2"
+          ],
+          "conditionsJson": "[{\"field\":\"exportApply\",\"value\":true}]",
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": true,
+          "matchMode": "first"
+        },
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "省医院南岗乐奥2件",
+          "priority": 11,
+          "price": 26.4,
+          "keywords": [
+            "乐奥2件"
+          ],
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": true,
+          "matchMode": "first"
+        },
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "省医院南岗手术包6件",
+          "priority": 10,
+          "price": 22.01,
+          "keywords": [
+            "手术包-6件",
+            "双信封包装"
+          ],
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": true,
+          "matchMode": "first"
+        }
+      ],
+      "rule_count": 10,
+      "active_rule_count": 10
+    },
+    "SHENG-YY-XF": {
+      "code": "SHENG-YY-XF",
+      "name": "黑龙江省医院（香坊院区）",
+      "status": null,
+      "billingPricingMode": "hybrid",
+      "standardPricingOverride": null,
+      "billingEnabled": null,
+      "productRules": [
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "W9050纺织现价",
+          "priority": 5,
+          "price": 18.0,
+          "keywords": [
+            "床单/W9050",
+            "刷手服/W9050",
+            "敷布包/W9050",
+            "敷料/W9050",
+            "手术衣-1件/W9050"
+          ],
+          "matchMode": "any_price",
+          "acceptedPrices": [
+            15,
+            18,
+            30
+          ],
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": true
+        },
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "手术室胸腔镜17件178.2",
+          "priority": 3,
+          "price": 178.2,
+          "keywords": [
+            "胸腔镜-17件"
+          ],
+          "minInstrumentCount": 17,
+          "maxInstrumentCount": 17,
+          "conditionsJson": "[{\"field\":\"department\",\"value\":[\"手术室\"]}]",
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": true,
+          "matchMode": "first"
+        },
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "手术室额外包胸腔镜19.8",
+          "priority": 4,
+          "price": 19.8,
+          "keywords": [
+            "胸腔镜"
+          ],
+          "excludeKeywords": [
+            "w12050",
+            "W12050",
+            "17件",
+            "21件",
+            "22件",
+            "32件"
+          ],
+          "conditionsJson": "[{\"field\":\"department\",\"value\":[\"手术室\"]}]",
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": true,
+          "matchMode": "first"
+        },
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "校正价13.2",
+          "priority": 11,
+          "price": 13.2,
+          "keywords": [
+            "勾刀-2",
+            "钩刀-2"
+          ],
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": true,
+          "matchMode": "first"
+        },
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "校正价180.0",
+          "priority": 13,
+          "price": 180.0,
+          "keywords": [
+            "4K-",
+            "外一27件筐1",
+            "外三",
+            "外二26筐1",
+            "好镜-26筐1",
+            "妇科-",
+            "普镜-",
+            "泌腹腔镜-",
+            "胸腔镜-"
+          ],
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": true,
+          "matchMode": "first"
+        },
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "校正价39.6",
+          "priority": 12,
+          "price": 39.6,
+          "keywords": [
+            "4K镜头1气腹管1光源1"
+          ],
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": true,
+          "matchMode": "first"
+        },
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "校正价8.1",
+          "priority": 10,
+          "price": 8.1,
+          "keywords": [
+            "克氏钳-1/双",
+            "克氏钳（尖头）-1/双z1029",
+            "克氏钳（平头）-1/双"
+          ],
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": true,
+          "matchMode": "first"
+        },
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "生殖医学科W9050纺织18元",
+          "priority": 3,
+          "price": 18.0,
+          "keywords": [
+            "床单/W9050",
+            "敷料包/W9050",
+            "敷料包",
+            "刷手服/W9050"
+          ],
+          "conditionsJson": "[{\"field\":\"department\",\"value\":[\"生殖医学科\"]}]",
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": true,
+          "matchMode": "first"
+        },
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "生殖医学科刷手服18元",
+          "priority": 3,
+          "price": 18.0,
+          "keywords": [
+            "刷手服"
+          ],
+          "conditionsJson": "[{\"field\":\"department\",\"value\":[\"生殖医学科\"]}]",
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": true,
+          "matchMode": "first"
+        },
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "神外一勾刀-2 26.4元",
+          "priority": 3,
+          "price": 26.4,
+          "keywords": [
+            "勾刀-2",
+            "钩刀-2"
+          ],
+          "conditionsJson": "[{\"field\":\"department\",\"value\":[\"神外一\"]}]",
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": true,
+          "matchMode": "first"
+        },
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "神外一勾刀13.2元",
+          "priority": 4,
+          "price": 13.2,
+          "keywords": [
+            "勾刀",
+            "钩刀"
+          ],
+          "excludeKeywords": [
+            "-2"
+          ],
+          "conditionsJson": "[{\"field\":\"department\",\"value\":[\"神外一\"]}]",
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": true,
+          "matchMode": "first"
+        }
+      ],
+      "rule_count": 11,
+      "active_rule_count": 11
+    },
+    "SHKF-YY": {
+      "code": "SHKF-YY",
+      "name": "黑龙江省社会康复医院",
+      "status": null,
+      "billingPricingMode": "special_only",
+      "standardPricingOverride": null,
+      "billingEnabled": false,
+      "productRules": [
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "校正价2.5",
+          "priority": 10,
+          "price": 2.5,
+          "keywords": [
+            "棉签"
+          ],
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": true,
+          "matchMode": "first"
+        },
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "社会康复ITI种植盒44",
+          "priority": 5,
+          "price": 44,
+          "keywords": [
+            "ITI种植盒"
+          ],
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": true,
+          "matchMode": "first"
+        },
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "社会康复内提工具盒44",
+          "priority": 4,
+          "price": 44.0,
+          "keywords": [
+            "内提工具盒"
+          ],
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": true,
+          "matchMode": "first"
+        },
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "社会康复大车针盒22",
+          "priority": 11,
+          "price": 22,
+          "keywords": [
+            "大车针盒"
+          ],
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": true,
+          "matchMode": "first"
+        },
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "社会康复抛光车针盒16.5",
+          "priority": 10,
+          "price": 16.5,
+          "keywords": [
+            "抛光车针盒"
+          ],
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": true,
+          "matchMode": "first"
+        },
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "社会康复梁光强器械盒22",
+          "priority": 8,
+          "price": 22,
+          "keywords": [
+            "梁光强器械盒"
+          ],
+          "excludeKeywords": [
+            "粉"
+          ],
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": true,
+          "matchMode": "first"
+        },
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "社会康复梁光强器械盒粉16.5",
+          "priority": 7,
+          "price": 16.5,
+          "keywords": [
+            "梁光强器械盒（粉）",
+            "梁光强器械盒(粉)",
+            "梁光强器械盒粉"
+          ],
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": true,
+          "matchMode": "first"
+        },
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "社会康复环切器械盒16.5",
+          "priority": 9,
+          "price": 16.5,
+          "keywords": [
+            "环切器械盒"
+          ],
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": true,
+          "matchMode": "first"
+        },
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "社会康复登腾种植盒44",
+          "priority": 6,
+          "price": 44,
+          "keywords": [
+            "登腾种植盒",
+            "DT种植盒"
+          ],
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": true,
+          "matchMode": "first"
+        },
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "社会康复百诺工具盒44",
+          "priority": 5,
+          "price": 44.0,
+          "keywords": [
+            "百诺工具盒"
+          ],
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": true,
+          "matchMode": "first"
+        },
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "社会康复种植盒16.5",
+          "priority": 12,
+          "price": 16.5,
+          "keywords": [
+            "种植盒"
+          ],
+          "excludeKeywords": [
+            "ITI",
+            "登腾",
+            "DT"
+          ],
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": true,
+          "matchMode": "first"
+        }
+      ],
+      "rule_count": 11,
+      "active_rule_count": 11
+    },
+    "SUOFEI-YL": {
+      "code": "SUOFEI-YL",
+      "name": "索菲医疗美容门诊",
+      "status": null,
+      "billingPricingMode": "standard",
+      "standardPricingOverride": null,
+      "billingEnabled": null,
+      "productRules": [],
+      "rule_count": 0,
+      "active_rule_count": 0
+    },
+    "TAIPING-RM": {
+      "code": "TAIPING-RM",
+      "name": "太平人民医院",
+      "status": null,
+      "billingPricingMode": "special_only",
+      "standardPricingOverride": null,
+      "billingEnabled": false,
+      "productRules": [
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "太平开腹包",
+          "priority": 7,
+          "price": 119.63,
+          "keywords": [
+            "开腹包"
+          ],
+          "matchMode": "any_price",
+          "acceptedPrices": [
+            119.63
+          ],
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": true
+        },
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "太平拇外翻13件",
+          "priority": 16,
+          "price": 53.63,
+          "keywords": [
+            "拇外翻"
+          ],
+          "matchMode": "any_price",
+          "acceptedPrices": [
+            53.63
+          ],
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": true
+        },
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "太平皮肤拉钩",
+          "priority": 9,
+          "price": 10.13,
+          "keywords": [
+            "皮肤拉钩"
+          ],
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": true,
+          "matchMode": "first"
+        },
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "太平缝合包",
+          "priority": 8,
+          "price": 20.63,
+          "keywords": [
+            "缝合包"
+          ],
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": true,
+          "matchMode": "first"
+        },
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "太平肌钩",
+          "priority": 15,
+          "price": 10.13,
+          "keywords": [
+            "肌钩"
+          ],
+          "matchMode": "any_price",
+          "acceptedPrices": [
+            10.13
+          ],
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": true
+        },
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "太平腔镜器械",
+          "priority": 6,
+          "price": 119.63,
+          "keywords": [
+            "腔镜器械"
+          ],
+          "matchMode": "any_price",
+          "acceptedPrices": [
+            119.63
+          ],
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": true
+        },
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "校正价18.8",
+          "priority": 13,
+          "price": 18.8,
+          "keywords": [
+            "取环钳（低温）-1件",
+            "窥器-1"
+          ],
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": true,
+          "matchMode": "first"
+        },
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "校正价26.3",
+          "priority": 14,
+          "price": 26.3,
+          "keywords": [
+            "水管-1"
+          ],
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": true,
+          "matchMode": "first"
+        },
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "校正价8.3",
+          "priority": 10,
+          "price": 8.3,
+          "keywords": [
+            "凿子-1",
+            "卵圆钳-1",
+            "取环器-1",
+            "宫颈钳-1",
+            "活检钳-1",
+            "窥器-1"
+          ],
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": true,
+          "matchMode": "first"
+        },
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "校正价8.91",
+          "priority": 11,
+          "price": 8.91,
+          "keywords": [
+            "产钳-2",
+            "剪刀1持针器1钩镊1",
+            "剪刀1窥器1宫颈钳1",
+            "吸头5号.6号.7号-3件",
+            "吸头5号6号7号-3件",
+            "吸头6号.7号.8号-3件",
+            "小S拉钩-1",
+            "巾钳子-2",
+            "拆线剪1止血钳1",
+            "拆线剪1止血钳小2",
+            "持针器1剪刀1止血钳1",
+            "探针1窥器1宫颈钳1",
+            "止血钳 中-3",
+            "活检钳1宫颈钳1",
+            "活检钳1宫颈钳1镊子1",
+            "电钻-3",
+            "舌钳1开口器1",
+            "锤子-1"
+          ],
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": true,
+          "matchMode": "first"
+        },
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "校正价9.8",
+          "priority": 12,
+          "price": 9.8,
+          "keywords": [
+            "咬骨钳-1",
+            "弯盘-1"
+          ],
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": true,
+          "matchMode": "first"
+        }
+      ],
+      "rule_count": 11,
+      "active_rule_count": 11
+    },
+    "VICTORIA": {
+      "code": "VICTORIA",
+      "name": "黑龙江维多利亚妇产医院",
+      "status": null,
+      "billingPricingMode": "standard",
+      "standardPricingOverride": null,
+      "billingEnabled": false,
+      "productRules": [
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "校正价16.0",
+          "priority": 10,
+          "price": 16.0,
+          "keywords": [
+            "带架方盘-1"
+          ],
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": true,
+          "matchMode": "first"
+        },
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "校正价25.0",
+          "priority": 11,
+          "price": 25.0,
+          "keywords": [
+            "手柄-1"
+          ],
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": true,
+          "matchMode": "first"
+        }
+      ],
+      "rule_count": 2,
+      "active_rule_count": 2
+    },
+    "WCSRMYY": {
+      "code": "WCSRMYY",
+      "name": "WCSRMYY",
+      "status": null,
+      "billingPricingMode": "standard",
+      "standardPricingOverride": null,
+      "billingEnabled": true,
+      "productRules": [
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "上肢锁定固定332",
+          "priority": 4,
+          "price": 332,
+          "keywords": [
+            "上肢锁定"
+          ],
+          "excludeKeywords": [
+            "长钉"
+          ],
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": true,
+          "matchMode": "first"
+        },
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "上肢锁定长钉固定370.5",
+          "priority": 3,
+          "price": 370.5,
+          "keywords": [
+            "上肢锁定长钉"
+          ],
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": true,
+          "matchMode": "first"
+        },
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "优贝特空心钉4.0固定233",
+          "priority": 1,
+          "price": 233,
+          "keywords": [
+            "优贝特空心钉4.0"
+          ],
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": true,
+          "matchMode": "first"
+        },
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "墨希钉固定50",
+          "priority": 4,
+          "price": 50,
+          "keywords": [
+            "墨希钉"
+          ],
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": true,
+          "matchMode": "first"
+        },
+        {
+          "ruleType": "PRICE_PER_INSTRUMENT",
+          "name": "手术室操作器22元/件",
+          "priority": 10,
+          "price": 22,
+          "keywords": [
+            "操作器"
+          ],
+          "conditionsJson": "[{\"field\":\"department\",\"value\":[\"手术室\"]}]",
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": true,
+          "matchMode": "first"
+        },
+        {
+          "ruleType": "PRICE_PER_INSTRUMENT",
+          "name": "手术室腹腔镜器械(三号)17元/件",
+          "priority": 11,
+          "price": 17,
+          "keywords": [
+            "腹腔镜器械"
+          ],
+          "conditionsJson": "[{\"field\":\"department\",\"value\":[\"手术室\"]}]",
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": false,
+          "matchMode": "first"
+        },
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "手术室腹腔镜器械包187元/包",
+          "priority": 9,
+          "price": 187,
+          "keywords": [
+            "腹腔镜器械"
+          ],
+          "conditionsJson": "[{\"field\":\"department\",\"value\":[\"手术室\"]}]",
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": false,
+          "matchMode": "first"
+        },
+        {
+          "ruleType": "FOLD",
+          "name": "手术室骨元针5件算1件",
+          "priority": 10,
+          "keywords": [
+            "骨元针"
+          ],
+          "threshold": 5,
+          "foldRatio": 5,
+          "conditionsJson": "[{\"field\":\"department\",\"value\":[\"手术室\"]}]",
+          "isActive": true,
+          "matchMode": "first",
+          "skipPackaging": false,
+          "skipDiscount": false
+        },
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "空心钉4.0固定233",
+          "priority": 2,
+          "price": 233,
+          "keywords": [
+            "空心钉4.0"
+          ],
+          "excludeKeywords": [
+            "优贝特"
+          ],
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": true,
+          "matchMode": "first"
+        },
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "额外包10纸塑袋13.5",
+          "priority": 6,
+          "price": 13.5,
+          "keywords": [
+            "10/双",
+            "/z1026",
+            "/z1029",
+            "/z1035"
+          ],
+          "minInstrumentCount": 1,
+          "maxInstrumentCount": 1,
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": true,
+          "matchMode": "first"
+        },
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "额外包75纸塑袋10.5",
+          "priority": 5,
+          "price": 10.5,
+          "keywords": [
+            "75/双",
+            "/z7526",
+            "/z7530",
+            "/z7534"
+          ],
+          "excludeKeywords": [
+            "墨希钉"
+          ],
+          "minInstrumentCount": 1,
+          "maxInstrumentCount": 1,
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": true,
+          "matchMode": "first"
+        }
+      ],
+      "rule_count": 11,
+      "active_rule_count": 9
+    },
+    "WJ-HLJ-ZD": {
+      "code": "WJ-HLJ-ZD",
+      "name": "武警黑龙江省总队医院",
+      "status": null,
+      "billingPricingMode": "special_only",
+      "standardPricingOverride": null,
+      "billingEnabled": null,
+      "productRules": [
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "校正价16.5",
+          "priority": 11,
+          "price": 16.5,
+          "keywords": [
+            "克氏针折弯钳-1"
+          ],
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": true,
+          "matchMode": "first"
+        },
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "校正价20.0",
+          "priority": 12,
+          "price": 20.0,
+          "keywords": [
+            "刷手包",
+            "器械包（无纺布）",
+            "敷料包（无纺布）"
+          ],
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": true,
+          "matchMode": "first"
+        },
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "校正价35.0",
+          "priority": 13,
+          "price": 35.0,
+          "keywords": [
+            "环氧乙烷（自行打包）-1包"
+          ],
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": true,
+          "matchMode": "first"
+        },
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "校正价8.0",
+          "priority": 10,
+          "price": 8.0,
+          "keywords": [
+            "器械包（纸塑袋）",
+            "敷料包（纸塑袋）"
+          ],
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": true,
+          "matchMode": "first"
+        }
+      ],
+      "rule_count": 4,
+      "active_rule_count": 4
+    },
+    "XF-ZYY": {
+      "code": "XF-ZYY",
+      "name": "香坊中医院",
+      "status": null,
+      "billingPricingMode": null,
+      "standardPricingOverride": null,
+      "billingEnabled": null,
+      "productRules": [],
+      "rule_count": 0,
+      "active_rule_count": 0
+    },
+    "XINFA-HSZ": {
+      "code": "XINFA-HSZ",
+      "name": "新发红十字医院",
+      "status": null,
+      "billingPricingMode": "hybrid",
+      "standardPricingOverride": null,
+      "billingEnabled": null,
+      "productRules": [
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "新发棉球纸塑袋",
+          "priority": 10,
+          "price": 4.0,
+          "keywords": [
+            "棉球/Z",
+            "带线棉球"
+          ],
+          "matchMode": "any_price",
+          "acceptedPrices": [
+            4.0,
+            2.5,
+            7.5,
+            5.5
+          ],
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": true
+        },
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "新发镜头0度35",
+          "priority": 5,
+          "price": 35,
+          "keywords": [
+            "0度镜头"
+          ],
+          "temperature": "LT",
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": true,
+          "matchMode": "first"
+        },
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "新发镜头12度28",
+          "priority": 5,
+          "price": 28,
+          "keywords": [
+            "12度镜头",
+            "镜头-1/双"
+          ],
+          "temperature": "LT",
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": true,
+          "matchMode": "first"
+        },
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "新发镜头30度35",
+          "priority": 5,
+          "price": 35,
+          "keywords": [
+            "30度镜头",
+            "30°镜头"
+          ],
+          "temperature": "LT",
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": true,
+          "matchMode": "first"
+        },
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "校正价66.0",
+          "priority": 10,
+          "price": 66.0,
+          "keywords": [
+            "膀胱镜器械-3件"
+          ],
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": true,
+          "matchMode": "first"
+        },
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "穿刺器帽22",
+          "priority": 10,
+          "price": 22,
+          "keywords": [
+            "穿刺器帽"
+          ],
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": true,
+          "matchMode": "first"
+        }
+      ],
+      "rule_count": 6,
+      "active_rule_count": 6
+    },
+    "YILI-YL": {
+      "code": "YILI-YL",
+      "name": "易丽医疗",
+      "status": null,
+      "billingPricingMode": "standard",
+      "standardPricingOverride": null,
+      "billingEnabled": null,
+      "productRules": [
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "易丽敷料纸塑4元",
+          "priority": 10,
+          "keywords": [
+            "孔巾",
+            "包布",
+            "大单",
+            "治疗巾"
+          ],
+          "price": 4.0,
+          "minBagSizeInclusive": 20,
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": true,
+          "matchMode": "first"
+        }
+      ],
+      "rule_count": 1,
+      "active_rule_count": 1
+    },
+    "YUANDONG-XN": {
+      "code": "YUANDONG-XN",
+      "name": "黑龙江省远东心脑血管医院",
+      "status": null,
+      "billingPricingMode": "standard",
+      "standardPricingOverride": null,
+      "billingEnabled": null,
+      "productRules": [],
+      "rule_count": 0,
+      "active_rule_count": 0
+    },
+    "YUEMEI-FH": {
+      "code": "YUEMEI-FH",
+      "name": "悦美芳华医疗门诊医院",
+      "status": null,
+      "billingPricingMode": "standard",
+      "standardPricingOverride": null,
+      "billingEnabled": null,
+      "productRules": [
+        {
+          "ruleType": "PRICE_PER_INSTRUMENT",
+          "name": "眼包5.5元/件",
+          "priority": 8,
+          "price": 5.5,
+          "keywords": [
+            "眼包"
+          ],
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": true,
+          "matchMode": "first"
+        }
+      ],
+      "rule_count": 1,
+      "active_rule_count": 1
+    },
+    "ZUYAN-NG": {
+      "code": "ZUYAN-NG",
+      "name": "祖研-黑龙江省中医医院（南岗院区）",
+      "status": null,
+      "billingPricingMode": "hybrid",
+      "standardPricingOverride": null,
+      "billingEnabled": true,
+      "productRules": [
+        {
+          "ruleType": "FOLD",
+          "name": "排针10盘算1件",
+          "priority": 10,
+          "keywords": [
+            "排针"
+          ],
+          "threshold": 10,
+          "foldRatio": 5.5,
+          "isActive": false,
+          "matchMode": "first",
+          "skipPackaging": false,
+          "skipDiscount": false
+        },
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "校正价13.5",
+          "priority": 10,
+          "price": 13.5,
+          "keywords": [
+            "排针-11",
+            "排针-12",
+            "排针-14",
+            "排针-15",
+            "排针20",
+            "排针17",
+            "排针15",
+            "排针13",
+            "排针12",
+            "排针9件",
+            "排针-6",
+            "排针-10"
+          ],
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": false,
+          "matchMode": "first"
+        },
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "校正价16.5",
+          "priority": 11,
+          "price": 16.5,
+          "keywords": [
+            "排针-23",
+            "排针-28",
+            "排针-30",
+            "排针21",
+            "排针22件",
+            "排针30件",
+            "排针21件",
+            "排针30件"
+          ],
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": false,
+          "matchMode": "first"
+        },
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "校正价22.0",
+          "priority": 12,
+          "price": 22.0,
+          "keywords": [
+            "排针34件",
+            "排针35件",
+            "排针-34",
+            "排针-35",
+            "排针-47"
+          ],
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": false,
+          "matchMode": "first"
+        },
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "校正价8.0",
+          "priority": 13,
+          "price": 8.0,
+          "keywords": [
+            "排针-6/Z",
+            "排针9件"
+          ],
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": false,
+          "matchMode": "first"
+        },
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "祖研南岗export 弯盘13",
+          "priority": 3,
+          "price": 13,
+          "keywords": [
+            "弯盘-1/Z2032"
+          ],
+          "conditionsJson": "[{\"field\":\"exportApply\",\"value\":true}]",
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": false,
+          "matchMode": "first"
+        },
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "祖研南岗弯盘13",
+          "priority": 4,
+          "price": 13,
+          "keywords": [
+            "弯盘-1/Z2032"
+          ],
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": false,
+          "matchMode": "first"
+        },
+        {
+          "ruleType": "FOLD",
+          "name": "祖研排针10合1免包材",
+          "priority": 11,
+          "keywords": [
+            "排针"
+          ],
+          "threshold": 10,
+          "foldRatio": 10,
+          "minInstrumentCount": 21,
+          "skipPackaging": true,
+          "isActive": true,
+          "matchMode": "first",
+          "skipDiscount": false
+        },
+        {
+          "ruleType": "FOLD",
+          "name": "祖研排针10合1含包材",
+          "priority": 10,
+          "keywords": [
+            "排针"
+          ],
+          "threshold": 10,
+          "foldRatio": 10,
+          "maxInstrumentCount": 20,
+          "skipPackaging": false,
+          "isActive": true,
+          "matchMode": "first",
+          "skipDiscount": false
+        }
+      ],
+      "rule_count": 9,
+      "active_rule_count": 2
+    },
+    "ZUYAN-SF": {
+      "code": "ZUYAN-SF",
+      "name": "祖研-黑龙江省中医医院（三辅院区）",
+      "status": null,
+      "billingPricingMode": "special_only",
+      "standardPricingOverride": null,
+      "billingEnabled": null,
+      "productRules": [
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "PDF/期待价30",
+          "priority": 200,
+          "price": 30.0,
+          "keywords": [
+            "纱布条"
+          ],
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": true,
+          "matchMode": "first"
+        },
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "三辅探针瘘管刨刀包",
+          "priority": 8,
+          "price": 13.5,
+          "keywords": [
+            "探针1瘘管1刨刀1"
+          ],
+          "matchMode": "any_price",
+          "acceptedPrices": [
+            13.5,
+            16.5
+          ],
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": false
+        },
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "校正价22.0",
+          "priority": 10,
+          "price": 22.0,
+          "keywords": [
+            "器械包-4件"
+          ],
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": true,
+          "matchMode": "first"
+        },
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "校正价30.0",
+          "priority": 11,
+          "price": 30.0,
+          "keywords": [
+            "纱布条"
+          ],
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": true,
+          "matchMode": "first"
+        },
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "校正价33.0",
+          "priority": 12,
+          "price": 33.0,
+          "keywords": [
+            "排针包48件盘1",
+            "美容科排针包50件盘1"
+          ],
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": true,
+          "matchMode": "first"
+        },
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "校正价38.5",
+          "priority": 13,
+          "price": 38.5,
+          "keywords": [
+            "排针包51件盘1"
+          ],
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": true,
+          "matchMode": "first"
+        },
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "祖研三辅export 探针刨刀16.5",
+          "priority": 3,
+          "price": 16.5,
+          "keywords": [
+            "探针1瘘管1刨刀1/Z1026"
+          ],
+          "conditionsJson": "[{\"field\":\"exportApply\",\"value\":true}]",
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": true,
+          "matchMode": "first"
+        },
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "针线包现价",
+          "priority": 5,
+          "price": 2.5,
+          "keywords": [
+            "针线包"
+          ],
+          "matchMode": "any_price",
+          "acceptedPrices": [
+            2.5,
+            25
+          ],
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": true
+        }
+      ],
+      "rule_count": 8,
+      "active_rule_count": 7
+    },
+    "ZUYAN-XA": {
+      "code": "ZUYAN-XA",
+      "name": "祖研-黑龙江省中医医院（香安院区）",
+      "status": null,
+      "billingPricingMode": "hybrid",
+      "standardPricingOverride": null,
+      "billingEnabled": null,
+      "productRules": [
+        {
+          "ruleType": "FOLD",
+          "name": "排针10盘算1件",
+          "priority": 10,
+          "keywords": [
+            "排针"
+          ],
+          "threshold": 10,
+          "foldRatio": 5.5,
+          "isActive": true,
+          "matchMode": "first",
+          "skipPackaging": false,
+          "skipDiscount": false
+        },
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "校正价16.5",
+          "priority": 10,
+          "price": 16.5,
+          "keywords": [
+            "剪刀2止血钳1"
+          ],
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": true,
+          "matchMode": "first"
+        },
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "校正价22.0",
+          "priority": 11,
+          "price": 22.0,
+          "keywords": [
+            "剪刀2止血钳1探针1"
+          ],
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": true,
+          "matchMode": "first"
+        }
+      ],
+      "rule_count": 3,
+      "active_rule_count": 3
+    },
+    "ZY3-DIANLI": {
+      "code": "ZY3-DIANLI",
+      "name": "黑龙江省中医药大学附属第三医院（电力）",
+      "status": null,
+      "billingPricingMode": "special_only",
+      "standardPricingOverride": null,
+      "billingEnabled": null,
+      "productRules": [
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "小件盒25",
+          "priority": 10,
+          "price": 25,
+          "keywords": [
+            "小件盒"
+          ],
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": true,
+          "matchMode": "first"
+        },
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "校正价13.5",
+          "priority": 11,
+          "price": 13.5,
+          "keywords": [
+            "成型片-7",
+            "洁牙尖-7"
+          ],
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": true,
+          "matchMode": "first"
+        },
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "校正价35.0",
+          "priority": 12,
+          "price": 35.0,
+          "keywords": [
+            "洗手服"
+          ],
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": true,
+          "matchMode": "first"
+        },
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "校正价8.0",
+          "priority": 10,
+          "price": 8.0,
+          "keywords": [
+            "洁牙尖-5件"
+          ],
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": true,
+          "matchMode": "first"
+        },
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "校正价88.0",
+          "priority": 13,
+          "price": 88.0,
+          "keywords": [
+            "激光镜-4件 盒1"
+          ],
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": true,
+          "matchMode": "first"
+        },
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "等离子镜36",
+          "priority": 20,
+          "price": 36,
+          "keywords": [
+            "等离子镜"
+          ],
+          "temperature": "LT",
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": true,
+          "matchMode": "first"
+        }
+      ],
+      "rule_count": 6,
+      "active_rule_count": 6
+    },
+    "ZYY-D1": {
+      "code": "ZYY-D1",
+      "name": "黑龙江中医药大学附属第一医院",
+      "status": null,
+      "billingPricingMode": "hybrid",
+      "standardPricingOverride": {
+        "highTemperature": {
+          "paperPlastic": {
+            "capMode": "fuyi",
+            "perPackagePrice": 4.4,
+            "minCharge": 13.2,
+            "bagSizes": [
+              {
+                "size": 25,
+                "price": 12.79,
+                "keywords": [
+                  "25cm",
+                  "25",
+                  "特大"
+                ]
+              },
+              {
+                "size": 20,
+                "price": 10.39,
+                "keywords": [
+                  "20cm",
+                  "20",
+                  "大"
+                ]
+              },
+              {
+                "size": 15,
+                "price": 8.79,
+                "keywords": [
+                  "15cm",
+                  "15",
+                  "中"
+                ]
+              },
+              {
+                "size": 10,
+                "price": 6.39,
+                "keywords": [
+                  "10cm",
+                  "10",
+                  "小"
+                ]
+              }
+            ]
+          },
+          "nonWoven": {
+            "minCharge": 13.2,
+            "flatPerPackagePrice": 4.4,
+            "flatRateThreshold": 3
+          }
+        },
+        "lowTemperature": {
+          "paperPlastic": {
+            "bagSizes": [
+              {
+                "size": 30,
+                "price": 27.97,
+                "keywords": [
+                  "30cm",
+                  "30",
+                  "低温灭菌 30cm"
+                ]
+              },
+              {
+                "size": 25,
+                "price": 23.98,
+                "keywords": [
+                  "25cm",
+                  "25",
+                  "低温灭菌 25cm"
+                ]
+              },
+              {
+                "size": 20,
+                "price": 22.38,
+                "keywords": [
+                  "20cm",
+                  "20",
+                  "低温灭菌 20cm"
+                ]
+              },
+              {
+                "size": 15,
+                "price": 19.98,
+                "keywords": [
+                  "15cm",
+                  "15",
+                  "低温灭菌 15cm"
+                ]
+              },
+              {
+                "size": 10,
+                "price": 17.58,
+                "keywords": [
+                  "10cm",
+                  "10",
+                  "低温灭菌 10cm"
+                ]
+              }
+            ],
+            "tierPrices": [
+              {
+                "count": 20,
+                "price": 239.76
+              },
+              {
+                "count": 10,
+                "price": 131.87
+              },
+              {
+                "count": 5,
+                "price": 70.33
+              }
+            ],
+            "remainderPerPiecePrice": 17.58
+          },
+          "nonWoven": {
+            "tierPrices": [
+              {
+                "count": 20,
+                "price": 239.76
+              },
+              {
+                "count": 10,
+                "price": 131.87
+              },
+              {
+                "count": 5,
+                "price": 70.33
+              }
+            ],
+            "remainderPerPiecePrice": 17.58,
+            "minSingleCharge": 17.58
+          }
+        },
+        "dressingPack": {
+          "nonWoven": {
+            "below90": 19.98,
+            "equals90": 23.98,
+            "range12to15": 27.97
+          }
+        }
+      },
+      "billingEnabled": null,
+      "productRules": [
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "30°腹腔镜组合价",
+          "priority": 5,
+          "price": 30.4,
+          "keywords": [
+            "30°腹腔镜",
+            "30度腹腔镜"
+          ],
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": true,
+          "matchMode": "first"
+        },
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "30度腹腔镜ground30.38",
+          "priority": -1,
+          "price": 30.4,
+          "keywords": [
+            "30°腹腔镜",
+            "30度腹腔镜"
+          ],
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": true,
+          "matchMode": "first"
+        },
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "30度腹腔镜组合价golden30.4",
+          "priority": 0,
+          "price": 30.38,
+          "keywords": [
+            "30°腹腔镜",
+            "30度腹腔镜"
+          ],
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": false,
+          "matchMode": "first"
+        },
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "低温器械保护盒",
+          "priority": 20,
+          "price": 8,
+          "keywords": [
+            "低温器械保护盒",
+            "保护盒"
+          ],
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": true,
+          "matchMode": "first"
+        },
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "低温套10件",
+          "priority": 31,
+          "price": 131.87,
+          "keywords": [
+            "低温灭菌（套）10件",
+            "低温灭菌 (套)10件"
+          ],
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": true,
+          "matchMode": "first"
+        },
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "低温套20件",
+          "priority": 32,
+          "price": 239.76,
+          "keywords": [
+            "低温灭菌（套）20件",
+            "低温灭菌 (套)20件"
+          ],
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": true,
+          "matchMode": "first"
+        },
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "低温套5件",
+          "priority": 30,
+          "price": 70.33,
+          "keywords": [
+            "低温灭菌（套）5件",
+            "低温灭菌(套)5件"
+          ],
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": true,
+          "matchMode": "first"
+        },
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "低温袋10cm",
+          "priority": 40,
+          "price": 17.58,
+          "keywords": [
+            "低温灭菌 10cm"
+          ],
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": false,
+          "matchMode": "first"
+        },
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "低温袋15cm",
+          "priority": 41,
+          "price": 20,
+          "keywords": [
+            "膀胱取石钳"
+          ],
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": true,
+          "matchMode": "first"
+        },
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "低温袋20cm",
+          "priority": 42,
+          "price": 22.38,
+          "keywords": [
+            "低温灭菌 20cm"
+          ],
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": false,
+          "matchMode": "first"
+        },
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "低温袋25cm",
+          "priority": 43,
+          "price": 23.98,
+          "keywords": [
+            "低温灭菌 25cm"
+          ],
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": false,
+          "matchMode": "first"
+        },
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "低温袋30cm",
+          "priority": 44,
+          "price": 27.97,
+          "keywords": [
+            "低温灭菌 30cm"
+          ],
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": false,
+          "matchMode": "first"
+        },
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "保温杯-1Z2044",
+          "priority": 39,
+          "price": 22.38,
+          "keywords": [
+            "保温杯-1Z2044"
+          ],
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": true,
+          "matchMode": "first"
+        },
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "冲洗头-120固定价",
+          "priority": 13,
+          "price": 310.4,
+          "keywords": [
+            "冲洗头-120"
+          ],
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": true,
+          "matchMode": "first"
+        },
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "冲洗头-79固定价",
+          "priority": 13,
+          "price": 220,
+          "keywords": [
+            "冲洗头-79"
+          ],
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": true,
+          "matchMode": "first"
+        },
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "冲洗头-82固定价",
+          "priority": 13,
+          "price": 237.6,
+          "keywords": [
+            "冲洗头-82"
+          ],
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": true,
+          "matchMode": "first"
+        },
+        {
+          "ruleType": "FOLD",
+          "name": "冲洗头5件算1件",
+          "priority": 16,
+          "keywords": [
+            "冲洗头"
+          ],
+          "threshold": 5,
+          "foldRatio": 5,
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": true,
+          "matchMode": "first"
+        },
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "外二换药包120布golden21.99",
+          "priority": 0,
+          "price": 21.99,
+          "keywords": [
+            "换药包(120布)",
+            "换药包120"
+          ],
+          "conditionsJson": "[{\"field\":\"department\",\"value\":[\"外二\"]}]",
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": false,
+          "matchMode": "first"
+        },
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "外二换药包按包21.99",
+          "priority": 4,
+          "price": 21.99,
+          "keywords": [
+            "换药包"
+          ],
+          "conditionsJson": "[{\"field\":\"department\",\"value\":[\"外二\"]}]",
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": false,
+          "matchMode": "first"
+        },
+        {
+          "ruleType": "PRICE_PER_INSTRUMENT",
+          "name": "外来器械4.4每件",
+          "priority": 80,
+          "price": 4.4,
+          "keywords": [
+            "外来"
+          ],
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": true,
+          "matchMode": "first"
+        },
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "外来生物监测120",
+          "priority": 82,
+          "price": 120,
+          "keywords": [
+            "生物监测"
+          ],
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": true,
+          "matchMode": "first"
+        },
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "外来钉盒40",
+          "priority": 81,
+          "price": 40,
+          "keywords": [
+            "钉盒"
+          ],
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": true,
+          "matchMode": "first"
+        },
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "孔巾包整包价",
+          "priority": 11,
+          "price": 27.97,
+          "keywords": [
+            "孔巾包"
+          ],
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": true,
+          "matchMode": "first"
+        },
+        {
+          "ruleType": "FIXED_PRICE",
+          "billingMode": "PER_PACK",
+          "name": "宫腔镜镜头-3件按包52.74",
+          "priority": 4,
+          "price": 52.8,
+          "keywords": [
+            "镜头-3件"
+          ],
+          "conditionsJson": "[{\"field\":\"department\",\"value\":[\"宫腔镜\"]}]",
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": true,
+          "matchMode": "first"
+        },
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "张景欣特器w12050",
+          "priority": 8,
+          "price": 132,
+          "keywords": [
+            "张景欣特器"
+          ],
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": true,
+          "matchMode": "first"
+        },
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "换药包120布组合价",
+          "priority": 10,
+          "price": 22.0,
+          "keywords": [
+            "换药包(120布)",
+            "换药包120"
+          ],
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": true,
+          "matchMode": "first"
+        },
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "敷料20x20",
+          "priority": 70,
+          "price": 3.2,
+          "keywords": [
+            "20cm*20cm",
+            "20×20"
+          ],
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": true,
+          "matchMode": "first"
+        },
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "敷料中20x20x30",
+          "priority": 74,
+          "price": 23.98,
+          "keywords": [
+            "敷料中（20cm*20cm*30cm）"
+          ],
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": true,
+          "matchMode": "first"
+        },
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "敷料大20x20x15",
+          "priority": 71,
+          "price": 2,
+          "keywords": [
+            "大 （20cm*20cm*15cm）",
+            "20cm*20cm*15cm"
+          ],
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": true,
+          "matchMode": "first"
+        },
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "敷料大30x30x50",
+          "priority": 72,
+          "price": 27.97,
+          "keywords": [
+            "敷料大（30cm*30cm*50cm）"
+          ],
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": true,
+          "matchMode": "first"
+        },
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "敷料小20x20x15",
+          "priority": 73,
+          "price": 19.98,
+          "keywords": [
+            "敷料小（20cm*20cm*15cm）"
+          ],
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": true,
+          "matchMode": "first"
+        },
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "橄榄头-102固定价",
+          "priority": 13,
+          "price": 257.6,
+          "keywords": [
+            "橄榄头-102"
+          ],
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": true,
+          "matchMode": "first"
+        },
+        {
+          "ruleType": "FOLD",
+          "name": "橄榄头5件算1件",
+          "priority": 15,
+          "keywords": [
+            "橄榄头"
+          ],
+          "threshold": 5,
+          "foldRatio": 5,
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": true,
+          "matchMode": "first"
+        },
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "王树人特器26golden328",
+          "priority": 0,
+          "price": 328,
+          "keywords": [
+            "王树人特器-26"
+          ],
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": false,
+          "matchMode": "first"
+        },
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "王树人特器w12050",
+          "priority": 8,
+          "price": 328,
+          "keywords": [
+            "王树人特器-26"
+          ],
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": true,
+          "matchMode": "first"
+        },
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "球内注药3件最低把价",
+          "priority": 12,
+          "price": 13.2,
+          "keywords": [
+            "球内注药"
+          ],
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": true,
+          "matchMode": "first"
+        },
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "纸塑袋10cm两件套",
+          "priority": 55,
+          "price": 10.79,
+          "keywords": [
+            "纸塑袋 10cm",
+            "纸塑袋10cm"
+          ],
+          "bagSizeEquals": 2,
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": true,
+          "matchMode": "first"
+        },
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "纸塑袋10cm单把",
+          "priority": 50,
+          "price": 6.39,
+          "keywords": [
+            "纸塑袋 10cm",
+            "纸塑袋10cm"
+          ],
+          "bagSizeEquals": 1,
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": true,
+          "matchMode": "first"
+        },
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "纸塑袋15cm两件套",
+          "priority": 54,
+          "price": 13.19,
+          "keywords": [
+            "纸塑袋 15cm",
+            "纸塑袋15cm"
+          ],
+          "bagSizeEquals": 2,
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": true,
+          "matchMode": "first"
+        },
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "纸塑袋15cm单把",
+          "priority": 51,
+          "price": 8.79,
+          "keywords": [
+            "纸塑袋 15cm",
+            "纸塑袋15cm"
+          ],
+          "bagSizeEquals": 1,
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": true,
+          "matchMode": "first"
+        },
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "纸塑袋20cm单把",
+          "priority": 52,
+          "price": 10.39,
+          "keywords": [
+            "纸塑袋20cm",
+            "纸塑袋 20cm"
+          ],
+          "bagSizeEquals": 1,
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": true,
+          "matchMode": "first"
+        },
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "纸塑袋25cm单把",
+          "priority": 53,
+          "price": 12.79,
+          "keywords": [
+            "纸塑袋 25cm",
+            "纸塑袋25cm"
+          ],
+          "bagSizeEquals": 1,
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": true,
+          "matchMode": "first"
+        },
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "腔镜包整包价",
+          "priority": 11,
+          "price": 27.97,
+          "keywords": [
+            "腔镜包"
+          ],
+          "excludeKeywords": [
+            "腹腔镜"
+          ],
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": true,
+          "matchMode": "first"
+        },
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "辅料包整包价",
+          "priority": 11,
+          "price": 27.97,
+          "keywords": [
+            "辅料包"
+          ],
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": true,
+          "matchMode": "first"
+        },
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "输尿管镜z3095两件35.16",
+          "priority": 35,
+          "price": 35.16,
+          "keywords": [
+            "z3095"
+          ],
+          "minInstrumentCount": 2,
+          "maxInstrumentCount": 2,
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": true,
+          "matchMode": "first"
+        },
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "附一低温双1件35元",
+          "priority": 4,
+          "price": 35.0,
+          "keywords": [
+            "双"
+          ],
+          "excludeKeywords": [
+            "(双)",
+            "/(双)",
+            "双极",
+            "双极线"
+          ],
+          "temperature": "LT",
+          "maxInstrumentCount": 1,
+          "minInstrumentCount": 1,
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": true,
+          "matchMode": "first"
+        },
+        {
+          "ruleType": "FOLD",
+          "name": "附一克氏针5合1免包材",
+          "priority": 6,
+          "keywords": [
+            "克氏针",
+            "银质针",
+            "内热针",
+            "车针",
+            "拔髓针",
+            "扩大针",
+            "卷棉子"
+          ],
+          "threshold": 5,
+          "foldRatio": 5,
+          "minInstrumentCount": 11,
+          "skipPackaging": true,
+          "isActive": true,
+          "matchMode": "first",
+          "skipDiscount": false
+        },
+        {
+          "ruleType": "FOLD",
+          "name": "附一克氏针5合1含包材",
+          "priority": 5,
+          "keywords": [
+            "克氏针",
+            "银质针",
+            "内热针",
+            "车针",
+            "拔髓针",
+            "扩大针",
+            "卷棉子"
+          ],
+          "threshold": 5,
+          "foldRatio": 5,
+          "maxInstrumentCount": 10,
+          "skipPackaging": false,
+          "isActive": true,
+          "matchMode": "first",
+          "skipDiscount": false
+        }
+      ],
+      "rule_count": 48,
+      "active_rule_count": 40
+    },
+    "ZYY-D2-HN": {
+      "code": "ZYY-D2-HN",
+      "name": "黑龙江中医药大学附属第二医院（哈南分院）",
+      "status": null,
+      "billingPricingMode": "hybrid",
+      "standardPricingOverride": null,
+      "billingEnabled": null,
+      "productRules": [
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "校正价16.5",
+          "priority": 10,
+          "price": 16.5,
+          "keywords": [
+            "粉刺针-3"
+          ],
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": true,
+          "matchMode": "first"
+        }
+      ],
+      "rule_count": 1,
+      "active_rule_count": 1
+    },
+    "ZYY-D2-NG": {
+      "code": "ZYY-D2-NG",
+      "name": "黑龙江中医药大学附属第二医院（南岗）",
+      "status": null,
+      "billingPricingMode": "special_only",
+      "standardPricingOverride": null,
+      "billingEnabled": null,
+      "productRules": [
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "PDF/期待价30",
+          "priority": 200,
+          "price": 30.0,
+          "keywords": [
+            "大衣"
+          ],
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": true,
+          "matchMode": "any_price"
+        },
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "PDF/期待价35",
+          "priority": 201,
+          "price": 35.0,
+          "keywords": [
+            "小单"
+          ],
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": true,
+          "matchMode": "first"
+        },
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "校正价22.0",
+          "priority": 10,
+          "price": 22.0,
+          "keywords": [
+            "剪刀-4",
+            "车针-17"
+          ],
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": true,
+          "matchMode": "first"
+        },
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "校正价30.0",
+          "priority": 11,
+          "price": 30.0,
+          "keywords": [
+            "大衣"
+          ],
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": true,
+          "matchMode": "first"
+        },
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "校正价35.0",
+          "priority": 12,
+          "price": 35.0,
+          "keywords": [
+            "小单"
+          ],
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": true,
+          "matchMode": "first"
+        },
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "校正价38.5",
+          "priority": 13,
+          "price": 38.5,
+          "keywords": [
+            "机扩针-6盒1"
+          ],
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": true,
+          "matchMode": "first"
+        },
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "附二南岗export 关节镜30度44",
+          "priority": 3,
+          "price": 44,
+          "keywords": [
+            "关节镜30°/z2060"
+          ],
+          "conditionsJson": "[{\"field\":\"exportApply\",\"value\":true}]",
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": false,
+          "matchMode": "first"
+        },
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "附二南岗export 关节镜70度44",
+          "priority": 3,
+          "price": 44,
+          "keywords": [
+            "关节镜70°-1/z2060"
+          ],
+          "conditionsJson": "[{\"field\":\"exportApply\",\"value\":true}]",
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": false,
+          "matchMode": "first"
+        },
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "附二南岗export 刮勺探针22",
+          "priority": 3,
+          "price": 22,
+          "keywords": [
+            "刮勺探针4/z1035"
+          ],
+          "conditionsJson": "[{\"field\":\"exportApply\",\"value\":true}]",
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": false,
+          "matchMode": "first"
+        },
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "附二南岗export 机扩针7盒16.5",
+          "priority": 3,
+          "price": 16.5,
+          "keywords": [
+            "机扩针-7盒1/z1526"
+          ],
+          "conditionsJson": "[{\"field\":\"exportApply\",\"value\":true}]",
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": false,
+          "matchMode": "first"
+        },
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "附二南岗export 椎间孔镜35",
+          "priority": 3,
+          "price": 35,
+          "keywords": [
+            "椎间孔镜镜头-1（双层）/z2060"
+          ],
+          "conditionsJson": "[{\"field\":\"exportApply\",\"value\":true}]",
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": false,
+          "matchMode": "first"
+        },
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "附二南岗关节镜30度",
+          "priority": 12,
+          "price": 36.0,
+          "keywords": [
+            "关节镜30°"
+          ],
+          "matchMode": "first",
+          "acceptedPrices": [
+            36.0,
+            44.0
+          ],
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": true
+        },
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "附二南岗关节镜70度",
+          "priority": 13,
+          "price": 28.0,
+          "keywords": [
+            "关节镜70°"
+          ],
+          "matchMode": "first",
+          "acceptedPrices": [
+            28.0,
+            44.0
+          ],
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": true
+        },
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "附二南岗刮勺探针4",
+          "priority": 9,
+          "price": 22.0,
+          "keywords": [
+            "刮勺探针4"
+          ],
+          "matchMode": "first",
+          "acceptedPrices": [
+            8.0,
+            22.0
+          ],
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": false
+        },
+        {
+          "ruleType": "PRICE_PER_INSTRUMENT",
+          "billingMode": "PACK_NAME_SUFFIX",
+          "pieceCountSource": "PACK_NAME_LAST_NUMBER",
+          "name": "附二南岗刮勺探针5.5元/把",
+          "priority": 8,
+          "price": 5.5,
+          "keywords": [
+            "刮勺探针"
+          ],
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": true,
+          "matchMode": "first"
+        },
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "附二南岗大衣W9050",
+          "priority": 4,
+          "price": 30,
+          "keywords": [
+            "大衣"
+          ],
+          "skipPackaging": true,
+          "isActive": true,
+          "matchMode": "first",
+          "skipDiscount": false
+        },
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "附二南岗大衣无纺布35",
+          "priority": 3,
+          "price": 35,
+          "keywords": [
+            "大衣-无纺布"
+          ],
+          "skipPackaging": true,
+          "conditionsJson": "[{\"field\":\"exportApply\",\"value\":true}]",
+          "isActive": true,
+          "matchMode": "first",
+          "skipDiscount": false
+        },
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "附二南岗小单w1250",
+          "priority": 4,
+          "price": 35,
+          "keywords": [
+            "小单"
+          ],
+          "skipPackaging": true,
+          "isActive": true,
+          "matchMode": "first",
+          "skipDiscount": false
+        },
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "附二南岗弯针2",
+          "priority": 10,
+          "price": 13.5,
+          "keywords": [
+            "弯针-2"
+          ],
+          "matchMode": "first",
+          "acceptedPrices": [
+            8.0,
+            13.5
+          ],
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": true
+        },
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "附二南岗机扩针7盒",
+          "priority": 8,
+          "price": 16.5,
+          "keywords": [
+            "机扩针-7盒1"
+          ],
+          "matchMode": "any_price",
+          "acceptedPrices": [
+            11.0,
+            16.5
+          ],
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": true
+        },
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "附二南岗椎间孔镜镜头",
+          "priority": 11,
+          "price": 35.0,
+          "keywords": [
+            "椎间孔镜镜头"
+          ],
+          "matchMode": "first",
+          "acceptedPrices": [
+            30.0,
+            35.0
+          ],
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": true
+        }
+      ],
+      "rule_count": 21,
+      "active_rule_count": 15
+    }
+  }
+}

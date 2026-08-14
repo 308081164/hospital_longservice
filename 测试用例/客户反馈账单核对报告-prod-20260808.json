@@ -1,0 +1,1258 @@
+{
+  "generated_at": "2026-08-08T17:12:00",
+  "profile": "prod",
+  "wave6_baseline": null,
+  "coverage": {
+    "total": 38,
+    "found": 38,
+    "missing": 0,
+    "changed": 20,
+    "unchanged": 0,
+    "error": 0
+  },
+  "preflight": {
+    "smoke_ok": true,
+    "deploy_check_ok": true,
+    "deploy_check_detail": "ok",
+    "api_base": "http://39.102.213.51:8853",
+    "checked_at": "2026-08-08T09:20:23"
+  },
+  "s1_summary": {
+    "ok": 37,
+    "warn_no_settlement": 1,
+    "skip": 0
+  },
+  "s4_summary": {
+    "total": 38,
+    "pass": 17,
+    "fail": 21,
+    "fail_extra": 17,
+    "fail_missed": 4,
+    "skip": 0,
+    "error": 0,
+    "md_drift": 21
+  },
+  "s8_bill_counts": {
+    "fail": 22,
+    "pass": 13,
+    "warn": 3
+  },
+  "s8_settlement_counts": {
+    "pass": 18,
+    "blocked_material": 4,
+    "fail": 16
+  },
+  "strict_dual_pass": 11,
+  "deviations": [
+    {
+      "priority": "P0",
+      "hospital": "南岗区妇产医院",
+      "step": "S4",
+      "detail": "漏检 missed=4 job=320 keys=['1608922|扩棒（6.5 7 7.5）-3件z7526|1', '1611043|扩棒（4 4.5 5）-3/z7526|1', '1613091|扩棒（4 4.5 5）-3/z7526|1']"
+    },
+    {
+      "priority": "P0",
+      "hospital": "哈尔滨冰城医疗美容医院",
+      "step": "S4",
+      "detail": "漏检 missed=2 job=295 keys=['1609398|环钻包|2', '1614554|环钻包|1']"
+    },
+    {
+      "priority": "P0",
+      "hospital": "哈尔滨市呼兰区第一人民医院",
+      "step": "S4",
+      "detail": "extra warning 295 条（P0 bug · prod Job 数据）"
+    },
+    {
+      "priority": "P0",
+      "hospital": "哈尔滨市第二医院",
+      "step": "S4",
+      "detail": "漏检 missed=3 job=273 keys=['1609478|正畸去胶车针-1/Z7520|1', '1614205|正畸去胶车针-1/Z7520|1', '1615803|正畸去胶车针-1/Z7520|1']"
+    },
+    {
+      "priority": "P0",
+      "hospital": "哈尔滨市第五医院",
+      "step": "S4",
+      "detail": "extra warning 55 条（P0 bug · prod Job 数据）"
+    },
+    {
+      "priority": "P0",
+      "hospital": "哈尔滨市红十字妇产医院",
+      "step": "S4",
+      "detail": "extra warning 12 条（P0 bug · prod Job 数据）"
+    },
+    {
+      "priority": "P0",
+      "hospital": "国药总医院主院区",
+      "step": "S4",
+      "detail": "extra warning 3 条（P0 bug · prod Job 数据）"
+    },
+    {
+      "priority": "P0",
+      "hospital": "国药总医院第三院区",
+      "step": "S4",
+      "detail": "extra warning 2 条（P0 bug · prod Job 数据）"
+    },
+    {
+      "priority": "P0",
+      "hospital": "国药总医院第二院区",
+      "step": "S4",
+      "detail": "extra warning 1 条（P0 bug · prod Job 数据）"
+    },
+    {
+      "priority": "P0",
+      "hospital": "新发红十字医院",
+      "step": "S4",
+      "detail": "extra warning 21 条（P0 bug · prod Job 数据）"
+    },
+    {
+      "priority": "P0",
+      "hospital": "祖研-黑龙江省中医医院（三辅院区）",
+      "step": "S4",
+      "detail": "漏检 missed=6 job=280 keys=['1611839|探针1瘘管1刨刀1/Z1026|1', '1612616|探针1瘘管1刨刀1/Z1026|2', '1613063|探针1瘘管1刨刀1/Z1026|1']"
+    },
+    {
+      "priority": "P0",
+      "hospital": "祖研-黑龙江省中医医院（南岗院区）",
+      "step": "S4",
+      "detail": "extra warning 2 条（P0 bug · prod Job 数据）"
+    },
+    {
+      "priority": "P0",
+      "hospital": "黑龙江中医药大学附属第一医院",
+      "step": "S4",
+      "detail": "extra warning 256 条（P0 bug · prod Job 数据）"
+    },
+    {
+      "priority": "P0",
+      "hospital": "黑龙江中医药大学附属第二医院（南岗）",
+      "step": "S4",
+      "detail": "extra warning 2 条（P0 bug · prod Job 数据）"
+    },
+    {
+      "priority": "P0",
+      "hospital": "黑龙江中医药大学附属第二医院（哈南分院）",
+      "step": "S4",
+      "detail": "extra warning 2 条（P0 bug · prod Job 数据）"
+    },
+    {
+      "priority": "P0",
+      "hospital": "黑龙江九洲妇科医院",
+      "step": "S4",
+      "detail": "extra warning 12 条（P0 bug · prod Job 数据）"
+    },
+    {
+      "priority": "P0",
+      "hospital": "黑龙江省医院（南岗院区）",
+      "step": "S4",
+      "detail": "extra warning 1132 条（P0 bug · prod Job 数据）"
+    },
+    {
+      "priority": "P0",
+      "hospital": "黑龙江省医院（香坊院区）",
+      "step": "S4",
+      "detail": "extra warning 2796 条（P0 bug · prod Job 数据）"
+    },
+    {
+      "priority": "P0",
+      "hospital": "黑龙江省第二医院（南岗院区）",
+      "step": "S4",
+      "detail": "extra warning 2 条（P0 bug · prod Job 数据）"
+    },
+    {
+      "priority": "P0",
+      "hospital": "黑龙江省第二医院（松北院区）",
+      "step": "S4",
+      "detail": "extra warning 23 条（P0 bug · prod Job 数据）"
+    },
+    {
+      "priority": "P0",
+      "hospital": "黑龙江维多利亚妇产医院",
+      "step": "S4",
+      "detail": "extra warning 116 条（P0 bug · prod Job 数据）"
+    },
+    {
+      "priority": "P2",
+      "hospital": "南岗区妇产医院",
+      "step": "S8 bill",
+      "detail": "与本地材料比对 fail · 行 61 vs 58 (Δ3) · 总额 2966.5 vs 2883.0 (Δ83.50) · sheets=3 summary=化验室 · S4 pass_zero · 58 行 · Δ9.4 OCR/套包四舍五入 · layout 登记（prod Job 数据 · 非 export 失败）"
+    },
+    {
+      "priority": "P2",
+      "hospital": "南岗区妇产医院",
+      "step": "S8 settlement",
+      "detail": "与本地材料比对 fail · 总额 3616.5 vs 3352.0 (Δ264.50) · 条目 2/2 · 金额差 ['灭菌费用', '物流费用']（prod Job 数据）"
+    },
+    {
+      "priority": "P2",
+      "hospital": "呼兰区红十字医院",
+      "step": "S8 bill",
+      "detail": "与本地材料比对 fail · 行 7 vs 22 (Δ15) · 总额 863.0 vs 2144.5 (Δ1281.50)（prod Job 数据 · 非 export 失败）"
+    },
+    {
+      "priority": "P2",
+      "hospital": "呼兰区红十字医院",
+      "step": "S8 settlement",
+      "detail": "与本地材料比对 fail · 总额 913.0 vs 2244.5 (Δ1331.50) · 条目 2/2 · 金额差 ['灭菌费用', '物流费用']（prod Job 数据）"
+    },
+    {
+      "priority": "P2",
+      "hospital": "哈尔滨冰城医疗美容医院",
+      "step": "S8 bill",
+      "detail": "与本地材料比对 fail · 行 38 vs 38 (Δ0) · 总额 1568.0 vs 1559.0 (Δ9.00)（prod Job 数据 · 非 export 失败）"
+    },
+    {
+      "priority": "P2",
+      "hospital": "哈尔滨冰城医疗美容医院",
+      "step": "S8 settlement",
+      "detail": "与本地材料比对 fail · 总额 1768.0 vs 1759.0 (Δ9.00) · 条目 2/2 · 金额差 ['灭菌费用']（prod Job 数据）"
+    },
+    {
+      "priority": "P2",
+      "hospital": "哈尔滨工业大学医院",
+      "step": "S8 settlement",
+      "detail": "与本地材料比对 fail · 总额 74350.0 vs 60645.6 (Δ13704.40) · 条目 2/3 · 缺 ['加急物流费'] · 金额差 ['灭菌费用']（prod Job 数据）"
+    },
+    {
+      "priority": "P2",
+      "hospital": "哈尔滨市呼兰区第一人民医院",
+      "step": "S8 bill",
+      "detail": "与本地材料比对 fail · 行 154 vs 423 (Δ269) · 总额 9255.92 vs 10194.1 (Δ938.18)（prod Job 数据 · 非 export 失败）"
+    },
+    {
+      "priority": "P2",
+      "hospital": "哈尔滨市呼兰区第一人民医院",
+      "step": "S8 settlement",
+      "detail": "与本地材料比对 fail · 总额 10055.92 vs 10994.1 (Δ938.18) · 条目 2/2 · 金额差 ['灭菌费用']（prod Job 数据）"
+    },
+    {
+      "priority": "P2",
+      "hospital": "哈尔滨市第二医院",
+      "step": "S8 bill",
+      "detail": "与本地材料比对 fail · 行 1922 vs 1958 (Δ36) · 总额 93490.5 vs 105383.0 (Δ11892.50) · sheets=23 summary=供应室（prod Job 数据 · 非 export 失败）"
+    },
+    {
+      "priority": "P2",
+      "hospital": "哈尔滨市第五医院",
+      "step": "S8 bill",
+      "detail": "与本地材料比对 fail · 行 5004 vs 5005 (Δ1) · 总额 454919.5 vs 455692.0 (Δ772.50) · S4 pass · 5005 行一致 · 总额 Δ420=28 行铂康处理后表 vs export/DB correctedTotalPrice：W905060 光源铂康35/引擎22·28、胸腔镜2×(121→99)、磨头Z1026(88→38.5)、W906050胸外镜头(35→11)等；export 与 Job613 DB 455272 一致，非 export 引擎 bug（prod Job 数据 · 非 export 失败）"
+    },
+    {
+      "priority": "P2",
+      "hospital": "哈尔滨市第五医院",
+      "step": "S8 settlement",
+      "detail": "与本地材料比对 fail · 总额 456491.5 vs 772061.5 (Δ315570.00) · 条目 2/3 · 缺 ['外来器械费用'] · 金额差 ['灭菌费用', '物流费用']（prod Job 数据）"
+    },
+    {
+      "priority": "P2",
+      "hospital": "哈尔滨市第五医院（二门诊）",
+      "step": "S8 settlement",
+      "detail": "与本地材料比对 fail · 总额 456491.5 vs 772061.5 (Δ315570.00) · 条目 2/3 · 缺 ['外来器械费用'] · 金额差 ['灭菌费用', '物流费用'] · 合并结款 · 见市五院 Job613（prod Job 数据）"
+    },
+    {
+      "priority": "P2",
+      "hospital": "哈尔滨市红十字妇产医院",
+      "step": "S8 bill",
+      "detail": "与本地材料比对 fail · 行 1723 vs 1723 (Δ0) · 总额 159512.0 vs 159033.0 (Δ479.00)（prod Job 数据 · 非 export 失败）"
+    },
+    {
+      "priority": "P2",
+      "hospital": "哈尔滨长健医院",
+      "step": "S8 settlement",
+      "detail": "登记已知差 · 总额 738.5 vs 688.5 (Δ50.00) · 条目 2/2 · 金额差 ['物流费用']"
+    },
+    {
+      "priority": "P2",
+      "hospital": "国药总医院主院区",
+      "step": "S8 bill",
+      "detail": "与本地材料比对 fail · 行 131 vs 139 (Δ8) · 总额 21383.5 vs 21989.0 (Δ605.50)（prod Job 数据 · 非 export 失败）"
+    },
+    {
+      "priority": "P2",
+      "hospital": "国药总医院第三院区",
+      "step": "S8 bill",
+      "detail": "与本地材料比对 fail · 行 11 vs 12 (Δ1) · 总额 1819.0 vs 1667.0 (Δ152.00) · S8 已知差：相对 6月__5.26-6.25 处理后表 15 行/1667 元，export-v2 14 行/1665 元（Δ1 行 Δ2 元）；缺「内热针(中)-15」行、中单 3+5 被合并为两行 5×5、止血钳/内热针(长)包数与铂康表不一致；S4 pass_zero，属 legacy 汽轮机导出汇总口径（prod Job 数据 · 非 export 失败）"
+    },
+    {
+      "priority": "P2",
+      "hospital": "国药总医院第三院区",
+      "step": "S8 settlement",
+      "detail": "与本地材料比对 fail · 总额 2069.0 vs 1474.5 (Δ594.50) · 条目 2/2 · 金额差 ['物流费用', '灭菌费用']（prod Job 数据）"
+    },
+    {
+      "priority": "P2",
+      "hospital": "国药总医院第二院区",
+      "step": "S8 bill",
+      "detail": "与本地材料比对 fail · 行 43 vs 54 (Δ11) · 总额 4618.5 vs 4447.5 (Δ171.00)（prod Job 数据 · 非 export 失败）"
+    },
+    {
+      "priority": "P2",
+      "hospital": "太平人民医院",
+      "step": "S8 settlement",
+      "detail": "与本地材料比对 fail · 总额 5992.18 vs 5431.02 (Δ561.16) · 条目 1/1 · 金额差 ['灭菌费用']（prod Job 数据）"
+    },
+    {
+      "priority": "P2",
+      "hospital": "新发红十字医院",
+      "step": "S8 bill",
+      "detail": "与本地材料比对 fail · 行 375 vs 375 (Δ0) · 总额 21903.0 vs 21866.0 (Δ37.00)（prod Job 数据 · 非 export 失败）"
+    },
+    {
+      "priority": "P2",
+      "hospital": "祖研-黑龙江省中医医院（三辅院区）",
+      "step": "S8 bill",
+      "detail": "与本地材料比对 fail · 行 246 vs 246 (Δ0) · 总额 23065.0 vs 23024.0 (Δ41.00) · sheets=13 summary=外科门诊 · S4 pass · 246 行一致 · 总额 Δ24 为四舍五入/legacy 布局 structure_ok false（prod Job 数据 · 非 export 失败）"
+    },
+    {
+      "priority": "P2",
+      "hospital": "祖研-黑龙江省中医医院（三辅院区）",
+      "step": "S8 settlement",
+      "detail": "与本地材料比对 fail · 总额 24115.0 vs 23849.0 (Δ266.00) · 条目 2/2 · 金额差 ['灭菌费用', '物流费用']（prod Job 数据）"
+    },
+    {
+      "priority": "P2",
+      "hospital": "黑龙江中医药大学附属第一医院",
+      "step": "S8 bill",
+      "detail": "与本地材料比对 fail · 行 1853 vs 1848 (Δ5) · 总额 154541.12 vs 155448.8 (Δ907.68) · sheets=42 summary=中医经典病房（prod Job 数据 · 非 export 失败）"
+    },
+    {
+      "priority": "P2",
+      "hospital": "黑龙江中医药大学附属第二医院（哈南分院）",
+      "step": "S8 bill",
+      "detail": "与本地材料比对 fail · 行 252 vs 252 (Δ0) · 总额 8869.0 vs 8880.0 (Δ11.00) · sheets=9 summary=口腔（prod Job 数据 · 非 export 失败）"
+    },
+    {
+      "priority": "P2",
+      "hospital": "黑龙江九洲妇科医院",
+      "step": "S8 bill",
+      "detail": "与本地材料比对 fail · 行 12 vs 11 (Δ1) · 总额 3104.0 vs 6132.5 (Δ3028.50)（prod Job 数据 · 非 export 失败）"
+    },
+    {
+      "priority": "P2",
+      "hospital": "黑龙江九洲妇科医院",
+      "step": "S8 settlement",
+      "detail": "与本地材料比对 fail · 总额 1552.0 vs 3066.25 (Δ1514.25) · 条目 2/4 · 缺 ['加急灭菌费', '物流费用'] · 金额差 ['高温灭菌费用']（prod Job 数据）"
+    },
+    {
+      "priority": "P2",
+      "hospital": "黑龙江省中医药大学附属第三医院（电力）",
+      "step": "S8 bill",
+      "detail": "与本地材料比对 fail · 行 517 vs 540 (Δ23) · 总额 27636.0 vs 30769.5 (Δ3133.50)（prod Job 数据 · 非 export 失败）"
+    },
+    {
+      "priority": "P2",
+      "hospital": "黑龙江省医院（南岗院区）",
+      "step": "S8 bill",
+      "detail": "与本地材料比对 fail · 行 1205 vs 1205 (Δ0) · 总额 67107.32 vs 41669.02 (Δ25438.30) · sheets=25 summary=ICU · S4 pass · 1205/1206 行 · Δ185.7 子包合并/四舍五入登记（prod Job 数据 · 非 export 失败）"
+    },
+    {
+      "priority": "P2",
+      "hospital": "黑龙江省医院（南岗院区）",
+      "step": "S8 settlement",
+      "detail": "与本地材料比对 fail · 总额 69926.82 vs 46178.92 (Δ23747.90) · 条目 2/2 · 金额差 ['灭菌费用']（prod Job 数据）"
+    },
+    {
+      "priority": "P2",
+      "hospital": "黑龙江省医院（香坊院区）",
+      "step": "S8 bill",
+      "detail": "与本地材料比对 fail · 行 2975 vs 2975 (Δ0) · 总额 268498.0 vs 178518.9 (Δ89979.10) · sheets=56 summary=NICU（9楼 新生儿）（prod Job 数据 · 非 export 失败）"
+    },
+    {
+      "priority": "P2",
+      "hospital": "黑龙江省医院（香坊院区）",
+      "step": "S8 settlement",
+      "detail": "与本地材料比对 fail · 总额 293995.5 vs 182093.0 (Δ111902.50) · 条目 2/2 · 金额差 ['灭菌费用']（prod Job 数据）"
+    },
+    {
+      "priority": "P2",
+      "hospital": "黑龙江省社会康复医院",
+      "step": "S8 bill",
+      "detail": "与本地材料比对 fail · 行 33 vs 26 (Δ7) · 总额 1049.0 vs 761.5 (Δ287.50) · Job 625 与 6月__省康复6月账单 成对（非监狱单表）（prod Job 数据 · 非 export 失败）"
+    },
+    {
+      "priority": "P2",
+      "hospital": "黑龙江省社会康复医院",
+      "step": "S8 settlement",
+      "detail": "与本地材料比对 fail · 总额 986.75 vs 721.12 (Δ265.63) · 条目 2/2 · 金额差 ['灭菌费用', '物流费用']（prod Job 数据）"
+    },
+    {
+      "priority": "P2",
+      "hospital": "黑龙江省第二医院（南岗院区）",
+      "step": "S8 bill",
+      "detail": "与本地材料比对 fail · 行 44 vs 86 (Δ42) · 总额 969.4 vs 956.2 (Δ13.20)（prod Job 数据 · 非 export 失败）"
+    },
+    {
+      "priority": "P2",
+      "hospital": "黑龙江省第二医院（南岗院区）",
+      "step": "S8 settlement",
+      "detail": "与本地材料比对 fail · 总额 1291.4 vs 1278.2 (Δ13.20) · 条目 2/2 · 金额差 ['灭菌费用']（prod Job 数据）"
+    },
+    {
+      "priority": "P2",
+      "hospital": "黑龙江省第二医院（松北院区）",
+      "step": "S8 bill",
+      "detail": "与本地材料比对 fail · 行 1278 vs 1426 (Δ148) · 总额 65781.1 vs 73999.05 (Δ8217.95) · sheets=22 summary=ICU · S7 kit 组件行保留 · 行差缺 part3 材料（prod Job 数据 · 非 export 失败）"
+    },
+    {
+      "priority": "P2",
+      "hospital": "黑龙江维多利亚妇产医院",
+      "step": "S8 bill",
+      "detail": "与本地材料比对 fail · 行 117 vs 117 (Δ0) · 总额 8873.25 vs 17025.5 (Δ8152.25)（prod Job 数据 · 非 export 失败）"
+    },
+    {
+      "priority": "P2",
+      "hospital": "黑龙江维多利亚妇产医院",
+      "step": "S8 settlement",
+      "detail": "与本地材料比对 fail · 总额 3802.08 vs 9703.75 (Δ5901.67) · 条目 5/7 · 缺 ['低消补差', '加急灭菌费', '加急物流费'] · 多 ['封顶调减'] · 金额差 ['高温灭菌费用', '低温灭菌费用']（prod Job 数据）"
+    },
+    {
+      "priority": "P3",
+      "hospital": "哈尔滨市第二医院",
+      "step": "S8 settlement",
+      "detail": "材料阻塞 · 跳过结款自动化"
+    },
+    {
+      "priority": "P3",
+      "hospital": "国药总医院主院区",
+      "step": "S8 settlement",
+      "detail": "材料阻塞 · 跳过结款自动化"
+    },
+    {
+      "priority": "P3",
+      "hospital": "国药总医院第二院区",
+      "step": "S8 settlement",
+      "detail": "材料阻塞 · 跳过结款自动化"
+    },
+    {
+      "priority": "P3",
+      "hospital": "黑龙江省第二医院（松北院区）",
+      "step": "S8 settlement",
+      "detail": "材料阻塞 · 跳过结款自动化"
+    },
+    {
+      "priority": "INFO",
+      "hospital": "南岗区妇产医院",
+      "step": "local vs prod",
+      "detail": "bill pass→fail"
+    },
+    {
+      "priority": "INFO",
+      "hospital": "呼兰区红十字医院",
+      "step": "local vs prod",
+      "detail": "bill pass→fail; settlement pass→fail"
+    },
+    {
+      "priority": "INFO",
+      "hospital": "哈尔滨冰城医疗美容医院",
+      "step": "local vs prod",
+      "detail": "bill pass→fail; settlement pass→fail"
+    },
+    {
+      "priority": "INFO",
+      "hospital": "哈尔滨工业大学医院",
+      "step": "local vs prod",
+      "detail": "settlement pass→fail"
+    },
+    {
+      "priority": "INFO",
+      "hospital": "哈尔滨市呼兰区第一人民医院",
+      "step": "local vs prod",
+      "detail": "bill pass→fail; settlement pass→fail"
+    },
+    {
+      "priority": "INFO",
+      "hospital": "哈尔滨市第五医院",
+      "step": "local vs prod",
+      "detail": "bill pass→fail; settlement pass→fail"
+    },
+    {
+      "priority": "INFO",
+      "hospital": "哈尔滨市第五医院（二门诊）",
+      "step": "local vs prod",
+      "detail": "settlement pass→fail"
+    },
+    {
+      "priority": "INFO",
+      "hospital": "哈尔滨市红十字妇产医院",
+      "step": "local vs prod",
+      "detail": "bill pass→fail"
+    },
+    {
+      "priority": "INFO",
+      "hospital": "国药总医院第三院区",
+      "step": "local vs prod",
+      "detail": "bill pass→fail; settlement pass→fail"
+    },
+    {
+      "priority": "INFO",
+      "hospital": "太平人民医院",
+      "step": "local vs prod",
+      "detail": "settlement pass→fail"
+    },
+    {
+      "priority": "INFO",
+      "hospital": "新发红十字医院",
+      "step": "local vs prod",
+      "detail": "bill pass→fail"
+    },
+    {
+      "priority": "INFO",
+      "hospital": "祖研-黑龙江省中医医院（三辅院区）",
+      "step": "local vs prod",
+      "detail": "bill pass→fail; settlement pass→fail"
+    },
+    {
+      "priority": "INFO",
+      "hospital": "祖研-黑龙江省中医医院（南岗院区）",
+      "step": "local vs prod",
+      "detail": "bill pass→warn"
+    },
+    {
+      "priority": "INFO",
+      "hospital": "黑龙江中医药大学附属第一医院",
+      "step": "local vs prod",
+      "detail": "bill pass→fail"
+    },
+    {
+      "priority": "INFO",
+      "hospital": "黑龙江中医药大学附属第二医院（南岗）",
+      "step": "local vs prod",
+      "detail": "bill pass→warn"
+    },
+    {
+      "priority": "INFO",
+      "hospital": "黑龙江中医药大学附属第二医院（哈南分院）",
+      "step": "local vs prod",
+      "detail": "bill pass→fail"
+    },
+    {
+      "priority": "INFO",
+      "hospital": "黑龙江九洲妇科医院",
+      "step": "local vs prod",
+      "detail": "bill pass→fail; settlement pass→fail"
+    },
+    {
+      "priority": "INFO",
+      "hospital": "黑龙江省中医药大学附属第三医院（电力）",
+      "step": "local vs prod",
+      "detail": "bill pass→fail"
+    },
+    {
+      "priority": "INFO",
+      "hospital": "黑龙江省医院（南岗院区）",
+      "step": "local vs prod",
+      "detail": "bill pass→fail; settlement pass→fail"
+    },
+    {
+      "priority": "INFO",
+      "hospital": "黑龙江省医院（香坊院区）",
+      "step": "local vs prod",
+      "detail": "bill pass→fail; settlement pass→fail"
+    },
+    {
+      "priority": "INFO",
+      "hospital": "黑龙江省社会康复医院",
+      "step": "local vs prod",
+      "detail": "bill pass→fail; settlement pass→fail"
+    },
+    {
+      "priority": "INFO",
+      "hospital": "黑龙江省第二医院（南岗院区）",
+      "step": "local vs prod",
+      "detail": "bill pass→fail; settlement pass→fail"
+    },
+    {
+      "priority": "INFO",
+      "hospital": "黑龙江维多利亚妇产医院",
+      "step": "local vs prod",
+      "detail": "bill pass→fail; settlement pass→fail"
+    }
+  ],
+  "matrix": [
+    {
+      "hospital": "黑龙江中医药大学附属第一医院",
+      "s1": "✅",
+      "s4": "🚫",
+      "s8_bill": "fail",
+      "s8_settlement": "pass",
+      "job_id": 339,
+      "note": "行 1853 vs 1848 (Δ5) · 总额 154541.12 vs 155448.8 (Δ907.68) · sheets=42 summary=中医经"
+    },
+    {
+      "hospital": "黑龙江省中医药大学附属第三医院（电力）",
+      "s1": "✅",
+      "s4": "✅",
+      "s8_bill": "fail",
+      "s8_settlement": "pass",
+      "job_id": 269,
+      "note": "行 517 vs 540 (Δ23) · 总额 27636.0 vs 30769.5 (Δ3133.50)"
+    },
+    {
+      "hospital": "国药总医院主院区",
+      "s1": "✅",
+      "s4": "🚫",
+      "s8_bill": "fail",
+      "s8_settlement": "blocked_material",
+      "job_id": 270,
+      "note": "行 131 vs 139 (Δ8) · 总额 21383.5 vs 21989.0 (Δ605.50)"
+    },
+    {
+      "hospital": "国药总医院第二院区",
+      "s1": "✅",
+      "s4": "🚫",
+      "s8_bill": "fail",
+      "s8_settlement": "blocked_material",
+      "job_id": 271,
+      "note": "行 43 vs 54 (Δ11) · 总额 4618.5 vs 4447.5 (Δ171.00)"
+    },
+    {
+      "hospital": "国药总医院第三院区",
+      "s1": "✅",
+      "s4": "🚫",
+      "s8_bill": "fail",
+      "s8_settlement": "fail",
+      "job_id": 272,
+      "note": "行 11 vs 12 (Δ1) · 总额 1819.0 vs 1667.0 (Δ152.00) · S8 已知差：相对 6月__5.26-6.25 处理后表 1"
+    },
+    {
+      "hospital": "哈尔滨市第二医院",
+      "s1": "✅",
+      "s4": "fail",
+      "s8_bill": "fail",
+      "s8_settlement": "blocked_material",
+      "job_id": 273,
+      "note": "行 1922 vs 1958 (Δ36) · 总额 93490.5 vs 105383.0 (Δ11892.50) · sheets=23 summary=供应"
+    },
+    {
+      "hospital": "哈尔滨市第五医院",
+      "s1": "✅",
+      "s4": "🚫",
+      "s8_bill": "fail",
+      "s8_settlement": "fail",
+      "job_id": 274,
+      "note": "行 5004 vs 5005 (Δ1) · 总额 454919.5 vs 455692.0 (Δ772.50) · S4 pass · 5005 行一致 · 总"
+    },
+    {
+      "hospital": "哈尔滨市第五医院（二门诊）",
+      "s1": "🔄",
+      "s4": "✅",
+      "s8_bill": "pass",
+      "s8_settlement": "fail",
+      "job_id": 275,
+      "note": "无缺结款函参考（S8 settlement 可能 skip）"
+    },
+    {
+      "hospital": "新发红十字医院",
+      "s1": "✅",
+      "s4": "🚫",
+      "s8_bill": "fail",
+      "s8_settlement": "pass",
+      "job_id": 276,
+      "note": "行 375 vs 375 (Δ0) · 总额 21903.0 vs 21866.0 (Δ37.00)"
+    },
+    {
+      "hospital": "黑龙江省医院（南岗院区）",
+      "s1": "✅",
+      "s4": "🚫",
+      "s8_bill": "fail",
+      "s8_settlement": "fail",
+      "job_id": 277,
+      "note": "行 1205 vs 1205 (Δ0) · 总额 67107.32 vs 41669.02 (Δ25438.30) · sheets=25 summary=IC"
+    },
+    {
+      "hospital": "黑龙江省医院（香坊院区）",
+      "s1": "✅",
+      "s4": "🚫",
+      "s8_bill": "fail",
+      "s8_settlement": "fail",
+      "job_id": 340,
+      "note": "行 2975 vs 2975 (Δ0) · 总额 268498.0 vs 178518.9 (Δ89979.10) · sheets=56 summary=NI"
+    },
+    {
+      "hospital": "祖研-黑龙江省中医医院（南岗院区）",
+      "s1": "✅",
+      "s4": "🚫",
+      "s8_bill": "warn",
+      "s8_settlement": "pass",
+      "job_id": 279,
+      "note": ""
+    },
+    {
+      "hospital": "祖研-黑龙江省中医医院（三辅院区）",
+      "s1": "✅",
+      "s4": "🚫",
+      "s8_bill": "fail",
+      "s8_settlement": "fail",
+      "job_id": 280,
+      "note": "行 246 vs 246 (Δ0) · 总额 23065.0 vs 23024.0 (Δ41.00) · sheets=13 summary=外科门诊 · S4"
+    },
+    {
+      "hospital": "祖研-黑龙江省中医医院（香安院区）",
+      "s1": "✅",
+      "s4": "✅",
+      "s8_bill": "pass",
+      "s8_settlement": "pass",
+      "job_id": 281,
+      "note": ""
+    },
+    {
+      "hospital": "南岗区妇产医院",
+      "s1": "✅",
+      "s4": "🚫",
+      "s8_bill": "fail",
+      "s8_settlement": "fail",
+      "job_id": 320,
+      "note": "行 61 vs 58 (Δ3) · 总额 2966.5 vs 2883.0 (Δ83.50) · sheets=3 summary=化验室 · S4 pass_"
+    },
+    {
+      "hospital": "黑龙江省社会康复医院",
+      "s1": "✅",
+      "s4": "✅",
+      "s8_bill": "fail",
+      "s8_settlement": "fail",
+      "job_id": 317,
+      "note": "行 33 vs 26 (Δ7) · 总额 1049.0 vs 761.5 (Δ287.50) · Job 625 与 6月__省康复6月账单 成对（非监狱单表）"
+    },
+    {
+      "hospital": "道外区人民医院",
+      "s1": "✅",
+      "s4": "✅",
+      "s8_bill": "pass",
+      "s8_settlement": "pass",
+      "job_id": 284,
+      "note": ""
+    },
+    {
+      "hospital": "太平人民医院",
+      "s1": "✅",
+      "s4": "✅",
+      "s8_bill": "pass",
+      "s8_settlement": "fail",
+      "job_id": 285,
+      "note": ""
+    },
+    {
+      "hospital": "三精肾病医院",
+      "s1": "✅",
+      "s4": "✅",
+      "s8_bill": "pass",
+      "s8_settlement": "pass",
+      "job_id": 286,
+      "note": ""
+    },
+    {
+      "hospital": "黑龙江维多利亚妇产医院",
+      "s1": "✅",
+      "s4": "🚫",
+      "s8_bill": "fail",
+      "s8_settlement": "fail",
+      "job_id": 287,
+      "note": "行 117 vs 117 (Δ0) · 总额 8873.25 vs 17025.5 (Δ8152.25)"
+    },
+    {
+      "hospital": "黑龙江九洲妇科医院",
+      "s1": "✅",
+      "s4": "🚫",
+      "s8_bill": "fail",
+      "s8_settlement": "fail",
+      "job_id": 307,
+      "note": "行 12 vs 11 (Δ1) · 总额 3104.0 vs 6132.5 (Δ3028.50)"
+    },
+    {
+      "hospital": "呼兰区红十字医院",
+      "s1": "✅",
+      "s4": "✅",
+      "s8_bill": "fail",
+      "s8_settlement": "fail",
+      "job_id": 324,
+      "note": "行 7 vs 22 (Δ15) · 总额 863.0 vs 2144.5 (Δ1281.50)"
+    },
+    {
+      "hospital": "呼兰中医院",
+      "s1": "✅",
+      "s4": "✅",
+      "s8_bill": "pass",
+      "s8_settlement": "pass",
+      "job_id": 290,
+      "note": ""
+    },
+    {
+      "hospital": "黑龙江中医药大学附属第二医院（南岗）",
+      "s1": "✅",
+      "s4": "🚫",
+      "s8_bill": "warn",
+      "s8_settlement": "pass",
+      "job_id": 291,
+      "note": ""
+    },
+    {
+      "hospital": "黑龙江中医药大学附属第二医院（哈南分院）",
+      "s1": "✅",
+      "s4": "🚫",
+      "s8_bill": "fail",
+      "s8_settlement": "pass",
+      "job_id": 292,
+      "note": "行 252 vs 252 (Δ0) · 总额 8869.0 vs 8880.0 (Δ11.00) · sheets=9 summary=口腔"
+    },
+    {
+      "hospital": "哈尔滨仁胜医院",
+      "s1": "✅",
+      "s4": "✅",
+      "s8_bill": "pass",
+      "s8_settlement": "pass",
+      "job_id": 293,
+      "note": ""
+    },
+    {
+      "hospital": "哈尔滨华夏眼科医院",
+      "s1": "✅",
+      "s4": "✅",
+      "s8_bill": "pass",
+      "s8_settlement": "pass",
+      "job_id": 294,
+      "note": ""
+    },
+    {
+      "hospital": "哈尔滨冰城医疗美容医院",
+      "s1": "✅",
+      "s4": "fail",
+      "s8_bill": "fail",
+      "s8_settlement": "fail",
+      "job_id": 295,
+      "note": "行 38 vs 38 (Δ0) · 总额 1568.0 vs 1559.0 (Δ9.00)"
+    },
+    {
+      "hospital": "香坊中医院",
+      "s1": "✅",
+      "s4": "✅",
+      "s8_bill": "pass",
+      "s8_settlement": "pass",
+      "job_id": 296,
+      "note": ""
+    },
+    {
+      "hospital": "武警黑龙江省总队医院",
+      "s1": "✅",
+      "s4": "✅",
+      "s8_bill": "pass",
+      "s8_settlement": "pass",
+      "job_id": 297,
+      "note": ""
+    },
+    {
+      "hospital": "悦美芳华医疗门诊医院",
+      "s1": "✅",
+      "s4": "✅",
+      "s8_bill": "pass",
+      "s8_settlement": "pass",
+      "job_id": 298,
+      "note": ""
+    },
+    {
+      "hospital": "黑龙江省第二医院（南岗院区）",
+      "s1": "✅",
+      "s4": "🚫",
+      "s8_bill": "fail",
+      "s8_settlement": "fail",
+      "job_id": 299,
+      "note": "行 44 vs 86 (Δ42) · 总额 969.4 vs 956.2 (Δ13.20)"
+    },
+    {
+      "hospital": "黑龙江省第二医院（松北院区）",
+      "s1": "✅",
+      "s4": "🚫",
+      "s8_bill": "fail",
+      "s8_settlement": "blocked_material",
+      "job_id": 300,
+      "note": "行 1278 vs 1426 (Δ148) · 总额 65781.1 vs 73999.05 (Δ8217.95) · sheets=22 summary=IC"
+    },
+    {
+      "hospital": "哈尔滨市呼兰区第一人民医院",
+      "s1": "✅",
+      "s4": "🚫",
+      "s8_bill": "fail",
+      "s8_settlement": "fail",
+      "job_id": 341,
+      "note": "行 154 vs 423 (Δ269) · 总额 9255.92 vs 10194.1 (Δ938.18)"
+    },
+    {
+      "hospital": "哈尔滨市红十字妇产医院",
+      "s1": "✅",
+      "s4": "🚫",
+      "s8_bill": "fail",
+      "s8_settlement": "pass",
+      "job_id": 342,
+      "note": "行 1723 vs 1723 (Δ0) · 总额 159512.0 vs 159033.0 (Δ479.00)"
+    },
+    {
+      "hospital": "哈尔滨工业大学医院",
+      "s1": "✅",
+      "s4": "✅",
+      "s8_bill": "warn",
+      "s8_settlement": "fail",
+      "job_id": 303,
+      "note": ""
+    },
+    {
+      "hospital": "哈尔滨工程大学医院",
+      "s1": "✅",
+      "s4": "✅",
+      "s8_bill": "pass",
+      "s8_settlement": "pass",
+      "job_id": 304,
+      "note": ""
+    },
+    {
+      "hospital": "哈尔滨长健医院",
+      "s1": "✅",
+      "s4": "✅",
+      "s8_bill": "pass",
+      "s8_settlement": "pass",
+      "job_id": 305,
+      "note": ""
+    }
+  ],
+  "local_vs_prod": [
+    {
+      "hospital": "黑龙江中医药大学附属第一医院",
+      "local_bill": "pass",
+      "prod_bill": "fail",
+      "local_settlement": "pass",
+      "prod_settlement": "pass",
+      "diff": true,
+      "note": "bill pass→fail"
+    },
+    {
+      "hospital": "黑龙江省中医药大学附属第三医院（电力）",
+      "local_bill": "pass",
+      "prod_bill": "fail",
+      "local_settlement": "pass",
+      "prod_settlement": "pass",
+      "diff": true,
+      "note": "bill pass→fail"
+    },
+    {
+      "hospital": "国药总医院主院区",
+      "local_bill": "fail",
+      "prod_bill": "fail",
+      "local_settlement": "blocked_material",
+      "prod_settlement": "blocked_material",
+      "diff": false,
+      "note": ""
+    },
+    {
+      "hospital": "国药总医院第二院区",
+      "local_bill": "fail",
+      "prod_bill": "fail",
+      "local_settlement": "blocked_material",
+      "prod_settlement": "blocked_material",
+      "diff": false,
+      "note": ""
+    },
+    {
+      "hospital": "国药总医院第三院区",
+      "local_bill": "pass",
+      "prod_bill": "fail",
+      "local_settlement": "pass",
+      "prod_settlement": "fail",
+      "diff": true,
+      "note": "bill pass→fail; settlement pass→fail"
+    },
+    {
+      "hospital": "哈尔滨市第二医院",
+      "local_bill": "fail",
+      "prod_bill": "fail",
+      "local_settlement": "blocked_material",
+      "prod_settlement": "blocked_material",
+      "diff": false,
+      "note": ""
+    },
+    {
+      "hospital": "哈尔滨市第五医院",
+      "local_bill": "pass",
+      "prod_bill": "fail",
+      "local_settlement": "pass",
+      "prod_settlement": "fail",
+      "diff": true,
+      "note": "bill pass→fail; settlement pass→fail"
+    },
+    {
+      "hospital": "哈尔滨市第五医院（二门诊）",
+      "local_bill": "pass",
+      "prod_bill": "pass",
+      "local_settlement": "pass",
+      "prod_settlement": "fail",
+      "diff": true,
+      "note": "settlement pass→fail"
+    },
+    {
+      "hospital": "新发红十字医院",
+      "local_bill": "pass",
+      "prod_bill": "fail",
+      "local_settlement": "pass",
+      "prod_settlement": "pass",
+      "diff": true,
+      "note": "bill pass→fail"
+    },
+    {
+      "hospital": "黑龙江省医院（南岗院区）",
+      "local_bill": "pass",
+      "prod_bill": "fail",
+      "local_settlement": "pass",
+      "prod_settlement": "fail",
+      "diff": true,
+      "note": "bill pass→fail; settlement pass→fail"
+    },
+    {
+      "hospital": "黑龙江省医院（香坊院区）",
+      "local_bill": "pass",
+      "prod_bill": "fail",
+      "local_settlement": "pass",
+      "prod_settlement": "fail",
+      "diff": true,
+      "note": "bill pass→fail; settlement pass→fail"
+    },
+    {
+      "hospital": "祖研-黑龙江省中医医院（南岗院区）",
+      "local_bill": "pass",
+      "prod_bill": "warn",
+      "local_settlement": "pass",
+      "prod_settlement": "pass",
+      "diff": true,
+      "note": "bill pass→warn"
+    },
+    {
+      "hospital": "祖研-黑龙江省中医医院（三辅院区）",
+      "local_bill": "pass",
+      "prod_bill": "fail",
+      "local_settlement": "pass",
+      "prod_settlement": "fail",
+      "diff": true,
+      "note": "bill pass→fail; settlement pass→fail"
+    },
+    {
+      "hospital": "祖研-黑龙江省中医医院（香安院区）",
+      "local_bill": "pass",
+      "prod_bill": "pass",
+      "local_settlement": "pass",
+      "prod_settlement": "pass",
+      "diff": false,
+      "note": ""
+    },
+    {
+      "hospital": "南岗区妇产医院",
+      "local_bill": "pass",
+      "prod_bill": "fail",
+      "local_settlement": "fail",
+      "prod_settlement": "fail",
+      "diff": true,
+      "note": "bill pass→fail"
+    },
+    {
+      "hospital": "黑龙江省社会康复医院",
+      "local_bill": "pass",
+      "prod_bill": "fail",
+      "local_settlement": "pass",
+      "prod_settlement": "fail",
+      "diff": true,
+      "note": "bill pass→fail; settlement pass→fail"
+    },
+    {
+      "hospital": "道外区人民医院",
+      "local_bill": "pass",
+      "prod_bill": "pass",
+      "local_settlement": "pass",
+      "prod_settlement": "pass",
+      "diff": false,
+      "note": ""
+    },
+    {
+      "hospital": "太平人民医院",
+      "local_bill": "pass",
+      "prod_bill": "pass",
+      "local_settlement": "pass",
+      "prod_settlement": "fail",
+      "diff": true,
+      "note": "settlement pass→fail"
+    },
+    {
+      "hospital": "三精肾病医院",
+      "local_bill": "pass",
+      "prod_bill": "pass",
+      "local_settlement": "pass",
+      "prod_settlement": "pass",
+      "diff": false,
+      "note": ""
+    },
+    {
+      "hospital": "黑龙江维多利亚妇产医院",
+      "local_bill": "pass",
+      "prod_bill": "fail",
+      "local_settlement": "pass",
+      "prod_settlement": "fail",
+      "diff": true,
+      "note": "bill pass→fail; settlement pass→fail"
+    },
+    {
+      "hospital": "黑龙江九洲妇科医院",
+      "local_bill": "pass",
+      "prod_bill": "fail",
+      "local_settlement": "pass",
+      "prod_settlement": "fail",
+      "diff": true,
+      "note": "bill pass→fail; settlement pass→fail"
+    },
+    {
+      "hospital": "呼兰区红十字医院",
+      "local_bill": "pass",
+      "prod_bill": "fail",
+      "local_settlement": "pass",
+      "prod_settlement": "fail",
+      "diff": true,
+      "note": "bill pass→fail; settlement pass→fail"
+    },
+    {
+      "hospital": "呼兰中医院",
+      "local_bill": "pass",
+      "prod_bill": "pass",
+      "local_settlement": "pass",
+      "prod_settlement": "pass",
+      "diff": false,
+      "note": ""
+    },
+    {
+      "hospital": "黑龙江中医药大学附属第二医院（南岗）",
+      "local_bill": "pass",
+      "prod_bill": "warn",
+      "local_settlement": "pass",
+      "prod_settlement": "pass",
+      "diff": true,
+      "note": "bill pass→warn"
+    },
+    {
+      "hospital": "黑龙江中医药大学附属第二医院（哈南分院）",
+      "local_bill": "pass",
+      "prod_bill": "fail",
+      "local_settlement": "pass",
+      "prod_settlement": "pass",
+      "diff": true,
+      "note": "bill pass→fail"
+    },
+    {
+      "hospital": "哈尔滨仁胜医院",
+      "local_bill": "pass",
+      "prod_bill": "pass",
+      "local_settlement": "pass",
+      "prod_settlement": "pass",
+      "diff": false,
+      "note": ""
+    },
+    {
+      "hospital": "哈尔滨华夏眼科医院",
+      "local_bill": "pass",
+      "prod_bill": "pass",
+      "local_settlement": "pass",
+      "prod_settlement": "pass",
+      "diff": false,
+      "note": ""
+    },
+    {
+      "hospital": "哈尔滨冰城医疗美容医院",
+      "local_bill": "pass",
+      "prod_bill": "fail",
+      "local_settlement": "pass",
+      "prod_settlement": "fail",
+      "diff": true,
+      "note": "bill pass→fail; settlement pass→fail"
+    },
+    {
+      "hospital": "香坊中医院",
+      "local_bill": "pass",
+      "prod_bill": "pass",
+      "local_settlement": "pass",
+      "prod_settlement": "pass",
+      "diff": false,
+      "note": ""
+    },
+    {
+      "hospital": "武警黑龙江省总队医院",
+      "local_bill": "pass",
+      "prod_bill": "pass",
+      "local_settlement": "pass",
+      "prod_settlement": "pass",
+      "diff": false,
+      "note": ""
+    },
+    {
+      "hospital": "悦美芳华医疗门诊医院",
+      "local_bill": "pass",
+      "prod_bill": "pass",
+      "local_settlement": "pass",
+      "prod_settlement": "pass",
+      "diff": false,
+      "note": ""
+    },
+    {
+      "hospital": "黑龙江省第二医院（南岗院区）",
+      "local_bill": "pass",
+      "prod_bill": "fail",
+      "local_settlement": "pass",
+      "prod_settlement": "fail",
+      "diff": true,
+      "note": "bill pass→fail; settlement pass→fail"
+    },
+    {
+      "hospital": "黑龙江省第二医院（松北院区）",
+      "local_bill": "fail",
+      "prod_bill": "fail",
+      "local_settlement": "blocked_material",
+      "prod_settlement": "blocked_material",
+      "diff": false,
+      "note": ""
+    },
+    {
+      "hospital": "哈尔滨市呼兰区第一人民医院",
+      "local_bill": "pass",
+      "prod_bill": "fail",
+      "local_settlement": "pass",
+      "prod_settlement": "fail",
+      "diff": true,
+      "note": "bill pass→fail; settlement pass→fail"
+    },
+    {
+      "hospital": "哈尔滨市红十字妇产医院",
+      "local_bill": "pass",
+      "prod_bill": "fail",
+      "local_settlement": "pass",
+      "prod_settlement": "pass",
+      "diff": true,
+      "note": "bill pass→fail"
+    },
+    {
+      "hospital": "哈尔滨工业大学医院",
+      "local_bill": "warn",
+      "prod_bill": "warn",
+      "local_settlement": "pass",
+      "prod_settlement": "fail",
+      "diff": true,
+      "note": "settlement pass→fail"
+    },
+    {
+      "hospital": "哈尔滨工程大学医院",
+      "local_bill": "pass",
+      "prod_bill": "pass",
+      "local_settlement": "pass",
+      "prod_settlement": "pass",
+      "diff": false,
+      "note": ""
+    },
+    {
+      "hospital": "哈尔滨长健医院",
+      "local_bill": "pass",
+      "prod_bill": "pass",
+      "local_settlement": "pass",
+      "prod_settlement": "pass",
+      "diff": false,
+      "note": ""
+    }
+  ]
+}

@@ -125,7 +125,15 @@ public final class DefaultPricingTemplate {
                 "defaultPageMargin", "1cm"
         ));
         rules.put("specialRules", Map.of(
-                "fixedPrices", List.of(),
+                "fixedPrices", List.of(
+                        Map.of(
+                                "name", "软镜固定300元",
+                                "keywords", List.of("软镜"),
+                                "price", 300.0,
+                                "skipPackaging", true,
+                                "skipHospitalDiscount", true
+                        )
+                ),
                 "foldRules", List.of(),
                 "extraFees", List.of()
         ));

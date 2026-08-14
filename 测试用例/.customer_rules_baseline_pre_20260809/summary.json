@@ -1,0 +1,50 @@
+{
+  "GUOYAO-2": {
+    "code": "GUOYAO-2",
+    "files": {
+      "6月期待价格校正清单.csv": {
+        "lines": 0,
+        "snapshot": ".customer_rules_baseline_pre_20260809/GUOYAO-2_6月期待价格校正清单.csv"
+      },
+      "6月系统warning.tsv": {
+        "lines": 0,
+        "snapshot": ".customer_rules_baseline_pre_20260809/GUOYAO-2_6月系统warning.tsv"
+      }
+    }
+  },
+  "BINGCHENG-YM": {
+    "code": "BINGCHENG-YM",
+    "files": {
+      "6月期待价格校正清单.csv": {
+        "lines": 2,
+        "snapshot": ".customer_rules_baseline_pre_20260809/BINGCHENG-YM_6月期待价格校正清单.csv"
+      },
+      "6月系统warning.tsv": {
+        "lines": 0,
+        "snapshot": ".customer_rules_baseline_pre_20260809/BINGCHENG-YM_6月系统warning.tsv"
+      }
+    }
+  },
+  "HRB-HEU": {
+    "code": "HRB-HEU",
+    "files": {
+      "6月系统warning.tsv": {
+        "lines": 0,
+        "snapshot": ".customer_rules_baseline_pre_20260809/HRB-HEU_6月系统warning.tsv"
+      }
+    }
+  },
+  "HRB-WY-EM": {
+    "code": "HRB-WY-EM",
+    "files": {
+      "6月期待价格校正清单.csv": {
+        "lines": 0,
+        "snapshot": ".customer_rules_baseline_pre_20260809/HRB-WY-EM_6月期待价格校正清单.csv"
+      },
+      "6月系统warning.tsv": {
+        "lines": 0,
+        "snapshot": ".customer_rules_baseline_pre_20260809/HRB-WY-EM_6月系统warning.tsv"
+      }
+    }
+  }
+}

@@ -1033,6 +1033,36 @@ def cmd_s4(args: argparse.Namespace) -> int:
     return forward_batch_script("batch_june_system_test.py", args.passthrough, extra)
 
 
+def cmd_audit_strict_v8(args: argparse.Namespace) -> int:
+    extra = build_api_forward_args(args)
+    if args.report_sections:
+        extra.extend(["--report-sections", args.report_sections])
+    elif args.batch:
+        extra.extend(["--batch", args.batch])
+    elif args.all_v8:
+        extra.append("--all-v8")
+    elif args.all_v8_testable:
+        extra.append("--all-v8-testable")
+    elif args.hospital:
+        for name in args.hospital:
+            extra.extend(["--hospital", name])
+    else:
+        print(
+            "audit strict-v8 需要 --hospital、--batch、--report-sections 或 --all-v8-testable",
+            file=sys.stderr,
+        )
+        return 2
+    if args.month is not None:
+        extra.extend(["--month", str(args.month)])
+    if args.refresh_csv:
+        extra.append("--refresh-csv")
+    if args.fail_on_fail:
+        extra.append("--fail-on-fail")
+    if args.out_date:
+        extra.extend(["--out-date", args.out_date])
+    return forward_batch_script("special_v8_strict_excel_audit.py", args.passthrough, extra)
+
+
 def cmd_verify(args: argparse.Namespace) -> int:
     client = resolve_client(args)
     combined = CliReport("verify", args.profile, client.mode, client.api_base, time.time())
@@ -1129,6 +1159,28 @@ def build_parser() -> argparse.ArgumentParser:
     p_s4.add_argument("--allow-import", action="store_true", help="允许无 --hospital 时全量重导")
     p_s4.add_argument("passthrough", nargs=argparse.REMAINDER)
     p_s4.set_defaults(func=cmd_s4)
+
+    p_audit = sub.add_parser("audit", help="严格验收审计")
+    audit_sub = p_audit.add_subparsers(dest="audit_cmd", required=True)
+    p_strict_v8 = audit_sub.add_parser(
+        "strict-v8",
+        help="特殊收费 v8 严格 Excel 对账（透传 special_v8_strict_excel_audit.py）",
+    )
+    add_common_flags(p_strict_v8)
+    p_strict_v8.add_argument("--hospital", "-H", action="append", default=[])
+    p_strict_v8.add_argument("--month", type=int, help="账期月份（6 或 7）")
+    p_strict_v8.add_argument("--batch", choices=["814"], help="814 新增批次（7 月 strict 可测院）")
+    p_strict_v8.add_argument(
+        "--report-sections",
+        help="合并报告章节，如 july,june",
+    )
+    p_strict_v8.add_argument("--all-v8-testable", action="store_true", help="v8 可测院批量跑")
+    p_strict_v8.add_argument("--all-v8", action="store_true", help="20 院全量（含 SKIP 附录）")
+    p_strict_v8.add_argument("--refresh-csv", action="store_true", help="审计前刷新 {month}月期待价格校正清单.csv")
+    p_strict_v8.add_argument("--out-date", help="报告文件名日期 YYYYMMDD")
+    p_strict_v8.add_argument("--fail-on-fail", action="store_true", help="任一 FAIL/ERROR 时 exit 1")
+    p_strict_v8.add_argument("passthrough", nargs=argparse.REMAINDER)
+    p_strict_v8.set_defaults(func=cmd_audit_strict_v8)
 
     p_verify = sub.add_parser("verify", help="smoke + deploy-check + 可选 S8/S4")
     add_common_flags(p_verify)

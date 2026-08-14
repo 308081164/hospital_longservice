@@ -3266,4 +3266,150 @@ class PricingEngineTest {
         assertThat(result.status).isEqualTo("unchanged");
         assertThat(result.pricingRule).contains("新发镜头30度35");
     }
+
+    @Test
+    void specialV8LtJiaomaoFoldSmallPackAndOverFive() throws Exception {
+        ObjectNode rules = (ObjectNode) defaultRules();
+        ArrayNode foldRules = ((ObjectNode) rules.path("specialRules")).withArray("foldRules");
+        ObjectNode small = foldRules.addObject();
+        small.put("name", "海员胶帽≤5按1件");
+        small.putArray("hospitals").add("黑龙江省海员总医院（松北）");
+        small.putArray("keywords").add("胶帽");
+        small.put("threshold", 5);
+        small.put("foldRatio", 5);
+        small.put("maxInstrumentCount", 5);
+        small.put("temperature", "LT");
+        ObjectNode over = foldRules.addObject();
+        over.put("name", "海员胶帽>5折算22");
+        over.putArray("hospitals").add("黑龙江省海员总医院（松北）");
+        over.putArray("keywords").add("胶帽");
+        over.put("threshold", 5);
+        over.put("foldRatio", 5);
+        over.put("unitPrice", 22.0);
+        over.put("minInstrumentCount", 6);
+        over.put("temperature", "LT");
+        over.put("skipPackaging", true);
+
+        PricingEngine engine = new PricingEngine(rules);
+        PricingEngine.ProcessedResult smallPack = engine.processRow(row(
+                "黑龙江省海员总医院（松北）",
+                "额外包(低温等离子)",
+                "胶帽-3/Z7520",
+                "低温纸塑袋200*200",
+                3, 1, 22.0, 22.0));
+        assertThat(smallPack.expectedUnitPrice).isEqualTo(28.0);
+        assertThat(smallPack.notes).anyMatch(n -> n.contains("海员胶帽≤5按1件"));
+
+        PricingEngine.ProcessedResult overFive = engine.processRow(row(
+                "黑龙江省海员总医院（松北）",
+                "额外包(低温等离子)",
+                "胶帽-6/Z7520",
+                "低温纸塑袋200*200",
+                6, 1, 44.0, 44.0));
+        assertThat(overFive.expectedUnitPrice).isEqualTo(44.0);
+        assertThat(overFive.pricingRule).contains("低温特色折算单价");
+    }
+
+    @Test
+    void specialV8ChunyuPlasticPipeFold() throws Exception {
+        ObjectNode rules = (ObjectNode) defaultRules();
+        ArrayNode foldRules = ((ObjectNode) rules.path("specialRules")).withArray("foldRules");
+        ObjectNode small = foldRules.addObject();
+        small.put("name", "春语塑料管≤10按1件");
+        small.putArray("hospitals").add("春语医疗美容医院");
+        small.putArray("keywords").add("塑料管").add("管子");
+        small.put("threshold", 10);
+        small.put("foldRatio", 10);
+        small.put("maxInstrumentCount", 10);
+        small.put("temperature", "LT");
+        ObjectNode over = foldRules.addObject();
+        over.put("name", "春语塑料管>10折算22");
+        over.putArray("hospitals").add("春语医疗美容医院");
+        over.putArray("keywords").add("塑料管").add("管子");
+        over.put("threshold", 10);
+        over.put("foldRatio", 10);
+        over.put("unitPrice", 22.0);
+        over.put("minInstrumentCount", 11);
+        over.put("temperature", "LT");
+        over.put("skipPackaging", true);
+
+        PricingEngine engine = new PricingEngine(rules);
+        PricingEngine.ProcessedResult smallPack = engine.processRow(row(
+                "春语医疗美容医院",
+                "低温等离子/ETO",
+                "塑料管-8/Z7520",
+                "低温灭菌纸塑袋15cm",
+                8, 1, 25.0, 25.0));
+        assertThat(smallPack.expectedUnitPrice).isEqualTo(25.0);
+
+        PricingEngine.ProcessedResult overTen = engine.processRow(row(
+                "春语医疗美容医院",
+                "低温等离子/ETO",
+                "塑料管-15/Z7520",
+                "低温灭菌纸塑袋15cm",
+                15, 1, 44.0, 44.0));
+        assertThat(overTen.expectedUnitPrice).isEqualTo(44.0);
+        assertThat(overTen.pricingRule).contains("低温特色折算单价");
+    }
+
+    @Test
+    void specialV8ZuyanPaizhenTenFoldWithBagThreshold() throws Exception {
+        ObjectNode rules = (ObjectNode) defaultRules();
+        ArrayNode foldRules = ((ObjectNode) rules.path("specialRules")).withArray("foldRules");
+        ObjectNode withBag = foldRules.addObject();
+        withBag.put("name", "祖研排针10合1含包材");
+        withBag.putArray("hospitals").add("祖研-黑龙江省中医医院（南岗院区）");
+        withBag.putArray("keywords").add("排针");
+        withBag.put("threshold", 10);
+        withBag.put("foldRatio", 10);
+        withBag.put("maxInstrumentCount", 20);
+        ObjectNode noBag = foldRules.addObject();
+        noBag.put("name", "祖研排针10合1免包材");
+        noBag.putArray("hospitals").add("祖研-黑龙江省中医医院（南岗院区）");
+        noBag.putArray("keywords").add("排针");
+        noBag.put("threshold", 10);
+        noBag.put("foldRatio", 10);
+        noBag.put("minInstrumentCount", 21);
+        noBag.put("skipPackaging", true);
+
+        PricingEngine engine = new PricingEngine(rules);
+        PricingEngine.ProcessedResult withBagResult = engine.processRow(row(
+                "祖研-黑龙江省中医医院（南岗院区）",
+                "额外包(纸塑袋)",
+                "排针-15/Z7537",
+                "高温纸塑袋75*370",
+                15, 1, 16.5, 16.5));
+        assertThat(withBagResult.expectedUnitPrice).isEqualTo(13.5);
+
+        PricingEngine.ProcessedResult noBagResult = engine.processRow(row(
+                "祖研-黑龙江省中医医院（南岗院区）",
+                "额外包(纸塑袋)",
+                "排针-25/Z7537",
+                "高温纸塑袋75*370",
+                25, 1, 16.5, 16.5));
+        assertThat(noBagResult.expectedUnitPrice).isEqualTo(16.5);
+        assertThat(noBagResult.notes).anyMatch(n -> n.contains("免包材") || n.contains("免袋"));
+    }
+
+    @Test
+    void specialV8GlobalSoftMirror300() throws Exception {
+        ObjectNode rules = (ObjectNode) defaultRules();
+        ArrayNode fixedPrices = ((ObjectNode) rules.path("specialRules")).withArray("fixedPrices");
+        ObjectNode softMirror = fixedPrices.addObject();
+        softMirror.put("name", "软镜固定300元");
+        softMirror.putArray("keywords").add("软镜");
+        softMirror.put("price", 300.0);
+        softMirror.put("skipPackaging", true);
+        softMirror.put("skipHospitalDiscount", true);
+
+        PricingEngine engine = new PricingEngine(rules);
+        PricingEngine.ProcessedResult result = engine.processRow(row(
+                "测试医院",
+                "额外包(ETO)",
+                "软镜-1/Z2060",
+                "高温纸塑袋75*200",
+                1, 1, 300.0, 300.0));
+        assertThat(result.expectedUnitPrice).isEqualTo(300.0);
+        assertThat(result.pricingRule).contains("软镜固定300");
+    }
 }

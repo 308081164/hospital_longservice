@@ -1,0 +1,12 @@
+{
+  "hospital": "哈尔滨冰城医疗美容医院",
+  "code": "BINGCHENG-YM",
+  "job_id_before": 761,
+  "job_id_after": 764,
+  "s4_status_before": "fail",
+  "s4_status_after": "pass",
+  "missed_before": 2,
+  "missed_after": 0,
+  "matched_after": 2,
+  "expected_rows": 2
+}

@@ -23,8 +23,10 @@ STANDARD_XLSX = Path(
 )
 SPECIAL_XLSX = Path(
     "/Users/yangxinghui/Library/Containers/com.tencent.xinWeChat/Data/Documents/"
-    "xwechat_files/wxid_7qwn4vnuj7xo22_508c/temp/drag/特殊收费(2).xlsx"
+    "xwechat_files/wxid_7qwn4vnuj7xo22_508c/temp/drag/特殊收费(8).xlsx"
 )
+UNIFIED_SHEET = "通用特殊收费"
+LT_GENERAL_SHEET = "环氧与低温通用收费"
 
 # 客户简称 → (系统 code, 系统全称, 匹配置信度)
 HOSPITAL_MAP: dict[str, tuple[str | None, str, str]] = {
@@ -39,6 +41,18 @@ HOSPITAL_MAP: dict[str, tuple[str | None, str, str]] = {
     "易丽医疗": ("YILI-YL", "易丽医疗", "已确认"),
     "佳医医疗": ("JIAYI-YL", "佳医医疗", "已确认"),
     "市五院（二门诊）": ("HRB-WY-EM", "哈尔滨市第五医院（二门诊）", "已确认"),
+    "九州医院": ("JIUZHOU-FK", "黑龙江九洲妇科医院", "已确认"),
+    "博尚医院": ("BOSHANG-YY", "博尚医院", "v8新建"),
+    "黑龙江省海员总医院（松北）": ("HAIYUAN-SB", "黑龙江省海员总医院（松北）", "v8新建"),
+    "黑龙江省妇幼保健院（人口）": ("HLJ-FY-RK", "黑龙江省妇幼保健院（人口）", "v8新建"),
+    "祖研-黑龙江省中医医院（南岗院区）": ("ZUYAN-NG", "祖研-黑龙江省中医医院（南岗院区）", "已确认"),
+    "黑龙江省社会康复医院": ("SHKF-YY", "黑龙江省社会康复医院", "已确认"),
+    "哈尔滨市道里区妇幼保健院": ("DL-FUCHAN", "哈尔滨市道里区妇幼保健院", "v8新建"),
+    "春语医疗美容医院": ("CHUNYU-YL", "春语医疗美容医院", "v8新建"),
+    "黑龙江总工会医院": ("HL-ZGH", "黑龙江总工会医院", "HardcodedRules"),
+    "哈尔滨基准生物有限公司": ("JZSW-BIO", "哈尔滨基准生物科技有限公司", "已确认"),
+    "索菲医疗美容门诊": ("SUOFEI-YL", "索菲医疗美容门诊", "v8新建"),
+    "省监狱管理局医院": ("HLJ-JYGLJ-YY", "省监狱管理局医院", "已确认"),
 }
 
 # HardcodedRulesMigrationRunner 中未完全写入 manifest 的规则
@@ -130,14 +144,14 @@ def extract_keyword(rule_text: str) -> str:
 
 
 def parse_standard_excel() -> dict[str, Any]:
-    if not STANDARD_XLSX.is_file():
-        raise FileNotFoundError(f"客户标准收费文件不可访问: {STANDARD_XLSX}")
-    df = pd.read_excel(STANDARD_XLSX, sheet_name="Sheet1", header=None)
     sections: dict[str, list[dict[str, str]]] = {
         "系统标准价": [],
         "外来器械收费": [],
         "通用特殊收费": [],
     }
+    if not STANDARD_XLSX.is_file():
+        return sections
+    df = pd.read_excel(STANDARD_XLSX, sheet_name="Sheet1", header=None)
     current = "系统标准价"
     for _, row in df.iterrows():
         c0, c1, c2 = row.get(0), row.get(1), row.get(2)
@@ -169,7 +183,7 @@ def parse_special_excel() -> tuple[list[dict[str, Any]], list[dict[str, Any]]]:
     if not SPECIAL_XLSX.is_file():
         raise FileNotFoundError(f"客户特殊收费文件不可访问: {SPECIAL_XLSX}")
     per_hospital = pd.read_excel(SPECIAL_XLSX, sheet_name="各医院特殊收费")
-    unified = pd.read_excel(SPECIAL_XLSX, sheet_name="统一特殊收费")
+    unified = pd.read_excel(SPECIAL_XLSX, sheet_name=UNIFIED_SHEET)
     per_hospital["医院名称"] = per_hospital["医院名称"].ffill()
     per_hospital["医院序号"] = per_hospital["医院序号"].ffill()
     hospitals: list[dict[str, Any]] = []
@@ -209,6 +223,24 @@ def parse_special_excel() -> tuple[list[dict[str, Any]], list[dict[str, Any]]]:
             }
         )
     return hospitals, unified_rules
+
+
+def parse_lt_general_excel() -> list[dict[str, Any]]:
+    if not SPECIAL_XLSX.is_file():
+        return []
+    df = pd.read_excel(SPECIAL_XLSX, sheet_name=LT_GENERAL_SHEET, header=None)
+    rows: list[dict[str, Any]] = []
+    for _, r in df.iterrows():
+        c0, c1 = r.get(0), r.get(1)
+        c5, c6 = r.get(5), r.get(6)
+        c7, c8 = r.get(7), r.get(8)
+        if isinstance(c0, str) and "包内件数" in c0:
+            continue
+        if c0 and str(c0) != "nan":
+            rows.append({"tier": str(c0).strip(), "price": str(c1 or "").strip(), "section": "tier"})
+        if c5 and str(c5) != "nan" and "包内件数" not in str(c5):
+            rows.append({"bagWidth": str(c5).strip(), "price": str(c6 or "").strip(), "note": str(c8 or "").strip(), "section": "singleBag"})
+    return rows
 
 
 def rule_desc(r: dict[str, Any]) -> str:
@@ -362,56 +394,82 @@ def compare_dressing_rule(customer_rule: dict[str, Any], sys_rules: list[dict[st
 def compare_bingcheng(customer_rules: list[dict[str, Any]], sys_rules: list[dict[str, Any]]) -> tuple[list[Conflict], list[str]]:
     conflicts: list[Conflict] = []
     matched: list[str] = []
+    per_piece_map = {
+        "环钻包": ("冰城环钻包按件5.5", "冰城环钻包无纺布加价3", 3),
+        "整形手术包": ("冰城整形手术包按件5.5", "冰城整形手术包无纺布加价3", 3),
+        "脂充包": ("冰城脂充包按件5.5", "冰城脂充包无纺布加价5", 5),
+    }
     for cr in customer_rules:
         pkg = cr["package"]
         pricing = cr["pricing_rule"]
-        if "件数*5.5" in pricing or "件数*5.5＋" in pricing:
-            addon = re.search(r"[＋+](\d+)元", pricing)
-            addon_val = addon.group(1) if addon else "?"
-            sys_map = {
-                "环钻包": ("环钻包30.5", 30.5),
-                "整形手术包": ("整形包58", 58.0),
-                "脂充包": ("整形包54.5", 54.5),
-            }
-            if pkg in sys_map:
-                sname, sprice = sys_map[pkg]
-                sr = next((r for r in sys_rules if r.get("name") == sname), None)
-                if sr:
-                    matched.append(sname)
-                    conflicts.append(
-                        Conflict(
-                            field=f"{pkg}计价模型",
-                            customer_value=pricing + (f"（备注:{cr['note']}）" if cr["note"] != "nan" else ""),
-                            system_value=f"FIXED {sprice}元/包 ({sname})",
-                            severity="critical",
-                            impact="客户要求按件数×5.5+无纺布附加费，系统为固定打包价，账期金额会系统性偏差",
-                            suggestion="改为 PRICE_PER_INSTRUMENT+附加费规则，或与客户确认是否改用固定价",
-                        )
+        if pkg not in per_piece_map:
+            continue
+        pi_name, fee_name, addon = per_piece_map[pkg]
+        pi = next((r for r in sys_rules if r.get("name") == pi_name and r.get("isActive", True)), None)
+        fee = next((r for r in sys_rules if r.get("name") == fee_name and r.get("isActive", True)), None)
+        if pi and fee:
+            matched.extend([pi_name, fee_name])
+            if not (pi.get("ruleType") == "PRICE_PER_INSTRUMENT" and float(pi.get("price") or 0) == 5.5):
+                conflicts.append(
+                    Conflict(
+                        field=f"{pkg}按件",
+                        customer_value=pricing,
+                        system_value=rule_desc(pi),
+                        severity="major",
+                        impact="按件单价应为5.5",
+                        suggestion="激活 PRICE_PER_INSTRUMENT 5.5",
                     )
-    extra = {r.get("name") for r in sys_rules} - set(matched)
-    for name in sorted(extra):
-        if name == "≥3件按件5.5元":
-            conflicts.append(
-                Conflict(
-                    field="通用≥3件规则",
-                    customer_value="无（客户未列）",
-                    system_value="PRICE_PER_INSTRUMENT 5.5元 HT ≥3件",
-                    severity="minor",
-                    impact="客户表未覆盖的兜底规则，可能多收费",
-                    suggestion="与客户确认是否需要保留",
                 )
-            )
-        elif name == "环钻27.5":
-            conflicts.append(
-                Conflict(
-                    field="环钻（非环钻包）",
-                    customer_value="无",
-                    system_value="FIXED 27.5 关键词[环钻]",
-                    severity="pending",
-                    impact="环钻包与环钻可能重复命中",
-                    suggestion="确认环钻/环钻包边界",
+            if float(fee.get("fee") or 0) != addon:
+                conflicts.append(
+                    Conflict(
+                        field=f"{pkg}无纺布加价",
+                        customer_value=f"+{addon}元",
+                        system_value=f"EXTRA_FEE {fee.get('fee')}元",
+                        severity="major",
+                        impact="无纺布附加费不一致",
+                        suggestion=f"激活 EXTRA_FEE +{addon}",
+                    )
                 )
+        else:
+            fixed_map = {"环钻包": "环钻27.5", "整形手术包": "整形包58", "脂充包": "脂充包54.5"}
+            fixed_name = fixed_map.get(pkg)
+            fixed = next((r for r in sys_rules if r.get("name") == fixed_name and r.get("isActive", True)), None) if fixed_name else None
+            if fixed:
+                matched.append(fixed_name)
+                conflicts.append(
+                    Conflict(
+                        field=f"{pkg}计价模型",
+                        customer_value=pricing,
+                        system_value=f"FIXED {fixed.get('price')}元 ({fixed_name})",
+                        severity="critical",
+                        impact="v8要求按件×5.5+无纺布附加费，当前为固定打包价",
+                        suggestion="停用 FIXED，激活按件+EXTRA_FEE 规则",
+                    )
+                )
+            else:
+                conflicts.append(
+                    Conflict(
+                        field=f"{pkg}",
+                        customer_value=pricing,
+                        system_value="无 active 规则",
+                        severity="critical",
+                        impact="冰城特色包未配置",
+                        suggestion="新增/激活按件+加价规则",
+                    )
+                )
+    bad_active = next((r for r in sys_rules if r.get("name") == "≥3件按件5.5元" and r.get("isActive", True)), None)
+    if bad_active and not bad_active.get("excludeKeywords"):
+        conflicts.append(
+            Conflict(
+                field="通用≥3件规则",
+                customer_value="无（客户未列）",
+                system_value="PRICE_PER_INSTRUMENT 5.5元 HT ≥3件 无排除词",
+                severity="major",
+                impact="可能误伤特色器械包",
+                suggestion="为≥3件规则添加 excludeKeywords 或 deactivate",
             )
+        )
     return conflicts, matched
 
 
@@ -674,7 +732,7 @@ def render_report(
     lines.append("| 来源 | 路径/说明 |")
     lines.append("|------|-----------|")
     lines.append(f"| 客户标准收费 | `{STANDARD_XLSX}` · Sheet1 |")
-    lines.append(f"| 客户特殊收费 | `{SPECIAL_XLSX}` · 各医院特殊收费 / 统一特殊收费 |")
+    lines.append(f"| 客户特殊收费 | `{SPECIAL_XLSX}` · 各医院特殊收费 / {UNIFIED_SHEET} / {LT_GENERAL_SHEET} |")
     lines.append("| 系统 productRules | `测试用例/billing_rules_manifest.json`（billing-seeds 合并） |")
     lines.append("| 系统标准价 | `DefaultPricingTemplate.java` v2.0 |")
     lines.append("| 补充硬编码 | `HardcodedRulesMigrationRunner.java`（HTFH/NEAU 等） |")
@@ -697,7 +755,7 @@ def render_report(
             lines.append(f"| {c.field} | {c.customer_value} | {c.system_value} | {SEVERITY[c.severity]} | {c.suggestion} |")
         lines.append("")
 
-    lines.append("### 3.2 统一特殊收费（客户「统一特殊收费」sheet）\n")
+    lines.append("### 3.2 通用特殊收费（客户「通用特殊收费」sheet）\n")
     lines.append("| 序号 | 包/关键词 | 包类型 | 件数条件 | 客户收费规则 | 备注 |")
     lines.append("|------|-----------|--------|----------|--------------|------|")
     for ur in unified_rules:
@@ -782,6 +840,7 @@ def render_report(
 def main() -> None:
     standard_sections = parse_standard_excel()
     hospitals, unified_rules = parse_special_excel()
+    lt_general = parse_lt_general_excel()
     manifest = load_manifest()
     hospital_reports = [compare_hospital(h, manifest) for h in hospitals]
     global_conflicts = compare_global_unified(unified_rules, manifest)

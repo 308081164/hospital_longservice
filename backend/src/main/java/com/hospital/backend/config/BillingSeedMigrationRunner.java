@@ -294,7 +294,17 @@ public class BillingSeedMigrationRunner implements CommandLineRunner {
             new IncrementalSeed("billing_seed_bingcheng_ym_rollback_per_piece_20260811_v1",
                     "billing-seeds/phase-bingcheng-ym-rollback-per-piece-20260811.json"),
             new IncrementalSeed("billing_seed_global_cotton_paper_plastic_20260812_v1",
-                    "billing-seeds/phase-global-cotton-paper-plastic-20260812.json")
+                    "billing-seeds/phase-global-cotton-paper-plastic-20260812.json"),
+            new IncrementalSeed("billing_seed_special_v8_onboard_20260814_v1",
+                    "billing-seeds/phase-special-v8-onboard-20260814.json"),
+            new IncrementalSeed("billing_seed_special_v8_rules_20260814_v1",
+                    "billing-seeds/phase-special-v8-rules-20260814.json"),
+            new IncrementalSeed("billing_seed_pricing_fidelity_fix_20260814_v1",
+                    "billing-seeds/phase-pricing-fidelity-fix-20260814.json"),
+            new IncrementalSeed("billing_seed_pricing_fidelity_fix_part2_20260814_v1",
+                    "billing-seeds/phase-pricing-fidelity-fix-part2-20260814.json"),
+            new IncrementalSeed("billing_seed_pricing_fidelity_fix_part3_20260814_v1",
+                    "billing-seeds/phase-pricing-fidelity-fix-part3-20260814.json")
     );
 
     private static final String ZYY_D1_P0_MARKER = "billing_seed_zyy_d1_p0_v2";
@@ -1130,14 +1140,21 @@ public class BillingSeedMigrationRunner implements CommandLineRunner {
                     log.info("Batch patch updated rule {}/{}", code, ruleName);
                 }
             }
+            boolean strictRuleOps = bool(root, "strictRuleOps", false);
             for (JsonNode ruleNode : root.path("newRules")) {
                 String code = text(ruleNode, "code");
                 Customer customer = customerMapper.selectByCode(code);
                 if (customer == null) {
+                    if (strictRuleOps) {
+                        throw new IllegalStateException("Batch patch newRules customer not found: " + code);
+                    }
                     continue;
                 }
                 String name = text(ruleNode, "name");
                 if (customerProductRuleMapper.countByCustomerIdAndName(customer.getId(), name) > 0) {
+                    if (strictRuleOps) {
+                        throw new IllegalStateException("Batch patch newRules duplicate rule: " + code + "/" + name);
+                    }
                     continue;
                 }
                 seedProductRules(customer.getId(), JsonUtils.getObjectMapper().createArrayNode().add(ruleNode));
@@ -1148,18 +1165,24 @@ public class BillingSeedMigrationRunner implements CommandLineRunner {
                 String ruleName = text(deact, "ruleName");
                 Customer customer = customerMapper.selectByCode(code);
                 if (customer == null) {
+                    if (strictRuleOps) {
+                        throw new IllegalStateException("Batch patch deactivateRules customer not found: " + code);
+                    }
                     continue;
                 }
-                deactivateProductRule(customer.getId(), ruleName);
+                deactivateProductRule(customer.getId(), ruleName, strictRuleOps);
             }
             for (JsonNode act : root.path("activateRules")) {
                 String code = text(act, "code");
                 String ruleName = text(act, "ruleName");
                 Customer customer = customerMapper.selectByCode(code);
                 if (customer == null) {
+                    if (strictRuleOps) {
+                        throw new IllegalStateException("Batch patch activateRules customer not found: " + code);
+                    }
                     continue;
                 }
-                activateProductRule(customer.getId(), ruleName);
+                activateProductRule(customer.getId(), ruleName, strictRuleOps);
             }
             seedExternalInstruments(root.path("externalInstruments"));
             for (JsonNode discNode : root.path("discountUpdates")) {
@@ -1554,8 +1577,18 @@ public class BillingSeedMigrationRunner implements CommandLineRunner {
     }
 
     private void deactivateProductRule(Long customerId, String ruleName) {
+        deactivateProductRule(customerId, ruleName, false);
+    }
+
+    private void deactivateProductRule(Long customerId, String ruleName, boolean strict) {
         CustomerProductRule rule = findProductRuleByName(customerId, ruleName);
-        if (rule == null || !Boolean.TRUE.equals(rule.getIsActive())) {
+        if (rule == null) {
+            if (strict) {
+                throw new IllegalStateException("Deactivate rule not found: customerId=" + customerId + ", rule=" + ruleName);
+            }
+            return;
+        }
+        if (!Boolean.TRUE.equals(rule.getIsActive())) {
             return;
         }
         rule.setIsActive(false);
@@ -1564,8 +1597,18 @@ public class BillingSeedMigrationRunner implements CommandLineRunner {
     }
 
     private void activateProductRule(Long customerId, String ruleName) {
+        activateProductRule(customerId, ruleName, false);
+    }
+
+    private void activateProductRule(Long customerId, String ruleName, boolean strict) {
         CustomerProductRule rule = findProductRuleByName(customerId, ruleName);
-        if (rule == null || Boolean.TRUE.equals(rule.getIsActive())) {
+        if (rule == null) {
+            if (strict) {
+                throw new IllegalStateException("Activate rule not found: customerId=" + customerId + ", rule=" + ruleName);
+            }
+            return;
+        }
+        if (Boolean.TRUE.equals(rule.getIsActive())) {
             return;
         }
         rule.setIsActive(true);

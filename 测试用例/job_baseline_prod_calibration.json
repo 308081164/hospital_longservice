@@ -1,302 +1,356 @@
 {
-  "generated_at": "2026-07-29T21:29:21",
+  "generated_at": "2026-08-08T19:13:23",
   "api_base": "http://39.102.213.51:8853",
   "summary": {
     "total": 38,
-    "found": 20,
-    "missing": 18,
+    "found": 38,
+    "missing": 0,
     "changed": 0,
-    "unchanged": 20,
+    "unchanged": 38,
     "error": 0
   },
   "entries": [
     {
       "hospital": "黑龙江中医药大学附属第一医院",
       "status": "unchanged",
-      "job_id": 208,
-      "old_job_id": 208,
+      "job_id": 378,
+      "old_job_id": 378,
       "job_status": null,
-      "createdAt": "2026-07-29T15:02:13",
-      "candidates": 12
+      "createdAt": "2026-08-08T19:11:08",
+      "candidates": 40
     },
     {
       "hospital": "黑龙江省中医药大学附属第三医院（电力）",
-      "status": "missing",
-      "old_job_id": null,
-      "candidates": 0
+      "status": "unchanged",
+      "job_id": 364,
+      "old_job_id": 364,
+      "job_status": null,
+      "createdAt": "2026-08-08T18:57:42",
+      "candidates": 3
     },
     {
       "hospital": "国药总医院主院区",
-      "status": "missing",
-      "old_job_id": null,
-      "candidates": 0
+      "status": "unchanged",
+      "job_id": 270,
+      "old_job_id": 270,
+      "job_status": null,
+      "createdAt": "2026-08-05T10:38:09",
+      "candidates": 1
     },
     {
       "hospital": "国药总医院第二院区",
-      "status": "missing",
-      "old_job_id": null,
-      "candidates": 0
+      "status": "unchanged",
+      "job_id": 271,
+      "old_job_id": 271,
+      "job_status": null,
+      "createdAt": "2026-08-05T10:38:10",
+      "candidates": 1
     },
     {
       "hospital": "国药总医院第三院区",
-      "status": "missing",
-      "old_job_id": null,
-      "candidates": 0
+      "status": "unchanged",
+      "job_id": 377,
+      "old_job_id": 377,
+      "job_status": null,
+      "createdAt": "2026-08-08T19:11:07",
+      "candidates": 4
     },
     {
       "hospital": "哈尔滨市第二医院",
       "status": "unchanged",
-      "job_id": 185,
-      "old_job_id": 185,
+      "job_id": 273,
+      "old_job_id": 273,
       "job_status": null,
-      "createdAt": "2026-07-27T15:59:28",
-      "candidates": 8
+      "createdAt": "2026-08-05T10:38:15",
+      "candidates": 10
     },
     {
       "hospital": "哈尔滨市第五医院",
-      "status": "missing",
-      "old_job_id": null,
-      "candidates": 0
+      "status": "unchanged",
+      "job_id": 376,
+      "old_job_id": 376,
+      "job_status": null,
+      "createdAt": "2026-08-08T19:11:03",
+      "candidates": 4
     },
     {
       "hospital": "哈尔滨市第五医院（二门诊）",
-      "status": "missing",
-      "old_job_id": null,
-      "candidates": 0
+      "status": "unchanged",
+      "job_id": 275,
+      "old_job_id": 275,
+      "job_status": null,
+      "createdAt": "2026-08-05T10:38:30",
+      "candidates": 1
     },
     {
       "hospital": "新发红十字医院",
-      "status": "missing",
-      "old_job_id": null,
-      "candidates": 0
+      "status": "unchanged",
+      "job_id": 379,
+      "old_job_id": 379,
+      "job_status": null,
+      "createdAt": "2026-08-08T19:11:17",
+      "candidates": 6
     },
     {
       "hospital": "黑龙江省医院（南岗院区）",
       "status": "unchanged",
-      "job_id": 153,
-      "old_job_id": 153,
+      "job_id": 374,
+      "old_job_id": 374,
       "job_status": null,
-      "createdAt": "2026-07-27T10:36:59",
-      "candidates": 1
+      "createdAt": "2026-08-08T19:10:55",
+      "candidates": 5
     },
     {
       "hospital": "黑龙江省医院（香坊院区）",
       "status": "unchanged",
-      "job_id": 152,
-      "old_job_id": 152,
+      "job_id": 375,
+      "old_job_id": 375,
       "job_status": null,
-      "createdAt": "2026-07-27T09:45:37",
-      "candidates": 1
+      "createdAt": "2026-08-08T19:10:58",
+      "candidates": 7
     },
     {
       "hospital": "祖研-黑龙江省中医医院（南岗院区）",
-      "status": "missing",
-      "old_job_id": null,
-      "candidates": 0
+      "status": "unchanged",
+      "job_id": 279,
+      "old_job_id": 279,
+      "job_status": null,
+      "createdAt": "2026-08-05T10:38:43",
+      "candidates": 2
     },
     {
       "hospital": "祖研-黑龙江省中医医院（三辅院区）",
-      "status": "missing",
-      "old_job_id": null,
-      "candidates": 0
+      "status": "unchanged",
+      "job_id": 380,
+      "old_job_id": 380,
+      "job_status": null,
+      "createdAt": "2026-08-08T19:11:18",
+      "candidates": 5
     },
     {
       "hospital": "祖研-黑龙江省中医医院（香安院区）",
-      "status": "missing",
-      "old_job_id": null,
-      "candidates": 0
+      "status": "unchanged",
+      "job_id": 281,
+      "old_job_id": 281,
+      "job_status": null,
+      "createdAt": "2026-08-05T10:38:46",
+      "candidates": 2
     },
     {
       "hospital": "南岗区妇产医院",
       "status": "unchanged",
-      "job_id": 193,
-      "old_job_id": 193,
+      "job_id": 356,
+      "old_job_id": 356,
       "job_status": null,
-      "createdAt": "2026-07-28T08:55:28",
-      "candidates": 4
+      "createdAt": "2026-08-08T18:46:36",
+      "candidates": 7
     },
     {
       "hospital": "黑龙江省社会康复医院",
       "status": "unchanged",
-      "job_id": 213,
-      "old_job_id": 213,
+      "job_id": 357,
+      "old_job_id": 357,
       "job_status": null,
-      "createdAt": "2026-07-29T16:39:03",
-      "candidates": 3
+      "createdAt": "2026-08-08T18:46:40",
+      "candidates": 6
     },
     {
       "hospital": "道外区人民医院",
       "status": "unchanged",
-      "job_id": 207,
-      "old_job_id": 207,
+      "job_id": 284,
+      "old_job_id": 284,
       "job_status": null,
-      "createdAt": "2026-07-28T16:43:49",
-      "candidates": 3
+      "createdAt": "2026-08-05T10:38:48",
+      "candidates": 4
     },
     {
       "hospital": "太平人民医院",
-      "status": "missing",
-      "old_job_id": null,
-      "candidates": 0
+      "status": "unchanged",
+      "job_id": 285,
+      "old_job_id": 285,
+      "job_status": null,
+      "createdAt": "2026-08-05T10:38:50",
+      "candidates": 1
     },
     {
       "hospital": "三精肾病医院",
       "status": "unchanged",
-      "job_id": 198,
-      "old_job_id": 198,
+      "job_id": 286,
+      "old_job_id": 286,
       "job_status": null,
-      "createdAt": "2026-07-28T12:54:02",
-      "candidates": 3
+      "createdAt": "2026-08-05T10:38:51",
+      "candidates": 4
     },
     {
       "hospital": "黑龙江维多利亚妇产医院",
       "status": "unchanged",
-      "job_id": 50,
-      "old_job_id": 50,
+      "job_id": 348,
+      "old_job_id": 348,
       "job_status": null,
-      "createdAt": "2026-07-23T12:23:00",
-      "candidates": 1
+      "createdAt": "2026-08-08T18:45:48",
+      "candidates": 3
     },
     {
       "hospital": "黑龙江九洲妇科医院",
       "status": "unchanged",
-      "job_id": 84,
-      "old_job_id": 84,
+      "job_id": 349,
+      "old_job_id": 349,
       "job_status": null,
-      "createdAt": "2026-07-23T14:25:01",
-      "candidates": 6
+      "createdAt": "2026-08-08T18:45:53",
+      "candidates": 9
     },
     {
       "hospital": "呼兰区红十字医院",
-      "status": "missing",
-      "old_job_id": null,
-      "candidates": 0
+      "status": "unchanged",
+      "job_id": 351,
+      "old_job_id": 351,
+      "job_status": null,
+      "createdAt": "2026-08-08T18:46:01",
+      "candidates": 3
     },
     {
       "hospital": "呼兰中医院",
       "status": "unchanged",
-      "job_id": 38,
-      "old_job_id": 38,
+      "job_id": 290,
+      "old_job_id": 290,
       "job_status": null,
-      "createdAt": "2026-07-23T10:18:52",
-      "candidates": 2
+      "createdAt": "2026-08-05T10:38:56",
+      "candidates": 3
     },
     {
       "hospital": "黑龙江中医药大学附属第二医院（南岗）",
-      "status": "missing",
-      "old_job_id": null,
-      "candidates": 0
+      "status": "unchanged",
+      "job_id": 291,
+      "old_job_id": 291,
+      "job_status": null,
+      "createdAt": "2026-08-05T10:38:58",
+      "candidates": 1
     },
     {
       "hospital": "黑龙江中医药大学附属第二医院（哈南分院）",
       "status": "unchanged",
-      "job_id": 159,
-      "old_job_id": 159,
+      "job_id": 381,
+      "old_job_id": 381,
       "job_status": null,
-      "createdAt": "2026-07-27T12:08:36",
-      "candidates": 5
+      "createdAt": "2026-08-08T19:11:18",
+      "candidates": 9
     },
     {
       "hospital": "哈尔滨仁胜医院",
       "status": "unchanged",
-      "job_id": 45,
-      "old_job_id": 45,
+      "job_id": 293,
+      "old_job_id": 293,
       "job_status": null,
-      "createdAt": "2026-07-23T10:54:19",
-      "candidates": 2
+      "createdAt": "2026-08-05T10:39:01",
+      "candidates": 4
     },
     {
       "hospital": "哈尔滨华夏眼科医院",
       "status": "unchanged",
-      "job_id": 197,
-      "old_job_id": 197,
+      "job_id": 294,
+      "old_job_id": 294,
       "job_status": null,
-      "createdAt": "2026-07-28T12:51:23",
-      "candidates": 7
+      "createdAt": "2026-08-05T10:39:02",
+      "candidates": 9
     },
     {
       "hospital": "哈尔滨冰城医疗美容医院",
       "status": "unchanged",
-      "job_id": 211,
-      "old_job_id": 211,
+      "job_id": 382,
+      "old_job_id": 382,
       "job_status": null,
-      "createdAt": "2026-07-29T16:10:40",
-      "candidates": 15
+      "createdAt": "2026-08-08T19:11:19",
+      "candidates": 19
     },
     {
       "hospital": "香坊中医院",
       "status": "unchanged",
-      "job_id": 53,
-      "old_job_id": 53,
+      "job_id": 296,
+      "old_job_id": 296,
       "job_status": null,
-      "createdAt": "2026-07-23T12:27:34",
-      "candidates": 1
+      "createdAt": "2026-08-05T10:39:04",
+      "candidates": 2
     },
     {
       "hospital": "武警黑龙江省总队医院",
       "status": "unchanged",
-      "job_id": 205,
-      "old_job_id": 205,
+      "job_id": 297,
+      "old_job_id": 297,
       "job_status": null,
-      "createdAt": "2026-07-28T16:37:21",
-      "candidates": 3
+      "createdAt": "2026-08-05T10:39:04",
+      "candidates": 5
     },
     {
       "hospital": "悦美芳华医疗门诊医院",
       "status": "unchanged",
-      "job_id": 212,
-      "old_job_id": 212,
+      "job_id": 298,
+      "old_job_id": 298,
       "job_status": null,
-      "createdAt": "2026-07-29T16:14:06",
-      "candidates": 3
+      "createdAt": "2026-08-05T10:39:05",
+      "candidates": 4
     },
     {
       "hospital": "黑龙江省第二医院（南岗院区）",
-      "status": "missing",
-      "old_job_id": null,
-      "candidates": 0
+      "status": "unchanged",
+      "job_id": 360,
+      "old_job_id": 360,
+      "job_status": null,
+      "createdAt": "2026-08-08T18:46:53",
+      "candidates": 2
     },
     {
       "hospital": "黑龙江省第二医院（松北院区）",
-      "status": "missing",
-      "old_job_id": null,
-      "candidates": 0
+      "status": "unchanged",
+      "job_id": 300,
+      "old_job_id": 300,
+      "job_status": null,
+      "createdAt": "2026-08-05T10:39:08",
+      "candidates": 1
     },
     {
       "hospital": "哈尔滨市呼兰区第一人民医院",
-      "status": "missing",
-      "old_job_id": null,
-      "candidates": 0
+      "status": "unchanged",
+      "job_id": 361,
+      "old_job_id": 361,
+      "job_status": null,
+      "createdAt": "2026-08-08T18:46:58",
+      "candidates": 4
     },
     {
       "hospital": "哈尔滨市红十字妇产医院",
-      "status": "missing",
-      "old_job_id": null,
-      "candidates": 0
+      "status": "unchanged",
+      "job_id": 362,
+      "old_job_id": 362,
+      "job_status": null,
+      "createdAt": "2026-08-08T18:47:06",
+      "candidates": 5
     },
     {
       "hospital": "哈尔滨工业大学医院",
       "status": "unchanged",
-      "job_id": 77,
-      "old_job_id": 77,
+      "job_id": 303,
+      "old_job_id": 303,
       "job_status": null,
-      "createdAt": "2026-07-23T13:51:47",
-      "candidates": 3
+      "createdAt": "2026-08-05T10:39:18",
+      "candidates": 4
     },
     {
       "hospital": "哈尔滨工程大学医院",
-      "status": "missing",
-      "old_job_id": null,
-      "candidates": 0
+      "status": "unchanged",
+      "job_id": 304,
+      "old_job_id": 304,
+      "job_status": null,
+      "createdAt": "2026-08-05T10:39:20",
+      "candidates": 1
     },
     {
       "hospital": "哈尔滨长健医院",
       "status": "unchanged",
-      "job_id": 162,
-      "old_job_id": 162,
+      "job_id": 305,
+      "old_job_id": 305,
       "job_status": null,
-      "createdAt": "2026-07-27T12:44:38",
-      "candidates": 5
+      "createdAt": "2026-08-05T10:39:21",
+      "candidates": 11
     }
   ]
 }

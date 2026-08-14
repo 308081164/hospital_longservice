@@ -85,6 +85,11 @@ TODO_HOSPITALS: list[str] = [
     "哈尔滨工业大学医院",
     "哈尔滨工程大学医院",
     "哈尔滨长健医院",
+    # 2026-08-09 客户建档 + 特色规则
+    "方南南医院",
+    "美意医疗",
+    "易丽医疗",
+    "佳医医疗",
 ]
 
 # Hardcoded engine rules not in billing-seeds (customer_code -> rules)
@@ -134,6 +139,11 @@ FOLDER_CODE_OVERRIDE: dict[str, str] = {
     "哈尔滨工业大学医院": "HRB-HIT",
     "哈尔滨工程大学医院": "HRB-HEU",
     "哈尔滨长健医院": "HRB-CJ",
+    "国药总医院第二院区": "GUOYAO-2",
+    "方南南医院": "FNN-YY",
+    "美意医疗": "MEIYI-YL",
+    "易丽医疗": "YILI-YL",
+    "佳医医疗": "JIAYI-YL",
 }
 
 # S4 验收固定原始/处理后成对（跨自然月账期）
@@ -184,6 +194,37 @@ HOSPITAL_PAIR_OVERRIDE: dict[str, tuple[str, str, str]] = {
         "5月(5.1-5.31验收)",
     ),
 }
+
+# 814 新增 7 月 strict 成对 override
+HOSPITAL_PAIR_OVERRIDE_JULY: dict[str, tuple[str, str, str]] = {
+    "黑龙江菁华上德生殖妇产医院": (
+        "原始表格/7月__上德原始.xlsx",
+        "处理后表格/7月__上德账单.xlsx",
+        "7月",
+    ),
+    "哈尔滨冰城医疗美容医院": (
+        "原始表格/7月__冰城原始.xlsx",
+        "处理后表格/7月__冰城医美账单.xlsx",
+        "7月",
+    ),
+    "国药总医院第二院区": (
+        "原始表格/7月__电机厂原始.xlsx",
+        "处理后表格/7月__电机厂账单.xlsx",
+        "7月(4家拆分)",
+    ),
+}
+
+
+def month_pair_override(hospital_name: str, month: int) -> dict[str, tuple[str, str, str]]:
+    if month == TARGET_MONTH:
+        return HOSPITAL_PAIR_OVERRIDE
+    if month == 7:
+        return HOSPITAL_PAIR_OVERRIDE_JULY
+    return {}
+
+
+def expected_csv_name(month: int) -> str:
+    return f"{month}月期待价格校正清单.csv"
 
 
 @dataclass
@@ -390,15 +431,16 @@ def classify_coverage(
     return "uncovered", "无特色规则且默认规则未确认"
 
 
-def pick_june_pair(hospital_dir: Path) -> tuple[Path | None, Path | None, str]:
+def pick_month_pair(hospital_dir: Path, month: int = TARGET_MONTH) -> tuple[Path | None, Path | None, str]:
     raw_dir = hospital_dir / "原始表格"
     proc_dir = hospital_dir / "处理后表格"
     if not raw_dir.is_dir() or not proc_dir.is_dir():
         return None, None, "缺少原始或处理后目录"
 
     name = hospital_dir.name
-    if name in HOSPITAL_PAIR_OVERRIDE:
-        rel_raw, rel_proc, label = HOSPITAL_PAIR_OVERRIDE[name]
+    overrides = month_pair_override(name, month)
+    if name in overrides:
+        rel_raw, rel_proc, label = overrides[name]
         raw = hospital_dir / rel_raw
         proc = hospital_dir / rel_proc
         if raw.is_file() and proc.is_file():
@@ -408,38 +450,39 @@ def pick_june_pair(hospital_dir: Path) -> tuple[Path | None, Path | None, str]:
     proc_files = [p for p in proc_dir.iterdir() if p.suffix.lower() in {".xlsx", ".xls"}]
 
     mapping = match_raw_processed(raw_files, proc_files)
-    if TARGET_MONTH in mapping:
-        raw, bill, _ = mapping[TARGET_MONTH]
+    if month in mapping:
+        raw, bill, _ = mapping[month]
         if bill:
-            return raw, bill, "6月"
+            return raw, bill, f"{month}月"
 
-    # 5.13-6.15 等：按 match_raw_processed 的 5 月成对，避免 6.15 误配 6月__ 其它账期
-    if 5 in mapping:
+    if month == TARGET_MONTH and 5 in mapping:
         raw5, bill5, _ = mapping[5]
         if raw5 and bill5 and re.search(r"5\.\d+-6\.", raw5.name):
             return raw5, bill5, "5月跨期(含6月)"
 
-    # Date-range bills ending in June (e.g. 5.9-6.8) — require处理后文件名含同日期段
-    june_raw: list[Path] = []
+    month_raw: list[Path] = []
     for raw in raw_files:
         m = extract_month_from_name(raw.name)
-        if m == TARGET_MONTH:
-            june_raw.append(raw)
-        elif re.search(r"[-~]6[\.-]|6[\.-]\d|6月", raw.name):
-            june_raw.append(raw)
-    for raw in june_raw:
-        bill = pick_processed_bill(TARGET_MONTH, proc_files, raw.name)
+        if m == month:
+            month_raw.append(raw)
+        elif month == TARGET_MONTH and re.search(r"[-~]6[\.-]|6[\.-]\d|6月", raw.name):
+            month_raw.append(raw)
+    for raw in month_raw:
+        bill = pick_processed_bill(month, proc_files, raw.name)
         if bill:
             raw_range = extract_date_range_token(raw.name)
-            if raw_range and raw_range not in bill.name:
-                # 处理后账期与原始不一致，跳过
+            if raw_range and raw_range not in bill.name and month == TARGET_MONTH:
                 alt = pick_processed_bill(5, proc_files, raw.name)
                 if alt and (not raw_range or raw_range in alt.name):
                     return raw, alt, f"跨月(原始:{raw.name})"
                 continue
-            return raw, bill, f"6月(原始:{raw.name})"
+            return raw, bill, f"{month}月(原始:{raw.name})"
 
-    return None, None, "无6月可对比材料"
+    return None, None, f"无{month}月可对比材料"
+
+
+def pick_june_pair(hospital_dir: Path) -> tuple[Path | None, Path | None, str]:
+    return pick_month_pair(hospital_dir, TARGET_MONTH)
 
 
 def row_match_key(r: DetailRow) -> tuple[str, str, str]:
@@ -489,8 +532,11 @@ def iter_compare_pairs(
     return pairs
 
 
-def extract_expected_price_rows(hospital_dir: Path) -> tuple[list[ExpectedPriceRow], Path | None, Path | None, str]:
-    raw_path, proc_path, note = pick_june_pair(hospital_dir)
+def extract_expected_price_rows(
+    hospital_dir: Path,
+    month: int = TARGET_MONTH,
+) -> tuple[list[ExpectedPriceRow], Path | None, Path | None, str]:
+    raw_path, proc_path, note = pick_month_pair(hospital_dir, month)
     if not raw_path or not proc_path:
         return [], raw_path, proc_path, note
 
@@ -531,8 +577,12 @@ def extract_expected_price_rows(hospital_dir: Path) -> tuple[list[ExpectedPriceR
     return expected, raw_path, proc_path, note
 
 
-def write_hospital_csv(hospital_dir: Path, rows: list[ExpectedPriceRow]) -> Path:
-    out = hospital_dir / "6月期待价格校正清单.csv"
+def write_hospital_csv(
+    hospital_dir: Path,
+    rows: list[ExpectedPriceRow],
+    month: int = TARGET_MONTH,
+) -> Path:
+    out = hospital_dir / expected_csv_name(month)
     with out.open("w", encoding="utf-8-sig", newline="") as f:
         w = csv.writer(f)
         w.writerow([
@@ -549,7 +599,11 @@ def write_hospital_csv(hospital_dir: Path, rows: list[ExpectedPriceRow]) -> Path
     return out
 
 
-def audit_hospital(name: str, profiles: dict[str, CustomerProfile]) -> HospitalAudit:
+def audit_hospital(
+    name: str,
+    profiles: dict[str, CustomerProfile],
+    month: int = TARGET_MONTH,
+) -> HospitalAudit:
     hospital_dir = TEST_CASE_DIR / name
     audit = HospitalAudit(name=name, status="pending")
 
@@ -564,7 +618,7 @@ def audit_hospital(name: str, profiles: dict[str, CustomerProfile]) -> HospitalA
         audit.message = "缺少原始表格"
         return audit
 
-    expected, raw_path, proc_path, pair_note = extract_expected_price_rows(hospital_dir)
+    expected, raw_path, proc_path, pair_note = extract_expected_price_rows(hospital_dir, month)
     if not raw_path or not proc_path:
         audit.status = "skip_no_june"
         audit.message = pair_note
@@ -601,7 +655,7 @@ def audit_hospital(name: str, profiles: dict[str, CustomerProfile]) -> HospitalA
     audit.expected_count = len(expected)
     audit.uncovered_count = len(audit.uncovered_rows)
 
-    write_hospital_csv(hospital_dir, expected)
+    write_hospital_csv(hospital_dir, expected, month)
 
     if audit.uncovered_count > 0:
         audit.status = "blocked_uncovered"

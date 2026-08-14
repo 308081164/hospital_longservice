@@ -1,0 +1,73 @@
+{
+  "version": "1",
+  "description": "特殊收费(8) v8：6 家新医院 onboarding + HL-ZGH 镜头加收",
+  "profiles": [
+    {
+      "code": "BOSHANG-YY",
+      "name": "博尚医院",
+      "billingEnabled": true,
+      "billingPricingMode": "special_only",
+      "aliases": ["博尚医院", "博尚"]
+    },
+    {
+      "code": "HAIYUAN-SB",
+      "name": "黑龙江省海员总医院（松北）",
+      "billingEnabled": true,
+      "billingPricingMode": "hybrid",
+      "aliases": ["海员总医院松北", "黑龙江省海员总医院（松北）", "海员松北"]
+    },
+    {
+      "code": "HLJ-FY-RK",
+      "name": "黑龙江省妇幼保健院（人口）",
+      "billingEnabled": true,
+      "billingPricingMode": "hybrid",
+      "aliases": ["黑龙江省妇幼保健院（人口）", "省妇幼人口", "妇幼人口"]
+    },
+    {
+      "code": "DL-FUCHAN",
+      "name": "哈尔滨市道里区妇幼保健院",
+      "billingEnabled": true,
+      "billingPricingMode": "hybrid",
+      "aliases": ["道里区妇幼保健院", "哈尔滨市道里区妇幼保健院", "道里妇幼"]
+    },
+    {
+      "code": "CHUNYU-YL",
+      "name": "春语医疗美容医院",
+      "billingEnabled": true,
+      "billingPricingMode": "hybrid",
+      "aliases": ["春语医疗美容医院", "春语医美", "春语医疗"]
+    },
+    {
+      "code": "SUOFEI-YL",
+      "name": "索菲医疗美容门诊",
+      "billingEnabled": true,
+      "billingPricingMode": "standard",
+      "aliases": ["索菲医疗美容门诊", "索菲医美", "索菲医疗"]
+    },
+    {
+      "code": "HL-ZGH",
+      "name": "黑龙江总工会医院",
+      "billingEnabled": true,
+      "billingPricingMode": "hybrid",
+      "aliases": ["黑龙江总工会医院", "总工会医院"]
+    },
+    {
+      "code": "SHKF-YY",
+      "name": "黑龙江省社会康复医院",
+      "billingEnabled": true,
+      "billingPricingMode": "special_only"
+    }
+  ],
+  "newRules": [
+    {
+      "code": "HL-ZGH",
+      "ruleType": "EXTRA_FEE",
+      "name": "总工会镜头铂康盒加收8",
+      "priority": 10,
+      "fee": 8.0,
+      "keywords": ["12°镜头", "12度镜头", "镜头"],
+      "skipPackaging": false,
+      "skipDiscount": true
+    }
+  ]
+}

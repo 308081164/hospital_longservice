@@ -1,0 +1,93 @@
+{
+  "version": "1",
+  "description": "计价贴合修复：冰城 v8 重激活、上德建档、九洲账单层关闭折扣",
+  "deactivateRules": [
+    { "code": "BINGCHENG-YM", "ruleName": "环钻27.5" },
+    { "code": "BINGCHENG-YM", "ruleName": "环钻包30.5" },
+    { "code": "BINGCHENG-YM", "ruleName": "整形包58" },
+    { "code": "BINGCHENG-YM", "ruleName": "脂充包54.5" },
+    { "code": "BINGCHENG-YM", "ruleName": "整形包54.5" },
+    { "code": "BINGCHENG-YM", "ruleName": "≥3件按件5.5元" }
+  ],
+  "strictRuleOps": true,
+  "activateRules": [
+    { "code": "BINGCHENG-YM", "ruleName": "冰城环钻包按件5.5" },
+    { "code": "BINGCHENG-YM", "ruleName": "冰城环钻包无纺布加价3" },
+    { "code": "BINGCHENG-YM", "ruleName": "冰城环钻包小件包装加价3" },
+    { "code": "BINGCHENG-YM", "ruleName": "冰城整形手术包按件5.5" },
+    { "code": "BINGCHENG-YM", "ruleName": "冰城整形手术包无纺布加价3" },
+    { "code": "BINGCHENG-YM", "ruleName": "冰城脂充包按件5.5" },
+    { "code": "BINGCHENG-YM", "ruleName": "冰城脂充包无纺布加价5" },
+    { "code": "ZUYAN-NG", "ruleName": "校正价13.5" },
+    { "code": "ZUYAN-NG", "ruleName": "校正价16.5" },
+    { "code": "ZUYAN-NG", "ruleName": "校正价22.0" }
+  ],
+  "profiles": [
+    {
+      "code": "SHANGDE-FC",
+      "name": "黑龙江菁华上德生殖妇产医院",
+      "billingEnabled": true,
+      "billingPricingMode": "special_only",
+      "aliases": [
+        "上德",
+        "菁华上德",
+        "黑龙江菁华上德生殖妇产医院"
+      ],
+      "productRules": [
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "上德子痫包16.5",
+          "priority": 5,
+          "price": 16.5,
+          "keywords": ["子痫包-3件/Z1526", "子痫包"],
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": true
+        },
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "上德优视加件187",
+          "priority": 6,
+          "price": 187.0,
+          "keywords": ["优视加件-11件/w9050", "优视加件"],
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": true
+        }
+      ]
+    },
+    {
+      "code": "JIUZHOU-FK",
+      "name": "黑龙江九洲妇科医院",
+      "billingEnabled": false,
+      "billingPricingMode": "special_only",
+      "aliases": ["九州妇科", "黑龙江九洲妇科医院"]
+    }
+  ],
+  "newRules": [
+    {
+      "code": "BINGCHENG-YM",
+      "ruleType": "EXTRA_FEE",
+      "name": "冰城环钻包小件包装加价3",
+      "priority": 8,
+      "fee": 3.0,
+      "minInstrumentCount": 2,
+      "maxInstrumentCount": 5,
+      "keywords": ["环钻包", "环钻"],
+      "skipPackaging": true,
+      "skipDiscount": true
+    }
+  ],
+  "discountUpdates": [
+    {
+      "code": "JIUZHOU-FK",
+      "name": "高温5折",
+      "applyStage": "settlement_only"
+    },
+    {
+      "code": "JIUZHOU-FK",
+      "name": "低温7折",
+      "applyStage": "settlement_only"
+    }
+  ]
+}

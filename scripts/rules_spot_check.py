@@ -227,17 +227,32 @@ BINGCHENG_YM_HOSPITAL = "哈尔滨冰城医疗美容医院"
 
 BINGCHENG_YM_SPOT_CHECKS: list[dict[str, Any]] = [
     {
-        "name": "冰城环钻包27.5",
+        "name": "冰城环钻包2件33",
         "department": "手术室",
         "packName": "环钻包",
         "type": "器械包(ZSD)",
-        "packageMaterial": "高温灭菌无纺布60*60",
+        "packageMaterial": "高温灭菌无纺布90*90",
         "instrumentCount": 2,
         "packCount": 1,
-        "unitPrice": 30.5,
-        "totalPrice": 61.0,
-        "expectedUnitPrice": 27.5,
-        "priceTol": 0.02,
+        "unitPrice": 33.0,
+        "totalPrice": 33.0,
+        "expectedUnitPrice": 14.0,
+        "expectedCorrectedTotal": 14.0,
+        "priceTol": 0.5,
+    },
+    {
+        "name": "冰城脂充包2件16",
+        "department": "手术室",
+        "packName": "脂充包",
+        "type": "器械包(ZSD)",
+        "packageMaterial": "高温灭菌无纺布120*120",
+        "instrumentCount": 2,
+        "packCount": 1,
+        "unitPrice": 16.0,
+        "totalPrice": 16.0,
+        "expectedUnitPrice": 16.0,
+        "expectedCorrectedTotal": 16.0,
+        "priceTol": 0.5,
     },
 ]
 
@@ -529,6 +544,209 @@ STANDARD_COTTON_SPOT_CHECKS: list[dict[str, Any]] = [
     },
 ]
 
+ZUYAN_NG_SPOT_CHECKS: list[dict[str, Any]] = [
+    {
+        "name": "祖研排针25件免袋",
+        "department": "美容科",
+        "packName": "排针-25/Z7537",
+        "type": "额外包(纸塑袋)",
+        "packageMaterial": "高温纸塑袋75*370",
+        "instrumentCount": 25,
+        "packCount": 1,
+        "unitPrice": 16.5,
+        "totalPrice": 16.5,
+        "expectedUnitPrice": 16.5,
+        "priceTol": 0.5,
+    },
+]
+
+SHKF_YY_SPOT_CHECKS: list[dict[str, Any]] = [
+    {
+        "name": "社会康复内提工具盒44",
+        "department": "口腔科",
+        "packName": "内提工具盒10件盒1/W6050",
+        "type": "单包装",
+        "packageMaterial": "高温纸塑袋75*200",
+        "instrumentCount": 10,
+        "packCount": 1,
+        "unitPrice": 44.0,
+        "totalPrice": 44.0,
+        "expectedUnitPrice": 44.0,
+    },
+]
+
+JIUZHOU_FK_SPOT_CHECKS: list[dict[str, Any]] = [
+    {
+        "name": "九州方盘5.5",
+        "department": "手术室",
+        "packName": "方盘-1/Z7520",
+        "type": "额外包",
+        "packageMaterial": "高温纸塑袋75*200",
+        "instrumentCount": 1,
+        "packCount": 1,
+        "unitPrice": 5.5,
+        "totalPrice": 5.5,
+        "expectedUnitPrice": 5.5,
+    },
+]
+
+JZSW_BIO_SPOT_CHECKS: list[dict[str, Any]] = [
+    {
+        "name": "基准生物氩氦刀150",
+        "department": "手术室",
+        "packName": "氩氦刀-1/Z2060",
+        "type": "额外包(低温等离子)",
+        "packageMaterial": "低温纸塑袋200*300",
+        "instrumentCount": 1,
+        "packCount": 1,
+        "unitPrice": 150.0,
+        "totalPrice": 150.0,
+        "expectedUnitPrice": 150.0,
+    },
+]
+
+HLJ_JYGLJ_YY_SPOT_CHECKS: list[dict[str, Any]] = [
+    {
+        "name": "监狱密封件6件44",
+        "department": "手术室",
+        "packName": "密封件-6/Z7520",
+        "type": "额外包(低温等离子)",
+        "packageMaterial": "低温纸塑袋200*200",
+        "instrumentCount": 6,
+        "packCount": 1,
+        "unitPrice": 44.0,
+        "totalPrice": 44.0,
+        "expectedUnitPrice": 44.0,
+        "priceTol": 0.5,
+    },
+]
+
+HAIYUAN_SB_SPOT_CHECKS: list[dict[str, Any]] = [
+    {
+        "name": "海员胶帽6件44",
+        "department": "手术室",
+        "packName": "胶帽-6/Z7520",
+        "type": "额外包(低温等离子)",
+        "packageMaterial": "低温纸塑袋200*200",
+        "instrumentCount": 6,
+        "packCount": 1,
+        "unitPrice": 44.0,
+        "totalPrice": 44.0,
+        "expectedUnitPrice": 44.0,
+        "priceTol": 0.5,
+    },
+]
+
+HLJ_FY_RK_SPOT_CHECKS: list[dict[str, Any]] = [
+    {
+        "name": "妇幼人口密封件3件28",
+        "department": "手术室",
+        "packName": "密封胶圈-3/Z7520",
+        "type": "额外包(低温等离子)",
+        "packageMaterial": "低温纸塑袋200*200",
+        "instrumentCount": 3,
+        "packCount": 1,
+        "unitPrice": 28.0,
+        "totalPrice": 28.0,
+        "expectedUnitPrice": 28.0,
+        "priceTol": 1.0,
+    },
+]
+
+CHUNYU_YL_SPOT_CHECKS: list[dict[str, Any]] = [
+    {
+        "name": "春语塑料管15件44",
+        "department": "手术室",
+        "packName": "塑料管-15/Z7520",
+        "type": "低温等离子/ETO",
+        "packageMaterial": "低温灭菌纸塑袋15cm",
+        "instrumentCount": 15,
+        "packCount": 1,
+        "unitPrice": 44.0,
+        "totalPrice": 44.0,
+        "expectedUnitPrice": 44.0,
+        "priceTol": 0.5,
+    },
+]
+
+BOSHANG_YY_SPOT_CHECKS: list[dict[str, Any]] = [
+    {
+        "name": "博尚旋切器44",
+        "department": "手术室",
+        "packName": "旋切器1胶帽4/Z2045",
+        "type": "额外包(低温等离子)",
+        "packageMaterial": "低温纸塑袋200*300",
+        "instrumentCount": 5,
+        "packCount": 1,
+        "unitPrice": 44.0,
+        "totalPrice": 44.0,
+        "expectedUnitPrice": 44.0,
+    },
+]
+
+DL_FUCHAN_SPOT_CHECKS: list[dict[str, Any]] = [
+    {
+        "name": "道里妇幼棉花针8件",
+        "department": "口腔科",
+        "packName": "棉花针-8/Z7520",
+        "type": "额外包(纸塑袋)",
+        "packageMaterial": "高温纸塑袋75*200",
+        "instrumentCount": 8,
+        "packCount": 1,
+        "unitPrice": 16.5,
+        "totalPrice": 16.5,
+        "expectedUnitPrice": 16.5,
+        "priceTol": 0.5,
+    },
+]
+
+HL_ZGH_SPOT_CHECKS: list[dict[str, Any]] = [
+    {
+        "name": "总工会镜头低温阶梯",
+        "department": "手术室",
+        "packName": "12°镜头-1/Z2060",
+        "type": "额外包(低温等离子)",
+        "packageMaterial": "低温纸塑袋200*600",
+        "instrumentCount": 1,
+        "packCount": 1,
+        "unitPrice": 35.0,
+        "totalPrice": 35.0,
+        "expectedUnitPrice": 35.0,
+        "priceTol": 5.0,
+    },
+]
+
+SUOFEI_YL_SPOT_CHECKS: list[dict[str, Any]] = [
+    {
+        "name": "索菲面吸针3件16.5",
+        "department": "手术室",
+        "packName": "面吸针-3/双/Z7520",
+        "type": "额外包(纸塑袋)",
+        "packageMaterial": "高温纸塑袋75*200",
+        "instrumentCount": 3,
+        "packCount": 1,
+        "unitPrice": 16.5,
+        "totalPrice": 16.5,
+        "expectedUnitPrice": 16.5,
+        "priceTol": 0.5,
+    },
+]
+
+GLOBAL_SOFT_MIRROR_SPOT_CHECKS: list[dict[str, Any]] = [
+    {
+        "name": "全局软镜300",
+        "department": "手术室",
+        "packName": "软镜-1/Z2060",
+        "type": "额外包(ETO)",
+        "packageMaterial": "高温纸塑袋75*200",
+        "instrumentCount": 1,
+        "packCount": 1,
+        "unitPrice": 300.0,
+        "totalPrice": 300.0,
+        "expectedUnitPrice": 300.0,
+    },
+]
+
 SPOT_CHECK_PRESETS: dict[str, list[dict[str, Any]]] = {
     "HRB-2ND": HRB_2ND_SPOT_CHECKS,
     "ZYY-D1": ZYY_D1_SPOT_CHECKS,
@@ -544,6 +762,19 @@ SPOT_CHECK_PRESETS: dict[str, list[dict[str, Any]]] = {
     "NEAU-YY": NEAU_YY_SPOT_CHECKS,
     "HRB-SD-MB": HRB_SD_MB_SPOT_CHECKS,
     "HRB-HTFH": HRB_HTFH_SPOT_CHECKS,
+    "ZUYAN-NG": ZUYAN_NG_SPOT_CHECKS,
+    "SHKF-YY": SHKF_YY_SPOT_CHECKS,
+    "JIUZHOU-FK": JIUZHOU_FK_SPOT_CHECKS,
+    "JZSW-BIO": JZSW_BIO_SPOT_CHECKS,
+    "HLJ-JYGLJ-YY": HLJ_JYGLJ_YY_SPOT_CHECKS,
+    "HAIYUAN-SB": HAIYUAN_SB_SPOT_CHECKS,
+    "HLJ-FY-RK": HLJ_FY_RK_SPOT_CHECKS,
+    "CHUNYU-YL": CHUNYU_YL_SPOT_CHECKS,
+    "BOSHANG-YY": BOSHANG_YY_SPOT_CHECKS,
+    "DL-FUCHAN": DL_FUCHAN_SPOT_CHECKS,
+    "HL-ZGH": HL_ZGH_SPOT_CHECKS,
+    "SUOFEI-YL": SUOFEI_YL_SPOT_CHECKS,
+    "GLOBAL-SOFT-MIRROR": GLOBAL_SOFT_MIRROR_SPOT_CHECKS,
     "STANDARD": STANDARD_COTTON_SPOT_CHECKS,
 }
 
