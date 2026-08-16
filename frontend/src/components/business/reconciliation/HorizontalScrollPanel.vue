@@ -1,260 +1,317 @@
 <template>
-  <div ref="panelRef" class="h-scroll-panel" :style="{ maxHeight: maxHeight ?? '500px' }">
-    <div ref="contentRef" class="h-scroll-panel__content">
-      <slot />
+  <div ref="shellRef" class="h-scroll-shell" :style="shellStyle">
+    <div ref="contentRef" class="h-scroll-shell__content">
+      <div ref="trackRef" class="h-scroll-shell__track" @scroll="onTrackScroll">
+        <div ref="innerRef" class="h-scroll-shell__inner">
+          <slot />
+        </div>
+      </div>
+    </div>
+    <div v-if="$slots.footer" class="h-scroll-shell__footer">
+      <slot name="footer" />
     </div>
     <div
+      v-show="showRail"
       ref="railRef"
-      class="h-scroll-panel__rail"
-      :class="{ 'is-inactive': !showRail }"
-      aria-hidden="true"
-      @scroll="onRailScroll"
+      class="h-scroll-shell__rail"
+      aria-label="横向滚动"
     >
-      <div class="h-scroll-panel__rail-track" :style="{ width: `${railWidth}px` }" />
+      <div
+        ref="railTrackRef"
+        class="h-scroll-shell__rail-track"
+        @mousedown="onRailTrackMouseDown"
+      >
+        <div
+          class="h-scroll-shell__rail-thumb"
+          :style="thumbStyle"
+          @mousedown.stop="onThumbMouseDown"
+        />
+      </div>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-  import { computed, nextTick, onBeforeUnmount, onMounted, provide, ref } from 'vue'
+  import { computed, nextTick, onBeforeUnmount, onMounted, onUpdated, ref, watch } from 'vue'
 
-  defineProps<{
+  const props = defineProps<{
     maxHeight?: string
   }>()
 
-  type BodyEntry = {
-    el: HTMLElement
-    onScroll: () => void
-  }
+  const shellStyle = computed(() => ({
+    maxHeight: props.maxHeight ?? '500px'
+  }))
 
-  const contentRef = ref<HTMLElement | null>(null)
+  const shellRef = ref<HTMLElement | null>(null)
+  const trackRef = ref<HTMLElement | null>(null)
+  const innerRef = ref<HTMLElement | null>(null)
   const railRef = ref<HTMLElement | null>(null)
-  const railWidth = ref(0)
-  const railClientWidth = ref(0)
+  const railTrackRef = ref<HTMLElement | null>(null)
+  const trackScrollWidth = ref(0)
+  const trackClientWidth = ref(0)
+  const trackScrollLeft = ref(0)
 
-  const bodies: BodyEntry[] = []
-  const visibilityMap = new Map<HTMLElement, number>()
-  let activeBody: HTMLElement | null = null
-  let syncing = false
-  let bodyResizeObserver: ResizeObserver | null = null
-  let railResizeObserver: ResizeObserver | null = null
-  let bodyIntersectionObserver: IntersectionObserver | null = null
-  let pickRaf = 0
-  let resizeRaf = 0
+  let resizeObserver: ResizeObserver | null = null
+  let dragState: { startX: number; startScrollLeft: number } | null = null
+  let lastAppliedMinWidth = ''
 
-  const showRail = computed(() => railWidth.value > railClientWidth.value + 1)
+  const showRail = computed(() => trackScrollWidth.value > trackClientWidth.value + 1)
 
-  function updateRailClientWidth() {
-    railClientWidth.value = railRef.value?.clientWidth ?? contentRef.value?.clientWidth ?? 0
+  const maxScrollLeft = computed(() =>
+    Math.max(0, trackScrollWidth.value - trackClientWidth.value)
+  )
+
+  const thumbWidth = computed(() => {
+    if (!showRail.value || trackClientWidth.value <= 0) return 0
+    const ratio = trackClientWidth.value / trackScrollWidth.value
+    return Math.max(48, Math.round(trackClientWidth.value * ratio))
+  })
+
+  const thumbOffset = computed(() => {
+    if (!showRail.value || maxScrollLeft.value <= 0) return 0
+    const travel = trackClientWidth.value - thumbWidth.value
+    return (trackScrollLeft.value / maxScrollLeft.value) * travel
+  })
+
+  const thumbStyle = computed(() => ({
+    width: `${thumbWidth.value}px`,
+    transform: `translateX(${thumbOffset.value}px)`
+  }))
+
+  function measureContentWidth(inner: HTMLElement): number {
+    let width = inner.scrollWidth
+
+    inner.querySelectorAll('.el-table').forEach((table) => {
+      const tableEl = table as HTMLElement
+      width = Math.max(width, tableEl.scrollWidth, tableEl.offsetWidth)
+
+      tableEl
+        .querySelectorAll('.el-table__header-wrapper table, .el-table__body-wrapper table')
+        .forEach((nestedTable) => {
+          const nested = nestedTable as HTMLElement
+          width = Math.max(width, nested.scrollWidth, nested.offsetWidth)
+        })
+    })
+
+    return width
   }
 
-  function syncRailFromBody() {
-    if (syncing || !activeBody || !railRef.value) return
-    syncing = true
-    railRef.value.scrollLeft = activeBody.scrollLeft
-    syncing = false
-  }
-
-  function syncBodyFromRail() {
-    if (syncing || !activeBody || !railRef.value) return
-    syncing = true
-    activeBody.scrollLeft = railRef.value.scrollLeft
-    syncing = false
-  }
-
-  function onRailScroll() {
-    syncBodyFromRail()
-  }
-
-  function applyActiveBody(nextBody: HTMLElement | null) {
-    const nextRailWidth = nextBody ? nextBody.scrollWidth : 0
-    if (activeBody === nextBody && railWidth.value === nextRailWidth) {
+  function measureTrack() {
+    const track = trackRef.value
+    const inner = innerRef.value
+    if (!track || !inner) {
+      trackScrollWidth.value = 0
+      trackClientWidth.value = 0
+      trackScrollLeft.value = 0
       return
     }
 
-    activeBody = nextBody
-    railWidth.value = nextRailWidth
-    if (activeBody) {
-      syncRailFromBody()
+    const contentWidth = Math.max(measureContentWidth(inner), track.scrollWidth)
+    trackScrollWidth.value = contentWidth
+    trackClientWidth.value = track.clientWidth
+    trackScrollLeft.value = track.scrollLeft
+
+    const nextMinWidth = contentWidth > track.clientWidth ? `${contentWidth}px` : '100%'
+    if (lastAppliedMinWidth !== nextMinWidth) {
+      inner.style.minWidth = nextMinWidth
+      lastAppliedMinWidth = nextMinWidth
     }
-    updateRailClientWidth()
   }
 
-  function pickActiveBody() {
-    const viewport = contentRef.value
-    if (!viewport || bodies.length === 0) {
-      if (activeBody !== null) {
-        applyActiveBody(null)
-      }
-      return
-    }
-
-    let bestEl: HTMLElement | null = null
-    let bestRatio = -1
-
-    for (const entry of bodies) {
-      const ratio = visibilityMap.get(entry.el) ?? 0
-      if (ratio > bestRatio) {
-        bestRatio = ratio
-        bestEl = entry.el
-      }
-    }
-
-    // 滞后：当前 body 仍占视口 25% 以上且领先不明显时，避免边界来回切换
-    if (activeBody && bestEl && activeBody !== bestEl) {
-      const currentRatio = visibilityMap.get(activeBody) ?? 0
-      if (currentRatio > 0.25 && bestRatio - currentRatio < 0.12) {
-        bestEl = activeBody
-      }
-    }
-
-    applyActiveBody(bestEl)
+  function setScrollLeft(nextLeft: number) {
+    const track = trackRef.value
+    if (!track) return
+    const clamped = Math.max(0, Math.min(maxScrollLeft.value, nextLeft))
+    track.scrollLeft = clamped
+    trackScrollLeft.value = clamped
   }
 
-  function schedulePickActiveBody() {
-    if (pickRaf) return
-    pickRaf = window.requestAnimationFrame(() => {
-      pickRaf = 0
-      pickActiveBody()
+  function onTrackScroll() {
+    trackScrollLeft.value = trackRef.value?.scrollLeft ?? 0
+  }
+
+  function onThumbMouseDown(event: MouseEvent) {
+    if (!showRail.value) return
+    dragState = {
+      startX: event.clientX,
+      startScrollLeft: trackScrollLeft.value
+    }
+    document.addEventListener('mousemove', onThumbMouseMove)
+    document.addEventListener('mouseup', onThumbMouseUp)
+    event.preventDefault()
+  }
+
+  function onThumbMouseMove(event: MouseEvent) {
+    if (!dragState || maxScrollLeft.value <= 0) return
+    const travel = trackClientWidth.value - thumbWidth.value
+    if (travel <= 0) return
+    const deltaX = event.clientX - dragState.startX
+    const scrollDelta = (deltaX / travel) * maxScrollLeft.value
+    setScrollLeft(dragState.startScrollLeft + scrollDelta)
+  }
+
+  function onThumbMouseUp() {
+    dragState = null
+    document.removeEventListener('mousemove', onThumbMouseMove)
+    document.removeEventListener('mouseup', onThumbMouseUp)
+  }
+
+  function onRailTrackMouseDown(event: MouseEvent) {
+    if (!showRail.value || !railTrackRef.value) return
+    if ((event.target as HTMLElement).classList.contains('h-scroll-shell__rail-thumb')) return
+
+    const rect = railTrackRef.value.getBoundingClientRect()
+    const clickOffset = event.clientX - rect.left
+    const targetScrollLeft =
+      ((clickOffset - thumbWidth.value / 2) / Math.max(1, trackClientWidth.value - thumbWidth.value)) *
+      maxScrollLeft.value
+    setScrollLeft(targetScrollLeft)
+  }
+
+  function scheduleMeasure() {
+    nextTick(() => {
+      measureTrack()
     })
   }
 
-  function scheduleResizeUpdate() {
-    if (resizeRaf) return
-    resizeRaf = window.requestAnimationFrame(() => {
-      resizeRaf = 0
-      if (activeBody) {
-        const nextRailWidth = activeBody.scrollWidth
-        if (railWidth.value !== nextRailWidth) {
-          railWidth.value = nextRailWidth
-          updateRailClientWidth()
-        }
-      }
-    })
-  }
-
-  function ensureIntersectionObserver() {
-    const root = contentRef.value
-    if (!root) return
-
-    if (!bodyIntersectionObserver) {
-      bodyIntersectionObserver = new IntersectionObserver(
-        (entries) => {
-          for (const entry of entries) {
-            visibilityMap.set(entry.target as HTMLElement, entry.intersectionRatio)
-          }
-          schedulePickActiveBody()
-        },
-        {
-          root,
-          threshold: [0, 0.1, 0.25, 0.5, 0.75, 1]
-        }
-      )
+  onMounted(() => {
+    scheduleMeasure()
+    const targets = [innerRef.value, trackRef.value, shellRef.value].filter(Boolean) as Element[]
+    if (targets.length) {
+      resizeObserver = new ResizeObserver(() => scheduleMeasure())
+      targets.forEach((target) => resizeObserver?.observe(target))
     }
-
-    for (const entry of bodies) {
-      bodyIntersectionObserver.observe(entry.el)
-    }
-  }
-
-  function registerBody(el: HTMLElement) {
-    const onScroll = () => {
-      if (activeBody !== el) {
-        applyActiveBody(el)
-        return
-      }
-      syncRailFromBody()
-    }
-
-    const entry: BodyEntry = { el, onScroll }
-    bodies.push(entry)
-    visibilityMap.set(el, 0)
-    el.addEventListener('scroll', onScroll, { passive: true })
-
-    if (!bodyResizeObserver) {
-      bodyResizeObserver = new ResizeObserver(() => {
-        scheduleResizeUpdate()
+    if (innerRef.value) {
+      innerRef.value.querySelectorAll('.el-table').forEach((table) => {
+        resizeObserver?.observe(table)
       })
     }
-    bodyResizeObserver.observe(el)
-
-    nextTick(() => {
-      ensureIntersectionObserver()
-      schedulePickActiveBody()
-    })
-
-    return () => {
-      el.removeEventListener('scroll', onScroll)
-      bodyResizeObserver?.unobserve(el)
-      bodyIntersectionObserver?.unobserve(el)
-      visibilityMap.delete(el)
-      const index = bodies.indexOf(entry)
-      if (index >= 0) bodies.splice(index, 1)
-      if (activeBody === el) {
-        schedulePickActiveBody()
-      }
-    }
-  }
-
-  provide('horizontalScrollRegister', registerBody)
-
-  onMounted(async () => {
-    await nextTick()
-    updateRailClientWidth()
-    ensureIntersectionObserver()
-    schedulePickActiveBody()
-    if (railRef.value) {
-      railResizeObserver = new ResizeObserver(() => updateRailClientWidth())
-      railResizeObserver.observe(railRef.value)
-    }
+    window.addEventListener('resize', scheduleMeasure, { passive: true })
   })
 
   onBeforeUnmount(() => {
-    if (pickRaf) {
-      window.cancelAnimationFrame(pickRaf)
-    }
-    if (resizeRaf) {
-      window.cancelAnimationFrame(resizeRaf)
-    }
-    bodyResizeObserver?.disconnect()
-    bodyIntersectionObserver?.disconnect()
-    railResizeObserver?.disconnect()
-    bodies.length = 0
-    visibilityMap.clear()
+    resizeObserver?.disconnect()
+    window.removeEventListener('resize', scheduleMeasure)
+    onThumbMouseUp()
   })
+
+  onUpdated(() => {
+    scheduleMeasure()
+  })
+
+  watch(
+    () => props.maxHeight,
+    () => scheduleMeasure()
+  )
+
+  defineExpose({ remeasure: scheduleMeasure })
 </script>
 
 <style scoped>
-  .h-scroll-panel {
-    display: flex;
-    flex-direction: column;
+  .h-scroll-shell {
+    display: grid;
+    grid-template-rows: minmax(0, 1fr) auto auto;
     overflow: hidden;
     background: #fff;
     border: 1px solid var(--el-border-color-lighter, #ebeef5);
     border-radius: 6px;
   }
 
-  .h-scroll-panel__content {
-    flex: 1 1 auto;
+  .h-scroll-shell__content {
     min-height: 0;
-    overflow: hidden auto;
-    overscroll-behavior: contain;
+    overflow: hidden;
   }
 
-  .h-scroll-panel__rail {
+  .h-scroll-shell__track {
+    height: 100%;
+    max-height: 100%;
+    overflow: auto;
+    overscroll-behavior: contain;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+
+  .h-scroll-shell__track::-webkit-scrollbar {
+    display: none;
+    width: 0;
+    height: 0;
+  }
+
+  .h-scroll-shell__inner {
+    width: max-content;
+    min-width: 100%;
+  }
+
+  .h-scroll-shell__footer {
+    grid-row: 2;
     flex-shrink: 0;
-    height: 14px;
-    overflow: hidden auto;
-    background: #fafafa;
+    padding: 8px 12px 6px;
+    background: #fff;
+    border-top: 1px solid var(--el-border-color-extra-light, #f2f6fc);
+  }
+
+  .h-scroll-shell__rail {
+    grid-row: 3;
+    padding: 4px 8px 6px;
+    background: #f5f7fa;
     border-top: 1px solid var(--el-border-color-lighter, #ebeef5);
   }
 
-  .h-scroll-panel__rail.is-inactive {
-    visibility: hidden;
-    pointer-events: none;
+  .h-scroll-shell__rail-track {
+    position: relative;
+    height: 10px;
+    overflow: hidden;
+    cursor: pointer;
+    background: #e4e7ed;
+    border-radius: 5px;
   }
 
-  .h-scroll-panel__rail-track {
-    height: 1px;
+  .h-scroll-shell__rail-thumb {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 10px;
+    background: rgb(144 147 153 / 0.85);
+    border-radius: 5px;
+    cursor: grab;
+    transition: background-color 0.15s ease;
+  }
+
+  .h-scroll-shell__rail-thumb:hover {
+    background: rgb(96 98 102 / 0.9);
+  }
+
+  .h-scroll-shell__rail-thumb:active {
+    cursor: grabbing;
+    background: rgb(64 66 70 / 0.95);
+  }
+
+  .h-scroll-shell__inner :deep(.el-table) {
+    width: max-content;
+    min-width: 100%;
+  }
+
+  .h-scroll-shell__inner :deep(.el-table table) {
+    width: max-content !important;
+    min-width: 100%;
+    table-layout: auto !important;
+  }
+
+  .h-scroll-shell__inner :deep(.el-table__inner-wrapper),
+  .h-scroll-shell__inner :deep(.el-table__header-wrapper),
+  .h-scroll-shell__inner :deep(.el-table__body-wrapper),
+  .h-scroll-shell__inner :deep(.el-table__footer-wrapper) {
+    overflow: visible !important;
+  }
+
+  .h-scroll-shell__inner :deep(.el-table .el-scrollbar__wrap) {
+    overflow: visible !important;
+  }
+
+  .h-scroll-shell__inner :deep(.el-table .el-scrollbar__bar.is-horizontal) {
+    display: none !important;
+    height: 0 !important;
+    opacity: 0 !important;
+    pointer-events: none !important;
   }
 </style>

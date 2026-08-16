@@ -110,10 +110,53 @@
               {{ t('reconciliation.detail.policyTraces') }} ({{ ctx.policyTraces.length }})
             </ElTag>
           </ElTooltip>
+
+          <ElTooltip
+            v-if="ctx.hasFieldConsistencyIssues"
+            placement="top"
+            :show-after="200"
+          >
+            <template #content>
+              <div class="max-w-sm space-y-1 text-xs">
+                <div v-for="(item, index) in ctx.fieldConsistencyViolations" :key="index">
+                  {{ item.message }}
+                </div>
+              </div>
+            </template>
+            <ElTag size="small" type="danger" effect="plain">
+              {{ t('reconciliation.detail.fieldConsistencyTag') }}
+              ({{ ctx.fieldConsistencyViolations.length }})
+            </ElTag>
+          </ElTooltip>
+
+          <ElTooltip
+            v-if="pricingRuleSummary"
+            placement="top"
+            :content="pricingRuleSummary"
+            :show-after="200"
+          >
+            <ElTag size="small" type="info" effect="plain" class="max-w-[120px] truncate">
+              {{ pricingRuleShort }}
+            </ElTag>
+          </ElTooltip>
+
+          <button
+            v-if="showViewDetailLink"
+            type="button"
+            class="text-xs text-primary hover:underline"
+            @click.stop="emit('open-detail', row)"
+          >
+            {{ t('pricingFlow.viewDetail') }}
+          </button>
         </div>
       </div>
 
       <div v-else class="expanded-view space-y-3 px-2 py-1">
+        <section v-if="pricingRuleSummary" class="detail-section">
+          <div class="detail-section-title">{{ t('pricingFlow.ruleSummary') }}</div>
+          <div class="detail-value text-sm">{{ pricingRuleSummary }}</div>
+        </section>
+
         <section v-if="ctx.isMultiPrice" class="detail-section">
           <div class="detail-section-title">{{ t('reconciliation.detail.multiPriceSection') }}</div>
           <div class="detail-grid">
@@ -193,6 +236,25 @@
           </ol>
         </section>
 
+        <section v-if="ctx.hasFieldConsistencyIssues" class="detail-section">
+          <div class="detail-section-title">{{
+            t('reconciliation.detail.fieldConsistencySection')
+          }}</div>
+          <ElAlert type="error" :closable="false" show-icon class="mb-2">
+            <template #title>
+              <span class="text-xs">{{ t('reconciliation.detail.fieldConsistencyHint') }}</span>
+            </template>
+          </ElAlert>
+          <ul class="trace-notes-list">
+            <li v-for="(item, index) in ctx.fieldConsistencyViolations" :key="index">
+              <span class="font-medium">{{
+                fieldConsistencyViolationLabel(item.code, t)
+              }}</span>
+              <span class="ml-1">{{ item.message }}</span>
+            </li>
+          </ul>
+        </section>
+
         <section v-if="ctx.discountChain.length" class="detail-section">
           <div class="detail-section-title">{{
             t('reconciliation.detail.discountChainSection')
@@ -222,10 +284,12 @@
   import { computed } from 'vue'
   import { useI18n } from 'vue-i18n'
   import {
+    fieldConsistencyViolationLabel,
     formatReconciliationCurrency,
     hasBillingDetail,
     parseReconciliationBillingContext
   } from '@/utils/reconciliationBillingNotes'
+  import { hasPricingDetail } from '@/utils/reconciliationPricingPath'
 
   defineOptions({ name: 'ReconciliationBillingDetail' })
 
@@ -233,16 +297,35 @@
     defineProps<{
       row: Record<string, unknown>
       expanded?: boolean
+      showViewDetailLink?: boolean
     }>(),
     {
-      expanded: false
+      expanded: false,
+      showViewDetailLink: false
     }
   )
+
+  const emit = defineEmits<{
+    'open-detail': [row: Record<string, unknown>]
+  }>()
 
   const { t } = useI18n()
 
   const ctx = computed(() => parseReconciliationBillingContext(props.row))
-  const hasContent = computed(() => hasBillingDetail(props.row))
+  const hasContent = computed(
+    () => hasBillingDetail(props.row) || hasPricingDetail(props.row)
+  )
+
+  const pricingRuleSummary = computed(() => {
+    const raw = props.row.pricingRule ?? props.row.pricing_rule
+    return raw == null ? '' : String(raw).trim()
+  })
+
+  const pricingRuleShort = computed(() => {
+    const text = pricingRuleSummary.value
+    if (!text) return ''
+    return text.length > 16 ? `${text.slice(0, 16)}…` : text
+  })
 
   const ruleTooltip = computed(() => {
     const parts = [ctx.value.ruleName]

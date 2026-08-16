@@ -386,7 +386,7 @@
         "standardPricingOverridePlaceholder": "{\n  \"highTemperature\": { \"paperPlastic\": { ... } },\n  \"lowTemperature\": { ... },\n  \"dressingPack\": { ... }\n}",
         "standardPricingOverrideFormatHint": "须为 JSON 对象；保存时会压缩为单行写入数据库。结构需与 billing seed 中 standardPricingOverride 一致。",
         "standardPricingOverrideStructureHint": "顶层键通常为 highTemperature、lowTemperature、dressingPack，与 PricingRuleCompiler 合并逻辑一致。",
-        "standardPricingOverrideHybridHint": "附一等 hybrid 客户常在此配置独立标准价表；special_only 模式下未命中特色规则时通常不走阶梯表，本字段影响有限。",
+        "standardPricingOverrideHybridHint": "hybrid 模式下未命中特色规则时走标准灭菌路径，此处覆盖价表会深合并进引擎标准阶梯。special_only 未命中时不走阶梯表。",
         "standardPricingOverrideInvalid": "标准灭菌价覆盖不是合法的 JSON 对象",
         "pathOverrideTitle": "路径覆盖",
         "pathOverrideDesc": "适用于需偏离医院通用高温/低温阶梯计价的客户。常在「仅特色规则」计价模式下配合使用，用于强制调整单条任务的计价路径。",
@@ -797,10 +797,19 @@
       "otherNotes": "其他说明",
       "policyTraces": "策略链",
       "policyTracesSection": "策略追溯 (policyTraces)",
+      "fieldConsistencyTag": "字段核对",
+      "fieldConsistencySection": "字段核对异常",
+      "fieldConsistencyHint": "包名、包类型与包装材料/器械数列存在不一致，请核对原始账单。",
+      "fieldConsistencyBagSize": "包材尺寸不一致",
+      "fieldConsistencyMaterialClass": "包材类别不一致",
+      "fieldConsistencyInstrumentCount": "器械件数不一致",
+      "fieldConsistencyLegendRed": "红框：包材尺寸/类别不一致",
+      "fieldConsistencyLegendGreen": "绿框：包名件数与器械数不一致",
       "tabRegular": "常规账单",
       "tabExternal": "外来器械 ({count})",
       "suggestedDepartment": "建议科室",
-      "billingEmpty": "暂无计费追溯信息"
+      "billingEmpty": "暂无计费追溯信息",
+      "pricingRuleColumn": "计价规则"
     },
     "settlementSummary": {
       "title": "月度结算摘要",
@@ -836,6 +845,13 @@
       "reviewPendingTitle": "仍有待复核行",
       "reviewPendingMessage": "当前有 {count} 行待复核，建议先点击「查看详情」核对。是否仍要继续审核？",
       "proceedReview": "继续审核"
+    },
+    "exportAnomaly": {
+      "title": "导出异常明细",
+      "description": "默认仅导出差额不为 0 的计价异常行。",
+      "includeFieldConsistency": "同时包含字段一致性问题",
+      "fieldConsistencyHint": "勾选后将额外导出「包名/类型/包装材料/器械数」列不一致、但差额为 0 的行，并在 Excel 中增加「字段核对问题」列。",
+      "confirm": "开始导出"
     },
     "exportWizard": {
       "title": "导出向导",
@@ -1106,6 +1122,33 @@
       "openExportWizard": "对账页导出向导预览"
     }
   },
+  "pricingPath": {
+    "specialHit": "特色规则",
+    "standard": "标准灭菌",
+    "preserve": "保留原价",
+    "disabled": "特色已关闭",
+    "skipped": "无法计价",
+    "unknown": "未识别"
+  },
+  "pricingFlow": {
+    "title": "计价规则与流程",
+    "viewDetail": "查看详情",
+    "ruleSummary": "规则摘要",
+    "timeline": "计价流程",
+    "difference": "差额",
+    "status": "状态",
+    "copyRule": "复制规则",
+    "copySuccess": "已复制规则摘要",
+    "copyFailed": "复制失败",
+    "stepSummary": "命中规则摘要",
+    "stepRuleMeta": "关联规则",
+    "stepMultiPrice": "多报价匹配",
+    "stepNote": "计价说明",
+    "stepNoteIndex": "步骤 {index}",
+    "traceMeta": "追溯元数据",
+    "pricingPath": "计价路径",
+    "matchedProductId": "匹配产品 ID"
+  },
   "versionManagement": {
     "list": {
       "empty": "暂无数据。",
@@ -1137,7 +1180,8 @@
         "totalPrice": "原总价",
         "correctedTotalPrice": "修正总价",
         "difference": "差额",
-        "status": "修正状态"
+        "status": "修正状态",
+        "pricingRule": "计价规则"
       },
       "status": {
         "corrected": "已修正",

@@ -3,6 +3,7 @@ package com.hospital.backend.controller;
 import com.hospital.backend.common.Result;
 import com.hospital.backend.dto.request.export.ExportV2Request;
 import com.hospital.backend.dto.request.hospital.CreateExportLogRequest;
+import com.hospital.backend.dto.request.hospital.ExportAnomaliesRequest;
 import com.hospital.backend.dto.request.hospital.HospitalBillTemplateExportRequest;
 import com.hospital.backend.dto.request.hospital.HospitalSettlementTemplateExportRequest;
 import com.hospital.backend.dto.request.hospital.ReconciliationReviewRequest;
@@ -147,8 +148,13 @@ public class HospitalReconciliationController {
     }
 
     @PostMapping("/hospital-reconciliations/{jobId}/export-anomalies")
-    public ResponseEntity<byte[]> exportAnomalies(@PathVariable Long jobId) {
-        return hospitalReconciliationService.exportAnomalies(jobId);
+    public ResponseEntity<byte[]> exportAnomalies(
+            @PathVariable Long jobId,
+            @RequestBody(required = false) ExportAnomaliesRequest request) {
+        if (request == null) {
+            request = new ExportAnomaliesRequest();
+        }
+        return hospitalReconciliationService.exportAnomalies(jobId, request);
     }
 
     @PostMapping("/hospital-reconciliations/export-html-settlement")

@@ -283,10 +283,21 @@
                   :disabled="
                     entrySummary(entry).warning === 0 && entrySummary(entry).corrected === 0
                   "
-                  @click="handleExportAnomalies(entry)"
+                  @click="openExportAnomalyDialog(entry)"
                 >
                   导出异常
                 </ElButton>
+                <span
+                  v-if="entry.processedRows.some((row) => hasFieldConsistencyIssues(rowAsRecord(row)))"
+                  class="inline-flex flex-wrap items-center gap-2 text-xs text-gray-500"
+                >
+                  <span class="field-consistency-legend field-consistency-legend--red">{{
+                    t('reconciliation.detail.fieldConsistencyLegendRed')
+                  }}</span>
+                  <span class="field-consistency-legend field-consistency-legend--green">{{
+                    t('reconciliation.detail.fieldConsistencyLegendGreen')
+                  }}</span>
+                </span>
                 <span
                   v-if="entry.onlyShowAbnormal && !entry.anomalyLoading"
                   class="text-xs text-orange-500"
@@ -365,38 +376,56 @@
                       >
                     </div>
                   </div>
-                  <HorizontalScrollBody>
                   <ElTable
                     :data="group.rows"
                     border
                     stripe
                     size="small"
-                    style="width: 100%"
                     :default-sort="{ prop: 'rowNumber', order: 'ascending' }"
+                    :row-class-name="entryRowClassName"
                   >
                     <ElTableColumn prop="rowNumber" label="行号" width="65" sortable />
                     <ElTableColumn prop="deliveryDate" label="发货日期" width="110" sortable />
-                    <ElTableColumn prop="type" label="类型" min-width="90" sortable />
+                    <ElTableColumn prop="type" label="类型" min-width="90" sortable>
+                      <template #default="{ row }">
+                        <FieldConsistencyHighlight :row="rowAsRecord(row)" field="type">
+                          {{ row.type }}
+                        </FieldConsistencyHighlight>
+                      </template>
+                    </ElTableColumn>
                     <ElTableColumn
                       prop="packName"
                       label="包名"
                       min-width="160"
                       sortable
                       show-overflow-tooltip
-                    />
-                    <ElTableColumn
-                      prop="packageMaterial"
-                      label="包装材料"
-                      min-width="110"
-                      sortable
-                    />
+                    >
+                      <template #default="{ row }">
+                        <FieldConsistencyHighlight :row="rowAsRecord(row)" field="packName">
+                          {{ row.packName }}
+                        </FieldConsistencyHighlight>
+                      </template>
+                    </ElTableColumn>
+                    <ElTableColumn prop="packageMaterial" label="包装材料" min-width="110" sortable>
+                      <template #default="{ row }">
+                        <FieldConsistencyHighlight :row="rowAsRecord(row)" field="packageMaterial">
+                          {{ row.packageMaterial }}
+                        </FieldConsistencyHighlight>
+                      </template>
+                    </ElTableColumn>
                     <ElTableColumn
                       prop="instrumentCount"
                       label="器械数"
                       width="80"
                       sortable
                       align="right"
-                    />
+                    >
+                      <template #default="{ row }">
+                        <FieldConsistencyHighlight :row="rowAsRecord(row)" field="instrumentCount">
+                          {{ row.instrumentCount }}
+                        </FieldConsistencyHighlight>
+                      </template>
+                    </ElTableColumn>
                     <ElTableColumn
                       prop="packCount"
                       label="包数"
@@ -458,15 +487,30 @@
                     <ElTableColumn type="expand" width="42" :label="t('table.column.expand')">
                       <template #default="{ row }">
                         <ReconciliationBillingDetail
-                          v-if="hasRowBillingDetail(row)"
+                          v-if="hasRowPricingDetail(row)"
                           :row="rowAsRecord(row)"
                           expanded
                         />
                       </template>
                     </ElTableColumn>
+                    <ElTableColumn
+                      :label="t('reconciliation.detail.pricingRuleColumn')"
+                      min-width="140"
+                    >
+                      <template #default="{ row }">
+                        <PricingPathTag
+                          :row="rowAsRecord(row)"
+                          @open-detail="openPricingFlowDetail"
+                        />
+                      </template>
+                    </ElTableColumn>
                     <ElTableColumn :label="t('reconciliation.detail.billingNotes')" min-width="160">
                       <template #default="{ row }">
-                        <ReconciliationBillingDetail :row="rowAsRecord(row)" />
+                        <ReconciliationBillingDetail
+                          :row="rowAsRecord(row)"
+                          show-view-detail-link
+                          @open-detail="openPricingFlowDetail"
+                        />
                       </template>
                     </ElTableColumn>
                     <ElTableColumn label="状态" width="90" sortable prop="status">
@@ -477,30 +521,31 @@
                       </template>
                     </ElTableColumn>
                   </ElTable>
-                  </HorizontalScrollBody>
                 </div>
                 </template>
+                <template #footer>
+                  <div class="flex items-center justify-between">
+                    <span class="text-xs text-gray-400"
+                      >{{ entry.onlyShowAbnormal ? '异常模式' : '当前显示' }}
+                      {{ entryDisplayRows(entry).length }} 行{{
+                        entry.onlyShowAbnormal
+                          ? ''
+                          : `，共 ${entry.displayTotal || entrySummary(entry).total} 行`
+                      }}</span
+                    >
+                    <ElPagination
+                      v-if="!entry.onlyShowAbnormal && entry.displayTotal > entry.displayPageSize"
+                      :current-page="entry.displayPage"
+                      :page-size="entry.displayPageSize"
+                      :total="entry.displayTotal"
+                      layout="prev, pager, next"
+                      size="small"
+                      background
+                      @current-change="(p: number) => onEntryPageChange(entry, p)"
+                    />
+                  </div>
+                </template>
               </HorizontalScrollPanel>
-              <div class="mt-3 flex items-center justify-between">
-                <span class="text-xs text-gray-400"
-                  >{{ entry.onlyShowAbnormal ? '异常模式' : '当前显示' }}
-                  {{ entryDisplayRows(entry).length }} 行{{
-                    entry.onlyShowAbnormal
-                      ? ''
-                      : `，共 ${entry.displayTotal || entrySummary(entry).total} 行`
-                  }}</span
-                >
-                <ElPagination
-                  v-if="!entry.onlyShowAbnormal && entry.displayTotal > entry.displayPageSize"
-                  :current-page="entry.displayPage"
-                  :page-size="entry.displayPageSize"
-                  :total="entry.displayTotal"
-                  layout="prev, pager, next"
-                  size="small"
-                  background
-                  @current-change="(p: number) => onEntryPageChange(entry, p)"
-                />
-              </div>
             </template>
           </template>
         </div>
@@ -1123,8 +1168,20 @@
         <ElTableColumn prop="rowNumber" label="行号" width="65" sortable />
         <ElTableColumn prop="sheetName" label="工作表" min-width="80" />
         <ElTableColumn prop="deliveryDate" label="发货日期" width="110" />
-        <ElTableColumn prop="type" label="类型" min-width="90" />
-        <ElTableColumn prop="packName" label="包名" min-width="140" show-overflow-tooltip />
+        <ElTableColumn prop="type" label="类型" min-width="90">
+          <template #default="{ row }">
+            <FieldConsistencyHighlight :row="row" field="type">
+              {{ row['type'] }}
+            </FieldConsistencyHighlight>
+          </template>
+        </ElTableColumn>
+        <ElTableColumn prop="packName" label="包名" min-width="140" show-overflow-tooltip>
+          <template #default="{ row }">
+            <FieldConsistencyHighlight :row="row" field="packName">
+              {{ row['packName'] }}
+            </FieldConsistencyHighlight>
+          </template>
+        </ElTableColumn>
         <ElTableColumn label="建议科室" min-width="120">
           <template #default="{ row }">
             <span
@@ -1139,8 +1196,20 @@
             <span v-else class="text-gray-300 text-xs">—</span>
           </template>
         </ElTableColumn>
-        <ElTableColumn prop="packageMaterial" label="包装材料" min-width="110" />
-        <ElTableColumn prop="instrumentCount" label="器械数" width="70" align="right" />
+        <ElTableColumn prop="packageMaterial" label="包装材料" min-width="110">
+          <template #default="{ row }">
+            <FieldConsistencyHighlight :row="row" field="packageMaterial">
+              {{ row['packageMaterial'] }}
+            </FieldConsistencyHighlight>
+          </template>
+        </ElTableColumn>
+        <ElTableColumn prop="instrumentCount" label="器械数" width="70" align="right">
+          <template #default="{ row }">
+            <FieldConsistencyHighlight :row="row" field="instrumentCount">
+              {{ row['instrumentCount'] }}
+            </FieldConsistencyHighlight>
+          </template>
+        </ElTableColumn>
         <ElTableColumn prop="packCount" label="包数" width="60" align="right" />
         <ElTableColumn label="原单价" width="80" align="right">
           <template #default="{ row }">{{
@@ -1184,7 +1253,12 @@
         </ElTableColumn>
         <ElTableColumn type="expand" width="42" :label="t('table.column.expand')">
           <template #default="{ row }">
-            <ReconciliationBillingDetail v-if="hasRowBillingDetail(row)" :row="row" expanded />
+            <ReconciliationBillingDetail v-if="hasRowPricingDetail(row)" :row="row" expanded />
+          </template>
+        </ElTableColumn>
+        <ElTableColumn :label="t('reconciliation.detail.pricingRuleColumn')" min-width="140">
+          <template #default="{ row }">
+            <PricingPathTag :row="row" @open-detail="openPricingFlowDetail" />
           </template>
         </ElTableColumn>
         <ElTableColumn :label="t('reconciliation.detail.billingNotes')" min-width="180">
@@ -1192,7 +1266,11 @@
             <span v-if="row['isUrgent']" class="mr-1 text-xs text-warning">{{
               t('reconciliation.detail.urgentTag')
             }}</span>
-            <ReconciliationBillingDetail :row="row" />
+            <ReconciliationBillingDetail
+              :row="row"
+              show-view-detail-link
+              @open-detail="openPricingFlowDetail"
+            />
           </template>
         </ElTableColumn>
         <ElTableColumn label="状态" width="110">
@@ -1330,6 +1408,32 @@
     </template>
   </ElDialog>
 
+  <PricingFlowDrawer
+    v-model:visible="pricingFlowDrawerVisible"
+    :row="pricingFlowRow"
+  />
+
+  <ElDialog
+    v-model="exportAnomalyDialogVisible"
+    :title="t('reconciliation.exportAnomaly.title')"
+    width="480px"
+    destroy-on-close
+  >
+    <p class="text-sm text-gray-600">{{ t('reconciliation.exportAnomaly.description') }}</p>
+    <ElCheckbox v-model="exportIncludeFieldConsistency" class="mt-4">
+      {{ t('reconciliation.exportAnomaly.includeFieldConsistency') }}
+    </ElCheckbox>
+    <p class="mt-2 text-xs leading-relaxed text-gray-400">
+      {{ t('reconciliation.exportAnomaly.fieldConsistencyHint') }}
+    </p>
+    <template #footer>
+      <ElButton @click="exportAnomalyDialogVisible = false">{{ t('common.cancel') }}</ElButton>
+      <ElButton type="primary" :loading="exportAnomalyLoading" @click="confirmExportAnomalies">
+        {{ t('reconciliation.exportAnomaly.confirm') }}
+      </ElButton>
+    </template>
+  </ElDialog>
+
   <ElDrawer v-model="unmatchedDrawerVisible" title="待建档产品引导" size="560px" destroy-on-close>
     <ElAlert
       v-if="unmatchedLoading"
@@ -1419,6 +1523,9 @@
     notes: string[]
     matchedRuleId?: number | null
     matchedPriceOption?: number | null
+    matchedProductId?: number | null
+    matchedVariantId?: number | null
+    pricingPath?: string | null
     billingNotes?: Record<string, unknown> | null
   }
 
@@ -2107,10 +2214,12 @@
     type LogisticsAllocationPreview
   } from '@/api/billing-config/logisticsApi'
   import { quickOnboardProduct } from '@/api/master-data/productsApi'
-  import { buildReconciliationVersionGroupKey } from '@/utils/reconciliationVersionGroup'
-  import HorizontalScrollBody from '@/components/business/reconciliation/HorizontalScrollBody.vue'
+  import { buildReconciliationVersionGroupKey, compareReconciliationGroupsByLatestActivity } from '@/utils/reconciliationVersionGroup'
   import HorizontalScrollPanel from '@/components/business/reconciliation/HorizontalScrollPanel.vue'
   import ReconciliationBillingDetail from '@/components/business/reconciliation/ReconciliationBillingDetail.vue'
+  import FieldConsistencyHighlight from '@/components/business/reconciliation/FieldConsistencyHighlight.vue'
+  import PricingFlowDrawer from '@/components/business/reconciliation/PricingFlowDrawer.vue'
+  import PricingPathTag from '@/components/business/reconciliation/PricingPathTag.vue'
   import ReconciliationExportWizard from '@/components/business/reconciliation/ReconciliationExportWizard.vue'
   import ReconciliationAllocationPanel from '@/components/business/reconciliation/ReconciliationAllocationPanel.vue'
   import UatHelperPanel from '@/components/business/reconciliation/UatHelperPanel.vue'
@@ -2120,7 +2229,12 @@
     runExportPreflight,
     runReviewPreflight
   } from '@/composables/reconciliationExportPreflight'
-  import { extractRowBillingFields, hasBillingDetail } from '@/utils/reconciliationBillingNotes'
+  import {
+    extractRowBillingFields,
+    fieldConsistencyRowClass,
+    parseReconciliationBillingContext
+  } from '@/utils/reconciliationBillingNotes'
+  import { hasPricingDetail } from '@/utils/reconciliationPricingPath'
   import {
     exportTypeI18nKey,
     jobExportProfileLabel,
@@ -2158,8 +2272,16 @@
     return row as unknown as Record<string, unknown>
   }
 
-  function hasRowBillingDetail(row: ProcessedRow | Record<string, unknown>): boolean {
-    return hasBillingDetail(row as Record<string, unknown>)
+  function hasRowPricingDetail(row: ProcessedRow | Record<string, unknown>): boolean {
+    return hasPricingDetail(row as Record<string, unknown>)
+  }
+
+  const pricingFlowDrawerVisible = ref(false)
+  const pricingFlowRow = ref<Record<string, unknown> | null>(null)
+
+  function openPricingFlowDetail(row: Record<string, unknown>) {
+    pricingFlowRow.value = row
+    pricingFlowDrawerVisible.value = true
   }
 
   function mapApiRowToProcessedRow(row: Record<string, unknown>): ProcessedRow {
@@ -2187,8 +2309,18 @@
       notes: (row['notes'] as string[]) ?? [],
       matchedRuleId: billingFields.matchedRuleId,
       matchedPriceOption: billingFields.matchedPriceOption,
+      matchedProductId: toOptionalNumber(row['matchedProductId'] ?? row['matched_product_id']),
+      matchedVariantId: toOptionalNumber(row['matchedVariantId'] ?? row['matched_variant_id']),
+      pricingPath: (row['pricingPath'] ?? row['pricing_path']) as string | null | undefined,
       billingNotes: billingFields.billingNotes
     }
+  }
+
+  function toOptionalNumber(value: unknown): number | null {
+    if (typeof value === 'number' && Number.isFinite(value)) return value
+    if (value == null || value === '') return null
+    const parsed = Number(value)
+    return Number.isFinite(parsed) ? parsed : null
   }
 
   const statusLabels: Record<string, string> = {
@@ -2292,7 +2424,6 @@
       map.get(key)!.push(item)
     }
     return Array.from(map.entries())
-      .sort(([a], [b]) => a.localeCompare(b, 'zh-CN'))
       .map(([key, versions]) => {
         const sorted = versions.sort(
           (a, b) =>
@@ -2307,6 +2438,7 @@
           versions: sorted
         }
       })
+      .sort(compareReconciliationGroupsByLatestActivity)
   })
 
   const filteredHistoryGroups = computed(() => {
@@ -2462,6 +2594,10 @@
   const isReviewing = ref(false)
 
   const exportWizardVisible = ref(false)
+  const exportAnomalyDialogVisible = ref(false)
+  const exportAnomalyTarget = ref<UploadEntry | null>(null)
+  const exportIncludeFieldConsistency = ref(false)
+  const exportAnomalyLoading = ref(false)
   const exportWizardJob = ref<Api.Hospital.ReconciliationJob | null>(null)
   const exportWizardInitialType = ref<string>('bill')
   const exportWizardAllowedTypes = ref<string[]>(['bill', 'settlement'])
@@ -2728,6 +2864,7 @@
       }
       entry.displayTotal = saved.totalRows ?? 0
       entry.displayPage = 1
+      historyFilterPage.value = 1
 
       // 分页加载第一页行数据（不依赖 saved.rows，避免巨大 JSON）
       // 和历史列表并行请求，互不依赖
@@ -2888,20 +3025,40 @@
     }
   }
 
-  /** 导出异常明细：调用后端接口，下载差额不为0的异常行 Excel */
-  async function handleExportAnomalies(entry: UploadEntry) {
+  /** 导出异常明细：弹出选项后调用后端接口 */
+  function openExportAnomalyDialog(entry: UploadEntry) {
     if (!entry.savedJobId) return
+    exportAnomalyTarget.value = entry
+    exportIncludeFieldConsistency.value = false
+    exportAnomalyDialogVisible.value = true
+  }
+
+  async function confirmExportAnomalies() {
+    const entry = exportAnomalyTarget.value
+    if (!entry?.savedJobId) return
+    exportAnomalyLoading.value = true
     try {
       const blob = await downloadBlob(
         `/api/hospital-reconciliations/${entry.savedJobId}/export-anomalies`,
-        {}
+        { includeFieldConsistency: exportIncludeFieldConsistency.value }
       )
       const hospitalName = entry.rule?.hospitalName || 'hospital'
       const fileName = buildExportFileName('异常明细_', hospitalName)
       triggerDownload(blob, fileName)
+      exportAnomalyDialogVisible.value = false
     } catch (error) {
       ElMessage.error(error instanceof Error ? error.message : '导出异常失败')
+    } finally {
+      exportAnomalyLoading.value = false
     }
+  }
+
+  function hasFieldConsistencyIssues(row: Record<string, unknown>): boolean {
+    return parseReconciliationBillingContext(row).hasFieldConsistencyIssues
+  }
+
+  function entryRowClassName({ row }: { row: ProcessedRow }): string {
+    return fieldConsistencyRowClass(rowAsRecord(row))
   }
 
   /** 导出单个条目的异常项 */
@@ -3104,6 +3261,8 @@
   function detailRowClassName({ row }: { row: Record<string, unknown> }): string {
     const classes: string[] = []
     if (row['isUrgent']) classes.push('detail-row-urgent')
+    const fieldClass = fieldConsistencyRowClass(row)
+    if (fieldClass) classes.push(fieldClass)
     const diff = row['difference'] as number | null | undefined
     if (diff === null || diff === undefined) return classes.join(' ')
     classes.push(diff !== 0 ? 'detail-row-diff' : 'detail-row-ok')
@@ -3580,6 +3739,34 @@
 
   :deep(.detail-row-ok:hover td) {
     background-color: #e1f3d8 !important;
+  }
+
+  :deep(.field-consistency-row td) {
+    background-color: #fff7f7 !important;
+  }
+
+  :deep(.field-consistency-row:hover td) {
+    background-color: #ffeded !important;
+  }
+
+  .field-consistency-legend {
+    display: inline-flex;
+    align-items: center;
+    padding: 1px 6px;
+    font-weight: 600;
+    border-radius: 4px;
+  }
+
+  .field-consistency-legend--red {
+    color: #c45656;
+    background: #fef0f0;
+    box-shadow: inset 0 0 0 1px #fab6b6;
+  }
+
+  .field-consistency-legend--green {
+    color: #529b2e;
+    background: #f0f9eb;
+    box-shadow: inset 0 0 0 1px #b3e19d;
   }
 
   /* 详情表格原生交互元素（替代 ElInput/ElSelect/ElButton，避免每行创建 Vue 组件导致渲染卡顿） */

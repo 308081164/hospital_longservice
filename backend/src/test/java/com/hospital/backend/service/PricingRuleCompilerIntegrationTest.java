@@ -287,7 +287,9 @@ class PricingRuleCompilerIntegrationTest {
 
         JsonNode compiled = compiler.compile(MAPPER.valueToTree(DefaultPricingTemplate.buildRulesMap()), "关闭特色医院");
         assertThat(compiled.path("billingProfile").path("enabled").asBoolean()).isFalse();
-        assertThat(compiled.path("specialRules").path("fixedPrices")).isEmpty();
+        JsonNode fixedPrices = compiled.path("specialRules").path("fixedPrices");
+        assertThat(fixedPrices).isNotEmpty();
+        assertThat(fixedPrices).allSatisfy(node -> assertThat(node.has("ruleId")).isFalse());
     }
 
     @Test
@@ -494,7 +496,9 @@ class PricingRuleCompilerIntegrationTest {
 
         JsonNode compiled = compiler.compile(MAPPER.valueToTree(DefaultPricingTemplate.buildRulesMap()), "关闭特色引擎医院");
         assertThat(compiled.path("billingProfile").path("enabled").asBoolean()).isFalse();
-        assertThat(compiled.path("specialRules").path("fixedPrices")).isEmpty();
+        JsonNode fixedPrices = compiled.path("specialRules").path("fixedPrices");
+        assertThat(fixedPrices).isNotEmpty();
+        assertThat(fixedPrices).allSatisfy(node -> assertThat(node.has("ruleId")).isFalse());
 
         PricingEngine engine = new PricingEngine(compiled);
         PricingEngine.ProcessedResult result = engine.processRow(Map.of(
@@ -617,8 +621,8 @@ class PricingRuleCompilerIntegrationTest {
         JsonNode compiled = compiler.compileForCustomer(
                 MAPPER.valueToTree(DefaultPricingTemplate.buildRulesMap()), customer);
         JsonNode fixedPrices = compiled.path("specialRules").path("fixedPrices");
-        assertThat(fixedPrices).hasSize(1);
-        assertThat(fixedPrices.get(0).path("name").asText()).isEqualTo("手术包5.5元/件");
+        assertThat(fixedPrices).anySatisfy(node ->
+                assertThat(node.path("name").asText()).isEqualTo("手术包5.5元/件"));
 
         PricingEngine engine = new PricingEngine(compiled);
         PricingEngine.ProcessedResult result = engine.processRow(Map.of(

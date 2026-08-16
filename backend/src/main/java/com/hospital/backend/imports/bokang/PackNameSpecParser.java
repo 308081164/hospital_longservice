@@ -76,7 +76,8 @@ public final class PackNameSpecParser {
         return packName;
     }
 
-    private static Integer extractPieceCount(String packName) {
+    /** 从包名提取 `-N` / `-N件` 器械件数 hint。 */
+    public static Integer extractPieceCount(String packName) {
         if (packName == null) {
             return null;
         }
@@ -86,6 +87,53 @@ public final class PackNameSpecParser {
         }
         return null;
     }
+
+    /** 从任意文本提取首个 mm 尺寸（如 75*200）。 */
+    public static java.util.Optional<MmSize> extractMmSize(String text) {
+        if (text == null || text.isBlank()) {
+            return java.util.Optional.empty();
+        }
+        String normalized = text.replace("×", "*").replace("x", "*").replace("X", "*");
+        Matcher mm = BAG_SIZE_MM.matcher(normalized);
+        if (!mm.find()) {
+            return java.util.Optional.empty();
+        }
+        return java.util.Optional.of(new MmSize(
+                Integer.parseInt(mm.group(1)),
+                Integer.parseInt(mm.group(2))));
+    }
+
+    /** 从类型字段推断包材类别（纸塑袋/无纺布/棉/敷料）。 */
+    public static String inferMaterialClassFromType(String type) {
+        if (type == null || type.isBlank()) {
+            return null;
+        }
+        if (type.contains("纸塑袋") || type.contains("纸塑")) {
+            return "PAPER_PLASTIC";
+        }
+        if (type.contains("无纺布")) {
+            return "NON_WOVEN";
+        }
+        if (type.contains("敷料")) {
+            return "COTTON_DRESSING";
+        }
+        if (type.contains("棉")) {
+            return "COTTON_DRESSING";
+        }
+        return null;
+    }
+
+    /** 从包装材料字段推断包材类别。 */
+    public static String inferMaterialClassFromMaterial(String packageMaterial) {
+        BagInfo info = parseBagMaterial(packageMaterial);
+        return info.materialClass;
+    }
+
+    public static String formatMmSize(MmSize size) {
+        return size.widthMm() + "*" + size.heightMm();
+    }
+
+    public record MmSize(int widthMm, int heightMm) {}
 
     private static String extractOrderNo(String packName) {
         if (packName == null) {

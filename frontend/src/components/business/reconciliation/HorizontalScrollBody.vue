@@ -1,36 +1,19 @@
 <template>
-  <div ref="bodyRef" class="h-scroll-body">
+  <div class="h-scroll-body">
     <slot />
   </div>
 </template>
 
 <script setup lang="ts">
-  import { inject, onBeforeUnmount, onMounted, ref } from 'vue'
-
-  const bodyRef = ref<HTMLElement | null>(null)
-  const register = inject<(el: HTMLElement) => (() => void) | undefined>('horizontalScrollRegister')
-
-  let cleanup: (() => void) | undefined
-
-  onMounted(() => {
-    if (bodyRef.value && register) {
-      cleanup = register(bodyRef.value)
-    }
-  })
-
-  onBeforeUnmount(() => {
-    cleanup?.()
-  })
+  /**
+   * 兼容旧用法：横向滚动已由 HorizontalScrollPanel 统一管理，
+   * 此组件仅作语义分组，不再注册独立 scroll body。
+   */
+  defineOptions({ name: 'HorizontalScrollBody' })
 </script>
 
 <style scoped>
   .h-scroll-body {
-    overflow: auto visible;
-    scrollbar-width: none;
-  }
-
-  .h-scroll-body::-webkit-scrollbar {
-    display: none;
-    height: 0;
+    width: 100%;
   }
 </style>

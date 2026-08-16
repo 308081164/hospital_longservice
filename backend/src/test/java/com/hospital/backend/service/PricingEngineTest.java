@@ -44,6 +44,30 @@ class PricingEngineTest {
     }
 
     @Test
+    void fieldConsistencyMismatchForcesWarningEvenWhenPriceMatches() {
+        PricingEngine.ProcessedResult result = engine.processRow(row(
+                "测试医院",
+                "额外包(纸塑袋)",
+                "支抗钉-3 75*20",
+                "高温纸塑袋75*200",
+                3,
+                1,
+                8.0,
+                8.0
+        ));
+
+        assertThat(result.status).isEqualTo("warning");
+        assertThat(result.notes).anyMatch(note -> note.contains("【字段核对】"));
+        assertThat(result.billingNotes).isNotNull();
+        Object nested = result.billingNotes.get("fieldConsistency");
+        if (nested instanceof Map<?, ?> nestedMap) {
+            assertThat(nestedMap.get("type")).isEqualTo("field_consistency");
+        } else {
+            assertThat(result.billingNotes.get("type")).isEqualTo("field_consistency");
+        }
+    }
+
+    @Test
     void pricesHangtianFenghuaSpoonByInstrumentCount() {
         PricingEngine.ProcessedResult result = engine.processRow(row(
                 "哈尔滨航天风华医院",

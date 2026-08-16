@@ -71,10 +71,18 @@ public class PricingEngine {
         String packName = str(row, "packName");
         String packageMaterial = str(row, "packageMaterial");
         String hospitalName = str(row, "hospitalName");
+        int instrumentCount = intVal(row, "instrumentCount");
+        List<BillRowFieldConsistencyValidator.Violation> consistencyViolations =
+                BillRowFieldConsistencyValidator.validate(type, packName, packageMaterial, instrumentCount);
+        boolean forceConsistencyWarning = !consistencyViolations.isEmpty();
+        for (BillRowFieldConsistencyValidator.Violation violation : consistencyViolations) {
+            notes.add("【字段核对】" + violation.message());
+        }
+        Map<String, Object> consistencyBillingNotes =
+                BillRowFieldConsistencyValidator.toBillingNotes(consistencyViolations);
         packageMaterial = inferPricingPackageMaterial(type, packageMaterial, notes);
         packageMaterial = normalizeFuyiImportMaterial(type, packName, packageMaterial, notes);
         row.put("packageMaterial", packageMaterial);
-        int instrumentCount = intVal(row, "instrumentCount");
         int packCount = Math.max(1, intVal(row, "packCount"));
         Double unitPrice = doubleOrNull(row, "unitPrice");
         Double totalPrice = doubleOrNull(row, "totalPrice");
@@ -86,9 +94,11 @@ public class PricingEngine {
             disabled.expectedUnitPrice = unitPrice;
             disabled.correctedTotalPrice = totalPrice;
             disabled.difference = 0.0;
-            disabled.status = "unchanged";
+            disabled.status = forceConsistencyWarning ? "warning" : "unchanged";
             disabled.pricingRule = "特色账单已关闭";
-            disabled.notes = List.of("客户未启用特色账单，保留原始价格。");
+            disabled.notes = new ArrayList<>(notes);
+            disabled.notes.add("客户未启用特色账单，保留原始价格。");
+            disabled.billingNotes = consistencyBillingNotes;
             return disabled;
         }
         JsonNode pathOverride = billingProfile.path("pathOverride");
@@ -98,7 +108,7 @@ public class PricingEngine {
         String pricingMode = billingProfile.path("pricingMode").asText("standard");
         boolean specialOnly = "special_only".equalsIgnoreCase(pricingMode);
         boolean hybrid = "hybrid".equalsIgnoreCase(pricingMode);
-        boolean preserveOriginalOnMiss = specialOnly || hybrid;
+        boolean preserveOriginalOnMiss = specialOnly;
 
         boolean isLowTempType = !disableLowTemp
                 && (type.contains("低温") || type.contains("ETO") || type.contains("EO"));
@@ -189,6 +199,7 @@ public class PricingEngine {
         boolean appliedSpecialFoldRule = false;
         boolean foldSkipPackaging = false;
         Double foldUnitPriceOverride = null;
+        Long foldMatchedRuleId = null;
         if (preMatchedSpecialPrice == null && !isZsdInstrumentPack) {
             int countBeforeSpecialFold = effectiveCount;
             FoldApplyResult foldResult = applySpecialFoldRules(row, bagSize, effectiveCount, notes);
@@ -196,6 +207,7 @@ public class PricingEngine {
             appliedSpecialFoldRule = foldResult.matched();
             foldSkipPackaging = foldResult.skipPackaging();
             foldUnitPriceOverride = foldResult.unitPriceOverride();
+            foldMatchedRuleId = foldResult.ruleId();
         }
         if (foldUnitPriceOverride != null && !Double.isNaN(foldUnitPriceOverride)) {
             forceHighTempPerItem = foldUnitPriceOverride;
@@ -283,6 +295,7 @@ public class PricingEngine {
         Double expectedUnitPrice = unitPrice;
         boolean skipPackaging = foldSkipPackaging;
         boolean skipHospitalDiscount = false;
+        Long matchedRuleId = foldMatchedRuleId;
         SpecialPriceResult specialPrice = preMatchedSpecialPrice != null
                 ? preMatchedSpecialPrice
                 : findSpecialFixedPrice(row, bagSize, effectiveCount, matchedProductId, matchedVariantId);
@@ -294,22 +307,27 @@ public class PricingEngine {
             notes.add(specialPrice.note);
             skipPackaging = specialPrice.skipPackaging;
             skipHospitalDiscount = specialPrice.skipHospitalDiscount;
+            if (specialPrice.ruleId != null) {
+                matchedRuleId = specialPrice.ruleId;
+            }
         } else if (preserveOriginalOnMiss) {
             Double forcedPrice = computeForceHighTempUnitPrice(forceHighTempPerItem, materialBillingCount);
             if (forcedPrice != null) {
                 expectedUnitPrice = forcedPrice;
                 pricingRule = "路径覆盖：高温固定单价";
-                notes.add("计价模式为" + (specialOnly ? "仅特色规则" : "特色+保留原价")
-                        + "，按路径覆盖高温单价 "
+                notes.add("计价模式为仅特色规则，按路径覆盖高温单价 "
                         + fmt(forceHighTempPerItem) + " 元/件 × " + materialBillingCount + " 件 = "
                         + fmt(expectedUnitPrice) + " 元。");
             } else {
-                pricingRule = specialOnly ? "special_only 未命中特色规则" : "hybrid 未命中特色规则";
-                notes.add("计价模式为" + (specialOnly ? "仅特色规则" : "特色+保留原价")
-                        + "，未命中客户特色规则，保留原始价格。");
+                pricingRule = "special_only 未命中特色规则";
+                notes.add("计价模式为仅特色规则，未命中客户特色规则，保留原始价格。");
                 requiresReview = true;
             }
-        } else if (type.contains("纸塑袋") && isCottonDressingPackName(packName)
+        } else {
+            if (hybrid) {
+                notes.add("混合模式未命中特色规则，走标准灭菌计价。");
+            }
+            if (type.contains("纸塑袋") && isCottonDressingPackName(packName)
                 && shouldUseDressingCottonPaperPlasticPrice(packName, type, instrumentCount, packCount)) {
             int bagSize2 = detectBagSize(str(row, "packageMaterial") + str(row, "packName"));
             Double cottonPrice = resolveCottonPaperPlasticUnitPrice(bagSize2);
@@ -456,6 +474,7 @@ public class PricingEngine {
                 requiresReview = true;
             }
         }
+        }
 
         if (specialPrice == null && expectedUnitPrice != null) {
             MultiplierResult multiplierResult = findCustomerMultiplier(
@@ -468,6 +487,9 @@ public class PricingEngine {
                 if (multiplierResult.skipHospitalDiscount) {
                     skipHospitalDiscount = true;
                 }
+                if (matchedRuleId == null && multiplierResult.ruleId != null) {
+                    matchedRuleId = multiplierResult.ruleId;
+                }
             }
         }
 
@@ -477,6 +499,9 @@ public class PricingEngine {
                 expectedUnitPrice = round(expectedUnitPrice + specialFee.fee);
                 pricingRule = pricingRule + " + " + specialFee.ruleName;
                 notes.add(specialFee.note);
+                if (matchedRuleId == null && specialFee.ruleId != null) {
+                    matchedRuleId = specialFee.ruleId;
+                }
             }
         }
 
@@ -581,6 +606,10 @@ public class PricingEngine {
             status = "unchanged";
         }
 
+        if (forceConsistencyWarning) {
+            status = "warning";
+        }
+
         ProcessedResult result = new ProcessedResult();
         result.expectedUnitPrice = expectedUnitPrice;
         result.correctedTotalPrice = correctedTotalPrice;
@@ -588,15 +617,71 @@ public class PricingEngine {
         result.status = status;
         result.pricingRule = pricingRule;
         result.notes = notes;
+        result.matchedRuleId = matchedRuleId;
         if (specialPrice != null) {
-            result.matchedRuleId = specialPrice.ruleId;
             result.matchedPriceOption = specialPrice.matchedPriceOption;
             if (specialPrice.anyPriceMode) {
                 result.billingNotes = buildAnyPriceBillingNotes(
                         specialPrice, anyPriceAccepted, unitPrice, notes);
+            } else {
+                result.billingNotes = buildRowBillingNotes(
+                        notes, type, packName, packageMaterial, hospitalName, skipHospitalDiscount, matchedRuleId);
             }
+        } else {
+            result.billingNotes = buildRowBillingNotes(
+                    notes, type, packName, packageMaterial, hospitalName, skipHospitalDiscount, matchedRuleId);
         }
+        result.billingNotes = mergeBillingNotes(result.billingNotes, consistencyBillingNotes);
         return result;
+    }
+
+    private Map<String, Object> mergeBillingNotes(
+            Map<String, Object> primary,
+            Map<String, Object> consistency) {
+        if (consistency == null || consistency.isEmpty()) {
+            return primary;
+        }
+        if (primary == null || primary.isEmpty()) {
+            return consistency;
+        }
+        Map<String, Object> merged = new LinkedHashMap<>(primary);
+        merged.put("fieldConsistency", consistency);
+        merged.put("field_consistency", consistency);
+        if ("field_consistency".equals(consistency.get("type"))) {
+            merged.put("consistencyViolations", consistency.get("violations"));
+        }
+        return merged;
+    }
+
+    private Map<String, Object> buildRowBillingNotes(
+            List<String> notes,
+            String type,
+            String packName,
+            String packageMaterial,
+            String hospitalName,
+            boolean skipHospitalDiscount,
+            Long matchedRuleId) {
+        Map<String, Object> billingNotes = new LinkedHashMap<>();
+        if (matchedRuleId != null) {
+            billingNotes.put("matchedRuleId", matchedRuleId);
+            billingNotes.put("matched_rule_id", matchedRuleId);
+        }
+        List<Map<String, Object>> discountChain = buildDiscountChain(notes);
+        if (!discountChain.isEmpty()) {
+            billingNotes.put("discountChain", discountChain);
+        }
+        BillingPolicyApplier.AppliedDiscount discount = BillingPolicyApplier.resolveBestDiscount(
+                rules, type, packName, packageMaterial, hospitalName, skipHospitalDiscount);
+        if (discount.trace() != null && !discount.trace().isEmpty()) {
+            List<Map<String, Object>> policyTraces = new ArrayList<>();
+            for (String traceLine : discount.trace()) {
+                Map<String, Object> step = new LinkedHashMap<>();
+                step.put("label", traceLine);
+                policyTraces.add(step);
+            }
+            billingNotes.put("policyTraces", policyTraces);
+        }
+        return billingNotes.isEmpty() ? null : billingNotes;
     }
 
     private Map<String, Object> buildAnyPriceBillingNotes(
@@ -689,7 +774,7 @@ public class PricingEngine {
     private FoldApplyResult applyFoldRuleList(Map<String, Object> row, JsonNode foldRules, String combined, int bagSize,
                                               int effectiveCount, List<String> notes) {
         if (!foldRules.isArray()) {
-            return new FoldApplyResult(effectiveCount, false, false, null);
+            return new FoldApplyResult(effectiveCount, false, false, null, null);
         }
         BillingConditionEvaluator.RowContext ctx = new BillingConditionEvaluator.RowContext(
                 str(row, "type"),
@@ -719,13 +804,14 @@ public class PricingEngine {
             if (Double.isNaN(unitPriceOverride)) {
                 unitPriceOverride = null;
             }
-            return new FoldApplyResult(result, skipPackaging, true, unitPriceOverride);
+            Long ruleId = rule.has("ruleId") ? rule.path("ruleId").asLong() : null;
+            return new FoldApplyResult(result, skipPackaging, true, unitPriceOverride, ruleId);
         }
-        return new FoldApplyResult(effectiveCount, false, false, null);
+        return new FoldApplyResult(effectiveCount, false, false, null, null);
     }
 
     private record FoldApplyResult(int effectiveCount, boolean skipPackaging, boolean matched,
-                                   Double unitPriceOverride) {}
+                                   Double unitPriceOverride, Long ruleId) {}
 
     private SpecialPriceResult findSpecialFixedPrice(
             Map<String, Object> row, int bagSize, int effectiveCount,
@@ -899,6 +985,7 @@ public class PricingEngine {
         result.ruleName = rule.path("name").asText("客户商品倍率");
         result.skipHospitalDiscount = rule.path("skipHospitalDiscount").asBoolean(false);
         result.note = result.ruleName + "，基础单价 × " + multiplier + " 倍。";
+        result.ruleId = rule.has("ruleId") ? rule.path("ruleId").asLong() : null;
         return result;
     }
 
@@ -932,6 +1019,7 @@ public class PricingEngine {
         if (Double.isNaN(result.fee)) return null;
         result.ruleName = rule.path("name").asText("特殊加收");
         result.note = result.ruleName + "，加收 " + fmt(result.fee) + " 元。";
+        result.ruleId = rule.has("ruleId") ? rule.path("ruleId").asLong() : null;
         return result;
     }
 
@@ -2070,6 +2158,7 @@ public class PricingEngine {
         double fee;
         String ruleName;
         String note;
+        Long ruleId;
     }
 
     private static class MultiplierResult {
@@ -2077,6 +2166,7 @@ public class PricingEngine {
         String ruleName;
         String note;
         boolean skipHospitalDiscount;
+        Long ruleId;
     }
 
     private static class TierSplit {

@@ -367,7 +367,7 @@ public class PricingRuleCompiler {
 
     /**
      * 客户级标准灭菌阶梯价：深合并 highTemperature / lowTemperature / dressingPack 等节，
-     * 在特色规则未命中时由 PricingEngine 走标准路径并使用附一/道外等独立单价表。
+     * 在 hybrid/standard 且特色规则未命中时由 PricingEngine 走标准路径并使用附一/道外等独立单价表。
      */
     private void applyStandardPricingOverride(ObjectNode compiled, Customer customer) {
         String json = customer.getStandardPricingOverride();
@@ -527,6 +527,9 @@ public class PricingRuleCompiler {
 
     private ObjectNode toMultiplierNode(CustomerProductRule rule, List<String> hospitalNames) {
         ObjectNode node = MAPPER.createObjectNode();
+        if (rule.getId() != null) {
+            node.put("ruleId", rule.getId());
+        }
         node.put("name", rule.getName());
         node.set("hospitals", MAPPER.valueToTree(hospitalNames));
         appendProductBinding(node, rule);
@@ -614,6 +617,9 @@ public class PricingRuleCompiler {
 
     private ObjectNode toFoldRuleNode(CustomerProductRule rule, List<String> hospitalNames) {
         ObjectNode node = MAPPER.createObjectNode();
+        if (rule.getId() != null) {
+            node.put("ruleId", rule.getId());
+        }
         node.put("name", rule.getName());
         node.set("hospitals", MAPPER.valueToTree(hospitalNames));
         appendJsonArray(node, "keywords", rule.getKeywords());
@@ -645,6 +651,9 @@ public class PricingRuleCompiler {
 
     private ObjectNode toExtraFeeNode(CustomerProductRule rule, List<String> hospitalNames) {
         ObjectNode node = MAPPER.createObjectNode();
+        if (rule.getId() != null) {
+            node.put("ruleId", rule.getId());
+        }
         node.put("name", rule.getName());
         node.set("hospitals", MAPPER.valueToTree(hospitalNames));
         appendJsonArray(node, "keywords", rule.getKeywords());

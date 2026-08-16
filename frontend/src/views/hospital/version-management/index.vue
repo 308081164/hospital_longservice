@@ -194,6 +194,11 @@
                   </span>
                 </template>
               </ElTableColumn>
+              <ElTableColumn :label="t('versionManagement.detail.columns.pricingRule')" min-width="140">
+                <template #default="{ row }">
+                  <PricingPathTag :row="row" @open-detail="openPricingFlowDetail" />
+                </template>
+              </ElTableColumn>
               <ElTableColumn :label="t('versionManagement.detail.columns.status')" width="100">
                 <template #default="{ row }">
                   <ElTag :type="statusTagType(row['status'] as string)" size="small" effect="plain">
@@ -316,6 +321,11 @@
         </div>
       </template>
     </ElDialog>
+
+    <PricingFlowDrawer
+      v-model:visible="pricingFlowDrawerVisible"
+      :row="pricingFlowRow"
+    />
   </div>
 </template>
 
@@ -331,9 +341,11 @@ import {
   getReconciliationDetail,
   getReconciliationRows,
 } from '@/api/hospital/reconciliationsApi'
-import { buildReconciliationVersionGroupKey } from '@/utils/reconciliationVersionGroup'
+import { buildReconciliationVersionGroupKey, compareReconciliationGroupsByLatestActivity } from '@/utils/reconciliationVersionGroup'
 import { useBillingPermission } from '@/composables/useBillingPermission'
 import { runReviewPreflight } from '@/composables/reconciliationExportPreflight'
+import PricingFlowDrawer from '@/components/business/reconciliation/PricingFlowDrawer.vue'
+import PricingPathTag from '@/components/business/reconciliation/PricingPathTag.vue'
 
 defineOptions({ name: 'VersionManagement' })
 
@@ -384,6 +396,14 @@ const detailPage = ref(1)
 const detailPageSize = ref(200)
 
 const detailPaginatedRows = computed(() => detailRowsCache.value.get(detailPage.value) ?? [])
+
+const pricingFlowDrawerVisible = ref(false)
+const pricingFlowRow = ref<Record<string, unknown> | null>(null)
+
+function openPricingFlowDetail(row: Record<string, unknown>) {
+  pricingFlowRow.value = row
+  pricingFlowDrawerVisible.value = true
+}
 
 // 审核弹窗
 const reviewVisible = ref(false)
@@ -443,7 +463,8 @@ const allFileGroups = computed<FileVersionGroup[]>(() => {
     if (!map.has(key)) map.set(key, [])
     map.get(key)!.push(job)
   }
-  return Array.from(map.entries()).map(([key, versions]) => {
+  return Array.from(map.entries())
+    .map(([key, versions]) => {
     const sorted = versions.sort(
       (a, b) =>
         b.versionNo - a.versionNo
@@ -453,6 +474,7 @@ const allFileGroups = computed<FileVersionGroup[]>(() => {
     const sourceFileName = sorted[0].sourceFileName?.trim() || '(未命名)'
     return { key, hospitalName, sourceFileName, versions: sorted }
   })
+    .sort(compareReconciliationGroupsByLatestActivity)
 })
 
 const filteredFileGroups = computed(() => {

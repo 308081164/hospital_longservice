@@ -3,6 +3,7 @@ package com.hospital.backend.service.impl;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.hospital.backend.common.JsonUtils;
 import com.hospital.backend.common.Result;
+import com.hospital.backend.service.BillRowBillingNotesSupport;
 import com.hospital.backend.service.PricingEngine;
 import com.hospital.backend.service.PricingRuleCompiler;
 import com.hospital.backend.service.RowSplitter;
@@ -996,6 +997,9 @@ public class HospitalReconciliationServiceImpl implements HospitalReconciliation
         m.put("notes", JsonUtils.parseToList(r.getNotesJson(), String.class));
         m.put("matchedRuleId", r.getMatchedRuleId());
         m.put("matchedPriceOption", r.getMatchedPriceOption());
+        m.put("matchedProductId", r.getMatchedProductId());
+        m.put("matchedVariantId", r.getMatchedVariantId());
+        m.put("pricingPath", r.getPricingPath());
         m.put("isUrgent", Boolean.TRUE.equals(r.getIsUrgent()));
         if (r.getBillingNotes() != null && !r.getBillingNotes().isBlank()) {
             try {
@@ -1547,23 +1551,29 @@ public class HospitalReconciliationServiceImpl implements HospitalReconciliation
      *
      * POST /api/hospital-reconciliations/{jobId}/export-anomalies
      *
-     * 导出所有差额不为 0 的异常行，格式与账单类似，但额外显示原价与修正价格的对比。
+     * 默认导出差额不为 0 的异常行；可选 {@code includeFieldConsistency=true} 额外包含字段一致性问题行。
      * 包含列：序号、发货日期、发货单号、类型、包类别号、包名、包装材料、包数、
-     *         器械数、原单价、原总价、修正单价、修正总价、差额、规则说明、备注
+     *         器械数、原单价、原总价、修正单价、修正总价、差额、（可选）字段核对问题
      *
      * @param jobId 核对任务 ID
+     * @param request 导出选项
      * @return xlsx 二进制文件流
      */
-    public ResponseEntity<byte[]> exportAnomalies(Long jobId) {
+    public ResponseEntity<byte[]> exportAnomalies(Long jobId, ExportAnomaliesRequest request) {
+        if (request == null) {
+            request = new ExportAnomaliesRequest();
+        }
         try {
             HospitalReconciliationJob job = jobMapper.selectById(jobId);
             if (job == null) {
                 return ResponseEntity.notFound().build();
             }
 
-            List<BillRowItem> allRows = loadBillRowsFromDb(jobId);
-            List<BillRowItem> anomalies = allRows.stream()
-                    .filter(r -> r.getDifference() != null && Math.abs(r.getDifference()) > 0.001)
+            boolean includeFieldConsistency = request.isIncludeFieldConsistency();
+            List<HospitalReconciliationRow> entities =
+                    rowMapper.selectByJobIdOrderBySheetNameAscRowNumberAsc(jobId);
+            List<HospitalReconciliationRow> anomalies = entities.stream()
+                    .filter(r -> isAnomalyExportRow(r, includeFieldConsistency))
                     .collect(Collectors.toList());
 
             if (anomalies.isEmpty()) {
@@ -1575,22 +1585,27 @@ public class HospitalReconciliationServiceImpl implements HospitalReconciliation
                                 java.util.Arrays.asList("无异常数据"))));
             }
 
-            // 构建表头和数据行
             List<List<String>> rows = new ArrayList<>();
-            rows.add(Arrays.asList(
+            List<String> header = new ArrayList<>(Arrays.asList(
                     "行号", "发货日期", "发货单号", "类型", "包类别号", "包名",
                     "包装材料", "包数", "器械数",
                     "原单价", "原总价", "修正单价", "修正总价", "差额"
             ));
+            if (includeFieldConsistency) {
+                header.add("字段核对问题");
+            }
+            rows.add(header);
 
-            for (BillRowItem row : anomalies) {
+            for (HospitalReconciliationRow row : anomalies) {
                 String origUnitPrice = row.getUnitPrice() != null ? String.format("%.2f", row.getUnitPrice()) : "";
                 String origTotalPrice = row.getTotalPrice() != null ? String.format("%.2f", row.getTotalPrice()) : "";
-                String corrUnitPrice = row.getExpectedUnitPrice() != null ? String.format("%.2f", row.getExpectedUnitPrice()) : "";
-                String corrTotalPrice = row.getCorrectedTotalPrice() != null ? String.format("%.2f", row.getCorrectedTotalPrice()) : "";
+                String corrUnitPrice = row.getExpectedUnitPrice() != null
+                        ? String.format("%.2f", row.getExpectedUnitPrice()) : "";
+                String corrTotalPrice = row.getCorrectedTotalPrice() != null
+                        ? String.format("%.2f", row.getCorrectedTotalPrice()) : "";
                 String diff = row.getDifference() != null ? String.format("%.2f", row.getDifference()) : "";
 
-                rows.add(Arrays.asList(
+                List<String> dataRow = new ArrayList<>(Arrays.asList(
                         row.getRowNumber() != null ? String.valueOf(row.getRowNumber()) : "",
                         row.getDeliveryDate() != null ? row.getDeliveryDate() : "",
                         formatIntegerString(row.getOrderNo()),
@@ -1606,6 +1621,10 @@ public class HospitalReconciliationServiceImpl implements HospitalReconciliation
                         corrTotalPrice,
                         diff
                 ));
+                if (includeFieldConsistency) {
+                    dataRow.add(BillRowBillingNotesSupport.summarizeFieldConsistencyViolations(row.getBillingNotes()));
+                }
+                rows.add(dataRow);
             }
 
             byte[] content = generateSimpleExcel("异常明细", rows);
@@ -1615,7 +1634,6 @@ public class HospitalReconciliationServiceImpl implements HospitalReconciliation
                     + "_异常明细_" + LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmmss"))
                     + ".xlsx");
 
-            // 记录导出日志
             try {
                 HospitalReconciliationExportLog exportLog = new HospitalReconciliationExportLog();
                 exportLog.setJobId(jobId);
@@ -1637,6 +1655,16 @@ public class HospitalReconciliationServiceImpl implements HospitalReconciliation
             log.error("导出异常明细失败: {}", e.getMessage(), e);
             return ResponseEntity.internalServerError().build();
         }
+    }
+
+    private boolean isAnomalyExportRow(HospitalReconciliationRow row, boolean includeFieldConsistency) {
+        Double difference = row.getDifference();
+        boolean priceAnomaly = difference != null && Math.abs(difference) > 0.001;
+        if (priceAnomaly) {
+            return true;
+        }
+        return includeFieldConsistency
+                && BillRowBillingNotesSupport.hasFieldConsistencyViolations(row.getBillingNotes());
     }
 
     /**

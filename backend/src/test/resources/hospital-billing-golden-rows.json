@@ -290,7 +290,7 @@
     "expected" : {
       "expectedUnitPrice" : 52.0,
       "correctedTotalPrice" : 104.0,
-      "status" : "unchanged",
+      "status" : "warning",
       "notesContains" : [ "镜头" ]
     }
   }, {
@@ -435,7 +435,7 @@
     "expected" : {
       "expectedUnitPrice" : 13.3,
       "correctedTotalPrice" : 13.3,
-      "status" : "unchanged"
+      "status" : "warning"
     }
   }, {
     "id" : "er-ng-ht-4",

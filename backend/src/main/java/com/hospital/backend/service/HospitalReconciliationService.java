@@ -2,6 +2,7 @@ package com.hospital.backend.service;
 
 import com.hospital.backend.common.Result;
 import com.hospital.backend.dto.request.hospital.CreateExportLogRequest;
+import com.hospital.backend.dto.request.hospital.ExportAnomaliesRequest;
 import com.hospital.backend.dto.request.hospital.HospitalBillTemplateExportRequest;
 import com.hospital.backend.dto.request.hospital.HospitalSettlementTemplateExportRequest;
 import com.hospital.backend.dto.request.hospital.ReconciliationReviewRequest;
@@ -55,7 +56,7 @@ public interface HospitalReconciliationService {
 
     ResponseEntity<byte[]> exportDepartmentSummary(Long jobId);
 
-    ResponseEntity<byte[]> exportAnomalies(Long jobId);
+    ResponseEntity<byte[]> exportAnomalies(Long jobId, ExportAnomaliesRequest request);
 
     ResponseEntity<String> exportHtmlSettlement(HospitalSettlementTemplateExportRequest request);
 

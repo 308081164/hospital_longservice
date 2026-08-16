@@ -374,7 +374,7 @@
         "standardPricingOverridePlaceholder": "{\n  \"highTemperature\": { \"paperPlastic\": { ... } },\n  \"lowTemperature\": { ... },\n  \"dressingPack\": { ... }\n}",
         "standardPricingOverrideFormatHint": "Must be a JSON object; saved as compact JSON in the database. Structure matches billing seed standardPricingOverride.",
         "standardPricingOverrideStructureHint": "Top-level keys are typically highTemperature, lowTemperature, dressingPack (PricingRuleCompiler merge).",
-        "standardPricingOverrideHybridHint": "Hybrid hospitals (e.g. ZYY-D1) often set a hospital-specific standard table here; under special_only, unmatched rows rarely use tiers.",
+        "standardPricingOverrideHybridHint": "In hybrid mode, unmatched rows use the standard sterilization path; overrides here are deep-merged into engine tier tables. special_only unmatched rows keep the bill price.",
         "standardPricingOverrideInvalid": "Standard pricing override must be a valid JSON object",
         "pathOverrideTitle": "Path override",
         "pathOverrideDesc": "For customers that must deviate from the hospital HT/LT tier table. Often used with “Special rules only” to force how individual job rows are priced.",
@@ -786,9 +786,18 @@
       "billingEmpty": "No billing trace available",
       "policyTraces": "Policy traces",
       "policyTracesSection": "Policy traces (policyTraces)",
+      "fieldConsistencyTag": "Field check",
+      "fieldConsistencySection": "Field consistency issues",
+      "fieldConsistencyHint": "Pack name, type, packaging material, or instrument count columns are inconsistent.",
+      "fieldConsistencyBagSize": "Bag size mismatch",
+      "fieldConsistencyMaterialClass": "Material class mismatch",
+      "fieldConsistencyInstrumentCount": "Instrument count mismatch",
+      "fieldConsistencyLegendRed": "Red: bag size or material class mismatch",
+      "fieldConsistencyLegendGreen": "Green: pack-name piece count vs instrument count mismatch",
       "tabRegular": "Regular bill",
       "tabExternal": "External instruments ({count})",
-      "suggestedDepartment": "Suggested dept"
+      "suggestedDepartment": "Suggested dept",
+      "pricingRuleColumn": "Pricing rule"
     },
     "settlementSummary": {
       "title": "Monthly settlement summary",
@@ -811,6 +820,13 @@
       "sterilizeTotal": "Sterilization",
       "ratio": "Ratio",
       "allocatedFee": "Allocated fee"
+    },
+    "exportAnomaly": {
+      "title": "Export anomaly rows",
+      "description": "By default only rows with a non-zero price difference are exported.",
+      "includeFieldConsistency": "Also include field consistency issues",
+      "fieldConsistencyHint": "When checked, rows with pack/type/material/instrument inconsistencies (difference = 0) are exported with a Field Check Issues column.",
+      "confirm": "Export"
     },
     "exportWizard": {
       "title": "Export Wizard",
@@ -1057,6 +1073,33 @@
       "addMapping": "Add mapping"
     }
   },
+  "pricingPath": {
+    "specialHit": "Special rule",
+    "standard": "Standard sterilization",
+    "preserve": "Preserve original",
+    "disabled": "Special billing off",
+    "skipped": "Not priced",
+    "unknown": "Unknown"
+  },
+  "pricingFlow": {
+    "title": "Pricing rule & flow",
+    "viewDetail": "View details",
+    "ruleSummary": "Rule summary",
+    "timeline": "Pricing flow",
+    "difference": "Difference",
+    "status": "Status",
+    "copyRule": "Copy rule",
+    "copySuccess": "Rule summary copied",
+    "copyFailed": "Copy failed",
+    "stepSummary": "Matched rule summary",
+    "stepRuleMeta": "Linked rule",
+    "stepMultiPrice": "Multi-price match",
+    "stepNote": "Pricing note",
+    "stepNoteIndex": "Step {index}",
+    "traceMeta": "Trace metadata",
+    "pricingPath": "Pricing path",
+    "matchedProductId": "Matched product ID"
+  },
   "versionManagement": {
     "list": {
       "empty": "No data.",
@@ -1088,7 +1131,8 @@
         "totalPrice": "Orig. Total",
         "correctedTotalPrice": "Corrected Total",
         "difference": "Difference",
-        "status": "Status"
+        "status": "Status",
+        "pricingRule": "Pricing rule"
       },
       "status": {
         "corrected": "Corrected",

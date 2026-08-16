@@ -15,7 +15,7 @@ class RuleFidelityRegressionTest {
     private static final ObjectMapper MAPPER = new ObjectMapper();
 
     @Test
-    void guoyao2HybridPreservesUnchangedRows() throws Exception {
+    void guoyao2HybridUsesStandardPathWhenSpecialRuleMisses() throws Exception {
         JsonNode rules = RuleFidelityTestSupport.compileForCustomerCode("GUOYAO-2");
         PricingEngine engine = new PricingEngine(rules);
         PricingEngine.ProcessedResult bite = engine.processRow(Map.of(
@@ -29,8 +29,10 @@ class RuleFidelityRegressionTest {
                 "unitPrice", 16.5,
                 "totalPrice", 16.5
         ));
-        assertThat(bite.status).isEqualTo("unchanged");
-        assertThat(bite.pricingRule).contains("hybrid 未命中特色规则");
+        assertThat(bite.status).isEqualTo("warning");
+        assertThat(bite.expectedUnitPrice).isEqualTo(8.0);
+        assertThat(bite.pricingRule).contains("高温纸塑袋");
+        assertThat(bite.notes).anyMatch(note -> note.contains("混合模式未命中特色规则，走标准灭菌计价"));
 
         PricingEngine.ProcessedResult tourniquet = engine.processRow(Map.of(
                 "hospitalName", "国药总医院第二院区",
@@ -43,7 +45,10 @@ class RuleFidelityRegressionTest {
                 "unitPrice", 13.0,
                 "totalPrice", 13.0
         ));
-        assertThat(tourniquet.status).isEqualTo("unchanged");
+        assertThat(tourniquet.status).isEqualTo("warning");
+        assertThat(tourniquet.expectedUnitPrice).isEqualTo(30.0);
+        assertThat(tourniquet.pricingRule).contains("驱血带");
+        assertThat(tourniquet.notes).anyMatch(note -> note.contains("混合模式未命中特色规则，走标准灭菌计价"));
     }
 
     @Test
@@ -56,7 +61,7 @@ class RuleFidelityRegressionTest {
                 "type", "高温无纺布-90×90-50g",
                 "packName", "人流包-22件/w9050",
                 "packageMaterial", "无纺布-90×90-50g",
-                "instrumentCount", 11,
+                "instrumentCount", 22,
                 "packCount", 11,
                 "unitPrice", 121.0,
                 "totalPrice", 121.0
@@ -66,7 +71,7 @@ class RuleFidelityRegressionTest {
     }
 
     @Test
-    void zuyanHybridPreservesBeautyRows() throws Exception {
+    void zuyanHybridUsesStandardPathForBeautyRows() throws Exception {
         JsonNode rules = RuleFidelityTestSupport.compileForCustomerCode("ZUYAN-NG");
         PricingEngine engine = new PricingEngine(rules);
         PricingEngine.ProcessedResult result = engine.processRow(Map.of(
@@ -80,7 +85,9 @@ class RuleFidelityRegressionTest {
                 "unitPrice", 22.0,
                 "totalPrice", 22.0
         ));
-        assertThat(result.status).isEqualTo("unchanged");
+        assertThat(result.status).isEqualTo("warning");
+        assertThat(result.expectedUnitPrice).isEqualTo(16.5);
+        assertThat(result.notes).anyMatch(note -> note.contains("混合模式未命中特色规则，走标准灭菌计价"));
     }
 
     @Test

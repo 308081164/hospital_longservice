@@ -100,12 +100,12 @@ def extra_month_gaps(hospital: str, hospital_dir: Path) -> list[str]:
                 gaps.append("6月原始账单（系统导入格式）")
 
     elif hospital == "松电慢病":
-        if not month_prefixed_files(hospital_dir, "raw", 3):
-            gaps.append("3月原始账单（系统导入格式）")
+        if not month_prefixed_files(hospital_dir, "raw", 6) or not month_prefixed_files(hospital_dir, "proc", 6):
+            gaps.append("6月原始账单 + 6月处理后账单（系统导入格式，成对）")
 
     elif hospital == "黑龙江省海员总医院（松北）":
-        if not month_prefixed_files(hospital_dir, "raw", 3) and not month_prefixed_files(hospital_dir, "raw", 4):
-            gaps.append("3–4月原始账单（系统导入格式）")
+        if not month_prefixed_files(hospital_dir, "raw", 6) or not month_prefixed_files(hospital_dir, "proc", 6):
+            gaps.append("6月原始账单 + 6月处理后账单（系统导入格式，成对）")
 
     elif hospital == "航天风华":
         if month_prefixed_files(hospital_dir, "proc", 8) and not month_prefixed_files(hospital_dir, "raw", 8):

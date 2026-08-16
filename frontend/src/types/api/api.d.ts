@@ -351,6 +351,12 @@ declare namespace Api {
       status: string
       pricingRule: string
       notes: string[]
+      matchedRuleId?: number | null
+      matchedPriceOption?: number | null
+      matchedProductId?: number | null
+      matchedVariantId?: number | null
+      pricingPath?: string | null
+      billingNotes?: Record<string, unknown> | null
     }
 
     /** 校对任务摘要 */

@@ -127,17 +127,48 @@ class VersionManager {
   }
 
   /**
+   * 从版本号或升级日志解析可读的升级时间
+   */
+  private resolveUpgradeTime(version: string): string | null {
+    const embeddedTimestamp = version.match(/(\d{14})\b/)
+    if (embeddedTimestamp) {
+      const stamp = embeddedTimestamp[1]
+      return `${stamp.slice(0, 4)}-${stamp.slice(4, 6)}-${stamp.slice(6, 8)} ${stamp.slice(8, 10)}:${stamp.slice(10, 12)}:${stamp.slice(12, 14)}`
+    }
+
+    const normalizedCurrent = this.normalizeVersion(version)
+    const matchedLog = upgradeLogList.value.find(
+      (item) => this.normalizeVersion(item.version) === normalizedCurrent
+    )
+    if (matchedLog?.date) {
+      return matchedLog.date
+    }
+
+    return upgradeLogList.value[0]?.date ?? null
+  }
+
+  /**
    * 构建升级通知消息
    */
   private buildUpgradeMessage(requireReLogin: boolean): string {
     const { title: content } = upgradeLogList.value[0]
+    const upgradeTime = this.resolveUpgradeTime(StorageConfig.CURRENT_VERSION)
 
     const messageParts = [
       `<p style="color: var(--art-gray-800) !important; padding-bottom: 5px;">`,
       `系统已升级到 ${StorageConfig.CURRENT_VERSION} 版本，此次更新带来了以下改进：`,
-      `</p>`,
-      content
+      `</p>`
     ]
+
+    if (upgradeTime) {
+      messageParts.push(
+        `<p style="color: var(--art-gray-600) !important; padding-bottom: 5px; font-size: 13px;">`,
+        `升级时间：${upgradeTime}`,
+        `</p>`
+      )
+    }
+
+    messageParts.push(content)
 
     if (requireReLogin) {
       messageParts.push(
