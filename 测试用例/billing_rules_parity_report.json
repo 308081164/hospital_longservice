@@ -1,6 +1,6 @@
 {
   "command": "rules compare",
-  "manifest_hash": "0f49ffaa7858744d9031ba9ecda732ebe27004969f637824fb5a2e6822612ff1",
+  "manifest_hash": "a54feef3a484bc1626d0c508f336379b92d7a9e35e1375803d2ac3e0d47fe282",
   "api_base": "http://39.102.213.51:8853",
   "ok": true,
   "summary": {
@@ -17,10 +17,10 @@
   "results": [
     {
       "code": "BINGCHENG-YM",
-      "expected_count": 12,
-      "prod_count": 12,
-      "active_expected": 4,
-      "active_prod": 4,
+      "expected_count": 13,
+      "prod_count": 13,
+      "active_expected": 7,
+      "active_prod": 7,
       "mode_expected": "special_only",
       "mode_prod": "special_only",
       "mode_drift": false,
@@ -408,10 +408,10 @@
     },
     {
       "code": "ZUYAN-NG",
-      "expected_count": 7,
-      "prod_count": 8,
-      "active_expected": 7,
-      "active_prod": 7,
+      "expected_count": 9,
+      "prod_count": 10,
+      "active_expected": 5,
+      "active_prod": 5,
       "mode_expected": "hybrid",
       "mode_prod": "hybrid",
       "mode_drift": false,

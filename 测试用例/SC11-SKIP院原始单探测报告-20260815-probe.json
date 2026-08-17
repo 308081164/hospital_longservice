@@ -1,0 +1,1281 @@
+{
+  "generated": "2026-08-15",
+  "prefer_month": 6,
+  "results": [
+    {
+      "customer_label": "方南南",
+      "folder": "方南南医院",
+      "status": "NO_RAW",
+      "message": "缺 7 月原始表；原始表格无 xlsx",
+      "raw_file": "",
+      "month": null,
+      "job_id": null,
+      "warning_count": 0,
+      "warnings": []
+    },
+    {
+      "customer_label": "东北农大",
+      "folder": "东北农业大学",
+      "status": "NO_RAW",
+      "message": "缺 7 月原始表；原始表格无 xlsx",
+      "raw_file": "",
+      "month": null,
+      "job_id": null,
+      "warning_count": 0,
+      "warnings": []
+    },
+    {
+      "customer_label": "工程大学",
+      "folder": "哈尔滨工程大学医院",
+      "status": "OK",
+      "message": "严格对账 SKIP：无 6 月 raw+proc 成对（仅 5 月）；已做原始单导入探测",
+      "raw_file": "哈尔滨工程大学医院5月账单.xlsx",
+      "month": 5,
+      "job_id": 861,
+      "warning_count": 0,
+      "warnings": []
+    },
+    {
+      "customer_label": "松电慢病",
+      "folder": "松电慢病",
+      "status": "NO_RAW",
+      "message": "缺 3 月原始表；原始表格无 xlsx",
+      "raw_file": "",
+      "month": null,
+      "job_id": null,
+      "warning_count": 0,
+      "warnings": []
+    },
+    {
+      "customer_label": "航天风华",
+      "folder": "航天风华",
+      "status": "NO_RAW",
+      "message": "缺 8 月原始表；原始表格无 xlsx",
+      "raw_file": "",
+      "month": null,
+      "job_id": null,
+      "warning_count": 0,
+      "warnings": []
+    },
+    {
+      "customer_label": "博尚",
+      "folder": "博尚医院",
+      "status": "NO_RAW",
+      "message": "缺 7 月 raw+proc 成对；原始表格无 xlsx",
+      "raw_file": "",
+      "month": null,
+      "job_id": null,
+      "warning_count": 0,
+      "warnings": []
+    },
+    {
+      "customer_label": "海员松北",
+      "folder": "黑龙江省海员总医院（松北）",
+      "status": "NO_RAW",
+      "message": "缺 3–4 月原始表；原始表格无 xlsx",
+      "raw_file": "",
+      "month": null,
+      "job_id": null,
+      "warning_count": 0,
+      "warnings": []
+    },
+    {
+      "customer_label": "省妇幼人口",
+      "folder": "黑龙江省妇幼保健院（人口）",
+      "status": "OK",
+      "message": "严格对账 SKIP：缺 7 月处理后；已做原始单导入探测",
+      "raw_file": "7月__人口原始.xlsx",
+      "month": 7,
+      "job_id": 862,
+      "warning_count": 26,
+      "warnings": [
+        {
+          "id": 548707,
+          "sheetName": "口腔科（刘医生）",
+          "rowNumber": 14,
+          "deliveryDate": "2026-07-23",
+          "orderNo": "1623260",
+          "type": "额外包(纸塑袋)",
+          "categoryNo": "20348378",
+          "packName": "车针-7/Z7520",
+          "packageMaterial": "高温纸塑袋75*200*",
+          "packCount": 1,
+          "instrumentCount": 7,
+          "unitPrice": 13.5,
+          "totalPrice": 13.5,
+          "expectedUnitPrice": 38.5,
+          "correctedTotalPrice": 38.5,
+          "difference": 25.0,
+          "status": "warning",
+          "pricingRule": "高温纸塑袋10cm计费",
+          "notes": [
+            "结构化产品匹配: 车针 [SMALL_ITEM] → standard",
+            "混合模式未命中特色规则，走标准灭菌计价。",
+            "大于等于 3 件，按 5.50 元/件 × 7 = 38.50 元计费，不再计袋费。"
+          ],
+          "matchedRuleId": null,
+          "matchedPriceOption": null,
+          "matchedProductId": 4,
+          "matchedVariantId": null,
+          "pricingPath": "standard",
+          "isUrgent": false,
+          "billingNotes": {
+            "policyTraces": [
+              {
+                "label": "未命中折扣策略"
+              }
+            ],
+            "discountChain": [
+              {
+                "label": "结构化产品匹配: 车针 [SMALL_ITEM] → standard"
+              },
+              {
+                "label": "大于等于 3 件，按 5.50 元/件 × 7 = 38.50 元计费，不再计袋费。"
+              }
+            ]
+          }
+        },
+        {
+          "id": 548604,
+          "sheetName": "口腔科（樊医生）",
+          "rowNumber": 13,
+          "deliveryDate": "2026-07-02",
+          "orderNo": "1616858",
+          "type": "额外包(纸塑袋)",
+          "categoryNo": "20005912",
+          "packName": "车针-5/Z7520",
+          "packageMaterial": "高温纸塑袋75*200",
+          "packCount": 4,
+          "instrumentCount": 20,
+          "unitPrice": 8.0,
+          "totalPrice": 32.0,
+          "expectedUnitPrice": 27.5,
+          "correctedTotalPrice": 110.0,
+          "difference": 78.0,
+          "status": "warning",
+          "pricingRule": "高温纸塑袋10cm计费",
+          "notes": [
+            "结构化产品匹配: 车针 [SMALL_ITEM] → standard",
+            "混合模式未命中特色规则，走标准灭菌计价。",
+            "大于等于 3 件，按 5.50 元/件 × 5 = 27.50 元计费，不再计袋费。",
+            "小件器械超过 10 件，按客户标准不加袋子钱。"
+          ],
+          "matchedRuleId": null,
+          "matchedPriceOption": null,
+          "matchedProductId": 4,
+          "matchedVariantId": null,
+          "pricingPath": "standard",
+          "isUrgent": false,
+          "billingNotes": {
+            "policyTraces": [
+              {
+                "label": "未命中折扣策略"
+              }
+            ],
+            "discountChain": [
+              {
+                "label": "结构化产品匹配: 车针 [SMALL_ITEM] → standard"
+              },
+              {
+                "label": "大于等于 3 件，按 5.50 元/件 × 5 = 27.50 元计费，不再计袋费。"
+              }
+            ]
+          }
+        },
+        {
+          "id": 548609,
+          "sheetName": "口腔科（樊医生）",
+          "rowNumber": 18,
+          "deliveryDate": "2026-07-02",
+          "orderNo": "1616858",
+          "type": "额外包(纸塑袋)",
+          "categoryNo": "20314290",
+          "packName": "根管锉-4/Z7520",
+          "packageMaterial": "高温纸塑袋75*200*",
+          "packCount": 7,
+          "instrumentCount": 28,
+          "unitPrice": 8.0,
+          "totalPrice": 56.0,
+          "expectedUnitPrice": 22.0,
+          "correctedTotalPrice": 154.0,
+          "difference": 98.0,
+          "status": "warning",
+          "pricingRule": "高温纸塑袋10cm计费",
+          "notes": [
+            "混合模式未命中特色规则，走标准灭菌计价。",
+            "大于等于 3 件，按 5.50 元/件 × 4 = 22 元计费，不再计袋费。",
+            "小件器械超过 10 件，按客户标准不加袋子钱。"
+          ],
+          "matchedRuleId": null,
+          "matchedPriceOption": null,
+          "matchedProductId": null,
+          "matchedVariantId": null,
+          "pricingPath": null,
+          "isUrgent": false,
+          "billingNotes": {
+            "policyTraces": [
+              {
+                "label": "未命中折扣策略"
+              }
+            ],
+            "discountChain": [
+              {
+                "label": "大于等于 3 件，按 5.50 元/件 × 4 = 22 元计费，不再计袋费。"
+              }
+            ]
+          }
+        },
+        {
+          "id": 548621,
+          "sheetName": "口腔科（樊医生）",
+          "rowNumber": 30,
+          "deliveryDate": "2026-07-07",
+          "orderNo": "1618066",
+          "type": "额外包(纸塑袋)",
+          "categoryNo": "20005912",
+          "packName": "车针-5/Z7520",
+          "packageMaterial": "高温纸塑袋75*200",
+          "packCount": 5,
+          "instrumentCount": 25,
+          "unitPrice": 8.0,
+          "totalPrice": 40.0,
+          "expectedUnitPrice": 27.5,
+          "correctedTotalPrice": 137.5,
+          "difference": 97.5,
+          "status": "warning",
+          "pricingRule": "高温纸塑袋10cm计费",
+          "notes": [
+            "结构化产品匹配: 车针 [SMALL_ITEM] → standard",
+            "混合模式未命中特色规则，走标准灭菌计价。",
+            "大于等于 3 件，按 5.50 元/件 × 5 = 27.50 元计费，不再计袋费。",
+            "小件器械超过 10 件，按客户标准不加袋子钱。"
+          ],
+          "matchedRuleId": null,
+          "matchedPriceOption": null,
+          "matchedProductId": 4,
+          "matchedVariantId": null,
+          "pricingPath": "standard",
+          "isUrgent": false,
+          "billingNotes": {
+            "policyTraces": [
+              {
+                "label": "未命中折扣策略"
+              }
+            ],
+            "discountChain": [
+              {
+                "label": "结构化产品匹配: 车针 [SMALL_ITEM] → standard"
+              },
+              {
+                "label": "大于等于 3 件，按 5.50 元/件 × 5 = 27.50 元计费，不再计袋费。"
+              }
+            ]
+          }
+        },
+        {
+          "id": 548622,
+          "sheetName": "口腔科（樊医生）",
+          "rowNumber": 31,
+          "deliveryDate": "2026-07-07",
+          "orderNo": "1618066",
+          "type": "额外包(纸塑袋)",
+          "categoryNo": "20351067",
+          "packName": "车针-6/z7520",
+          "packageMaterial": "高温纸塑袋75*200",
+          "packCount": 1,
+          "instrumentCount": 6,
+          "unitPrice": 13.5,
+          "totalPrice": 13.5,
+          "expectedUnitPrice": 33.0,
+          "correctedTotalPrice": 33.0,
+          "difference": 19.5,
+          "status": "warning",
+          "pricingRule": "高温纸塑袋10cm计费",
+          "notes": [
+            "结构化产品匹配: 车针 [SMALL_ITEM] → standard",
+            "混合模式未命中特色规则，走标准灭菌计价。",
+            "大于等于 3 件，按 5.50 元/件 × 6 = 33 元计费，不再计袋费。"
+          ],
+          "matchedRuleId": null,
+          "matchedPriceOption": null,
+          "matchedProductId": 4,
+          "matchedVariantId": null,
+          "pricingPath": "standard",
+          "isUrgent": false,
+          "billingNotes": {
+            "policyTraces": [
+              {
+                "label": "未命中折扣策略"
+              }
+            ],
+            "discountChain": [
+              {
+                "label": "结构化产品匹配: 车针 [SMALL_ITEM] → standard"
+              },
+              {
+                "label": "大于等于 3 件，按 5.50 元/件 × 6 = 33 元计费，不再计袋费。"
+              }
+            ]
+          }
+        },
+        {
+          "id": 548626,
+          "sheetName": "口腔科（樊医生）",
+          "rowNumber": 35,
+          "deliveryDate": "2026-07-07",
+          "orderNo": "1618066",
+          "type": "额外包(纸塑袋)",
+          "categoryNo": "20013926",
+          "packName": "根管锉-5/Z7520",
+          "packageMaterial": "高温纸塑袋75*200*",
+          "packCount": 7,
+          "instrumentCount": 35,
+          "unitPrice": 8.0,
+          "totalPrice": 56.0,
+          "expectedUnitPrice": 27.5,
+          "correctedTotalPrice": 192.5,
+          "difference": 136.5,
+          "status": "warning",
+          "pricingRule": "高温纸塑袋10cm计费",
+          "notes": [
+            "混合模式未命中特色规则，走标准灭菌计价。",
+            "大于等于 3 件，按 5.50 元/件 × 5 = 27.50 元计费，不再计袋费。",
+            "小件器械超过 10 件，按客户标准不加袋子钱。"
+          ],
+          "matchedRuleId": null,
+          "matchedPriceOption": null,
+          "matchedProductId": null,
+          "matchedVariantId": null,
+          "pricingPath": null,
+          "isUrgent": false,
+          "billingNotes": {
+            "policyTraces": [
+              {
+                "label": "未命中折扣策略"
+              }
+            ],
+            "discountChain": [
+              {
+                "label": "大于等于 3 件，按 5.50 元/件 × 5 = 27.50 元计费，不再计袋费。"
+              }
+            ]
+          }
+        },
+        {
+          "id": 548629,
+          "sheetName": "口腔科（樊医生）",
+          "rowNumber": 38,
+          "deliveryDate": "2026-07-07",
+          "orderNo": "1618066",
+          "type": "额外包(纸塑袋)",
+          "categoryNo": "20361511",
+          "packName": "抛光棒-1/z7520",
+          "packageMaterial": "高温纸塑袋75*200",
+          "packCount": 5,
+          "instrumentCount": 5,
+          "unitPrice": 5.5,
+          "totalPrice": 27.5,
+          "expectedUnitPrice": 8.0,
+          "correctedTotalPrice": 40.0,
+          "difference": 12.5,
+          "status": "warning",
+          "pricingRule": "高温纸塑袋10cm计费",
+          "notes": [
+            "混合模式未命中特色规则，走标准灭菌计价。",
+            "高温纸塑袋件数 1 件，含袋费 8 元，封顶 16.50 元。"
+          ],
+          "matchedRuleId": null,
+          "matchedPriceOption": null,
+          "matchedProductId": null,
+          "matchedVariantId": null,
+          "pricingPath": null,
+          "isUrgent": false,
+          "billingNotes": {
+            "policyTraces": [
+              {
+                "label": "未命中折扣策略"
+              }
+            ]
+          }
+        },
+        {
+          "id": 548636,
+          "sheetName": "口腔科（樊医生）",
+          "rowNumber": 45,
+          "deliveryDate": "2026-07-12",
+          "orderNo": "1619820",
+          "type": "额外包(纸塑袋)",
+          "categoryNo": "20005912",
+          "packName": "车针-5/Z7520",
+          "packageMaterial": "高温纸塑袋75*200",
+          "packCount": 3,
+          "instrumentCount": 15,
+          "unitPrice": 8.0,
+          "totalPrice": 24.0,
+          "expectedUnitPrice": 27.5,
+          "correctedTotalPrice": 82.5,
+          "difference": 58.5,
+          "status": "warning",
+          "pricingRule": "高温纸塑袋10cm计费",
+          "notes": [
+            "结构化产品匹配: 车针 [SMALL_ITEM] → standard",
+            "混合模式未命中特色规则，走标准灭菌计价。",
+            "大于等于 3 件，按 5.50 元/件 × 5 = 27.50 元计费，不再计袋费。",
+            "小件器械超过 10 件，按客户标准不加袋子钱。"
+          ],
+          "matchedRuleId": null,
+          "matchedPriceOption": null,
+          "matchedProductId": 4,
+          "matchedVariantId": null,
+          "pricingPath": "standard",
+          "isUrgent": false,
+          "billingNotes": {
+            "policyTraces": [
+              {
+                "label": "未命中折扣策略"
+              }
+            ],
+            "discountChain": [
+              {
+                "label": "结构化产品匹配: 车针 [SMALL_ITEM] → standard"
+              },
+              {
+                "label": "大于等于 3 件，按 5.50 元/件 × 5 = 27.50 元计费，不再计袋费。"
+              }
+            ]
+          }
+        },
+        {
+          "id": 548641,
+          "sheetName": "口腔科（樊医生）",
+          "rowNumber": 50,
+          "deliveryDate": "2026-07-12",
+          "orderNo": "1619820",
+          "type": "额外包(纸塑袋)",
+          "categoryNo": "20013926",
+          "packName": "根管锉-5/Z7520",
+          "packageMaterial": "高温纸塑袋75*200*",
+          "packCount": 8,
+          "instrumentCount": 40,
+          "unitPrice": 8.0,
+          "totalPrice": 64.0,
+          "expectedUnitPrice": 27.5,
+          "correctedTotalPrice": 220.0,
+          "difference": 156.0,
+          "status": "warning",
+          "pricingRule": "高温纸塑袋10cm计费",
+          "notes": [
+            "混合模式未命中特色规则，走标准灭菌计价。",
+            "大于等于 3 件，按 5.50 元/件 × 5 = 27.50 元计费，不再计袋费。",
+            "小件器械超过 10 件，按客户标准不加袋子钱。"
+          ],
+          "matchedRuleId": null,
+          "matchedPriceOption": null,
+          "matchedProductId": null,
+          "matchedVariantId": null,
+          "pricingPath": null,
+          "isUrgent": false,
+          "billingNotes": {
+            "policyTraces": [
+              {
+                "label": "未命中折扣策略"
+              }
+            ],
+            "discountChain": [
+              {
+                "label": "大于等于 3 件，按 5.50 元/件 × 5 = 27.50 元计费，不再计袋费。"
+              }
+            ]
+          }
+        },
+        {
+          "id": 548644,
+          "sheetName": "口腔科（樊医生）",
+          "rowNumber": 53,
+          "deliveryDate": "2026-07-12",
+          "orderNo": "1619820",
+          "type": "额外包(纸塑袋)",
+          "categoryNo": "20361511",
+          "packName": "抛光棒-1/z7520",
+          "packageMaterial": "高温纸塑袋75*200",
+          "packCount": 5,
+          "instrumentCount": 5,
+          "unitPrice": 5.5,
+          "totalPrice": 27.5,
+          "expectedUnitPrice": 8.0,
+          "correctedTotalPrice": 40.0,
+          "difference": 12.5,
+          "status": "warning",
+          "pricingRule": "高温纸塑袋10cm计费",
+          "notes": [
+            "混合模式未命中特色规则，走标准灭菌计价。",
+            "高温纸塑袋件数 1 件，含袋费 8 元，封顶 16.50 元。"
+          ],
+          "matchedRuleId": null,
+          "matchedPriceOption": null,
+          "matchedProductId": null,
+          "matchedVariantId": null,
+          "pricingPath": null,
+          "isUrgent": false,
+          "billingNotes": {
+            "policyTraces": [
+              {
+                "label": "未命中折扣策略"
+              }
+            ]
+          }
+        },
+        {
+          "id": 548646,
+          "sheetName": "口腔科（樊医生）",
+          "rowNumber": 55,
+          "deliveryDate": "2026-07-12",
+          "orderNo": "1619820",
+          "type": "额外包(纸塑袋)",
+          "categoryNo": "20322373",
+          "packName": "全冠套装(7个针)/Z1526",
+          "packageMaterial": "高温纸塑袋150*260*",
+          "packCount": 1,
+          "instrumentCount": 8,
+          "unitPrice": 11.0,
+          "totalPrice": 11.0,
+          "expectedUnitPrice": 44.0,
+          "correctedTotalPrice": 44.0,
+          "difference": 33.0,
+          "status": "warning",
+          "pricingRule": "高温纸塑袋15cm计费",
+          "notes": [
+            "混合模式未命中特色规则，走标准灭菌计价。",
+            "大于等于 3 件，按 5.50 元/件 × 8 = 44 元计费，不再计袋费。"
+          ],
+          "matchedRuleId": null,
+          "matchedPriceOption": null,
+          "matchedProductId": null,
+          "matchedVariantId": null,
+          "pricingPath": null,
+          "isUrgent": false,
+          "billingNotes": {
+            "policyTraces": [
+              {
+                "label": "未命中折扣策略"
+              }
+            ],
+            "discountChain": [
+              {
+                "label": "大于等于 3 件，按 5.50 元/件 × 8 = 44 元计费，不再计袋费。"
+              }
+            ]
+          }
+        },
+        {
+          "id": 548654,
+          "sheetName": "口腔科（樊医生）",
+          "rowNumber": 63,
+          "deliveryDate": "2026-07-15",
+          "orderNo": "1620504",
+          "type": "额外包(纸塑袋)",
+          "categoryNo": "20005912",
+          "packName": "车针-5/Z7520",
+          "packageMaterial": "高温纸塑袋75*200",
+          "packCount": 2,
+          "instrumentCount": 10,
+          "unitPrice": 8.0,
+          "totalPrice": 16.0,
+          "expectedUnitPrice": 27.5,
+          "correctedTotalPrice": 55.0,
+          "difference": 39.0,
+          "status": "warning",
+          "pricingRule": "高温纸塑袋10cm计费",
+          "notes": [
+            "结构化产品匹配: 车针 [SMALL_ITEM] → standard",
+            "混合模式未命中特色规则，走标准灭菌计价。",
+            "大于等于 3 件，按 5.50 元/件 × 5 = 27.50 元计费，不再计袋费。"
+          ],
+          "matchedRuleId": null,
+          "matchedPriceOption": null,
+          "matchedProductId": 4,
+          "matchedVariantId": null,
+          "pricingPath": "standard",
+          "isUrgent": false,
+          "billingNotes": {
+            "policyTraces": [
+              {
+                "label": "未命中折扣策略"
+              }
+            ],
+            "discountChain": [
+              {
+                "label": "结构化产品匹配: 车针 [SMALL_ITEM] → standard"
+              },
+              {
+                "label": "大于等于 3 件，按 5.50 元/件 × 5 = 27.50 元计费，不再计袋费。"
+              }
+            ]
+          }
+        },
+        {
+          "id": 548655,
+          "sheetName": "口腔科（樊医生）",
+          "rowNumber": 64,
+          "deliveryDate": "2026-07-15",
+          "orderNo": "1620504",
+          "type": "额外包(纸塑袋)",
+          "categoryNo": "20348378",
+          "packName": "车针-7/Z7520",
+          "packageMaterial": "高温纸塑袋75*200*",
+          "packCount": 1,
+          "instrumentCount": 7,
+          "unitPrice": 13.5,
+          "totalPrice": 13.5,
+          "expectedUnitPrice": 38.5,
+          "correctedTotalPrice": 38.5,
+          "difference": 25.0,
+          "status": "warning",
+          "pricingRule": "高温纸塑袋10cm计费",
+          "notes": [
+            "结构化产品匹配: 车针 [SMALL_ITEM] → standard",
+            "混合模式未命中特色规则，走标准灭菌计价。",
+            "大于等于 3 件，按 5.50 元/件 × 7 = 38.50 元计费，不再计袋费。"
+          ],
+          "matchedRuleId": null,
+          "matchedPriceOption": null,
+          "matchedProductId": 4,
+          "matchedVariantId": null,
+          "pricingPath": "standard",
+          "isUrgent": false,
+          "billingNotes": {
+            "policyTraces": [
+              {
+                "label": "未命中折扣策略"
+              }
+            ],
+            "discountChain": [
+              {
+                "label": "结构化产品匹配: 车针 [SMALL_ITEM] → standard"
+              },
+              {
+                "label": "大于等于 3 件，按 5.50 元/件 × 7 = 38.50 元计费，不再计袋费。"
+              }
+            ]
+          }
+        },
+        {
+          "id": 548659,
+          "sheetName": "口腔科（樊医生）",
+          "rowNumber": 68,
+          "deliveryDate": "2026-07-15",
+          "orderNo": "1620504",
+          "type": "额外包(纸塑袋)",
+          "categoryNo": "20314290",
+          "packName": "根管锉-4/Z7520",
+          "packageMaterial": "高温纸塑袋75*200*",
+          "packCount": 1,
+          "instrumentCount": 4,
+          "unitPrice": 8.0,
+          "totalPrice": 8.0,
+          "expectedUnitPrice": 22.0,
+          "correctedTotalPrice": 22.0,
+          "difference": 14.0,
+          "status": "warning",
+          "pricingRule": "高温纸塑袋10cm计费",
+          "notes": [
+            "混合模式未命中特色规则，走标准灭菌计价。",
+            "大于等于 3 件，按 5.50 元/件 × 4 = 22 元计费，不再计袋费。"
+          ],
+          "matchedRuleId": null,
+          "matchedPriceOption": null,
+          "matchedProductId": null,
+          "matchedVariantId": null,
+          "pricingPath": null,
+          "isUrgent": false,
+          "billingNotes": {
+            "policyTraces": [
+              {
+                "label": "未命中折扣策略"
+              }
+            ],
+            "discountChain": [
+              {
+                "label": "大于等于 3 件，按 5.50 元/件 × 4 = 22 元计费，不再计袋费。"
+              }
+            ]
+          }
+        },
+        {
+          "id": 548660,
+          "sheetName": "口腔科（樊医生）",
+          "rowNumber": 69,
+          "deliveryDate": "2026-07-15",
+          "orderNo": "1620504",
+          "type": "额外包(纸塑袋)",
+          "categoryNo": "20013926",
+          "packName": "根管锉-5/Z7520",
+          "packageMaterial": "高温纸塑袋75*200*",
+          "packCount": 2,
+          "instrumentCount": 10,
+          "unitPrice": 8.0,
+          "totalPrice": 16.0,
+          "expectedUnitPrice": 27.5,
+          "correctedTotalPrice": 55.0,
+          "difference": 39.0,
+          "status": "warning",
+          "pricingRule": "高温纸塑袋10cm计费",
+          "notes": [
+            "混合模式未命中特色规则，走标准灭菌计价。",
+            "大于等于 3 件，按 5.50 元/件 × 5 = 27.50 元计费，不再计袋费。"
+          ],
+          "matchedRuleId": null,
+          "matchedPriceOption": null,
+          "matchedProductId": null,
+          "matchedVariantId": null,
+          "pricingPath": null,
+          "isUrgent": false,
+          "billingNotes": {
+            "policyTraces": [
+              {
+                "label": "未命中折扣策略"
+              }
+            ],
+            "discountChain": [
+              {
+                "label": "大于等于 3 件，按 5.50 元/件 × 5 = 27.50 元计费，不再计袋费。"
+              }
+            ]
+          }
+        },
+        {
+          "id": 548664,
+          "sheetName": "口腔科（樊医生）",
+          "rowNumber": 73,
+          "deliveryDate": "2026-07-15",
+          "orderNo": "1620504",
+          "type": "额外包(纸塑袋)",
+          "categoryNo": "20361511",
+          "packName": "抛光棒-1/z7520",
+          "packageMaterial": "高温纸塑袋75*200",
+          "packCount": 6,
+          "instrumentCount": 6,
+          "unitPrice": 5.5,
+          "totalPrice": 33.0,
+          "expectedUnitPrice": 8.0,
+          "correctedTotalPrice": 48.0,
+          "difference": 15.0,
+          "status": "warning",
+          "pricingRule": "高温纸塑袋10cm计费",
+          "notes": [
+            "混合模式未命中特色规则，走标准灭菌计价。",
+            "高温纸塑袋件数 1 件，含袋费 8 元，封顶 16.50 元。"
+          ],
+          "matchedRuleId": null,
+          "matchedPriceOption": null,
+          "matchedProductId": null,
+          "matchedVariantId": null,
+          "pricingPath": null,
+          "isUrgent": false,
+          "billingNotes": {
+            "policyTraces": [
+              {
+                "label": "未命中折扣策略"
+              }
+            ]
+          }
+        },
+        {
+          "id": 548672,
+          "sheetName": "口腔科（樊医生）",
+          "rowNumber": 81,
+          "deliveryDate": "2026-07-23",
+          "orderNo": "1623258",
+          "type": "额外包(纸塑袋)",
+          "categoryNo": "20351067",
+          "packName": "车针-6/z7520",
+          "packageMaterial": "高温纸塑袋75*200",
+          "packCount": 1,
+          "instrumentCount": 6,
+          "unitPrice": 13.5,
+          "totalPrice": 13.5,
+          "expectedUnitPrice": 33.0,
+          "correctedTotalPrice": 33.0,
+          "difference": 19.5,
+          "status": "warning",
+          "pricingRule": "高温纸塑袋10cm计费",
+          "notes": [
+            "结构化产品匹配: 车针 [SMALL_ITEM] → standard",
+            "混合模式未命中特色规则，走标准灭菌计价。",
+            "大于等于 3 件，按 5.50 元/件 × 6 = 33 元计费，不再计袋费。"
+          ],
+          "matchedRuleId": null,
+          "matchedPriceOption": null,
+          "matchedProductId": 4,
+          "matchedVariantId": null,
+          "pricingPath": "standard",
+          "isUrgent": false,
+          "billingNotes": {
+            "policyTraces": [
+              {
+                "label": "未命中折扣策略"
+              }
+            ],
+            "discountChain": [
+              {
+                "label": "结构化产品匹配: 车针 [SMALL_ITEM] → standard"
+              },
+              {
+                "label": "大于等于 3 件，按 5.50 元/件 × 6 = 33 元计费，不再计袋费。"
+              }
+            ]
+          }
+        },
+        {
+          "id": 548677,
+          "sheetName": "口腔科（樊医生）",
+          "rowNumber": 86,
+          "deliveryDate": "2026-07-23",
+          "orderNo": "1623258",
+          "type": "额外包(纸塑袋)",
+          "categoryNo": "20013926",
+          "packName": "根管锉-5/Z7520",
+          "packageMaterial": "高温纸塑袋75*200*",
+          "packCount": 6,
+          "instrumentCount": 30,
+          "unitPrice": 8.0,
+          "totalPrice": 48.0,
+          "expectedUnitPrice": 27.5,
+          "correctedTotalPrice": 165.0,
+          "difference": 117.0,
+          "status": "warning",
+          "pricingRule": "高温纸塑袋10cm计费",
+          "notes": [
+            "混合模式未命中特色规则，走标准灭菌计价。",
+            "大于等于 3 件，按 5.50 元/件 × 5 = 27.50 元计费，不再计袋费。",
+            "小件器械超过 10 件，按客户标准不加袋子钱。"
+          ],
+          "matchedRuleId": null,
+          "matchedPriceOption": null,
+          "matchedProductId": null,
+          "matchedVariantId": null,
+          "pricingPath": null,
+          "isUrgent": false,
+          "billingNotes": {
+            "policyTraces": [
+              {
+                "label": "未命中折扣策略"
+              }
+            ],
+            "discountChain": [
+              {
+                "label": "大于等于 3 件，按 5.50 元/件 × 5 = 27.50 元计费，不再计袋费。"
+              }
+            ]
+          }
+        },
+        {
+          "id": 548678,
+          "sheetName": "口腔科（樊医生）",
+          "rowNumber": 87,
+          "deliveryDate": "2026-07-23",
+          "orderNo": "1623258",
+          "type": "额外包(纸塑袋)",
+          "categoryNo": "20329041",
+          "packName": "根管锉-7/Z7520",
+          "packageMaterial": "高温纸塑袋75*200*",
+          "packCount": 1,
+          "instrumentCount": 2,
+          "unitPrice": 13.5,
+          "totalPrice": 13.5,
+          "expectedUnitPrice": 8.0,
+          "correctedTotalPrice": 8.0,
+          "difference": -5.5,
+          "status": "warning",
+          "pricingRule": "高温纸塑袋10cm计费",
+          "notes": [
+            "名称含小件关键词，单包器械数 2 件 ≤ 5，按 1 件计费。",
+            "混合模式未命中特色规则，走标准灭菌计价。",
+            "高温纸塑袋件数 1 件，含袋费 8 元，封顶 16.50 元。"
+          ],
+          "matchedRuleId": null,
+          "matchedPriceOption": null,
+          "matchedProductId": null,
+          "matchedVariantId": null,
+          "pricingPath": null,
+          "isUrgent": false,
+          "billingNotes": {
+            "policyTraces": [
+              {
+                "label": "未命中折扣策略"
+              }
+            ]
+          }
+        },
+        {
+          "id": 548680,
+          "sheetName": "口腔科（樊医生）",
+          "rowNumber": 89,
+          "deliveryDate": "2026-07-23",
+          "orderNo": "1623258",
+          "type": "额外包(纸塑袋)",
+          "categoryNo": "20361511",
+          "packName": "抛光棒-1/z7520",
+          "packageMaterial": "高温纸塑袋75*200",
+          "packCount": 1,
+          "instrumentCount": 1,
+          "unitPrice": 5.5,
+          "totalPrice": 5.5,
+          "expectedUnitPrice": 8.0,
+          "correctedTotalPrice": 8.0,
+          "difference": 2.5,
+          "status": "warning",
+          "pricingRule": "高温纸塑袋10cm计费",
+          "notes": [
+            "混合模式未命中特色规则，走标准灭菌计价。",
+            "高温纸塑袋件数 1 件，含袋费 8 元，封顶 16.50 元。"
+          ],
+          "matchedRuleId": null,
+          "matchedPriceOption": null,
+          "matchedProductId": null,
+          "matchedVariantId": null,
+          "pricingPath": null,
+          "isUrgent": false,
+          "billingNotes": {
+            "policyTraces": [
+              {
+                "label": "未命中折扣策略"
+              }
+            ]
+          }
+        },
+        {
+          "id": 548721,
+          "sheetName": "门诊手术室",
+          "rowNumber": 17,
+          "deliveryDate": "2026-07-01",
+          "orderNo": "1616541",
+          "type": "单包装包(老肯低温)",
+          "categoryNo": "20383300",
+          "packName": "宫腔镜-2件盒1/W12050",
+          "packageMaterial": "无纺布-120×120-50g",
+          "packCount": 1,
+          "instrumentCount": 2,
+          "unitPrice": 44.0,
+          "totalPrice": 44.0,
+          "expectedUnitPrice": 35.0,
+          "correctedTotalPrice": 35.0,
+          "difference": -9.0,
+          "status": "warning",
+          "pricingRule": "低温无纺布阶梯计费",
+          "notes": [
+            "结构化产品匹配: 低温无纺布器械包 [LT_NON_WOVEN] → standard",
+            "包装类型含低温标识且包名含\"盒\"，单包件数减 1 件（盒不收费）。",
+            "混合模式未命中特色规则，走标准灭菌计价。",
+            "低温单件无纺布，单价 35 元。"
+          ],
+          "matchedRuleId": null,
+          "matchedPriceOption": null,
+          "matchedProductId": 17,
+          "matchedVariantId": null,
+          "pricingPath": "standard",
+          "isUrgent": false,
+          "billingNotes": {
+            "policyTraces": [
+              {
+                "label": "未命中折扣策略"
+              }
+            ],
+            "discountChain": [
+              {
+                "label": "结构化产品匹配: 低温无纺布器械包 [LT_NON_WOVEN] → standard"
+              }
+            ]
+          }
+        },
+        {
+          "id": 548741,
+          "sheetName": "门诊手术室",
+          "rowNumber": 37,
+          "deliveryDate": "2026-07-07",
+          "orderNo": "1618174",
+          "type": "单包装包(老肯低温)",
+          "categoryNo": "20383300",
+          "packName": "宫腔镜-2件盒1/W12050",
+          "packageMaterial": "无纺布-120×120-50g",
+          "packCount": 1,
+          "instrumentCount": 2,
+          "unitPrice": 44.0,
+          "totalPrice": 44.0,
+          "expectedUnitPrice": 35.0,
+          "correctedTotalPrice": 35.0,
+          "difference": -9.0,
+          "status": "warning",
+          "pricingRule": "低温无纺布阶梯计费",
+          "notes": [
+            "结构化产品匹配: 低温无纺布器械包 [LT_NON_WOVEN] → standard",
+            "包装类型含低温标识且包名含\"盒\"，单包件数减 1 件（盒不收费）。",
+            "混合模式未命中特色规则，走标准灭菌计价。",
+            "低温单件无纺布，单价 35 元。"
+          ],
+          "matchedRuleId": null,
+          "matchedPriceOption": null,
+          "matchedProductId": 17,
+          "matchedVariantId": null,
+          "pricingPath": "standard",
+          "isUrgent": false,
+          "billingNotes": {
+            "policyTraces": [
+              {
+                "label": "未命中折扣策略"
+              }
+            ],
+            "discountChain": [
+              {
+                "label": "结构化产品匹配: 低温无纺布器械包 [LT_NON_WOVEN] → standard"
+              }
+            ]
+          }
+        },
+        {
+          "id": 548787,
+          "sheetName": "门诊手术室",
+          "rowNumber": 83,
+          "deliveryDate": "2026-07-21",
+          "orderNo": "1622220",
+          "type": "单包装包(老肯低温)",
+          "categoryNo": "20383300",
+          "packName": "宫腔镜-2件盒1/W12050",
+          "packageMaterial": "无纺布-120×120-50g",
+          "packCount": 1,
+          "instrumentCount": 2,
+          "unitPrice": 44.0,
+          "totalPrice": 44.0,
+          "expectedUnitPrice": 35.0,
+          "correctedTotalPrice": 35.0,
+          "difference": -9.0,
+          "status": "warning",
+          "pricingRule": "低温无纺布阶梯计费",
+          "notes": [
+            "结构化产品匹配: 低温无纺布器械包 [LT_NON_WOVEN] → standard",
+            "包装类型含低温标识且包名含\"盒\"，单包件数减 1 件（盒不收费）。",
+            "混合模式未命中特色规则，走标准灭菌计价。",
+            "低温单件无纺布，单价 35 元。"
+          ],
+          "matchedRuleId": null,
+          "matchedPriceOption": null,
+          "matchedProductId": 17,
+          "matchedVariantId": null,
+          "pricingPath": "standard",
+          "isUrgent": false,
+          "billingNotes": {
+            "policyTraces": [
+              {
+                "label": "未命中折扣策略"
+              }
+            ],
+            "discountChain": [
+              {
+                "label": "结构化产品匹配: 低温无纺布器械包 [LT_NON_WOVEN] → standard"
+              }
+            ]
+          }
+        },
+        {
+          "id": 548810,
+          "sheetName": "门诊手术室",
+          "rowNumber": 106,
+          "deliveryDate": "2026-07-23",
+          "orderNo": "1622932",
+          "type": "额外包(低温等离子)",
+          "categoryNo": "20434762",
+          "packName": "英姿双开弯钳-1/Z2060",
+          "packageMaterial": "低温纸塑袋200*600",
+          "packCount": 1,
+          "instrumentCount": 1,
+          "unitPrice": 28.0,
+          "totalPrice": 28.0,
+          "expectedUnitPrice": 35.0,
+          "correctedTotalPrice": 35.0,
+          "difference": 7.0,
+          "status": "warning",
+          "pricingRule": "低温纸塑袋(双)20cm阶梯计费",
+          "notes": [
+            "结构化产品匹配: 低温纸塑袋器械包 [LT_PAPER_PLASTIC] → standard",
+            "混合模式未命中特色规则，走标准灭菌计价。",
+            "低温单件纸塑袋包名含「双」，按客户标准固定 35 元计费（市二院除外）。"
+          ],
+          "matchedRuleId": null,
+          "matchedPriceOption": null,
+          "matchedProductId": 15,
+          "matchedVariantId": null,
+          "pricingPath": "standard",
+          "isUrgent": false,
+          "billingNotes": {
+            "policyTraces": [
+              {
+                "label": "未命中折扣策略"
+              }
+            ],
+            "discountChain": [
+              {
+                "label": "结构化产品匹配: 低温纸塑袋器械包 [LT_PAPER_PLASTIC] → standard"
+              }
+            ]
+          }
+        },
+        {
+          "id": 548820,
+          "sheetName": "门诊手术室",
+          "rowNumber": 116,
+          "deliveryDate": "2026-07-24",
+          "orderNo": "1623340",
+          "type": "额外包(低温等离子)",
+          "categoryNo": "20434940",
+          "packName": "刨削刀头-2件/Z1026",
+          "packageMaterial": "低温纸塑袋100*260",
+          "packCount": 1,
+          "instrumentCount": 2,
+          "unitPrice": 27.5,
+          "totalPrice": 27.5,
+          "expectedUnitPrice": 44.0,
+          "correctedTotalPrice": 44.0,
+          "difference": 16.5,
+          "status": "warning",
+          "pricingRule": "低温纸塑袋10cm阶梯计费",
+          "notes": [
+            "结构化产品匹配: 低温纸塑袋器械包 [LT_PAPER_PLASTIC] → standard",
+            "混合模式未命中特色规则，走标准灭菌计价。",
+            "低温纸塑袋 2 件 × 22 元 = 44 元。"
+          ],
+          "matchedRuleId": null,
+          "matchedPriceOption": null,
+          "matchedProductId": 15,
+          "matchedVariantId": null,
+          "pricingPath": "standard",
+          "isUrgent": false,
+          "billingNotes": {
+            "policyTraces": [
+              {
+                "label": "未命中折扣策略"
+              }
+            ],
+            "discountChain": [
+              {
+                "label": "结构化产品匹配: 低温纸塑袋器械包 [LT_PAPER_PLASTIC] → standard"
+              },
+              {
+                "label": "低温纸塑袋 2 件 × 22 元 = 44 元。"
+              }
+            ]
+          }
+        },
+        {
+          "id": 548826,
+          "sheetName": "门诊手术室",
+          "rowNumber": 122,
+          "deliveryDate": "2026-07-24",
+          "orderNo": "1623340",
+          "type": "单包装包(老肯低温)",
+          "categoryNo": "20383300",
+          "packName": "宫腔镜-2件盒1/W12050",
+          "packageMaterial": "无纺布-120×120-50g",
+          "packCount": 1,
+          "instrumentCount": 2,
+          "unitPrice": 44.0,
+          "totalPrice": 44.0,
+          "expectedUnitPrice": 35.0,
+          "correctedTotalPrice": 35.0,
+          "difference": -9.0,
+          "status": "warning",
+          "pricingRule": "低温无纺布阶梯计费",
+          "notes": [
+            "结构化产品匹配: 低温无纺布器械包 [LT_NON_WOVEN] → standard",
+            "包装类型含低温标识且包名含\"盒\"，单包件数减 1 件（盒不收费）。",
+            "混合模式未命中特色规则，走标准灭菌计价。",
+            "低温单件无纺布，单价 35 元。"
+          ],
+          "matchedRuleId": null,
+          "matchedPriceOption": null,
+          "matchedProductId": 17,
+          "matchedVariantId": null,
+          "pricingPath": "standard",
+          "isUrgent": false,
+          "billingNotes": {
+            "policyTraces": [
+              {
+                "label": "未命中折扣策略"
+              }
+            ],
+            "discountChain": [
+              {
+                "label": "结构化产品匹配: 低温无纺布器械包 [LT_NON_WOVEN] → standard"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "customer_label": "道里妇幼",
+      "folder": "道里区妇幼保健院",
+      "status": "NO_RAW",
+      "message": "缺 7 月 raw+proc 成对；原始表格无 xlsx",
+      "raw_file": "",
+      "month": null,
+      "job_id": null,
+      "warning_count": 0,
+      "warnings": []
+    },
+    {
+      "customer_label": "春语医美",
+      "folder": "春语医美",
+      "status": "NO_RAW",
+      "message": "缺 7 月 raw+proc 成对；原始表格无 xlsx",
+      "raw_file": "",
+      "month": null,
+      "job_id": null,
+      "warning_count": 0,
+      "warnings": []
+    },
+    {
+      "customer_label": "总工会",
+      "folder": "总工会",
+      "status": "NO_RAW",
+      "message": "缺 7 月 raw+proc 成对；原始表格无 xlsx",
+      "raw_file": "",
+      "month": null,
+      "job_id": null,
+      "warning_count": 0,
+      "warnings": []
+    },
+    {
+      "customer_label": "基准生物",
+      "folder": "基准生物",
+      "status": "NO_RAW",
+      "message": "缺 7 月 raw+proc 成对；原始表格无 xlsx",
+      "raw_file": "",
+      "month": null,
+      "job_id": null,
+      "warning_count": 0,
+      "warnings": []
+    },
+    {
+      "customer_label": "索菲医美",
+      "folder": "索菲医美",
+      "status": "NO_RAW",
+      "message": "缺 7 月 raw+proc 成对；原始表格无 xlsx",
+      "raw_file": "",
+      "month": null,
+      "job_id": null,
+      "warning_count": 0,
+      "warnings": []
+    },
+    {
+      "customer_label": "省监狱管理局",
+      "folder": null,
+      "status": "NO_FOLDER",
+      "message": "无测试用例目录",
+      "raw_file": "",
+      "month": null,
+      "job_id": null,
+      "warning_count": 0,
+      "warnings": []
+    }
+  ]
+}

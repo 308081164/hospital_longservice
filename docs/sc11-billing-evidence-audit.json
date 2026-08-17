@@ -1,0 +1,1927 @@
+{
+  "generatedAt": "2026-08-14",
+  "sources": {
+    "registry": "backend/src/test/resources/pricing-engine/rule-type-registry.json",
+    "fixtures": "backend/src/test/resources/pricing-engine/sc11-fixtures.json",
+    "manifest": "backend/src/main/resources/billing-seeds/billing-rules-manifest.json",
+    "csvFilesScanned": 62,
+    "csvRowsWithPack": 780,
+    "pendingMatchDocs": 8
+  },
+  "reports": {
+    "814Summary": {
+      "pass": 8,
+      "fail": 1,
+      "skip": 27,
+      "error": 0
+    },
+    "v8Summary": {
+      "pass": 4,
+      "fail": 2,
+      "skip": 14,
+      "error": 0
+    }
+  },
+  "summary": {
+    "fixtureTotal": 40,
+    "validRunnable": 9,
+    "confirmedFixtures": 7,
+    "invalidFixtures": 31,
+    "typesConfirmed": 3,
+    "typesPendingMaterials": 13
+  },
+  "byType": [
+    {
+      "sc11Type": "SC11-T01",
+      "registryRuleCount": 3,
+      "fixtureCount": 2,
+      "validFixtureCount": 1,
+      "confirmedFixtureCount": 1,
+      "csvEvidenceRows": 40,
+      "csvSamples": [
+        {
+          "source": "测试用例/哈尔滨冰城医疗美容医院/6月期待价格校正清单.csv",
+          "line": 2,
+          "hospitalDir": "哈尔滨冰城医疗美容医院",
+          "month": "6月",
+          "department": "手术室",
+          "shipmentNo": "1609398",
+          "packName": "环钻包",
+          "packCount": "2.0",
+          "unitPriceBefore": 30.5,
+          "unitPriceAfter": 27.5,
+          "ruleCoverage": "special_rule",
+          "matchedRule": "环钻27.5"
+        },
+        {
+          "source": "测试用例/哈尔滨冰城医疗美容医院/6月期待价格校正清单.csv",
+          "line": 3,
+          "hospitalDir": "哈尔滨冰城医疗美容医院",
+          "month": "6月",
+          "department": "手术室",
+          "shipmentNo": "1614554",
+          "packName": "环钻包",
+          "packCount": "1.0",
+          "unitPriceBefore": 30.5,
+          "unitPriceAfter": 27.5,
+          "ruleCoverage": "special_rule",
+          "matchedRule": "环钻27.5"
+        },
+        {
+          "source": "测试用例/哈尔滨冰城医疗美容医院/7月期待价格校正清单.csv",
+          "line": 2,
+          "hospitalDir": "哈尔滨冰城医疗美容医院",
+          "month": "7月",
+          "department": "全部科室(汇总对比)",
+          "shipmentNo": "1623568",
+          "packName": "环钻包",
+          "packCount": "1.0",
+          "unitPriceBefore": 27.5,
+          "unitPriceAfter": 33.5,
+          "ruleCoverage": "special_rule",
+          "matchedRule": "环钻27.5(关键词匹配)"
+        },
+        {
+          "source": "测试用例/哈尔滨冰城医疗美容医院/7月期待价格校正清单.csv",
+          "line": 3,
+          "hospitalDir": "哈尔滨冰城医疗美容医院",
+          "month": "7月",
+          "department": "全部科室(汇总对比)",
+          "shipmentNo": "1624134",
+          "packName": "环钻包",
+          "packCount": "2.0",
+          "unitPriceBefore": 27.5,
+          "unitPriceAfter": 33.5,
+          "ruleCoverage": "special_rule",
+          "matchedRule": "环钻27.5(关键词匹配)"
+        },
+        {
+          "source": "测试用例/黑龙江省医院（南岗院区）/6月期待价格校正清单.csv",
+          "line": 5,
+          "hospitalDir": "黑龙江省医院（南岗院区）",
+          "month": "6月",
+          "department": "皮肤门诊",
+          "shipmentNo": "1605141",
+          "packName": "门皮 手术包-6件（双信封包装！！！）",
+          "packCount": "1.0",
+          "unitPriceBefore": 21.828,
+          "unitPriceAfter": 22.01,
+          "ruleCoverage": "default_heuristic",
+          "matchedRule": "标准计费引擎（启发式）"
+        }
+      ],
+      "verdict": "confirmed",
+      "confirmedFixtures": [
+        "t01_bingcheng_huanzuan_5pc"
+      ],
+      "invalidFixtures": [
+        "t01_bingcheng_huanzuan_1pc"
+      ]
+    },
+    {
+      "sc11Type": "SC11-T02",
+      "registryRuleCount": 2,
+      "fixtureCount": 2,
+      "validFixtureCount": 0,
+      "confirmedFixtureCount": 0,
+      "csvEvidenceRows": 3,
+      "csvSamples": [
+        {
+          "source": "测试用例/国药总医院第二院区/2月期待价格校正清单.csv",
+          "line": 2,
+          "hospitalDir": "国药总医院第二院区",
+          "month": "2月期待价格校正清单.csv",
+          "department": "手术室",
+          "shipmentNo": "1576233",
+          "packName": "缝合针-6/Z7520",
+          "packCount": "2.0",
+          "unitPriceBefore": 35.5,
+          "unitPriceAfter": 8.0,
+          "ruleCoverage": "",
+          "matchedRule": ""
+        },
+        {
+          "source": "测试用例/国药总医院第二院区/2月期待价格校正清单.csv",
+          "line": 3,
+          "hospitalDir": "国药总医院第二院区",
+          "month": "2月期待价格校正清单.csv",
+          "department": "手术室",
+          "shipmentNo": "1576233",
+          "packName": "缝合针-8/Z7520",
+          "packCount": "1.0",
+          "unitPriceBefore": 46.5,
+          "unitPriceAfter": 8.0,
+          "ruleCoverage": "",
+          "matchedRule": ""
+        },
+        {
+          "source": "测试用例/国药总医院第二院区/2月期待价格校正清单.csv",
+          "line": 4,
+          "hospitalDir": "国药总医院第二院区",
+          "month": "2月期待价格校正清单.csv",
+          "department": "手术室",
+          "shipmentNo": "1580008",
+          "packName": "缝合针-6/Z7520",
+          "packCount": "1.0",
+          "unitPriceBefore": 35.5,
+          "unitPriceAfter": 8.0,
+          "ruleCoverage": "",
+          "matchedRule": ""
+        }
+      ],
+      "verdict": "csv_evidence_no_valid_fixture",
+      "confirmedFixtures": [],
+      "invalidFixtures": [
+        "t02_guoyao2_suture_8",
+        "t02_guoyao2_suture_generic_packaging"
+      ]
+    },
+    {
+      "sc11Type": "SC11-T04",
+      "registryRuleCount": 20,
+      "fixtureCount": 2,
+      "validFixtureCount": 0,
+      "confirmedFixtureCount": 0,
+      "csvEvidenceRows": 22,
+      "csvSamples": [
+        {
+          "source": "测试用例/黑龙江中医药大学附属第二医院（南岗）/6月期待价格校正清单.csv",
+          "line": 2,
+          "hospitalDir": "黑龙江中医药大学附属第二医院（南岗）",
+          "month": "6月",
+          "department": "口腔二科",
+          "shipmentNo": "1610277",
+          "packName": "机扩针-6盒1/z1020",
+          "packCount": "1.0",
+          "unitPriceBefore": 41.0,
+          "unitPriceAfter": 38.5,
+          "ruleCoverage": "default_heuristic",
+          "matchedRule": "标准计费引擎（启发式）"
+        },
+        {
+          "source": "测试用例/黑龙江中医药大学附属第二医院（南岗）/6月期待价格校正清单.csv",
+          "line": 3,
+          "hospitalDir": "黑龙江中医药大学附属第二医院（南岗）",
+          "month": "6月",
+          "department": "口腔二（肖华）",
+          "shipmentNo": "1615169",
+          "packName": "车针-17/z1020",
+          "packCount": "1.0",
+          "unitPriceBefore": 16.5,
+          "unitPriceAfter": 22.0,
+          "ruleCoverage": "default_heuristic",
+          "matchedRule": "标准计费引擎（启发式）"
+        },
+        {
+          "source": "测试用例/哈尔滨市第二医院/6月期待价格校正清单.csv",
+          "line": 3,
+          "hospitalDir": "哈尔滨市第二医院",
+          "month": "6月",
+          "department": "口腔科（正）",
+          "shipmentNo": "1609478",
+          "packName": "正畸去胶车针-1/Z7520",
+          "packCount": "1.0",
+          "unitPriceBefore": 8.0,
+          "unitPriceAfter": 8.0,
+          "ruleCoverage": "unchanged",
+          "matchedRule": "口腔科正畸车针8元"
+        },
+        {
+          "source": "测试用例/哈尔滨市第二医院/6月期待价格校正清单.csv",
+          "line": 4,
+          "hospitalDir": "哈尔滨市第二医院",
+          "month": "6月",
+          "department": "口腔科（正）",
+          "shipmentNo": "1614205",
+          "packName": "正畸去胶车针-1/Z7520",
+          "packCount": "1.0",
+          "unitPriceBefore": 8.0,
+          "unitPriceAfter": 8.0,
+          "ruleCoverage": "unchanged",
+          "matchedRule": "口腔科正畸车针8元"
+        },
+        {
+          "source": "测试用例/哈尔滨市第二医院/6月期待价格校正清单.csv",
+          "line": 5,
+          "hospitalDir": "哈尔滨市第二医院",
+          "month": "6月",
+          "department": "口腔科（正）",
+          "shipmentNo": "1615803",
+          "packName": "正畸去胶车针-1/Z7520",
+          "packCount": "1.0",
+          "unitPriceBefore": 8.0,
+          "unitPriceAfter": 8.0,
+          "ruleCoverage": "unchanged",
+          "matchedRule": "口腔科正畸车针8元"
+        }
+      ],
+      "verdict": "csv_evidence_no_valid_fixture",
+      "confirmedFixtures": [],
+      "invalidFixtures": [
+        "t04_guoyao2_pointer_12",
+        "t04_fnn_pdrill_8"
+      ]
+    },
+    {
+      "sc11Type": "SC11-T03b",
+      "registryRuleCount": 1,
+      "fixtureCount": 2,
+      "validFixtureCount": 0,
+      "confirmedFixtureCount": 0,
+      "csvEvidenceRows": 69,
+      "csvSamples": [
+        {
+          "source": "测试用例/哈尔滨市第五医院/6月期待价格校正清单.csv",
+          "line": 4,
+          "hospitalDir": "哈尔滨市第五医院",
+          "month": "6月",
+          "department": "（一）手术室",
+          "shipmentNo": "1601577",
+          "packName": "AR水管-2件/双/Z1530",
+          "packCount": "1.0",
+          "unitPriceBefore": 24.0,
+          "unitPriceAfter": 16.5,
+          "ruleCoverage": "default_heuristic",
+          "matchedRule": "标准计费引擎（启发式）"
+        },
+        {
+          "source": "测试用例/哈尔滨市第五医院/6月期待价格校正清单.csv",
+          "line": 5,
+          "hospitalDir": "哈尔滨市第五医院",
+          "month": "6月",
+          "department": "（一）手术室",
+          "shipmentNo": "1602075",
+          "packName": "德美2号刨刀-1/双/Z2550",
+          "packCount": "1.0",
+          "unitPriceBefore": 26.5,
+          "unitPriceAfter": 16.5,
+          "ruleCoverage": "default_heuristic",
+          "matchedRule": "标准计费引擎（启发式）"
+        },
+        {
+          "source": "测试用例/哈尔滨市第五医院/6月期待价格校正清单.csv",
+          "line": 7,
+          "hospitalDir": "哈尔滨市第五医院",
+          "month": "6月",
+          "department": "（一）手术室",
+          "shipmentNo": "1603207",
+          "packName": "德美2号刨刀-1/双/Z2550",
+          "packCount": "1.0",
+          "unitPriceBefore": 26.5,
+          "unitPriceAfter": 16.5,
+          "ruleCoverage": "default_heuristic",
+          "matchedRule": "标准计费引擎（启发式）"
+        },
+        {
+          "source": "测试用例/哈尔滨市第五医院/6月期待价格校正清单.csv",
+          "line": 8,
+          "hospitalDir": "哈尔滨市第五医院",
+          "month": "6月",
+          "department": "（一）手术室",
+          "shipmentNo": "1603473",
+          "packName": "西山骨动力1号-1/双/Z2530",
+          "packCount": "1.0",
+          "unitPriceBefore": 26.5,
+          "unitPriceAfter": 16.5,
+          "ruleCoverage": "default_heuristic",
+          "matchedRule": "标准计费引擎（启发式）"
+        },
+        {
+          "source": "测试用例/哈尔滨市第五医院/6月期待价格校正清单.csv",
+          "line": 9,
+          "hospitalDir": "哈尔滨市第五医院",
+          "month": "6月",
+          "department": "（一）手术室",
+          "shipmentNo": "1603773",
+          "packName": "西山骨动力1号-1/双/Z2530",
+          "packCount": "1.0",
+          "unitPriceBefore": 26.5,
+          "unitPriceAfter": 16.5,
+          "ruleCoverage": "default_heuristic",
+          "matchedRule": "标准计费引擎（启发式）"
+        }
+      ],
+      "verdict": "csv_evidence_no_valid_fixture",
+      "confirmedFixtures": [],
+      "invalidFixtures": [
+        "t03b_generic_double_lt35",
+        "t03b_generic_double_lt35_alt"
+      ]
+    },
+    {
+      "sc11Type": "SC11-T05",
+      "registryRuleCount": 8,
+      "fixtureCount": 2,
+      "validFixtureCount": 0,
+      "confirmedFixtureCount": 0,
+      "csvEvidenceRows": 22,
+      "csvSamples": [
+        {
+          "source": "测试用例/黑龙江中医药大学附属第二医院（南岗）/6月期待价格校正清单.csv",
+          "line": 2,
+          "hospitalDir": "黑龙江中医药大学附属第二医院（南岗）",
+          "month": "6月",
+          "department": "口腔二科",
+          "shipmentNo": "1610277",
+          "packName": "机扩针-6盒1/z1020",
+          "packCount": "1.0",
+          "unitPriceBefore": 41.0,
+          "unitPriceAfter": 38.5,
+          "ruleCoverage": "default_heuristic",
+          "matchedRule": "标准计费引擎（启发式）"
+        },
+        {
+          "source": "测试用例/黑龙江中医药大学附属第二医院（南岗）/6月期待价格校正清单.csv",
+          "line": 3,
+          "hospitalDir": "黑龙江中医药大学附属第二医院（南岗）",
+          "month": "6月",
+          "department": "口腔二（肖华）",
+          "shipmentNo": "1615169",
+          "packName": "车针-17/z1020",
+          "packCount": "1.0",
+          "unitPriceBefore": 16.5,
+          "unitPriceAfter": 22.0,
+          "ruleCoverage": "default_heuristic",
+          "matchedRule": "标准计费引擎（启发式）"
+        },
+        {
+          "source": "测试用例/哈尔滨市第二医院/6月期待价格校正清单.csv",
+          "line": 3,
+          "hospitalDir": "哈尔滨市第二医院",
+          "month": "6月",
+          "department": "口腔科（正）",
+          "shipmentNo": "1609478",
+          "packName": "正畸去胶车针-1/Z7520",
+          "packCount": "1.0",
+          "unitPriceBefore": 8.0,
+          "unitPriceAfter": 8.0,
+          "ruleCoverage": "unchanged",
+          "matchedRule": "口腔科正畸车针8元"
+        },
+        {
+          "source": "测试用例/哈尔滨市第二医院/6月期待价格校正清单.csv",
+          "line": 4,
+          "hospitalDir": "哈尔滨市第二医院",
+          "month": "6月",
+          "department": "口腔科（正）",
+          "shipmentNo": "1614205",
+          "packName": "正畸去胶车针-1/Z7520",
+          "packCount": "1.0",
+          "unitPriceBefore": 8.0,
+          "unitPriceAfter": 8.0,
+          "ruleCoverage": "unchanged",
+          "matchedRule": "口腔科正畸车针8元"
+        },
+        {
+          "source": "测试用例/哈尔滨市第二医院/6月期待价格校正清单.csv",
+          "line": 5,
+          "hospitalDir": "哈尔滨市第二医院",
+          "month": "6月",
+          "department": "口腔科（正）",
+          "shipmentNo": "1615803",
+          "packName": "正畸去胶车针-1/Z7520",
+          "packCount": "1.0",
+          "unitPriceBefore": 8.0,
+          "unitPriceAfter": 8.0,
+          "ruleCoverage": "unchanged",
+          "matchedRule": "口腔科正畸车针8元"
+        }
+      ],
+      "verdict": "csv_evidence_no_valid_fixture",
+      "confirmedFixtures": [],
+      "invalidFixtures": [
+        "t05_guoyao2_pointer_20",
+        "t05_fnn_jikuozhen_15"
+      ]
+    },
+    {
+      "sc11Type": "SC11-T06",
+      "registryRuleCount": 1,
+      "fixtureCount": 2,
+      "validFixtureCount": 2,
+      "confirmedFixtureCount": 2,
+      "csvEvidenceRows": 27,
+      "csvSamples": [
+        {
+          "source": "测试用例/祖研-黑龙江省中医医院（南岗院区）/6月期待价格校正清单.csv",
+          "line": 2,
+          "hospitalDir": "祖研-黑龙江省中医医院（南岗院区）",
+          "month": "6月",
+          "department": "美容科",
+          "shipmentNo": "1608289",
+          "packName": "排针-11/Z7526",
+          "packCount": "1.0",
+          "unitPriceBefore": 60.5,
+          "unitPriceAfter": 13.5,
+          "ruleCoverage": "special_rule",
+          "matchedRule": "校正价13.5"
+        },
+        {
+          "source": "测试用例/祖研-黑龙江省中医医院（南岗院区）/6月期待价格校正清单.csv",
+          "line": 3,
+          "hospitalDir": "祖研-黑龙江省中医医院（南岗院区）",
+          "month": "6月",
+          "department": "美容科",
+          "shipmentNo": "1608289",
+          "packName": "排针20/Z1026",
+          "packCount": "3.0",
+          "unitPriceBefore": 110.0,
+          "unitPriceAfter": 13.5,
+          "ruleCoverage": "special_rule",
+          "matchedRule": "校正价13.5"
+        },
+        {
+          "source": "测试用例/祖研-黑龙江省中医医院（南岗院区）/6月期待价格校正清单.csv",
+          "line": 4,
+          "hospitalDir": "祖研-黑龙江省中医医院（南岗院区）",
+          "month": "6月",
+          "department": "美容科",
+          "shipmentNo": "1609061",
+          "packName": "排针-15/Z1026",
+          "packCount": "3.0",
+          "unitPriceBefore": 82.5,
+          "unitPriceAfter": 13.5,
+          "ruleCoverage": "special_rule",
+          "matchedRule": "校正价13.5"
+        },
+        {
+          "source": "测试用例/祖研-黑龙江省中医医院（南岗院区）/6月期待价格校正清单.csv",
+          "line": 5,
+          "hospitalDir": "祖研-黑龙江省中医医院（南岗院区）",
+          "month": "6月",
+          "department": "美容科",
+          "shipmentNo": "1609061",
+          "packName": "排针20/Z1026",
+          "packCount": "1.0",
+          "unitPriceBefore": 110.0,
+          "unitPriceAfter": 13.5,
+          "ruleCoverage": "special_rule",
+          "matchedRule": "校正价13.5"
+        },
+        {
+          "source": "测试用例/祖研-黑龙江省中医医院（南岗院区）/6月期待价格校正清单.csv",
+          "line": 6,
+          "hospitalDir": "祖研-黑龙江省中医医院（南岗院区）",
+          "month": "6月",
+          "department": "美容科",
+          "shipmentNo": "1609796",
+          "packName": "排针20/Z1026",
+          "packCount": "2.0",
+          "unitPriceBefore": 110.0,
+          "unitPriceAfter": 13.5,
+          "ruleCoverage": "special_rule",
+          "matchedRule": "校正价13.5"
+        }
+      ],
+      "verdict": "confirmed",
+      "confirmedFixtures": [
+        "t06_zuyan_pai_15",
+        "t06_zuyan_pai_25"
+      ],
+      "invalidFixtures": []
+    },
+    {
+      "sc11Type": "SC11-T07",
+      "registryRuleCount": 3,
+      "fixtureCount": 2,
+      "validFixtureCount": 0,
+      "confirmedFixtureCount": 0,
+      "csvEvidenceRows": 194,
+      "csvSamples": [
+        {
+          "source": "测试用例/黑龙江中医药大学附属第二医院（南岗）/6月期待价格校正清单.csv",
+          "line": 4,
+          "hospitalDir": "黑龙江中医药大学附属第二医院（南岗）",
+          "month": "6月",
+          "department": "手术室",
+          "shipmentNo": "1611803",
+          "packName": "大衣/W9050",
+          "packCount": "8.0",
+          "unitPriceBefore": 35.0,
+          "unitPriceAfter": 30.0,
+          "ruleCoverage": "needs_engine_verify",
+          "matchedRule": "待 PricingEngine 验证默认规则"
+        },
+        {
+          "source": "测试用例/黑龙江中医药大学附属第二医院（南岗）/6月期待价格校正清单.csv",
+          "line": 6,
+          "hospitalDir": "黑龙江中医药大学附属第二医院（南岗）",
+          "month": "6月",
+          "department": "手术室",
+          "shipmentNo": "1612238",
+          "packName": "大衣/W9050",
+          "packCount": "3.0",
+          "unitPriceBefore": 35.0,
+          "unitPriceAfter": 30.0,
+          "ruleCoverage": "needs_engine_verify",
+          "matchedRule": "待 PricingEngine 验证默认规则"
+        },
+        {
+          "source": "测试用例/哈尔滨市第五医院/6月期待价格校正清单.csv",
+          "line": 3,
+          "hospitalDir": "哈尔滨市第五医院",
+          "month": "6月",
+          "department": "骨科（送一手）",
+          "shipmentNo": "1607242",
+          "packName": "骨四1 宋晓辉韧带咬钳 2件/W605060",
+          "packCount": "1.0",
+          "unitPriceBefore": 11.0,
+          "unitPriceAfter": 16.5,
+          "ruleCoverage": "default_heuristic",
+          "matchedRule": "标准计费引擎（启发式）"
+        },
+        {
+          "source": "测试用例/哈尔滨市第五医院/6月期待价格校正清单.csv",
+          "line": 14,
+          "hospitalDir": "哈尔滨市第五医院",
+          "month": "6月",
+          "department": "（一）手术室",
+          "shipmentNo": "1605451",
+          "packName": "德美4K1号刨刀-1/W6050",
+          "packCount": "1.0",
+          "unitPriceBefore": 35.0,
+          "unitPriceAfter": 16.5,
+          "ruleCoverage": "default_heuristic",
+          "matchedRule": "标准计费引擎（启发式）"
+        },
+        {
+          "source": "测试用例/哈尔滨市第五医院/6月期待价格校正清单.csv",
+          "line": 31,
+          "hospitalDir": "哈尔滨市第五医院",
+          "month": "6月",
+          "department": "（二）手术室",
+          "shipmentNo": "1608149",
+          "packName": "旧轧皮机（2号）-2件盒1/W12050",
+          "packCount": "1.0",
+          "unitPriceBefore": 22.0,
+          "unitPriceAfter": 16.5,
+          "ruleCoverage": "default_heuristic",
+          "matchedRule": "标准计费引擎（启发式）"
+        }
+      ],
+      "verdict": "csv_evidence_no_valid_fixture",
+      "confirmedFixtures": [],
+      "invalidFixtures": [
+        "t07_guoyao2_cotton_w90",
+        "t07_guoyao2_cotton_w60"
+      ]
+    },
+    {
+      "sc11Type": "SC11-T08",
+      "registryRuleCount": 20,
+      "fixtureCount": 4,
+      "validFixtureCount": 2,
+      "confirmedFixtureCount": 2,
+      "csvEvidenceRows": 49,
+      "csvSamples": [
+        {
+          "source": "测试用例/祖研-黑龙江省中医医院（南岗院区）/6月期待价格校正清单.csv",
+          "line": 15,
+          "hospitalDir": "祖研-黑龙江省中医医院（南岗院区）",
+          "month": "6月",
+          "department": "美容科",
+          "shipmentNo": "1612425",
+          "packName": "排针22件/Z1026",
+          "packCount": "1.0",
+          "unitPriceBefore": 121.0,
+          "unitPriceAfter": 16.5,
+          "ruleCoverage": "special_rule",
+          "matchedRule": "校正价16.5"
+        },
+        {
+          "source": "测试用例/太平人民医院/5月期待价格校正清单.csv",
+          "line": 2,
+          "hospitalDir": "太平人民医院",
+          "month": "5月期待价格校正清单.csv",
+          "department": "妇科门诊",
+          "shipmentNo": "1602772",
+          "packName": "剪刀1窥器1宫颈钳1/z2044",
+          "packCount": "1.0",
+          "unitPriceBefore": 12.375,
+          "unitPriceAfter": 8.91,
+          "ruleCoverage": "",
+          "matchedRule": ""
+        },
+        {
+          "source": "测试用例/太平人民医院/5月期待价格校正清单.csv",
+          "line": 4,
+          "hospitalDir": "太平人民医院",
+          "month": "5月期待价格校正清单.csv",
+          "department": "妇科门诊",
+          "shipmentNo": "1602772",
+          "packName": "探针1窥器1宫颈钳1/z2044",
+          "packCount": "5.0",
+          "unitPriceBefore": 12.375,
+          "unitPriceAfter": 8.91,
+          "ruleCoverage": "",
+          "matchedRule": ""
+        },
+        {
+          "source": "测试用例/太平人民医院/5月期待价格校正清单.csv",
+          "line": 6,
+          "hospitalDir": "太平人民医院",
+          "month": "5月期待价格校正清单.csv",
+          "department": "妇科门诊",
+          "shipmentNo": "1603543",
+          "packName": "剪刀1窥器1宫颈钳1/z2044",
+          "packCount": "1.0",
+          "unitPriceBefore": 12.375,
+          "unitPriceAfter": 8.91,
+          "ruleCoverage": "",
+          "matchedRule": ""
+        },
+        {
+          "source": "测试用例/太平人民医院/5月期待价格校正清单.csv",
+          "line": 9,
+          "hospitalDir": "太平人民医院",
+          "month": "5月期待价格校正清单.csv",
+          "department": "妇科门诊",
+          "shipmentNo": "1603543",
+          "packName": "探针1窥器1宫颈钳1/z2044",
+          "packCount": "8.0",
+          "unitPriceBefore": 12.375,
+          "unitPriceAfter": 8.91,
+          "ruleCoverage": "",
+          "matchedRule": ""
+        }
+      ],
+      "verdict": "confirmed",
+      "confirmedFixtures": [
+        "t08_jiuzhou_fangpan",
+        "t08_shkf_billing_off"
+      ],
+      "invalidFixtures": [
+        "t08_jzsw_bio_150",
+        "t08_shkf_44"
+      ]
+    },
+    {
+      "sc11Type": "SC11-T09",
+      "registryRuleCount": 2,
+      "fixtureCount": 2,
+      "validFixtureCount": 0,
+      "confirmedFixtureCount": 0,
+      "csvEvidenceRows": 1,
+      "csvSamples": [
+        {
+          "source": "测试用例/黑龙江中医药大学附属第一医院/6月期待价格校正清单.csv",
+          "line": 32,
+          "hospitalDir": "黑龙江中医药大学附属第一医院",
+          "month": "6月",
+          "department": "手术室(二区)",
+          "shipmentNo": "1615711",
+          "packName": "孔巾包",
+          "packCount": "10.0",
+          "unitPriceBefore": 0.0,
+          "unitPriceAfter": 28.0,
+          "ruleCoverage": "special_rule",
+          "matchedRule": "孔巾包整包价"
+        }
+      ],
+      "verdict": "csv_evidence_no_valid_fixture",
+      "confirmedFixtures": [],
+      "invalidFixtures": [
+        "t09_jiayi_kongjin",
+        "t09_jiayi_kongjin_alt"
+      ]
+    },
+    {
+      "sc11Type": "SC11-T10",
+      "registryRuleCount": 1,
+      "fixtureCount": 2,
+      "validFixtureCount": 0,
+      "confirmedFixtureCount": 0,
+      "csvEvidenceRows": 26,
+      "csvSamples": [
+        {
+          "source": "测试用例/武警黑龙江省总队医院/6月期待价格校正清单.csv",
+          "line": 3,
+          "hospitalDir": "武警黑龙江省总队医院",
+          "month": "6月",
+          "department": "供应室",
+          "shipmentNo": "1608234",
+          "packName": "敷料包（纸塑袋）",
+          "packCount": "3.0",
+          "unitPriceBefore": 0.0,
+          "unitPriceAfter": 8.0,
+          "ruleCoverage": "needs_engine_verify",
+          "matchedRule": "待 PricingEngine 验证默认规则"
+        },
+        {
+          "source": "测试用例/武警黑龙江省总队医院/6月期待价格校正清单.csv",
+          "line": 6,
+          "hospitalDir": "武警黑龙江省总队医院",
+          "month": "6月",
+          "department": "供应室",
+          "shipmentNo": "1608673",
+          "packName": "敷料包（纸塑袋）",
+          "packCount": "1.0",
+          "unitPriceBefore": 0.0,
+          "unitPriceAfter": 8.0,
+          "ruleCoverage": "needs_engine_verify",
+          "matchedRule": "待 PricingEngine 验证默认规则"
+        },
+        {
+          "source": "测试用例/武警黑龙江省总队医院/6月期待价格校正清单.csv",
+          "line": 10,
+          "hospitalDir": "武警黑龙江省总队医院",
+          "month": "6月",
+          "department": "供应室",
+          "shipmentNo": "1609434",
+          "packName": "敷料包（纸塑袋）",
+          "packCount": "1.0",
+          "unitPriceBefore": 0.0,
+          "unitPriceAfter": 8.0,
+          "ruleCoverage": "needs_engine_verify",
+          "matchedRule": "待 PricingEngine 验证默认规则"
+        },
+        {
+          "source": "测试用例/武警黑龙江省总队医院/6月期待价格校正清单.csv",
+          "line": 16,
+          "hospitalDir": "武警黑龙江省总队医院",
+          "month": "6月",
+          "department": "供应室",
+          "shipmentNo": "1611512",
+          "packName": "敷料包（纸塑袋）",
+          "packCount": "7.0",
+          "unitPriceBefore": 0.0,
+          "unitPriceAfter": 8.0,
+          "ruleCoverage": "needs_engine_verify",
+          "matchedRule": "待 PricingEngine 验证默认规则"
+        },
+        {
+          "source": "测试用例/武警黑龙江省总队医院/6月期待价格校正清单.csv",
+          "line": 18,
+          "hospitalDir": "武警黑龙江省总队医院",
+          "month": "6月",
+          "department": "供应室",
+          "shipmentNo": "1611878",
+          "packName": "敷料包（无纺布）",
+          "packCount": "2.0",
+          "unitPriceBefore": 0.0,
+          "unitPriceAfter": 20.0,
+          "ruleCoverage": "needs_engine_verify",
+          "matchedRule": "待 PricingEngine 验证默认规则"
+        }
+      ],
+      "verdict": "csv_evidence_no_valid_fixture",
+      "confirmedFixtures": [],
+      "invalidFixtures": [
+        "t10_hrb2nd_dressing_lt20",
+        "t10_hrb2nd_dressing_lt20_alt"
+      ]
+    },
+    {
+      "sc11Type": "SC11-T11",
+      "registryRuleCount": 3,
+      "fixtureCount": 2,
+      "validFixtureCount": 0,
+      "confirmedFixtureCount": 0,
+      "csvEvidenceRows": 0,
+      "csvSamples": [],
+      "verdict": "invalid_pending_materials",
+      "confirmedFixtures": [],
+      "invalidFixtures": [
+        "t11_haiyuan_cap_3",
+        "t11_prison_seal_4"
+      ]
+    },
+    {
+      "sc11Type": "SC11-T12",
+      "registryRuleCount": 1,
+      "fixtureCount": 2,
+      "validFixtureCount": 0,
+      "confirmedFixtureCount": 0,
+      "csvEvidenceRows": 0,
+      "csvSamples": [],
+      "verdict": "invalid_pending_materials",
+      "confirmedFixtures": [],
+      "invalidFixtures": [
+        "t12_chunyu_plastic_tube",
+        "t12_chunyu_tube_alt"
+      ]
+    },
+    {
+      "sc11Type": "SC11-T13",
+      "registryRuleCount": 5,
+      "fixtureCount": 2,
+      "validFixtureCount": 0,
+      "confirmedFixtureCount": 0,
+      "csvEvidenceRows": 13,
+      "csvSamples": [
+        {
+          "source": "测试用例/黑龙江省医院（香坊院区）/6月期待价格校正清单.csv",
+          "line": 70,
+          "hospitalDir": "黑龙江省医院（香坊院区）",
+          "month": "6月",
+          "department": "手术室",
+          "shipmentNo": "1607646",
+          "packName": "4K镜头1气腹管1光源1/W12050",
+          "packCount": "1.0",
+          "unitPriceBefore": 13.2,
+          "unitPriceAfter": 39.6,
+          "ruleCoverage": "default_heuristic",
+          "matchedRule": "标准计费引擎（启发式）"
+        },
+        {
+          "source": "测试用例/黑龙江省医院（香坊院区）/6月期待价格校正清单.csv",
+          "line": 98,
+          "hospitalDir": "黑龙江省医院（香坊院区）",
+          "month": "6月",
+          "department": "手术室",
+          "shipmentNo": "1608896",
+          "packName": "4K镜头1气腹管1光源1/W12050",
+          "packCount": "1.0",
+          "unitPriceBefore": 13.2,
+          "unitPriceAfter": 39.6,
+          "ruleCoverage": "default_heuristic",
+          "matchedRule": "标准计费引擎（启发式）"
+        },
+        {
+          "source": "测试用例/黑龙江省医院（香坊院区）/6月期待价格校正清单.csv",
+          "line": 116,
+          "hospitalDir": "黑龙江省医院（香坊院区）",
+          "month": "6月",
+          "department": "手术室",
+          "shipmentNo": "1609590",
+          "packName": "4K镜头1气腹管1光源1/W12050",
+          "packCount": "1.0",
+          "unitPriceBefore": 13.2,
+          "unitPriceAfter": 39.6,
+          "ruleCoverage": "default_heuristic",
+          "matchedRule": "标准计费引擎（启发式）"
+        },
+        {
+          "source": "测试用例/黑龙江省医院（香坊院区）/6月期待价格校正清单.csv",
+          "line": 127,
+          "hospitalDir": "黑龙江省医院（香坊院区）",
+          "month": "6月",
+          "department": "手术室",
+          "shipmentNo": "1609771",
+          "packName": "4K镜头1气腹管1光源1/W12050",
+          "packCount": "1.0",
+          "unitPriceBefore": 13.2,
+          "unitPriceAfter": 39.6,
+          "ruleCoverage": "default_heuristic",
+          "matchedRule": "标准计费引擎（启发式）"
+        },
+        {
+          "source": "测试用例/黑龙江省医院（香坊院区）/6月期待价格校正清单.csv",
+          "line": 150,
+          "hospitalDir": "黑龙江省医院（香坊院区）",
+          "month": "6月",
+          "department": "手术室",
+          "shipmentNo": "1610778",
+          "packName": "4K镜头1气腹管1光源1/W12050",
+          "packCount": "1.0",
+          "unitPriceBefore": 13.2,
+          "unitPriceAfter": 39.6,
+          "ruleCoverage": "default_heuristic",
+          "matchedRule": "标准计费引擎（启发式）"
+        }
+      ],
+      "verdict": "csv_evidence_no_valid_fixture",
+      "confirmedFixtures": [],
+      "invalidFixtures": [
+        "t13_hlzgh_lens_plus8",
+        "t13_hlzgh_lens_empty_rule"
+      ]
+    },
+    {
+      "sc11Type": "SC11-T14",
+      "registryRuleCount": 1,
+      "fixtureCount": 2,
+      "validFixtureCount": 0,
+      "confirmedFixtureCount": 0,
+      "csvEvidenceRows": 0,
+      "csvSamples": [],
+      "verdict": "invalid_pending_materials",
+      "confirmedFixtures": [],
+      "invalidFixtures": [
+        "t14_suofei_face_3",
+        "t14_suofei_face_4"
+      ]
+    },
+    {
+      "sc11Type": "SC11-T15",
+      "registryRuleCount": 2,
+      "fixtureCount": 2,
+      "validFixtureCount": 0,
+      "confirmedFixtureCount": 0,
+      "csvEvidenceRows": 0,
+      "csvSamples": [],
+      "verdict": "invalid_pending_materials",
+      "confirmedFixtures": [],
+      "invalidFixtures": [
+        "t15_soft_mirror_eto",
+        "t15_soft_mirror_lt"
+      ]
+    },
+    {
+      "sc11Type": "SC11-T16",
+      "registryRuleCount": 32,
+      "fixtureCount": 2,
+      "validFixtureCount": 0,
+      "confirmedFixtureCount": 0,
+      "csvEvidenceRows": 3,
+      "csvSamples": [
+        {
+          "source": "测试用例/黑龙江中医药大学附属第二医院（哈南分院）/5月期待价格校正清单.csv",
+          "line": 2,
+          "hospitalDir": "黑龙江中医药大学附属第二医院（哈南分院）",
+          "month": "5月期待价格校正清单.csv",
+          "department": "皮肤科",
+          "shipmentNo": "1603159",
+          "packName": "粉刺针-3/Z7526",
+          "packCount": "1.0",
+          "unitPriceBefore": 19.0,
+          "unitPriceAfter": 16.5,
+          "ruleCoverage": "",
+          "matchedRule": ""
+        },
+        {
+          "source": "测试用例/祖研-黑龙江省中医医院（南岗院区）/6月期待价格校正清单.csv",
+          "line": 2,
+          "hospitalDir": "祖研-黑龙江省中医医院（南岗院区）",
+          "month": "6月",
+          "department": "美容科",
+          "shipmentNo": "1608289",
+          "packName": "排针-11/Z7526",
+          "packCount": "1.0",
+          "unitPriceBefore": 60.5,
+          "unitPriceAfter": 13.5,
+          "ruleCoverage": "special_rule",
+          "matchedRule": "校正价13.5"
+        },
+        {
+          "source": "测试用例/祖研-黑龙江省中医医院（南岗院区）/6月期待价格校正清单.csv",
+          "line": 12,
+          "hospitalDir": "祖研-黑龙江省中医医院（南岗院区）",
+          "month": "6月",
+          "department": "美容科",
+          "shipmentNo": "1611875",
+          "packName": "排针-12/Z7526",
+          "packCount": "1.0",
+          "unitPriceBefore": 66.0,
+          "unitPriceAfter": 13.5,
+          "ruleCoverage": "special_rule",
+          "matchedRule": "校正价13.5"
+        }
+      ],
+      "verdict": "csv_evidence_no_valid_fixture",
+      "confirmedFixtures": [],
+      "invalidFixtures": [
+        "t16_lt_standard_1pc",
+        "t16_lt_standard_5pc"
+      ]
+    }
+  ],
+  "fixtures": [
+    {
+      "id": "t01_bingcheng_huanzuan_5pc",
+      "sc11Type": "SC11-T01",
+      "customerCode": "BINGCHENG-YM",
+      "valid": true,
+      "skipParameterized": false,
+      "billingEvidence": "confirmed",
+      "invalidReason": null,
+      "manifest": {
+        "code": "BINGCHENG-YM",
+        "name": "哈尔滨冰城医疗美容医院",
+        "billingPricingMode": "special_only",
+        "billingEnabled": true,
+        "activeRuleCount": 6
+      },
+      "source": "特殊收费(11).xlsx#冰城#环钻",
+      "expect": {
+        "status": "warning",
+        "expectedUnitPrice": 33.5,
+        "pricingRuleContains": "环钻",
+        "pricingRuleNotContains": "27.5"
+      }
+    },
+    {
+      "id": "t01_bingcheng_huanzuan_1pc",
+      "sc11Type": "SC11-T01",
+      "customerCode": "BINGCHENG-YM",
+      "valid": false,
+      "skipParameterized": true,
+      "billingEvidence": "none",
+      "invalidReason": "7月账单无 1 件环钻独立行，与 CSV 无法对齐",
+      "manifest": {
+        "code": "BINGCHENG-YM",
+        "name": "哈尔滨冰城医疗美容医院",
+        "billingPricingMode": "special_only",
+        "billingEnabled": true,
+        "activeRuleCount": 6
+      },
+      "source": "特殊收费(11).xlsx#冰城#环钻",
+      "expect": {
+        "status": "warning",
+        "expectedUnitPrice": 33.5,
+        "pricingRuleContains": "环钻"
+      }
+    },
+    {
+      "id": "t02_guoyao2_suture_8",
+      "sc11Type": "SC11-T02",
+      "customerCode": "GUOYAO-2",
+      "valid": false,
+      "skipParameterized": true,
+      "billingEvidence": "none",
+      "invalidReason": "无账单实践或 fixture 设置与 manifest/账单不一致",
+      "manifest": {
+        "code": "GUOYAO-2",
+        "name": "国药总医院第二院区",
+        "billingPricingMode": "hybrid",
+        "billingEnabled": null,
+        "activeRuleCount": 5
+      },
+      "source": "特殊收费(11).xlsx#电机厂#缝合针",
+      "expect": {
+        "status": "warning",
+        "expectedUnitPrice": 8.0,
+        "pricingRuleContains": "缝合针"
+      }
+    },
+    {
+      "id": "t02_guoyao2_suture_generic_packaging",
+      "sc11Type": "SC11-T02",
+      "customerCode": "GUOYAO-2",
+      "valid": false,
+      "skipParameterized": true,
+      "billingEvidence": "none",
+      "invalidReason": "无账单实践或 fixture 设置与 manifest/账单不一致",
+      "manifest": {
+        "code": "GUOYAO-2",
+        "name": "国药总医院第二院区",
+        "billingPricingMode": "hybrid",
+        "billingEnabled": null,
+        "activeRuleCount": 5
+      },
+      "source": "特殊收费(11).xlsx#通用#缝合针",
+      "expect": {
+        "status": "warning",
+        "expectedUnitPrice": 8.0
+      }
+    },
+    {
+      "id": "t03_guoyao2_double_lt3",
+      "sc11Type": "SC11-T03",
+      "customerCode": "GUOYAO-2",
+      "valid": false,
+      "skipParameterized": true,
+      "billingEvidence": "none",
+      "invalidReason": "无账单实践或 fixture 设置与 manifest/账单不一致",
+      "manifest": {
+        "code": "GUOYAO-2",
+        "name": "国药总医院第二院区",
+        "billingPricingMode": "hybrid",
+        "billingEnabled": null,
+        "activeRuleCount": 5
+      },
+      "source": "特殊收费(11).xlsx#电机厂#双＜3",
+      "expect": {
+        "status": "warning",
+        "pricingRuleContains": "双"
+      }
+    },
+    {
+      "id": "t03_guoyao2_double_ge3",
+      "sc11Type": "SC11-T03",
+      "customerCode": "GUOYAO-2",
+      "valid": false,
+      "skipParameterized": true,
+      "billingEvidence": "none",
+      "invalidReason": "无账单实践或 fixture 设置与 manifest/账单不一致",
+      "manifest": {
+        "code": "GUOYAO-2",
+        "name": "国药总医院第二院区",
+        "billingPricingMode": "hybrid",
+        "billingEnabled": null,
+        "activeRuleCount": 5
+      },
+      "source": "特殊收费(11).xlsx#电机厂#双≥3",
+      "expect": {
+        "status": "warning",
+        "pricingRuleContains": "双"
+      }
+    },
+    {
+      "id": "t03b_generic_double_lt35",
+      "sc11Type": "SC11-T03b",
+      "customerCode": "ZYY-D1",
+      "valid": false,
+      "skipParameterized": true,
+      "billingEvidence": "none",
+      "invalidReason": "无账单实践或 fixture 设置与 manifest/账单不一致",
+      "manifest": {
+        "code": "ZYY-D1",
+        "name": "黑龙江中医药大学附属第一医院",
+        "billingPricingMode": "hybrid",
+        "billingEnabled": null,
+        "activeRuleCount": 40
+      },
+      "source": "特殊收费(11).xlsx#通用#双低温35",
+      "expect": {
+        "status": "warning",
+        "expectedUnitPrice": 35.0,
+        "pricingRuleContains": "双"
+      }
+    },
+    {
+      "id": "t03b_generic_double_lt35_alt",
+      "sc11Type": "SC11-T03b",
+      "customerCode": "ZYY-D1",
+      "valid": false,
+      "skipParameterized": true,
+      "billingEvidence": "none",
+      "invalidReason": "无账单实践或 fixture 设置与 manifest/账单不一致",
+      "manifest": {
+        "code": "ZYY-D1",
+        "name": "黑龙江中医药大学附属第一医院",
+        "billingPricingMode": "hybrid",
+        "billingEnabled": null,
+        "activeRuleCount": 40
+      },
+      "source": "特殊收费(11).xlsx#通用#双低温35",
+      "expect": {
+        "status": "unchanged",
+        "expectedUnitPrice": 35.0
+      }
+    },
+    {
+      "id": "t04_guoyao2_pointer_12",
+      "sc11Type": "SC11-T04",
+      "customerCode": "GUOYAO-2",
+      "valid": false,
+      "skipParameterized": true,
+      "billingEvidence": "none",
+      "invalidReason": "无账单实践或 fixture 设置与 manifest/账单不一致",
+      "manifest": {
+        "code": "GUOYAO-2",
+        "name": "国药总医院第二院区",
+        "billingPricingMode": "hybrid",
+        "billingEnabled": null,
+        "activeRuleCount": 5
+      },
+      "source": "特殊收费(11).xlsx#电机厂#指针",
+      "expect": {
+        "status": "warning",
+        "pricingRuleContains": "指针"
+      }
+    },
+    {
+      "id": "t04_fnn_pdrill_8",
+      "sc11Type": "SC11-T04",
+      "customerCode": "FNN-YY",
+      "valid": false,
+      "skipParameterized": true,
+      "billingEvidence": "none",
+      "invalidReason": "无账单实践或 fixture 设置与 manifest/账单不一致",
+      "manifest": {
+        "code": "FNN-YY",
+        "name": "方南南医院",
+        "billingPricingMode": "standard",
+        "billingEnabled": null,
+        "activeRuleCount": 2
+      },
+      "source": "特殊收费(11).xlsx#方南南#P钻",
+      "expect": {
+        "status": "warning",
+        "pricingRuleContains": "P钻"
+      }
+    },
+    {
+      "id": "t04b_neau_root_11",
+      "sc11Type": "SC11-T04b",
+      "customerCode": "NEAU-YY",
+      "valid": true,
+      "skipParameterized": false,
+      "billingEvidence": "confirmed",
+      "invalidReason": null,
+      "manifest": {
+        "code": "NEAU-YY",
+        "name": "NEAU-YY",
+        "billingPricingMode": "standard",
+        "billingEnabled": true,
+        "activeRuleCount": 4
+      },
+      "source": "特殊收费(11).xlsx#东北农大#根管锉5.6",
+      "expect": {
+        "status": "warning",
+        "expectedUnitPrice": 16.8
+      }
+    },
+    {
+      "id": "t04b_neau_root_6",
+      "sc11Type": "SC11-T04b",
+      "customerCode": "NEAU-YY",
+      "valid": true,
+      "skipParameterized": false,
+      "billingEvidence": "confirmed",
+      "invalidReason": null,
+      "manifest": {
+        "code": "NEAU-YY",
+        "name": "NEAU-YY",
+        "billingPricingMode": "standard",
+        "billingEnabled": true,
+        "activeRuleCount": 4
+      },
+      "source": "特殊收费(11).xlsx#东北农大#根管锉5.6",
+      "expect": {
+        "status": "warning",
+        "expectedUnitPrice": 11.2
+      }
+    },
+    {
+      "id": "t05_guoyao2_pointer_20",
+      "sc11Type": "SC11-T05",
+      "customerCode": "GUOYAO-2",
+      "valid": false,
+      "skipParameterized": true,
+      "billingEvidence": "none",
+      "invalidReason": "无账单实践或 fixture 设置与 manifest/账单不一致",
+      "manifest": {
+        "code": "GUOYAO-2",
+        "name": "国药总医院第二院区",
+        "billingPricingMode": "hybrid",
+        "billingEnabled": null,
+        "activeRuleCount": 5
+      },
+      "source": "特殊收费(11).xlsx#电机厂#指针＞10",
+      "expect": {
+        "status": "warning",
+        "expectedUnitPrice": 22.0,
+        "pricingRuleContains": "指针"
+      }
+    },
+    {
+      "id": "t05_fnn_jikuozhen_15",
+      "sc11Type": "SC11-T05",
+      "customerCode": "FNN-YY",
+      "valid": false,
+      "skipParameterized": true,
+      "billingEvidence": "none",
+      "invalidReason": "无账单实践或 fixture 设置与 manifest/账单不一致",
+      "manifest": {
+        "code": "FNN-YY",
+        "name": "方南南医院",
+        "billingPricingMode": "standard",
+        "billingEnabled": null,
+        "activeRuleCount": 2
+      },
+      "source": "特殊收费(11).xlsx#方南南#机扩针＞10",
+      "expect": {
+        "status": "warning",
+        "expectedUnitPrice": 22.0
+      }
+    },
+    {
+      "id": "t06_zuyan_pai_15",
+      "sc11Type": "SC11-T06",
+      "customerCode": "ZUYAN-NG",
+      "valid": true,
+      "skipParameterized": false,
+      "billingEvidence": "confirmed",
+      "invalidReason": null,
+      "manifest": {
+        "code": "ZUYAN-NG",
+        "name": "祖研-黑龙江省中医医院（南岗院区）",
+        "billingPricingMode": "hybrid",
+        "billingEnabled": true,
+        "activeRuleCount": 5
+      },
+      "source": "特殊收费(11).xlsx#祖研#排针",
+      "expect": {
+        "status": "unchanged",
+        "expectedUnitPrice": 13.5
+      }
+    },
+    {
+      "id": "t06_zuyan_pai_25",
+      "sc11Type": "SC11-T06",
+      "customerCode": "ZUYAN-NG",
+      "valid": true,
+      "skipParameterized": false,
+      "billingEvidence": "confirmed",
+      "invalidReason": null,
+      "manifest": {
+        "code": "ZUYAN-NG",
+        "name": "祖研-黑龙江省中医医院（南岗院区）",
+        "billingPricingMode": "hybrid",
+        "billingEnabled": true,
+        "activeRuleCount": 5
+      },
+      "source": "特殊收费(11).xlsx#祖研#排针",
+      "expect": {
+        "status": "unchanged",
+        "expectedUnitPrice": 16.5
+      }
+    },
+    {
+      "id": "t07_guoyao2_cotton_w90",
+      "sc11Type": "SC11-T07",
+      "customerCode": "GUOYAO-2",
+      "valid": false,
+      "skipParameterized": true,
+      "billingEvidence": "none",
+      "invalidReason": "无账单实践或 fixture 设置与 manifest/账单不一致",
+      "manifest": {
+        "code": "GUOYAO-2",
+        "name": "国药总医院第二院区",
+        "billingPricingMode": "hybrid",
+        "billingEnabled": null,
+        "activeRuleCount": 5
+      },
+      "source": "特殊收费(11).xlsx#电机厂#棉球W90",
+      "expect": {
+        "status": "warning",
+        "expectedUnitPrice": 30.0
+      }
+    },
+    {
+      "id": "t07_guoyao2_cotton_w60",
+      "sc11Type": "SC11-T07",
+      "customerCode": "GUOYAO-2",
+      "valid": false,
+      "skipParameterized": true,
+      "billingEvidence": "none",
+      "invalidReason": "无账单实践或 fixture 设置与 manifest/账单不一致",
+      "manifest": {
+        "code": "GUOYAO-2",
+        "name": "国药总医院第二院区",
+        "billingPricingMode": "hybrid",
+        "billingEnabled": null,
+        "activeRuleCount": 5
+      },
+      "source": "特殊收费(11).xlsx#电机厂#棉球W60",
+      "expect": {
+        "status": "warning",
+        "expectedUnitPrice": 25.0
+      }
+    },
+    {
+      "id": "t08_jiuzhou_fangpan",
+      "sc11Type": "SC11-T08",
+      "customerCode": "JIUZHOU-FK",
+      "valid": true,
+      "skipParameterized": false,
+      "billingEvidence": "confirmed",
+      "invalidReason": null,
+      "manifest": {
+        "code": "JIUZHOU-FK",
+        "name": "黑龙江九洲妇科医院",
+        "billingPricingMode": "standard",
+        "billingEnabled": false,
+        "activeRuleCount": 1
+      },
+      "source": "特殊收费(11).xlsx#九州#方盘",
+      "expect": {
+        "status": "unchanged",
+        "pricingRuleContains": "特色账单已关闭"
+      }
+    },
+    {
+      "id": "t08_jzsw_bio_150",
+      "sc11Type": "SC11-T08",
+      "customerCode": "JZSW-BIO",
+      "valid": false,
+      "skipParameterized": true,
+      "billingEvidence": "none",
+      "invalidReason": "无账单实践或 fixture 设置与 manifest/账单不一致",
+      "manifest": {
+        "code": "JZSW-BIO",
+        "name": "哈尔滨基准生物科技有限公司",
+        "billingPricingMode": "standard",
+        "billingEnabled": null,
+        "activeRuleCount": 1
+      },
+      "source": "特殊收费(11).xlsx#基准生物#氩氦刀150",
+      "expect": {
+        "status": "warning",
+        "expectedUnitPrice": 150.0,
+        "pricingRuleContains": "氩氦刀"
+      }
+    },
+    {
+      "id": "t08_shkf_billing_off",
+      "sc11Type": "SC11-T08",
+      "customerCode": "SHKF-YY",
+      "valid": true,
+      "skipParameterized": false,
+      "billingEvidence": "confirmed",
+      "invalidReason": null,
+      "manifest": {
+        "code": "SHKF-YY",
+        "name": "黑龙江省社会康复医院",
+        "billingPricingMode": "special_only",
+        "billingEnabled": false,
+        "activeRuleCount": 11
+      },
+      "source": "特殊收费(11).xlsx#社会康复#16.5",
+      "expect": {
+        "status": "unchanged",
+        "pricingRuleContains": "特色账单已关闭"
+      }
+    },
+    {
+      "id": "t08_shkf_44",
+      "sc11Type": "SC11-T08",
+      "customerCode": "SHKF-YY",
+      "valid": false,
+      "skipParameterized": true,
+      "billingEvidence": "none",
+      "invalidReason": "SHKF billingEnabled=false，无 warning 账单实践",
+      "manifest": {
+        "code": "SHKF-YY",
+        "name": "黑龙江省社会康复医院",
+        "billingPricingMode": "special_only",
+        "billingEnabled": false,
+        "activeRuleCount": 11
+      },
+      "source": "特殊收费(11).xlsx#社会康复#44",
+      "expect": {
+        "status": "warning",
+        "expectedUnitPrice": 44.0
+      }
+    },
+    {
+      "id": "t09_jiayi_kongjin",
+      "sc11Type": "SC11-T09",
+      "customerCode": "JIAYI-YL",
+      "valid": false,
+      "skipParameterized": true,
+      "billingEvidence": "none",
+      "invalidReason": "无账单实践或 fixture 设置与 manifest/账单不一致",
+      "manifest": {
+        "code": "JIAYI-YL",
+        "name": "佳医医疗",
+        "billingPricingMode": "standard",
+        "billingEnabled": null,
+        "activeRuleCount": 1
+      },
+      "source": "特殊收费(11).xlsx#工程大学#孔巾≥20",
+      "expect": {
+        "status": "warning",
+        "expectedUnitPrice": 4.0,
+        "pricingRuleContains": "孔巾"
+      }
+    },
+    {
+      "id": "t09_jiayi_kongjin_alt",
+      "sc11Type": "SC11-T09",
+      "customerCode": "JIAYI-YL",
+      "valid": false,
+      "skipParameterized": true,
+      "billingEvidence": "none",
+      "invalidReason": "无账单实践或 fixture 设置与 manifest/账单不一致",
+      "manifest": {
+        "code": "JIAYI-YL",
+        "name": "佳医医疗",
+        "billingPricingMode": "standard",
+        "billingEnabled": null,
+        "activeRuleCount": 1
+      },
+      "source": "特殊收费(11).xlsx#工程大学#孔巾≥20",
+      "expect": {
+        "status": "warning",
+        "expectedUnitPrice": 4.0
+      }
+    },
+    {
+      "id": "t10_hrb2nd_dressing_lt20",
+      "sc11Type": "SC11-T10",
+      "customerCode": "HRB-2ND",
+      "valid": false,
+      "skipParameterized": true,
+      "billingEvidence": "none",
+      "invalidReason": "无账单实践或 fixture 设置与 manifest/账单不一致",
+      "manifest": {
+        "code": "HRB-2ND",
+        "name": "哈尔滨市第二医院",
+        "billingPricingMode": "special_only",
+        "billingEnabled": null,
+        "activeRuleCount": 7
+      },
+      "source": "特殊收费(11).xlsx#通用#纸塑＜20",
+      "expect": {
+        "status": "warning",
+        "expectedUnitPrice": 2.5
+      }
+    },
+    {
+      "id": "t10_hrb2nd_dressing_lt20_alt",
+      "sc11Type": "SC11-T10",
+      "customerCode": "HRB-2ND",
+      "valid": false,
+      "skipParameterized": true,
+      "billingEvidence": "none",
+      "invalidReason": "无账单实践或 fixture 设置与 manifest/账单不一致",
+      "manifest": {
+        "code": "HRB-2ND",
+        "name": "哈尔滨市第二医院",
+        "billingPricingMode": "special_only",
+        "billingEnabled": null,
+        "activeRuleCount": 7
+      },
+      "source": "特殊收费(11).xlsx#通用#纸塑＜20",
+      "expect": {
+        "status": "warning",
+        "expectedUnitPrice": 2.5
+      }
+    },
+    {
+      "id": "t11_haiyuan_cap_3",
+      "sc11Type": "SC11-T11",
+      "customerCode": "HAIYUAN-SB",
+      "valid": false,
+      "skipParameterized": true,
+      "billingEvidence": "none",
+      "invalidReason": "无账单实践或 fixture 设置与 manifest/账单不一致",
+      "manifest": {
+        "code": "HAIYUAN-SB",
+        "name": "黑龙江省海员总医院（松北）",
+        "billingPricingMode": "hybrid",
+        "billingEnabled": null,
+        "activeRuleCount": 2
+      },
+      "source": "特殊收费(11).xlsx#海员#胶帽≤5",
+      "expect": {
+        "status": "warning",
+        "pricingRuleContains": "胶帽"
+      }
+    },
+    {
+      "id": "t11_prison_seal_4",
+      "sc11Type": "SC11-T11",
+      "customerCode": "HLJ-JYGLJ-YY",
+      "valid": false,
+      "skipParameterized": true,
+      "billingEvidence": "none",
+      "invalidReason": "无账单实践或 fixture 设置与 manifest/账单不一致",
+      "manifest": {
+        "code": "HLJ-JYGLJ-YY",
+        "name": "省监狱管理局医院",
+        "billingPricingMode": "standard",
+        "billingEnabled": null,
+        "activeRuleCount": 3
+      },
+      "source": "特殊收费(11).xlsx#监狱#密封件≤5",
+      "expect": {
+        "status": "warning",
+        "pricingRuleContains": "密封"
+      }
+    },
+    {
+      "id": "t12_chunyu_plastic_tube",
+      "sc11Type": "SC11-T12",
+      "customerCode": "CHUNYU-YL",
+      "valid": false,
+      "skipParameterized": true,
+      "billingEvidence": "none",
+      "invalidReason": "无账单实践或 fixture 设置与 manifest/账单不一致",
+      "manifest": {
+        "code": "CHUNYU-YL",
+        "name": "春语医疗美容医院",
+        "billingPricingMode": "hybrid",
+        "billingEnabled": null,
+        "activeRuleCount": 2
+      },
+      "source": "特殊收费(11).xlsx#春语#塑料管",
+      "expect": {
+        "status": "warning",
+        "pricingRuleContains": "塑料管"
+      }
+    },
+    {
+      "id": "t12_chunyu_tube_alt",
+      "sc11Type": "SC11-T12",
+      "customerCode": "CHUNYU-YL",
+      "valid": false,
+      "skipParameterized": true,
+      "billingEvidence": "none",
+      "invalidReason": "无账单实践或 fixture 设置与 manifest/账单不一致",
+      "manifest": {
+        "code": "CHUNYU-YL",
+        "name": "春语医疗美容医院",
+        "billingPricingMode": "hybrid",
+        "billingEnabled": null,
+        "activeRuleCount": 2
+      },
+      "source": "特殊收费(11).xlsx#春语#管子",
+      "expect": {
+        "status": "warning",
+        "pricingRuleContains": "管子"
+      }
+    },
+    {
+      "id": "t13_hlzgh_lens_plus8",
+      "sc11Type": "SC11-T13",
+      "customerCode": "HL-ZGH",
+      "valid": false,
+      "skipParameterized": true,
+      "billingEvidence": "none",
+      "invalidReason": "无账单实践或 fixture 设置与 manifest/账单不一致",
+      "manifest": {
+        "code": "HL-ZGH",
+        "name": "黑龙江总工会医院",
+        "billingPricingMode": "hybrid",
+        "billingEnabled": null,
+        "activeRuleCount": 1
+      },
+      "source": "特殊收费(11).xlsx#总工会#镜头+8",
+      "expect": {
+        "notesContains": "镜头"
+      }
+    },
+    {
+      "id": "t13_hlzgh_lens_empty_rule",
+      "sc11Type": "SC11-T13",
+      "customerCode": "HL-ZGH",
+      "valid": false,
+      "skipParameterized": true,
+      "billingEvidence": "none",
+      "invalidReason": "无账单实践或 fixture 设置与 manifest/账单不一致",
+      "manifest": {
+        "code": "HL-ZGH",
+        "name": "黑龙江总工会医院",
+        "billingPricingMode": "hybrid",
+        "billingEnabled": null,
+        "activeRuleCount": 1
+      },
+      "source": "特殊收费(11).xlsx#总工会#检查镜",
+      "expect": {
+        "notesContains": "镜头"
+      }
+    },
+    {
+      "id": "t14_suofei_face_3",
+      "sc11Type": "SC11-T14",
+      "customerCode": "SUOFEI-YL",
+      "valid": false,
+      "skipParameterized": true,
+      "billingEvidence": "none",
+      "invalidReason": "无账单实践或 fixture 设置与 manifest/账单不一致",
+      "manifest": {
+        "code": "SUOFEI-YL",
+        "name": "索菲医疗美容门诊",
+        "billingPricingMode": "standard",
+        "billingEnabled": null,
+        "activeRuleCount": 0
+      },
+      "source": "特殊收费(11).xlsx#索菲#面吸针≥3",
+      "expect": {
+        "status": "warning",
+        "expectedUnitPrice": 27.5,
+        "pricingRuleContains": "面吸针"
+      }
+    },
+    {
+      "id": "t14_suofei_face_4",
+      "sc11Type": "SC11-T14",
+      "customerCode": "SUOFEI-YL",
+      "valid": false,
+      "skipParameterized": true,
+      "billingEvidence": "none",
+      "invalidReason": "无账单实践或 fixture 设置与 manifest/账单不一致",
+      "manifest": {
+        "code": "SUOFEI-YL",
+        "name": "索菲医疗美容门诊",
+        "billingPricingMode": "standard",
+        "billingEnabled": null,
+        "activeRuleCount": 0
+      },
+      "source": "特殊收费(11).xlsx#索菲#面吸针≥3",
+      "expect": {
+        "status": "warning",
+        "expectedUnitPrice": 22.0
+      }
+    },
+    {
+      "id": "t15_soft_mirror_eto",
+      "sc11Type": "SC11-T15",
+      "customerCode": "HRB-2ND",
+      "valid": false,
+      "skipParameterized": true,
+      "billingEvidence": "none",
+      "invalidReason": "无账单实践或 fixture 设置与 manifest/账单不一致",
+      "manifest": {
+        "code": "HRB-2ND",
+        "name": "哈尔滨市第二医院",
+        "billingPricingMode": "special_only",
+        "billingEnabled": null,
+        "activeRuleCount": 7
+      },
+      "source": "特殊收费(11).xlsx#通用#软镜ETO300",
+      "expect": {
+        "status": "warning",
+        "expectedUnitPrice": 300.0
+      }
+    },
+    {
+      "id": "t15_soft_mirror_lt",
+      "sc11Type": "SC11-T15",
+      "customerCode": "HRB-2ND",
+      "valid": false,
+      "skipParameterized": true,
+      "billingEvidence": "none",
+      "invalidReason": "无账单实践或 fixture 设置与 manifest/账单不一致",
+      "manifest": {
+        "code": "HRB-2ND",
+        "name": "哈尔滨市第二医院",
+        "billingPricingMode": "special_only",
+        "billingEnabled": null,
+        "activeRuleCount": 7
+      },
+      "source": "特殊收费(11).xlsx#通用#软镜LT300",
+      "expect": {
+        "status": "warning",
+        "expectedUnitPrice": 300.0
+      }
+    },
+    {
+      "id": "t16_lt_standard_1pc",
+      "sc11Type": "SC11-T16",
+      "customerCode": "HRB-2ND",
+      "valid": false,
+      "skipParameterized": true,
+      "billingEvidence": "none",
+      "invalidReason": "无账单实践或 fixture 设置与 manifest/账单不一致",
+      "manifest": {
+        "code": "HRB-2ND",
+        "name": "哈尔滨市第二医院",
+        "billingPricingMode": "special_only",
+        "billingEnabled": null,
+        "activeRuleCount": 7
+      },
+      "source": "特殊收费(11).xlsx#Sheet3#1件",
+      "expect": {
+        "status": "warning"
+      }
+    },
+    {
+      "id": "t16_lt_standard_5pc",
+      "sc11Type": "SC11-T16",
+      "customerCode": "HRB-2ND",
+      "valid": false,
+      "skipParameterized": true,
+      "billingEvidence": "none",
+      "invalidReason": "无账单实践或 fixture 设置与 manifest/账单不一致",
+      "manifest": {
+        "code": "HRB-2ND",
+        "name": "哈尔滨市第二医院",
+        "billingPricingMode": "special_only",
+        "billingEnabled": null,
+        "activeRuleCount": 7
+      },
+      "source": "特殊收费(11).xlsx#Sheet3#5件",
+      "expect": {
+        "status": "warning"
+      }
+    },
+    {
+      "id": "billing_hybrid_unchanged",
+      "sc11Type": "SC11-DB-HYBRID",
+      "customerCode": "GUOYAO-2",
+      "valid": true,
+      "skipParameterized": false,
+      "billingEvidence": "none",
+      "invalidReason": null,
+      "manifest": {
+        "code": "GUOYAO-2",
+        "name": "国药总医院第二院区",
+        "billingPricingMode": "hybrid",
+        "billingEnabled": null,
+        "activeRuleCount": 5
+      },
+      "source": "manifest#GUOYAO-2#hybrid未命中",
+      "expect": {
+        "status": "warning",
+        "expectedUnitPrice": 8.0,
+        "pricingRuleContains": "高温纸塑袋"
+      }
+    },
+    {
+      "id": "billing_disabled_jiuzhou",
+      "sc11Type": "SC11-DB-BILLING_OFF",
+      "customerCode": "JIUZHOU-FK",
+      "valid": true,
+      "skipParameterized": false,
+      "billingEvidence": "none",
+      "invalidReason": null,
+      "manifest": {
+        "code": "JIUZHOU-FK",
+        "name": "黑龙江九洲妇科医院",
+        "billingPricingMode": "standard",
+        "billingEnabled": false,
+        "activeRuleCount": 1
+      },
+      "source": "manifest#JIUZHOU-FK#billingEnabled=false",
+      "expect": {
+        "status": "unchanged",
+        "pricingRuleContains": "特色账单已关闭"
+      }
+    }
+  ],
+  "pendingMatchDocs": [
+    {
+      "source": "测试用例/待匹配/哈尔滨长健医院_定价核对说明.md",
+      "customerCodes": [
+        "77",
+        "42",
+        "8",
+        "231"
+      ],
+      "text": "# 哈尔滨长健医院（HRB-CJ）— 6 月手术室定价核对\n\n## 背景\n\n- 客户：**哈尔滨长健医院**，代码 `HRB-CJ`，铂康 **rule_id=8**（标准灭菌计费 v2.0）。\n- 特色账单规则文档 **未** 单独列出长健；按 **标准阶梯** 计费（与「账单正常计费」类客户一致）。\n- 测试文件：`测试用例/待匹配/处理后表格/6月__长健6月账单.xlsx` → sheet **手术室**。\n\n## 关键行（2026-06-08 / 1610288）\n\n| 包名 | 类型 | 源 Excel 单价 | 说明 |\n|------|------|---------------|------|\n| 尿道探子-14/w6050 | 额外包(纸塑袋) | **77** | 14 件 × 5.5 = 77（高温纸塑袋阶梯） |\n| 手术包（二） | 器械包(ZSD) | **236.5** | 43 件 × 5.5 = 236.5（高温无纺布，>3 件按把价） |\n\n源 Excel **无**「包装材料 / 器械数」列；对账 UI 中器械数、无纺布材料多来自 **包类别号 "
+    },
+    {
+      "source": "测试用例/待匹配/哈尔滨美涵美_吸脂针定价核对说明.md",
+      "customerCodes": [
+        "8"
+      ],
+      "text": "# 哈尔滨美涵美（HRB-MHM）吸脂针定价\n\n## 客户\n\n- **代码**：`HRB-MHM`\n- **全称**：哈尔滨美涵美医疗美容有限公司\n- **来源**：`HardcodedRulesMigrationRunner` / 铂康额外客户（非 42 院参考，`status=inactive` 但可配置产品规则）\n\n## 业务规则\n\n| 包名长度标识 | 计费件数 |\n|-------------|---------|\n| 含 `型号20cm以下` / `20cm以下` | 5 根算 1 件（`threshold=5`, `foldRatio=5`） |\n| 含 `型号20cm以上` / `20cm以上` | 按实件数，不 5 合 1 |\n\n长度以**包名**为准，不是纸塑袋物理尺寸。\n\n## 实现\n\n1. **客户产品规则**（FOLD）：`美涵吸脂针20cm以下5件算1件`，关键词 `型号20cm以下`、`20cm以下`。\n2. **引擎**：`PricingEngine.isLiposuctionNeedleLongVariant` 对「吸脂针 + 20cm以上」跳过全局「"
+    },
+    {
+      "source": "测试用例/待匹配/README.md",
+      "customerCodes": [],
+      "text": "# 待匹配测试用例\n\n本目录存放**无法自动匹配到具体医院**的账单文件，作为 `测试用例/{医院名称}/` 的补充归档。\n\n## 目录结构\n\n```\n待匹配/\n  原始表格/      # 系统导入格式的原始账单（未处理）\n  处理后表格/    # 人工处理/导出格式的账单\n```\n\n## 数据来源\n\n| 子目录 | 原铂康路径 | 说明 |\n|--------|-----------|------|\n| 原始表格 | `铂康/AI账单（原始未处理的）/` | AI 导入原始格式 |\n| 原始表格 | `铂康/账单原始数据-4(1)/账单原始数据-4/` | 补充原始数据 |\n| 处理后表格 | `铂康/2026年账单(正确的)/` | 2026 年正确账单（递归） |\n| 处理后表格 | `铂康/已做完账单(1)/` | 已完成账单（递归） |\n\n> 上述铂康源目录在整理完成后已删除；文件已复制至本目录或各医院子目录。\n\n## 为何在此\n\n这些文件在自动匹配时无法唯一对应 `铂康/参考文件（按照医院）/` 中的任一医院，常见原因包括：\n\n- 文件名/路径缺少医院标识或别名\n- 多"
+    },
+    {
+      "source": "测试用例/待匹配/数据问题分析.md",
+      "customerCodes": [],
+      "text": "# 待匹配 — 原始表格数据问题分析\n\n> 分析日期：2026-07-22\n> 对比方法：以「处理后表格」为基准（ground truth），逐行匹配原始表格中的发货明细\n> 匹配键：发货日期 + 发货单号 + 包类别号 + 包名\n\n## 一、文件清单\n\n| 月份 | 原始表格 | 处理后表格（账单） | 处理后表格（结款函） |\n|------|----------|-------------------|-------------------|\n\n**说明：** 原始表格仅含账单明细，不含结款函；结款函仅存在于处理后表格中，为系统导出产物。\n\n## 二、总体对比摘要\n\n| 月份 | 原始行数 | 处理后行数 | 缺失行 | 多余行 | 字段不一致 | 金额差异 |\n|------|---------|-----------|--------|--------|-----------|---------|\n\n\n**警告：** 分析过程中出现错误：原始表格为空\n\n## 四、原始表格数据问题明细\n\n## 五、问题模式归纳\n\n### 5.1 已确认问题（需系统处理）\n\n无已确认的明细字段差"
+    },
+    {
+      "source": "测试用例/待匹配/黑龙江省妇幼保健院_车针5合1核对说明.md",
+      "customerCodes": [
+        "HLFB-SF",
+        "NG-FUCHAN"
+      ],
+      "text": "# 黑龙江省妇幼保健院（人口）（HLFB-SF）— 口腔车针 5 合 1 @ 13.5\n\n## 客户编码\n\n| 医院 | code | 说明 |\n|------|------|------|\n| 黑龙江省妇幼保健院（人口） | **HLFB-SF** | 参考样例 `测试用例/reference-妇幼6月.xlsx`（非 NG-FUCHAN 南岗妇产） |\n\n> **NG-FUCHAN**（南岗区妇产医院）6 月清单无车针校正行；本院规则以省妇幼人口账单为准。\n\n## 规则\n\n| 机制 | 内容 |\n|------|------|\n| 特色账单 | `billingEnabled=true`，`billingPricingMode=standard` |\n| FOLD（5→1） | `HardcodedRulesMigrationRunner`：`省妇幼人口口腔小件 5 件算 1 件`，关键词含 **车针** |\n| 校正价 | Seed `phase-hlfb-sf-chezhen-20260724.json`：`校正价13.5`，关键词 **车针**，`skipPackaging="
+    },
+    {
+      "source": "测试用例/待匹配/纠错测试记录-松电与农大.md",
+      "customerCodes": [],
+      "text": "# 松电慢性病门诊 / 东北农大口腔 — 纠错能力测试（S5）\n\n> 更新 · 2026-07-23 · 两家均为口腔科针类 5 合 1 · 规范见 [`../S5纠错测试最小用例集.md`](../S5纠错测试最小用例集.md)\n\n## 哈尔滨道外区松电慢性病专科门诊部\n\n| 项目 | 值 |\n|------|-----|\n| **客户编码** | （博康建档名）哈尔滨道外区松电慢性病专科门诊部 |\n| **S4 基线** | 待匹配 · 种子 `phase-hrb-sd-neau-kouqiang-fold-20260723.json` |\n\n| # | 场景ID | 包名 | 故意错误 | 期望 status | 自动化 | UI | 结果 |\n|---|--------|------|----------|-------------|--------|-----|:----:|\n| 1 | EC-PRICE | 口腔科 `车针-32` · 7 折后 38.5 | 账单 **42.35** (+10%) | `warning` | `PricingEngineTest#songd"
+    },
+    {
+      "source": "测试用例/待匹配/纠错测试记录-HRB-MHM.md",
+      "customerCodes": [
+        "8"
+      ],
+      "text": "# 哈尔滨美涵美医疗美容（HRB-MHM）— 纠错能力测试（S5）\n\n> 更新 · 2026-07-23 · 材料在 `测试用例/待匹配/` · 规范见 [`../S5纠错测试最小用例集.md`](../S5纠错测试最小用例集.md)\n\n| 项目 | 值 |\n|------|-----|\n| **客户编码** | HRB-MHM |\n| **S4 基线** | 待匹配 · 种子 `phase-hrb-mhm-xizhizhen-20260723.json` |\n\n## 用例执行表\n\n| # | 场景ID | 类型 / 包名（黄金行） | 故意错误 | 期望 status | 期望明细 | 自动化 | UI/Job | 结果 |\n|---|--------|----------------------|----------|-------------|----------|--------|--------|:----:|\n| 1 | EC-PRICE | `额外包(纸塑袋)` · 吸脂针(型号20cm以下)-5件 | `unitPrice=8.8`（应为 **8**） | `warni"
+    },
+    {
+      "source": "测试用例/待匹配/松电东北农大_口腔科针类5合1核对说明.md",
+      "customerCodes": [
+        "HRB-SD-MB",
+        "NEAU-YY",
+        "7",
+        "13",
+        "4"
+      ],
+      "text": "# 松电 / 东北农大 — 口腔科针类 5 件算 1 件\n\n## 客户编码\n\n| 医院 | code | 铂康 job |\n|------|------|----------|\n| 哈尔滨道外区松电慢性病专科门诊部 | **HRB-SD-MB** | 37 |\n| 东北农业大学医院 | **NEAU-YY** | 36 |\n\n## 规则\n\n- 种子：`backend/src/main/resources/billing-seeds/phase-hrb-sd-neau-kouqiang-fold-20260723.json`\n- 修复种子（科室条件）：`backend/src/main/resources/billing-seeds/phase-hrb-sd-neau-kouqiang-fold-fix-20260724-v2.json`\n- 标记：\n  - `billing_seed_hrb_sd_neau_kouqiang_fold_20260723_v1`\n  - `billing_seed_hrb_sd_neau_kouqiang_fold_fix_20260724_v2`（重补"
+    }
+  ]
+}
