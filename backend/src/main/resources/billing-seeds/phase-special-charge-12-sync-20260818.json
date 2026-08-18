@@ -1,0 +1,673 @@
+{
+  "version": "1",
+  "description": "对照特殊收费(12).xlsx：恢复 Excel 12 规则、补录新增/更新项（22 院）",
+  "strictRuleOps": true,
+  "customerUpdates": [
+    {
+      "code": "SHKF-YY",
+      "billingEnabled": true,
+      "billingPricingMode": "special_only"
+    },
+    {
+      "code": "HULAN-TCM",
+      "billingEnabled": true
+    },
+    {
+      "code": "SUOFEI-YL",
+      "billingEnabled": true,
+      "billingPricingMode": "hybrid"
+    }
+  ],
+  "activateRules": [
+    {
+      "code": "GUOYAO-2",
+      "ruleName": "电机厂双按件5.5内层袋"
+    },
+    {
+      "code": "GUOYAO-2",
+      "ruleName": "电机厂双按件5.5外层袋"
+    },
+    {
+      "code": "GUOYAO-2",
+      "ruleName": "电机厂指针5合1含包材"
+    },
+    {
+      "code": "GUOYAO-2",
+      "ruleName": "电机厂指针5合1免包材"
+    },
+    {
+      "code": "HL-ZGH",
+      "ruleName": "总工会镜头铂康盒加收8"
+    },
+    {
+      "code": "CHUNYU-YL",
+      "ruleName": "春语塑料管≤10按1件"
+    },
+    {
+      "code": "CHUNYU-YL",
+      "ruleName": "春语塑料管>10折算22"
+    },
+    {
+      "code": "SHKF-YY",
+      "ruleName": "社会康复ITI种植盒44"
+    },
+    {
+      "code": "SHKF-YY",
+      "ruleName": "社会康复内提工具盒44"
+    },
+    {
+      "code": "SHKF-YY",
+      "ruleName": "社会康复大车针盒22"
+    },
+    {
+      "code": "SHKF-YY",
+      "ruleName": "社会康复抛光车针盒16.5"
+    },
+    {
+      "code": "SHKF-YY",
+      "ruleName": "社会康复梁光强器械盒22"
+    },
+    {
+      "code": "SHKF-YY",
+      "ruleName": "社会康复梁光强器械盒粉16.5"
+    },
+    {
+      "code": "SHKF-YY",
+      "ruleName": "社会康复环切器械盒16.5"
+    },
+    {
+      "code": "SHKF-YY",
+      "ruleName": "社会康复登腾种植盒44"
+    },
+    {
+      "code": "SHKF-YY",
+      "ruleName": "社会康复百诺工具盒44"
+    },
+    {
+      "code": "SHKF-YY",
+      "ruleName": "社会康复种植盒16.5"
+    }
+  ],
+  "deactivateRules": [
+    {
+      "code": "HULAN-TCM",
+      "ruleName": "外科包固定价"
+    },
+    {
+      "code": "HULAN-TCM",
+      "ruleName": "阑尾包固定价"
+    },
+    {
+      "code": "HULAN-TCM",
+      "ruleName": "校正价275.0"
+    }
+  ],
+  "ruleUpdates": [
+    {
+      "code": "HLJ-FY-RK",
+      "ruleName": "妇幼人口密封件≤5按1件",
+      "setKeywords": [
+        "密封件",
+        "密封胶圈",
+        "水管膜片",
+        "垫片"
+      ]
+    },
+    {
+      "code": "HLJ-FY-RK",
+      "ruleName": "妇幼人口密封件>5折算22",
+      "setKeywords": [
+        "密封件",
+        "密封胶圈",
+        "水管膜片",
+        "垫片"
+      ]
+    }
+  ],
+  "newRules": [
+    {
+      "code": "GUOYAO-2",
+      "ruleType": "FIXED_PRICE",
+      "name": "电机厂敷料W605070固定25棉球",
+      "priority": 30,
+      "price": 25.0,
+      "keywords": [
+        "棉球",
+        "W6050",
+        "W6070",
+        "W7060",
+        "W7070"
+      ],
+      "skipPackaging": true,
+      "skipDiscount": true
+    },
+    {
+      "code": "GUOYAO-2",
+      "ruleType": "FIXED_PRICE",
+      "name": "电机厂敷料W605070固定25纱布",
+      "priority": 30,
+      "price": 25.0,
+      "keywords": [
+        "纱布",
+        "W6050",
+        "W6070",
+        "W7060",
+        "W7070"
+      ],
+      "skipPackaging": true,
+      "skipDiscount": true
+    },
+    {
+      "code": "GUOYAO-2",
+      "ruleType": "FIXED_PRICE",
+      "name": "电机厂敷料W9050固定30棉球",
+      "priority": 30,
+      "price": 30.0,
+      "keywords": [
+        "棉球",
+        "W9050",
+        "W9060"
+      ],
+      "skipPackaging": true,
+      "skipDiscount": true
+    },
+    {
+      "code": "GUOYAO-2",
+      "ruleType": "FIXED_PRICE",
+      "name": "电机厂敷料W9050固定30纱布",
+      "priority": 30,
+      "price": 30.0,
+      "keywords": [
+        "纱布",
+        "W9050",
+        "W9060"
+      ],
+      "skipPackaging": true,
+      "skipDiscount": true
+    },
+    {
+      "code": "GUOYAO-2",
+      "ruleType": "FIXED_PRICE",
+      "name": "电机厂敷料W120150固定35棉球",
+      "priority": 30,
+      "price": 35.0,
+      "keywords": [
+        "棉球",
+        "W12050",
+        "W15050"
+      ],
+      "skipPackaging": true,
+      "skipDiscount": true
+    },
+    {
+      "code": "GUOYAO-2",
+      "ruleType": "FIXED_PRICE",
+      "name": "电机厂敷料W120150固定35纱布",
+      "priority": 30,
+      "price": 35.0,
+      "keywords": [
+        "纱布",
+        "W12050",
+        "W15050"
+      ],
+      "skipPackaging": true,
+      "skipDiscount": true
+    },
+    {
+      "code": "SUOFEI-YL",
+      "ruleType": "PRICE_PER_INSTRUMENT",
+      "name": "索菲面吸针按件5.5",
+      "priority": 10,
+      "price": 5.5,
+      "keywords": [
+        "面吸针"
+      ],
+      "minInstrumentCount": 3,
+      "skipPackaging": true,
+      "skipDiscount": true
+    },
+    {
+      "code": "HLJ-FY-RK",
+      "ruleType": "FOLD",
+      "name": "妇幼人口根管锉5合1含包材",
+      "priority": 10,
+      "keywords": [
+        "根管锉"
+      ],
+      "threshold": 5,
+      "foldRatio": 5,
+      "maxInstrumentCount": 10,
+      "skipPackaging": false
+    },
+    {
+      "code": "HLJ-FY-RK",
+      "ruleType": "FOLD",
+      "name": "妇幼人口根管锉5合1免包材",
+      "priority": 11,
+      "keywords": [
+        "根管锉"
+      ],
+      "threshold": 5,
+      "foldRatio": 5,
+      "minInstrumentCount": 11,
+      "skipPackaging": true
+    },
+    {
+      "code": "HLJ-FY-RK",
+      "ruleType": "FOLD",
+      "name": "妇幼人口针类组件5合1含包材",
+      "priority": 10,
+      "keywords": [
+        "针类组件"
+      ],
+      "threshold": 5,
+      "foldRatio": 5,
+      "maxInstrumentCount": 10,
+      "skipPackaging": false
+    },
+    {
+      "code": "HLJ-FY-RK",
+      "ruleType": "FOLD",
+      "name": "妇幼人口针类组件5合1免包材",
+      "priority": 11,
+      "keywords": [
+        "针类组件"
+      ],
+      "threshold": 5,
+      "foldRatio": 5,
+      "minInstrumentCount": 11,
+      "skipPackaging": true
+    },
+    {
+      "code": "HLJ-FY-RK",
+      "ruleType": "FOLD",
+      "name": "妇幼人口机扩锉5合1含包材",
+      "priority": 10,
+      "keywords": [
+        "机扩锉"
+      ],
+      "threshold": 5,
+      "foldRatio": 5,
+      "maxInstrumentCount": 10,
+      "skipPackaging": false
+    },
+    {
+      "code": "HLJ-FY-RK",
+      "ruleType": "FOLD",
+      "name": "妇幼人口机扩锉5合1免包材",
+      "priority": 11,
+      "keywords": [
+        "机扩锉"
+      ],
+      "threshold": 5,
+      "foldRatio": 5,
+      "minInstrumentCount": 11,
+      "skipPackaging": true
+    },
+    {
+      "code": "HLJ-FY-RK",
+      "ruleType": "FOLD",
+      "name": "妇幼人口机扩针5合1含包材",
+      "priority": 10,
+      "keywords": [
+        "机扩针"
+      ],
+      "threshold": 5,
+      "foldRatio": 5,
+      "maxInstrumentCount": 10,
+      "skipPackaging": false
+    },
+    {
+      "code": "HLJ-FY-RK",
+      "ruleType": "FOLD",
+      "name": "妇幼人口机扩针5合1免包材",
+      "priority": 11,
+      "keywords": [
+        "机扩针"
+      ],
+      "threshold": 5,
+      "foldRatio": 5,
+      "minInstrumentCount": 11,
+      "skipPackaging": true
+    },
+    {
+      "code": "HLJ-FY-RK",
+      "ruleType": "FOLD",
+      "name": "妇幼人口荡洗针5合1含包材",
+      "priority": 10,
+      "keywords": [
+        "荡洗针"
+      ],
+      "threshold": 5,
+      "foldRatio": 5,
+      "maxInstrumentCount": 10,
+      "skipPackaging": false
+    },
+    {
+      "code": "HLJ-FY-RK",
+      "ruleType": "FOLD",
+      "name": "妇幼人口荡洗针5合1免包材",
+      "priority": 11,
+      "keywords": [
+        "荡洗针"
+      ],
+      "threshold": 5,
+      "foldRatio": 5,
+      "minInstrumentCount": 11,
+      "skipPackaging": true
+    },
+    {
+      "code": "HLJ-FY-RK",
+      "ruleType": "FOLD",
+      "name": "妇幼人口加长锉5合1含包材",
+      "priority": 10,
+      "keywords": [
+        "加长锉"
+      ],
+      "threshold": 5,
+      "foldRatio": 5,
+      "maxInstrumentCount": 10,
+      "skipPackaging": false
+    },
+    {
+      "code": "HLJ-FY-RK",
+      "ruleType": "FOLD",
+      "name": "妇幼人口加长锉5合1免包材",
+      "priority": 11,
+      "keywords": [
+        "加长锉"
+      ],
+      "threshold": 5,
+      "foldRatio": 5,
+      "minInstrumentCount": 11,
+      "skipPackaging": true
+    },
+    {
+      "code": "HLJ-FY-RK",
+      "ruleType": "FOLD",
+      "name": "妇幼人口洗髓针5合1含包材",
+      "priority": 10,
+      "keywords": [
+        "洗髓针"
+      ],
+      "threshold": 5,
+      "foldRatio": 5,
+      "maxInstrumentCount": 10,
+      "skipPackaging": false
+    },
+    {
+      "code": "HLJ-FY-RK",
+      "ruleType": "FOLD",
+      "name": "妇幼人口洗髓针5合1免包材",
+      "priority": 11,
+      "keywords": [
+        "洗髓针"
+      ],
+      "threshold": 5,
+      "foldRatio": 5,
+      "minInstrumentCount": 11,
+      "skipPackaging": true
+    },
+    {
+      "code": "HLJ-FY-RK",
+      "ruleType": "FOLD",
+      "name": "妇幼人口针包5合1含包材",
+      "priority": 10,
+      "keywords": [
+        "针包"
+      ],
+      "threshold": 5,
+      "foldRatio": 5,
+      "maxInstrumentCount": 10,
+      "skipPackaging": false
+    },
+    {
+      "code": "HLJ-FY-RK",
+      "ruleType": "FOLD",
+      "name": "妇幼人口针包5合1免包材",
+      "priority": 11,
+      "keywords": [
+        "针包"
+      ],
+      "threshold": 5,
+      "foldRatio": 5,
+      "minInstrumentCount": 11,
+      "skipPackaging": true
+    },
+    {
+      "code": "HLJ-FY-RK",
+      "ruleType": "FOLD",
+      "name": "妇幼人口彩色锉5合1含包材",
+      "priority": 10,
+      "keywords": [
+        "彩色锉"
+      ],
+      "threshold": 5,
+      "foldRatio": 5,
+      "maxInstrumentCount": 11,
+      "skipPackaging": false
+    },
+    {
+      "code": "HLJ-FY-RK",
+      "ruleType": "FOLD",
+      "name": "妇幼人口彩色锉5合1免包材",
+      "priority": 11,
+      "keywords": [
+        "彩色锉"
+      ],
+      "threshold": 5,
+      "foldRatio": 5,
+      "minInstrumentCount": 12,
+      "skipPackaging": true
+    },
+    {
+      "code": "HLJ-FY-RK",
+      "ruleType": "FOLD",
+      "name": "妇幼人口手扩锉5合1含包材",
+      "priority": 10,
+      "keywords": [
+        "手扩锉"
+      ],
+      "threshold": 5,
+      "foldRatio": 5,
+      "maxInstrumentCount": 12,
+      "skipPackaging": false
+    },
+    {
+      "code": "HLJ-FY-RK",
+      "ruleType": "FOLD",
+      "name": "妇幼人口手扩锉5合1免包材",
+      "priority": 11,
+      "keywords": [
+        "手扩锉"
+      ],
+      "threshold": 5,
+      "foldRatio": 5,
+      "minInstrumentCount": 13,
+      "skipPackaging": true
+    },
+    {
+      "code": "HLJ-FY-RK",
+      "ruleType": "FOLD",
+      "name": "妇幼人口针盒针5合1含包材",
+      "priority": 10,
+      "keywords": [
+        "针"
+      ],
+      "threshold": 5,
+      "foldRatio": 5,
+      "maxInstrumentCount": 6,
+      "skipPackaging": false
+    },
+    {
+      "code": "HLJ-FY-RK",
+      "ruleType": "FOLD",
+      "name": "妇幼人口针盒针5合1免包材",
+      "priority": 11,
+      "keywords": [
+        "针"
+      ],
+      "threshold": 5,
+      "foldRatio": 5,
+      "minInstrumentCount": 7,
+      "skipPackaging": true
+    },
+    {
+      "code": "HLJ-FY-RK",
+      "ruleType": "EXTRA_FEE",
+      "name": "妇幼人口新腹腔镜镜头加收8",
+      "priority": 20,
+      "fee": 8.0,
+      "keywords": [
+        "新腹腔镜镜头",
+        "腹腔镜镜头"
+      ],
+      "skipPackaging": true,
+      "skipDiscount": true
+    },
+    {
+      "code": "HULAN-TCM",
+      "ruleType": "PRICE_PER_INSTRUMENT",
+      "name": "呼兰中医阑尾包按件5.5",
+      "priority": 10,
+      "price": 5.5,
+      "keywords": [
+        "铂康-阑尾包"
+      ],
+      "skipPackaging": true,
+      "skipDiscount": true
+    },
+    {
+      "code": "HULAN-TCM",
+      "ruleType": "EXTRA_FEE",
+      "name": "呼兰中医阑尾包包材加价13",
+      "priority": 11,
+      "fee": 13.0,
+      "keywords": [
+        "铂康-阑尾包"
+      ],
+      "skipPackaging": true,
+      "skipDiscount": true
+    },
+    {
+      "code": "HULAN-TCM",
+      "ruleType": "PRICE_PER_INSTRUMENT",
+      "name": "呼兰中医外科包按件5.5",
+      "priority": 10,
+      "price": 5.5,
+      "keywords": [
+        "铂康-外科包"
+      ],
+      "skipPackaging": true,
+      "skipDiscount": true
+    },
+    {
+      "code": "HULAN-TCM",
+      "ruleType": "EXTRA_FEE",
+      "name": "呼兰中医外科包包材加价13",
+      "priority": 11,
+      "fee": 13.0,
+      "keywords": [
+        "铂康-外科包"
+      ],
+      "skipPackaging": true,
+      "skipDiscount": true
+    },
+    {
+      "code": "HULAN-TCM",
+      "ruleType": "PRICE_PER_INSTRUMENT",
+      "name": "呼兰中医外科包按件5.5",
+      "priority": 10,
+      "price": 5.5,
+      "keywords": [
+        "外科包"
+      ],
+      "skipPackaging": true,
+      "skipDiscount": true
+    },
+    {
+      "code": "HULAN-TCM",
+      "ruleType": "EXTRA_FEE",
+      "name": "呼兰中医外科包包材加价13",
+      "priority": 11,
+      "fee": 13.0,
+      "keywords": [
+        "外科包"
+      ],
+      "skipPackaging": true,
+      "skipDiscount": true
+    },
+    {
+      "code": "HULAN-TCM",
+      "ruleType": "FOLD",
+      "name": "呼兰中医胶帽5合1含包材",
+      "priority": 10,
+      "keywords": [
+        "胶帽"
+      ],
+      "threshold": 5,
+      "foldRatio": 5,
+      "maxInstrumentCount": 5,
+      "skipPackaging": false,
+      "temperature": "LT"
+    },
+    {
+      "code": "HULAN-TCM",
+      "ruleType": "FOLD",
+      "name": "呼兰中医胶帽5合1免包材",
+      "priority": 11,
+      "keywords": [
+        "胶帽"
+      ],
+      "threshold": 5,
+      "foldRatio": 5,
+      "minInstrumentCount": 6,
+      "skipPackaging": true,
+      "price": 22.0,
+      "temperature": "LT"
+    }
+  ],
+  "profiles": [
+    {
+      "code": "PFQ-RM",
+      "name": "哈尔滨市平房区人民医院",
+      "billingEnabled": true,
+      "billingPricingMode": "hybrid",
+      "aliases": [
+        "平房区人民医院",
+        "平房人民",
+        "哈尔滨市平房区人民医院"
+      ],
+      "discounts": [],
+      "policies": [],
+      "productRules": [
+        {
+          "code": "PFQ-RM",
+          "ruleType": "FOLD",
+          "name": "平房人民针盒针5合1含包材",
+          "priority": 10,
+          "keywords": [
+            "针"
+          ],
+          "threshold": 5,
+          "foldRatio": 5,
+          "maxInstrumentCount": 6,
+          "skipPackaging": false
+        },
+        {
+          "code": "PFQ-RM",
+          "ruleType": "FOLD",
+          "name": "平房人民针盒针5合1免包材",
+          "priority": 11,
+          "keywords": [
+            "针"
+          ],
+          "threshold": 5,
+          "foldRatio": 5,
+          "minInstrumentCount": 7,
+          "skipPackaging": true
+        }
+      ]
+    }
+  ]
+}

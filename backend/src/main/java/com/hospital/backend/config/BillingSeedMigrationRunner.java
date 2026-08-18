@@ -308,7 +308,9 @@ public class BillingSeedMigrationRunner implements CommandLineRunner {
             new IncrementalSeed("billing_seed_bingcheng_ym_remove_xiaojian_packaging_20260818_v1",
                     "billing-seeds/phase-bingcheng-ym-remove-xiaojian-packaging-20260818.json"),
             new IncrementalSeed("billing_seed_deactivate_extra_customer_rules_20260818_v1",
-                    "billing-seeds/phase-deactivate-extra-customer-rules-20260818.json")
+                    "billing-seeds/phase-deactivate-extra-customer-rules-20260818.json"),
+            new IncrementalSeed("billing_seed_special_charge_12_sync_20260818_v1",
+                    "billing-seeds/phase-special-charge-12-sync-20260818.json")
     );
 
     private static final String ZYY_D1_P0_MARKER = "billing_seed_zyy_d1_p0_v2";
@@ -447,7 +449,10 @@ public class BillingSeedMigrationRunner implements CommandLineRunner {
                     || "billing-seeds/phase-zyy-d1-z2044-infer-fix-20260804.json".equals(incremental.classpathFile())
                     || "billing-seeds/phase-changjian-rule-migrate-20260804.json".equals(incremental.classpathFile())
                     || "billing-seeds/phase-zuyan-ng-pricing-fix-20260805.json".equals(incremental.classpathFile())
-                    || "billing-seeds/phase-parity-legacy-rule-cleanup-20260806.json".equals(incremental.classpathFile())) {
+                    || "billing-seeds/phase-parity-legacy-rule-cleanup-20260806.json".equals(incremental.classpathFile())
+                    || "billing-seeds/phase-bingcheng-ym-remove-xiaojian-packaging-20260818.json".equals(incremental.classpathFile())
+                    || "billing-seeds/phase-deactivate-extra-customer-rules-20260818.json".equals(incremental.classpathFile())
+                    || "billing-seeds/phase-special-charge-12-sync-20260818.json".equals(incremental.classpathFile())) {
                 applyBatchPatchSeedFile(incremental.classpathFile());
             } else if ("billing-seeds/phase-billing-mode-backfill-20260730.json".equals(incremental.classpathFile())) {
                 applyBillingModeBackfillSeedFile(incremental.classpathFile());

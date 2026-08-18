@@ -1,7 +1,7 @@
 {
   "version": 1,
-  "generated_at": "2026-08-14T08:51:05.292926+00:00",
-  "manifest_hash": "a54feef3a484bc1626d0c508f336379b92d7a9e35e1375803d2ac3e0d47fe282",
+  "generated_at": "2026-08-18T08:17:08.648122+00:00",
+  "manifest_hash": "3ad986ba0f17c2429cb648fd46b32b3ee9a91eef3764c0b8358af355508c98a4",
   "customers": {
     "AL-YY": {
       "code": "AL-YY",
@@ -69,6 +69,22 @@
           "matchMode": "first"
         },
         {
+          "ruleType": "EXTRA_FEE",
+          "name": "冰城环钻包小件包装加价3",
+          "priority": 8,
+          "fee": 3.0,
+          "minInstrumentCount": 2,
+          "maxInstrumentCount": 5,
+          "keywords": [
+            "环钻包",
+            "环钻"
+          ],
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": true,
+          "matchMode": "first"
+        },
+        {
           "ruleType": "PRICE_PER_INSTRUMENT",
           "name": "冰城环钻包按件5.5",
           "priority": 6,
@@ -94,22 +110,6 @@
           "skipPackaging": true,
           "skipDiscount": true,
           "isActive": true,
-          "matchMode": "first"
-        },
-        {
-          "ruleType": "EXTRA_FEE",
-          "name": "冰城环钻包小件包装加价3",
-          "priority": 8,
-          "fee": 3.0,
-          "minInstrumentCount": 2,
-          "maxInstrumentCount": 5,
-          "keywords": [
-            "环钻包",
-            "环钻"
-          ],
-          "skipPackaging": true,
-          "skipDiscount": true,
-          "isActive": false,
           "matchMode": "first"
         },
         {
@@ -216,8 +216,8 @@
           "matchMode": "first"
         }
       ],
-      "rule_count": 12,
-      "active_rule_count": 6
+      "rule_count": 13,
+      "active_rule_count": 7
     },
     "BOSHANG-YY": {
       "code": "BOSHANG-YY",
@@ -321,7 +321,7 @@
           "minInstrumentCount": 11,
           "temperature": "LT",
           "skipPackaging": true,
-          "isActive": false,
+          "isActive": true,
           "matchMode": "first",
           "skipDiscount": false
         },
@@ -338,13 +338,13 @@
           "maxInstrumentCount": 10,
           "temperature": "LT",
           "skipPackaging": false,
-          "isActive": false,
+          "isActive": true,
           "matchMode": "first",
           "skipDiscount": false
         }
       ],
       "rule_count": 2,
-      "active_rule_count": 0
+      "active_rule_count": 2
     },
     "DAOWAI-RM": {
       "code": "DAOWAI-RM",
@@ -908,7 +908,7 @@
           "minInstrumentCount": 3,
           "skipPackaging": false,
           "skipDiscount": true,
-          "isActive": false,
+          "isActive": true,
           "matchMode": "first"
         },
         {
@@ -932,7 +932,7 @@
           "maxInstrumentCount": 2,
           "skipPackaging": false,
           "skipDiscount": true,
-          "isActive": false,
+          "isActive": true,
           "matchMode": "first"
         },
         {
@@ -960,7 +960,7 @@
           "foldRatio": 5,
           "minInstrumentCount": 11,
           "skipPackaging": true,
-          "isActive": false,
+          "isActive": true,
           "matchMode": "first",
           "skipDiscount": false
         },
@@ -975,9 +975,103 @@
           "foldRatio": 5,
           "maxInstrumentCount": 10,
           "skipPackaging": false,
-          "isActive": false,
+          "isActive": true,
           "matchMode": "first",
           "skipDiscount": false
+        },
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "电机厂敷料W120150固定35棉球",
+          "priority": 30,
+          "price": 35.0,
+          "keywords": [
+            "棉球",
+            "W12050",
+            "W15050"
+          ],
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": true,
+          "matchMode": "first"
+        },
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "电机厂敷料W120150固定35纱布",
+          "priority": 30,
+          "price": 35.0,
+          "keywords": [
+            "纱布",
+            "W12050",
+            "W15050"
+          ],
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": true,
+          "matchMode": "first"
+        },
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "电机厂敷料W605070固定25棉球",
+          "priority": 30,
+          "price": 25.0,
+          "keywords": [
+            "棉球",
+            "W6050",
+            "W6070",
+            "W7060",
+            "W7070"
+          ],
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": true,
+          "matchMode": "first"
+        },
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "电机厂敷料W605070固定25纱布",
+          "priority": 30,
+          "price": 25.0,
+          "keywords": [
+            "纱布",
+            "W6050",
+            "W6070",
+            "W7060",
+            "W7070"
+          ],
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": true,
+          "matchMode": "first"
+        },
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "电机厂敷料W9050固定30棉球",
+          "priority": 30,
+          "price": 30.0,
+          "keywords": [
+            "棉球",
+            "W9050",
+            "W9060"
+          ],
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": true,
+          "matchMode": "first"
+        },
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "电机厂敷料W9050固定30纱布",
+          "priority": 30,
+          "price": 30.0,
+          "keywords": [
+            "纱布",
+            "W9050",
+            "W9060"
+          ],
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": true,
+          "matchMode": "first"
         },
         {
           "ruleType": "FIXED_PRICE",
@@ -993,8 +1087,8 @@
           "matchMode": "first"
         }
       ],
-      "rule_count": 8,
-      "active_rule_count": 1
+      "rule_count": 14,
+      "active_rule_count": 11
     },
     "GUOYAO-3": {
       "code": "GUOYAO-3",
@@ -1139,12 +1233,12 @@
           ],
           "skipPackaging": false,
           "skipDiscount": true,
-          "isActive": false,
+          "isActive": true,
           "matchMode": "first"
         }
       ],
       "rule_count": 1,
-      "active_rule_count": 0
+      "active_rule_count": 1
     },
     "HLFB-SF": {
       "code": "HLFB-SF",
@@ -1181,6 +1275,36 @@
       "productRules": [
         {
           "ruleType": "FOLD",
+          "name": "妇幼人口加长锉5合1免包材",
+          "priority": 11,
+          "keywords": [
+            "加长锉"
+          ],
+          "threshold": 5,
+          "foldRatio": 5,
+          "minInstrumentCount": 11,
+          "skipPackaging": true,
+          "isActive": true,
+          "matchMode": "first",
+          "skipDiscount": false
+        },
+        {
+          "ruleType": "FOLD",
+          "name": "妇幼人口加长锉5合1含包材",
+          "priority": 10,
+          "keywords": [
+            "加长锉"
+          ],
+          "threshold": 5,
+          "foldRatio": 5,
+          "maxInstrumentCount": 10,
+          "skipPackaging": false,
+          "isActive": true,
+          "matchMode": "first",
+          "skipDiscount": false
+        },
+        {
+          "ruleType": "FOLD",
           "name": "妇幼人口密封件>5折算22",
           "priority": 11,
           "keywords": [
@@ -1213,10 +1337,324 @@
           "isActive": true,
           "matchMode": "first",
           "skipDiscount": false
+        },
+        {
+          "ruleType": "FOLD",
+          "name": "妇幼人口彩色锉5合1免包材",
+          "priority": 11,
+          "keywords": [
+            "彩色锉"
+          ],
+          "threshold": 5,
+          "foldRatio": 5,
+          "minInstrumentCount": 12,
+          "skipPackaging": true,
+          "isActive": true,
+          "matchMode": "first",
+          "skipDiscount": false
+        },
+        {
+          "ruleType": "FOLD",
+          "name": "妇幼人口彩色锉5合1含包材",
+          "priority": 10,
+          "keywords": [
+            "彩色锉"
+          ],
+          "threshold": 5,
+          "foldRatio": 5,
+          "maxInstrumentCount": 11,
+          "skipPackaging": false,
+          "isActive": true,
+          "matchMode": "first",
+          "skipDiscount": false
+        },
+        {
+          "ruleType": "FOLD",
+          "name": "妇幼人口手扩锉5合1免包材",
+          "priority": 11,
+          "keywords": [
+            "手扩锉"
+          ],
+          "threshold": 5,
+          "foldRatio": 5,
+          "minInstrumentCount": 13,
+          "skipPackaging": true,
+          "isActive": true,
+          "matchMode": "first",
+          "skipDiscount": false
+        },
+        {
+          "ruleType": "FOLD",
+          "name": "妇幼人口手扩锉5合1含包材",
+          "priority": 10,
+          "keywords": [
+            "手扩锉"
+          ],
+          "threshold": 5,
+          "foldRatio": 5,
+          "maxInstrumentCount": 12,
+          "skipPackaging": false,
+          "isActive": true,
+          "matchMode": "first",
+          "skipDiscount": false
+        },
+        {
+          "ruleType": "EXTRA_FEE",
+          "name": "妇幼人口新腹腔镜镜头加收8",
+          "priority": 20,
+          "fee": 8.0,
+          "keywords": [
+            "新腹腔镜镜头",
+            "腹腔镜镜头"
+          ],
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": true,
+          "matchMode": "first"
+        },
+        {
+          "ruleType": "FOLD",
+          "name": "妇幼人口机扩针5合1免包材",
+          "priority": 11,
+          "keywords": [
+            "机扩针"
+          ],
+          "threshold": 5,
+          "foldRatio": 5,
+          "minInstrumentCount": 11,
+          "skipPackaging": true,
+          "isActive": true,
+          "matchMode": "first",
+          "skipDiscount": false
+        },
+        {
+          "ruleType": "FOLD",
+          "name": "妇幼人口机扩针5合1含包材",
+          "priority": 10,
+          "keywords": [
+            "机扩针"
+          ],
+          "threshold": 5,
+          "foldRatio": 5,
+          "maxInstrumentCount": 10,
+          "skipPackaging": false,
+          "isActive": true,
+          "matchMode": "first",
+          "skipDiscount": false
+        },
+        {
+          "ruleType": "FOLD",
+          "name": "妇幼人口机扩锉5合1免包材",
+          "priority": 11,
+          "keywords": [
+            "机扩锉"
+          ],
+          "threshold": 5,
+          "foldRatio": 5,
+          "minInstrumentCount": 11,
+          "skipPackaging": true,
+          "isActive": true,
+          "matchMode": "first",
+          "skipDiscount": false
+        },
+        {
+          "ruleType": "FOLD",
+          "name": "妇幼人口机扩锉5合1含包材",
+          "priority": 10,
+          "keywords": [
+            "机扩锉"
+          ],
+          "threshold": 5,
+          "foldRatio": 5,
+          "maxInstrumentCount": 10,
+          "skipPackaging": false,
+          "isActive": true,
+          "matchMode": "first",
+          "skipDiscount": false
+        },
+        {
+          "ruleType": "FOLD",
+          "name": "妇幼人口根管锉5合1免包材",
+          "priority": 11,
+          "keywords": [
+            "根管锉"
+          ],
+          "threshold": 5,
+          "foldRatio": 5,
+          "minInstrumentCount": 11,
+          "skipPackaging": true,
+          "isActive": true,
+          "matchMode": "first",
+          "skipDiscount": false
+        },
+        {
+          "ruleType": "FOLD",
+          "name": "妇幼人口根管锉5合1含包材",
+          "priority": 10,
+          "keywords": [
+            "根管锉"
+          ],
+          "threshold": 5,
+          "foldRatio": 5,
+          "maxInstrumentCount": 10,
+          "skipPackaging": false,
+          "isActive": true,
+          "matchMode": "first",
+          "skipDiscount": false
+        },
+        {
+          "ruleType": "FOLD",
+          "name": "妇幼人口洗髓针5合1免包材",
+          "priority": 11,
+          "keywords": [
+            "洗髓针"
+          ],
+          "threshold": 5,
+          "foldRatio": 5,
+          "minInstrumentCount": 11,
+          "skipPackaging": true,
+          "isActive": true,
+          "matchMode": "first",
+          "skipDiscount": false
+        },
+        {
+          "ruleType": "FOLD",
+          "name": "妇幼人口洗髓针5合1含包材",
+          "priority": 10,
+          "keywords": [
+            "洗髓针"
+          ],
+          "threshold": 5,
+          "foldRatio": 5,
+          "maxInstrumentCount": 10,
+          "skipPackaging": false,
+          "isActive": true,
+          "matchMode": "first",
+          "skipDiscount": false
+        },
+        {
+          "ruleType": "FOLD",
+          "name": "妇幼人口荡洗针5合1免包材",
+          "priority": 11,
+          "keywords": [
+            "荡洗针"
+          ],
+          "threshold": 5,
+          "foldRatio": 5,
+          "minInstrumentCount": 11,
+          "skipPackaging": true,
+          "isActive": true,
+          "matchMode": "first",
+          "skipDiscount": false
+        },
+        {
+          "ruleType": "FOLD",
+          "name": "妇幼人口荡洗针5合1含包材",
+          "priority": 10,
+          "keywords": [
+            "荡洗针"
+          ],
+          "threshold": 5,
+          "foldRatio": 5,
+          "maxInstrumentCount": 10,
+          "skipPackaging": false,
+          "isActive": true,
+          "matchMode": "first",
+          "skipDiscount": false
+        },
+        {
+          "ruleType": "FOLD",
+          "name": "妇幼人口针包5合1免包材",
+          "priority": 11,
+          "keywords": [
+            "针包"
+          ],
+          "threshold": 5,
+          "foldRatio": 5,
+          "minInstrumentCount": 11,
+          "skipPackaging": true,
+          "isActive": true,
+          "matchMode": "first",
+          "skipDiscount": false
+        },
+        {
+          "ruleType": "FOLD",
+          "name": "妇幼人口针包5合1含包材",
+          "priority": 10,
+          "keywords": [
+            "针包"
+          ],
+          "threshold": 5,
+          "foldRatio": 5,
+          "maxInstrumentCount": 10,
+          "skipPackaging": false,
+          "isActive": true,
+          "matchMode": "first",
+          "skipDiscount": false
+        },
+        {
+          "ruleType": "FOLD",
+          "name": "妇幼人口针盒针5合1免包材",
+          "priority": 11,
+          "keywords": [
+            "针"
+          ],
+          "threshold": 5,
+          "foldRatio": 5,
+          "minInstrumentCount": 7,
+          "skipPackaging": true,
+          "isActive": true,
+          "matchMode": "first",
+          "skipDiscount": false
+        },
+        {
+          "ruleType": "FOLD",
+          "name": "妇幼人口针盒针5合1含包材",
+          "priority": 10,
+          "keywords": [
+            "针"
+          ],
+          "threshold": 5,
+          "foldRatio": 5,
+          "maxInstrumentCount": 6,
+          "skipPackaging": false,
+          "isActive": true,
+          "matchMode": "first",
+          "skipDiscount": false
+        },
+        {
+          "ruleType": "FOLD",
+          "name": "妇幼人口针类组件5合1免包材",
+          "priority": 11,
+          "keywords": [
+            "针类组件"
+          ],
+          "threshold": 5,
+          "foldRatio": 5,
+          "minInstrumentCount": 11,
+          "skipPackaging": true,
+          "isActive": true,
+          "matchMode": "first",
+          "skipDiscount": false
+        },
+        {
+          "ruleType": "FOLD",
+          "name": "妇幼人口针类组件5合1含包材",
+          "priority": 10,
+          "keywords": [
+            "针类组件"
+          ],
+          "threshold": 5,
+          "foldRatio": 5,
+          "maxInstrumentCount": 10,
+          "skipPackaging": false,
+          "isActive": true,
+          "matchMode": "first",
+          "skipDiscount": false
         }
       ],
-      "rule_count": 2,
-      "active_rule_count": 2
+      "rule_count": 25,
+      "active_rule_count": 25
     },
     "HLJ-JYGLJ-YY": {
       "code": "HLJ-JYGLJ-YY",
@@ -2572,7 +3010,7 @@
       "status": null,
       "billingPricingMode": "special_only",
       "standardPricingOverride": null,
-      "billingEnabled": false,
+      "billingEnabled": true,
       "productRules": [
         {
           "ruleType": "FIXED_PRICE",
@@ -2589,6 +3027,91 @@
           "matchMode": "first"
         },
         {
+          "ruleType": "EXTRA_FEE",
+          "name": "呼兰中医外科包包材加价13",
+          "priority": 11,
+          "fee": 13.0,
+          "keywords": [
+            "外科包"
+          ],
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": true,
+          "matchMode": "first"
+        },
+        {
+          "ruleType": "PRICE_PER_INSTRUMENT",
+          "name": "呼兰中医外科包按件5.5",
+          "priority": 10,
+          "price": 5.5,
+          "keywords": [
+            "外科包"
+          ],
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": true,
+          "matchMode": "first"
+        },
+        {
+          "ruleType": "FOLD",
+          "name": "呼兰中医胶帽5合1免包材",
+          "priority": 11,
+          "keywords": [
+            "胶帽"
+          ],
+          "threshold": 5,
+          "foldRatio": 5,
+          "minInstrumentCount": 6,
+          "skipPackaging": true,
+          "price": 22.0,
+          "temperature": "LT",
+          "isActive": true,
+          "matchMode": "first",
+          "skipDiscount": false
+        },
+        {
+          "ruleType": "FOLD",
+          "name": "呼兰中医胶帽5合1含包材",
+          "priority": 10,
+          "keywords": [
+            "胶帽"
+          ],
+          "threshold": 5,
+          "foldRatio": 5,
+          "maxInstrumentCount": 5,
+          "skipPackaging": false,
+          "temperature": "LT",
+          "isActive": true,
+          "matchMode": "first",
+          "skipDiscount": false
+        },
+        {
+          "ruleType": "EXTRA_FEE",
+          "name": "呼兰中医阑尾包包材加价13",
+          "priority": 11,
+          "fee": 13.0,
+          "keywords": [
+            "铂康-阑尾包"
+          ],
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": true,
+          "matchMode": "first"
+        },
+        {
+          "ruleType": "PRICE_PER_INSTRUMENT",
+          "name": "呼兰中医阑尾包按件5.5",
+          "priority": 10,
+          "price": 5.5,
+          "keywords": [
+            "铂康-阑尾包"
+          ],
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": true,
+          "matchMode": "first"
+        },
+        {
           "ruleType": "FIXED_PRICE",
           "name": "外科包固定价",
           "priority": 10,
@@ -2598,7 +3121,7 @@
           ],
           "skipPackaging": true,
           "skipDiscount": true,
-          "isActive": true,
+          "isActive": false,
           "matchMode": "first"
         },
         {
@@ -2611,7 +3134,7 @@
           ],
           "skipPackaging": true,
           "skipDiscount": true,
-          "isActive": true,
+          "isActive": false,
           "matchMode": "any_price"
         },
         {
@@ -2624,12 +3147,12 @@
           ],
           "skipPackaging": true,
           "skipDiscount": true,
-          "isActive": true,
+          "isActive": false,
           "matchMode": "first"
         }
       ],
-      "rule_count": 4,
-      "active_rule_count": 4
+      "rule_count": 10,
+      "active_rule_count": 7
     },
     "JIAYI-YL": {
       "code": "JIAYI-YL",
@@ -3148,6 +3671,50 @@
       "rule_count": 0,
       "active_rule_count": 0
     },
+    "PFQ-RM": {
+      "code": "PFQ-RM",
+      "name": "哈尔滨市平房区人民医院",
+      "status": null,
+      "billingPricingMode": "hybrid",
+      "standardPricingOverride": null,
+      "billingEnabled": null,
+      "productRules": [
+        {
+          "code": "PFQ-RM",
+          "ruleType": "FOLD",
+          "name": "平房人民针盒针5合1免包材",
+          "priority": 11,
+          "keywords": [
+            "针"
+          ],
+          "threshold": 5,
+          "foldRatio": 5,
+          "minInstrumentCount": 7,
+          "skipPackaging": true,
+          "isActive": true,
+          "matchMode": "first",
+          "skipDiscount": false
+        },
+        {
+          "code": "PFQ-RM",
+          "ruleType": "FOLD",
+          "name": "平房人民针盒针5合1含包材",
+          "priority": 10,
+          "keywords": [
+            "针"
+          ],
+          "threshold": 5,
+          "foldRatio": 5,
+          "maxInstrumentCount": 6,
+          "skipPackaging": false,
+          "isActive": true,
+          "matchMode": "first",
+          "skipDiscount": false
+        }
+      ],
+      "rule_count": 2,
+      "active_rule_count": 2
+    },
     "RENSHENG": {
       "code": "RENSHENG",
       "name": "哈尔滨仁胜医院",
@@ -3326,6 +3893,46 @@
       ],
       "rule_count": 11,
       "active_rule_count": 11
+    },
+    "SHANGDE-FC": {
+      "code": "SHANGDE-FC",
+      "name": "黑龙江菁华上德生殖妇产医院",
+      "status": null,
+      "billingPricingMode": "special_only",
+      "standardPricingOverride": null,
+      "billingEnabled": null,
+      "productRules": [
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "上德优视加件187",
+          "priority": 6,
+          "price": 187.0,
+          "keywords": [
+            "优视加件-11件/w9050",
+            "优视加件"
+          ],
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": true,
+          "matchMode": "first"
+        },
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "上德子痫包16.5",
+          "priority": 5,
+          "price": 16.5,
+          "keywords": [
+            "子痫包-3件/Z1526",
+            "子痫包"
+          ],
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": true,
+          "matchMode": "first"
+        }
+      ],
+      "rule_count": 2,
+      "active_rule_count": 2
     },
     "SHENG-YY-NG": {
       "code": "SHENG-YY-NG",
@@ -3690,7 +4297,7 @@
       "status": null,
       "billingPricingMode": "special_only",
       "standardPricingOverride": null,
-      "billingEnabled": false,
+      "billingEnabled": true,
       "productRules": [
         {
           "ruleType": "FIXED_PRICE",
@@ -3715,7 +4322,7 @@
           ],
           "skipPackaging": true,
           "skipDiscount": true,
-          "isActive": false,
+          "isActive": true,
           "matchMode": "first"
         },
         {
@@ -3728,7 +4335,7 @@
           ],
           "skipPackaging": true,
           "skipDiscount": true,
-          "isActive": false,
+          "isActive": true,
           "matchMode": "first"
         },
         {
@@ -3741,7 +4348,7 @@
           ],
           "skipPackaging": true,
           "skipDiscount": true,
-          "isActive": false,
+          "isActive": true,
           "matchMode": "first"
         },
         {
@@ -3754,7 +4361,7 @@
           ],
           "skipPackaging": true,
           "skipDiscount": true,
-          "isActive": false,
+          "isActive": true,
           "matchMode": "first"
         },
         {
@@ -3770,7 +4377,7 @@
           ],
           "skipPackaging": true,
           "skipDiscount": true,
-          "isActive": false,
+          "isActive": true,
           "matchMode": "first"
         },
         {
@@ -3785,7 +4392,7 @@
           ],
           "skipPackaging": true,
           "skipDiscount": true,
-          "isActive": false,
+          "isActive": true,
           "matchMode": "first"
         },
         {
@@ -3798,7 +4405,7 @@
           ],
           "skipPackaging": true,
           "skipDiscount": true,
-          "isActive": false,
+          "isActive": true,
           "matchMode": "first"
         },
         {
@@ -3812,7 +4419,7 @@
           ],
           "skipPackaging": true,
           "skipDiscount": true,
-          "isActive": false,
+          "isActive": true,
           "matchMode": "first"
         },
         {
@@ -3825,7 +4432,7 @@
           ],
           "skipPackaging": true,
           "skipDiscount": true,
-          "isActive": false,
+          "isActive": true,
           "matchMode": "first"
         },
         {
@@ -3843,23 +4450,38 @@
           ],
           "skipPackaging": true,
           "skipDiscount": true,
-          "isActive": false,
+          "isActive": true,
           "matchMode": "first"
         }
       ],
       "rule_count": 11,
-      "active_rule_count": 0
+      "active_rule_count": 10
     },
     "SUOFEI-YL": {
       "code": "SUOFEI-YL",
       "name": "索菲医疗美容门诊",
       "status": null,
-      "billingPricingMode": "standard",
+      "billingPricingMode": "hybrid",
       "standardPricingOverride": null,
-      "billingEnabled": null,
-      "productRules": [],
-      "rule_count": 0,
-      "active_rule_count": 0
+      "billingEnabled": true,
+      "productRules": [
+        {
+          "ruleType": "PRICE_PER_INSTRUMENT",
+          "name": "索菲面吸针按件5.5",
+          "priority": 10,
+          "price": 5.5,
+          "keywords": [
+            "面吸针"
+          ],
+          "minInstrumentCount": 3,
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": true,
+          "matchMode": "first"
+        }
+      ],
+      "rule_count": 1,
+      "active_rule_count": 1
     },
     "TAIPING-RM": {
       "code": "TAIPING-RM",

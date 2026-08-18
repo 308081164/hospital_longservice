@@ -23,7 +23,7 @@ STANDARD_XLSX = Path(
 )
 SPECIAL_XLSX = Path(
     "/Users/yangxinghui/Library/Containers/com.tencent.xinWeChat/Data/Documents/"
-    "xwechat_files/wxid_7qwn4vnuj7xo22_508c/temp/drag/特殊收费(8).xlsx"
+    "xwechat_files/wxid_7qwn4vnuj7xo22_508c/temp/drag/特殊收费(12).xlsx"
 )
 UNIFIED_SHEET = "通用特殊收费"
 LT_GENERAL_SHEET = "环氧与低温通用收费"
@@ -53,6 +53,8 @@ HOSPITAL_MAP: dict[str, tuple[str | None, str, str]] = {
     "哈尔滨基准生物有限公司": ("JZSW-BIO", "哈尔滨基准生物科技有限公司", "已确认"),
     "索菲医疗美容门诊": ("SUOFEI-YL", "索菲医疗美容门诊", "v8新建"),
     "省监狱管理局医院": ("HLJ-JYGLJ-YY", "省监狱管理局医院", "已确认"),
+    "呼兰中医院": ("HULAN-TCM", "呼兰中医院", "已确认"),
+    "平房区人民医院": ("PFQ-RM", "哈尔滨市平房区人民医院", "Excel12新增"),
 }
 
 # HardcodedRulesMigrationRunner 中未完全写入 manifest 的规则

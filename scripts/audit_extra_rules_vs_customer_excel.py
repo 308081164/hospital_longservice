@@ -14,7 +14,7 @@ import customer_rules_compare as crc  # noqa: E402
 
 SPECIAL_XLSX = Path(
     "/Users/yangxinghui/Library/Containers/com.tencent.xinWeChat/Data/Documents/"
-    "xwechat_files/wxid_7qwn4vnuj7xo22_508c/temp/drag/特殊收费(11).xlsx"
+    "xwechat_files/wxid_7qwn4vnuj7xo22_508c/temp/drag/特殊收费(12).xlsx"
 )
 
 
