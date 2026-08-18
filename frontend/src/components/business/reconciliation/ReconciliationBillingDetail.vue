@@ -89,7 +89,7 @@
             <template #content>
               <div class="max-w-sm space-y-1 text-xs">
                 <div v-for="(step, index) in ctx.discountChain" :key="index">
-                  {{ step.detail ?? step.label }}
+                  {{ localizeDisplayText(step.detail ?? step.label) }}
                 </div>
               </div>
             </template>
@@ -102,7 +102,9 @@
             <template #content>
               <div class="max-w-sm space-y-1 text-xs">
                 <div v-for="(step, index) in ctx.policyTraces" :key="index">
-                  {{ step.label }}{{ step.detail ? ` — ${step.detail}` : '' }}
+                  {{ localizeDisplayText(step.label) }}{{
+                    step.detail ? ` — ${localizeDisplayText(step.detail)}` : ''
+                  }}
                 </div>
               </div>
             </template>
@@ -119,7 +121,7 @@
             <template #content>
               <div class="max-w-sm space-y-1 text-xs">
                 <div v-for="(item, index) in ctx.fieldConsistencyViolations" :key="index">
-                  {{ item.message }}
+                  {{ localizeDisplayText(item.message) }}
                 </div>
               </div>
             </template>
@@ -132,7 +134,7 @@
           <ElTooltip
             v-if="pricingRuleSummary"
             placement="top"
-            :content="pricingRuleSummary"
+            :content="localizedPricingRuleSummary"
             :show-after="200"
           >
             <ElTag size="small" type="info" effect="plain" class="max-w-[120px] truncate">
@@ -154,7 +156,7 @@
       <div v-else class="expanded-view space-y-3 px-2 py-1">
         <section v-if="pricingRuleSummary" class="detail-section">
           <div class="detail-section-title">{{ t('pricingFlow.ruleSummary') }}</div>
-          <div class="detail-value text-sm">{{ pricingRuleSummary }}</div>
+          <div class="detail-value text-sm">{{ localizedPricingRuleSummary }}</div>
         </section>
 
         <section v-if="ctx.isMultiPrice" class="detail-section">
@@ -230,8 +232,12 @@
           <ol class="discount-chain-list">
             <li v-for="(step, index) in ctx.policyTraces" :key="index">
               <span class="font-medium">{{ step.label }}</span>
-              <span v-if="step.policyType" class="ml-1 text-gray-400">({{ step.policyType }})</span>
-              <div v-if="step.detail" class="text-gray-500">{{ step.detail }}</div>
+              <span v-if="step.policyType" class="ml-1 text-gray-400">{{
+                formatPolicyTypeDisplay(step.policyType)
+              }}</span>
+              <div v-if="step.detail" class="text-gray-500">{{
+                localizeDisplayText(step.detail)
+              }}</div>
             </li>
           </ol>
         </section>
@@ -250,7 +256,7 @@
               <span class="font-medium">{{
                 fieldConsistencyViolationLabel(item.code, t)
               }}</span>
-              <span class="ml-1">{{ item.message }}</span>
+              <span class="ml-1">{{ localizeDisplayText(item.message) }}</span>
             </li>
           </ul>
         </section>
@@ -261,10 +267,10 @@
           }}</div>
           <ol class="discount-chain-list">
             <li v-for="(step, index) in ctx.discountChain" :key="index">
-              <ElTooltip v-if="step.detail" placement="top" :content="step.detail">
-                <span>{{ step.label }}</span>
+              <ElTooltip v-if="step.detail" placement="top" :content="localizeDisplayText(step.detail)">
+                <span>{{ localizeDisplayText(step.label) }}</span>
               </ElTooltip>
-              <span v-else>{{ step.label }}</span>
+              <span v-else>{{ localizeDisplayText(step.label) }}</span>
             </li>
           </ol>
         </section>
@@ -272,7 +278,7 @@
         <section v-if="ctx.traceNotes.length" class="detail-section">
           <div class="detail-section-title">{{ t('reconciliation.detail.otherNotes') }}</div>
           <ul class="trace-notes-list">
-            <li v-for="(note, index) in ctx.traceNotes" :key="index">{{ note }}</li>
+            <li v-for="(note, index) in ctx.traceNotes" :key="index">{{ localizeDisplayText(note) }}</li>
           </ul>
         </section>
       </div>
@@ -290,6 +296,10 @@
     parseReconciliationBillingContext
   } from '@/utils/reconciliationBillingNotes'
   import { hasPricingDetail } from '@/utils/reconciliationPricingPath'
+  import {
+    formatPolicyTypeDisplay,
+    localizeReconciliationDisplayText
+  } from '@/utils/reconciliationDisplayText'
 
   defineOptions({ name: 'ReconciliationBillingDetail' })
 
@@ -321,8 +331,12 @@
     return raw == null ? '' : String(raw).trim()
   })
 
+  const localizedPricingRuleSummary = computed(() =>
+    pricingRuleSummary.value ? localizeReconciliationDisplayText(pricingRuleSummary.value) : ''
+  )
+
   const pricingRuleShort = computed(() => {
-    const text = pricingRuleSummary.value
+    const text = localizedPricingRuleSummary.value
     if (!text) return ''
     return text.length > 16 ? `${text.slice(0, 16)}…` : text
   })
@@ -352,6 +366,10 @@
       return true
     }
     return false
+  }
+
+  function localizeDisplayText(value: string): string {
+    return localizeReconciliationDisplayText(value)
   }
 </script>
 

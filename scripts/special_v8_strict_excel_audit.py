@@ -1,12 +1,13 @@
 #!/usr/bin/env python3
 """Strict Excel audit for special-pricing v8 hospitals.
 
-Compare three row sets with zero tolerance on unit prices (Decimal exact):
+Compare three row sets:
   E — expected corrections from raw vs processed Excel diff
-  W — system import warnings (status=warning)
+  W — pricing-related import warnings (status=warning), excluding field-consistency-only
   P — processed Excel unit prices (ground-truth self-check)
 
-PASS iff E.keys == W.keys and all unit prices match exactly.
+PASS iff E.keys == W.keys and all unit prices within target (strict < 0.01 yuan → ERROR).
+Field-consistency warnings (包材名称/器械数 vs 包名) do not count as 多报.
 """
 
 from __future__ import annotations
@@ -79,6 +80,14 @@ V8_TESTABLE_FOLDERS: list[str] = [h.folder for h in V8_HOSPITALS if h.testable a
 V8_BY_FOLDER: dict[str, V8Hospital] = {h.folder: h for h in V8_HOSPITALS if h.folder}
 V8_BY_LABEL: dict[str, V8Hospital] = {h.customer_label: h for h in V8_HOSPITALS}
 
+PRICE_ERROR_TOLERANCE = Decimal("0.01")
+
+FIELD_CONSISTENCY_CODES = frozenset({
+    "BAG_SIZE_MISMATCH",
+    "MATERIAL_CLASS_MISMATCH",
+    "INSTRUMENT_COUNT_MISMATCH",
+})
+
 
 @dataclass
 class DiffRow:
@@ -106,6 +115,8 @@ class HospitalStrictResult:
     proc_file: str = ""
     expected_count: int = 0
     warning_count: int = 0
+    pricing_warning_count: int = 0
+    non_pricing_warning_ignored: int = 0
     matched_count: int = 0
     missed: list[DiffRow] = field(default_factory=list)
     extra: list[DiffRow] = field(default_factory=list)
@@ -124,6 +135,67 @@ def to_decimal(value: Any) -> Decimal | None:
         return Decimal(str(value)).quantize(Decimal("0.01"))
     except (InvalidOperation, ValueError, TypeError):
         return None
+
+
+def price_diff(a: Any, b: Any) -> Decimal | None:
+    da, db = to_decimal(a), to_decimal(b)
+    if da is None or db is None:
+        return None
+    return abs(da - db)
+
+
+def has_pricing_error(a: Any, b: Any) -> bool:
+    diff = price_diff(a, b)
+    return diff is not None and diff >= PRICE_ERROR_TOLERANCE
+
+
+def parse_billing_notes(row: dict[str, Any]) -> dict[str, Any]:
+    notes = row.get("billingNotes") or row.get("billing_notes") or {}
+    if isinstance(notes, str):
+        try:
+            notes = json.loads(notes)
+        except json.JSONDecodeError:
+            notes = {}
+    return notes if isinstance(notes, dict) else {}
+
+
+def field_consistency_violation_codes(billing_notes: dict[str, Any]) -> set[str]:
+    fc = billing_notes.get("fieldConsistency")
+    if isinstance(fc, dict):
+        violations = fc.get("violations") or []
+    elif billing_notes.get("type") == "field_consistency":
+        violations = billing_notes.get("violations") or []
+    else:
+        return set()
+    codes: set[str] = set()
+    for item in violations:
+        if isinstance(item, dict) and item.get("code"):
+            codes.add(str(item["code"]))
+    return codes
+
+
+def is_field_consistency_only_warning(row: dict[str, Any]) -> bool:
+    """Warnings driven only by 包材/器械字段核对，与计价规则偏差无关。"""
+    codes = field_consistency_violation_codes(parse_billing_notes(row))
+    if not codes or not codes.issubset(FIELD_CONSISTENCY_CODES):
+        return False
+    unit = row.get("unitPrice")
+    expected = row.get("expectedUnitPrice")
+    if unit is None or expected is None:
+        return True
+    diff = price_diff(unit, expected)
+    return diff is None or diff < PRICE_ERROR_TOLERANCE
+
+
+def should_exclude_from_pricing_warnings(row: dict[str, Any]) -> bool:
+    """Exclude warnings unrelated to pricing rules (field consistency or no unit delta ≥0.01)."""
+    if is_field_consistency_only_warning(row):
+        return True
+    unit = row.get("unitPrice")
+    expected = row.get("expectedUnitPrice")
+    if unit is not None and expected is not None and not has_pricing_error(unit, expected):
+        return True
+    return False
 
 
 def decimal_exact(a: Any, b: Any) -> bool:
@@ -212,6 +284,7 @@ def warning_entry(w: dict[str, Any]) -> tuple[str, dict[str, Any]]:
         "system_unit": w.get("expectedUnitPrice"),
         "raw_unit": w.get("unitPrice"),
         "pricing_rule": str(w.get("pricingRule") or ""),
+        "field_consistency_only": is_field_consistency_only_warning(w),
     }
 
 
@@ -283,11 +356,15 @@ def audit_hospital_strict(token: str, folder_name: str, *, month: int = TARGET_M
     result.warning_count = len(warnings)
     w_map: dict[str, dict[str, Any]] = {}
     for w in warnings:
+        if should_exclude_from_pricing_warnings(w):
+            result.non_pricing_warning_ignored += 1
+            continue
         key, meta_row = warning_entry(w)
         if key in w_map:
             result.dedupe_note = result.dedupe_note or "warning 集合存在 strict key 重复（已保留首条）"
         else:
             w_map[key] = meta_row
+    result.pricing_warning_count = len(w_map)
 
     e_keys = set(e_map)
     w_keys = set(w_map)
@@ -306,36 +383,52 @@ def audit_hospital_strict(token: str, folder_name: str, *, month: int = TARGET_M
         proc_unit = e_meta.get("proc_unit")
         system_unit = w_meta.get("system_unit")
         proc_verify = e_meta.get("proc_verify_unit")
-        if not decimal_exact(system_unit, proc_unit) or not decimal_exact(system_unit, proc_verify):
+        if has_pricing_error(system_unit, proc_unit) or has_pricing_error(system_unit, proc_verify):
             merged = {**e_meta, **w_meta}
-            result.price_mismatch.append(diff_from_expected(key, merged, "PRICE_MISMATCH"))
+            result.price_mismatch.append(diff_from_expected(key, merged, "PRICE_ERROR"))
 
-    has_diff = bool(result.missed or result.extra or result.price_mismatch or result.proc_mismatch)
-    result.fully_aligned = not has_diff and len(e_map) == len(w_map)
+    has_pricing_error_rows = bool(result.missed or result.price_mismatch or result.proc_mismatch)
+    has_extra = bool(result.extra)
+    result.fully_aligned = not has_pricing_error_rows and not has_extra and len(e_map) == len(w_map)
 
-    if result.expected_count == 0 and result.warning_count == 0:
+    if result.expected_count == 0 and result.pricing_warning_count == 0:
         result.status = "PASS"
-        result.message = "零期待校正，零 warning"
+        msg = "零期待校正，零计价 warning"
+        if result.non_pricing_warning_ignored:
+            msg += f"（忽略非计价 warning {result.non_pricing_warning_ignored} 条）"
+        result.message = msg
     elif result.fully_aligned:
         result.status = "PASS"
         unique_warnings = len(w_map)
         if result.warning_count != unique_warnings:
             result.dedupe_note = result.dedupe_note or (
-                f"warning 行 {result.warning_count} 条，strict key 去重后 {unique_warnings} 条"
+                f"warning 行 {result.warning_count} 条，计价相关 strict key 去重后 {unique_warnings} 条"
             )
-        result.message = f"完全对应：{result.expected_count} 条，单价 Decimal 精确相等"
-    else:
-        result.status = "FAIL"
+        result.message = (
+            f"完全对应：{result.expected_count} 条，目标单价偏差 < {PRICE_ERROR_TOLERANCE} 元"
+        )
+        if result.non_pricing_warning_ignored:
+            result.message += f"；忽略非计价 warning {result.non_pricing_warning_ignored} 条"
+    elif has_pricing_error_rows:
+        result.status = "ERROR"
         parts = []
         if result.missed:
             parts.append(f"漏检 {len(result.missed)}")
-        if result.extra:
-            parts.append(f"多报 {len(result.extra)}")
         if result.price_mismatch:
-            parts.append(f"价差 {len(result.price_mismatch)}")
+            parts.append(f"计价误差≥{PRICE_ERROR_TOLERANCE} {len(result.price_mismatch)}")
         if result.proc_mismatch:
             parts.append(f"ground truth 自洽失败 {len(result.proc_mismatch)}")
+        if result.extra:
+            parts.append(f"多报 {len(result.extra)}")
+        result.message = "；".join(parts)
+    else:
+        result.status = "FAIL"
+        parts = []
+        if result.extra:
+            parts.append(f"多报 {len(result.extra)}")
         result.message = "；".join(parts) if parts else "条目或单价未完全对应"
+        if result.non_pricing_warning_ignored:
+            result.message += f"；忽略非计价 warning {result.non_pricing_warning_ignored} 条"
 
     return result
 
@@ -398,8 +491,8 @@ def batch814_skip_results() -> list[HospitalStrictResult]:
 
 def render_section_table(results: list[HospitalStrictResult]) -> list[str]:
     lines = [
-        "| 客户名 | 测试目录 | 状态 | E | W | 漏检 | 多报 | 价差 | 完全对应 | Job |",
-        "|--------|---------|------|---|---|------|------|------|---------|-----|",
+        "| 客户名 | 测试目录 | 状态 | E | W(计价) | 非计价忽略 | 漏检 | 多报 | 计价误差 | 完全对应 | Job |",
+        "|--------|---------|------|---|---------|------------|------|------|----------|---------|-----|",
     ]
     for r in results:
         fully = "是" if r.fully_aligned else ("—" if r.status == "SKIP" else "否")
@@ -411,7 +504,8 @@ def render_section_table(results: list[HospitalStrictResult]) -> list[str]:
         job = str(r.job_id) if r.job_id else "-"
         lines.append(
             f"| {r.customer_label} | {r.hospital} | {r.status} | {r.expected_count} | "
-            f"{r.warning_count} | {len(r.missed)} | {len(r.extra)} | {len(r.price_mismatch)} | "
+            f"{r.pricing_warning_count} | {r.non_pricing_warning_ignored} | {len(r.missed)} | "
+            f"{len(r.extra)} | {len(r.price_mismatch)} | "
             f"{fully} | {job} |"
         )
     return lines
@@ -434,7 +528,9 @@ def render_markdown(
         "",
         f"> 生成日期：{generated}",
         f"> API：`{api_base}`",
-        "> 判定：E/W/P 三方比对，strict key 含科室，单价 Decimal 零容差",
+        "> 判定：E/W/P 三方比对；W 仅含计价 correction（单价偏差≥0.01）；"
+        "包材/器械字段核对及同价 warning 不计入多报；"
+        f"目标单价偏差 ≥ {PRICE_ERROR_TOLERANCE} 元 → ERROR",
         "",
         "## 总览",
         "",
@@ -493,7 +589,7 @@ def render_markdown(
 
             append_diff_table("漏检 missed", r.missed)
             append_diff_table("多报 extra", r.extra)
-            append_diff_table("单价不一致 price_mismatch", r.price_mismatch)
+            append_diff_table("计价误差 price_error (≥0.01)", r.price_mismatch)
             append_diff_table("ground truth 自洽 proc_mismatch", r.proc_mismatch)
 
     return "\n".join(lines) + "\n"

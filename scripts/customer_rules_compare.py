@@ -458,6 +458,21 @@ def compare_bingcheng(customer_rules: list[dict[str, Any]], sys_rules: list[dict
                         suggestion="新增/激活按件+加价规则",
                     )
                 )
+    extra_pack = next(
+        (r for r in sys_rules if r.get("name") == "冰城环钻包小件包装加价3" and r.get("isActive", True)),
+        None,
+    )
+    if extra_pack:
+        conflicts.append(
+            Conflict(
+                field="环钻包小件包装加价",
+                customer_value="件数×5.5+3（仅一项附加费）",
+                system_value=f"EXTRA_FEE +{extra_pack.get('fee')}元 ({extra_pack.get('name')})",
+                severity="critical",
+                impact="多计 3 元/包（如 5 件应为 30.5 而非 33.5）",
+                suggestion="停用 冰城环钻包小件包装加价3",
+            )
+        )
     bad_active = next((r for r in sys_rules if r.get("name") == "≥3件按件5.5元" and r.get("isActive", True)), None)
     if bad_active and not bad_active.get("excludeKeywords"):
         conflicts.append(

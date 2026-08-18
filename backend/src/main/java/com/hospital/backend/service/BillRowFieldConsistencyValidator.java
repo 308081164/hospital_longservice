@@ -10,7 +10,7 @@ import java.util.Map;
 import java.util.Optional;
 
 /**
- * 账单行字段一致性校验：包名 vs 类型/包装材料（红），包名件数 vs 器械数列（绿）。
+ * 账单行字段一致性校验：包名 vs 类型/包装材料，包名件数合计 vs 器械数列。
  */
 public final class BillRowFieldConsistencyValidator {
 
@@ -26,8 +26,10 @@ public final class BillRowFieldConsistencyValidator {
             String type,
             String packName,
             String packageMaterial,
-            int instrumentCount) {
+            int instrumentCount,
+            int packCount) {
         List<Violation> violations = new ArrayList<>();
+        int normalizedPackCount = Math.max(1, packCount);
 
         Optional<MmSize> packNameSize = PackNameSpecParser.extractMmSize(packName);
         Optional<MmSize> materialSize = PackNameSpecParser.extractMmSize(packageMaterial);
@@ -63,15 +65,23 @@ public final class BillRowFieldConsistencyValidator {
                     fields));
         }
 
-        Integer namePieceCount = PackNameSpecParser.extractPieceCount(packName);
-        if (namePieceCount != null && namePieceCount != instrumentCount) {
-            Map<String, Object> fields = new LinkedHashMap<>();
-            fields.put("packNameCount", namePieceCount);
-            fields.put("instrumentCount", instrumentCount);
-            violations.add(new Violation(
-                    CODE_INSTRUMENT_COUNT_MISMATCH,
-                    "包名件数 " + namePieceCount + " 与器械数列 " + instrumentCount + " 不一致",
-                    fields));
+        Integer namePieceCount = PackNameSpecParser.extractTotalPieceCountFromPackName(packName);
+        if (namePieceCount != null) {
+            int expectedInstrumentCount = normalizedPackCount * namePieceCount;
+            if (expectedInstrumentCount != instrumentCount) {
+                Map<String, Object> fields = new LinkedHashMap<>();
+                fields.put("packNameCount", namePieceCount);
+                fields.put("packCount", normalizedPackCount);
+                fields.put("expectedInstrumentCount", expectedInstrumentCount);
+                fields.put("instrumentCount", instrumentCount);
+                violations.add(new Violation(
+                        CODE_INSTRUMENT_COUNT_MISMATCH,
+                        "包名件数合计 " + namePieceCount
+                                + " × 包数 " + normalizedPackCount
+                                + " = " + expectedInstrumentCount
+                                + " 与器械数列 " + instrumentCount + " 不一致",
+                        fields));
+            }
         }
 
         return violations;

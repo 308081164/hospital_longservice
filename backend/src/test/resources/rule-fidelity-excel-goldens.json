@@ -688,12 +688,12 @@
         "rawUnit": 27.5,
         "unitPrice": 27.5,
         "totalPrice": 27.5,
-        "expectedUnitPrice": 33.5,
+        "expectedUnitPrice": 30.5,
         "type": "器械包(ZSD)",
         "packageMaterial": "无纺布-90×90-50g",
         "instrumentCount": 5
       },
-      "note": "原始按器械数×基础单价(27.5)计费；处理后按标准价(33.5)计费"
+      "note": "原始按器械数×基础单价(30.5)计费；处理后按标准价(30.5)计费"
     },
     {
       "id": "哈尔滨冰城医疗美容医院__7__E__1624134__环钻包",
@@ -710,12 +710,12 @@
         "rawUnit": 27.5,
         "unitPrice": 27.5,
         "totalPrice": 55.0,
-        "expectedUnitPrice": 33.5,
+        "expectedUnitPrice": 30.5,
         "type": "器械包(ZSD)",
         "packageMaterial": "无纺布-90×90-50g",
         "instrumentCount": 10
       },
-      "note": "原始按器械数×基础单价(27.5)计费；处理后按标准价(33.5)计费"
+      "note": "原始按器械数×基础单价(30.5)计费；处理后按标准价(30.5)计费"
     },
     {
       "id": "哈尔滨冰城医疗美容医院__7__U__1616805__1",
@@ -14084,8 +14084,8 @@
         "sheet": "手术室",
         "shipNo": "1620721",
         "packName": "驱血带(高温)/Z2032",
-        "type": "敷料包(无纺布包)",
-        "packageMaterial": "无纺布-90×90-50g",
+        "type": "额外包(纸塑袋)",
+        "packageMaterial": "高温纸塑袋200*320",
         "instrumentCount": 1,
         "packCount": 1,
         "unitPrice": 13.0,

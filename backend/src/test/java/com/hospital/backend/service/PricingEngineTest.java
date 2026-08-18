@@ -68,6 +68,44 @@ class PricingEngineTest {
     }
 
     @Test
+    void fieldConsistencyMultiInstrumentPackNameMatchesInstrumentCount() {
+        PricingEngine.ProcessedResult result = engine.processRow(row(
+                "测试医院",
+                "额外包(纸塑袋)",
+                "止血钳-2剪-1/Z1530",
+                "高温纸塑袋75*200",
+                3,
+                1,
+                8.0,
+                8.0
+        ));
+
+        assertThat(result.notes).noneMatch(note -> note.contains("【字段核对】"));
+        if (result.billingNotes != null) {
+            assertThat(result.billingNotes.get("fieldConsistency")).isNull();
+            assertThat(result.billingNotes.get("field_consistency")).isNull();
+        }
+    }
+
+    @Test
+    void fieldConsistencyMultiInstrumentPackNameWrongCountForcesWarning() {
+        PricingEngine.ProcessedResult result = engine.processRow(row(
+                "测试医院",
+                "额外包(纸塑袋)",
+                "止血钳-2剪-1/Z1530",
+                "高温纸塑袋75*200",
+                2,
+                1,
+                8.0,
+                8.0
+        ));
+
+        assertThat(result.status).isEqualTo("warning");
+        assertThat(result.notes).anyMatch(note -> note.contains("【字段核对】")
+                && note.contains("器械数列"));
+    }
+
+    @Test
     void pricesHangtianFenghuaSpoonByInstrumentCount() {
         PricingEngine.ProcessedResult result = engine.processRow(row(
                 "哈尔滨航天风华医院",
@@ -1118,16 +1156,10 @@ class PricingEngineTest {
                         "keywords", List.of("机扩针"), "threshold", 5, "foldRatio", 5)
         );
 
-        List<Map<String, Object>> extraFees = List.of(
-                Map.of("name", "镜头租借公司筐加收",
-                        "hospitals", List.of("黑龙江总工会医院"),
-                        "keywords", List.of("镜头"), "fee", 8.0)
-        );
-
         rules.put("specialRules", Map.of(
                 "fixedPrices", fixedPrices,
                 "foldRules", foldRules,
-                "extraFees", extraFees
+                "extraFees", List.of()
         ));
         return MAPPER.valueToTree(rules);
     }
@@ -1704,6 +1736,24 @@ class PricingEngineTest {
                 totalPrice);
         row.put("department", department);
         return row;
+    }
+
+    @Test
+    void paperPlasticTourniquetUsesHighTempPaperPricingNotDressingWCode() {
+        PricingEngine.ProcessedResult result = engine.processRow(row(
+                "国药总医院第二院区",
+                "额外包(纸塑袋)",
+                "驱血带(高温)/Z2032",
+                "高温纸塑袋200*320",
+                1,
+                1,
+                13.0,
+                13.0));
+
+        assertThat(result.expectedUnitPrice).isEqualTo(13.0);
+        assertThat(result.status).isEqualTo("unchanged");
+        assertThat(result.pricingRule).contains("高温纸塑袋20cm");
+        assertThat(result.notes).anyMatch(n -> n.contains("纸塑"));
     }
 
     @Test

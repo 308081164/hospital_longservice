@@ -2,6 +2,7 @@ import {
   hasBillingDetail,
   parseReconciliationBillingContext
 } from '@/utils/reconciliationBillingNotes'
+import { localizeReconciliationDisplayText } from '@/utils/reconciliationDisplayText'
 
 export type PricingPathCategory =
   | 'SPECIAL_HIT'
@@ -168,14 +169,14 @@ export function buildPricingFlowTimeline(row: Record<string, unknown>): PricingF
     steps.push({
       kind: 'summary',
       label: 'pricingFlow.stepSummary',
-      detail: pricingRule
+      detail: localizeReconciliationDisplayText(pricingRule)
     })
   }
 
   if (ctx.ruleName || ctx.matchedRuleId != null) {
     const parts: string[] = []
     if (ctx.ruleName) parts.push(ctx.ruleName)
-    if (ctx.matchedRuleId != null) parts.push(`规则 ID: ${ctx.matchedRuleId}`)
+    if (ctx.matchedRuleId != null) parts.push(`规则编号（Rule ID）：${ctx.matchedRuleId}`)
     steps.push({
       kind: 'ruleMeta',
       label: 'pricingFlow.stepRuleMeta',
@@ -200,13 +201,17 @@ export function buildPricingFlowTimeline(row: Record<string, unknown>): PricingF
     steps.push({
       kind: 'note',
       label: 'pricingFlow.stepNote',
-      detail: note
+      detail: localizeReconciliationDisplayText(note)
     })
   })
 
   if (steps.length === 0 && ctx.traceNotes.length > 0) {
     ctx.traceNotes.forEach((note) => {
-      steps.push({ kind: 'note', label: 'pricingFlow.stepNote', detail: note })
+      steps.push({
+        kind: 'note',
+        label: 'pricingFlow.stepNote',
+        detail: localizeReconciliationDisplayText(note)
+      })
     })
   }
 

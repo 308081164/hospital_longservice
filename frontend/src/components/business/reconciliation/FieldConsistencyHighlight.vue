@@ -36,9 +36,9 @@
     box-shadow: inset 0 0 0 1px #fab6b6;
   }
 
-  .field-consistency-cell--green {
-    color: #529b2e;
-    background: #f0f9eb;
-    box-shadow: inset 0 0 0 1px #b3e19d;
+  .field-consistency-cell--amber {
+    color: #b88230;
+    background: #fdf6ec;
+    box-shadow: inset 0 0 0 1px #f5dab1;
   }
 </style>

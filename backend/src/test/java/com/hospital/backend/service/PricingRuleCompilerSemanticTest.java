@@ -87,7 +87,7 @@ class PricingRuleCompilerSemanticTest {
     }
 
     @Test
-    void manifestBingchengCompilesSmallPackagingExtraWithBounds() throws Exception {
+    void manifestBingchengDoesNotCompileSmallPackagingExtra() throws Exception {
         JsonNode compiled = PricingEngineTestSupport.compileForCustomerCode("BINGCHENG-YM");
         JsonNode extras = compiled.path("specialRules").path("extraFees");
         JsonNode smallPack = null;
@@ -97,8 +97,6 @@ class PricingRuleCompilerSemanticTest {
                 break;
             }
         }
-        assertThat(smallPack).isNotNull();
-        assertThat(smallPack.path("minInstrumentCount").asInt()).isEqualTo(2);
-        assertThat(smallPack.path("maxInstrumentCount").asInt()).isEqualTo(5);
+        assertThat(smallPack).isNull();
     }
 }

@@ -1,0 +1,99 @@
+{
+  "version": "1",
+  "description": "对照特殊收费(11).xlsx：停用各院超出客户 Excel 的 active productRules（全量审计清单）",
+  "strictRuleOps": true,
+  "deactivateRules": [
+    {
+      "code": "BINGCHENG-YM",
+      "ruleName": "冰城环钻包小件包装加价3"
+    },
+    {
+      "code": "GUOYAO-2",
+      "ruleName": "电机厂双按件5.5内层袋"
+    },
+    {
+      "code": "GUOYAO-2",
+      "ruleName": "电机厂双按件5.5外层袋"
+    },
+    {
+      "code": "GUOYAO-2",
+      "ruleName": "电机厂指针5合1免包材"
+    },
+    {
+      "code": "GUOYAO-2",
+      "ruleName": "电机厂指针5合1含包材"
+    },
+    {
+      "code": "NEAU-YY",
+      "ruleName": "东北农业大学医院洁牙机尖每件 5.5 元"
+    },
+    {
+      "code": "HRB-HTFH",
+      "ruleName": "航天风华挖勺每件 5.5 元"
+    },
+    {
+      "code": "BOSHANG-YY",
+      "ruleName": "博尚胶帽5合1"
+    },
+    {
+      "code": "CHUNYU-YL",
+      "ruleName": "春语塑料管>10折算22"
+    },
+    {
+      "code": "CHUNYU-YL",
+      "ruleName": "春语塑料管≤10按1件"
+    },
+    {
+      "code": "HL-ZGH",
+      "ruleName": "总工会镜头铂康盒加收8"
+    },
+    {
+      "code": "HLJ-JYGLJ-YY",
+      "ruleName": "微克夹钳35元"
+    },
+    {
+      "code": "SHKF-YY",
+      "ruleName": "校正价2.5"
+    },
+    {
+      "code": "SHKF-YY",
+      "ruleName": "社会康复ITI种植盒44"
+    },
+    {
+      "code": "SHKF-YY",
+      "ruleName": "社会康复内提工具盒44"
+    },
+    {
+      "code": "SHKF-YY",
+      "ruleName": "社会康复大车针盒22"
+    },
+    {
+      "code": "SHKF-YY",
+      "ruleName": "社会康复抛光车针盒16.5"
+    },
+    {
+      "code": "SHKF-YY",
+      "ruleName": "社会康复梁光强器械盒22"
+    },
+    {
+      "code": "SHKF-YY",
+      "ruleName": "社会康复梁光强器械盒粉16.5"
+    },
+    {
+      "code": "SHKF-YY",
+      "ruleName": "社会康复环切器械盒16.5"
+    },
+    {
+      "code": "SHKF-YY",
+      "ruleName": "社会康复登腾种植盒44"
+    },
+    {
+      "code": "SHKF-YY",
+      "ruleName": "社会康复百诺工具盒44"
+    },
+    {
+      "code": "SHKF-YY",
+      "ruleName": "社会康复种植盒16.5"
+    }
+  ]
+}

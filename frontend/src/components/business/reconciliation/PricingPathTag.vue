@@ -11,7 +11,7 @@
     </ElTag>
     <ElTooltip v-if="classification.summary && classification.summary !== '—'" placement="top" :show-after="200">
       <template #content>
-        <div class="max-w-xs text-xs">{{ classification.summary }}</div>
+        <div class="max-w-xs text-xs">{{ localizedSummary }}</div>
       </template>
       <ElTag
         size="small"
@@ -20,7 +20,7 @@
         class="max-w-[120px] cursor-pointer truncate"
         @click.stop="emitOpenDetail"
       >
-        {{ classification.summary }}
+        {{ localizedSummary }}
       </ElTag>
     </ElTooltip>
     <button
@@ -38,6 +38,7 @@
   import { computed } from 'vue'
   import { useI18n } from 'vue-i18n'
   import { classifyPricingPath } from '@/utils/reconciliationPricingPath'
+  import { localizeReconciliationDisplayText } from '@/utils/reconciliationDisplayText'
 
   defineOptions({ name: 'PricingPathTag' })
 
@@ -58,6 +59,10 @@
   const { t } = useI18n()
 
   const classification = computed(() => classifyPricingPath(props.row))
+
+  const localizedSummary = computed(() =>
+    localizeReconciliationDisplayText(classification.value.summary)
+  )
 
   function emitOpenDetail() {
     if (!props.clickable) return

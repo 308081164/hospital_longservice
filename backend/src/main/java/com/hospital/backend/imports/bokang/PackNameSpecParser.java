@@ -14,6 +14,9 @@ public final class PackNameSpecParser {
 
     private static final Pattern ORDER_NO = Pattern.compile("/([ZzWw]\\d+)");
     private static final Pattern PIECE_COUNT = Pattern.compile("[-－](\\d+)件?");
+    /** 器械名（汉字/字母）后紧跟数字、位于斜杠前 stem 末尾，如 排针20 → 20。 */
+    private static final Pattern TRAILING_NAME_DIGITS =
+            Pattern.compile("([\\p{L}\\p{Script=Han}]+)(\\d+)$");
     private static final Pattern BAG_SIZE_MM = Pattern.compile("(\\d+)\\s*[*×xX]\\s*(\\d+)");
 
     private PackNameSpecParser() {}
@@ -76,7 +79,7 @@ public final class PackNameSpecParser {
         return packName;
     }
 
-    /** 从包名提取 `-N` / `-N件` 器械件数 hint。 */
+    /** 从包名提取首个 `-N` / `-N件` 器械件数 hint（单件规格）。 */
     public static Integer extractPieceCount(String packName) {
         if (packName == null) {
             return null;
@@ -86,6 +89,48 @@ public final class PackNameSpecParser {
             return Integer.parseInt(m.group(1));
         }
         return null;
+    }
+
+    /**
+     * 从包名（斜杠订单后缀之前）提取器械件数合计。
+     * <p>优先级：
+     * <ol>
+     *   <li>若存在 {@code -N} / {@code -N件}，累加全部（如 止血钳-2剪-1 → 3，排针-12 → 12）</li>
+     *   <li>否则若 stem 末尾为「汉字/字母 + 数字」（无连字符），取该数字（如 排针20 → 20）</li>
+     * </ol>
+     * 两种规则互斥，避免 排针-12 与 排针20 类名称重复计数。
+     */
+    public static Integer extractTotalPieceCountFromPackName(String packName) {
+        if (packName == null) {
+            return null;
+        }
+        String stem = packNameStemBeforeSlash(packName);
+        if (stem.isBlank()) {
+            return null;
+        }
+        Matcher hyphenMatcher = PIECE_COUNT.matcher(stem);
+        int hyphenSum = 0;
+        boolean foundHyphen = false;
+        while (hyphenMatcher.find()) {
+            hyphenSum += Integer.parseInt(hyphenMatcher.group(1));
+            foundHyphen = true;
+        }
+        if (foundHyphen) {
+            return hyphenSum;
+        }
+        Matcher trailingMatcher = TRAILING_NAME_DIGITS.matcher(stem);
+        if (trailingMatcher.find()) {
+            return Integer.parseInt(trailingMatcher.group(2));
+        }
+        return null;
+    }
+
+    private static String packNameStemBeforeSlash(String packName) {
+        int slash = packName.indexOf('/');
+        if (slash > 0) {
+            return packName.substring(0, slash).trim();
+        }
+        return packName.trim();
     }
 
     /** 从任意文本提取首个 mm 尺寸（如 75*200）。 */

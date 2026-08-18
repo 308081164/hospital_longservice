@@ -15,7 +15,8 @@ class BillRowFieldConsistencyValidatorTest {
                         "额外包(纸塑袋)",
                         "支抗钉-3 75*20",
                         "高温纸塑袋75*200",
-                        3);
+                        3,
+                        1);
 
         assertThat(violations).hasSize(1);
         assertThat(violations.get(0).code())
@@ -30,7 +31,8 @@ class BillRowFieldConsistencyValidatorTest {
                         "额外包(纸塑袋)",
                         "支抗钉-3 75*20",
                         "高温纸塑袋75*200",
-                        2);
+                        2,
+                        1);
 
         assertThat(violations).extracting(BillRowFieldConsistencyValidator.Violation::code)
                 .containsExactly(
@@ -45,7 +47,8 @@ class BillRowFieldConsistencyValidatorTest {
                         "额外包(纸塑袋)",
                         "剪刀-3/z1530",
                         "高温纸塑袋75*200",
-                        3);
+                        3,
+                        1);
 
         assertThat(violations).isEmpty();
     }
@@ -57,11 +60,93 @@ class BillRowFieldConsistencyValidatorTest {
                         "额外包(纸塑袋)",
                         "剪刀-3/z1530",
                         "低温无纺布30*40",
-                        3);
+                        3,
+                        1);
 
         assertThat(violations).hasSize(1);
         assertThat(violations.get(0).code())
                 .isEqualTo(BillRowFieldConsistencyValidator.CODE_MATERIAL_CLASS_MISMATCH);
+    }
+
+    @Test
+    void multiInstrumentPackNameMatchesTotalInstrumentCount() {
+        List<BillRowFieldConsistencyValidator.Violation> violations =
+                BillRowFieldConsistencyValidator.validate(
+                        "额外包(纸塑袋)",
+                        "止血钳-2剪-1/Z1530",
+                        "高温纸塑袋75*200",
+                        3,
+                        1);
+
+        assertThat(violations).isEmpty();
+    }
+
+    @Test
+    void multiInstrumentPackNameWrongInstrumentCountReportsViolation() {
+        List<BillRowFieldConsistencyValidator.Violation> violations =
+                BillRowFieldConsistencyValidator.validate(
+                        "额外包(纸塑袋)",
+                        "止血钳-2剪-1/Z1530",
+                        "高温纸塑袋75*200",
+                        2,
+                        1);
+
+        assertThat(violations).extracting(BillRowFieldConsistencyValidator.Violation::code)
+                .containsExactly(BillRowFieldConsistencyValidator.CODE_INSTRUMENT_COUNT_MISMATCH);
+    }
+
+    @Test
+    void compactPackNameWithoutHyphenMatchesInstrumentCount() {
+        List<BillRowFieldConsistencyValidator.Violation> violations =
+                BillRowFieldConsistencyValidator.validate(
+                        "额外包(纸塑袋)",
+                        "排针20/Z1026",
+                        "高温纸塑袋75*200",
+                        140,
+                        7);
+
+        assertThat(violations).isEmpty();
+    }
+
+    @Test
+    void compactPackNameWithoutHyphenWrongInstrumentCountReportsViolation() {
+        List<BillRowFieldConsistencyValidator.Violation> violations =
+                BillRowFieldConsistencyValidator.validate(
+                        "额外包(纸塑袋)",
+                        "排针20/Z1026",
+                        "高温纸塑袋75*200",
+                        100,
+                        7);
+
+        assertThat(violations).extracting(BillRowFieldConsistencyValidator.Violation::code)
+                .containsExactly(BillRowFieldConsistencyValidator.CODE_INSTRUMENT_COUNT_MISMATCH);
+    }
+
+    @Test
+    void hyphenPackNameWrongInstrumentCountStillReportsViolation() {
+        List<BillRowFieldConsistencyValidator.Violation> violations =
+                BillRowFieldConsistencyValidator.validate(
+                        "额外包(纸塑袋)",
+                        "排针-12/Z7526",
+                        "高温纸塑袋75*200",
+                        2,
+                        1);
+
+        assertThat(violations).extracting(BillRowFieldConsistencyValidator.Violation::code)
+                .containsExactly(BillRowFieldConsistencyValidator.CODE_INSTRUMENT_COUNT_MISMATCH);
+    }
+
+    @Test
+    void multiInstrumentPackNameWithMultiplePacksMatchesExpectedTotal() {
+        List<BillRowFieldConsistencyValidator.Violation> violations =
+                BillRowFieldConsistencyValidator.validate(
+                        "额外包(纸塑袋)",
+                        "止血钳-2剪-1/Z1530",
+                        "高温纸塑袋75*200",
+                        6,
+                        2);
+
+        assertThat(violations).isEmpty();
     }
 
     @Test
@@ -71,7 +156,8 @@ class BillRowFieldConsistencyValidatorTest {
                         "额外包(纸塑袋)",
                         "支抗钉-3 75*20",
                         "高温纸塑袋75*200",
-                        2);
+                        2,
+                        1);
 
         var billingNotes = BillRowFieldConsistencyValidator.toBillingNotes(violations);
         assertThat(billingNotes).isNotNull();

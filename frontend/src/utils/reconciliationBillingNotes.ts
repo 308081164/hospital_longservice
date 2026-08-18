@@ -1,3 +1,9 @@
+import {
+  formatFieldConsistencyCodeDisplay,
+  formatPolicyTypeDisplay,
+  localizeReconciliationDisplayText
+} from '@/utils/reconciliationDisplayText'
+
 export type DiscountChainStep = {
   label: string
   detail?: string
@@ -22,7 +28,7 @@ export type FieldConsistencyViolation = {
 
 export type FieldConsistencyHighlightField = 'type' | 'packName' | 'packageMaterial' | 'instrumentCount'
 
-export type FieldConsistencyCellTone = 'red' | 'green' | null
+export type FieldConsistencyCellTone = 'red' | 'amber' | null
 
 export type ReconciliationBillingContext = {
   isMultiPrice: boolean
@@ -137,13 +143,24 @@ export function extractPolicyTraces(
   if (!Array.isArray(raw)) return traces
   for (const item of raw) {
     if (typeof item === 'string') {
-      traces.push({ label: item })
+      traces.push({ label: localizeReconciliationDisplayText(item) })
     } else if (item && typeof item === 'object') {
       const obj = item as Record<string, unknown>
+      const rawPolicyType = obj.policyType != null ? String(obj.policyType) : undefined
+      const rawLabel = String(obj.name ?? obj.label ?? '')
+      let label = rawLabel
+      if (!label && rawPolicyType) {
+        label = formatPolicyTypeDisplay(rawPolicyType)
+      } else if (label && rawPolicyType && label.toUpperCase() === rawPolicyType.toUpperCase()) {
+        label = formatPolicyTypeDisplay(rawPolicyType)
+      } else {
+        label = localizeReconciliationDisplayText(label || '策略')
+      }
       traces.push({
-        label: String(obj.name ?? obj.policyType ?? obj.label ?? '策略'),
-        detail: obj.description != null ? String(obj.description) : undefined,
-        policyType: obj.policyType != null ? String(obj.policyType) : undefined
+        label,
+        detail: obj.description != null ? localizeReconciliationDisplayText(String(obj.description)) : undefined,
+        policyType:
+          rawPolicyType && !label.includes(rawPolicyType) ? rawPolicyType : undefined
       })
     }
   }
@@ -204,7 +221,7 @@ export function fieldConsistencyViolationLabel(
     case 'INSTRUMENT_COUNT_MISMATCH':
       return t('reconciliation.detail.fieldConsistencyInstrumentCount')
     default:
-      return code
+      return formatFieldConsistencyCodeDisplay(code) || code
   }
 }
 
@@ -234,7 +251,7 @@ export function fieldConsistencyAffectedFields(
   return fields
 }
 
-/** 单个单元格高亮色调：红=包材/类型，绿=器械件数 */
+/** 单个单元格高亮色调：红=包材/类型，琥珀=器械件数 */
 export function fieldConsistencyCellTone(
   row: Record<string, unknown>,
   field: FieldConsistencyHighlightField
@@ -252,13 +269,13 @@ export function fieldConsistencyCellTone(
   )
 
   if (field === 'instrumentCount' && hasInstrumentMismatch) {
-    return 'green'
+    return 'amber'
   }
   if (hasRedMismatch && ['type', 'packName', 'packageMaterial'].includes(field)) {
     return 'red'
   }
   if (field === 'packName' && hasInstrumentMismatch) {
-    return 'green'
+    return 'amber'
   }
   return 'red'
 }
@@ -269,7 +286,7 @@ export function fieldConsistencyCellClass(
 ): string {
   const tone = fieldConsistencyCellTone(row, field)
   if (tone === 'red') return 'field-consistency-cell field-consistency-cell--red'
-  if (tone === 'green') return 'field-consistency-cell field-consistency-cell--green'
+  if (tone === 'amber') return 'field-consistency-cell field-consistency-cell--amber'
   return ''
 }
 

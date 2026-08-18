@@ -1,0 +1,8 @@
+{
+  "version": "1",
+  "description": "冰城环钻：停用客户 Excel 未列出的「小件包装加价3」，对齐 件数×5.5+3=30.5",
+  "strictRuleOps": true,
+  "deactivateRules": [
+    { "code": "BINGCHENG-YM", "ruleName": "冰城环钻包小件包装加价3" }
+  ]
+}

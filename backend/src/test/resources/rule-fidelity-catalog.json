@@ -26,7 +26,7 @@
       "instrumentCount": 10,
       "packCount": 2,
       "unitPrice": 27.5,
-      "expectedUnitPrice": 33.5,
+      "expectedUnitPrice": 30.5,
       "mustNotHitRule": "环钻27.5",
       "mustHitRules": [
         "冰城环钻包按件5.5",

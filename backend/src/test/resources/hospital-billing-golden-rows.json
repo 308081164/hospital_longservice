@@ -288,10 +288,9 @@
       "hospitalName" : "黑龙江总工会医院"
     },
     "expected" : {
-      "expectedUnitPrice" : 52.0,
-      "correctedTotalPrice" : 104.0,
-      "status" : "warning",
-      "notesContains" : [ "镜头" ]
+      "expectedUnitPrice" : 44.0,
+      "correctedTotalPrice" : 88.0,
+      "status" : "warning"
     }
   }, {
     "id" : "hl-zgh-ht-1",

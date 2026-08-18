@@ -109,7 +109,7 @@
           ],
           "skipPackaging": true,
           "skipDiscount": true,
-          "isActive": true,
+          "isActive": false,
           "matchMode": "first"
         },
         {
@@ -280,13 +280,13 @@
           "foldRatio": 5,
           "temperature": "LT",
           "skipPackaging": false,
-          "isActive": true,
+          "isActive": false,
           "matchMode": "first",
           "skipDiscount": false
         }
       ],
       "rule_count": 4,
-      "active_rule_count": 4
+      "active_rule_count": 3
     },
     "CHANGJIAN": {
       "code": "CHANGJIAN",
@@ -321,7 +321,7 @@
           "minInstrumentCount": 11,
           "temperature": "LT",
           "skipPackaging": true,
-          "isActive": true,
+          "isActive": false,
           "matchMode": "first",
           "skipDiscount": false
         },
@@ -338,13 +338,13 @@
           "maxInstrumentCount": 10,
           "temperature": "LT",
           "skipPackaging": false,
-          "isActive": true,
+          "isActive": false,
           "matchMode": "first",
           "skipDiscount": false
         }
       ],
       "rule_count": 2,
-      "active_rule_count": 2
+      "active_rule_count": 0
     },
     "DAOWAI-RM": {
       "code": "DAOWAI-RM",
@@ -908,7 +908,7 @@
           "minInstrumentCount": 3,
           "skipPackaging": false,
           "skipDiscount": true,
-          "isActive": true,
+          "isActive": false,
           "matchMode": "first"
         },
         {
@@ -932,7 +932,7 @@
           "maxInstrumentCount": 2,
           "skipPackaging": false,
           "skipDiscount": true,
-          "isActive": true,
+          "isActive": false,
           "matchMode": "first"
         },
         {
@@ -960,7 +960,7 @@
           "foldRatio": 5,
           "minInstrumentCount": 11,
           "skipPackaging": true,
-          "isActive": true,
+          "isActive": false,
           "matchMode": "first",
           "skipDiscount": false
         },
@@ -975,7 +975,7 @@
           "foldRatio": 5,
           "maxInstrumentCount": 10,
           "skipPackaging": false,
-          "isActive": true,
+          "isActive": false,
           "matchMode": "first",
           "skipDiscount": false
         },
@@ -994,7 +994,7 @@
         }
       ],
       "rule_count": 8,
-      "active_rule_count": 5
+      "active_rule_count": 1
     },
     "GUOYAO-3": {
       "code": "GUOYAO-3",
@@ -1139,12 +1139,12 @@
           ],
           "skipPackaging": false,
           "skipDiscount": true,
-          "isActive": true,
+          "isActive": false,
           "matchMode": "first"
         }
       ],
       "rule_count": 1,
-      "active_rule_count": 1
+      "active_rule_count": 0
     },
     "HLFB-SF": {
       "code": "HLFB-SF",
@@ -1236,7 +1236,7 @@
           ],
           "skipPackaging": true,
           "skipDiscount": true,
-          "isActive": true,
+          "isActive": false,
           "matchMode": "first"
         },
         {
@@ -1276,7 +1276,7 @@
         }
       ],
       "rule_count": 3,
-      "active_rule_count": 3
+      "active_rule_count": 2
     },
     "HRB-2ND": {
       "code": "HRB-2ND",
@@ -3702,7 +3702,7 @@
           ],
           "skipPackaging": true,
           "skipDiscount": true,
-          "isActive": true,
+          "isActive": false,
           "matchMode": "first"
         },
         {
@@ -3715,7 +3715,7 @@
           ],
           "skipPackaging": true,
           "skipDiscount": true,
-          "isActive": true,
+          "isActive": false,
           "matchMode": "first"
         },
         {
@@ -3728,7 +3728,7 @@
           ],
           "skipPackaging": true,
           "skipDiscount": true,
-          "isActive": true,
+          "isActive": false,
           "matchMode": "first"
         },
         {
@@ -3741,7 +3741,7 @@
           ],
           "skipPackaging": true,
           "skipDiscount": true,
-          "isActive": true,
+          "isActive": false,
           "matchMode": "first"
         },
         {
@@ -3754,7 +3754,7 @@
           ],
           "skipPackaging": true,
           "skipDiscount": true,
-          "isActive": true,
+          "isActive": false,
           "matchMode": "first"
         },
         {
@@ -3770,7 +3770,7 @@
           ],
           "skipPackaging": true,
           "skipDiscount": true,
-          "isActive": true,
+          "isActive": false,
           "matchMode": "first"
         },
         {
@@ -3785,7 +3785,7 @@
           ],
           "skipPackaging": true,
           "skipDiscount": true,
-          "isActive": true,
+          "isActive": false,
           "matchMode": "first"
         },
         {
@@ -3798,7 +3798,7 @@
           ],
           "skipPackaging": true,
           "skipDiscount": true,
-          "isActive": true,
+          "isActive": false,
           "matchMode": "first"
         },
         {
@@ -3812,7 +3812,7 @@
           ],
           "skipPackaging": true,
           "skipDiscount": true,
-          "isActive": true,
+          "isActive": false,
           "matchMode": "first"
         },
         {
@@ -3825,7 +3825,7 @@
           ],
           "skipPackaging": true,
           "skipDiscount": true,
-          "isActive": true,
+          "isActive": false,
           "matchMode": "first"
         },
         {
@@ -3843,12 +3843,12 @@
           ],
           "skipPackaging": true,
           "skipDiscount": true,
-          "isActive": true,
+          "isActive": false,
           "matchMode": "first"
         }
       ],
       "rule_count": 11,
-      "active_rule_count": 11
+      "active_rule_count": 0
     },
     "SUOFEI-YL": {
       "code": "SUOFEI-YL",

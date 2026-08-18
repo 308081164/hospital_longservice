@@ -793,7 +793,7 @@
       "fieldConsistencyMaterialClass": "Material class mismatch",
       "fieldConsistencyInstrumentCount": "Instrument count mismatch",
       "fieldConsistencyLegendRed": "Red: bag size or material class mismatch",
-      "fieldConsistencyLegendGreen": "Green: pack-name piece count vs instrument count mismatch",
+      "fieldConsistencyLegendAmber": "Amber: pack-name piece total vs instrument count mismatch",
       "tabRegular": "Regular bill",
       "tabExternal": "External instruments ({count})",
       "suggestedDepartment": "Suggested dept",

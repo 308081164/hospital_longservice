@@ -45,7 +45,7 @@
           </ElButton>
         </div>
         <div class="rounded border border-gray-200 bg-white p-3 text-sm text-gray-800">
-          {{ pricingRule }}
+          {{ localizedPricingRule }}
         </div>
       </section>
 
@@ -58,7 +58,7 @@
             </span>
             <div class="min-w-0 flex-1">
               <div class="text-xs font-medium text-gray-600">{{ stepLabel(step, index) }}</div>
-              <div v-if="step.detail" class="mt-0.5 text-sm text-gray-800 break-words">{{ step.detail }}</div>
+              <div v-if="step.detail" class="mt-0.5 text-sm text-gray-800 break-words">{{ localizeDisplayText(step.detail) }}</div>
             </div>
           </li>
         </ol>
@@ -109,6 +109,11 @@
     parseReconciliationBillingContext
   } from '@/utils/reconciliationBillingNotes'
   import { buildPricingFlowTimeline, type PricingFlowStep } from '@/utils/reconciliationPricingPath'
+  import {
+    formatPricingPathDisplay,
+    formatReconciliationStatusDisplay,
+    localizeReconciliationDisplayText
+  } from '@/utils/reconciliationDisplayText'
 
   defineOptions({ name: 'PricingFlowDrawer' })
 
@@ -135,6 +140,10 @@
     return raw == null ? '' : String(raw).trim()
   })
 
+  const localizedPricingRule = computed(() =>
+    pricingRule.value ? localizeReconciliationDisplayText(pricingRule.value) : ''
+  )
+
   const packTitle = computed(() => {
     if (!props.row) return '—'
     const packName = String(props.row.packName ?? props.row.pack_name ?? '—')
@@ -154,16 +163,7 @@
     return typeof v === 'number' ? v : null
   })
 
-  const statusLabel = computed(() => {
-    const status = String(props.row?.status ?? '')
-    const map: Record<string, string> = {
-      corrected: '已修正',
-      unchanged: '无需修改',
-      warning: '人工复核',
-      skipped: '已跳过'
-    }
-    return map[status] ?? status
-  })
+  const statusLabel = computed(() => formatReconciliationStatusDisplay(String(props.row?.status ?? '')))
 
   const statusTagType = computed(() => {
     const status = String(props.row?.status ?? '')
@@ -182,8 +182,12 @@
 
   const pricingPathLabel = computed(() => {
     const raw = props.row?.pricingPath ?? props.row?.pricing_path
-    return raw == null || raw === '' ? '' : String(raw)
+    return raw == null || raw === '' ? '' : formatPricingPathDisplay(String(raw))
   })
+
+  function localizeDisplayText(value: string): string {
+    return localizeReconciliationDisplayText(value)
+  }
 
   function formatCurrency(value: number | null | undefined): string {
     return formatReconciliationCurrency(value)

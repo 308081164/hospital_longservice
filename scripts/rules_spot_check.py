@@ -321,6 +321,18 @@ GUOYAO_2_SPOT_CHECKS: list[dict[str, Any]] = [
         "expectedUnitPrice": 20.5,
         "priceTol": 0.5,
     },
+    {
+        "name": "电机厂驱血带纸塑13",
+        "department": "手术室",
+        "packName": "驱血带(高温)/Z2032",
+        "type": "额外包(纸塑袋)",
+        "packageMaterial": "高温纸塑袋200*320",
+        "instrumentCount": 1,
+        "packCount": 1,
+        "unitPrice": 13.0,
+        "totalPrice": 13.0,
+        "expectedUnitPrice": 13.0,
+    },
 ]
 
 HRB_WY_HOSPITAL = "哈尔滨市第五医院"

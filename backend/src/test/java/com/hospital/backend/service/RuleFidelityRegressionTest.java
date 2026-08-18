@@ -34,11 +34,32 @@ class RuleFidelityRegressionTest {
         assertThat(bite.pricingRule).contains("高温纸塑袋");
         assertThat(bite.notes).anyMatch(note -> note.contains("混合模式未命中特色规则，走标准灭菌计价"));
 
+        PricingEngine.ProcessedResult tourniquetPaper = engine.processRow(Map.of(
+                "hospitalName", "国药总医院第二院区",
+                "department", "手术室",
+                "type", "额外包(纸塑袋)",
+                "packName", "驱血带(高温)/Z2032",
+                "packageMaterial", "高温纸塑袋200*320",
+                "instrumentCount", 1,
+                "packCount", 1,
+                "unitPrice", 13.0,
+                "totalPrice", 13.0
+        ));
+        assertThat(tourniquetPaper.status).isEqualTo("unchanged");
+        assertThat(tourniquetPaper.expectedUnitPrice).isEqualTo(13.0);
+        assertThat(tourniquetPaper.pricingRule).contains("高温纸塑袋20cm");
+        assertThat(tourniquetPaper.notes).anyMatch(note -> note.contains("混合模式未命中特色规则，走标准灭菌计价"));
+    }
+
+    @Test
+    void guoyao2NonWovenTourniquetUsesDressingWCode() throws Exception {
+        JsonNode rules = RuleFidelityTestSupport.compileForCustomerCode("GUOYAO-2");
+        PricingEngine engine = new PricingEngine(rules);
         PricingEngine.ProcessedResult tourniquet = engine.processRow(Map.of(
                 "hospitalName", "国药总医院第二院区",
                 "department", "手术室",
                 "type", "敷料包(无纺布包)",
-                "packName", "驱血带(高温)/Z2032",
+                "packName", "驱血带(高温)/W90",
                 "packageMaterial", "无纺布-90×90-50g",
                 "instrumentCount", 1,
                 "packCount", 1,
@@ -66,8 +87,10 @@ class RuleFidelityRegressionTest {
                 "unitPrice", 121.0,
                 "totalPrice", 121.0
         ));
-        assertThat(result.status).isEqualTo("unchanged");
+        assertThat(result.status).isEqualTo("warning");
         assertThat(result.pricingRule).isEqualTo("特色账单已关闭");
+        assertThat(result.expectedUnitPrice).isEqualTo(121.0);
+        assertThat(result.notes).anyMatch(note -> note.contains("字段核对"));
     }
 
     @Test
@@ -106,7 +129,7 @@ class RuleFidelityRegressionTest {
                 "totalPrice", 55.0
         ));
         assertThat(result.status).isEqualTo("warning");
-        assertThat(result.expectedUnitPrice).isEqualTo(33.5);
+        assertThat(result.expectedUnitPrice).isEqualTo(30.5);
         assertThat(result.pricingRule).doesNotContain("环钻27.5");
         assertThat(result.pricingRule).contains("冰城环钻包");
     }

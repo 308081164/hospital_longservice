@@ -294,8 +294,8 @@
                   <span class="field-consistency-legend field-consistency-legend--red">{{
                     t('reconciliation.detail.fieldConsistencyLegendRed')
                   }}</span>
-                  <span class="field-consistency-legend field-consistency-legend--green">{{
-                    t('reconciliation.detail.fieldConsistencyLegendGreen')
+                  <span class="field-consistency-legend field-consistency-legend--amber">{{
+                    t('reconciliation.detail.fieldConsistencyLegendAmber')
                   }}</span>
                 </span>
                 <span
@@ -3763,10 +3763,10 @@
     box-shadow: inset 0 0 0 1px #fab6b6;
   }
 
-  .field-consistency-legend--green {
-    color: #529b2e;
-    background: #f0f9eb;
-    box-shadow: inset 0 0 0 1px #b3e19d;
+  .field-consistency-legend--amber {
+    color: #b88230;
+    background: #fdf6ec;
+    box-shadow: inset 0 0 0 1px #f5dab1;
   }
 
   /* 详情表格原生交互元素（替代 ElInput/ElSelect/ElButton，避免每行创建 Vue 组件导致渲染卡顿） */

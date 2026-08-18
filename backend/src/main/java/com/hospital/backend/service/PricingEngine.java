@@ -72,8 +72,10 @@ public class PricingEngine {
         String packageMaterial = str(row, "packageMaterial");
         String hospitalName = str(row, "hospitalName");
         int instrumentCount = intVal(row, "instrumentCount");
+        int packCount = Math.max(1, intVal(row, "packCount"));
         List<BillRowFieldConsistencyValidator.Violation> consistencyViolations =
-                BillRowFieldConsistencyValidator.validate(type, packName, packageMaterial, instrumentCount);
+                BillRowFieldConsistencyValidator.validate(
+                        type, packName, packageMaterial, instrumentCount, packCount);
         boolean forceConsistencyWarning = !consistencyViolations.isEmpty();
         for (BillRowFieldConsistencyValidator.Violation violation : consistencyViolations) {
             notes.add("【字段核对】" + violation.message());
@@ -83,7 +85,10 @@ public class PricingEngine {
         packageMaterial = inferPricingPackageMaterial(type, packageMaterial, notes);
         packageMaterial = normalizeFuyiImportMaterial(type, packName, packageMaterial, notes);
         row.put("packageMaterial", packageMaterial);
-        int packCount = Math.max(1, intVal(row, "packCount"));
+        PackPricingCategoryResolver.Resolution packCategoryResolution =
+                PackPricingCategoryResolver.resolve(
+                        type, packName, packageMaterial, instrumentCount, packCount);
+        PackPricingCategory packCategory = packCategoryResolution.category();
         Double unitPrice = doubleOrNull(row, "unitPrice");
         Double totalPrice = doubleOrNull(row, "totalPrice");
 
@@ -114,7 +119,7 @@ public class PricingEngine {
                 && (type.contains("低温") || type.contains("ETO") || type.contains("EO"));
         boolean isZsdInstrumentPack = isZsdInstrumentPackType(type);
 
-        boolean dressingPerPack = isDressingPerPackRow(packName, type, instrumentCount);
+        boolean dressingPerPack = isDressingPerPackRow(packName, type, instrumentCount, packCategory);
         int effectiveCount = instrumentCount;
         if (packCount > 1 && !isZsdInstrumentPack) {
             int divided = (int) Math.round((double) effectiveCount / packCount);
@@ -327,80 +332,91 @@ public class PricingEngine {
             if (hybrid) {
                 notes.add("混合模式未命中特色规则，走标准灭菌计价。");
             }
-            if (type.contains("纸塑袋") && isCottonDressingPackName(packName)
-                && shouldUseDressingCottonPaperPlasticPrice(packName, type, instrumentCount, packCount)) {
-            int bagSize2 = detectBagSize(str(row, "packageMaterial") + str(row, "packName"));
-            Double cottonPrice = resolveCottonPaperPlasticUnitPrice(bagSize2);
-            if (cottonPrice != null) {
-                expectedUnitPrice = cottonPrice;
-                pricingRule = "敷料包(纸塑袋)+棉球——" + bagSize2 + "cm";
-                notes.add("敷料包(纸塑袋)+棉球，纸塑袋规格 " + bagSize2 + "cm，按包计价 "
-                        + fmt(expectedUnitPrice) + " 元/包，总价=单价×包数(" + packCount + ")。");
-            } else {
-                pricingRule = "敷料包(纸塑袋)+棉球——未识别规格";
-                notes.add("敷料包(纸塑袋)+棉球未能识别纸塑袋规格，保留原始价格。");
-                requiresReview = true;
+            if (packCategoryResolution.note() != null) {
+                notes.add(packCategoryResolution.note());
             }
-            skipPackaging = true;
-        } else if (packName.contains("驱血带")
-                || (type.contains("敷料") && packName.contains("驱血带"))) {
-            Double measure = extractDressingPackMeasure(packageMaterial, packName);
-            if (measure != null) {
-                double dressPrice = computeDressingPackPrice(measure);
-                if (dressPrice > 0) {
-                    expectedUnitPrice = dressPrice;
-                    pricingRule = "敷料包(无纺布包)驱血带——" + measure;
-                    notes.add("驱血带按无纺布敷料包规格 " + measure + " 计价，单价 " + fmt(expectedUnitPrice) + " 元。");
-                } else {
-                    pricingRule = "敷料包(无纺布包)驱血带——未匹配定价";
-                    notes.add("驱血带未能匹配无纺布敷料分档，保留原始价格。");
-                    requiresReview = true;
+            switch (packCategory) {
+            case DRESSING_PAPER -> {
+                if (type.contains("纸塑袋") && isCottonDressingPackName(packName)
+                        && shouldUseDressingCottonPaperPlasticPrice(
+                                packName, type, instrumentCount, packCount)) {
+                    int bagSize2 = detectBagSize(str(row, "packageMaterial") + str(row, "packName"));
+                    Double cottonPrice = resolveCottonPaperPlasticUnitPrice(bagSize2);
+                    if (cottonPrice != null) {
+                        expectedUnitPrice = cottonPrice;
+                        pricingRule = "敷料包(纸塑袋)+棉球——" + bagSize2 + "cm";
+                        notes.add("敷料包(纸塑袋)+棉球，纸塑袋规格 " + bagSize2 + "cm，按包计价 "
+                                + fmt(expectedUnitPrice) + " 元/包，总价=单价×包数(" + packCount + ")。");
+                    } else {
+                        pricingRule = "敷料包(纸塑袋)+棉球——未识别规格";
+                        notes.add("敷料包(纸塑袋)+棉球未能识别纸塑袋规格，保留原始价格。");
+                        requiresReview = true;
+                    }
+                    skipPackaging = true;
+                } else if (type.contains("敷料包") && type.contains("纸塑袋") && !packName.contains("棉球缸")) {
+                    pricingRule = "敷料包(纸塑袋)——保留原单价";
+                    notes.add("敷料包(纸塑袋)按账单原单价计费，不套用无纺布敷料包尺寸价或高温纸塑袋阶梯。");
+                    skipPackaging = true;
                 }
-            } else if (isZeroImport(unitPrice, totalPrice)) {
-                double defaultPrice = defaultDressingPackPrice();
-                expectedUnitPrice = defaultPrice;
-                pricingRule = "敷料包(无纺布包)驱血带——默认价";
-                notes.add("驱血带未能识别 W 码规格，0 元导入按默认小敷料包 " + fmt(defaultPrice) + " 元。");
-                requiresReview = true;
-            } else {
-                pricingRule = "敷料包(无纺布包)驱血带——未识别规格";
-                notes.add("驱血带未能识别无纺布 W 码规格，保留原始价格。");
-                requiresReview = true;
             }
-            skipPackaging = true;
-        } else if (type.contains("敷料包") && type.contains("纸塑袋") && !packName.contains("棉球缸")) {
-            // 敷料包(纸塑袋)（棉球已在上方单独定价；棉球缸走高温纸塑件费+袋费/附一 fuyi 袋规）
-            pricingRule = "敷料包(纸塑袋)——保留原单价";
-            notes.add("敷料包(纸塑袋)按账单原单价计费，不套用无纺布敷料包尺寸价或高温纸塑袋阶梯。");
-            skipPackaging = true;
-        } else if (type.contains("敷料包")) {
-            // 敷料包(无纺布包)
-            Double measure = extractDressingPackMeasure(packageMaterial, packName);
-            if (measure != null) {
-                double dressPrice = computeDressingPackPrice(measure);
-                if (dressPrice > 0) {
-                    expectedUnitPrice = dressPrice;
-                    pricingRule = "敷料包(无纺布包)——" + measure;
-                    notes.add("敷料包规格 " + measure + "，按敷料包定价表计算单价为 " + fmt(expectedUnitPrice) + " 元。");
-                } else {
-                    pricingRule = "敷料包(无纺布包)——未匹配定价";
-                    notes.add("敷料包规格 " + measure + " 未命中定价表（<90→25, =90→30, 1.2~1.5→35），保留原始价格。");
-                    requiresReview = true;
+            case DRESSING_NONWOVEN -> {
+                if (packName.contains("驱血带")) {
+                    Double measure = extractDressingPackMeasure(packageMaterial, packName);
+                    if (measure != null) {
+                        double dressPrice = computeDressingPackPrice(measure);
+                        if (dressPrice > 0) {
+                            expectedUnitPrice = dressPrice;
+                            pricingRule = "敷料包(无纺布包)驱血带——" + measure;
+                            notes.add("驱血带按无纺布敷料包规格 " + measure + " 计价，单价 "
+                                    + fmt(expectedUnitPrice) + " 元。");
+                        } else {
+                            pricingRule = "敷料包(无纺布包)驱血带——未匹配定价";
+                            notes.add("驱血带未能匹配无纺布敷料分档，保留原始价格。");
+                            requiresReview = true;
+                        }
+                    } else if (isZeroImport(unitPrice, totalPrice)) {
+                        double defaultPrice = defaultDressingPackPrice();
+                        expectedUnitPrice = defaultPrice;
+                        pricingRule = "敷料包(无纺布包)驱血带——默认价";
+                        notes.add("驱血带未能识别 W 码规格，0 元导入按默认小敷料包 "
+                                + fmt(defaultPrice) + " 元。");
+                        requiresReview = true;
+                    } else {
+                        pricingRule = "敷料包(无纺布包)驱血带——未识别规格";
+                        notes.add("驱血带未能识别无纺布 W 码规格，保留原始价格。");
+                        requiresReview = true;
+                    }
+                    skipPackaging = true;
+                } else if (type.contains("敷料包")) {
+                    Double measure = extractDressingPackMeasure(packageMaterial, packName);
+                    if (measure != null) {
+                        double dressPrice = computeDressingPackPrice(measure);
+                        if (dressPrice > 0) {
+                            expectedUnitPrice = dressPrice;
+                            pricingRule = "敷料包(无纺布包)——" + measure;
+                            notes.add("敷料包规格 " + measure + "，按敷料包定价表计算单价为 "
+                                    + fmt(expectedUnitPrice) + " 元。");
+                        } else {
+                            pricingRule = "敷料包(无纺布包)——未匹配定价";
+                            notes.add("敷料包规格 " + measure + " 未命中定价表（<90→25, =90→30, 1.2~1.5→35），保留原始价格。");
+                            requiresReview = true;
+                        }
+                    } else if (isZeroImport(unitPrice, totalPrice)) {
+                        double defaultPrice = defaultDressingPackPrice();
+                        expectedUnitPrice = defaultPrice;
+                        pricingRule = "敷料包(无纺布包)——0元导入默认价";
+                        notes.add("敷料包未能识别规格尺寸，0 元导入按标准小敷料包默认单价 "
+                                + fmt(defaultPrice) + " 元。");
+                        requiresReview = true;
+                    } else {
+                        pricingRule = "敷料包(无纺布包)——未识别规格";
+                        notes.add("敷料包(无纺布包)未能识别到规格尺寸，保留原始价格。");
+                        requiresReview = true;
+                    }
+                    skipPackaging = true;
                 }
-            } else if (isZeroImport(unitPrice, totalPrice)) {
-                double defaultPrice = defaultDressingPackPrice();
-                expectedUnitPrice = defaultPrice;
-                pricingRule = "敷料包(无纺布包)——0元导入默认价";
-                notes.add("敷料包未能识别规格尺寸，0 元导入按标准小敷料包默认单价 "
-                        + fmt(defaultPrice) + " 元。");
-                requiresReview = true;
-            } else {
-                pricingRule = "敷料包(无纺布包)——未识别规格";
-                notes.add("敷料包(无纺布包)未能识别到规格尺寸，保留原始价格。");
-                requiresReview = true;
             }
-            skipPackaging = true;
-        } else if (isPaperPlastic) {
+            case INSTRUMENT_PAPER -> {
             if (isLowTemp) {
                 Double forcedLt = computeForceHighTempUnitPrice(forceHighTempPerItem, materialBillingCount);
                 if (forcedLt != null && appliedSpecialFoldRule) {
@@ -428,7 +444,8 @@ public class PricingEngine {
                     expectedUnitPrice = computeHighTempPaperPlastic(materialBillingCount, bagSize, zBagSize, notes, isDouble, hospitalName);
                 }
             }
-        } else if (isNonWoven) {
+            }
+            case INSTRUMENT_NONWOVEN -> {
             if (isLowTemp) {
                 Double forcedLt = computeForceHighTempUnitPrice(forceHighTempPerItem, materialBillingCount);
                 if (forcedLt != null && appliedSpecialFoldRule) {
@@ -467,13 +484,15 @@ public class PricingEngine {
                     }
                 }
             }
-        } else {
+            }
+            case UNKNOWN -> {
             pricingRule = "未识别包装类型，保留原价";
             notes.add("包装材料\"" + packageMaterial + "\"未能识别为纸塑袋或无纺布，已保留原始价格，请检查包装材料列填写是否正确，或手动调整单价。");
             if (unitPrice == null || isZeroImport(unitPrice, totalPrice)) {
                 requiresReview = true;
             }
-        }
+            }
+            }
         }
 
         if (specialPrice == null && expectedUnitPrice != null) {
@@ -1277,20 +1296,24 @@ public class PricingEngine {
     }
 
     /** 器械数为 0 的敷料按包行：不要把 0 件强制当成 1 件。 */
-    private boolean isDressingPerPackRow(String packName, String type, int instrumentCount) {
+    private boolean isDressingPerPackRow(
+            String packName, String type, int instrumentCount, PackPricingCategory category) {
         if (instrumentCount > 0) {
             return false;
         }
         if (packName.contains("棉球缸")) {
             return false;
         }
-        if (isCottonDressingPackName(packName) && type.contains("纸塑袋")) {
+        if (category == PackPricingCategory.DRESSING_PAPER) {
+            if (isCottonDressingPackName(packName) && type.contains("纸塑袋")) {
+                return true;
+            }
+            return type.contains("敷料包") && type.contains("纸塑袋");
+        }
+        if (category == PackPricingCategory.DRESSING_NONWOVEN && packName.contains("驱血带")) {
             return true;
         }
-        if (packName.contains("驱血带")) {
-            return true;
-        }
-        return type.contains("敷料包") && type.contains("纸塑袋");
+        return false;
     }
 
     /** 棉球/纱布纸塑袋敷料价：纯敷料棉球；棉球缸等容器走高温纸塑「件费+袋费」。 */

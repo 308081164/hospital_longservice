@@ -43,7 +43,7 @@
       },
       "expect": {
         "status": "warning",
-        "expectedUnitPrice": 33.5,
+        "expectedUnitPrice": 30.5,
         "pricingRuleContains": "环钻",
         "pricingRuleNotContains": "27.5"
       },
@@ -70,7 +70,7 @@
       },
       "expect": {
         "status": "warning",
-        "expectedUnitPrice": 33.5,
+        "expectedUnitPrice": 30.5,
         "pricingRuleContains": "环钻"
       },
       "billingRef": "测试用例/哈尔滨冰城医疗美容医院/7月期待价格校正清单.csv#1623568",
@@ -550,7 +550,7 @@
         "totalPrice": 11.0
       },
       "expect": {
-        "status": "unchanged",
+        "status": "warning",
         "pricingRuleContains": "特色账单已关闭"
       },
       "billingRef": "manifest#SHKF-YY#billingEnabled=false",
