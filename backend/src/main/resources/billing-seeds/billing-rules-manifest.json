@@ -1,7 +1,7 @@
 {
   "version": 1,
-  "generated_at": "2026-08-18T08:17:08.648122+00:00",
-  "manifest_hash": "3ad986ba0f17c2429cb648fd46b32b3ee9a91eef3764c0b8358af355508c98a4",
+  "generated_at": "2026-08-19T00:27:43.060544+00:00",
+  "manifest_hash": "66cc84540cc1dcc86d21fc3a2159053699efc0022fd23d1a2d9d00fcdb57d772",
   "customers": {
     "AL-YY": {
       "code": "AL-YY",
@@ -81,7 +81,7 @@
           ],
           "skipPackaging": true,
           "skipDiscount": true,
-          "isActive": true,
+          "isActive": false,
           "matchMode": "first"
         },
         {
@@ -217,7 +217,7 @@
         }
       ],
       "rule_count": 13,
-      "active_rule_count": 7
+      "active_rule_count": 6
     },
     "BOSHANG-YY": {
       "code": "BOSHANG-YY",
@@ -981,13 +981,12 @@
         },
         {
           "ruleType": "FIXED_PRICE",
-          "name": "电机厂敷料W120150固定35棉球",
+          "name": "电机厂敷料W120150固定35棉球_W12050",
           "priority": 30,
           "price": 35.0,
           "keywords": [
-            "棉球",
-            "W12050",
-            "W15050"
+            "棉球/W12050",
+            "棉球-W12050"
           ],
           "skipPackaging": true,
           "skipDiscount": true,
@@ -996,13 +995,12 @@
         },
         {
           "ruleType": "FIXED_PRICE",
-          "name": "电机厂敷料W120150固定35纱布",
+          "name": "电机厂敷料W120150固定35棉球_W15050",
           "priority": 30,
           "price": 35.0,
           "keywords": [
-            "纱布",
-            "W12050",
-            "W15050"
+            "棉球/W15050",
+            "棉球-W15050"
           ],
           "skipPackaging": true,
           "skipDiscount": true,
@@ -1011,15 +1009,40 @@
         },
         {
           "ruleType": "FIXED_PRICE",
-          "name": "电机厂敷料W605070固定25棉球",
+          "name": "电机厂敷料W120150固定35纱布_W12050",
+          "priority": 30,
+          "price": 35.0,
+          "keywords": [
+            "纱布/W12050",
+            "纱布-W12050"
+          ],
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": true,
+          "matchMode": "first"
+        },
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "电机厂敷料W120150固定35纱布_W15050",
+          "priority": 30,
+          "price": 35.0,
+          "keywords": [
+            "纱布/W15050",
+            "纱布-W15050"
+          ],
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": true,
+          "matchMode": "first"
+        },
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "电机厂敷料W605070固定25棉球_W6050",
           "priority": 30,
           "price": 25.0,
           "keywords": [
-            "棉球",
-            "W6050",
-            "W6070",
-            "W7060",
-            "W7070"
+            "棉球/W6050",
+            "棉球-W6050"
           ],
           "skipPackaging": true,
           "skipDiscount": true,
@@ -1028,15 +1051,12 @@
         },
         {
           "ruleType": "FIXED_PRICE",
-          "name": "电机厂敷料W605070固定25纱布",
+          "name": "电机厂敷料W605070固定25棉球_W6070",
           "priority": 30,
           "price": 25.0,
           "keywords": [
-            "纱布",
-            "W6050",
-            "W6070",
-            "W7060",
-            "W7070"
+            "棉球/W6070",
+            "棉球-W6070"
           ],
           "skipPackaging": true,
           "skipDiscount": true,
@@ -1045,13 +1065,12 @@
         },
         {
           "ruleType": "FIXED_PRICE",
-          "name": "电机厂敷料W9050固定30棉球",
+          "name": "电机厂敷料W605070固定25棉球_W7060",
           "priority": 30,
-          "price": 30.0,
+          "price": 25.0,
           "keywords": [
-            "棉球",
-            "W9050",
-            "W9060"
+            "棉球/W7060",
+            "棉球-W7060"
           ],
           "skipPackaging": true,
           "skipDiscount": true,
@@ -1060,13 +1079,222 @@
         },
         {
           "ruleType": "FIXED_PRICE",
-          "name": "电机厂敷料W9050固定30纱布",
+          "name": "电机厂敷料W605070固定25棉球_W7070",
+          "priority": 30,
+          "price": 25.0,
+          "keywords": [
+            "棉球/W7070",
+            "棉球-W7070"
+          ],
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": true,
+          "matchMode": "first"
+        },
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "电机厂敷料W605070固定25纱布_W6050",
+          "priority": 30,
+          "price": 25.0,
+          "keywords": [
+            "纱布/W6050",
+            "纱布-W6050"
+          ],
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": true,
+          "matchMode": "first"
+        },
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "电机厂敷料W605070固定25纱布_W6070",
+          "priority": 30,
+          "price": 25.0,
+          "keywords": [
+            "纱布/W6070",
+            "纱布-W6070"
+          ],
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": true,
+          "matchMode": "first"
+        },
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "电机厂敷料W605070固定25纱布_W7060",
+          "priority": 30,
+          "price": 25.0,
+          "keywords": [
+            "纱布/W7060",
+            "纱布-W7060"
+          ],
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": true,
+          "matchMode": "first"
+        },
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "电机厂敷料W605070固定25纱布_W7070",
+          "priority": 30,
+          "price": 25.0,
+          "keywords": [
+            "纱布/W7070",
+            "纱布-W7070"
+          ],
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": true,
+          "matchMode": "first"
+        },
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "电机厂敷料W9050固定30棉球_W9050",
           "priority": 30,
           "price": 30.0,
           "keywords": [
-            "纱布",
-            "W9050",
-            "W9060"
+            "棉球/W9050",
+            "棉球-W9050"
+          ],
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": true,
+          "matchMode": "first"
+        },
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "电机厂敷料W9050固定30棉球_W9060",
+          "priority": 30,
+          "price": 30.0,
+          "keywords": [
+            "棉球/W9060",
+            "棉球-W9060"
+          ],
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": true,
+          "matchMode": "first"
+        },
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "电机厂敷料W9050固定30纱布_W9050",
+          "priority": 30,
+          "price": 30.0,
+          "keywords": [
+            "纱布/W9050",
+            "纱布-W9050"
+          ],
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": true,
+          "matchMode": "first"
+        },
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "电机厂敷料W9050固定30纱布_W9060",
+          "priority": 30,
+          "price": 30.0,
+          "keywords": [
+            "纱布/W9060",
+            "纱布-W9060"
+          ],
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": true,
+          "matchMode": "first"
+        },
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "电机厂棉球W120150固定35",
+          "priority": 30,
+          "price": 35.0,
+          "keywords": [
+            "棉球/W12050",
+            "棉球/W15050",
+            "棉球/W120",
+            "棉球/W150"
+          ],
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": true,
+          "matchMode": "first"
+        },
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "电机厂棉球W605070固定25",
+          "priority": 30,
+          "price": 25.0,
+          "keywords": [
+            "棉球/W6050",
+            "棉球/W6070",
+            "棉球/W7060",
+            "棉球/W7070",
+            "棉球/W60",
+            "棉球/W70"
+          ],
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": true,
+          "matchMode": "first"
+        },
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "电机厂棉球W9050固定30",
+          "priority": 30,
+          "price": 30.0,
+          "keywords": [
+            "棉球/W9050",
+            "棉球/W9060",
+            "棉球/W90"
+          ],
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": true,
+          "matchMode": "first"
+        },
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "电机厂纱布W120150固定35",
+          "priority": 30,
+          "price": 35.0,
+          "keywords": [
+            "纱布/W12050",
+            "纱布/W15050",
+            "纱布/W120",
+            "纱布/W150"
+          ],
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": true,
+          "matchMode": "first"
+        },
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "电机厂纱布W605070固定25",
+          "priority": 30,
+          "price": 25.0,
+          "keywords": [
+            "纱布/W6050",
+            "纱布/W6070",
+            "纱布/W7060",
+            "纱布/W7070",
+            "纱布/W60",
+            "纱布/W70"
+          ],
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": true,
+          "matchMode": "first"
+        },
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "电机厂纱布W9050固定30",
+          "priority": 30,
+          "price": 30.0,
+          "keywords": [
+            "纱布/W9050",
+            "纱布/W9060",
+            "纱布/W90"
           ],
           "skipPackaging": true,
           "skipDiscount": true,
@@ -1087,8 +1315,8 @@
           "matchMode": "first"
         }
       ],
-      "rule_count": 14,
-      "active_rule_count": 11
+      "rule_count": 30,
+      "active_rule_count": 27
     },
     "GUOYAO-3": {
       "code": "GUOYAO-3",

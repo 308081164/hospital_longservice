@@ -536,7 +536,7 @@
     {
       "id": "t08_shkf_billing_off",
       "sc11Type": "SC11-T08",
-      "source": "特殊收费(11).xlsx#社会康复#16.5",
+      "source": "特殊收费(12).xlsx#社会康复#抛光车针盒16.5",
       "customerCode": "SHKF-YY",
       "hospitalName": "黑龙江省社会康复医院",
       "row": {
@@ -551,9 +551,10 @@
       },
       "expect": {
         "status": "warning",
-        "pricingRuleContains": "特色账单已关闭"
+        "expectedUnitPrice": 16.5,
+        "pricingRuleContains": "抛光车针盒"
       },
-      "billingRef": "manifest#SHKF-YY#billingEnabled=false",
+      "billingRef": "特殊收费(12).xlsx#社会康复#抛光车针盒6件盒1",
       "valid": true,
       "skipParameterized": false,
       "billingEvidence": "confirmed"
