@@ -1,0 +1,27 @@
+{
+  "version": "1",
+  "description": "客户FOLD规则添加setPrice:5.5，使折算后按5.5元/件计价。覆盖祖研排针10合1（祖研南岗）、电机厂指针5合1（电机厂）。",
+  "strictRuleOps": true,
+  "ruleUpdates": [
+    {
+      "code": "ZUYAN-NG",
+      "ruleName": "祖研排针10合1含包材",
+      "setPrice": 5.5
+    },
+    {
+      "code": "ZUYAN-NG",
+      "ruleName": "祖研排针10合1免包材",
+      "setPrice": 5.5
+    },
+    {
+      "code": "GUOYAO-2",
+      "ruleName": "电机厂指针5合1含包材",
+      "setPrice": 5.5
+    },
+    {
+      "code": "GUOYAO-2",
+      "ruleName": "电机厂指针5合1免包材",
+      "setPrice": 5.5
+    }
+  ]
+}

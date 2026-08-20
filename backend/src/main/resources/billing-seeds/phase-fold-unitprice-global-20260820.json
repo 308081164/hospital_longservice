@@ -1,0 +1,35 @@
+{
+  "version": "1",
+  "description": "全局FOLD规则添加unitPrice:5.5，使折算后按5.5元/件计价（而非走标准纸塑袋路径），并叠加标准包材费。覆盖通用小件5合1含包材、通用小件5合1免包材。",
+  "pricingRulePatches": [
+    {
+      "ruleId": 1,
+      "mergeRules": {
+        "specialRules": {
+          "foldRules": [
+            {
+              "name": "通用小件5合1含包材",
+              "priority": 50,
+              "keywords": ["克氏针", "银质针", "内热针", "车针", "拔髓针", "扩大针", "根扩针", "卷棉子"],
+              "threshold": 5,
+              "foldRatio": 5,
+              "maxInstrumentCount": 10,
+              "skipPackaging": false,
+              "unitPrice": 5.5
+            },
+            {
+              "name": "通用小件5合1免包材",
+              "priority": 51,
+              "keywords": ["克氏针", "银质针", "内热针", "车针", "拔髓针", "扩大针", "根扩针", "卷棉子"],
+              "threshold": 5,
+              "foldRatio": 5,
+              "minInstrumentCount": 11,
+              "skipPackaging": true,
+              "unitPrice": 5.5
+            }
+          ]
+        }
+      }
+    }
+  ]
+}

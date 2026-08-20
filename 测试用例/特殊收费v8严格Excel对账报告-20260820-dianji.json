@@ -3,41 +3,41 @@
   "api_base": "http://127.0.0.1:8000",
   "summary": {
     "pass": 0,
-    "fail": 1,
+    "fail": 0,
     "skip": 0,
-    "error": 0
+    "error": 1
   },
   "sections": {
     "month6": [
       {
-        "hospital": "黑龙江九洲妇科医院",
-        "customer_label": "九州",
-        "status": "FAIL",
-        "message": "多报 1",
-        "job_id": 940,
-        "raw_file": "九洲妇科6月账单.xlsx",
-        "proc_file": "6月__九州特殊账单.xlsx",
-        "expected_count": 0,
-        "warning_count": 1,
-        "pricing_warning_count": 1,
-        "non_pricing_warning_ignored": 0,
+        "hospital": "国药总医院第二院区",
+        "customer_label": "电机厂",
+        "status": "ERROR",
+        "message": "漏检 1",
+        "job_id": 941,
+        "raw_file": "电机厂6月账单.xlsx",
+        "proc_file": "6月__国药总医院第二院区5.26-6.25账单.xlsx",
+        "expected_count": 1,
+        "warning_count": 3,
+        "pricing_warning_count": 0,
+        "non_pricing_warning_ignored": 3,
         "matched_count": 0,
-        "missed": [],
-        "extra": [
+        "missed": [
           {
-            "diff_type": "EXTRA",
+            "diff_type": "MISSED",
             "sheet": "手术室",
-            "ship_no": "1615501",
-            "pack_name": "开腹包54件（筐1）",
-            "pack_count": 1,
-            "raw_unit": 302.5,
-            "proc_unit": null,
-            "system_unit": 297.0,
-            "proc_verify_unit": null,
-            "pricing_rule": "高温无纺布计费",
-            "key": "1615501|开腹包54件（筐1）|1"
+            "ship_no": "1616017",
+            "pack_name": "克氏针-12/Z7530",
+            "pack_count": 1.0,
+            "raw_unit": 16.5,
+            "proc_unit": 66.0,
+            "system_unit": null,
+            "proc_verify_unit": 66.0,
+            "pricing_rule": "",
+            "key": "1616017|克氏针-12/Z7530|1"
           }
         ],
+        "extra": [],
         "price_mismatch": [],
         "proc_mismatch": [],
         "dedupe_note": "",

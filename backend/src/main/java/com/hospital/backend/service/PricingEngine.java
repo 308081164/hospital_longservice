@@ -153,7 +153,8 @@ public class PricingEngine {
             notes.add("包装类型含低温标识且包名含\"盒\"，单包件数减 1 件（盒不收费）。");
         }
 
-        // 低温包装类型 + 包名不含"盒" → 按包名中"件"前数字取器械数（单包）
+        // 通用：从包名解析单包器械数
+        // 低温不含"盒"时，或高温包名含"-N/"或"N件"格式时，从包名取单包器械数
         if (isLowTempType && !packName.contains("盒")) {
             java.util.regex.Pattern p = java.util.regex.Pattern.compile("(\\d+)\\s*件");
             java.util.regex.Matcher m = p.matcher(packName);
@@ -164,7 +165,6 @@ public class PricingEngine {
                     notes.add("包装类型含低温标识且包名不含\"盒\"，按包名中\"件\"前数字取器械数为 " + effectiveCount + "。");
                 }
             } else {
-                // 回退：按包名中"-N/"格式取器械数（如"气腹管-1/Z3040"→1）
                 java.util.regex.Pattern p2 = java.util.regex.Pattern.compile("-(\\d+)/");
                 java.util.regex.Matcher m2 = p2.matcher(packName);
                 if (m2.find()) {
@@ -172,6 +172,37 @@ public class PricingEngine {
                     if (extracted > 0 && extracted != effectiveCount) {
                         effectiveCount = extracted;
                         notes.add("低温额外包按包名\"-" + extracted + "/\"取器械数为 " + effectiveCount + "。");
+                    }
+                }
+            }
+        } else if (!isLowTempType) {
+            // 高温：从包名解析单包器械数，覆盖Excel instrumentCount不准确的情况
+            java.util.regex.Pattern p = java.util.regex.Pattern.compile("(\\d+)\\s*件");
+            java.util.regex.Matcher m = p.matcher(packName);
+            if (m.find()) {
+                int extracted = Integer.parseInt(m.group(1));
+                if (extracted > 1 && extracted != effectiveCount) {
+                    effectiveCount = extracted;
+                    notes.add("高温包按包名中\"件\"前数字取单包器械数为 " + effectiveCount + "。");
+                }
+            } else {
+                java.util.regex.Pattern p2 = java.util.regex.Pattern.compile("-(\\d+)/");
+                java.util.regex.Matcher m2 = p2.matcher(packName);
+                if (m2.find()) {
+                    int extracted = Integer.parseInt(m2.group(1));
+                    if (extracted > 1 && extracted != effectiveCount) {
+                        effectiveCount = extracted;
+                        notes.add("高温包按包名\"-" + extracted + "/\"取单包器械数为 " + effectiveCount + "。");
+                    }
+                } else {
+                    java.util.regex.Pattern p3 = java.util.regex.Pattern.compile("(\\d{1,2})/");
+                    java.util.regex.Matcher m3 = p3.matcher(packName);
+                    if (m3.find()) {
+                        int extracted = Integer.parseInt(m3.group(1));
+                        if (extracted > 1 && extracted != effectiveCount) {
+                            effectiveCount = extracted;
+                            notes.add("高温包按包名\"" + extracted + "/\"取单包器械数为 " + effectiveCount + "。");
+                        }
                     }
                 }
             }
