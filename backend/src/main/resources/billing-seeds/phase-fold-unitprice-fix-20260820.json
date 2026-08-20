@@ -1,0 +1,99 @@
+{
+  "version": "1",
+  "description": "FOLD规则添加unitPrice:5.5，使折算后按5.5元/件计价（而非走标准纸塑袋路径），并叠加标准包材费。覆盖通用小件5合1、祖研排针10合1、电机厂指针5合1。",
+  "pricingRulePatches": [
+    {
+      "ruleId": 1,
+      "mergeRules": {
+        "specialRules": {
+          "foldRules": [
+            {
+              "name": "通用小件5合1含包材",
+              "priority": 50,
+              "keywords": ["克氏针", "银质针", "内热针", "车针", "拔髓针", "扩大针", "根扩针", "卷棉子"],
+              "threshold": 5,
+              "foldRatio": 5,
+              "maxInstrumentCount": 10,
+              "skipPackaging": false,
+              "unitPrice": 5.5
+            },
+            {
+              "name": "通用小件5合1免包材",
+              "priority": 51,
+              "keywords": ["克氏针", "银质针", "内热针", "车针", "拔髓针", "扩大针", "根扩针", "卷棉子"],
+              "threshold": 5,
+              "foldRatio": 5,
+              "minInstrumentCount": 11,
+              "skipPackaging": true,
+              "unitPrice": 5.5
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "customerUpdates": [
+    {
+      "code": "ZUYAN-NG",
+      "productRules": [
+        {
+          "ruleType": "FOLD",
+          "name": "祖研排针10合1含包材",
+          "priority": 10,
+          "keywords": ["排针"],
+          "threshold": 10,
+          "foldRatio": 10,
+          "maxInstrumentCount": 20,
+          "skipPackaging": false,
+          "unitPrice": 5.5,
+          "isActive": true,
+          "matchMode": "first"
+        },
+        {
+          "ruleType": "FOLD",
+          "name": "祖研排针10合1免包材",
+          "priority": 11,
+          "keywords": ["排针"],
+          "threshold": 10,
+          "foldRatio": 10,
+          "minInstrumentCount": 21,
+          "skipPackaging": true,
+          "unitPrice": 5.5,
+          "isActive": true,
+          "matchMode": "first"
+        }
+      ]
+    },
+    {
+      "code": "GUOYAO-2",
+      "productRules": [
+        {
+          "ruleType": "FOLD",
+          "name": "电机厂指针5合1含包材",
+          "priority": 14,
+          "keywords": ["指针"],
+          "threshold": 5,
+          "foldRatio": 5,
+          "maxInstrumentCount": 10,
+          "skipPackaging": false,
+          "unitPrice": 5.5,
+          "isActive": true,
+          "matchMode": "first"
+        },
+        {
+          "ruleType": "FOLD",
+          "name": "电机厂指针5合1免包材",
+          "priority": 15,
+          "keywords": ["指针"],
+          "threshold": 5,
+          "foldRatio": 5,
+          "minInstrumentCount": 11,
+          "skipPackaging": true,
+          "unitPrice": 5.5,
+          "isActive": true,
+          "matchMode": "first"
+        }
+      ]
+    }
+  ]
+}

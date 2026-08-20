@@ -163,6 +163,17 @@ public class PricingEngine {
                     effectiveCount = extracted;
                     notes.add("包装类型含低温标识且包名不含\"盒\"，按包名中\"件\"前数字取器械数为 " + effectiveCount + "。");
                 }
+            } else {
+                // 回退：按包名中"-N/"格式取器械数（如"气腹管-1/Z3040"→1）
+                java.util.regex.Pattern p2 = java.util.regex.Pattern.compile("-(\\d+)/");
+                java.util.regex.Matcher m2 = p2.matcher(packName);
+                if (m2.find()) {
+                    int extracted = Integer.parseInt(m2.group(1));
+                    if (extracted > 0 && extracted != effectiveCount) {
+                        effectiveCount = extracted;
+                        notes.add("低温额外包按包名\"-" + extracted + "/\"取器械数为 " + effectiveCount + "。");
+                    }
+                }
             }
         }
 
@@ -434,6 +445,12 @@ public class PricingEngine {
                     pricingRule = "低温特色折算单价";
                     notes.add("按特色规则低温折算单价 " + fmt(forceHighTempPerItem) + " 元/件 × "
                             + materialBillingCount + " 件 = " + fmt(expectedUnitPrice) + " 元。");
+                    if (!skipPackaging) {
+                        double bagFee = (bagSize > 0 && bagSize < 20) ? 2.5 : 4.0;
+                        expectedUnitPrice = round(expectedUnitPrice + bagFee);
+                        pricingRule = pricingRule + " + 标准包材费";
+                        notes.add("含包材规则，叠加标准包材费 " + fmt(bagFee) + " 元。");
+                    }
                 } else {
                     String ltPrefix = isDouble ? "低温纸塑袋(双)" : "低温纸塑袋";
                     pricingRule = ltPrefix + (bagSize > 0 ? bagSize + "cm" : "") + "阶梯计费";
@@ -447,6 +464,12 @@ public class PricingEngine {
                     pricingRule = "路径覆盖：高温固定单价";
                     notes.add("按路径覆盖高温单价 " + fmt(forceHighTempPerItem) + " 元/件 × "
                             + materialBillingCount + " 件 = " + fmt(expectedUnitPrice) + " 元。");
+                    if (appliedSpecialFoldRule && !skipPackaging) {
+                        double bagFee = (bagSize > 0 && bagSize < 20) ? 2.5 : 4.0;
+                        expectedUnitPrice = round(expectedUnitPrice + bagFee);
+                        pricingRule = pricingRule + " + 标准包材费";
+                        notes.add("含包材规则，叠加标准包材费 " + fmt(bagFee) + " 元。");
+                    }
                 } else {
                     int displaySize = bagSize > 25 ? 25 : bagSize;
                     String prefix = isDouble ? "高温纸塑袋(双)" : "高温纸塑袋";

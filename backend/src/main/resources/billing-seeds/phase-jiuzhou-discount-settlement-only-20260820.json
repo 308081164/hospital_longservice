@@ -1,0 +1,25 @@
+{
+  "version": "1",
+  "description": "九州折扣策略修正：将高温5折、低温7折的applyStage从默认bill_detail改为settlement_only，确保折扣仅在结款函阶段应用，不计入计价阶段。",
+  "profiles": [
+    {
+      "code": "JIUZHOU-FK",
+      "policies": [
+        {
+          "policyType": "DISCOUNT",
+          "name": "高温5折",
+          "scope": {"temperature": "HT"},
+          "params": {"rate": 0.5, "skipWhenFixedPrice": true, "applyStage": "settlement_only"},
+          "priority": 10
+        },
+        {
+          "policyType": "DISCOUNT",
+          "name": "低温7折",
+          "scope": {"temperature": "LT"},
+          "params": {"rate": 0.7, "skipWhenFixedPrice": true, "applyStage": "settlement_only"},
+          "priority": 20
+        }
+      ]
+    }
+  ]
+}

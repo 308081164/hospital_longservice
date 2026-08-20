@@ -155,6 +155,7 @@ public final class DefaultPricingTemplate {
         withBag.put("foldRatio", 5);
         withBag.put("maxInstrumentCount", 10);
         withBag.put("skipPackaging", false);
+        withBag.put("unitPrice", 5.5);
 
         Map<String, Object> noBag = new LinkedHashMap<>();
         noBag.put("name", "通用小件5合1免包材");
@@ -164,6 +165,7 @@ public final class DefaultPricingTemplate {
         noBag.put("foldRatio", 5);
         noBag.put("minInstrumentCount", 11);
         noBag.put("skipPackaging", true);
+        noBag.put("unitPrice", 5.5);
 
         return List.of(withBag, noBag);
     }
