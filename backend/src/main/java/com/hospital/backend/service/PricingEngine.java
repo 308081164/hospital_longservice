@@ -1337,7 +1337,6 @@ public class PricingEngine {
 
     private int foldCount(int count, int threshold, double foldRatio) {
         if (count <= 0) return 1;
-        if (threshold > 0 && count <= threshold) return 1;
         return Math.max(1, (int) Math.ceil(count / Math.max(1.0, foldRatio)));
     }
 

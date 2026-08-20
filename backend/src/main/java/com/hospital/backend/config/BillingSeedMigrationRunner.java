@@ -330,7 +330,11 @@ public class BillingSeedMigrationRunner implements CommandLineRunner {
             new IncrementalSeed("billing_seed_fold_unitprice_customers_20260820_v1",
                     "billing-seeds/phase-fold-unitprice-customers-20260820.json"),
             new IncrementalSeed("billing_seed_jiuzhou_discount_settlement_only_20260820_v1",
-                    "billing-seeds/phase-jiuzhou-discount-settlement-only-20260820.json")
+                    "billing-seeds/phase-jiuzhou-discount-settlement-only-20260820.json"),
+            new IncrementalSeed("billing_seed_global_special_rules_20260820_v1",
+                    "billing-seeds/phase-global-special-rules-20260820.json"),
+            new IncrementalSeed("billing_seed_guoyao_2_double_split_20260820_v1",
+                    "billing-seeds/phase-guoyao-2-double-split-20260820.json")
     );
 
     private static final String ZYY_D1_P0_MARKER = "billing_seed_zyy_d1_p0_v2";
@@ -477,13 +481,15 @@ public class BillingSeedMigrationRunner implements CommandLineRunner {
                     || "billing-seeds/phase-z-customer-dedup-hlfb-sf-20260820.json".equals(incremental.classpathFile())
                     || "billing-seeds/phase-bill-mirror-fix-20260820.json".equals(incremental.classpathFile())
                     || "billing-seeds/phase-boshang-hybrid-20260820.json".equals(incremental.classpathFile())
-                    || "billing-seeds/phase-fold-unitprice-customers-20260820.json".equals(incremental.classpathFile())) {
+                    || "billing-seeds/phase-fold-unitprice-customers-20260820.json".equals(incremental.classpathFile())
+                    || "billing-seeds/phase-guoyao-2-double-split-20260820.json".equals(incremental.classpathFile())) {
                 applyBatchPatchSeedFile(incremental.classpathFile());
             } else if ("billing-seeds/phase-billing-mode-backfill-20260730.json".equals(incremental.classpathFile())) {
                 applyBillingModeBackfillSeedFile(incremental.classpathFile());
             } else if ("billing-seeds/phase-global-cotton-paper-plastic-20260812.json".equals(incremental.classpathFile())
                     || "billing-seeds/phase-global-generic-fold-20260820.json".equals(incremental.classpathFile())
-                    || "billing-seeds/phase-fold-unitprice-global-20260820.json".equals(incremental.classpathFile())) {
+                    || "billing-seeds/phase-fold-unitprice-global-20260820.json".equals(incremental.classpathFile())
+                    || "billing-seeds/phase-global-special-rules-20260820.json".equals(incremental.classpathFile())) {
                 applied = applyPricingRulePatchSeedFile(incremental.classpathFile());
             } else {
                 applied = loadSeedClasspathFile(incremental.classpathFile());

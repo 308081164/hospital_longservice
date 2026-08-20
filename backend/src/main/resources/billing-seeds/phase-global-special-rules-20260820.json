@@ -1,0 +1,66 @@
+{
+  "version": "1",
+  "description": "对照特殊收费(13).xlsx通用特殊收费：①缝合针按1件含包材FOLD ②软镜固定300元 ③低温等离子「双」固定35元（市二院除外）",
+  "pricingRulePatches": [
+    {
+      "ruleId": 1,
+      "mergeRules": {
+        "specialRules": {
+          "foldRules": [
+            {
+              "name": "通用小件5合1含包材",
+              "priority": 50,
+              "keywords": ["克氏针", "银质针", "内热针", "车针", "拔髓针", "扩大针", "根扩针", "卷棉子"],
+              "threshold": 5,
+              "foldRatio": 5,
+              "maxInstrumentCount": 10,
+              "skipPackaging": false,
+              "unitPrice": 5.5
+            },
+            {
+              "name": "通用小件5合1免包材",
+              "priority": 51,
+              "keywords": ["克氏针", "银质针", "内热针", "车针", "拔髓针", "扩大针", "根扩针", "卷棉子"],
+              "threshold": 5,
+              "foldRatio": 5,
+              "minInstrumentCount": 11,
+              "skipPackaging": true,
+              "unitPrice": 5.5
+            },
+            {
+              "name": "通用缝合针按1件含包材",
+              "priority": 49,
+              "keywords": ["缝合针"],
+              "threshold": 99999,
+              "foldRatio": 99999,
+              "skipPackaging": false,
+              "unitPrice": 5.5
+            }
+          ],
+          "fixedPrices": [
+            {
+              "name": "通用软镜固定300",
+              "priority": 40,
+              "price": 300.0,
+              "keywords": ["软镜"],
+              "skipPackaging": true,
+              "skipDiscount": true,
+              "matchMode": "first"
+            },
+            {
+              "name": "通用双低温固定35",
+              "priority": 41,
+              "price": 35.0,
+              "keywords": ["双"],
+              "excludeKeywords": ["(双)", "/(双)", "双极", "双极线"],
+              "temperature": "LT",
+              "skipPackaging": true,
+              "skipDiscount": true,
+              "matchMode": "first"
+            }
+          ]
+        }
+      }
+    }
+  ]
+}

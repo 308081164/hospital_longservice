@@ -1,0 +1,54 @@
+{
+  "version": "1",
+  "description": "电机厂「双」规则拆分：<3件含外层袋，≥3件含内层纸塑袋（加价2.5元），对照特殊收费(13).xlsx电机厂②",
+  "strictRuleOps": true,
+  "profiles": [
+    {
+      "code": "GUOYAO-2",
+      "productRules": [
+        {
+          "ruleType": "PRICE_PER_INSTRUMENT",
+          "name": "电机厂双按件5.5含外层袋",
+          "priority": 20,
+          "price": 5.5,
+          "keywords": ["双"],
+          "excludeKeywords": ["(双)", "/(双)", "双极", "双极线"],
+          "maxInstrumentCount": 2,
+          "skipPackaging": false,
+          "skipDiscount": true,
+          "isActive": true,
+          "matchMode": "first"
+        },
+        {
+          "ruleType": "PRICE_PER_INSTRUMENT",
+          "name": "电机厂双按件5.5免包材",
+          "priority": 21,
+          "price": 5.5,
+          "keywords": ["双"],
+          "excludeKeywords": ["(双)", "/(双)", "双极", "双极线"],
+          "minInstrumentCount": 3,
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": true,
+          "matchMode": "first"
+        },
+        {
+          "ruleType": "EXTRA_FEE",
+          "name": "电机厂双内层纸塑袋加价2.5",
+          "priority": 22,
+          "fee": 2.5,
+          "keywords": ["双"],
+          "excludeKeywords": ["(双)", "/(双)", "双极", "双极线"],
+          "minInstrumentCount": 3,
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": true,
+          "matchMode": "first"
+        }
+      ]
+    }
+  ],
+  "deactivateRules": [
+    { "code": "GUOYAO-2", "ruleName": "电机厂双按件5.5" }
+  ]
+}
