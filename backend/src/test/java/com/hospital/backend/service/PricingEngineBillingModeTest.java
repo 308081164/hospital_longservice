@@ -30,7 +30,7 @@ class PricingEngineBillingModeTest {
     }
 
     @Test
-    void specialOnlyLeavesStandardRowsUnchanged() throws Exception {
+    void bingchengHybridFallsBackToStandardForNonSpecialRow() throws Exception {
         PricingEngine engine = PricingEngineTestSupport.engineForCustomerCode("BINGCHENG-YM");
         PricingEngine.ProcessedResult result = engine.processRow(Map.of(
                 "hospitalName", "哈尔滨冰城医疗美容医院",
@@ -43,8 +43,10 @@ class PricingEngineBillingModeTest {
                 "unitPrice", 22.0,
                 "totalPrice", 22.0
         ));
-        assertThat(result.status).isEqualTo("warning");
-        assertThat(result.pricingRule).contains("special_only");
+        assertThat(result.status).isEqualTo("unchanged");
+        assertThat(result.pricingRule).contains("高温纸塑袋");
+        assertThat(result.expectedUnitPrice).isEqualTo(22.0);
+        assertThat(result.notes).anyMatch(note -> note.contains("混合模式未命中特色规则，走标准灭菌计价"));
     }
 
     @Test

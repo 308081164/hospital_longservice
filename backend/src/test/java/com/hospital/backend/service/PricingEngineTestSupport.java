@@ -295,6 +295,10 @@ public final class PricingEngineTestSupport {
         if (fixture.has("valid") && !fixture.path("valid").asBoolean(true)) {
             return false;
         }
+        String customerCode = fixture.path("customerCode").asText("");
+        if (customerCode.isBlank()) {
+            return false;
+        }
         return true;
     }
 

@@ -1,7 +1,7 @@
 {
   "version": 1,
-  "generated_at": "2026-08-19T14:45:19.700727+00:00",
-  "manifest_hash": "2f049f480e07355988d5f3dbabfe0c1792a6320cbdb18886d1d6bca49388de2b",
+  "generated_at": "2026-08-20T10:47:38.769351+00:00",
+  "manifest_hash": "fcf3f4fdb59569564e268f910e6d15573778cf3ac812415875c82ddda25752e6",
   "billing_enabled_count": 56,
   "active_billing_enabled_count": 51,
   "customers": {
@@ -9,7 +9,7 @@
       "code": "AL-YY",
       "name": "奥兰医院",
       "status": null,
-      "billingPricingMode": null,
+      "billingPricingMode": "hybrid",
       "standardPricingOverride": null,
       "billingEnabled": false,
       "productRules": [],
@@ -20,7 +20,7 @@
       "code": "BINGCHENG-YM",
       "name": "哈尔滨冰城医疗美容医院",
       "status": null,
-      "billingPricingMode": "special_only",
+      "billingPricingMode": "hybrid",
       "standardPricingOverride": null,
       "billingEnabled": true,
       "productRules": [
@@ -234,7 +234,7 @@
       "code": "BOSHANG-YY",
       "name": "博尚医院",
       "status": null,
-      "billingPricingMode": "special_only",
+      "billingPricingMode": "hybrid",
       "standardPricingOverride": null,
       "billingEnabled": true,
       "productRules": [
@@ -303,7 +303,7 @@
       "code": "CHANGJIAN",
       "name": "哈尔滨长健医院(旧CHANGJIAN)",
       "status": "inactive",
-      "billingPricingMode": null,
+      "billingPricingMode": "hybrid",
       "standardPricingOverride": null,
       "billingEnabled": false,
       "productRules": [],
@@ -361,7 +361,7 @@
       "code": "DAOWAI-RM",
       "name": "道外区人民医院",
       "status": null,
-      "billingPricingMode": "standard",
+      "billingPricingMode": "hybrid",
       "standardPricingOverride": null,
       "billingEnabled": true,
       "productRules": [
@@ -567,7 +567,7 @@
       "code": "DD-DC",
       "name": "黑龙江东大肛肠",
       "status": null,
-      "billingPricingMode": null,
+      "billingPricingMode": "hybrid",
       "standardPricingOverride": null,
       "billingEnabled": false,
       "productRules": [],
@@ -650,7 +650,7 @@
       "code": "ERYY-NG",
       "name": "黑龙江省第二医院（南岗院区）",
       "status": null,
-      "billingPricingMode": "special_only",
+      "billingPricingMode": "hybrid",
       "standardPricingOverride": null,
       "billingEnabled": true,
       "productRules": [
@@ -675,7 +675,7 @@
       "code": "ERYY-SB",
       "name": "ERYY-SB",
       "status": null,
-      "billingPricingMode": "special_only",
+      "billingPricingMode": "hybrid",
       "standardPricingOverride": null,
       "billingEnabled": false,
       "productRules": [
@@ -813,7 +813,7 @@
       "code": "FNN-YY",
       "name": "方南南医院",
       "status": null,
-      "billingPricingMode": "standard",
+      "billingPricingMode": "hybrid",
       "standardPricingOverride": null,
       "billingEnabled": true,
       "productRules": [
@@ -1358,7 +1358,7 @@
       "code": "GUOYAO-MAIN",
       "name": "国药总医院主院区",
       "status": null,
-      "billingPricingMode": "special_only",
+      "billingPricingMode": "hybrid",
       "standardPricingOverride": null,
       "billingEnabled": true,
       "productRules": [
@@ -1483,7 +1483,7 @@
       "code": "HLFB-SF",
       "name": "黑龙江省妇幼保健院（人口）(旧HLFB-SF)",
       "status": "inactive",
-      "billingPricingMode": "standard",
+      "billingPricingMode": "hybrid",
       "standardPricingOverride": null,
       "billingEnabled": false,
       "productRules": [
@@ -1913,7 +1913,7 @@
       "code": "HLJ-JYGLJ-YY",
       "name": "省监狱管理局医院",
       "status": null,
-      "billingPricingMode": "standard",
+      "billingPricingMode": "hybrid",
       "standardPricingOverride": null,
       "billingEnabled": true,
       "productRules": [
@@ -1973,7 +1973,7 @@
       "code": "HRB-2ND",
       "name": "哈尔滨市第二医院",
       "status": null,
-      "billingPricingMode": "special_only",
+      "billingPricingMode": "hybrid",
       "standardPricingOverride": null,
       "billingEnabled": true,
       "productRules": [
@@ -2095,7 +2095,7 @@
       "code": "HRB-CJ",
       "name": "哈尔滨长健医院",
       "status": "inactive",
-      "billingPricingMode": "standard",
+      "billingPricingMode": "hybrid",
       "standardPricingOverride": null,
       "billingEnabled": true,
       "productRules": [
@@ -2160,7 +2160,7 @@
       "code": "HRB-GUSHANG",
       "name": "哈尔滨市骨伤科医院",
       "status": null,
-      "billingPricingMode": null,
+      "billingPricingMode": "hybrid",
       "standardPricingOverride": null,
       "billingEnabled": false,
       "productRules": [],
@@ -2171,7 +2171,7 @@
       "code": "HRB-HEU",
       "name": "哈尔滨工程大学医院",
       "status": null,
-      "billingPricingMode": "special_only",
+      "billingPricingMode": "hybrid",
       "standardPricingOverride": null,
       "billingEnabled": true,
       "productRules": [],
@@ -2182,7 +2182,7 @@
       "code": "HRB-HIT",
       "name": "哈尔滨工业大学医院",
       "status": null,
-      "billingPricingMode": "special_only",
+      "billingPricingMode": "hybrid",
       "standardPricingOverride": null,
       "billingEnabled": true,
       "productRules": [
@@ -2392,7 +2392,7 @@
       "code": "HRB-HSZ",
       "name": "哈尔滨市红十字妇产医院",
       "status": null,
-      "billingPricingMode": "special_only",
+      "billingPricingMode": "hybrid",
       "standardPricingOverride": null,
       "billingEnabled": true,
       "productRules": [
@@ -2459,7 +2459,7 @@
       "code": "HRB-HTFH",
       "name": "HRB-HTFH",
       "status": "inactive",
-      "billingPricingMode": null,
+      "billingPricingMode": "hybrid",
       "standardPricingOverride": null,
       "billingEnabled": false,
       "productRules": [
@@ -2501,7 +2501,7 @@
       "code": "HRB-HX-EYE",
       "name": "哈尔滨华夏眼科医院",
       "status": null,
-      "billingPricingMode": "standard",
+      "billingPricingMode": "hybrid",
       "standardPricingOverride": null,
       "billingEnabled": true,
       "productRules": [
@@ -2525,7 +2525,7 @@
       "code": "HRB-MHM",
       "name": "HRB-MHM",
       "status": "inactive",
-      "billingPricingMode": null,
+      "billingPricingMode": "hybrid",
       "standardPricingOverride": null,
       "billingEnabled": false,
       "productRules": [
@@ -2552,7 +2552,7 @@
       "code": "HRB-NGJY",
       "name": "哈尔滨市南岗区人民医院（九院）",
       "status": null,
-      "billingPricingMode": "standard",
+      "billingPricingMode": "hybrid",
       "standardPricingOverride": null,
       "billingEnabled": false,
       "productRules": [
@@ -2577,7 +2577,7 @@
       "code": "HRB-SD-MB",
       "name": "HRB-SD-MB",
       "status": "inactive",
-      "billingPricingMode": "standard",
+      "billingPricingMode": "hybrid",
       "standardPricingOverride": null,
       "billingEnabled": true,
       "productRules": [
@@ -2672,7 +2672,7 @@
       "code": "HRB-SH",
       "name": "哈尔滨森海医院",
       "status": null,
-      "billingPricingMode": "special_only",
+      "billingPricingMode": "hybrid",
       "standardPricingOverride": null,
       "billingEnabled": true,
       "productRules": [
@@ -3098,7 +3098,7 @@
       "code": "HULAN-HSZ",
       "name": "呼兰区红十字医院",
       "status": null,
-      "billingPricingMode": "special_only",
+      "billingPricingMode": "hybrid",
       "standardPricingOverride": null,
       "billingEnabled": true,
       "productRules": [
@@ -3123,7 +3123,7 @@
       "code": "HULAN-RM",
       "name": "呼兰区第一人民医院",
       "status": null,
-      "billingPricingMode": "special_only",
+      "billingPricingMode": "hybrid",
       "standardPricingOverride": null,
       "billingEnabled": true,
       "productRules": [
@@ -3261,7 +3261,7 @@
       "code": "HULAN-TCM",
       "name": "呼兰中医院",
       "status": null,
-      "billingPricingMode": "special_only",
+      "billingPricingMode": "hybrid",
       "standardPricingOverride": null,
       "billingEnabled": true,
       "productRules": [
@@ -3411,7 +3411,7 @@
       "code": "JIAYI-YL",
       "name": "佳医医疗",
       "status": null,
-      "billingPricingMode": "standard",
+      "billingPricingMode": "hybrid",
       "standardPricingOverride": null,
       "billingEnabled": true,
       "productRules": [
@@ -3438,7 +3438,7 @@
       "code": "JIUZHOU-FK",
       "name": "黑龙江九洲妇科医院",
       "status": null,
-      "billingPricingMode": "standard",
+      "billingPricingMode": "hybrid",
       "standardPricingOverride": null,
       "billingEnabled": true,
       "productRules": [
@@ -3463,7 +3463,7 @@
       "code": "JZSW-BIO",
       "name": "哈尔滨基准生物科技有限公司",
       "status": null,
-      "billingPricingMode": "standard",
+      "billingPricingMode": "hybrid",
       "standardPricingOverride": null,
       "billingEnabled": true,
       "productRules": [
@@ -3489,7 +3489,7 @@
       "code": "MEIYI-YL",
       "name": "美意医疗",
       "status": null,
-      "billingPricingMode": "standard",
+      "billingPricingMode": "hybrid",
       "standardPricingOverride": null,
       "billingEnabled": true,
       "productRules": [
@@ -3516,7 +3516,7 @@
       "code": "NEAU-YY",
       "name": "NEAU-YY",
       "status": "inactive",
-      "billingPricingMode": "standard",
+      "billingPricingMode": "hybrid",
       "standardPricingOverride": null,
       "billingEnabled": true,
       "productRules": [
@@ -3643,7 +3643,7 @@
       "code": "NG-FUCHAN",
       "name": "南岗区妇产医院",
       "status": null,
-      "billingPricingMode": "special_only",
+      "billingPricingMode": "hybrid",
       "standardPricingOverride": null,
       "billingEnabled": true,
       "productRules": [
@@ -3917,7 +3917,7 @@
       "code": "NG-XFX-SQ",
       "name": "南岗区先锋路社区卫生服务中心",
       "status": null,
-      "billingPricingMode": null,
+      "billingPricingMode": "hybrid",
       "standardPricingOverride": null,
       "billingEnabled": false,
       "productRules": [],
@@ -3972,7 +3972,7 @@
       "code": "RENSHENG",
       "name": "哈尔滨仁胜医院",
       "status": null,
-      "billingPricingMode": "standard",
+      "billingPricingMode": "hybrid",
       "standardPricingOverride": null,
       "billingEnabled": true,
       "productRules": [],
@@ -3983,7 +3983,7 @@
       "code": "SANJING-SB",
       "name": "三精肾病医院",
       "status": null,
-      "billingPricingMode": "standard",
+      "billingPricingMode": "hybrid",
       "standardPricingOverride": null,
       "billingEnabled": true,
       "productRules": [
@@ -4151,7 +4151,7 @@
       "code": "SHANGDE-FC",
       "name": "黑龙江菁华上德生殖妇产医院",
       "status": null,
-      "billingPricingMode": "special_only",
+      "billingPricingMode": "hybrid",
       "standardPricingOverride": null,
       "billingEnabled": true,
       "productRules": [
@@ -4548,7 +4548,7 @@
       "code": "SHKF-YY",
       "name": "黑龙江省社会康复医院",
       "status": null,
-      "billingPricingMode": "special_only",
+      "billingPricingMode": "hybrid",
       "standardPricingOverride": null,
       "billingEnabled": true,
       "productRules": [
@@ -4740,7 +4740,7 @@
       "code": "TAIPING-RM",
       "name": "太平人民医院",
       "status": null,
-      "billingPricingMode": "special_only",
+      "billingPricingMode": "hybrid",
       "standardPricingOverride": null,
       "billingEnabled": true,
       "productRules": [
@@ -4931,7 +4931,7 @@
       "code": "VICTORIA",
       "name": "黑龙江维多利亚妇产医院",
       "status": null,
-      "billingPricingMode": "standard",
+      "billingPricingMode": "hybrid",
       "standardPricingOverride": null,
       "billingEnabled": true,
       "productRules": [
@@ -5148,7 +5148,7 @@
       "code": "WJ-HLJ-ZD",
       "name": "武警黑龙江省总队医院",
       "status": null,
-      "billingPricingMode": "special_only",
+      "billingPricingMode": "hybrid",
       "standardPricingOverride": null,
       "billingEnabled": true,
       "productRules": [
@@ -5215,7 +5215,7 @@
       "code": "XF-ZYY",
       "name": "香坊中医院",
       "status": null,
-      "billingPricingMode": null,
+      "billingPricingMode": "hybrid",
       "standardPricingOverride": null,
       "billingEnabled": false,
       "productRules": [],
@@ -5328,7 +5328,7 @@
       "code": "YILI-YL",
       "name": "易丽医疗",
       "status": null,
-      "billingPricingMode": "standard",
+      "billingPricingMode": "hybrid",
       "standardPricingOverride": null,
       "billingEnabled": true,
       "productRules": [
@@ -5357,7 +5357,7 @@
       "code": "YUANDONG-XN",
       "name": "黑龙江省远东心脑血管医院",
       "status": null,
-      "billingPricingMode": "standard",
+      "billingPricingMode": "hybrid",
       "standardPricingOverride": null,
       "billingEnabled": true,
       "productRules": [],
@@ -5368,7 +5368,7 @@
       "code": "YUEMEI-FH",
       "name": "悦美芳华医疗门诊医院",
       "status": null,
-      "billingPricingMode": "standard",
+      "billingPricingMode": "hybrid",
       "standardPricingOverride": null,
       "billingEnabled": true,
       "productRules": [
@@ -5551,7 +5551,7 @@
       "code": "ZUYAN-SF",
       "name": "祖研-黑龙江省中医医院（三辅院区）",
       "status": null,
-      "billingPricingMode": "special_only",
+      "billingPricingMode": "hybrid",
       "standardPricingOverride": null,
       "billingEnabled": true,
       "productRules": [
@@ -5729,7 +5729,7 @@
       "code": "ZY3-DIANLI",
       "name": "黑龙江省中医药大学附属第三医院（电力）",
       "status": null,
-      "billingPricingMode": "special_only",
+      "billingPricingMode": "hybrid",
       "standardPricingOverride": null,
       "billingEnabled": true,
       "productRules": [
@@ -6683,7 +6683,7 @@
       "code": "ZYY-D2-NG",
       "name": "黑龙江中医药大学附属第二医院（南岗）",
       "status": null,
-      "billingPricingMode": "special_only",
+      "billingPricingMode": "hybrid",
       "standardPricingOverride": null,
       "billingEnabled": true,
       "productRules": [

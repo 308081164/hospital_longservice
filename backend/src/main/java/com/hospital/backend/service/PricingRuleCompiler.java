@@ -61,8 +61,8 @@ public class PricingRuleCompiler {
         Optional<Customer> customerOpt = customerResolver.resolveByName(hospitalName);
         if (customerOpt.isEmpty()) {
             ObjectNode billingProfile = MAPPER.createObjectNode();
-            billingProfile.put("enabled", false);
-            billingProfile.put("pricingMode", "standard");
+            billingProfile.put("enabled", true);
+            billingProfile.put("pricingMode", "hybrid");
             compiled.set("billingProfile", billingProfile);
             return compiled;
         }
@@ -92,11 +92,11 @@ public class PricingRuleCompiler {
         ObjectNode billingProfile = MAPPER.createObjectNode();
         billingProfile.put("enabled", Boolean.TRUE.equals(customer.getBillingEnabled()));
         String pricingMode = customer.getBillingPricingMode();
-        if (pricingMode != null && !pricingMode.isBlank()) {
-            billingProfile.put("pricingMode", pricingMode.trim().toLowerCase());
-        } else {
-            billingProfile.put("pricingMode", "standard");
+        if (pricingMode != null && !pricingMode.isBlank() && !"hybrid".equalsIgnoreCase(pricingMode.trim())) {
+            log.warn("客户 {} 的计价模式为 {}，已锁定为 hybrid（special_only 和 standard 模式已停用）",
+                    customer.getCode(), pricingMode);
         }
+        billingProfile.put("pricingMode", "hybrid");
         appendPathOverride(billingProfile, customer.getPathOverride());
         compiled.set("billingProfile", billingProfile);
 

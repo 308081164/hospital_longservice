@@ -5,7 +5,7 @@
         <h1 class="page-title">通用计价规则</h1>
         <p class="page-desc">
           维护全行业默认灭菌价目。各医院特色方案请在
-          <RouterLink to="/master-data/customers" class="link-customers">客户管理</RouterLink>
+          <RouterLink to="/master-data/customers" class="link-customers">特殊计价客户管理</RouterLink>
           中绑定维护。
         </p>
       </div>
@@ -297,7 +297,7 @@
               :rows="5"
               :max-rows="14"
               show-count
-              hint="逗号分隔；客户特色关键词扩展请在客户管理中配置"
+              hint="逗号分隔；客户特色关键词扩展请在特殊计价客户管理中配置"
               @change="markDirty"
             />
             <div v-if="selectedRuleId" class="needle-actions">

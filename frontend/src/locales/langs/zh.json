@@ -358,7 +358,7 @@
     },
     "masterData": {
       "title": "主数据",
-      "customers": "客户管理",
+      "customers": "特殊计价客户管理",
       "customerForm": {
         "billingEnabled": "启用特色账单",
         "billingEnabledHint": "关闭后不对账时合并该客户的特色规则",

@@ -322,7 +322,9 @@ public class BillingSeedMigrationRunner implements CommandLineRunner {
             new IncrementalSeed("billing_seed_bill_mirror_fix_20260820_v1",
                     "billing-seeds/phase-bill-mirror-fix-20260820.json"),
             new IncrementalSeed("billing_seed_boshang_hybrid_20260820_v1",
-                    "billing-seeds/phase-boshang-hybrid-20260820.json")
+                    "billing-seeds/phase-boshang-hybrid-20260820.json"),
+            new IncrementalSeed("billing_seed_unified_hybrid_20260820_v1",
+                    "billing-seeds/phase-unified-hybrid-20260820.json")
     );
 
     private static final String ZYY_D1_P0_MARKER = "billing_seed_zyy_d1_p0_v2";

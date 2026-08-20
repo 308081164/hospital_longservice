@@ -81,9 +81,17 @@ class PricingRuleCompilerSemanticTest {
                 customer
         );
         JsonNode folds = compiled.path("specialRules").path("foldRules");
-        assertThat(folds).hasSize(2);
-        assertThat(folds.get(0).path("maxInstrumentCount").asInt()).isEqualTo(10);
-        assertThat(folds.get(1).path("skipPackaging").asBoolean()).isTrue();
+        assertThat(folds).hasSizeGreaterThanOrEqualTo(2);
+        JsonNode customerFold = null;
+        JsonNode customerFoldSkip = null;
+        for (JsonNode f : folds) {
+            if (f.path("ruleId").asLong() == 90021L) customerFold = f;
+            if (f.path("ruleId").asLong() == 90022L) customerFoldSkip = f;
+        }
+        assertThat(customerFold).isNotNull();
+        assertThat(customerFold.path("maxInstrumentCount").asInt()).isEqualTo(10);
+        assertThat(customerFoldSkip).isNotNull();
+        assertThat(customerFoldSkip.path("skipPackaging").asBoolean()).isTrue();
     }
 
     @Test

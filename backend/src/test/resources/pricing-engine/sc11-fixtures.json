@@ -70,10 +70,10 @@
       },
       "expect": {
         "status": "warning",
-        "expectedUnitPrice": 30.5,
+        "expectedUnitPrice": 8.5,
         "pricingRuleContains": "环钻"
       },
-      "billingRef": "测试用例/哈尔滨冰城医疗美容医院/7月期待价格校正清单.csv#1623568",
+      "billingRef": "manifest#BINGCHENG-YM#hybrid,环钻包30.5规则已停用",
       "valid": false,
       "skipParameterized": true,
       "billingEvidence": "none",
@@ -360,7 +360,7 @@
       "id": "t04_generic_kirschner_12",
       "sc11Type": "SC11-T04",
       "source": "特殊收费(13).xlsx#通用#克氏针＞10",
-      "customerCode": null,
+      "customerCode": "GUOYAO-2",
       "hospitalName": "国药总医院第二院区",
       "row": {
         "department": "手术室",
@@ -385,8 +385,8 @@
       "id": "t04_generic_kirschner_6",
       "sc11Type": "SC11-T04",
       "source": "特殊收费(13).xlsx#通用#克氏针≤10",
-      "customerCode": null,
-      "hospitalName": "测试医院",
+      "customerCode": "GUOYAO-2",
+      "hospitalName": "国药总医院第二院区",
       "row": {
         "department": "手术室",
         "type": "额外包(纸塑袋)",
@@ -548,10 +548,11 @@
         "totalPrice": 11.0
       },
       "expect": {
-        "status": "unchanged",
-        "pricingRuleContains": "特色账单已关闭"
+        "status": "warning",
+        "expectedUnitPrice": 5.5,
+        "pricingRuleContains": "方盘"
       },
-      "billingRef": "manifest#JIUZHOU-FK#billingEnabled=false",
+      "billingRef": "manifest#JIUZHOU-FK#billingEnabled=true,hybrid",
       "valid": true,
       "skipParameterized": false,
       "billingEvidence": "confirmed"
@@ -1073,10 +1074,12 @@
       },
       "expect": {
         "status": "unchanged",
-        "pricingRuleContains": "特色账单已关闭"
+        "expectedUnitPrice": 5.5,
+        "pricingRuleContains": "方盘"
       },
       "valid": true,
-      "skipParameterized": false
+      "skipParameterized": false,
+      "billingRef": "manifest#JIUZHOU-FK#billingEnabled=true,hybrid"
     }
   ],
   "registrySkeletons": [

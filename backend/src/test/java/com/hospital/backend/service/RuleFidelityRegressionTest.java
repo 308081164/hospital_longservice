@@ -117,7 +117,7 @@ class RuleFidelityRegressionTest {
     }
 
     @Test
-    void jiuzhouBillingDisabledKeepsOriginalPrice() throws Exception {
+    void jiuzhouHybridCalculatesStandardPriceForNonSpecialRow() throws Exception {
         JsonNode rules = RuleFidelityTestSupport.compileForCustomerCode("JIUZHOU-FK");
         PricingEngine engine = new PricingEngine(rules);
         PricingEngine.ProcessedResult result = engine.processRow(Map.of(
@@ -132,9 +132,8 @@ class RuleFidelityRegressionTest {
                 "totalPrice", 121.0
         ));
         assertThat(result.status).isEqualTo("warning");
-        assertThat(result.pricingRule).isEqualTo("特色账单已关闭");
-        assertThat(result.expectedUnitPrice).isEqualTo(121.0);
-        assertThat(result.notes).anyMatch(note -> note.contains("字段核对"));
+        assertThat(result.pricingRule).contains("高温无纺布");
+        assertThat(result.notes).anyMatch(note -> note.contains("混合模式未命中特色规则，走标准灭菌计价"));
     }
 
     @Test
@@ -232,7 +231,8 @@ class RuleFidelityRegressionTest {
                 "unitPrice", 16.5,
                 "totalPrice", 16.5
         ));
-        assertThat(result.status).isEqualTo("unchanged");
+        assertThat(result.status).isEqualTo("warning");
+        assertThat(result.pricingRule).isEqualTo("特色账单已关闭");
     }
 
     @Test

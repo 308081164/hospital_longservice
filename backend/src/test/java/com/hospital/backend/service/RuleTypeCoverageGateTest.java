@@ -25,7 +25,7 @@ class RuleTypeCoverageGateTest {
         assertThat(missing)
                 .as("documented pending types — enable everySc11TypeHasConfirmedBillingEvidenceFixture when resolved")
                 .isNotEmpty();
-        assertThat(missing).contains("SC11-T02", "SC11-T04", "SC11-T16");
+        assertThat(missing).contains("SC11-T02", "SC11-T16");
     }
 
     @Test
