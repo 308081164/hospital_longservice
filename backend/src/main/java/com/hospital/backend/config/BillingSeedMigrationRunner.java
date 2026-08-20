@@ -310,7 +310,19 @@ public class BillingSeedMigrationRunner implements CommandLineRunner {
             new IncrementalSeed("billing_seed_deactivate_extra_customer_rules_20260818_v1",
                     "billing-seeds/phase-deactivate-extra-customer-rules-20260818.json"),
             new IncrementalSeed("billing_seed_special_charge_12_sync_20260818_v1",
-                    "billing-seeds/phase-special-charge-12-sync-20260818.json")
+                    "billing-seeds/phase-special-charge-12-sync-20260818.json"),
+            new IncrementalSeed("billing_seed_special_charge_13_sync_20260819_v1",
+                    "billing-seeds/phase-special-charge-13-sync-20260819.json"),
+            new IncrementalSeed("billing_seed_bingcheng_ym_huanzuan_keyword_fix_20260819_v1",
+                    "billing-seeds/phase9-bingcheng-ym-huanzuan-keyword-fix-20260819.json"),
+            new IncrementalSeed("billing_seed_customer_dedup_hlfb_sf_20260820_v1",
+                    "billing-seeds/phase-z-customer-dedup-hlfb-sf-20260820.json"),
+            new IncrementalSeed("billing_seed_global_generic_fold_20260820_v1",
+                    "billing-seeds/phase-global-generic-fold-20260820.json"),
+            new IncrementalSeed("billing_seed_bill_mirror_fix_20260820_v1",
+                    "billing-seeds/phase-bill-mirror-fix-20260820.json"),
+            new IncrementalSeed("billing_seed_boshang_hybrid_20260820_v1",
+                    "billing-seeds/phase-boshang-hybrid-20260820.json")
     );
 
     private static final String ZYY_D1_P0_MARKER = "billing_seed_zyy_d1_p0_v2";
@@ -452,11 +464,16 @@ public class BillingSeedMigrationRunner implements CommandLineRunner {
                     || "billing-seeds/phase-parity-legacy-rule-cleanup-20260806.json".equals(incremental.classpathFile())
                     || "billing-seeds/phase-bingcheng-ym-remove-xiaojian-packaging-20260818.json".equals(incremental.classpathFile())
                     || "billing-seeds/phase-deactivate-extra-customer-rules-20260818.json".equals(incremental.classpathFile())
-                    || "billing-seeds/phase-special-charge-12-sync-20260818.json".equals(incremental.classpathFile())) {
+                    || "billing-seeds/phase-special-charge-12-sync-20260818.json".equals(incremental.classpathFile())
+                    || "billing-seeds/phase-special-charge-13-sync-20260819.json".equals(incremental.classpathFile())
+                    || "billing-seeds/phase-z-customer-dedup-hlfb-sf-20260820.json".equals(incremental.classpathFile())
+                    || "billing-seeds/phase-bill-mirror-fix-20260820.json".equals(incremental.classpathFile())
+                    || "billing-seeds/phase-boshang-hybrid-20260820.json".equals(incremental.classpathFile())) {
                 applyBatchPatchSeedFile(incremental.classpathFile());
             } else if ("billing-seeds/phase-billing-mode-backfill-20260730.json".equals(incremental.classpathFile())) {
                 applyBillingModeBackfillSeedFile(incremental.classpathFile());
-            } else if ("billing-seeds/phase-global-cotton-paper-plastic-20260812.json".equals(incremental.classpathFile())) {
+            } else if ("billing-seeds/phase-global-cotton-paper-plastic-20260812.json".equals(incremental.classpathFile())
+                    || "billing-seeds/phase-global-generic-fold-20260820.json".equals(incremental.classpathFile())) {
                 applied = applyPricingRulePatchSeedFile(incremental.classpathFile());
             } else {
                 applied = loadSeedClasspathFile(incremental.classpathFile());
@@ -1029,6 +1046,7 @@ public class BillingSeedMigrationRunner implements CommandLineRunner {
                 log.info("Batch patch updated customer {}: mode={} enabled={}",
                         code, customer.getBillingPricingMode(), customer.getBillingEnabled());
             }
+            applyAliasUpdates(root);
             for (JsonNode patch : root.path("ruleUpdates")) {
                 String code = text(patch, "code");
                 String ruleName = text(patch, "ruleName");
@@ -1413,6 +1431,45 @@ public class BillingSeedMigrationRunner implements CommandLineRunner {
             entity.setPriority(100);
             entity.setIsActive(true);
             customerAliasMapper.insert(entity);
+        }
+    }
+
+    private void applyAliasUpdates(JsonNode root) {
+        for (JsonNode upd : root.path("aliasUpdates")) {
+            String fromCode = text(upd, "fromCode");
+            String toCode = text(upd, "toCode");
+            if (fromCode == null || toCode == null) {
+                continue;
+            }
+            Customer from = customerMapper.selectByCode(fromCode);
+            Customer to = customerMapper.selectByCode(toCode);
+            if (from == null || to == null) {
+                log.warn("Alias update skipped: from={} to={} (customer missing)", fromCode, toCode);
+                continue;
+            }
+            for (JsonNode aliasNode : upd.path("aliases")) {
+                String alias = aliasNode.asText(null);
+                if (alias == null || alias.isBlank()) {
+                    continue;
+                }
+                int moved = jdbcTemplate.update(
+                        "UPDATE customer_alias SET customer_id = ? WHERE customer_id = ? AND alias = ?",
+                        to.getId(), from.getId(), alias);
+                if (moved > 0) {
+                    log.info("Alias migrated {} from {} to {}", alias, fromCode, toCode);
+                    continue;
+                }
+                CustomerAlias owned = customerAliasMapper.selectByAlias(alias);
+                if (owned != null && owned.getCustomerId().equals(from.getId())) {
+                    jdbcTemplate.update(
+                            "UPDATE customer_alias SET customer_id = ? WHERE id = ?",
+                            to.getId(), owned.getId());
+                    log.info("Alias reassigned {} from {} to {}", alias, fromCode, toCode);
+                    continue;
+                }
+                ensureCustomerAliasExact(to.getId(), alias, "exact", "seed_migration", 10);
+                log.info("Alias ensured on {}: {}", toCode, alias);
+            }
         }
     }
 

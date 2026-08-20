@@ -1,5 +1,6 @@
 package com.hospital.backend.service;
 
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.junit.jupiter.api.Test;
 
 import java.util.Map;
@@ -42,13 +43,15 @@ class PricingEngineBillingModeTest {
                 "unitPrice", 22.0,
                 "totalPrice", 22.0
         ));
-        assertThat(result.status).isEqualTo("unchanged");
+        assertThat(result.status).isEqualTo("warning");
         assertThat(result.pricingRule).contains("special_only");
     }
 
     @Test
     void billingDisabledKeepsOriginalPrice() throws Exception {
-        PricingEngine engine = PricingEngineTestSupport.engineForCustomerCode("JIUZHOU-FK");
+        ObjectNode rules = PricingEngineTestSupport.defaultRules();
+        rules.putObject("billingProfile").put("enabled", false);
+        PricingEngine engine = new PricingEngine(rules);
         PricingEngine.ProcessedResult result = engine.processRow(Map.of(
                 "hospitalName", "黑龙江九洲妇科医院",
                 "department", "手术室",
@@ -60,7 +63,7 @@ class PricingEngineBillingModeTest {
                 "unitPrice", 11.0,
                 "totalPrice", 11.0
         ));
-        assertThat(result.status).isEqualTo("unchanged");
+        assertThat(result.status).isEqualTo("warning");
         assertThat(result.pricingRule).isEqualTo("特色账单已关闭");
     }
 

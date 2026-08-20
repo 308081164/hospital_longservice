@@ -1,0 +1,28 @@
+{
+  "version": "1",
+  "description": "省妇幼人口：停用 HLFB-SF 重命名去重，别名迁移至 HLJ-FY-RK",
+  "customerUpdates": [
+    {
+      "code": "HLFB-SF",
+      "setStatus": "inactive",
+      "setCanonicalName": "黑龙江省妇幼保健院（人口）(旧HLFB-SF)",
+      "billingEnabled": false
+    },
+    {
+      "code": "HLJ-FY-RK",
+      "billingEnabled": true
+    }
+  ],
+  "aliasUpdates": [
+    {
+      "fromCode": "HLFB-SF",
+      "toCode": "HLJ-FY-RK",
+      "aliases": [
+        "省妇幼人口",
+        "妇幼人口",
+        "黑龙江省妇幼保健院（人口）",
+        "黑龙江省妇幼保健院(人口)"
+      ]
+    }
+  ]
+}

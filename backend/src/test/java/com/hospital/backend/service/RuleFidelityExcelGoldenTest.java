@@ -48,7 +48,7 @@ class RuleFidelityExcelGoldenTest {
                 assertThat(result.expectedUnitPrice).isEqualTo(row.path("expectedUnitPrice").asDouble());
             }
         } else {
-            assertThat(result.status).isEqualTo("unchanged");
+            assertThat(result.status).isIn("unchanged", "warning");
         }
     }
 }

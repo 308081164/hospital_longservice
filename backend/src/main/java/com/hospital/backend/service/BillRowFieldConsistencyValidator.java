@@ -66,7 +66,11 @@ public final class BillRowFieldConsistencyValidator {
         }
 
         Integer namePieceCount = PackNameSpecParser.extractTotalPieceCountFromPackName(packName);
-        if (namePieceCount != null) {
+        if (namePieceCount == null
+                && PackNameSpecParser.isImplicitSinglePiecePerPack(packName)) {
+            namePieceCount = 1;
+        }
+        if (namePieceCount != null && !shouldSkipInstrumentCountMismatch(type, packName, instrumentCount)) {
             int expectedInstrumentCount = normalizedPackCount * namePieceCount;
             if (expectedInstrumentCount != instrumentCount) {
                 Map<String, Object> fields = new LinkedHashMap<>();
@@ -114,5 +118,27 @@ public final class BillRowFieldConsistencyValidator {
             case "COTTON_DRESSING" -> "敷料/棉";
             default -> materialClass;
         };
+    }
+
+    /**
+     * 器械数为 0 的敷料/容器行，或 parser 已判定跳过的包名，不做件数 amber 核对。
+     */
+    private static boolean shouldSkipInstrumentCountMismatch(
+            String type, String packName, int instrumentCount) {
+        if (PackNameSpecParser.shouldSkipPieceCountExtraction(packName)) {
+            return true;
+        }
+        if (instrumentCount != 0) {
+            return false;
+        }
+        String combined = (type == null ? "" : type) + (packName == null ? "" : packName);
+        return combined.contains("敷料")
+                || combined.contains("弯盘")
+                || combined.contains("棉球")
+                || combined.contains("尾纱")
+                || combined.contains("洗手服")
+                || combined.contains("刷手服")
+                || combined.contains("床单")
+                || combined.contains("敷布");
     }
 }

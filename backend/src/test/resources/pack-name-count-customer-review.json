@@ -1,0 +1,1067 @@
+{
+  "version": 1,
+  "source": "数量比对.xlsx 客户复核明细",
+  "caseCount": 106,
+  "cases": [
+    {
+      "id": "R001",
+      "typeId": "T01",
+      "packName": "弯盘-1/z2032",
+      "packCount": 1,
+      "billInstrumentCount": 0,
+      "expectedPerPack": 1,
+      "expectedTotal": 1,
+      "behavior": "skip_zero_dressing"
+    },
+    {
+      "id": "R002",
+      "typeId": "T01",
+      "packName": "弯盘-1/z2032",
+      "packCount": 2,
+      "billInstrumentCount": 0,
+      "expectedPerPack": 1,
+      "expectedTotal": 2,
+      "behavior": "skip_zero_dressing"
+    },
+    {
+      "id": "R003",
+      "typeId": "T01",
+      "packName": "V切包-15件/W12050",
+      "packCount": 2,
+      "billInstrumentCount": 32,
+      "expectedPerPack": 15,
+      "expectedTotal": 30,
+      "behavior": "mismatch"
+    },
+    {
+      "id": "R004",
+      "typeId": "T01",
+      "packName": "弯盘-1/z2032",
+      "packCount": 3,
+      "billInstrumentCount": 0,
+      "expectedPerPack": 1,
+      "expectedTotal": 3,
+      "behavior": "skip_zero_dressing"
+    },
+    {
+      "id": "R005",
+      "typeId": "T01",
+      "packName": "拔牙钳-1/z1029",
+      "packCount": 4,
+      "billInstrumentCount": 4,
+      "expectedPerPack": 1,
+      "expectedTotal": 4,
+      "behavior": "match"
+    },
+    {
+      "id": "R006",
+      "typeId": "T01",
+      "packName": "剪刀-1/z1029",
+      "packCount": 1,
+      "billInstrumentCount": 1,
+      "expectedPerPack": 1,
+      "expectedTotal": 1,
+      "behavior": "match"
+    },
+    {
+      "id": "R007",
+      "typeId": "T01",
+      "packName": "注射器-1/z1026",
+      "packCount": 1,
+      "billInstrumentCount": 1,
+      "expectedPerPack": 1,
+      "expectedTotal": 1,
+      "behavior": "match"
+    },
+    {
+      "id": "R008",
+      "typeId": "T01",
+      "packName": "骨凿-1/z1029",
+      "packCount": 1,
+      "billInstrumentCount": 1,
+      "expectedPerPack": 1,
+      "expectedTotal": 1,
+      "behavior": "match"
+    },
+    {
+      "id": "R009",
+      "typeId": "T01",
+      "packName": "手机-1/z7526",
+      "packCount": 8,
+      "billInstrumentCount": 8,
+      "expectedPerPack": null,
+      "expectedTotal": null,
+      "behavior": "skip"
+    },
+    {
+      "id": "R010",
+      "typeId": "T01",
+      "packName": "手机-1/z7526",
+      "packCount": 9,
+      "billInstrumentCount": 9,
+      "expectedPerPack": null,
+      "expectedTotal": null,
+      "behavior": "skip"
+    },
+    {
+      "id": "R011",
+      "typeId": "T01",
+      "packName": "手机-1/z7526",
+      "packCount": 7,
+      "billInstrumentCount": 7,
+      "expectedPerPack": null,
+      "expectedTotal": null,
+      "behavior": "skip"
+    },
+    {
+      "id": "R012",
+      "typeId": "T01",
+      "packName": "手机-1/z7526",
+      "packCount": 12,
+      "billInstrumentCount": 12,
+      "expectedPerPack": null,
+      "expectedTotal": null,
+      "behavior": "skip"
+    },
+    {
+      "id": "R013",
+      "typeId": "T02",
+      "packName": "镊子-1/z7526",
+      "packCount": 5,
+      "billInstrumentCount": 5,
+      "expectedPerPack": 1,
+      "expectedTotal": 5,
+      "behavior": "match"
+    },
+    {
+      "id": "R014",
+      "typeId": "T02",
+      "packName": "整形镊子-1/Z7520",
+      "packCount": 2,
+      "billInstrumentCount": 2,
+      "expectedPerPack": 1,
+      "expectedTotal": 2,
+      "behavior": "match"
+    },
+    {
+      "id": "R015",
+      "typeId": "T03",
+      "packName": "DMD光源2号-1（带盒）",
+      "packCount": 1,
+      "billInstrumentCount": 2,
+      "expectedPerPack": 1,
+      "expectedTotal": 1,
+      "behavior": "mismatch"
+    },
+    {
+      "id": "R016",
+      "typeId": "T03",
+      "packName": "妇科腔镜-17（铁帽3胶帽7）",
+      "packCount": 1,
+      "billInstrumentCount": 18,
+      "expectedPerPack": 17,
+      "expectedTotal": 17,
+      "behavior": "mismatch"
+    },
+    {
+      "id": "R017",
+      "typeId": "T03",
+      "packName": "妇腔镜器械-18（铁帽3胶帽8）",
+      "packCount": 1,
+      "billInstrumentCount": 19,
+      "expectedPerPack": 18,
+      "expectedTotal": 18,
+      "behavior": "mismatch"
+    },
+    {
+      "id": "R018",
+      "typeId": "T03",
+      "packName": "妇腔镜器械-17（铁帽3胶帽8）",
+      "packCount": 1,
+      "billInstrumentCount": 18,
+      "expectedPerPack": 17,
+      "expectedTotal": 17,
+      "behavior": "mismatch"
+    },
+    {
+      "id": "R019",
+      "typeId": "T03",
+      "packName": "扩棒-5(5.5 6 6.5 7 8)/Z1026",
+      "packCount": 1,
+      "billInstrumentCount": 5,
+      "expectedPerPack": 5,
+      "expectedTotal": 5,
+      "behavior": "match"
+    },
+    {
+      "id": "R020",
+      "typeId": "T03",
+      "packName": "异物钳-1（需保护）/z1526",
+      "packCount": 1,
+      "billInstrumentCount": 1,
+      "expectedPerPack": 1,
+      "expectedTotal": 1,
+      "behavior": "match"
+    },
+    {
+      "id": "R021",
+      "typeId": "T03",
+      "packName": "异物钳-1（需保护）/z1526",
+      "packCount": 2,
+      "billInstrumentCount": 2,
+      "expectedPerPack": 1,
+      "expectedTotal": 2,
+      "behavior": "match"
+    },
+    {
+      "id": "R022",
+      "typeId": "T03",
+      "packName": "探针-1(保护套！)/z7534",
+      "packCount": 1,
+      "billInstrumentCount": 1,
+      "expectedPerPack": 1,
+      "expectedTotal": 1,
+      "behavior": "match"
+    },
+    {
+      "id": "R023",
+      "typeId": "T03",
+      "packName": "水管-1（低温-布）w7050",
+      "packCount": 1,
+      "billInstrumentCount": 1,
+      "expectedPerPack": 1,
+      "expectedTotal": 1,
+      "behavior": "match"
+    },
+    {
+      "id": "R024",
+      "typeId": "T03",
+      "packName": "胸外镜头-1（盒1）W905060",
+      "packCount": 1,
+      "billInstrumentCount": 1,
+      "expectedPerPack": 1,
+      "expectedTotal": 1,
+      "behavior": "match"
+    },
+    {
+      "id": "R025",
+      "typeId": "T03",
+      "packName": "胸外镜头-1（盒1）W9050",
+      "packCount": 1,
+      "billInstrumentCount": 1,
+      "expectedPerPack": 1,
+      "expectedTotal": 1,
+      "behavior": "match"
+    },
+    {
+      "id": "R026",
+      "typeId": "T03",
+      "packName": "胸外镜头30°-1（盒1）W9050",
+      "packCount": 1,
+      "billInstrumentCount": 1,
+      "expectedPerPack": 1,
+      "expectedTotal": 1,
+      "behavior": "match"
+    },
+    {
+      "id": "R027",
+      "typeId": "T04",
+      "packName": "盘1碗1杯1/w6050",
+      "packCount": 1,
+      "billInstrumentCount": 3,
+      "expectedPerPack": 3,
+      "expectedTotal": 3,
+      "behavior": "match"
+    },
+    {
+      "id": "R028",
+      "typeId": "T04",
+      "packName": "盘1碗1杯1/w6050",
+      "packCount": 3,
+      "billInstrumentCount": 9,
+      "expectedPerPack": 3,
+      "expectedTotal": 9,
+      "behavior": "match"
+    },
+    {
+      "id": "R029",
+      "typeId": "T04",
+      "packName": "盘1碗1杯1/w6050",
+      "packCount": 4,
+      "billInstrumentCount": 12,
+      "expectedPerPack": 3,
+      "expectedTotal": 12,
+      "behavior": "match"
+    },
+    {
+      "id": "R030",
+      "typeId": "T04",
+      "packName": "盘1碗1杯1/w6050",
+      "packCount": 2,
+      "billInstrumentCount": 6,
+      "expectedPerPack": 3,
+      "expectedTotal": 6,
+      "behavior": "match"
+    },
+    {
+      "id": "R031",
+      "typeId": "T04",
+      "packName": "窥器1宫颈钳1镊子1/W6050",
+      "packCount": 1,
+      "billInstrumentCount": 3,
+      "expectedPerPack": 3,
+      "expectedTotal": 3,
+      "behavior": "match"
+    },
+    {
+      "id": "R032",
+      "typeId": "T04",
+      "packName": "剪刀1持针器1止血钳1/Z1530",
+      "packCount": 3,
+      "billInstrumentCount": 9,
+      "expectedPerPack": 3,
+      "expectedTotal": 9,
+      "behavior": "match"
+    },
+    {
+      "id": "R033",
+      "typeId": "T04",
+      "packName": "剪刀1持针器1止血钳1/Z1530",
+      "packCount": 2,
+      "billInstrumentCount": 6,
+      "expectedPerPack": 3,
+      "expectedTotal": 6,
+      "behavior": "match"
+    },
+    {
+      "id": "R034",
+      "typeId": "T04",
+      "packName": "剪刀1持针器1止血钳1/Z1530",
+      "packCount": 1,
+      "billInstrumentCount": 3,
+      "expectedPerPack": 3,
+      "expectedTotal": 3,
+      "behavior": "match"
+    },
+    {
+      "id": "R035",
+      "typeId": "T04",
+      "packName": "手机5X1729/z7526",
+      "packCount": 1,
+      "billInstrumentCount": 1,
+      "expectedPerPack": null,
+      "expectedTotal": null,
+      "behavior": "skip"
+    },
+    {
+      "id": "R036",
+      "typeId": "T04",
+      "packName": "盆1碗1/W9050",
+      "packCount": 4,
+      "billInstrumentCount": 8,
+      "expectedPerPack": 2,
+      "expectedTotal": 8,
+      "behavior": "match"
+    },
+    {
+      "id": "R037",
+      "typeId": "T05",
+      "packName": "车针架1针10/Z1026",
+      "packCount": 1,
+      "billInstrumentCount": 11,
+      "expectedPerPack": null,
+      "expectedTotal": null,
+      "behavior": "skip"
+    },
+    {
+      "id": "R038",
+      "typeId": "T05",
+      "packName": "机扩针架1针10/Z1020",
+      "packCount": 1,
+      "billInstrumentCount": 11,
+      "expectedPerPack": null,
+      "expectedTotal": null,
+      "behavior": "skip"
+    },
+    {
+      "id": "R039",
+      "typeId": "T05",
+      "packName": "机扩针架1针5/Z1020",
+      "packCount": 1,
+      "billInstrumentCount": 6,
+      "expectedPerPack": null,
+      "expectedTotal": null,
+      "behavior": "skip"
+    },
+    {
+      "id": "R040",
+      "typeId": "T05",
+      "packName": "针架1针9/Z1526",
+      "packCount": 1,
+      "billInstrumentCount": 10,
+      "expectedPerPack": null,
+      "expectedTotal": null,
+      "behavior": "skip"
+    },
+    {
+      "id": "R041",
+      "typeId": "T06",
+      "packName": "旧轧皮机（2号）-2件盒1/W12050",
+      "packCount": 1,
+      "billInstrumentCount": 3,
+      "expectedPerPack": 2,
+      "expectedTotal": 2,
+      "behavior": "mismatch"
+    },
+    {
+      "id": "R042",
+      "typeId": "T06",
+      "packName": "旧轧皮机（1号）-2件盒1/W9050",
+      "packCount": 1,
+      "billInstrumentCount": 3,
+      "expectedPerPack": 2,
+      "expectedTotal": 2,
+      "behavior": "mismatch"
+    },
+    {
+      "id": "R043",
+      "typeId": "T06",
+      "packName": "姜龙显微器械-6件盒1/W7050",
+      "packCount": 1,
+      "billInstrumentCount": 7,
+      "expectedPerPack": 6,
+      "expectedTotal": 6,
+      "behavior": "mismatch"
+    },
+    {
+      "id": "R044",
+      "typeId": "T06",
+      "packName": "0103机器人（低温）-5件盒1",
+      "packCount": 1,
+      "billInstrumentCount": 6,
+      "expectedPerPack": 5,
+      "expectedTotal": 5,
+      "behavior": "mismatch"
+    },
+    {
+      "id": "R045",
+      "typeId": "T06",
+      "packName": "种植扳手-8盒1/z2032",
+      "packCount": 1,
+      "billInstrumentCount": 9,
+      "expectedPerPack": 9,
+      "expectedTotal": 9,
+      "behavior": "match"
+    },
+    {
+      "id": "R046",
+      "typeId": "T06",
+      "packName": "机扩针-6盒1/z1526",
+      "packCount": 1,
+      "billInstrumentCount": 7,
+      "expectedPerPack": 7,
+      "expectedTotal": 7,
+      "behavior": "match"
+    },
+    {
+      "id": "R047",
+      "typeId": "T06",
+      "packName": "种植盒-7盒1/w6050",
+      "packCount": 1,
+      "billInstrumentCount": 8,
+      "expectedPerPack": 8,
+      "expectedTotal": 8,
+      "behavior": "match"
+    },
+    {
+      "id": "R048",
+      "typeId": "T06",
+      "packName": "种植盒-53盒1/W7050",
+      "packCount": 1,
+      "billInstrumentCount": 54,
+      "expectedPerPack": 54,
+      "expectedTotal": 54,
+      "behavior": "match"
+    },
+    {
+      "id": "R049",
+      "typeId": "T07",
+      "packName": "种植盒-11件 盒1/w6050",
+      "packCount": 1,
+      "billInstrumentCount": 11,
+      "expectedPerPack": 12,
+      "expectedTotal": 12,
+      "behavior": "mismatch"
+    },
+    {
+      "id": "R050",
+      "typeId": "T07",
+      "packName": "25°镜头1件 盒1/z2060",
+      "packCount": 1,
+      "billInstrumentCount": 1,
+      "expectedPerPack": 1,
+      "expectedTotal": 1,
+      "behavior": "match"
+    },
+    {
+      "id": "R051",
+      "typeId": "T07",
+      "packName": "激光镜-4件 盒1",
+      "packCount": 1,
+      "billInstrumentCount": 4,
+      "expectedPerPack": 4,
+      "expectedTotal": 4,
+      "behavior": "match"
+    },
+    {
+      "id": "R052",
+      "typeId": "T07",
+      "packName": "激光镜-4件 盒1/W15050",
+      "packCount": 1,
+      "billInstrumentCount": 4,
+      "expectedPerPack": 4,
+      "expectedTotal": 4,
+      "behavior": "match"
+    },
+    {
+      "id": "R053",
+      "typeId": "T07",
+      "packName": "洁牙机盒-5件  盒1/z1029",
+      "packCount": 1,
+      "billInstrumentCount": 6,
+      "expectedPerPack": 6,
+      "expectedTotal": 6,
+      "behavior": "match"
+    },
+    {
+      "id": "R054",
+      "typeId": "T07",
+      "packName": "种植9件盒1/w7050",
+      "packCount": 2,
+      "billInstrumentCount": 20,
+      "expectedPerPack": 10,
+      "expectedTotal": 20,
+      "behavior": "match"
+    },
+    {
+      "id": "R055",
+      "typeId": "T07",
+      "packName": "种植9件盒1/w7050",
+      "packCount": 1,
+      "billInstrumentCount": 10,
+      "expectedPerPack": 10,
+      "expectedTotal": 10,
+      "behavior": "match"
+    },
+    {
+      "id": "R056",
+      "typeId": "T07",
+      "packName": "种植盒-10件 盒1/w6050",
+      "packCount": 1,
+      "billInstrumentCount": 11,
+      "expectedPerPack": 11,
+      "expectedTotal": 11,
+      "behavior": "match"
+    },
+    {
+      "id": "R057",
+      "typeId": "T08",
+      "packName": "手术包（二）",
+      "packCount": 1,
+      "billInstrumentCount": 43,
+      "expectedPerPack": null,
+      "expectedTotal": null,
+      "behavior": "skip"
+    },
+    {
+      "id": "R058",
+      "typeId": "T08",
+      "packName": "换药包(120布)",
+      "packCount": 3,
+      "billInstrumentCount": 0,
+      "expectedPerPack": null,
+      "expectedTotal": null,
+      "behavior": "skip"
+    },
+    {
+      "id": "R059",
+      "typeId": "T09",
+      "packName": "车针23/z7526",
+      "packCount": 1,
+      "billInstrumentCount": 24,
+      "expectedPerPack": 23,
+      "expectedTotal": 23,
+      "behavior": "mismatch"
+    },
+    {
+      "id": "R060",
+      "typeId": "T09",
+      "packName": "脊柱常备器械髓核少1",
+      "packCount": 1,
+      "billInstrumentCount": 8,
+      "expectedPerPack": null,
+      "expectedTotal": null,
+      "behavior": "skip"
+    },
+    {
+      "id": "R061",
+      "typeId": "T09",
+      "packName": "脊柱机器人262",
+      "packCount": 1,
+      "billInstrumentCount": 7,
+      "expectedPerPack": null,
+      "expectedTotal": null,
+      "behavior": "skip"
+    },
+    {
+      "id": "R062",
+      "typeId": "T09",
+      "packName": "显微有钩镊1，无钩镊1/W5050",
+      "packCount": 1,
+      "billInstrumentCount": 3,
+      "expectedPerPack": 2,
+      "expectedTotal": 2,
+      "behavior": "mismatch"
+    },
+    {
+      "id": "R063",
+      "typeId": "T09",
+      "packName": "肌钩2/z1035",
+      "packCount": 2,
+      "billInstrumentCount": 4,
+      "expectedPerPack": 2,
+      "expectedTotal": 4,
+      "behavior": "match"
+    },
+    {
+      "id": "R064",
+      "typeId": "T09",
+      "packName": "肌钩2/z1035",
+      "packCount": 1,
+      "billInstrumentCount": 2,
+      "expectedPerPack": 2,
+      "expectedTotal": 2,
+      "behavior": "match"
+    },
+    {
+      "id": "R065",
+      "typeId": "T09",
+      "packName": "肛门拉钩1/2032",
+      "packCount": 2,
+      "billInstrumentCount": 2,
+      "expectedPerPack": 1,
+      "expectedTotal": 2,
+      "behavior": "match"
+    },
+    {
+      "id": "R066",
+      "typeId": "T09",
+      "packName": "镊子包21件 盘1/W7050",
+      "packCount": 1,
+      "billInstrumentCount": 22,
+      "expectedPerPack": 21,
+      "expectedTotal": 21,
+      "behavior": "mismatch"
+    },
+    {
+      "id": "R067",
+      "typeId": "T09",
+      "packName": "手机721001/z7526",
+      "packCount": 1,
+      "billInstrumentCount": 1,
+      "expectedPerPack": null,
+      "expectedTotal": null,
+      "behavior": "skip"
+    },
+    {
+      "id": "R068",
+      "typeId": "T09",
+      "packName": "手机DBC11227/z7526",
+      "packCount": 1,
+      "billInstrumentCount": 1,
+      "expectedPerPack": null,
+      "expectedTotal": null,
+      "behavior": "skip"
+    },
+    {
+      "id": "R069",
+      "typeId": "T09",
+      "packName": "手机0078/Z7526",
+      "packCount": 1,
+      "billInstrumentCount": 1,
+      "expectedPerPack": null,
+      "expectedTotal": null,
+      "behavior": "skip"
+    },
+    {
+      "id": "R070",
+      "typeId": "T09",
+      "packName": "手机11227/7526",
+      "packCount": 1,
+      "billInstrumentCount": 1,
+      "expectedPerPack": null,
+      "expectedTotal": null,
+      "behavior": "skip"
+    },
+    {
+      "id": "R071",
+      "typeId": "T10",
+      "packName": "扩棒（3-5.5号）-6 /z1526",
+      "packCount": 1,
+      "billInstrumentCount": 6,
+      "expectedPerPack": 6,
+      "expectedTotal": 6,
+      "behavior": "match"
+    },
+    {
+      "id": "R072",
+      "typeId": "T10",
+      "packName": "镊子包-5件（带框）/w9050",
+      "packCount": 1,
+      "billInstrumentCount": 6,
+      "expectedPerPack": 5,
+      "expectedTotal": 5,
+      "behavior": "mismatch"
+    },
+    {
+      "id": "R073",
+      "typeId": "T10",
+      "packName": "宫腔镜12度/z2060",
+      "packCount": 1,
+      "billInstrumentCount": 1,
+      "expectedPerPack": null,
+      "expectedTotal": null,
+      "behavior": "skip"
+    },
+    {
+      "id": "R074",
+      "typeId": "T10",
+      "packName": "宫腔镜30度/Z2060",
+      "packCount": 1,
+      "billInstrumentCount": 1,
+      "expectedPerPack": null,
+      "expectedTotal": null,
+      "behavior": "skip"
+    },
+    {
+      "id": "R075",
+      "typeId": "T10",
+      "packName": "取环钩-1//Z7537",
+      "packCount": 1,
+      "billInstrumentCount": 1,
+      "expectedPerPack": 1,
+      "expectedTotal": 1,
+      "behavior": "match"
+    },
+    {
+      "id": "R076",
+      "typeId": "T10",
+      "packName": "器械包4件/w6050",
+      "packCount": 3,
+      "billInstrumentCount": 12,
+      "expectedPerPack": 4,
+      "expectedTotal": 12,
+      "behavior": "match"
+    },
+    {
+      "id": "R077",
+      "typeId": "T10",
+      "packName": "器械包4件/w6050",
+      "packCount": 8,
+      "billInstrumentCount": 32,
+      "expectedPerPack": 4,
+      "expectedTotal": 32,
+      "behavior": "match"
+    },
+    {
+      "id": "R078",
+      "typeId": "T10",
+      "packName": "器械包4件/w6050",
+      "packCount": 2,
+      "billInstrumentCount": 8,
+      "expectedPerPack": 4,
+      "expectedTotal": 8,
+      "behavior": "match"
+    },
+    {
+      "id": "R079",
+      "typeId": "T10",
+      "packName": "拔牙挺（套保护套）/z7526",
+      "packCount": 6,
+      "billInstrumentCount": 6,
+      "expectedPerPack": null,
+      "expectedTotal": null,
+      "behavior": "skip"
+    },
+    {
+      "id": "R080",
+      "typeId": "T10",
+      "packName": "持针器/z1029",
+      "packCount": 6,
+      "billInstrumentCount": 6,
+      "expectedPerPack": null,
+      "expectedTotal": null,
+      "behavior": "skip"
+    },
+    {
+      "id": "R081",
+      "typeId": "T10",
+      "packName": "拔牙挺（套保护套）/z7526",
+      "packCount": 8,
+      "billInstrumentCount": 8,
+      "expectedPerPack": null,
+      "expectedTotal": null,
+      "behavior": "skip"
+    },
+    {
+      "id": "R082",
+      "typeId": "T10",
+      "packName": "持针器/z1029",
+      "packCount": 4,
+      "billInstrumentCount": 4,
+      "expectedPerPack": null,
+      "expectedTotal": null,
+      "behavior": "skip"
+    },
+    {
+      "id": "R083",
+      "typeId": "T11",
+      "packName": "手术包-10件（80*80布）",
+      "packCount": 1,
+      "billInstrumentCount": 20,
+      "expectedPerPack": 10,
+      "expectedTotal": 10,
+      "behavior": "mismatch"
+    },
+    {
+      "id": "R084",
+      "typeId": "T11",
+      "packName": "手术包-10件（80*80布）",
+      "packCount": 1,
+      "billInstrumentCount": 10,
+      "expectedPerPack": 10,
+      "expectedTotal": 10,
+      "behavior": "match"
+    },
+    {
+      "id": "R085",
+      "typeId": "T11",
+      "packName": "手术包（5号）-12件（80*80布）",
+      "packCount": 1,
+      "billInstrumentCount": 12,
+      "expectedPerPack": 12,
+      "expectedTotal": 12,
+      "behavior": "match"
+    },
+    {
+      "id": "R086",
+      "typeId": "T11",
+      "packName": "手术包-10件（80*80布）",
+      "packCount": 2,
+      "billInstrumentCount": 20,
+      "expectedPerPack": 10,
+      "expectedTotal": 20,
+      "behavior": "match"
+    },
+    {
+      "id": "R087",
+      "typeId": "T12",
+      "packName": "咬丝器-1/Z双2032",
+      "packCount": 1,
+      "billInstrumentCount": 1,
+      "expectedPerPack": 1,
+      "expectedTotal": 1,
+      "behavior": "match"
+    },
+    {
+      "id": "R088",
+      "typeId": "T12",
+      "packName": "咬丝器-1/Z双2032",
+      "packCount": 2,
+      "billInstrumentCount": 2,
+      "expectedPerPack": 1,
+      "expectedTotal": 2,
+      "behavior": "match"
+    },
+    {
+      "id": "R089",
+      "typeId": "T12",
+      "packName": "咬丝器-1/Z双2032",
+      "packCount": 3,
+      "billInstrumentCount": 3,
+      "expectedPerPack": 1,
+      "expectedTotal": 3,
+      "behavior": "match"
+    },
+    {
+      "id": "R090",
+      "typeId": "T12",
+      "packName": "咬丝器-1/Z双2032",
+      "packCount": 4,
+      "billInstrumentCount": 4,
+      "expectedPerPack": 1,
+      "expectedTotal": 4,
+      "behavior": "match"
+    },
+    {
+      "id": "R091",
+      "typeId": "T13",
+      "packName": "器械包-2袋/z1526",
+      "packCount": 1,
+      "billInstrumentCount": 2,
+      "expectedPerPack": 2,
+      "expectedTotal": 2,
+      "behavior": "match"
+    },
+    {
+      "id": "R092",
+      "typeId": "T13",
+      "packName": "器械包-2袋/z1526",
+      "packCount": 2,
+      "billInstrumentCount": 4,
+      "expectedPerPack": 2,
+      "expectedTotal": 4,
+      "behavior": "match"
+    },
+    {
+      "id": "R093",
+      "typeId": "T13",
+      "packName": "扩棒-5袋/z1029",
+      "packCount": 1,
+      "billInstrumentCount": 5,
+      "expectedPerPack": 5,
+      "expectedTotal": 5,
+      "behavior": "match"
+    },
+    {
+      "id": "R094",
+      "typeId": "T13",
+      "packName": "扩棒-4袋/z1029",
+      "packCount": 1,
+      "billInstrumentCount": 4,
+      "expectedPerPack": 4,
+      "expectedTotal": 4,
+      "behavior": "match"
+    },
+    {
+      "id": "R095",
+      "typeId": "T99",
+      "packName": "宫腔镜包26件",
+      "packCount": 1,
+      "billInstrumentCount": 27,
+      "expectedPerPack": 26,
+      "expectedTotal": 26,
+      "behavior": "mismatch"
+    },
+    {
+      "id": "R096",
+      "typeId": "T99",
+      "packName": "宫腔镜包26件",
+      "packCount": 2,
+      "billInstrumentCount": 54,
+      "expectedPerPack": 26,
+      "expectedTotal": 52,
+      "behavior": "mismatch"
+    },
+    {
+      "id": "R097",
+      "typeId": "T99",
+      "packName": "取上环包-21件",
+      "packCount": 1,
+      "billInstrumentCount": 22,
+      "expectedPerPack": 21,
+      "expectedTotal": 21,
+      "behavior": "mismatch"
+    },
+    {
+      "id": "R098",
+      "typeId": "T99",
+      "packName": "人流包（22件）",
+      "packCount": 1,
+      "billInstrumentCount": 23,
+      "expectedPerPack": 22,
+      "expectedTotal": 22,
+      "behavior": "mismatch"
+    },
+    {
+      "id": "R099",
+      "typeId": "T99",
+      "packName": "托盘-1/1526",
+      "packCount": 4,
+      "billInstrumentCount": 4,
+      "expectedPerPack": 1,
+      "expectedTotal": 4,
+      "behavior": "match"
+    },
+    {
+      "id": "R100",
+      "typeId": "T99",
+      "packName": "托盘-1/1526",
+      "packCount": 10,
+      "billInstrumentCount": 10,
+      "expectedPerPack": 1,
+      "expectedTotal": 10,
+      "behavior": "match"
+    },
+    {
+      "id": "R101",
+      "typeId": "T99",
+      "packName": "托盘-1/1526",
+      "packCount": 8,
+      "billInstrumentCount": 8,
+      "expectedPerPack": 1,
+      "expectedTotal": 8,
+      "behavior": "match"
+    },
+    {
+      "id": "R102",
+      "typeId": "T99",
+      "packName": "托盘-1/1526",
+      "packCount": 7,
+      "billInstrumentCount": 7,
+      "expectedPerPack": 1,
+      "expectedTotal": 7,
+      "behavior": "match"
+    },
+    {
+      "id": "R103",
+      "typeId": "T99",
+      "packName": "取冠器-1z7534",
+      "packCount": 1,
+      "billInstrumentCount": 1,
+      "expectedPerPack": 1,
+      "expectedTotal": 1,
+      "behavior": "match"
+    },
+    {
+      "id": "R104",
+      "typeId": "T99",
+      "packName": "钩镊-1z7526",
+      "packCount": 8,
+      "billInstrumentCount": 8,
+      "expectedPerPack": 1,
+      "expectedTotal": 8,
+      "behavior": "match"
+    },
+    {
+      "id": "R105",
+      "typeId": "T99",
+      "packName": "平镊-1z7534",
+      "packCount": 8,
+      "billInstrumentCount": 8,
+      "expectedPerPack": 1,
+      "expectedTotal": 8,
+      "behavior": "match"
+    },
+    {
+      "id": "R106",
+      "typeId": "T99",
+      "packName": "缝合包",
+      "packCount": 3,
+      "billInstrumentCount": 21,
+      "expectedPerPack": null,
+      "expectedTotal": null,
+      "behavior": "skip"
+    }
+  ]
+}

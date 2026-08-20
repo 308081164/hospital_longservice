@@ -21,10 +21,7 @@ STANDARD_XLSX = Path(
     "/Users/yangxinghui/Library/Containers/com.tencent.xinWeChat/Data/Documents/"
     "xwechat_files/wxid_7qwn4vnuj7xo22_508c/temp/drag/标准收费部分(1).xlsx"
 )
-SPECIAL_XLSX = Path(
-    "/Users/yangxinghui/Library/Containers/com.tencent.xinWeChat/Data/Documents/"
-    "xwechat_files/wxid_7qwn4vnuj7xo22_508c/temp/drag/特殊收费(12).xlsx"
-)
+SPECIAL_XLSX = ROOT / "铂康" / "特殊收费(13).xlsx"
 UNIFIED_SHEET = "通用特殊收费"
 LT_GENERAL_SHEET = "环氧与低温通用收费"
 

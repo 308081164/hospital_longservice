@@ -15,6 +15,50 @@ class RuleFidelityRegressionTest {
     private static final ObjectMapper MAPPER = new ObjectMapper();
 
     @Test
+    void guoyao2PointerTenFoldWithBagMatchesCustomerRule() throws Exception {
+        JsonNode rules = RuleFidelityTestSupport.compileForCustomerCode("GUOYAO-2");
+        PricingEngine engine = new PricingEngine(rules);
+        PricingEngine.ProcessedResult result = engine.processRow(Map.of(
+                "hospitalName", "国药总医院第二院区",
+                "department", "手术室",
+                "type", "额外包(纸塑袋)",
+                "packName", "指针-10/z7537",
+                "packageMaterial", "高温纸塑袋75*370",
+                "instrumentCount", 10,
+                "packCount", 1,
+                "unitPrice", 13.5,
+                "totalPrice", 13.5
+        ));
+        assertThat(result.status).isEqualTo("unchanged");
+        assertThat(result.expectedUnitPrice).isEqualTo(13.5);
+        assertThat(result.pricingRule).contains("电机厂指针5合1含包材");
+        assertThat(result.notes).anyMatch(note -> note.contains("电机厂指针5合1含包材"));
+        assertThat(result.notes).noneMatch(note -> note.contains("混合模式未命中特色规则，走标准灭菌计价"));
+    }
+
+    @Test
+    void guoyao2PointerTwelveFoldWithoutBagMatchesCustomerRule() throws Exception {
+        JsonNode rules = RuleFidelityTestSupport.compileForCustomerCode("GUOYAO-2");
+        PricingEngine engine = new PricingEngine(rules);
+        PricingEngine.ProcessedResult result = engine.processRow(Map.of(
+                "hospitalName", "国药总医院第二院区",
+                "department", "手术室",
+                "type", "额外包(纸塑袋)",
+                "packName", "指针-12/z7537",
+                "packageMaterial", "高温纸塑袋75*370",
+                "instrumentCount", 12,
+                "packCount", 1,
+                "unitPrice", 16.5,
+                "totalPrice", 16.5
+        ));
+        assertThat(result.status).isEqualTo("unchanged");
+        assertThat(result.expectedUnitPrice).isEqualTo(16.5);
+        assertThat(result.pricingRule).contains("电机厂指针5合1免包材");
+        assertThat(result.notes).anyMatch(note -> note.contains("电机厂指针5合1免包材"));
+        assertThat(result.notes).noneMatch(note -> note.contains("混合模式未命中特色规则，走标准灭菌计价"));
+    }
+
+    @Test
     void guoyao2HybridUsesStandardPathWhenSpecialRuleMisses() throws Exception {
         JsonNode rules = RuleFidelityTestSupport.compileForCustomerCode("GUOYAO-2");
         PricingEngine engine = new PricingEngine(rules);
@@ -151,6 +195,26 @@ class RuleFidelityRegressionTest {
         ));
         assertThat(result.status).isEqualTo("unchanged");
         assertThat(result.expectedUnitPrice).isEqualTo(41.5);
+    }
+
+    @Test
+    void bingchengHuanzuanTouDoesNotMatchHuanzuanPackRules() throws Exception {
+        JsonNode rules = RuleFidelityTestSupport.compileForCustomerCode("BINGCHENG-YM");
+        PricingEngine engine = new PricingEngine(rules);
+        PricingEngine.ProcessedResult result = engine.processRow(Map.of(
+                "hospitalName", "哈尔滨冰城医疗美容医院",
+                "department", "手术室",
+                "type", "额外包(纸塑袋)",
+                "packName", "1.2环钻头-1件/Z7520",
+                "packageMaterial", "高温纸塑袋75*200",
+                "instrumentCount", 1,
+                "packCount", 1,
+                "unitPrice", 8.0,
+                "totalPrice", 8.0
+        ));
+        assertThat(result.status).isEqualTo("unchanged");
+        assertThat(result.expectedUnitPrice).isEqualTo(8.0);
+        assertThat(result.pricingRule).doesNotContain("冰城环钻包");
     }
 
     @Test

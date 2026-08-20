@@ -1,85 +1,8 @@
 {
-  "passed": 7,
-  "failed": 3,
-  "observed": 1,
+  "passed": 1,
+  "failed": 0,
+  "observed": 0,
   "results": [
-    {
-      "id": "global_keshizhen_fold",
-      "name": "克氏针8件5合1",
-      "code": "ZYY-D1",
-      "expectedUnitPrice": 16.5,
-      "actualUnitPrice": 17.19,
-      "pricingRule": "高温纸塑袋25cm计费",
-      "status": "warning",
-      "ok": false,
-      "note": null
-    },
-    {
-      "id": "global_juanmianzi_fold",
-      "name": "卷棉子10件5合1",
-      "code": "ZYY-D1",
-      "expectedUnitPrice": 16.5,
-      "actualUnitPrice": 17.19,
-      "pricingRule": "高温纸塑袋25cm计费",
-      "status": "warning",
-      "ok": false,
-      "note": null
-    },
-    {
-      "id": "global_lt_double_35",
-      "name": "低温双层1件35元",
-      "code": "ZYY-D1",
-      "expectedUnitPrice": 35.0,
-      "actualUnitPrice": 35.0,
-      "pricingRule": "低温纸塑袋(双)20cm阶梯计费",
-      "status": "unchanged",
-      "ok": true,
-      "note": null
-    },
-    {
-      "id": "hrb2nd_lt_double",
-      "name": "市二院低温双层1件",
-      "code": "HRB-2ND",
-      "expectedUnitPrice": null,
-      "actualUnitPrice": 35.0,
-      "pricingRule": "special_only 未命中特色规则",
-      "status": "unchanged",
-      "ok": null,
-      "note": "记录实际价，核对市二院是否排除35元最低"
-    },
-    {
-      "id": "global_suture_dressing",
-      "name": "缝合针敷料纸塑25cm",
-      "code": "ZYY-D1",
-      "expectedUnitPrice": 4.0,
-      "actualUnitPrice": 4.0,
-      "pricingRule": "敷料包(纸塑袋)——保留原单价",
-      "status": "unchanged",
-      "ok": true,
-      "note": null
-    },
-    {
-      "id": "guoyao2_suture_8",
-      "name": "电机厂缝合针8元",
-      "code": "GUOYAO-2",
-      "expectedUnitPrice": 8.0,
-      "actualUnitPrice": 8.0,
-      "pricingRule": "电机厂缝合针8元",
-      "status": "warning",
-      "ok": true,
-      "note": null
-    },
-    {
-      "id": "heu_kongjin_4",
-      "name": "孔巾20cm4元",
-      "code": "HRB-HEU",
-      "expectedUnitPrice": 4.0,
-      "actualUnitPrice": 4.0,
-      "pricingRule": "特色账单已关闭",
-      "status": "unchanged",
-      "ok": true,
-      "note": null
-    },
     {
       "id": "guoyao2_pointer_fold",
       "name": "指针10件5合1含包材",
@@ -90,39 +13,6 @@
       "status": "unchanged",
       "ok": true,
       "note": "客户表：2折算件×5.5+包材(10cm)=13.5；补规则后一致"
-    },
-    {
-      "id": "guoyao2_double_per_piece",
-      "name": "双1件纸塑袋含外层袋",
-      "code": "GUOYAO-2",
-      "expectedUnitPrice": 8.0,
-      "actualUnitPrice": 8.0,
-      "pricingRule": "电机厂双按件5.5外层袋 + 纸塑袋费",
-      "status": "unchanged",
-      "ok": true,
-      "note": null
-    },
-    {
-      "id": "bcym_huanzuan_per_piece",
-      "name": "环钻包2件按件",
-      "code": "BINGCHENG-YM",
-      "expectedUnitPrice": 14.0,
-      "actualUnitPrice": 11.0,
-      "pricingRule": "冰城环钻包按件5.5",
-      "status": "warning",
-      "ok": false,
-      "note": null
-    },
-    {
-      "id": "wyem_quxuedai_w50",
-      "name": "驱血带W50",
-      "code": "HRB-WY-EM",
-      "expectedUnitPrice": 25.0,
-      "actualUnitPrice": 25.0,
-      "pricingRule": "敷料包(无纺布包)驱血带——50.0",
-      "status": "unchanged",
-      "ok": true,
-      "note": null
     }
   ]
 }

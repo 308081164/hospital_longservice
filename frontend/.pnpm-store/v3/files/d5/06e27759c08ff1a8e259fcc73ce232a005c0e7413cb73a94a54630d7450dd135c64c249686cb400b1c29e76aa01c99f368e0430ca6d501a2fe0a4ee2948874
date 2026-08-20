@@ -1,0 +1,33 @@
+export default class DefaultPreset {
+    constructor(options: any, playerConfig: any);
+    plugins: (typeof FullScreen | typeof PlayIcon | typeof Progress | typeof TimeIcon | typeof Volume | typeof Xglogger | typeof Replay | typeof Poster | typeof Start | typeof Enter | typeof Miniscreen | typeof Loading | typeof RotateIcon | typeof PIPIcon | typeof PlayNextIcon | typeof DownLoadIcon | typeof ScreenShotIcon | typeof DefinitionIcon | typeof PlaybackRateIcon | typeof Error | typeof Prompt | typeof ProgressPreview | typeof Thumbnail | typeof MiniProgress | typeof Stats | typeof GapJump | typeof WaitingTimeoutJump)[];
+    ignores: any[];
+    i18n: any[];
+}
+import FullScreen from "../plugins/fullscreen";
+import PlayIcon from "../plugins/play";
+import Progress from "../plugins/progress";
+import TimeIcon from "../plugins/time";
+import Volume from "../plugins/volume";
+import Xglogger from "../plugins/logger";
+import Replay from "../plugins/replay";
+import Poster from "../plugins/poster";
+import Start from "../plugins/start";
+import Enter from "../plugins/enter";
+import Miniscreen from "../plugins/miniScreen";
+import Loading from "../plugins/loading";
+import RotateIcon from "../plugins/rotate";
+import PIPIcon from "../plugins/pip";
+import PlayNextIcon from "../plugins/playNext";
+import DownLoadIcon from "../plugins/download";
+import ScreenShotIcon from "../plugins/screenShot";
+import DefinitionIcon from "../plugins/definition";
+import PlaybackRateIcon from "../plugins/playbackRate";
+import Error from "../plugins/error";
+import Prompt from "../plugins/prompt";
+import ProgressPreview from "../plugins/progressPreview";
+import Thumbnail from "../plugins/common/thumbnail";
+import MiniProgress from "../plugins/progress/miniProgress";
+import Stats from "../plugins/stats";
+import GapJump from "../plugins/gapJump";
+import WaitingTimeoutJump from "../plugins/waitingTimeoutJump";

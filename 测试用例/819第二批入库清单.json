@@ -1,0 +1,100 @@
+{
+  "source_dir": "铂康/8.19新增/第二批",
+  "strict_july_folders": [
+    "总工会",
+    "索菲医美",
+    "黑龙江省妇幼保健院（人口）"
+  ],
+  "entries": [
+    {
+      "source": "铂康/8.19新增/第二批/呼兰中医院.xlsx",
+      "dest": "测试用例/呼兰中医院/处理后表格/7月__呼兰中医院账单.xlsx",
+      "hospital": "呼兰中医院",
+      "kind": "proc",
+      "month": 7,
+      "strict_eligible": false,
+      "note": "819第二批7月处理后"
+    },
+    {
+      "source": "铂康/8.19新增/第二批/哈尔滨基准生物科技有限公司.xlsx",
+      "dest": "测试用例/基准生物/处理后表格/7月__基准生物账单.xlsx",
+      "hospital": "基准生物",
+      "kind": "proc",
+      "month": 7,
+      "strict_eligible": false,
+      "note": "819第二批7月处理后"
+    },
+    {
+      "source": "铂康/8.19新增/第二批/哈尔滨市道里区妇幼保健院.xlsx",
+      "dest": "测试用例/道里区妇幼保健院/处理后表格/7月__道里妇幼账单.xlsx",
+      "hospital": "道里区妇幼保健院",
+      "kind": "proc",
+      "month": 7,
+      "strict_eligible": false,
+      "note": "819第二批7月处理后"
+    },
+    {
+      "source": "铂康/8.19新增/第二批/平房区人民医院.xlsx",
+      "dest": "测试用例/哈尔滨市平房区人民医院/处理后表格/7月__平房区人民账单.xlsx",
+      "hospital": "哈尔滨市平房区人民医院",
+      "kind": "proc",
+      "month": 7,
+      "strict_eligible": false,
+      "note": "819第二批7月处理后"
+    },
+    {
+      "source": "铂康/8.19新增/第二批/春语医疗美容医院.xlsx",
+      "dest": "测试用例/春语医美/处理后表格/7月__春语账单.xlsx",
+      "hospital": "春语医美",
+      "kind": "proc",
+      "month": 7,
+      "strict_eligible": false,
+      "note": "819第二批7月处理后"
+    },
+    {
+      "source": "铂康/8.19新增/第二批/省监狱管理局医院.xlsx",
+      "dest": "测试用例/省监狱管理局医院/处理后表格/7月__省监狱账单.xlsx",
+      "hospital": "省监狱管理局医院",
+      "kind": "proc",
+      "month": 7,
+      "strict_eligible": false,
+      "note": "819第二批7月处理后"
+    },
+    {
+      "source": "铂康/8.19新增/第二批/索菲医疗美容门诊.xlsx",
+      "dest": "测试用例/索菲医美/处理后表格/7月__索菲账单.xlsx",
+      "hospital": "索菲医美",
+      "kind": "proc",
+      "month": 7,
+      "strict_eligible": true,
+      "note": "819第二批7月处理后"
+    },
+    {
+      "source": "铂康/8.19新增/第二批/黑龙江总工会医院.xlsx",
+      "dest": "测试用例/总工会/处理后表格/7月__总工会账单.xlsx",
+      "hospital": "总工会",
+      "kind": "proc",
+      "month": 7,
+      "strict_eligible": true,
+      "note": "819第二批7月处理后"
+    },
+    {
+      "source": "铂康/8.19新增/第二批/黑龙江省妇幼保健院（人口）.xlsx",
+      "dest": "测试用例/黑龙江省妇幼保健院（人口）/处理后表格/7月__人口账单.xlsx",
+      "hospital": "黑龙江省妇幼保健院（人口）",
+      "kind": "proc",
+      "month": 7,
+      "strict_eligible": true,
+      "note": "819第二批7月处理后"
+    },
+    {
+      "source": "铂康/8.19新增/第二批/黑龙江省社会康复医院xlsx.xlsx",
+      "dest": "测试用例/黑龙江省社会康复医院/处理后表格/7月__社会康复账单.xlsx",
+      "hospital": "黑龙江省社会康复医院",
+      "kind": "proc",
+      "month": 7,
+      "strict_eligible": false,
+      "note": "819第二批7月处理后"
+    }
+  ]
+}

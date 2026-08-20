@@ -12,10 +12,7 @@ sys.path.insert(0, str(ROOT / "scripts"))
 
 import customer_rules_compare as crc  # noqa: E402
 
-SPECIAL_XLSX = Path(
-    "/Users/yangxinghui/Library/Containers/com.tencent.xinWeChat/Data/Documents/"
-    "xwechat_files/wxid_7qwn4vnuj7xo22_508c/temp/drag/特殊收费(12).xlsx"
-)
+SPECIAL_XLSX = ROOT / "铂康" / "特殊收费(13).xlsx"
 
 
 def expected_rule_names_for_bingcheng() -> set[str]:

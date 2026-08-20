@@ -1,0 +1,77 @@
+var ZH = {
+  LANG: "zh-cn",
+  TEXT: {
+    ERROR_TYPES: {
+      network: {
+        code: 1,
+        msg: "\u89C6\u9891\u4E0B\u8F7D\u9519\u8BEF"
+      },
+      mse: {
+        code: 2,
+        msg: "\u6D41\u8FFD\u52A0\u9519\u8BEF"
+      },
+      parse: {
+        code: 3,
+        msg: "\u89E3\u6790\u9519\u8BEF"
+      },
+      format: {
+        code: 4,
+        msg: "\u683C\u5F0F\u9519\u8BEF"
+      },
+      decoder: {
+        code: 5,
+        msg: "\u89E3\u7801\u9519\u8BEF"
+      },
+      runtime: {
+        code: 6,
+        msg: "\u8BED\u6CD5\u9519\u8BEF"
+      },
+      timeout: {
+        code: 7,
+        msg: "\u64AD\u653E\u8D85\u65F6"
+      },
+      other: {
+        code: 8,
+        msg: "\u5176\u4ED6\u9519\u8BEF"
+      }
+    },
+    HAVE_NOTHING: "\u6CA1\u6709\u5173\u4E8E\u97F3\u9891/\u89C6\u9891\u662F\u5426\u5C31\u7EEA\u7684\u4FE1\u606F",
+    HAVE_METADATA: "\u97F3\u9891/\u89C6\u9891\u7684\u5143\u6570\u636E\u5DF2\u5C31\u7EEA",
+    HAVE_CURRENT_DATA: "\u5173\u4E8E\u5F53\u524D\u64AD\u653E\u4F4D\u7F6E\u7684\u6570\u636E\u662F\u53EF\u7528\u7684\uFF0C\u4F46\u6CA1\u6709\u8DB3\u591F\u7684\u6570\u636E\u6765\u64AD\u653E\u4E0B\u4E00\u5E27/\u6BEB\u79D2",
+    HAVE_FUTURE_DATA: "\u5F53\u524D\u53CA\u81F3\u5C11\u4E0B\u4E00\u5E27\u7684\u6570\u636E\u662F\u53EF\u7528\u7684",
+    HAVE_ENOUGH_DATA: "\u53EF\u7528\u6570\u636E\u8DB3\u4EE5\u5F00\u59CB\u64AD\u653E",
+    NETWORK_EMPTY: "\u97F3\u9891/\u89C6\u9891\u5C1A\u672A\u521D\u59CB\u5316",
+    NETWORK_IDLE: "\u97F3\u9891/\u89C6\u9891\u662F\u6D3B\u52A8\u7684\u4E14\u5DF2\u9009\u53D6\u8D44\u6E90\uFF0C\u4F46\u5E76\u672A\u4F7F\u7528\u7F51\u7EDC",
+    NETWORK_LOADING: "\u6D4F\u89C8\u5668\u6B63\u5728\u4E0B\u8F7D\u6570\u636E",
+    NETWORK_NO_SOURCE: "\u672A\u627E\u5230\u97F3\u9891/\u89C6\u9891\u6765\u6E90",
+    MEDIA_ERR_ABORTED: "\u53D6\u56DE\u8FC7\u7A0B\u88AB\u7528\u6237\u4E2D\u6B62",
+    MEDIA_ERR_NETWORK: "\u7F51\u7EDC\u9519\u8BEF",
+    MEDIA_ERR_DECODE: "\u89E3\u7801\u9519\u8BEF",
+    MEDIA_ERR_SRC_NOT_SUPPORTED: "\u4E0D\u652F\u6301\u7684\u97F3\u9891/\u89C6\u9891\u683C\u5F0F",
+    REPLAY: "\u91CD\u64AD",
+    ERROR: "\u7F51\u7EDC\u8FDE\u63A5\u4F3C\u4E4E\u51FA\u73B0\u4E86\u95EE\u9898",
+    PLAY_TIPS: "\u64AD\u653E",
+    PAUSE_TIPS: "\u6682\u505C",
+    PLAYNEXT_TIPS: "\u4E0B\u4E00\u96C6",
+    DOWNLOAD_TIPS: "\u4E0B\u8F7D",
+    ROTATE_TIPS: "\u65CB\u8F6C",
+    RELOAD_TIPS: "\u91CD\u65B0\u8F7D\u5165",
+    FULLSCREEN_TIPS: "\u8FDB\u5165\u5168\u5C4F",
+    EXITFULLSCREEN_TIPS: "\u9000\u51FA\u5168\u5C4F",
+    CSSFULLSCREEN_TIPS: "\u8FDB\u5165\u6837\u5F0F\u5168\u5C4F",
+    EXITCSSFULLSCREEN_TIPS: "\u9000\u51FA\u6837\u5F0F\u5168\u5C4F",
+    TEXTTRACK: "\u5B57\u5E55",
+    PIP: "\u753B\u4E2D\u753B",
+    SCREENSHOT: "\u622A\u56FE",
+    LIVE: "\u6B63\u5728\u76F4\u64AD",
+    OFF: "\u5173\u95ED",
+    OPEN: "\u5F00\u542F",
+    MINI_DRAG: "\u70B9\u51FB\u6309\u4F4F\u53EF\u62D6\u52A8\u89C6\u9891",
+    MINISCREEN: "\u5C0F\u5C4F\u5E55",
+    REFRESH_TIPS: "\u8BF7\u8BD5\u8BD5",
+    REFRESH: "\u5237\u65B0",
+    FORWARD: "\u5FEB\u8FDB\u4E2D",
+    LIVE_TIP: "\u76F4\u64AD"
+  }
+};
+export { ZH as default };

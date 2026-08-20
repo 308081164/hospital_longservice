@@ -81,7 +81,7 @@
             $t('menus.masterData.customerFilters.totalCount', { count: filteredCustomers.length })
           }}</span>
           <span class="ml-2 text-sm text-amber-700">
-            特色账单已启用 {{ billingEnabledCount }} / {{ customers.length }}
+            特色账单已启用 {{ billingEnabledCount }} / {{ activeCustomerCount }}
           </span>
         </ElFormItem>
       </ElForm>
@@ -100,7 +100,19 @@
           label="规范名称"
           min-width="200"
           show-overflow-tooltip
-        />
+        >
+          <template #default="{ row }">
+            <span>{{ row.canonical_name }}</span>
+            <ElTag
+              v-if="duplicateActiveNameSet.has((row.canonical_name || '').trim())"
+              type="warning"
+              size="small"
+              class="ml-1"
+            >
+              同名
+            </ElTag>
+          </template>
+        </ElTableColumn>
         <ElTableColumn prop="status" label="档案状态" width="90" align="center">
           <template #default="{ row }">
             <ElTag :type="row.status === 'active' ? 'success' : 'info'" size="small">
@@ -591,7 +603,7 @@
   const appliedKeyword = ref('')
   const filterForm = reactive({
     keyword: '',
-    status: '' as '' | 'active' | 'inactive',
+    status: 'active' as '' | 'active' | 'inactive',
     capMode: '' as '' | 'standard' | 'none',
     hasProductRules: '' as '' | 'yes' | 'no',
     billingEnabled: '' as '' | 'yes' | 'no'
@@ -723,9 +735,28 @@
     return !!(row.billing_enabled ?? row.billingEnabled)
   }
 
-  const billingEnabledCount = computed(
-    () => customers.value.filter((c) => isBillingEnabled(c)).length
+  function isActiveCustomer(row: Api.MasterData.CustomerRecord) {
+    return (row.status ?? 'active') === 'active'
+  }
+
+  const activeCustomerCount = computed(
+    () => customers.value.filter((c) => isActiveCustomer(c)).length
   )
+
+  const billingEnabledCount = computed(
+    () => customers.value.filter((c) => isActiveCustomer(c) && isBillingEnabled(c)).length
+  )
+
+  const duplicateActiveNameSet = computed(() => {
+    const counts = new Map<string, number>()
+    for (const c of customers.value) {
+      if (!isActiveCustomer(c)) continue
+      const name = (c.canonical_name || '').trim()
+      if (!name) continue
+      counts.set(name, (counts.get(name) || 0) + 1)
+    }
+    return new Set([...counts.entries()].filter(([, n]) => n > 1).map(([name]) => name))
+  })
 
   const filteredCustomers = computed(() => {
     let data = customers.value
@@ -767,7 +798,7 @@
 
   function resetFilters() {
     filterForm.keyword = ''
-    filterForm.status = ''
+    filterForm.status = 'active'
     filterForm.capMode = ''
     filterForm.hasProductRules = ''
     filterForm.billingEnabled = ''

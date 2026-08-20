@@ -23,6 +23,7 @@ import com.hospital.backend.service.SettlementJobFieldsApplier;
 import com.hospital.backend.service.ExternalInstrumentService;
 import com.hospital.backend.service.HospitalReconciliationService;
 import com.hospital.backend.service.HospitalExportCapabilityService;
+import com.hospital.backend.service.ReconciliationHospitalNameResolver;
 import com.hospital.backend.service.ReconciliationVersionGroup;
 import com.hospital.backend.export.BillColumnLayout;
 import com.hospital.backend.export.BillExportLayoutResolver;
@@ -38,6 +39,7 @@ import com.hospital.backend.dto.response.hospital.ReconciliationExportLogRespons
 import com.hospital.backend.dto.response.hospital.ReconciliationJobResponse;
 import com.hospital.backend.dto.response.hospital.TemplateRefResponse;
 import com.hospital.backend.entity.HospitalPricingRule;
+import com.hospital.backend.entity.Customer;
 import com.hospital.backend.entity.HospitalReconciliationExportLog;
 import com.hospital.backend.entity.HospitalReconciliationJob;
 import com.hospital.backend.entity.HospitalReconciliationRow;
@@ -199,6 +201,8 @@ public class HospitalReconciliationServiceImpl implements HospitalReconciliation
     private final ProductMatchService productMatchService;
 
     private final CustomerResolver customerResolver;
+
+    private final ReconciliationHospitalNameResolver reconciliationHospitalNameResolver;
 
     private final LogisticsPipelineService logisticsPipelineService;
 
@@ -562,7 +566,10 @@ public class HospitalReconciliationServiceImpl implements HospitalReconciliation
 
             // ---- 提取元数据 ----
             // 医院名称：用于分类索引和文件目录命名
-            String hospitalName = valueToString(payload.get("hospitalName"), "");
+            String sourceFileName = ReconciliationVersionGroup.normalizeSourceFileName(sourceFile.getOriginalFilename());
+            String hospitalName = reconciliationHospitalNameResolver.resolve(
+                    valueToString(payload.get("hospitalName"), ""),
+                    sourceFileName);
             // 操作人：记录是谁执行了本次核对操作
             String operatorName = valueToString(payload.get("operatorName"), "");
             // 规则信息：本次核对使用的是哪条计费规则
@@ -586,7 +593,6 @@ public class HospitalReconciliationServiceImpl implements HospitalReconciliation
 
             // ===== 第二步：生成版本号 =====
             // 按「医院 + 源文件」维度递增，不同月份/不同上传文件拥有独立版本链
-            String sourceFileName = ReconciliationVersionGroup.normalizeSourceFileName(sourceFile.getOriginalFilename());
             int versionNo = nextVersionNo(hospitalName, sourceFileName);
 
             // ===== 第三步：保存上传的 Excel 文件到磁盘 =====
@@ -672,7 +678,6 @@ public class HospitalReconciliationServiceImpl implements HospitalReconciliation
         try {
             List<Map<String, Object>> allRows = ExcelBillImportSupport.parseWorkbook(sourceFile.getInputStream());
             String dateRangeText = "";
-            String firstSheetHospitalName = "";
 
             if (allRows.isEmpty()) {
                 return Result.fail(400, "没有识别到有效明细行，请确认 Excel 格式与示例一致。");
@@ -689,12 +694,13 @@ public class HospitalReconciliationServiceImpl implements HospitalReconciliation
             }
 
             // 3. 确定医院名称。定价引擎中的医院特例规则需要先拿到医院名。
-            String hospitalName = (hospitalNameParam != null && !hospitalNameParam.isBlank())
-                    ? hospitalNameParam
-                    : (firstSheetHospitalName.isEmpty() ? "未命名医院" : firstSheetHospitalName);
+            String sourceFileName = ReconciliationVersionGroup.normalizeSourceFileName(sourceFile.getOriginalFilename());
+            String hospitalName = reconciliationHospitalNameResolver.resolve(hospitalNameParam, sourceFileName);
 
             // 4. 逐行处理（含 FOLD 拆行）
-            JsonNode compiledRules = customerResolver.resolveByName(hospitalName)
+            Optional<Customer> resolvedCustomer = customerResolver.resolveByName(hospitalName);
+            boolean customerUnresolved = resolvedCustomer.isEmpty();
+            JsonNode compiledRules = resolvedCustomer
                     .map(customer -> pricingRuleCompiler.compileForCustomer(rulesJson, customer, hospitalName))
                     .orElseGet(() -> pricingRuleCompiler.compile(rulesJson, hospitalName));
             PricingEngine engine = new PricingEngine(compiledRules);
@@ -737,7 +743,6 @@ public class HospitalReconciliationServiceImpl implements HospitalReconciliation
             }
 
             // 5. 生成版本号（按医院 + 源文件独立递增）
-            String sourceFileName = ReconciliationVersionGroup.normalizeSourceFileName(sourceFile.getOriginalFilename());
             int versionNo = nextVersionNo(hospitalName, sourceFileName);
 
             // 6. 保存文件
@@ -768,6 +773,10 @@ public class HospitalReconciliationServiceImpl implements HospitalReconciliation
             job.setReviewStatus("pending");
             job.setOperatorName(operatorName);
             job.setSourceDateRange(dateRangeText);
+            if (customerUnresolved) {
+                job.setReviewComment("customerUnresolved: 未能解析到系统客户「"
+                        + hospitalName + "」，特色规则未生效，请确认医院名称或别名配置。");
+            }
 
             // 8. 保存任务后关联物流导入并计算物流费
             job.setRowsJson(JsonUtils.toJson(processedRows));
@@ -2262,6 +2271,7 @@ public class HospitalReconciliationServiceImpl implements HospitalReconciliation
         response.setUrgentBreakdown(parseMonthlyBreakdown(job.getUrgentBreakdown()));
         response.setDeductionBreakdown(parseMonthlyBreakdown(job.getDeductionBreakdown()));
         hospitalExportCapabilityService.enrichJobResponse(response, job.getHospitalName());
+        response.setCustomerUnresolved(customerResolver.resolveByName(job.getHospitalName()).isEmpty());
         return response;
     }
 

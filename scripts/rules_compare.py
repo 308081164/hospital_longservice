@@ -241,17 +241,25 @@ def run_rules_compare(
     customers_manifest: dict[str, Any] = manifest.get("customers") or {}
     client.login(force=True)
     api_customers = client.customers()
-    billing_enabled = {
+    api_by_code = {
         str(c.get("code") or "").strip().upper(): c
         for c in api_customers
-        if c.get("billingEnabled") or c.get("billing_enabled")
+        if c.get("code")
     }
+    manifest_enabled_count = sum(
+        1 for e in customers_manifest.values() if e.get("billingEnabled")
+    )
+    api_enabled_count = sum(
+        1
+        for c in api_by_code.values()
+        if c.get("billingEnabled") or c.get("billing_enabled")
+    )
 
     targets: list[str] = []
     if code:
         targets = [code.strip().upper()]
     elif compare_all:
-        targets = sorted(set(customers_manifest) & set(billing_enabled))
+        targets = sorted(customers_manifest.keys())
     else:
         raise ValueError("需要 --code 或 --all")
 
@@ -270,7 +278,7 @@ def run_rules_compare(
                 }
             )
             continue
-        customer = billing_enabled.get(target) or client.customer_by_code(target)
+        customer = api_by_code.get(target) or client.customer_by_code(target)
         if customer is None:
             results.append(
                 {
@@ -284,8 +292,11 @@ def run_rules_compare(
             )
             continue
         customer_id = int(customer.get("id") or customer.get("customerId") or 0)
-        prod_rules = client.product_rules(customer_id)
-        expected_rules = list(entry.get("productRules") or [])
+        expected_billing_enabled = entry.get("billingEnabled")
+        manifest_inactive = (entry.get("status") or "").strip().lower() == "inactive"
+        compare_rules = not manifest_inactive and bool(expected_billing_enabled)
+        prod_rules = client.product_rules(customer_id) if compare_rules else []
+        expected_rules = list(entry.get("productRules") or []) if compare_rules else []
         prod_mode = (
             customer.get("billingPricingMode")
             or customer.get("billing_pricing_mode")
@@ -298,6 +309,8 @@ def run_rules_compare(
         if prod_billing_enabled is None:
             prod_billing_enabled = customer.get("billing_enabled")
         expected_billing_enabled = entry.get("billingEnabled")
+        if expected_billing_enabled is None:
+            expected_billing_enabled = False
         results.append(
             compare_customer(
                 code=target,
@@ -313,6 +326,9 @@ def run_rules_compare(
         )
 
     ok = all(r.get("ok") for r in results)
+    billing_count_ok = manifest_enabled_count == api_enabled_count
+    if compare_all and not billing_count_ok:
+        ok = False
     summary = {
         "customers": len(results),
         "ok_count": sum(1 for r in results if r.get("ok")),
@@ -323,6 +339,9 @@ def run_rules_compare(
         "mode_drift_count": sum(1 for r in results if r.get("mode_drift")),
         "override_drift_count": sum(1 for r in results if r.get("override_drift")),
         "billing_enabled_drift_count": sum(1 for r in results if r.get("billing_enabled_drift")),
+        "manifest_billing_enabled_count": manifest_enabled_count,
+        "api_billing_enabled_count": api_enabled_count,
+        "billing_enabled_count_ok": billing_count_ok,
     }
     return {
         "command": "rules compare",
@@ -344,7 +363,9 @@ def format_human(report: dict[str, Any]) -> str:
         f"changed {report['summary']['total_changed']} · "
         f"mode_drift {report['summary'].get('mode_drift_count', 0)} · "
         f"override_drift {report['summary'].get('override_drift_count', 0)} · "
-        f"billing_enabled_drift {report['summary'].get('billing_enabled_drift_count', 0)}",
+        f"billing_enabled_drift {report['summary'].get('billing_enabled_drift_count', 0)} · "
+        f"enabled_count manifest={report['summary'].get('manifest_billing_enabled_count')} "
+        f"api={report['summary'].get('api_billing_enabled_count')}",
     ]
     for row in report.get("results") or []:
         code = row.get("code")

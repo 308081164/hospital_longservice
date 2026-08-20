@@ -99,10 +99,10 @@ public class PricingEngine {
             disabled.expectedUnitPrice = unitPrice;
             disabled.correctedTotalPrice = totalPrice;
             disabled.difference = 0.0;
-            disabled.status = forceConsistencyWarning ? "warning" : "unchanged";
+            disabled.status = "warning";
             disabled.pricingRule = "特色账单已关闭";
             disabled.notes = new ArrayList<>(notes);
-            disabled.notes.add("客户未启用特色账单，保留原始价格。");
+            disabled.notes.add("客户未解析或未启用特色账单，无法校验，保留原始价格。");
             disabled.billingNotes = consistencyBillingNotes;
             return disabled;
         }
@@ -205,6 +205,7 @@ public class PricingEngine {
         boolean foldSkipPackaging = false;
         Double foldUnitPriceOverride = null;
         Long foldMatchedRuleId = null;
+        String foldMatchedRuleName = null;
         if (preMatchedSpecialPrice == null && !isZsdInstrumentPack) {
             int countBeforeSpecialFold = effectiveCount;
             FoldApplyResult foldResult = applySpecialFoldRules(row, bagSize, effectiveCount, notes);
@@ -213,6 +214,7 @@ public class PricingEngine {
             foldSkipPackaging = foldResult.skipPackaging();
             foldUnitPriceOverride = foldResult.unitPriceOverride();
             foldMatchedRuleId = foldResult.ruleId();
+            foldMatchedRuleName = foldResult.ruleName();
         }
         if (foldUnitPriceOverride != null && !Double.isNaN(foldUnitPriceOverride)) {
             forceHighTempPerItem = foldUnitPriceOverride;
@@ -329,7 +331,7 @@ public class PricingEngine {
                 requiresReview = true;
             }
         } else {
-            if (hybrid) {
+            if (hybrid && !appliedSpecialFoldRule) {
                 notes.add("混合模式未命中特色规则，走标准灭菌计价。");
             }
             if (packCategoryResolution.note() != null) {
@@ -362,18 +364,22 @@ public class PricingEngine {
             case DRESSING_NONWOVEN -> {
                 if (packName.contains("驱血带")) {
                     Double measure = extractDressingPackMeasure(packageMaterial, packName);
-                    if (measure != null) {
-                        double dressPrice = computeDressingPackPrice(measure);
-                        if (dressPrice > 0) {
-                            expectedUnitPrice = dressPrice;
-                            pricingRule = "敷料包(无纺布包)驱血带——" + measure;
-                            notes.add("驱血带按无纺布敷料包规格 " + measure + " 计价，单价 "
-                                    + fmt(expectedUnitPrice) + " 元。");
-                        } else {
-                            pricingRule = "敷料包(无纺布包)驱血带——未匹配定价";
-                            notes.add("驱血带未能匹配无纺布敷料分档，保留原始价格。");
-                            requiresReview = true;
+                    double dressPrice = measure != null ? computeDressingPackPrice(measure) : 0;
+                    if (dressPrice <= 0 && measure != null) {
+                        Double materialMeasure = extractDressingPackMeasure(packageMaterial, "");
+                        if (materialMeasure != null) {
+                            double materialPrice = computeDressingPackPrice(materialMeasure);
+                            if (materialPrice > 0) {
+                                measure = materialMeasure;
+                                dressPrice = materialPrice;
+                            }
                         }
+                    }
+                    if (dressPrice > 0) {
+                        expectedUnitPrice = dressPrice;
+                        pricingRule = "敷料包(无纺布包)驱血带——" + measure;
+                        notes.add("驱血带按无纺布敷料包规格 " + measure + " 计价，单价 "
+                                + fmt(expectedUnitPrice) + " 元。");
                     } else if (isZeroImport(unitPrice, totalPrice)) {
                         double defaultPrice = defaultDressingPackPrice();
                         expectedUnitPrice = defaultPrice;
@@ -382,8 +388,12 @@ public class PricingEngine {
                                 + fmt(defaultPrice) + " 元。");
                         requiresReview = true;
                     } else {
-                        pricingRule = "敷料包(无纺布包)驱血带——未识别规格";
-                        notes.add("驱血带未能识别无纺布 W 码规格，保留原始价格。");
+                        pricingRule = measure != null
+                                ? "敷料包(无纺布包)驱血带——未匹配定价"
+                                : "敷料包(无纺布包)驱血带——未识别规格";
+                        notes.add(measure != null
+                                ? "驱血带未能匹配无纺布敷料分档，保留原始价格。"
+                                : "驱血带未能识别无纺布 W 码规格，保留原始价格。");
                         requiresReview = true;
                     }
                     skipPackaging = true;
@@ -488,11 +498,12 @@ public class PricingEngine {
             case UNKNOWN -> {
             pricingRule = "未识别包装类型，保留原价";
             notes.add("包装材料\"" + packageMaterial + "\"未能识别为纸塑袋或无纺布，已保留原始价格，请检查包装材料列填写是否正确，或手动调整单价。");
-            if (unitPrice == null || isZeroImport(unitPrice, totalPrice)) {
-                requiresReview = true;
+            requiresReview = true;
             }
             }
-            }
+        }
+        if (appliedSpecialFoldRule && foldMatchedRuleName != null && !foldMatchedRuleName.isBlank()) {
+            pricingRule = foldMatchedRuleName;
         }
 
         if (specialPrice == null && expectedUnitPrice != null) {
@@ -604,11 +615,12 @@ public class PricingEngine {
         } else if (anyPriceAccepted) {
             status = "unchanged";
             difference = 0.0;
-        } else if (requiresReview && unitPrice != null && expectedUnitPrice != null
-                && Math.abs(expectedUnitPrice - unitPrice) <= 0.001) {
-            // 保留原价且单价未变：special_only 未命中、未识别规格等不应误报 warning
-            status = "unchanged";
-            difference = 0.0;
+        } else if (requiresReview) {
+            status = "warning";
+            if (unitPrice != null && expectedUnitPrice != null
+                    && Math.abs(expectedUnitPrice - unitPrice) <= 0.001) {
+                difference = 0.0;
+            }
         } else if (difference != null && Math.abs(difference) > 0.001) {
             if (specialPrice == null && unitPrice != null && expectedUnitPrice != null
                     && Math.abs(expectedUnitPrice - unitPrice) <= DISPLAY_PRICE_TOLERANCE) {
@@ -720,6 +732,9 @@ public class PricingEngine {
         if (unitPrice != null) {
             billingNotes.put("billUnitPrice", unitPrice);
         }
+        if (anyPriceAccepted) {
+            billingNotes.put("verifiedByRule", false);
+        }
         if (anyPriceAccepted && specialPrice.matchedPriceOption != null) {
             billingNotes.put("matchedPrice", specialPrice.matchedPriceOption);
             billingNotes.put("matchedPriceOption", specialPrice.matchedPriceOption);
@@ -793,7 +808,7 @@ public class PricingEngine {
     private FoldApplyResult applyFoldRuleList(Map<String, Object> row, JsonNode foldRules, String combined, int bagSize,
                                               int effectiveCount, List<String> notes) {
         if (!foldRules.isArray()) {
-            return new FoldApplyResult(effectiveCount, false, false, null, null);
+            return new FoldApplyResult(effectiveCount, false, false, null, null, null);
         }
         BillingConditionEvaluator.RowContext ctx = new BillingConditionEvaluator.RowContext(
                 str(row, "type"),
@@ -808,8 +823,13 @@ public class PricingEngine {
                 null,
                 combined
         );
-        for (JsonNode rule : foldRules) {
-            if (!matchesRuleKeywords(combined, rule.path("keywords"))) continue;
+        List<JsonNode> sortedRules = new ArrayList<>();
+        foldRules.forEach(sortedRules::add);
+        sortedRules.sort(java.util.Comparator.comparingInt(r -> r.path("priority").asInt(100)));
+        for (JsonNode rule : sortedRules) {
+            if (!BillingConditionEvaluator.matchesKeywordsExactToken(str(row, "packName"), rule.path("keywords"))) {
+                continue;
+            }
             if (!BillingConditionEvaluator.matchesRule(rule, ctx)) continue;
             int threshold = rule.path("threshold").asInt(5);
             double foldRatio = rule.path("foldRatio").asDouble(5.0);
@@ -824,13 +844,13 @@ public class PricingEngine {
                 unitPriceOverride = null;
             }
             Long ruleId = rule.has("ruleId") ? rule.path("ruleId").asLong() : null;
-            return new FoldApplyResult(result, skipPackaging, true, unitPriceOverride, ruleId);
+            return new FoldApplyResult(result, skipPackaging, true, unitPriceOverride, ruleId, name);
         }
-        return new FoldApplyResult(effectiveCount, false, false, null, null);
+        return new FoldApplyResult(effectiveCount, false, false, null, null, null);
     }
 
     private record FoldApplyResult(int effectiveCount, boolean skipPackaging, boolean matched,
-                                   Double unitPriceOverride, Long ruleId) {}
+                                   Double unitPriceOverride, Long ruleId, String ruleName) {}
 
     private SpecialPriceResult findSpecialFixedPrice(
             Map<String, Object> row, int bagSize, int effectiveCount,
@@ -1792,17 +1812,25 @@ public class PricingEngine {
     //  敷料包
     // ================================================================
 
+    /** 无纺布敷料 W 码规格前缀（最长优先），如 W5050→50、W15050→150。 */
+    private static final int[] DRESSING_W_SIZE_PREFIXES = {150, 120, 90, 70, 60, 50};
+
     private Double extractDressingPackMeasure(String material, String packName) {
         String combined = (material == null ? "" : material) + " " + (packName == null ? "" : packName);
-        java.util.regex.Matcher wCode = java.util.regex.Pattern
-                .compile("[/＿_]?W\\s*(\\d{2,3})", java.util.regex.Pattern.CASE_INSENSITIVE)
+        java.util.regex.Matcher wMarker = java.util.regex.Pattern
+                .compile("[/＿_]?W\\s*(\\d+)", java.util.regex.Pattern.CASE_INSENSITIVE)
                 .matcher(combined);
-        if (wCode.find()) {
-            double w = Double.parseDouble(wCode.group(1));
-            if (w >= 120) {
-                return w / 100.0;
+        if (wMarker.find()) {
+            String digits = wMarker.group(1);
+            for (int prefix : DRESSING_W_SIZE_PREFIXES) {
+                String prefixStr = String.valueOf(prefix);
+                if (digits.startsWith(prefixStr)) {
+                    if (prefix >= 120) {
+                        return prefix / 100.0;
+                    }
+                    return (double) prefix;
+                }
             }
-            return w;
         }
         java.util.regex.Matcher m = java.util.regex.Pattern.compile("(\\d+(?:\\.\\d+)?)\\s*[×x*]\\s*\\d+")
                 .matcher(material == null ? "" : material);
@@ -1973,57 +2001,21 @@ public class PricingEngine {
     }
 
     private boolean matchesKeywordsBoundary(String text, JsonNode keywords) {
-        if (!keywords.isArray()) return false;
-        String normalized = text.replaceAll("\\s+", "").toLowerCase();
-        for (JsonNode kw : keywords) {
-            String raw = kw.asText().replaceAll("\\s+", "").toLowerCase();
-            if (raw.isEmpty()) continue;
-            for (String k : raw.split("[，,]")) {
-                if (k.isEmpty()) continue;
-                int idx = 0;
-                while ((idx = normalized.indexOf(k, idx)) != -1) {
-                    char prevChar = idx > 0 ? normalized.charAt(idx - 1) : 0;
-                    char nextChar = idx + k.length() < normalized.length() ? normalized.charAt(idx + k.length()) : 0;
-                    boolean leftBoundary = prevChar == 0 || !isCJK(prevChar);
-                    boolean rightBoundary = nextChar == 0 || !isCJK(nextChar);
-                    if (rightBoundary) return true;
-                    idx += k.length();
-                }
-            }
-        }
-        return false;
+        return BillingConditionEvaluator.matchesKeywordsExactToken(text, keywords);
     }
 
-    /** 查找包名中匹配的小件关键词及其位置，用于区分大件/小件混合包 */
+    /** 查找包名中精准匹配的小件关键词及其位置，用于区分大件/小件混合包 */
     private SmallItemSplit findSmallItemSplit(String text, JsonNode keywords) {
-        if (!keywords.isArray()) return null;
-        String compact = text.replaceAll("\\s+", "");
-        String compactLower = compact.toLowerCase();
-        for (JsonNode kw : keywords) {
-            String raw = kw.asText().replaceAll("\\s+", "").toLowerCase();
-            if (raw.isEmpty()) continue;
-            for (String k : raw.split("[，,]")) {
-                if (k.isEmpty()) continue;
-                int idx = 0;
-                while ((idx = compactLower.indexOf(k, idx)) != -1) {
-                    char nextChar = idx + k.length() < compact.length() ? compact.charAt(idx + k.length()) : 0;
-                    boolean rightBoundary = nextChar == 0 || !isCJK(nextChar);
-                    if (rightBoundary) {
-                        SmallItemSplit split = new SmallItemSplit();
-                        split.keyword = compact.substring(idx, idx + k.length());
-                        split.position = idx;
-                        split.compactText = compact;
-                        return split;
-                    }
-                    idx += k.length();
-                }
-            }
+        BillingConditionEvaluator.ExactTokenKeywordMatch match =
+                BillingConditionEvaluator.findLongestExactTokenKeyword(text, keywords);
+        if (match == null) {
+            return null;
         }
-        return null;
-    }
-
-    private boolean isCJK(char ch) {
-        return (ch >= 0x4e00 && ch <= 0x9fff) || (ch >= 0x3400 && ch <= 0x4dbf);
+        SmallItemSplit split = new SmallItemSplit();
+        split.keyword = match.keyword();
+        split.position = match.position();
+        split.compactText = match.compactText();
+        return split;
     }
 
     private Double computeForceHighTempUnitPrice(double forceHighTempPerItem, int effectiveCount) {

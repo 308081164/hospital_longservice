@@ -69,7 +69,7 @@ public final class DefaultPricingTemplate {
                 "threshold", 5,
                 "foldRatio", 5,
                 "keywords", List.of("针", "小件", "探针", "穿刺针", "缝合针", "车针", "拔髓针",
-                        "成型片", "根管针", "根管锉", "洁牙机尖", "球钻", "挖勺", "手术针", "卷棉子")
+                        "成型片", "根管针", "根管锉", "支抗钉", "洁牙机尖", "球钻", "挖勺", "手术针", "卷棉子")
         ));
         rules.put("cleaning", Map.of(
                 "removeFirstRow", false,
@@ -134,10 +134,38 @@ public final class DefaultPricingTemplate {
                                 "skipHospitalDiscount", true
                         )
                 ),
-                "foldRules", List.of(),
+                "foldRules", genericSmallItemFoldRules(),
                 "extraFees", List.of()
         ));
         return rules;
+    }
+
+    /** 特殊收费 Excel「通用特殊收费」8 项 5合1 FOLD（SC11-T04/T05）。 */
+    private static List<String> genericSmallItemFoldKeywords() {
+        return List.of("克氏针", "银质针", "内热针", "车针", "拔髓针", "扩大针", "根扩针", "卷棉子");
+    }
+
+    private static List<Map<String, Object>> genericSmallItemFoldRules() {
+        List<String> keywords = genericSmallItemFoldKeywords();
+        Map<String, Object> withBag = new LinkedHashMap<>();
+        withBag.put("name", "通用小件5合1含包材");
+        withBag.put("priority", 50);
+        withBag.put("keywords", keywords);
+        withBag.put("threshold", 5);
+        withBag.put("foldRatio", 5);
+        withBag.put("maxInstrumentCount", 10);
+        withBag.put("skipPackaging", false);
+
+        Map<String, Object> noBag = new LinkedHashMap<>();
+        noBag.put("name", "通用小件5合1免包材");
+        noBag.put("priority", 51);
+        noBag.put("keywords", keywords);
+        noBag.put("threshold", 5);
+        noBag.put("foldRatio", 5);
+        noBag.put("minInstrumentCount", 11);
+        noBag.put("skipPackaging", true);
+
+        return List.of(withBag, noBag);
     }
 
     private static Map<String, Object> bag(int size, double price, String... keywords) {

@@ -90,6 +90,32 @@ public final class PricingEngineTestSupport {
         return new PricingEngine(compileForCustomerCode(customerCode));
     }
 
+    public static ObjectNode defaultRules() {
+        return (ObjectNode) MAPPER.valueToTree(DefaultPricingTemplate.buildRulesMap());
+    }
+
+    public static Map<String, Object> row(
+            String hospitalName,
+            String type,
+            String packName,
+            String packageMaterial,
+            int instrumentCount,
+            int packCount,
+            double unitPrice,
+            double totalPrice) {
+        Map<String, Object> row = new HashMap<>();
+        row.put("hospitalName", hospitalName);
+        row.put("department", "手术室");
+        row.put("type", type);
+        row.put("packName", packName);
+        row.put("packageMaterial", packageMaterial);
+        row.put("instrumentCount", instrumentCount);
+        row.put("packCount", packCount);
+        row.put("unitPrice", unitPrice);
+        row.put("totalPrice", totalPrice);
+        return row;
+    }
+
     public static Map<String, Object> rowFromFixture(JsonNode fixture) {
         JsonNode row = fixture.path("row");
         String hospitalName = fixture.path("hospitalName").asText("");

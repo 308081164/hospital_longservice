@@ -14,8 +14,32 @@ from typing import Any
 ROOT = Path(__file__).resolve().parents[1]
 SEED_DIR = ROOT / "backend/src/main/resources/billing-seeds"
 BACKEND_MANIFEST = SEED_DIR / "billing-rules-manifest.json"
-TEST_MANIFEST = ROOT / "测试用例/billing_rules_manifest.json"
+TEST_MANIFEST = ROOT / "backend/src/test/resources/billing-rules-manifest.json"
+LEGACY_TEST_MANIFEST = ROOT / "测试用例/billing_rules_manifest.json"
 SKIP_FILES = {"billing-rules-manifest.json"}
+
+# ExtraCustomerDeactivationRunner.INACTIVE_EXTRA_CODES
+INACTIVE_EXTRA_CODES = [
+    "HRB-XK",
+    "NEAU-YY",
+    "HRB-SD-MB",
+    "HRB-AM",
+    "HRB-ASM",
+    "HRB-BY",
+    "HRB-CY",
+    "HRB-BNXS",
+    "HRB-CJ",
+    "WCSRMYY",
+    "YMYXZX",
+    "HY-HYY",
+    "ZYY-DSFY",
+    "HL-ZGH",
+    "HLFB-SF",
+    "HRB-DLFB",
+    "HRB-HTFH",
+    "HRB-MHM",
+    "ZXYSJT",
+]
 
 
 def _text(node: dict[str, Any], key: str, default: str | None = None) -> str | None:
@@ -145,6 +169,22 @@ def _apply_customer_update(customers: dict[str, dict[str, Any]], patch: dict[str
         entry["status"] = patch["setStatus"]
 
 
+def _apply_enable_billing(
+    customers: dict[str, dict[str, Any]],
+    enable_codes: list[str],
+    *,
+    disable_all_others: bool,
+) -> None:
+    enable_set = {code.strip().upper() for code in enable_codes if code}
+    for code in enable_set:
+        entry = customers.setdefault(code, {"code": code, "productRules": {}})
+        entry["billingEnabled"] = True
+    if disable_all_others:
+        for code, entry in customers.items():
+            if code not in enable_set:
+                entry["billingEnabled"] = False
+
+
 def build_manifest() -> dict[str, Any]:
     customers: dict[str, dict[str, Any]] = {}
     deactivated: set[tuple[str, str]] = set()
@@ -167,11 +207,22 @@ def build_manifest() -> dict[str, Any]:
                     entry["billingPricingMode"] = profile["billingPricingMode"]
             if "standardPricingOverride" in profile:
                 entry["standardPricingOverride"] = profile["standardPricingOverride"]
+            if profile.get("billingEnabled") is not None:
+                entry["billingEnabled"] = bool(profile["billingEnabled"])
             rules: dict[str, dict[str, Any]] = entry.setdefault("productRules", {})
             _merge_profile_rules(rules, profile_rules, code=code, deactivated=deactivated)
 
         for patch in data.get("customerUpdates") or []:
             _apply_customer_update(customers, patch)
+
+        enable_billing = data.get("enableBilling")
+        if enable_billing:
+            codes = [str(c) for c in enable_billing]
+            _apply_enable_billing(
+                customers,
+                codes,
+                disable_all_others=bool(data.get("disableAllOthers", False)),
+            )
 
         for patch in data.get("ruleUpdates") or []:
             code = _text(patch, "code")
@@ -217,30 +268,44 @@ def build_manifest() -> dict[str, Any]:
             if rule_name in rules:
                 rules[rule_name]["isActive"] = True
 
+    for code in INACTIVE_EXTRA_CODES:
+        if code in customers:
+            customers[code]["status"] = "inactive"
+
     manifest_customers: dict[str, Any] = {}
     for code in sorted(customers):
         entry = customers[code]
         rules_map: dict[str, dict[str, Any]] = entry.get("productRules") or {}
         rules_list = [rules_map[name] for name in sorted(rules_map)]
         active_count = sum(1 for r in rules_list if r.get("isActive", True))
+        billing_enabled = bool(entry.get("billingEnabled", False))
+        status = entry.get("status")
         manifest_customers[code] = {
             "code": code,
             "name": entry.get("name", code),
-            "status": entry.get("status"),
+            "status": status,
             "billingPricingMode": entry.get("billingPricingMode"),
             "standardPricingOverride": entry.get("standardPricingOverride"),
-            "billingEnabled": entry.get("billingEnabled"),
+            "billingEnabled": billing_enabled,
             "productRules": rules_list,
             "rule_count": len(rules_list),
             "active_rule_count": active_count,
         }
 
+    enabled_count = sum(1 for c in manifest_customers.values() if c.get("billingEnabled"))
+    active_enabled_count = sum(
+        1
+        for c in manifest_customers.values()
+        if c.get("billingEnabled") and c.get("status") != "inactive"
+    )
     canonical = json.dumps(manifest_customers, ensure_ascii=False, sort_keys=True, separators=(",", ":"))
     manifest_hash = hashlib.sha256(canonical.encode("utf-8")).hexdigest()
     return {
         "version": 1,
         "generated_at": datetime.now(timezone.utc).isoformat(),
         "manifest_hash": manifest_hash,
+        "billing_enabled_count": enabled_count,
+        "active_billing_enabled_count": active_enabled_count,
         "customers": manifest_customers,
     }
 
@@ -260,7 +325,7 @@ def main() -> int:
             return 1
         print(
             f"{code}: rules={entry['rule_count']} active={entry['active_rule_count']} "
-            f"mode={entry.get('billingPricingMode')}"
+            f"mode={entry.get('billingPricingMode')} billingEnabled={entry.get('billingEnabled')}"
         )
         return 0
 
@@ -268,9 +333,16 @@ def main() -> int:
         payload = json.dumps(manifest, ensure_ascii=False, indent=2) + "\n"
         BACKEND_MANIFEST.write_text(payload, encoding="utf-8")
         TEST_MANIFEST.write_text(payload, encoding="utf-8")
+        LEGACY_TEST_MANIFEST.write_text(payload, encoding="utf-8")
         print(f"wrote {BACKEND_MANIFEST}")
         print(f"wrote {TEST_MANIFEST}")
-        print(f"customers={len(manifest['customers'])} hash={manifest['manifest_hash'][:16]}...")
+        print(f"wrote {LEGACY_TEST_MANIFEST}")
+        print(
+            f"customers={len(manifest['customers'])} "
+            f"billing_enabled={manifest['billing_enabled_count']} "
+            f"active_billing_enabled={manifest['active_billing_enabled_count']} "
+            f"hash={manifest['manifest_hash'][:16]}..."
+        )
         return 0
 
     print(json.dumps(manifest, ensure_ascii=False, indent=2))

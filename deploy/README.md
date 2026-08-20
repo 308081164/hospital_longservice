@@ -19,15 +19,16 @@
 
 | 工作流 | 作用 |
 |--------|------|
-| **Build and Deploy** | 构建镜像 → SCP 配置与 `deploy/` 脚本 → 拉镜像 → 启 mysql → **P0.6 SQL** → backend → 健康检查 → frontend → **reapply + 校验** |
-| **Apply Billing P0.6 on Production** | 仅同步 billing 脚本 + 执行 `reapply-billing-p0-6-on-server.sh`（可手动 dispatch） |
+| **Build and Deploy** | 构建镜像 → SCP 配置与 `deploy/` 脚本 → 拉镜像 → 启 mysql → backend → 健康检查 → frontend → **manifest reconcile + 校验** |
+| **Apply Billing P0.6 on Production** | 兼容旧名；实际执行 `reapply-billing-manifest-on-server.sh` |
 
 ### 2.1 部署后必须通过的校验
 
 脚本 `deploy/verify-billing-on-server.sh` + `deploy/verify-billing-api-on-server.sh`：
 
-- MySQL（与 backend **同一连库目标**）：`billing_enabled=1` 为 **24**，P0.6 marker `billing_seed_batch_p0_6_v1` 存在。
-- API：`GET /api/v1/customers` 统计 `billing_enabled=1` 为 **24**，且 **与 MySQL 计数一致**（UI 客户管理读此接口）。
+- MySQL（与 backend **同一连库目标**）：`billing_enabled=1` 与 `backend/src/main/resources/billing-seeds/billing-rules-manifest.json` 中 `billing_enabled_count` 一致。
+- manifest reconcile marker `billing_rules_manifest_hash` 应与 manifest 的 `manifest_hash` 一致。
+- API：`GET /api/v1/customers` 统计 `billing_enabled=1` 与 manifest 一致，且 **与 MySQL 计数一致**（UI 客户管理读此接口）。
 
 ### 2.2 GitHub Actions 重跑失败 job 的注意点
 
@@ -38,24 +39,50 @@
 
 ---
 
-## 3. P0.6 特色账单开关（24 院）
+## 3. 特色账单启用态（manifest 驱动）
+
+`billingEnabled` / `status` 由 backend 启动时的 `BillingRulesManifestReconciler` 从 manifest 同步，不再依赖 P0.6 硬编码 24 院 SQL。
 
 | 文件 | 说明 |
 |------|------|
-| `deploy/sql/p0-6-billing-toggle.sql` | 幂等 SQL：24 院 `billing_enabled=1`，其余 `0`，写入 marker |
-| `deploy/mysql-hospital-cli.sh` | 按 **运行中 backend 的 MYSQL_* ** 或 `.env` 执行 SQL/查询（避免 docker exec 打错库） |
-| `deploy/apply-p0-6-billing-sql.sh` | 仅导入 P0.6 SQL 并检查 24 |
-| `deploy/reapply-billing-p0-6-on-server.sh` | 导入 SQL → 重启 backend → MySQL + API 校验 |
-| `deploy/verify-billing-on-server.sh` | MySQL 统计 + 调用 API 校验 |
+| `backend/src/main/resources/billing-seeds/billing-rules-manifest.json` | 由 `scripts/billing_rules_manifest.py --write` 从全部 billing-seeds 合并生成 |
+| `deploy/reapply-billing-manifest-on-server.sh` | 重启 backend → 触发 reconcile → MySQL + API 校验 |
+| `deploy/reapply-billing-p0-6-on-server.sh` | **已废弃**，转调 manifest 脚本 |
+| `deploy/sql/p0-6-billing-toggle.sql` | **已废弃**（no-op），保留仅为兼容 |
+| `deploy/mysql-hospital-cli.sh` | 按 **运行中 backend 的 MYSQL_* ** 或 `.env` 执行 SQL/查询 |
+| `deploy/verify-billing-on-server.sh` | 从 manifest 读期望启用数 + MySQL/API 校验 |
+| `scripts/verify_billing_enabled_parity.py` | 本地/CI：manifest 与 API 逐院 billingEnabled 对比 |
+| `deploy/verify-guoyao2-pointer-rules-on-server.sh` | 生产：GUOYAO-2 指针 FOLD 规则 active + spot 13.5 |
+| `deploy/verify-guoyao2-generic-fold-on-server.sh` | 生产：模板通用小件5合1 FOLD + 克氏针-12 spot 16.5 |
 
-**手动在服务器执行**（需已 SCP 或 git pull 同步 `deploy/`）：
+**电机厂指针 prod 验收**（部署含 PricingEngine FOLD 修复后）：
 
 ```bash
 cd /mnt/newdisk/app/Hospital
-bash deploy/reapply-billing-p0-6-on-server.sh
+bash deploy/reapply-billing-manifest-on-server.sh
+bash deploy/verify-guoyao2-pointer-rules-on-server.sh
 ```
 
-P0.6 **只改客户开关**，**不会**同步全部 `customer_product_rule`；规则与本地一致需另走 [FULL-BILLING-SEED.md](./FULL-BILLING-SEED.md) / `sync-billing-to-prod.sh`。
+对账 Job 需重新上传或触发重算后，`指针-10/z7537` 规则单价应为 **13.5**，规则摘要为 **电机厂指针5合1含包材**。
+
+**电机厂克氏针（通用 FOLD）prod 验收**（部署含模板 foldRules 后）：
+
+```bash
+cd /mnt/newdisk/app/Hospital
+# 重启 backend 以应用 billing seed phase-global-generic-fold-20260820
+bash deploy/verify-guoyao2-generic-fold-on-server.sh
+```
+
+对账 Job 重算后，`克氏针-12/Z7530` 应为 **16.5**（非 66），规则摘要为 **通用小件5合1免包材**。
+
+**手动在服务器执行**（需已 SCP 或 git pull 同步 `backend/` + `deploy/`）：
+
+```bash
+cd /mnt/newdisk/app/Hospital
+bash deploy/reapply-billing-manifest-on-server.sh
+```
+
+manifest 同时携带 **productRules 期望态**；backend 启动时会 upsert 规则。更新 seeds 后请本地运行 `python3 scripts/billing_rules_manifest.py --write` 再部署。
 
 ---
 

@@ -150,6 +150,192 @@ class BillRowFieldConsistencyValidatorTest {
     }
 
     @Test
+    void compactCompoundPackNamePenBowlMatchesTotalInstrumentCount() {
+        List<BillRowFieldConsistencyValidator.Violation> violations =
+                BillRowFieldConsistencyValidator.validate(
+                        "额外包(无纺布)",
+                        "盆1碗1/W9050",
+                        "无纺布-90×90-50g",
+                        8,
+                        4);
+
+        assertThat(violations).isEmpty();
+    }
+
+    @Test
+    void compactCompoundPackNameMultiItemMatchesTotalInstrumentCount() {
+        List<BillRowFieldConsistencyValidator.Violation> violations =
+                BillRowFieldConsistencyValidator.validate(
+                        "额外包(无纺布)",
+                        "盆1碗2盘2杯1/W9050",
+                        "无纺布-90×90-50g",
+                        6,
+                        1);
+
+        assertThat(violations).isEmpty();
+    }
+
+    @Test
+    void boxContainerPackNameMatchesInstrumentCount() {
+        List<BillRowFieldConsistencyValidator.Violation> violations =
+                BillRowFieldConsistencyValidator.validate(
+                        "额外包(纸塑袋)",
+                        "机扩针-6盒1/z1526",
+                        "高温纸塑袋75*200",
+                        7,
+                        1);
+
+        assertThat(violations).isEmpty();
+    }
+
+    @Test
+    void parenthesisBasketPackNameMatchesInstrumentCount() {
+        List<BillRowFieldConsistencyValidator.Violation> violations =
+                BillRowFieldConsistencyValidator.validate(
+                        "额外包(纸塑袋)",
+                        "外科器械包-9（筐1）/w7050",
+                        "高温纸塑袋75*200",
+                        10,
+                        1);
+
+        assertThat(violations).isEmpty();
+    }
+
+    @Test
+    void needleRackPackNameSkipsInstrumentCountCheck() {
+        List<BillRowFieldConsistencyValidator.Violation> violations =
+                BillRowFieldConsistencyValidator.validate(
+                        "额外包(纸塑袋)",
+                        "车针架1针4/Z1026",
+                        "高温纸塑袋75*200",
+                        1,
+                        1);
+
+        assertThat(violations).extracting(BillRowFieldConsistencyValidator.Violation::code)
+                .doesNotContain(BillRowFieldConsistencyValidator.CODE_INSTRUMENT_COUNT_MISMATCH);
+    }
+
+    @Test
+    void zeroInstrumentDressingRowSkipsInstrumentCountCheck() {
+        List<BillRowFieldConsistencyValidator.Violation> violations =
+                BillRowFieldConsistencyValidator.validate(
+                        "敷料包(纸塑袋)",
+                        "弯盘-1/z2032",
+                        "高温纸塑袋75*200",
+                        0,
+                        1);
+
+        assertThat(violations).extracting(BillRowFieldConsistencyValidator.Violation::code)
+                .doesNotContain(BillRowFieldConsistencyValidator.CODE_INSTRUMENT_COUNT_MISMATCH);
+    }
+
+    @Test
+    void phoneModelPackNameSkipsInstrumentCountCheck() {
+        List<BillRowFieldConsistencyValidator.Violation> violations =
+                BillRowFieldConsistencyValidator.validate(
+                        "额外包(纸塑袋)",
+                        "手机721001/z7526",
+                        "高温纸塑袋75*200",
+                        1,
+                        1);
+
+        assertThat(violations).extracting(BillRowFieldConsistencyValidator.Violation::code)
+                .doesNotContain(BillRowFieldConsistencyValidator.CODE_INSTRUMENT_COUNT_MISMATCH);
+    }
+
+    @Test
+    void standalonePieceCountPackNameMatchesInstrumentCount() {
+        List<BillRowFieldConsistencyValidator.Violation> violations =
+                BillRowFieldConsistencyValidator.validate(
+                        "额外包(纸塑袋)",
+                        "宫腔镜包26件",
+                        "高温纸塑袋75*200",
+                        26,
+                        1);
+
+        assertThat(violations).isEmpty();
+    }
+
+    @Test
+    void parenBoxPieceTotalMatchesInstrumentCount() {
+        List<BillRowFieldConsistencyValidator.Violation> violations =
+                BillRowFieldConsistencyValidator.validate(
+                        "额外包(纸塑袋)",
+                        "史赛克摆锯骨动力-4（带盒5件）",
+                        "高温纸塑袋75*200",
+                        5,
+                        1);
+
+        assertThat(violations).isEmpty();
+    }
+
+    @Test
+    void implicitSinglePieceOrderCodeMatchesPackCount() {
+        List<BillRowFieldConsistencyValidator.Violation> violations =
+                BillRowFieldConsistencyValidator.validate(
+                        "额外包(纸塑袋)",
+                        "持针器/z1029",
+                        "高温纸塑袋75*200",
+                        6,
+                        6);
+
+        assertThat(violations).isEmpty();
+    }
+
+    @Test
+    void implicitSinglePieceOrderCodeWrongInstrumentCountReportsViolation() {
+        List<BillRowFieldConsistencyValidator.Violation> violations =
+                BillRowFieldConsistencyValidator.validate(
+                        "额外包(纸塑袋)",
+                        "持针器/z1029",
+                        "高温纸塑袋75*200",
+                        5,
+                        6);
+
+        assertThat(violations).extracting(BillRowFieldConsistencyValidator.Violation::code)
+                .containsExactly(BillRowFieldConsistencyValidator.CODE_INSTRUMENT_COUNT_MISMATCH);
+    }
+
+    @Test
+    void customerReviewCompactPlateBowlCupMatchesInstrumentCount() {
+        List<BillRowFieldConsistencyValidator.Violation> violations =
+                BillRowFieldConsistencyValidator.validate(
+                        "额外包(无纺布)",
+                        "盘1碗1杯1/w6050",
+                        "无纺布-90×90-50g",
+                        6,
+                        2);
+
+        assertThat(violations).isEmpty();
+    }
+
+    @Test
+    void customerReviewGluedOrderCodeMatchesInstrumentCount() {
+        List<BillRowFieldConsistencyValidator.Violation> violations =
+                BillRowFieldConsistencyValidator.validate(
+                        "额外包(纸塑袋)",
+                        "钩镊-1z7526",
+                        "高温纸塑袋75*200",
+                        8,
+                        8);
+
+        assertThat(violations).isEmpty();
+    }
+
+    @Test
+    void customerReviewLensSpacedBoxDoesNotAddExtraPiece() {
+        List<BillRowFieldConsistencyValidator.Violation> violations =
+                BillRowFieldConsistencyValidator.validate(
+                        "额外包(纸塑袋)",
+                        "激光镜-4件 盒1",
+                        "高温纸塑袋75*200",
+                        4,
+                        1);
+
+        assertThat(violations).isEmpty();
+    }
+
+    @Test
     void toBillingNotesBuildsStructuredPayload() {
         List<BillRowFieldConsistencyValidator.Violation> violations =
                 BillRowFieldConsistencyValidator.validate(

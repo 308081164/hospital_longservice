@@ -621,6 +621,9 @@ public class PricingRuleCompiler {
             node.put("ruleId", rule.getId());
         }
         node.put("name", rule.getName());
+        if (rule.getPriority() != null) {
+            node.put("priority", rule.getPriority());
+        }
         node.set("hospitals", MAPPER.valueToTree(hospitalNames));
         appendJsonArray(node, "keywords", rule.getKeywords());
         if (rule.getMaxBagSizeExclusive() != null) {

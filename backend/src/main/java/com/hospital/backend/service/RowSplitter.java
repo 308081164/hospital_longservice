@@ -109,6 +109,9 @@ public final class RowSplitter {
                     null,
                     combined
             );
+            if (!BillingConditionEvaluator.matchesKeywordsExactToken(str(row, "packName"), rule.path("keywords"))) {
+                continue;
+            }
             if (BillingConditionEvaluator.matchesRule(rule, ctx)) {
                 return rule;
             }

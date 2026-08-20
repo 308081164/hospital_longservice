@@ -646,7 +646,7 @@
                 <div class="min-w-0 flex-1">
                   <div class="flex flex-wrap items-center gap-2">
                     <span class="truncate text-sm font-semibold text-gray-800">{{
-                      group.hospitalName
+                      displayHospitalNameForJob(group.hospitalName, group.sourceFileName)
                     }}</span>
                     <ElTag
                       :type="reviewTagType(group.item.reviewStatus)"
@@ -995,7 +995,9 @@
         <div class="grid grid-cols-2 gap-4 rounded-lg bg-gray-50 p-4 text-sm md:grid-cols-4 flex-1">
           <div>
             <span class="text-gray-500">医院：</span>
-            <span class="font-medium">{{ detailData.hospitalName }}</span>
+            <span class="font-medium">{{
+              displayHospitalNameForJob(detailData.hospitalName, detailData.sourceFileName)
+            }}</span>
           </div>
           <div>
             <span class="text-gray-500">版本：</span>
@@ -1335,7 +1337,7 @@
           <div class="flex items-center justify-between">
             <span class="text-gray-500">任务：</span>
             <span class="font-medium"
-              >{{ reviewTarget.hospitalName }} · {{ formatDateTime(reviewTarget.createdAt) }}</span
+              >{{ displayHospitalNameForJob(reviewTarget.hospitalName, reviewTarget.sourceFileName) }} · {{ formatDateTime(reviewTarget.createdAt) }}</span
             >
           </div>
           <div class="mt-1 flex items-center justify-between">
@@ -1474,6 +1476,7 @@
 
 <script lang="ts">
   import * as XLSX from 'xlsx'
+  import { isLikelyHospitalName } from '@/utils/reconciliationHospitalName'
 
   type SheetTemplateMeta = {
     sheetName: string
@@ -1701,20 +1704,11 @@
     const titleText =
       findRowText(matrix.slice(0, headerRowIndex), '发货单汇总表') || '发货单汇总表-显示包装材料'
     const dateRangeText = findDateRangeText(matrix.slice(0, headerRowIndex))
+    const headerArea = matrix.slice(0, headerRowIndex)
     const hospitalDisplayName =
-      findRowText(
-        matrix.slice(headerRowIndex, Math.min(matrix.length, headerRowIndex + 4)),
-        '诊所'
-      ) ||
-      findRowText(
-        matrix.slice(headerRowIndex, Math.min(matrix.length, headerRowIndex + 4)),
-        '医院'
-      ) ||
-      findRowText(
-        matrix.slice(headerRowIndex, Math.min(matrix.length, headerRowIndex + 4)),
-        '门诊'
-      ) ||
-      sheetName
+      ['医院', '诊所']
+        .map((keyword) => findRowText(headerArea, keyword))
+        .find((text) => text && isLikelyHospitalName(text)) || ''
     return { sheetName, titleText, dateRangeText, hospitalDisplayName }
   }
 
@@ -1947,7 +1941,12 @@
   }
 
   function resolveSettlementHospitalName(sheetMetas: SheetTemplateMeta[]): string {
-    return sheetMetas.map((item) => item.hospitalDisplayName.trim()).find(Boolean) || ''
+    return (
+      sheetMetas
+        .map((item) => item.hospitalDisplayName.trim())
+        .filter((name) => name && isLikelyHospitalName(name))
+        .find(Boolean) || ''
+    )
   }
 
   function normalizeMatchText(value: string): string {
@@ -2215,6 +2214,11 @@
   } from '@/api/billing-config/logisticsApi'
   import { quickOnboardProduct } from '@/api/master-data/productsApi'
   import { buildReconciliationVersionGroupKey, compareReconciliationGroupsByLatestActivity } from '@/utils/reconciliationVersionGroup'
+  import {
+    displayHospitalNameForJob,
+    inferHospitalNameFromFileName,
+    resolveReconciliationHospitalName
+  } from '@/utils/reconciliationHospitalName'
   import HorizontalScrollPanel from '@/components/business/reconciliation/HorizontalScrollPanel.vue'
   import ReconciliationBillingDetail from '@/components/business/reconciliation/ReconciliationBillingDetail.vue'
   import FieldConsistencyHighlight from '@/components/business/reconciliation/FieldConsistencyHighlight.vue'
@@ -2449,6 +2453,9 @@
     return historyGroups.value.filter((group) => {
       if (normalizedKeyword) {
         const keywordMatched =
+          displayHospitalNameForJob(group.hospitalName, group.sourceFileName)
+            .toLowerCase()
+            .includes(normalizedKeyword) ||
           group.hospitalName.toLowerCase().includes(normalizedKeyword) ||
           group.sourceFileName.toLowerCase().includes(normalizedKeyword) ||
           group.versions.some((version) =>
@@ -2740,7 +2747,8 @@
       processedRows: [],
       status: 'pending',
       errorMessage: '',
-      hospitalName: file.name.replace(/\.[^.]+$/, '').replace(/^\d{4}[\s_-]?/, ''),
+      hospitalName: inferHospitalNameFromFileName(file.name) ||
+        file.name.replace(/\.[^.]+$/, '').replace(/^\d{4}[\s_-]?/, ''),
       rule: null,
       savedJobId: null,
       processingProgress: 0,
@@ -2766,7 +2774,11 @@
   async function resolveEntryRule(entry: UploadEntry) {
     // 收集所有可能用于匹配的关键词
     const keywords: string[] = []
-    if (entry.hospitalName) keywords.push(entry.hospitalName)
+    const fileNameHospital = inferHospitalNameFromFileName(entry.file.name)
+    if (fileNameHospital) keywords.push(fileNameHospital)
+    if (entry.hospitalName && !keywords.includes(entry.hospitalName)) {
+      keywords.push(entry.hospitalName)
+    }
     // 同时尝试从文件名提取的原始名称（reparseEntry 中可能被 Excel 内容覆盖）
     const fileNameBase = entry.file.name.replace(/\.[^.]+$/, '').replace(/^\d{4}[\s_-]?/, '')
     if (fileNameBase && !keywords.includes(fileNameBase)) {
@@ -2806,7 +2818,14 @@
     try {
       const workbook = await readHospitalWorkbook(entry.file, effectiveRules.value)
       entry.workbook = workbook
-      entry.hospitalName = resolveSettlementHospitalName(workbook.sheetMetas) || entry.hospitalName
+      entry.hospitalName =
+        resolveReconciliationHospitalName({
+          fileName: entry.file.name,
+          currentName: entry.hospitalName,
+          sheetHospitalDisplayNames: workbook.sheetMetas.map((meta) => meta.hospitalDisplayName),
+          ruleHospitalName: entry.rule?.hospitalName,
+          ruleName: entry.rule?.name
+        }) || entry.hospitalName
       entry.status = 'parsed'
     } catch (error) {
       entry.status = 'error'

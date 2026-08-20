@@ -545,7 +545,7 @@
       "hospital": "呼兰区红十字医院",
       "customerCode": "HULAN-HSZ",
       "month": 6,
-      "kind": "negative",
+      "kind": "historical",
       "row": {
         "sheet": "口腔科",
         "shipNo": "1614459",
@@ -564,7 +564,7 @@
       "hospital": "呼兰区红十字医院",
       "customerCode": "HULAN-HSZ",
       "month": 6,
-      "kind": "negative",
+      "kind": "historical",
       "row": {
         "sheet": "口腔科",
         "shipNo": "1614459",
@@ -579,42 +579,42 @@
       "note": "raw=proc unchanged guard"
     },
     {
-      "id": "哈尔滨冰城医疗美容医院__6__E__1609398__环钻包",
+      "id": "哈尔滨冰城医疗美容医院__6__U__1609398__环钻包",
       "hospital": "哈尔滨冰城医疗美容医院",
       "customerCode": "BINGCHENG-YM",
       "month": 6,
-      "kind": "expected",
+      "kind": "unchanged",
       "row": {
         "sheet": "手术室",
         "shipNo": "1609398",
         "packName": "环钻包",
         "packCount": 2.0,
-        "rawUnit": 30.5,
-        "expectedUnitPrice": 27.5,
-        "type": "",
-        "packageMaterial": "",
-        "instrumentCount": 1
+        "unitPrice": 30.5,
+        "totalPrice": 61.0,
+        "type": "器械包(ZSD)",
+        "packageMaterial": "无纺布-90×90-50g",
+        "instrumentCount": 10
       },
-      "note": "原始按器械数×基础单价(30.5)计费；处理后按标准价(27.5)计费"
+      "note": "环钻30.5锁定(2026-08-19)：原始与处理后均为30.5，无校正"
     },
     {
-      "id": "哈尔滨冰城医疗美容医院__6__E__1614554__环钻包",
+      "id": "哈尔滨冰城医疗美容医院__6__U__1614554__环钻包",
       "hospital": "哈尔滨冰城医疗美容医院",
       "customerCode": "BINGCHENG-YM",
       "month": 6,
-      "kind": "expected",
+      "kind": "unchanged",
       "row": {
         "sheet": "手术室",
         "shipNo": "1614554",
         "packName": "环钻包",
         "packCount": 1.0,
-        "rawUnit": 30.5,
-        "expectedUnitPrice": 27.5,
-        "type": "",
-        "packageMaterial": "",
-        "instrumentCount": 1
+        "unitPrice": 30.5,
+        "totalPrice": 30.5,
+        "type": "器械包(ZSD)",
+        "packageMaterial": "无纺布-90×90-50g",
+        "instrumentCount": 5
       },
-      "note": "原始按器械数×基础单价(30.5)计费；处理后按标准价(27.5)计费"
+      "note": "环钻30.5锁定(2026-08-19)：原始与处理后均为30.5，无校正"
     },
     {
       "id": "哈尔滨冰城医疗美容医院__6__U__1609398__1",
@@ -693,7 +693,7 @@
         "packageMaterial": "无纺布-90×90-50g",
         "instrumentCount": 5
       },
-      "note": "原始按器械数×基础单价(30.5)计费；处理后按标准价(30.5)计费"
+      "note": "环钻30.5锁定(2026-08-19)：原始27.5→特色30.5（件数×5.5+3）"
     },
     {
       "id": "哈尔滨冰城医疗美容医院__7__E__1624134__环钻包",
@@ -715,7 +715,7 @@
         "packageMaterial": "无纺布-90×90-50g",
         "instrumentCount": 10
       },
-      "note": "原始按器械数×基础单价(30.5)计费；处理后按标准价(30.5)计费"
+      "note": "环钻30.5锁定(2026-08-19)：原始27.5→特色30.5（件数×5.5+3）"
     },
     {
       "id": "哈尔滨冰城医疗美容医院__7__U__1616805__1",

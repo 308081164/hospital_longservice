@@ -1,0 +1,4 @@
+function Next() {
+  return new DOMParser().parseFromString('<svg xmlns="http://www.w3.org/2000/svg" width="24" height="40" viewBox="10 0 24 40">\n  <path transform="scale(0.038 0.028)" d="M800 380v768h-128v-352l-320 320v-704l320 320v-352z"></path>\n</svg>\n', "image/svg+xml").firstChild;
+}
+export { Next as default };

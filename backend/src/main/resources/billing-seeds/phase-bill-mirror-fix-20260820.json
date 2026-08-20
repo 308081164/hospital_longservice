@@ -1,0 +1,20 @@
+{
+  "version": "1",
+  "description": "镜像账单修复：人口别名、呼兰红十字恢复计费并改 hybrid",
+  "customerUpdates": [
+    {
+      "code": "HULAN-HSZ",
+      "billingEnabled": true,
+      "billingPricingMode": "hybrid"
+    }
+  ],
+  "aliasUpdates": [
+    {
+      "fromCode": "HLFB-SF",
+      "toCode": "HLJ-FY-RK",
+      "aliases": [
+        "人口"
+      ]
+    }
+  ]
+}

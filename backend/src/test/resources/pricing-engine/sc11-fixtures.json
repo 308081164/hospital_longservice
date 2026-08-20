@@ -248,13 +248,13 @@
         "totalPrice": 16.5
       },
       "expect": {
-        "status": "warning",
+        "status": "unchanged",
+        "expectedUnitPrice": 16.5,
         "pricingRuleContains": "指针"
       },
-      "valid": false,
-      "skipParameterized": true,
-      "billingEvidence": "none",
-      "invalidReason": "无账单实践或 fixture 设置与 manifest/账单不一致"
+      "valid": true,
+      "skipParameterized": false,
+      "billingEvidence": "confirmed"
     },
     {
       "id": "t04_fnn_pdrill_8",
@@ -348,14 +348,63 @@
         "totalPrice": 22.0
       },
       "expect": {
-        "status": "warning",
+        "status": "unchanged",
         "expectedUnitPrice": 22.0,
         "pricingRuleContains": "指针"
       },
-      "valid": false,
-      "skipParameterized": true,
-      "billingEvidence": "none",
-      "invalidReason": "无账单实践或 fixture 设置与 manifest/账单不一致"
+      "valid": true,
+      "skipParameterized": false,
+      "billingEvidence": "confirmed"
+    },
+    {
+      "id": "t04_generic_kirschner_12",
+      "sc11Type": "SC11-T04",
+      "source": "特殊收费(13).xlsx#通用#克氏针＞10",
+      "customerCode": null,
+      "hospitalName": "国药总医院第二院区",
+      "row": {
+        "department": "手术室",
+        "type": "额外包(纸塑袋)",
+        "packName": "克氏针-12/Z7530",
+        "packageMaterial": "高温纸塑袋75*300",
+        "instrumentCount": 12,
+        "packCount": 1,
+        "unitPrice": 16.5,
+        "totalPrice": 16.5
+      },
+      "expect": {
+        "status": "unchanged",
+        "expectedUnitPrice": 16.5,
+        "pricingRuleContains": "通用小件5合1免包材"
+      },
+      "valid": true,
+      "skipParameterized": false,
+      "billingEvidence": "confirmed"
+    },
+    {
+      "id": "t04_generic_kirschner_6",
+      "sc11Type": "SC11-T04",
+      "source": "特殊收费(13).xlsx#通用#克氏针≤10",
+      "customerCode": null,
+      "hospitalName": "测试医院",
+      "row": {
+        "department": "手术室",
+        "type": "额外包(纸塑袋)",
+        "packName": "克氏针(粗)-6/Z7530",
+        "packageMaterial": "高温纸塑袋75*370",
+        "instrumentCount": 6,
+        "packCount": 1,
+        "unitPrice": 13.5,
+        "totalPrice": 13.5
+      },
+      "expect": {
+        "status": "unchanged",
+        "expectedUnitPrice": 13.5,
+        "pricingRuleContains": "通用小件5合1含包材"
+      },
+      "valid": true,
+      "skipParameterized": false,
+      "billingEvidence": "confirmed"
     },
     {
       "id": "t05_fnn_jikuozhen_15",

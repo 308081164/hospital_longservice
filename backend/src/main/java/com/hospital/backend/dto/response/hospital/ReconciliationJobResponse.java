@@ -101,6 +101,9 @@ public class ReconciliationJobResponse {
     /** 是否启用特色账单计费 */
     private Boolean billingEnabled;
 
+    /** 导入时未能解析到系统客户（无法应用特色规则） */
+    private Boolean customerUnresolved;
+
     /** 卡片标识：特色账单或额外导出类型 */
     private Boolean hasSpecialExport;
 

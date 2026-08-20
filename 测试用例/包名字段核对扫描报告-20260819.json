@@ -1,0 +1,693 @@
+{
+  "generated_at": "2026-08-19T02:00:41.789856+00:00",
+  "root": "/Users/yangxinghui/CODE/My_Projects/hospital_longservice/测试用例",
+  "files_scanned": 1124,
+  "rows_with_instrument_count": 132830,
+  "focus_types_T03_T06_T07": {
+    "T03_连字符括号": {
+      "total_rows": 4101,
+      "skip": 63,
+      "validated": 4038,
+      "match": 3322,
+      "mismatch": 716,
+      "mismatch_rate": 0.1773,
+      "examples": [
+        {
+          "pack_name": "DMD光源2号-1（带盒）",
+          "parsed": 1,
+          "pack_count": 1,
+          "expected": 1,
+          "instrument_count": 2,
+          "file": "市五院5.9-6.8账单.xlsx"
+        },
+        {
+          "pack_name": "DMD光源2号-1（带盒）",
+          "parsed": 1,
+          "pack_count": 1,
+          "expected": 1,
+          "instrument_count": 2,
+          "file": "市五院5.9-6.8账单.xlsx"
+        },
+        {
+          "pack_name": "妇科腔镜-17（铁帽3胶帽7）",
+          "parsed": 17,
+          "pack_count": 1,
+          "expected": 17,
+          "instrument_count": 18,
+          "file": "市五院5.9-6.8账单.xlsx"
+        },
+        {
+          "pack_name": "DMD光源2号-1（带盒）",
+          "parsed": 1,
+          "pack_count": 1,
+          "expected": 1,
+          "instrument_count": 2,
+          "file": "市五院5.9-6.8账单.xlsx"
+        },
+        {
+          "pack_name": "妇科腔镜-17（铁帽3胶帽7）",
+          "parsed": 17,
+          "pack_count": 1,
+          "expected": 17,
+          "instrument_count": 18,
+          "file": "市五院5.9-6.8账单.xlsx"
+        },
+        {
+          "pack_name": "DMD光源2号-1（带盒）",
+          "parsed": 1,
+          "pack_count": 1,
+          "expected": 1,
+          "instrument_count": 2,
+          "file": "市五院5.9-6.8账单.xlsx"
+        }
+      ]
+    },
+    "T06_件盒_连字符": {
+      "total_rows": 291,
+      "skip": 0,
+      "validated": 291,
+      "match": 149,
+      "mismatch": 142,
+      "mismatch_rate": 0.488,
+      "examples": [
+        {
+          "pack_name": "旧轧皮机（2号）-2件盒1/W12050",
+          "parsed": 2,
+          "pack_count": 1,
+          "expected": 2,
+          "instrument_count": 3,
+          "file": "市五院5.9-6.8账单.xlsx"
+        },
+        {
+          "pack_name": "旧轧皮机（1号）-2件盒1/W9050",
+          "parsed": 2,
+          "pack_count": 1,
+          "expected": 2,
+          "instrument_count": 3,
+          "file": "市五院5.9-6.8账单.xlsx"
+        },
+        {
+          "pack_name": "姜龙显微器械-6件盒1/W7050",
+          "parsed": 6,
+          "pack_count": 1,
+          "expected": 6,
+          "instrument_count": 7,
+          "file": "市五院5.9-6.8账单.xlsx"
+        },
+        {
+          "pack_name": "姜龙显微器械-6件盒1/W7050",
+          "parsed": 6,
+          "pack_count": 1,
+          "expected": 6,
+          "instrument_count": 7,
+          "file": "市五院5.9-6.8账单.xlsx"
+        },
+        {
+          "pack_name": "0103机器人（低温）-5件盒1",
+          "parsed": 5,
+          "pack_count": 1,
+          "expected": 5,
+          "instrument_count": 6,
+          "file": "市五院5.9-6.8账单.xlsx"
+        },
+        {
+          "pack_name": "0138机器人（低温）-5件盒1",
+          "parsed": 5,
+          "pack_count": 1,
+          "expected": 5,
+          "instrument_count": 6,
+          "file": "市五院5.9-6.8账单.xlsx"
+        }
+      ]
+    },
+    "T07_件盒_无连字符": {
+      "total_rows": 473,
+      "skip": 0,
+      "validated": 473,
+      "match": 365,
+      "mismatch": 108,
+      "mismatch_rate": 0.2283,
+      "examples": [
+        {
+          "pack_name": "种植盒-11件 盒1/w6050",
+          "parsed": 12,
+          "pack_count": 1,
+          "expected": 12,
+          "instrument_count": 11,
+          "file": "附二南岗1月账单.xlsx"
+        },
+        {
+          "pack_name": "25°镜头1件 盒1/z2060",
+          "parsed": 2,
+          "pack_count": 1,
+          "expected": 2,
+          "instrument_count": 1,
+          "file": "省医院香坊4.21-5.20.xlsx"
+        },
+        {
+          "pack_name": "25°镜头1件 盒1/z2060",
+          "parsed": 2,
+          "pack_count": 1,
+          "expected": 2,
+          "instrument_count": 1,
+          "file": "省医院香坊4.21-5.20.xlsx"
+        },
+        {
+          "pack_name": "25°镜头1件 盒1/z2060",
+          "parsed": 2,
+          "pack_count": 1,
+          "expected": 2,
+          "instrument_count": 1,
+          "file": "省医院香坊4.21-5.20.xlsx"
+        },
+        {
+          "pack_name": "25°镜头1件 盒1/z2060",
+          "parsed": 2,
+          "pack_count": 1,
+          "expected": 2,
+          "instrument_count": 1,
+          "file": "省医院香坊4.21-5.20.xlsx"
+        },
+        {
+          "pack_name": "25°镜头1件 盒1/z2060",
+          "parsed": 2,
+          "pack_count": 1,
+          "expected": 2,
+          "instrument_count": 1,
+          "file": "省医院香坊4.21-5.20.xlsx"
+        }
+      ]
+    }
+  },
+  "by_type": {
+    "T01_连字符N件": {
+      "total_rows": 75077,
+      "skip": 3697,
+      "validated": 71380,
+      "match": 69222,
+      "mismatch": 2158,
+      "mismatch_rate": 0.0302,
+      "examples": [
+        {
+          "pack_name": "弯盘-1/z2032",
+          "parsed": 1,
+          "pack_count": 1,
+          "expected": 1,
+          "instrument_count": 0,
+          "file": "附二哈南6月账单.xlsx"
+        },
+        {
+          "pack_name": "弯盘-1/z2032",
+          "parsed": 1,
+          "pack_count": 2,
+          "expected": 2,
+          "instrument_count": 0,
+          "file": "附二哈南6月账单.xlsx"
+        },
+        {
+          "pack_name": "弯盘-1/z2032",
+          "parsed": 1,
+          "pack_count": 2,
+          "expected": 2,
+          "instrument_count": 0,
+          "file": "附二哈南6月账单.xlsx"
+        },
+        {
+          "pack_name": "弯盘-1/z2032",
+          "parsed": 1,
+          "pack_count": 1,
+          "expected": 1,
+          "instrument_count": 0,
+          "file": "附二哈南6月账单.xlsx"
+        },
+        {
+          "pack_name": "弯盘-1/z2032",
+          "parsed": 1,
+          "pack_count": 1,
+          "expected": 1,
+          "instrument_count": 0,
+          "file": "附二哈南6月账单.xlsx"
+        },
+        {
+          "pack_name": "弯盘-1/z2032",
+          "parsed": 1,
+          "pack_count": 1,
+          "expected": 1,
+          "instrument_count": 0,
+          "file": "附二哈南6月账单.xlsx"
+        }
+      ]
+    },
+    "T99_其他": {
+      "total_rows": 31569,
+      "skip": 18799,
+      "validated": 12770,
+      "match": 7919,
+      "mismatch": 4851,
+      "mismatch_rate": 0.3799,
+      "examples": [
+        {
+          "pack_name": "宫腔镜包26件",
+          "parsed": 26,
+          "pack_count": 1,
+          "expected": 26,
+          "instrument_count": 27,
+          "file": "附二哈南6月账单.xlsx"
+        },
+        {
+          "pack_name": "宫腔镜包26件",
+          "parsed": 26,
+          "pack_count": 2,
+          "expected": 52,
+          "instrument_count": 54,
+          "file": "附二哈南5月账单.xlsx"
+        },
+        {
+          "pack_name": "取上环包-21件",
+          "parsed": 21,
+          "pack_count": 1,
+          "expected": 21,
+          "instrument_count": 22,
+          "file": "附二南岗1月账单.xlsx"
+        },
+        {
+          "pack_name": "人流包（22件）",
+          "parsed": 22,
+          "pack_count": 1,
+          "expected": 22,
+          "instrument_count": 23,
+          "file": "附二南岗1月账单.xlsx"
+        },
+        {
+          "pack_name": "活检包（5件）",
+          "parsed": 5,
+          "pack_count": 1,
+          "expected": 5,
+          "instrument_count": 6,
+          "file": "附二南岗1月账单.xlsx"
+        },
+        {
+          "pack_name": "人流包（22件）",
+          "parsed": 22,
+          "pack_count": 3,
+          "expected": 66,
+          "instrument_count": 69,
+          "file": "附二南岗1月账单.xlsx"
+        }
+      ]
+    },
+    "T10_仅码": {
+      "total_rows": 12515,
+      "skip": 5858,
+      "validated": 6657,
+      "match": 5770,
+      "mismatch": 887,
+      "mismatch_rate": 0.1332,
+      "examples": [
+        {
+          "pack_name": "扩棒（3-5.5号）-6 /z1526",
+          "parsed": 11,
+          "pack_count": 1,
+          "expected": 11,
+          "instrument_count": 6,
+          "file": "附二哈南6月账单.xlsx"
+        },
+        {
+          "pack_name": "镊子包-5件（带框）/w9050",
+          "parsed": 5,
+          "pack_count": 1,
+          "expected": 5,
+          "instrument_count": 6,
+          "file": "附二南岗1月账单.xlsx"
+        },
+        {
+          "pack_name": "宫腔镜12度/z2060",
+          "parsed": 12,
+          "pack_count": 1,
+          "expected": 12,
+          "instrument_count": 1,
+          "file": "附二南岗1月账单.xlsx"
+        },
+        {
+          "pack_name": "宫腔镜12度/z2060",
+          "parsed": 12,
+          "pack_count": 1,
+          "expected": 12,
+          "instrument_count": 1,
+          "file": "附二南岗1月账单.xlsx"
+        },
+        {
+          "pack_name": "宫腔镜30度/Z2060",
+          "parsed": 30,
+          "pack_count": 1,
+          "expected": 30,
+          "instrument_count": 1,
+          "file": "附二南岗3月账单.xlsx"
+        },
+        {
+          "pack_name": "宫腔镜12度/z2060",
+          "parsed": 12,
+          "pack_count": 1,
+          "expected": 12,
+          "instrument_count": 1,
+          "file": "附二南岗3月账单.xlsx"
+        }
+      ]
+    },
+    "T04_紧凑复合": {
+      "total_rows": 4901,
+      "skip": 3,
+      "validated": 4898,
+      "match": 3089,
+      "mismatch": 1809,
+      "mismatch_rate": 0.3693,
+      "examples": [
+        {
+          "pack_name": "盘1碗1杯1/w6050",
+          "parsed": 4,
+          "pack_count": 1,
+          "expected": 4,
+          "instrument_count": 3,
+          "file": "附二哈南6月账单.xlsx"
+        },
+        {
+          "pack_name": "盘1碗1杯1/w6050",
+          "parsed": 4,
+          "pack_count": 3,
+          "expected": 12,
+          "instrument_count": 9,
+          "file": "附二哈南6月账单.xlsx"
+        },
+        {
+          "pack_name": "盘1碗1杯1/w6050",
+          "parsed": 4,
+          "pack_count": 4,
+          "expected": 16,
+          "instrument_count": 12,
+          "file": "附二哈南6月账单.xlsx"
+        },
+        {
+          "pack_name": "盘1碗1杯1/w6050",
+          "parsed": 4,
+          "pack_count": 1,
+          "expected": 4,
+          "instrument_count": 3,
+          "file": "附二哈南6月账单.xlsx"
+        },
+        {
+          "pack_name": "盘1碗1杯1/w6050",
+          "parsed": 4,
+          "pack_count": 4,
+          "expected": 16,
+          "instrument_count": 12,
+          "file": "附二哈南6月账单.xlsx"
+        },
+        {
+          "pack_name": "盘1碗1杯1/w6050",
+          "parsed": 4,
+          "pack_count": 2,
+          "expected": 8,
+          "instrument_count": 6,
+          "file": "附二哈南6月账单.xlsx"
+        }
+      ]
+    },
+    "T03_连字符括号": {
+      "total_rows": 4101,
+      "skip": 63,
+      "validated": 4038,
+      "match": 3322,
+      "mismatch": 716,
+      "mismatch_rate": 0.1773,
+      "examples": [
+        {
+          "pack_name": "DMD光源2号-1（带盒）",
+          "parsed": 1,
+          "pack_count": 1,
+          "expected": 1,
+          "instrument_count": 2,
+          "file": "市五院5.9-6.8账单.xlsx"
+        },
+        {
+          "pack_name": "DMD光源2号-1（带盒）",
+          "parsed": 1,
+          "pack_count": 1,
+          "expected": 1,
+          "instrument_count": 2,
+          "file": "市五院5.9-6.8账单.xlsx"
+        },
+        {
+          "pack_name": "妇科腔镜-17（铁帽3胶帽7）",
+          "parsed": 17,
+          "pack_count": 1,
+          "expected": 17,
+          "instrument_count": 18,
+          "file": "市五院5.9-6.8账单.xlsx"
+        },
+        {
+          "pack_name": "DMD光源2号-1（带盒）",
+          "parsed": 1,
+          "pack_count": 1,
+          "expected": 1,
+          "instrument_count": 2,
+          "file": "市五院5.9-6.8账单.xlsx"
+        },
+        {
+          "pack_name": "妇科腔镜-17（铁帽3胶帽7）",
+          "parsed": 17,
+          "pack_count": 1,
+          "expected": 17,
+          "instrument_count": 18,
+          "file": "市五院5.9-6.8账单.xlsx"
+        },
+        {
+          "pack_name": "DMD光源2号-1（带盒）",
+          "parsed": 1,
+          "pack_count": 1,
+          "expected": 1,
+          "instrument_count": 2,
+          "file": "市五院5.9-6.8账单.xlsx"
+        }
+      ]
+    },
+    "T09_末尾数字": {
+      "total_rows": 3332,
+      "skip": 489,
+      "validated": 2843,
+      "match": 1998,
+      "mismatch": 845,
+      "mismatch_rate": 0.2972,
+      "examples": [
+        {
+          "pack_name": "车针23/z7526",
+          "parsed": 23,
+          "pack_count": 1,
+          "expected": 23,
+          "instrument_count": 24,
+          "file": "附二南岗1月账单.xlsx"
+        },
+        {
+          "pack_name": "脊柱常备器械髓核少1",
+          "parsed": 1,
+          "pack_count": 1,
+          "expected": 1,
+          "instrument_count": 8,
+          "file": "市五院5.9-6.8账单.xlsx"
+        },
+        {
+          "pack_name": "脊柱机器人262",
+          "parsed": 262,
+          "pack_count": 1,
+          "expected": 262,
+          "instrument_count": 7,
+          "file": "市五院5.9-6.8账单.xlsx"
+        },
+        {
+          "pack_name": "脊柱常备器械髓核少1",
+          "parsed": 1,
+          "pack_count": 1,
+          "expected": 1,
+          "instrument_count": 8,
+          "file": "市五院1.9-2.8账单.xlsx"
+        },
+        {
+          "pack_name": "脊柱常备器械髓核少1",
+          "parsed": 1,
+          "pack_count": 1,
+          "expected": 1,
+          "instrument_count": 8,
+          "file": "市五院1.9-2.8账单.xlsx"
+        },
+        {
+          "pack_name": "显微有钩镊1，无钩镊1/W5050",
+          "parsed": 2,
+          "pack_count": 1,
+          "expected": 2,
+          "instrument_count": 3,
+          "file": "市五院1.9-2.8账单.xlsx"
+        }
+      ]
+    },
+    "T07_件盒_无连字符": {
+      "total_rows": 473,
+      "skip": 0,
+      "validated": 473,
+      "match": 365,
+      "mismatch": 108,
+      "mismatch_rate": 0.2283,
+      "examples": [
+        {
+          "pack_name": "种植盒-11件 盒1/w6050",
+          "parsed": 12,
+          "pack_count": 1,
+          "expected": 12,
+          "instrument_count": 11,
+          "file": "附二南岗1月账单.xlsx"
+        },
+        {
+          "pack_name": "25°镜头1件 盒1/z2060",
+          "parsed": 2,
+          "pack_count": 1,
+          "expected": 2,
+          "instrument_count": 1,
+          "file": "省医院香坊4.21-5.20.xlsx"
+        },
+        {
+          "pack_name": "25°镜头1件 盒1/z2060",
+          "parsed": 2,
+          "pack_count": 1,
+          "expected": 2,
+          "instrument_count": 1,
+          "file": "省医院香坊4.21-5.20.xlsx"
+        },
+        {
+          "pack_name": "25°镜头1件 盒1/z2060",
+          "parsed": 2,
+          "pack_count": 1,
+          "expected": 2,
+          "instrument_count": 1,
+          "file": "省医院香坊4.21-5.20.xlsx"
+        },
+        {
+          "pack_name": "25°镜头1件 盒1/z2060",
+          "parsed": 2,
+          "pack_count": 1,
+          "expected": 2,
+          "instrument_count": 1,
+          "file": "省医院香坊4.21-5.20.xlsx"
+        },
+        {
+          "pack_name": "25°镜头1件 盒1/z2060",
+          "parsed": 2,
+          "pack_count": 1,
+          "expected": 2,
+          "instrument_count": 1,
+          "file": "省医院香坊4.21-5.20.xlsx"
+        }
+      ]
+    },
+    "T05_针架": {
+      "total_rows": 312,
+      "skip": 312,
+      "validated": 0,
+      "match": 0,
+      "mismatch": 0,
+      "mismatch_rate": null,
+      "examples": []
+    },
+    "T06_件盒_连字符": {
+      "total_rows": 291,
+      "skip": 0,
+      "validated": 291,
+      "match": 149,
+      "mismatch": 142,
+      "mismatch_rate": 0.488,
+      "examples": [
+        {
+          "pack_name": "旧轧皮机（2号）-2件盒1/W12050",
+          "parsed": 2,
+          "pack_count": 1,
+          "expected": 2,
+          "instrument_count": 3,
+          "file": "市五院5.9-6.8账单.xlsx"
+        },
+        {
+          "pack_name": "旧轧皮机（1号）-2件盒1/W9050",
+          "parsed": 2,
+          "pack_count": 1,
+          "expected": 2,
+          "instrument_count": 3,
+          "file": "市五院5.9-6.8账单.xlsx"
+        },
+        {
+          "pack_name": "姜龙显微器械-6件盒1/W7050",
+          "parsed": 6,
+          "pack_count": 1,
+          "expected": 6,
+          "instrument_count": 7,
+          "file": "市五院5.9-6.8账单.xlsx"
+        },
+        {
+          "pack_name": "姜龙显微器械-6件盒1/W7050",
+          "parsed": 6,
+          "pack_count": 1,
+          "expected": 6,
+          "instrument_count": 7,
+          "file": "市五院5.9-6.8账单.xlsx"
+        },
+        {
+          "pack_name": "0103机器人（低温）-5件盒1",
+          "parsed": 5,
+          "pack_count": 1,
+          "expected": 5,
+          "instrument_count": 6,
+          "file": "市五院5.9-6.8账单.xlsx"
+        },
+        {
+          "pack_name": "0138机器人（低温）-5件盒1",
+          "parsed": 5,
+          "pack_count": 1,
+          "expected": 5,
+          "instrument_count": 6,
+          "file": "市五院5.9-6.8账单.xlsx"
+        }
+      ]
+    },
+    "T12_双袋": {
+      "total_rows": 189,
+      "skip": 0,
+      "validated": 189,
+      "match": 189,
+      "mismatch": 0,
+      "mismatch_rate": 0.0,
+      "examples": []
+    },
+    "T13_N袋": {
+      "total_rows": 36,
+      "skip": 36,
+      "validated": 0,
+      "match": 0,
+      "mismatch": 0,
+      "mismatch_rate": null,
+      "examples": []
+    },
+    "T11_尺寸规格": {
+      "total_rows": 34,
+      "skip": 0,
+      "validated": 34,
+      "match": 33,
+      "mismatch": 1,
+      "mismatch_rate": 0.0294,
+      "examples": [
+        {
+          "pack_name": "手术包-10件（80*80布）",
+          "parsed": 10,
+          "pack_count": 1,
+          "expected": 10,
+          "instrument_count": 20,
+          "file": "6月__南岗省医院5.21-6.20账单.xlsx"
+        }
+      ]
+    }
+  }
+}

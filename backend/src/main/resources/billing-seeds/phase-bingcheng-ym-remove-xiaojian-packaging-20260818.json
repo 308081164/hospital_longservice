@@ -1,6 +1,6 @@
 {
   "version": "1",
-  "description": "冰城环钻：停用客户 Excel 未列出的「小件包装加价3」，对齐 件数×5.5+3=30.5",
+  "description": "冰城环钻：停用客户 Excel 未列出的「小件包装加价3」；锁定特色价 30.5 元（件数×5.5+3，2026-08-19 客户确认）",
   "strictRuleOps": true,
   "deactivateRules": [
     { "code": "BINGCHENG-YM", "ruleName": "冰城环钻包小件包装加价3" }

@@ -1713,7 +1713,7 @@ class PricingEngineTest {
         PricingEngine.ProcessedResult result = disabledEngine.processRow(ngjyDressingPackRow(
                 "手术室", 0, 1, 0, 0));
 
-        assertThat(result.status).isEqualTo("unchanged");
+        assertThat(result.status).isEqualTo("warning");
         assertThat(result.expectedUnitPrice).isEqualTo(0.0);
         assertThat(result.difference).isEqualTo(0.0);
         assertThat(result.pricingRule).isEqualTo("特色账单已关闭");

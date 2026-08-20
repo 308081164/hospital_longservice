@@ -1,12 +1,4 @@
--- Idempotent P0.6: enable billing for acceptance-pass hospitals (generated from phase-batch-p0.6.json)
--- manifest billingEnabled=false 及 L9-L61 pass_zero 院不在此表，保持 billing_enabled=0
+-- Deprecated: billingEnabled/status 现由 BillingRulesManifestReconciler 在 backend 启动时从
+-- billing-rules-manifest.json 同步。保留本文件仅为 deploy 脚本向后兼容，不再修改 customer 表。
 SET NAMES utf8mb4;
-START TRANSACTION;
-UPDATE customer SET billing_enabled = 1 WHERE code IN ('ZYY-D1', 'ZY3-DIANLI', 'GUOYAO-MAIN', 'GUOYAO-2', 'GUOYAO-3', 'HRB-2ND', 'HRB-WY', 'HRB-WY-EM', 'XINFA-HSZ', 'SHENG-YY-NG', 'SHENG-YY-XF', 'ZUYAN-NG', 'ZUYAN-SF', 'ZUYAN-XA', 'DAOWAI-RM', 'SANJING-SB', 'ZYY-D2-NG', 'ZYY-D2-HN', 'RENSHENG', 'HRB-HX-EYE', 'BINGCHENG-YM', 'XF-ZYY', 'WJ-HLJ-ZD', 'YUEMEI-FH');
-UPDATE customer SET billing_enabled = 0 WHERE code NOT IN ('ZYY-D1', 'ZY3-DIANLI', 'GUOYAO-MAIN', 'GUOYAO-2', 'GUOYAO-3', 'HRB-2ND', 'HRB-WY', 'HRB-WY-EM', 'XINFA-HSZ', 'SHENG-YY-NG', 'SHENG-YY-XF', 'ZUYAN-NG', 'ZUYAN-SF', 'ZUYAN-XA', 'DAOWAI-RM', 'SANJING-SB', 'ZYY-D2-NG', 'ZYY-D2-HN', 'RENSHENG', 'HRB-HX-EYE', 'BINGCHENG-YM', 'XF-ZYY', 'WJ-HLJ-ZD', 'YUEMEI-FH');
-INSERT INTO sys_setting (setting_key, setting_value, description)
-SELECT 'billing_seed_batch_p0_6_v1', 'true', 'P0.6 billing toggle (deploy/reapply script)'
-FROM DUAL
-WHERE NOT EXISTS (SELECT 1 FROM sys_setting WHERE setting_key = 'billing_seed_batch_p0_6_v1');
-UPDATE sys_setting SET setting_value = 'true' WHERE setting_key = 'billing_seed_batch_p0_6_v1';
-COMMIT;
+SELECT 1;

@@ -1,0 +1,30 @@
+{
+  "version": "1",
+  "description": "冰城环钻：特色规则仅匹配「环钻包」，排除「环钻头」（环钻头走标准 5.5+2.5=8）",
+  "ruleUpdates": [
+    {
+      "code": "BINGCHENG-YM",
+      "ruleName": "冰城环钻包按件5.5",
+      "setKeywords": ["环钻包"],
+      "setExcludeKeywords": ["环钻头"]
+    },
+    {
+      "code": "BINGCHENG-YM",
+      "ruleName": "冰城环钻包无纺布加价3",
+      "setKeywords": ["环钻包"],
+      "setExcludeKeywords": ["环钻头"]
+    },
+    {
+      "code": "BINGCHENG-YM",
+      "ruleName": "冰城环钻包小件包装加价3",
+      "setKeywords": ["环钻包"],
+      "setExcludeKeywords": ["环钻头"]
+    },
+    {
+      "code": "BINGCHENG-YM",
+      "ruleName": "环钻27.5",
+      "setKeywords": ["环钻包"],
+      "setExcludeKeywords": ["环钻头"]
+    }
+  ]
+}

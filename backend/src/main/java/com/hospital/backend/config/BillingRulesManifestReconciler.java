@@ -21,6 +21,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * 启动时按 classpath billing-rules-manifest.json 全量 upsert productRules（幂等）。
@@ -82,12 +83,13 @@ public class BillingRulesManifestReconciler implements CommandLineRunner {
                     log.debug("Reconcile skipped unknown customer: {}", code);
                     continue;
                 }
-                if (isInactiveCustomer(customer)) {
-                    log.info("Reconcile skipped inactive customer: {}", code);
-                    continue;
-                }
                 if (applyCustomerManifestFields(customer, customerNode)) {
                     customersUpdated++;
+                    customer = customerMapper.selectByCode(code);
+                }
+                if (isInactiveCustomer(customer)) {
+                    log.info("Reconcile skipped inactive customer rules: {}", code);
+                    continue;
                 }
                 JsonNode rules = customerNode.path("productRules");
                 if (rules.isArray()) {
@@ -118,6 +120,20 @@ public class BillingRulesManifestReconciler implements CommandLineRunner {
             String override = node.get("standardPricingOverride").toString();
             if (!override.equals(customer.getStandardPricingOverride())) {
                 customer.setStandardPricingOverride(override);
+                changed = true;
+            }
+        }
+        if (node.has("billingEnabled") && !node.get("billingEnabled").isNull()) {
+            boolean enabled = node.get("billingEnabled").asBoolean();
+            if (!Objects.equals(enabled, Boolean.TRUE.equals(customer.getBillingEnabled()))) {
+                customer.setBillingEnabled(enabled);
+                changed = true;
+            }
+        }
+        if (node.hasNonNull("status")) {
+            String status = text(node, "status");
+            if (status != null && !status.equals(customer.getStatus())) {
+                customer.setStatus(status);
                 changed = true;
             }
         }

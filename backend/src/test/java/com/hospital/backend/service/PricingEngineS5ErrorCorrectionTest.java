@@ -113,11 +113,11 @@ class PricingEngineS5ErrorCorrectionTest {
                 88.0,
                 88.0));
 
-        assertThat(result.status).isEqualTo("unchanged");
+        assertThat(result.status).isEqualTo("warning");
         assertThat(result.expectedUnitPrice).isEqualTo(88.0);
         assertThat(result.correctedTotalPrice).isEqualTo(88.0);
         assertThat(result.pricingRule).isEqualTo("特色账单已关闭");
-        assertThat(result.notes).anyMatch(n -> n.contains("保留原始价格"));
+        assertThat(result.notes).anyMatch(n -> n.contains("无法校验"));
     }
 
     @Test

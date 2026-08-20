@@ -1,0 +1,23 @@
+{
+  "version": "1",
+  "description": "博尚（BOSHANG-YY）改 hybrid：未命中 FIXED 时走标准路径，低温单件双层袋 35 元",
+  "customerUpdates": [
+    {
+      "code": "BOSHANG-YY",
+      "billingEnabled": true,
+      "billingPricingMode": "hybrid"
+    }
+  ],
+  "profiles": [
+    {
+      "code": "BOSHANG-YY",
+      "name": "博尚医院",
+      "billingEnabled": true,
+      "billingPricingMode": "hybrid",
+      "aliases": [
+        "博尚医院",
+        "博尚"
+      ]
+    }
+  ]
+}

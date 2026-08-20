@@ -156,6 +156,7 @@ class BillExportFuyiLayoutTest {
                 com.hospital.backend.service.PricingRuleCompiler.class,
                 com.hospital.backend.service.ProductMatchService.class,
                 com.hospital.backend.service.CustomerResolver.class,
+                com.hospital.backend.service.ReconciliationHospitalNameResolver.class,
                 com.hospital.backend.service.LogisticsPipelineService.class,
                 com.hospital.backend.service.SettlementJobFieldsApplier.class,
                 com.hospital.backend.service.LogisticsImportService.class,
@@ -165,6 +166,6 @@ class BillExportFuyiLayoutTest {
                 com.hospital.backend.export.D8DisplayNameResolver.class,
                 com.hospital.backend.export.ExportTemplateResolver.class,
                 com.hospital.backend.service.HospitalExportCapabilityService.class);
-        return ctor.newInstance(null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null);
+        return ctor.newInstance(null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null);
     }
 }

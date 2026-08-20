@@ -123,6 +123,7 @@ jobs:
             deploy/nginx-hospital.conf \
             deploy/nginx-frontend-shared-net.conf \
             deploy/verify-billing-on-server.sh \
+            deploy/reapply-billing-manifest-on-server.sh \
             deploy/reapply-billing-p0-6-on-server.sh \
             deploy/apply-p0-6-billing-sql.sh \
             deploy/mysql-hospital-cli.sh \
@@ -223,22 +224,9 @@ jobs:
               fi
               sleep 2
             done
-            if [ -f deploy/sql/p0-6-billing-toggle.sql ]; then
-              chmod +x deploy/reapply-billing-p0-6-on-server.sh 2>/dev/null || true
-              if [ -x deploy/apply-p0-6-billing-sql.sh ]; then
-                chmod +x deploy/apply-p0-6-billing-sql.sh deploy/mysql-hospital-cli.sh 2>/dev/null || true
-                echo "DEPLOY_STAGE=apply_p0_6_before_backend"
-                bash deploy/apply-p0-6-billing-sql.sh
-              elif [ -x deploy/mysql-hospital-cli.sh ]; then
-                echo "DEPLOY_STAGE=apply_p0_6_before_backend"
-                bash deploy/mysql-hospital-cli.sh --import-root deploy/sql/p0-6-billing-toggle.sql
-              else
-                echo "DEPLOY_STAGE=apply_p0_6_before_backend"
-                docker exec -i hospital-mysql mysql -uroot -p"${MYSQL_ROOT_PASSWORD}" --default-character-set=utf8mb4 "${MYSQL_DATABASE:-hospital}" \
-                  < deploy/sql/p0-6-billing-toggle.sql
-              fi
-            else
-              echo "警告: 未找到 P0.6 SQL，backend 将使用库内现有 billing 状态"
+            if [ -f deploy/reapply-billing-manifest-on-server.sh ]; then
+              echo "DEPLOY_STAGE=billing_manifest_reconcile_deferred"
+              echo "billingEnabled 将在 backend 启动后由 manifest reconciler 同步"
             fi
             docker compose -f docker-compose.prod.yml up -d --no-deps --force-recreate backend
             echo "DEPLOY_STAGE=backend_container_started"
@@ -337,6 +325,7 @@ jobs:
             "${SSH_USER}@${SSH_HOST}" "mkdir -p '${DEPLOY_PATH}/deploy/sql'"
           scp -i ~/.ssh/deploy_billing_key -o StrictHostKeyChecking=no -P "${SSH_PORT}" \
             deploy/verify-billing-on-server.sh \
+            deploy/reapply-billing-manifest-on-server.sh \
             deploy/reapply-billing-p0-6-on-server.sh \
             deploy/apply-p0-6-billing-sql.sh \
             deploy/mysql-hospital-cli.sh \
@@ -348,7 +337,7 @@ jobs:
             deploy/sql/p0-6-billing-toggle.sql \
             "${SSH_USER}@${SSH_HOST}:${DEPLOY_PATH}/deploy/sql/"
 
-      - name: Apply P0.6 billing toggle and verify on server
+      - name: Reconcile billing manifest and verify on server
         uses: appleboy/ssh-action@v1.2.5
         with:
           host: ${{ secrets.SSH_HOST }}
@@ -360,21 +349,21 @@ jobs:
             set -e
             DPATH="${{ secrets.DEPLOY_PATH || '/mnt/newdisk/app/Hospital' }}"
             cd "$DPATH"
-            if [ ! -f deploy/sql/p0-6-billing-toggle.sql ]; then
-              echo "错误: deploy/sql/p0-6-billing-toggle.sql 未同步到服务器" >&2
-              ls -la deploy/ deploy/sql/ 2>/dev/null || true
+            MANIFEST="backend/src/main/resources/billing-seeds/billing-rules-manifest.json"
+            if [ ! -f "$MANIFEST" ]; then
+              echo "错误: $MANIFEST 未同步到服务器" >&2
+              ls -la backend/src/main/resources/billing-seeds/ 2>/dev/null || true
               exit 1
             fi
-            chmod +x deploy/verify-billing-on-server.sh deploy/reapply-billing-p0-6-on-server.sh \
-              deploy/apply-p0-6-billing-sql.sh deploy/verify-billing-api-on-server.sh \
-              deploy/mysql-hospital-cli.sh 2>/dev/null || true
+            chmod +x deploy/verify-billing-on-server.sh deploy/reapply-billing-manifest-on-server.sh \
+              deploy/verify-billing-api-on-server.sh deploy/mysql-hospital-cli.sh 2>/dev/null || true
             echo "==> deploy 目录（billing 脚本）"
-            ls -la deploy/*.sh deploy/sql/p0-6-billing-toggle.sql 2>/dev/null || ls -la deploy/ || true
+            ls -la deploy/*.sh "$MANIFEST" 2>/dev/null || ls -la deploy/ || true
             echo "==> backend 连库诊断"
             bash deploy/mysql-hospital-cli.sh --print-target 2>/dev/null || true
             docker inspect hospital-backend --format '{{range .Config.Env}}{{println .}}{{end}}' 2>/dev/null | grep '^MYSQL_' || true
-            bash deploy/reapply-billing-p0-6-on-server.sh || {
-              echo "==== reapply 失败，backend 日志 ===="
+            bash deploy/reapply-billing-manifest-on-server.sh || {
+              echo "==== manifest reconcile 失败，backend 日志 ===="
               docker logs hospital-backend 2>&1 | tail -80 || true
               exit 1
             }

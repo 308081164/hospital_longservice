@@ -1,7 +1,9 @@
 {
   "version": 1,
-  "generated_at": "2026-08-19T00:27:43.060544+00:00",
-  "manifest_hash": "66cc84540cc1dcc86d21fc3a2159053699efc0022fd23d1a2d9d00fcdb57d772",
+  "generated_at": "2026-08-19T14:45:19.700727+00:00",
+  "manifest_hash": "2f049f480e07355988d5f3dbabfe0c1792a6320cbdb18886d1d6bca49388de2b",
+  "billing_enabled_count": 56,
+  "active_billing_enabled_count": 51,
   "customers": {
     "AL-YY": {
       "code": "AL-YY",
@@ -9,7 +11,7 @@
       "status": null,
       "billingPricingMode": null,
       "standardPricingOverride": null,
-      "billingEnabled": null,
+      "billingEnabled": false,
       "productRules": [],
       "rule_count": 0,
       "active_rule_count": 0
@@ -76,13 +78,15 @@
           "minInstrumentCount": 2,
           "maxInstrumentCount": 5,
           "keywords": [
-            "环钻包",
-            "环钻"
+            "环钻包"
           ],
           "skipPackaging": true,
           "skipDiscount": true,
           "isActive": false,
-          "matchMode": "first"
+          "matchMode": "first",
+          "excludeKeywords": [
+            "环钻头"
+          ]
         },
         {
           "ruleType": "PRICE_PER_INSTRUMENT",
@@ -90,13 +94,15 @@
           "priority": 6,
           "price": 5.5,
           "keywords": [
-            "环钻包",
-            "环钻"
+            "环钻包"
           ],
           "skipPackaging": true,
           "skipDiscount": true,
           "isActive": true,
-          "matchMode": "first"
+          "matchMode": "first",
+          "excludeKeywords": [
+            "环钻头"
+          ]
         },
         {
           "ruleType": "EXTRA_FEE",
@@ -104,13 +110,15 @@
           "priority": 7,
           "fee": 3.0,
           "keywords": [
-            "环钻包",
-            "环钻"
+            "环钻包"
           ],
           "skipPackaging": true,
           "skipDiscount": true,
           "isActive": true,
-          "matchMode": "first"
+          "matchMode": "first",
+          "excludeKeywords": [
+            "环钻头"
+          ]
         },
         {
           "ruleType": "PRICE_PER_INSTRUMENT",
@@ -178,12 +186,15 @@
           "priority": 20,
           "price": 27.5,
           "keywords": [
-            "环钻"
+            "环钻包"
           ],
           "skipPackaging": true,
           "skipDiscount": true,
           "isActive": false,
-          "matchMode": "first"
+          "matchMode": "first",
+          "excludeKeywords": [
+            "环钻头"
+          ]
         },
         {
           "ruleType": "FIXED_PRICE",
@@ -225,7 +236,7 @@
       "status": null,
       "billingPricingMode": "special_only",
       "standardPricingOverride": null,
-      "billingEnabled": null,
+      "billingEnabled": true,
       "productRules": [
         {
           "ruleType": "FIXED_PRICE",
@@ -294,7 +305,7 @@
       "status": "inactive",
       "billingPricingMode": null,
       "standardPricingOverride": null,
-      "billingEnabled": null,
+      "billingEnabled": false,
       "productRules": [],
       "rule_count": 0,
       "active_rule_count": 0
@@ -305,7 +316,7 @@
       "status": null,
       "billingPricingMode": "hybrid",
       "standardPricingOverride": null,
-      "billingEnabled": null,
+      "billingEnabled": true,
       "productRules": [
         {
           "ruleType": "FOLD",
@@ -352,7 +363,7 @@
       "status": null,
       "billingPricingMode": "standard",
       "standardPricingOverride": null,
-      "billingEnabled": null,
+      "billingEnabled": true,
       "productRules": [
         {
           "ruleType": "FIXED_PRICE",
@@ -558,7 +569,7 @@
       "status": null,
       "billingPricingMode": null,
       "standardPricingOverride": null,
-      "billingEnabled": null,
+      "billingEnabled": false,
       "productRules": [],
       "rule_count": 0,
       "active_rule_count": 0
@@ -569,7 +580,7 @@
       "status": null,
       "billingPricingMode": "hybrid",
       "standardPricingOverride": null,
-      "billingEnabled": null,
+      "billingEnabled": true,
       "productRules": [
         {
           "ruleType": "FOLD",
@@ -641,7 +652,7 @@
       "status": null,
       "billingPricingMode": "special_only",
       "standardPricingOverride": null,
-      "billingEnabled": false,
+      "billingEnabled": true,
       "productRules": [
         {
           "ruleType": "PRICE_PER_INSTRUMENT",
@@ -804,7 +815,7 @@
       "status": null,
       "billingPricingMode": "standard",
       "standardPricingOverride": null,
-      "billingEnabled": null,
+      "billingEnabled": true,
       "productRules": [
         {
           "ruleType": "FOLD",
@@ -852,7 +863,7 @@
       "status": null,
       "billingPricingMode": "hybrid",
       "standardPricingOverride": null,
-      "billingEnabled": null,
+      "billingEnabled": true,
       "productRules": [
         {
           "ruleType": "FIXED_PRICE",
@@ -1324,7 +1335,7 @@
       "status": null,
       "billingPricingMode": "hybrid",
       "standardPricingOverride": null,
-      "billingEnabled": null,
+      "billingEnabled": true,
       "productRules": [
         {
           "ruleType": "FIXED_PRICE",
@@ -1349,7 +1360,7 @@
       "status": null,
       "billingPricingMode": "special_only",
       "standardPricingOverride": null,
-      "billingEnabled": null,
+      "billingEnabled": true,
       "productRules": [
         {
           "ruleType": "FIXED_PRICE",
@@ -1402,7 +1413,7 @@
       "status": null,
       "billingPricingMode": "hybrid",
       "standardPricingOverride": null,
-      "billingEnabled": null,
+      "billingEnabled": true,
       "productRules": [
         {
           "ruleType": "FOLD",
@@ -1444,10 +1455,10 @@
     "HL-ZGH": {
       "code": "HL-ZGH",
       "name": "黑龙江总工会医院",
-      "status": null,
+      "status": "inactive",
       "billingPricingMode": "hybrid",
       "standardPricingOverride": null,
-      "billingEnabled": null,
+      "billingEnabled": true,
       "productRules": [
         {
           "ruleType": "EXTRA_FEE",
@@ -1470,11 +1481,11 @@
     },
     "HLFB-SF": {
       "code": "HLFB-SF",
-      "name": "HLFB-SF",
-      "status": null,
+      "name": "黑龙江省妇幼保健院（人口）(旧HLFB-SF)",
+      "status": "inactive",
       "billingPricingMode": "standard",
       "standardPricingOverride": null,
-      "billingEnabled": true,
+      "billingEnabled": false,
       "productRules": [
         {
           "ruleType": "FIXED_PRICE",
@@ -1499,7 +1510,7 @@
       "status": null,
       "billingPricingMode": "hybrid",
       "standardPricingOverride": null,
-      "billingEnabled": null,
+      "billingEnabled": true,
       "productRules": [
         {
           "ruleType": "FOLD",
@@ -1801,7 +1812,7 @@
           "foldRatio": 5,
           "minInstrumentCount": 11,
           "skipPackaging": true,
-          "isActive": true,
+          "isActive": false,
           "matchMode": "first",
           "skipDiscount": false
         },
@@ -1815,6 +1826,20 @@
           "threshold": 5,
           "foldRatio": 5,
           "maxInstrumentCount": 10,
+          "skipPackaging": false,
+          "isActive": false,
+          "matchMode": "first",
+          "skipDiscount": false
+        },
+        {
+          "ruleType": "FOLD",
+          "name": "妇幼人口针包按1件含包材",
+          "priority": 10,
+          "keywords": [
+            "针包"
+          ],
+          "threshold": 99999,
+          "foldRatio": 5,
           "skipPackaging": false,
           "isActive": true,
           "matchMode": "first",
@@ -1881,8 +1906,8 @@
           "skipDiscount": false
         }
       ],
-      "rule_count": 25,
-      "active_rule_count": 25
+      "rule_count": 26,
+      "active_rule_count": 24
     },
     "HLJ-JYGLJ-YY": {
       "code": "HLJ-JYGLJ-YY",
@@ -1890,7 +1915,7 @@
       "status": null,
       "billingPricingMode": "standard",
       "standardPricingOverride": null,
-      "billingEnabled": null,
+      "billingEnabled": true,
       "productRules": [
         {
           "ruleType": "FIXED_PRICE",
@@ -1950,7 +1975,7 @@
       "status": null,
       "billingPricingMode": "special_only",
       "standardPricingOverride": null,
-      "billingEnabled": null,
+      "billingEnabled": true,
       "productRules": [
         {
           "ruleType": "FIXED_PRICE",
@@ -2069,7 +2094,7 @@
     "HRB-CJ": {
       "code": "HRB-CJ",
       "name": "哈尔滨长健医院",
-      "status": null,
+      "status": "inactive",
       "billingPricingMode": "standard",
       "standardPricingOverride": null,
       "billingEnabled": true,
@@ -2137,7 +2162,7 @@
       "status": null,
       "billingPricingMode": null,
       "standardPricingOverride": null,
-      "billingEnabled": null,
+      "billingEnabled": false,
       "productRules": [],
       "rule_count": 0,
       "active_rule_count": 0
@@ -2148,7 +2173,7 @@
       "status": null,
       "billingPricingMode": "special_only",
       "standardPricingOverride": null,
-      "billingEnabled": false,
+      "billingEnabled": true,
       "productRules": [],
       "rule_count": 0,
       "active_rule_count": 0
@@ -2159,7 +2184,7 @@
       "status": null,
       "billingPricingMode": "special_only",
       "standardPricingOverride": null,
-      "billingEnabled": false,
+      "billingEnabled": true,
       "productRules": [
         {
           "ruleType": "FIXED_PRICE",
@@ -2369,7 +2394,7 @@
       "status": null,
       "billingPricingMode": "special_only",
       "standardPricingOverride": null,
-      "billingEnabled": false,
+      "billingEnabled": true,
       "productRules": [
         {
           "ruleType": "FIXED_PRICE",
@@ -2433,10 +2458,10 @@
     "HRB-HTFH": {
       "code": "HRB-HTFH",
       "name": "HRB-HTFH",
-      "status": null,
+      "status": "inactive",
       "billingPricingMode": null,
       "standardPricingOverride": null,
-      "billingEnabled": null,
+      "billingEnabled": false,
       "productRules": [
         {
           "ruleType": "FOLD",
@@ -2499,10 +2524,10 @@
     "HRB-MHM": {
       "code": "HRB-MHM",
       "name": "HRB-MHM",
-      "status": null,
+      "status": "inactive",
       "billingPricingMode": null,
       "standardPricingOverride": null,
-      "billingEnabled": null,
+      "billingEnabled": false,
       "productRules": [
         {
           "ruleType": "FOLD",
@@ -2529,7 +2554,7 @@
       "status": null,
       "billingPricingMode": "standard",
       "standardPricingOverride": null,
-      "billingEnabled": true,
+      "billingEnabled": false,
       "productRules": [
         {
           "ruleType": "ZERO_PRICE_OVERRIDE",
@@ -2551,7 +2576,7 @@
     "HRB-SD-MB": {
       "code": "HRB-SD-MB",
       "name": "HRB-SD-MB",
-      "status": null,
+      "status": "inactive",
       "billingPricingMode": "standard",
       "standardPricingOverride": null,
       "billingEnabled": true,
@@ -2649,7 +2674,7 @@
       "status": null,
       "billingPricingMode": "special_only",
       "standardPricingOverride": null,
-      "billingEnabled": null,
+      "billingEnabled": true,
       "productRules": [
         {
           "ruleType": "FIXED_PRICE",
@@ -2687,7 +2712,7 @@
       "status": null,
       "billingPricingMode": "hybrid",
       "standardPricingOverride": null,
-      "billingEnabled": null,
+      "billingEnabled": true,
       "productRules": [
         {
           "ruleType": "FIXED_PRICE",
@@ -2979,7 +3004,7 @@
       "status": null,
       "billingPricingMode": "hybrid",
       "standardPricingOverride": null,
-      "billingEnabled": null,
+      "billingEnabled": true,
       "productRules": [
         {
           "ruleType": "FIXED_PRICE",
@@ -3075,7 +3100,7 @@
       "status": null,
       "billingPricingMode": "special_only",
       "standardPricingOverride": null,
-      "billingEnabled": false,
+      "billingEnabled": true,
       "productRules": [
         {
           "ruleType": "FIXED_PRICE",
@@ -3100,7 +3125,7 @@
       "status": null,
       "billingPricingMode": "special_only",
       "standardPricingOverride": null,
-      "billingEnabled": false,
+      "billingEnabled": true,
       "productRules": [
         {
           "ruleType": "FIXED_PRICE",
@@ -3388,7 +3413,7 @@
       "status": null,
       "billingPricingMode": "standard",
       "standardPricingOverride": null,
-      "billingEnabled": null,
+      "billingEnabled": true,
       "productRules": [
         {
           "ruleType": "FIXED_PRICE",
@@ -3415,7 +3440,7 @@
       "status": null,
       "billingPricingMode": "standard",
       "standardPricingOverride": null,
-      "billingEnabled": false,
+      "billingEnabled": true,
       "productRules": [
         {
           "ruleType": "FIXED_PRICE",
@@ -3440,7 +3465,7 @@
       "status": null,
       "billingPricingMode": "standard",
       "standardPricingOverride": null,
-      "billingEnabled": null,
+      "billingEnabled": true,
       "productRules": [
         {
           "ruleType": "FIXED_PRICE",
@@ -3466,7 +3491,7 @@
       "status": null,
       "billingPricingMode": "standard",
       "standardPricingOverride": null,
-      "billingEnabled": null,
+      "billingEnabled": true,
       "productRules": [
         {
           "ruleType": "FIXED_PRICE",
@@ -3490,7 +3515,7 @@
     "NEAU-YY": {
       "code": "NEAU-YY",
       "name": "NEAU-YY",
-      "status": null,
+      "status": "inactive",
       "billingPricingMode": "standard",
       "standardPricingOverride": null,
       "billingEnabled": true,
@@ -3620,7 +3645,7 @@
       "status": null,
       "billingPricingMode": "special_only",
       "standardPricingOverride": null,
-      "billingEnabled": false,
+      "billingEnabled": true,
       "productRules": [
         {
           "ruleType": "FIXED_PRICE",
@@ -3894,7 +3919,7 @@
       "status": null,
       "billingPricingMode": null,
       "standardPricingOverride": null,
-      "billingEnabled": null,
+      "billingEnabled": false,
       "productRules": [],
       "rule_count": 0,
       "active_rule_count": 0
@@ -3905,7 +3930,7 @@
       "status": null,
       "billingPricingMode": "hybrid",
       "standardPricingOverride": null,
-      "billingEnabled": null,
+      "billingEnabled": true,
       "productRules": [
         {
           "code": "PFQ-RM",
@@ -3949,7 +3974,7 @@
       "status": null,
       "billingPricingMode": "standard",
       "standardPricingOverride": null,
-      "billingEnabled": null,
+      "billingEnabled": true,
       "productRules": [],
       "rule_count": 0,
       "active_rule_count": 0
@@ -3960,7 +3985,7 @@
       "status": null,
       "billingPricingMode": "standard",
       "standardPricingOverride": null,
-      "billingEnabled": null,
+      "billingEnabled": true,
       "productRules": [
         {
           "ruleType": "FIXED_PRICE",
@@ -4128,7 +4153,7 @@
       "status": null,
       "billingPricingMode": "special_only",
       "standardPricingOverride": null,
-      "billingEnabled": null,
+      "billingEnabled": true,
       "productRules": [
         {
           "ruleType": "FIXED_PRICE",
@@ -4168,7 +4193,7 @@
       "status": null,
       "billingPricingMode": "hybrid",
       "standardPricingOverride": null,
-      "billingEnabled": null,
+      "billingEnabled": true,
       "productRules": [
         {
           "ruleType": "FIXED_PRICE",
@@ -4326,7 +4351,7 @@
       "status": null,
       "billingPricingMode": "hybrid",
       "standardPricingOverride": null,
-      "billingEnabled": null,
+      "billingEnabled": true,
       "productRules": [
         {
           "ruleType": "FIXED_PRICE",
@@ -4717,7 +4742,7 @@
       "status": null,
       "billingPricingMode": "special_only",
       "standardPricingOverride": null,
-      "billingEnabled": false,
+      "billingEnabled": true,
       "productRules": [
         {
           "ruleType": "FIXED_PRICE",
@@ -4908,7 +4933,7 @@
       "status": null,
       "billingPricingMode": "standard",
       "standardPricingOverride": null,
-      "billingEnabled": false,
+      "billingEnabled": true,
       "productRules": [
         {
           "ruleType": "FIXED_PRICE",
@@ -4943,7 +4968,7 @@
     "WCSRMYY": {
       "code": "WCSRMYY",
       "name": "WCSRMYY",
-      "status": null,
+      "status": "inactive",
       "billingPricingMode": "standard",
       "standardPricingOverride": null,
       "billingEnabled": true,
@@ -5125,7 +5150,7 @@
       "status": null,
       "billingPricingMode": "special_only",
       "standardPricingOverride": null,
-      "billingEnabled": null,
+      "billingEnabled": true,
       "productRules": [
         {
           "ruleType": "FIXED_PRICE",
@@ -5192,7 +5217,7 @@
       "status": null,
       "billingPricingMode": null,
       "standardPricingOverride": null,
-      "billingEnabled": null,
+      "billingEnabled": false,
       "productRules": [],
       "rule_count": 0,
       "active_rule_count": 0
@@ -5203,7 +5228,7 @@
       "status": null,
       "billingPricingMode": "hybrid",
       "standardPricingOverride": null,
-      "billingEnabled": null,
+      "billingEnabled": true,
       "productRules": [
         {
           "ruleType": "FIXED_PRICE",
@@ -5305,7 +5330,7 @@
       "status": null,
       "billingPricingMode": "standard",
       "standardPricingOverride": null,
-      "billingEnabled": null,
+      "billingEnabled": true,
       "productRules": [
         {
           "ruleType": "FIXED_PRICE",
@@ -5334,7 +5359,7 @@
       "status": null,
       "billingPricingMode": "standard",
       "standardPricingOverride": null,
-      "billingEnabled": null,
+      "billingEnabled": true,
       "productRules": [],
       "rule_count": 0,
       "active_rule_count": 0
@@ -5345,7 +5370,7 @@
       "status": null,
       "billingPricingMode": "standard",
       "standardPricingOverride": null,
-      "billingEnabled": null,
+      "billingEnabled": true,
       "productRules": [
         {
           "ruleType": "PRICE_PER_INSTRUMENT",
@@ -5528,7 +5553,7 @@
       "status": null,
       "billingPricingMode": "special_only",
       "standardPricingOverride": null,
-      "billingEnabled": null,
+      "billingEnabled": true,
       "productRules": [
         {
           "ruleType": "FIXED_PRICE",
@@ -5654,7 +5679,7 @@
       "status": null,
       "billingPricingMode": "hybrid",
       "standardPricingOverride": null,
-      "billingEnabled": null,
+      "billingEnabled": true,
       "productRules": [
         {
           "ruleType": "FOLD",
@@ -5706,7 +5731,7 @@
       "status": null,
       "billingPricingMode": "special_only",
       "standardPricingOverride": null,
-      "billingEnabled": null,
+      "billingEnabled": true,
       "productRules": [
         {
           "ruleType": "FIXED_PRICE",
@@ -5940,7 +5965,7 @@
           }
         }
       },
-      "billingEnabled": null,
+      "billingEnabled": true,
       "productRules": [
         {
           "ruleType": "FIXED_PRICE",
@@ -6635,7 +6660,7 @@
       "status": null,
       "billingPricingMode": "hybrid",
       "standardPricingOverride": null,
-      "billingEnabled": null,
+      "billingEnabled": true,
       "productRules": [
         {
           "ruleType": "FIXED_PRICE",
@@ -6660,7 +6685,7 @@
       "status": null,
       "billingPricingMode": "special_only",
       "standardPricingOverride": null,
-      "billingEnabled": null,
+      "billingEnabled": true,
       "productRules": [
         {
           "ruleType": "FIXED_PRICE",

@@ -57,6 +57,96 @@ public final class BillingConditionEvaluator {
         return false;
     }
 
+    public static boolean isCjkChar(char ch) {
+        return (ch >= 0x4e00 && ch <= 0x9fff) || (ch >= 0x3400 && ch <= 0x4dbf);
+    }
+
+    /** 关键词 token 边界：串首/串尾，或两侧为非 CJK 字符（如 - / 数字）。 */
+    public static boolean isKeywordTokenBoundary(char ch) {
+        return ch == 0 || !isCjkChar(ch);
+    }
+
+    /**
+     * 小件关键词精准匹配：关键词须作为独立 token 出现，不可嵌在其他中文词内
+     * （如「针」不可命中「克氏针」，「车针」不可命中「正畸去胶车针」）。
+     */
+    public static boolean matchesKeywordExactToken(String text, String keyword) {
+        if (text == null || keyword == null) {
+            return false;
+        }
+        String normalized = normalizeMatchText(text).toLowerCase();
+        String raw = normalizeMatchText(keyword).toLowerCase();
+        if (raw.isBlank()) {
+            return false;
+        }
+        for (String part : raw.split("[，,]")) {
+            if (part.isBlank()) {
+                continue;
+            }
+            int idx = 0;
+            while ((idx = normalized.indexOf(part, idx)) != -1) {
+                char prev = idx > 0 ? normalized.charAt(idx - 1) : 0;
+                char next = idx + part.length() < normalized.length()
+                        ? normalized.charAt(idx + part.length()) : 0;
+                if (isKeywordTokenBoundary(prev) && isKeywordTokenBoundary(next)) {
+                    return true;
+                }
+                idx += part.length();
+            }
+        }
+        return false;
+    }
+
+    public static boolean matchesKeywordsExactToken(String text, JsonNode keywords) {
+        if (keywords == null || !keywords.isArray() || keywords.isEmpty()) {
+            return false;
+        }
+        for (JsonNode kw : keywords) {
+            if (matchesKeywordExactToken(text, kw.asText(""))) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public record ExactTokenKeywordMatch(String keyword, int position, String compactText) {}
+
+    /** 按关键词长度降序，返回首个精准 token 命中（优先「穿刺针」而非「针」）。 */
+    public static ExactTokenKeywordMatch findLongestExactTokenKeyword(String text, JsonNode keywords) {
+        if (text == null || keywords == null || !keywords.isArray()) {
+            return null;
+        }
+        String compact = normalizeMatchText(text);
+        String compactLower = compact.toLowerCase();
+        List<String> parts = new ArrayList<>();
+        for (JsonNode kw : keywords) {
+            String raw = normalizeMatchText(kw.asText("")).toLowerCase();
+            if (raw.isBlank()) {
+                continue;
+            }
+            for (String part : raw.split("[，,]")) {
+                if (!part.isBlank()) {
+                    parts.add(part);
+                }
+            }
+        }
+        parts.sort((a, b) -> Integer.compare(b.length(), a.length()));
+        for (String part : parts) {
+            int idx = 0;
+            while ((idx = compactLower.indexOf(part, idx)) != -1) {
+                char prev = idx > 0 ? compactLower.charAt(idx - 1) : 0;
+                char next = idx + part.length() < compactLower.length()
+                        ? compactLower.charAt(idx + part.length()) : 0;
+                if (isKeywordTokenBoundary(prev) && isKeywordTokenBoundary(next)) {
+                    return new ExactTokenKeywordMatch(
+                            compact.substring(idx, idx + part.length()), idx, compact);
+                }
+                idx += part.length();
+            }
+        }
+        return null;
+    }
+
     public static boolean matchesRuleKeywords(String text, JsonNode keywords) {
         if (keywords == null || !keywords.isArray() || keywords.isEmpty()) {
             return true;

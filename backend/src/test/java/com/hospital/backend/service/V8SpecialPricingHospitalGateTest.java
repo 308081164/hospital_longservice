@@ -171,8 +171,8 @@ class V8SpecialPricingHospitalGateTest {
             }
             return new CaseResult("golden", id, true, "ok");
         }
-        if (!"unchanged".equals(result.status)) {
-            return new CaseResult("golden", id, false, "expected unchanged got " + result.status
+        if (!"unchanged".equals(result.status) && !"warning".equals(result.status)) {
+            return new CaseResult("golden", id, false, "expected unchanged or warning got " + result.status
                     + " rule=" + result.pricingRule);
         }
         return new CaseResult("golden", id, true, "ok");

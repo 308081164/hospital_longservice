@@ -24,7 +24,8 @@ public class UnmatchedProductAnalyzer {
         List<String> matchedNeedleKeywords = new ArrayList<>();
         String combined = (packName == null ? "" : packName) + " " + (type == null ? "" : type);
         for (String kw : needleKeywords) {
-            if (kw != null && !kw.isBlank() && combined.contains(kw)) {
+            if (kw != null && !kw.isBlank()
+                    && BillingConditionEvaluator.matchesKeywordExactToken(combined, kw)) {
                 matchedNeedleKeywords.add(kw);
             }
         }

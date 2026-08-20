@@ -156,6 +156,25 @@ CASES: list[dict[str, Any]] = [
         "note": "客户表：2折算件×5.5+包材(10cm)=13.5；补规则后一致",
     },
     {
+        "id": "guoyao2_kirschner_fold_12",
+        "code": "GUOYAO-2",
+        "hospital": "国药总医院第二院区",
+        "name": "克氏针12件5合1免包材",
+        "sample": {
+            "department": "手术室",
+            "packName": "克氏针-12/Z7530",
+            "type": "额外包(纸塑袋)",
+            "packageMaterial": "高温纸塑袋75*300",
+            "instrumentCount": 12,
+            "packCount": 1,
+            "unitPrice": 16.5,
+            "totalPrice": 16.5,
+        },
+        "expectedUnitPrice": 16.5,
+        "expectedPricingRuleContains": "通用小件5合1免包材",
+        "note": "Excel通用：ceil(12/5)×5.5=16.5；非12×5.5=66",
+    },
+    {
         "id": "guoyao2_double_per_piece",
         "code": "GUOYAO-2",
         "hospital": "国药总医院第二院区",
@@ -216,11 +235,18 @@ def _price_close(actual: Any, expected: float, *, tol: float = 0.05) -> bool:
         return False
 
 
-def run() -> dict[str, Any]:
-    client = ApiClient(mode="docker")
+def run(*, code: str | None = None, case_id: str | None = None, api_base: str | None = None) -> dict[str, Any]:
+    client = ApiClient(api_base=api_base) if api_base else ApiClient(mode="docker")
     client.login(force=True)
     results: list[dict[str, Any]] = []
-    for case in CASES:
+    cases = CASES
+    if code:
+        cases = [c for c in cases if c.get("code") == code.strip().upper()]
+    if case_id:
+        cases = [c for c in cases if c.get("id") == case_id.strip()]
+    if not cases:
+        return {"passed": 0, "failed": 1, "observed": 0, "results": [{"ok": False, "error": "no cases matched filter"}]}
+    for case in cases:
         customer = client.customer_by_code(case["code"])
         if customer is None:
             results.append({**case, "ok": False, "error": "customer not found"})
@@ -238,11 +264,15 @@ def run() -> dict[str, Any]:
             )
             actual = sim.get("expectedUnitPrice") or sim.get("expected_unit_price")
             expected = case.get("expectedUnitPrice")
+            pricing_rule = sim.get("pricingRule") or sim.get("pricing_rule")
             ok: bool | None
             if expected is None:
                 ok = None
             else:
                 ok = _price_close(actual, float(expected))
+            rule_contains = case.get("expectedPricingRuleContains")
+            if ok and rule_contains:
+                ok = rule_contains in str(pricing_rule or "")
             results.append(
                 {
                     "id": case["id"],
@@ -250,7 +280,7 @@ def run() -> dict[str, Any]:
                     "code": case["code"],
                     "expectedUnitPrice": expected,
                     "actualUnitPrice": actual,
-                    "pricingRule": sim.get("pricingRule") or sim.get("pricing_rule"),
+                    "pricingRule": pricing_rule,
                     "status": sim.get("status"),
                     "ok": ok,
                     "note": case.get("note"),
@@ -278,5 +308,14 @@ def run() -> dict[str, Any]:
 
 
 if __name__ == "__main__":
-    report = run()
+    import argparse
+
+    parser = argparse.ArgumentParser(description="Customer rules spot validation via simulate API")
+    parser.add_argument("--code", help="Filter by customer code")
+    parser.add_argument("--id", help="Filter by case id")
+    parser.add_argument("--api", help="API base URL (default: docker/local)")
+    args = parser.parse_args()
+    report = run(code=args.code, case_id=args.id, api_base=args.api)
     print(json.dumps(report, ensure_ascii=False, indent=2))
+    if report.get("failed", 0) > 0:
+        raise SystemExit(1)

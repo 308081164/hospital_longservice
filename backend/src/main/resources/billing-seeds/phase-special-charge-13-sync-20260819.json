@@ -1,0 +1,29 @@
+{
+  "version": "1",
+  "description": "对照特殊收费(13).xlsx：省妇幼人口「针包」改为 1*5.5+标准包材（整包按1件）",
+  "strictRuleOps": true,
+  "deactivateRules": [
+    {
+      "code": "HLJ-FY-RK",
+      "ruleName": "妇幼人口针包5合1含包材"
+    },
+    {
+      "code": "HLJ-FY-RK",
+      "ruleName": "妇幼人口针包5合1免包材"
+    }
+  ],
+  "newRules": [
+    {
+      "code": "HLJ-FY-RK",
+      "ruleType": "FOLD",
+      "name": "妇幼人口针包按1件含包材",
+      "priority": 10,
+      "keywords": [
+        "针包"
+      ],
+      "threshold": 99999,
+      "foldRatio": 5,
+      "skipPackaging": false
+    }
+  ]
+}
