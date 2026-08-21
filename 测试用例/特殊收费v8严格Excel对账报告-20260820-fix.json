@@ -1,0 +1,262 @@
+{
+  "generated": "2026-08-20",
+  "api_base": "http://127.0.0.1:8000",
+  "summary": {
+    "pass": 0,
+    "fail": 1,
+    "skip": 0,
+    "error": 0
+  },
+  "sections": {
+    "month6": [
+      {
+        "hospital": "祖研-黑龙江省中医医院（南岗院区）",
+        "customer_label": "祖研南岗",
+        "status": "FAIL",
+        "message": "多报 7；忽略非计价 warning 1 条",
+        "job_id": 947,
+        "raw_file": "祖研南岗6月账单.xlsx",
+        "proc_file": "6月__祖研-黑龙江省中医医院（南岗院区）6月账单.xlsx",
+        "expected_count": 25,
+        "warning_count": 45,
+        "pricing_warning_count": 32,
+        "non_pricing_warning_ignored": 1,
+        "matched_count": 25,
+        "missed": [],
+        "extra": [
+          {
+            "diff_type": "EXTRA",
+            "sheet": "美容科",
+            "ship_no": "1608289",
+            "pack_name": "器械包-5件（筐1）/w9050",
+            "pack_count": 1,
+            "raw_unit": 33.0,
+            "proc_unit": null,
+            "system_unit": 27.5,
+            "proc_verify_unit": null,
+            "pricing_rule": "高温无纺布计费",
+            "key": "1608289|器械包-5件（筐1）/w9050|1"
+          },
+          {
+            "diff_type": "EXTRA",
+            "sheet": "美容科",
+            "ship_no": "1609061",
+            "pack_name": "器械包-15件（筐1）件/w9050",
+            "pack_count": 1,
+            "raw_unit": 88.0,
+            "proc_unit": null,
+            "system_unit": 82.5,
+            "proc_verify_unit": null,
+            "pricing_rule": "高温无纺布计费",
+            "key": "1609061|器械包-15件（筐1）件/w9050|1"
+          },
+          {
+            "diff_type": "EXTRA",
+            "sheet": "美容科",
+            "ship_no": "1609796",
+            "pack_name": "器械包-10件（筐1）件/w9050",
+            "pack_count": 1,
+            "raw_unit": 60.5,
+            "proc_unit": null,
+            "system_unit": 55.0,
+            "proc_verify_unit": null,
+            "pricing_rule": "高温无纺布计费",
+            "key": "1609796|器械包-10件（筐1）件/w9050|1"
+          },
+          {
+            "diff_type": "EXTRA",
+            "sheet": "美容科",
+            "ship_no": "1610395",
+            "pack_name": "器械包-7件（筐1）/w9050",
+            "pack_count": 1,
+            "raw_unit": 44.0,
+            "proc_unit": null,
+            "system_unit": 38.5,
+            "proc_verify_unit": null,
+            "pricing_rule": "高温无纺布计费",
+            "key": "1610395|器械包-7件（筐1）/w9050|1"
+          },
+          {
+            "diff_type": "EXTRA",
+            "sheet": "美容科",
+            "ship_no": "1611177",
+            "pack_name": "器械包-8件（筐1）件/w9050",
+            "pack_count": 1,
+            "raw_unit": 49.5,
+            "proc_unit": null,
+            "system_unit": 44.0,
+            "proc_verify_unit": null,
+            "pricing_rule": "高温无纺布计费",
+            "key": "1611177|器械包-8件（筐1）件/w9050|1"
+          },
+          {
+            "diff_type": "EXTRA",
+            "sheet": "美容科",
+            "ship_no": "1611875",
+            "pack_name": "器械包-15件（筐1）件/w9050",
+            "pack_count": 1,
+            "raw_unit": 93.5,
+            "proc_unit": null,
+            "system_unit": 82.5,
+            "proc_verify_unit": null,
+            "pricing_rule": "高温无纺布计费",
+            "key": "1611875|器械包-15件（筐1）件/w9050|1"
+          },
+          {
+            "diff_type": "EXTRA",
+            "sheet": "美容科",
+            "ship_no": "1612425",
+            "pack_name": "器械包-3件（筐1）/w9050",
+            "pack_count": 1,
+            "raw_unit": 22.0,
+            "proc_unit": null,
+            "system_unit": 16.5,
+            "proc_verify_unit": null,
+            "pricing_rule": "高温无纺布计费",
+            "key": "1612425|器械包-3件（筐1）/w9050|1"
+          }
+        ],
+        "price_mismatch": [],
+        "proc_mismatch": [],
+        "dedupe_note": "warning 集合存在 strict key 重复（已保留首条）",
+        "fully_aligned": false,
+        "month": 6,
+        "section": "month6"
+      }
+    ]
+  },
+  "v8_hospitals": [
+    {
+      "customer_label": "冰城医美",
+      "folder": "哈尔滨冰城医疗美容医院",
+      "testable": true,
+      "skip_reason": ""
+    },
+    {
+      "customer_label": "电机厂",
+      "folder": "国药总医院第二院区",
+      "testable": true,
+      "skip_reason": ""
+    },
+    {
+      "customer_label": "方南南",
+      "folder": "方南南医院",
+      "testable": false,
+      "skip_reason": "缺 7 月原始表"
+    },
+    {
+      "customer_label": "东北农大",
+      "folder": "东北农业大学",
+      "testable": false,
+      "skip_reason": "缺 7 月原始表"
+    },
+    {
+      "customer_label": "工程大学",
+      "folder": "哈尔滨工程大学医院",
+      "testable": false,
+      "skip_reason": "无 6 月 raw+proc 成对（仅 5 月）"
+    },
+    {
+      "customer_label": "松电慢病",
+      "folder": "松电慢病",
+      "testable": false,
+      "skip_reason": "缺 6 月 raw+proc 成对"
+    },
+    {
+      "customer_label": "航天风华",
+      "folder": "航天风华",
+      "testable": false,
+      "skip_reason": "缺 8 月原始表"
+    },
+    {
+      "customer_label": "市五院二门诊",
+      "folder": "哈尔滨市第五医院（二门诊）",
+      "testable": true,
+      "skip_reason": ""
+    },
+    {
+      "customer_label": "九州",
+      "folder": "黑龙江九洲妇科医院",
+      "testable": true,
+      "skip_reason": ""
+    },
+    {
+      "customer_label": "博尚",
+      "folder": "博尚医院",
+      "testable": false,
+      "skip_reason": "缺 7 月 raw+proc 成对"
+    },
+    {
+      "customer_label": "海员松北",
+      "folder": "黑龙江省海员总医院（松北）",
+      "testable": false,
+      "skip_reason": "缺 6 月 raw+proc 成对"
+    },
+    {
+      "customer_label": "省妇幼人口",
+      "folder": "黑龙江省妇幼保健院（人口）",
+      "testable": false,
+      "skip_reason": "缺 6 月 raw+proc 成对（7 月可 strict）"
+    },
+    {
+      "customer_label": "祖研南岗",
+      "folder": "祖研-黑龙江省中医医院（南岗院区）",
+      "testable": true,
+      "skip_reason": ""
+    },
+    {
+      "customer_label": "社会康复",
+      "folder": "黑龙江省社会康复医院",
+      "testable": true,
+      "skip_reason": ""
+    },
+    {
+      "customer_label": "道里妇幼",
+      "folder": "道里区妇幼保健院",
+      "testable": false,
+      "skip_reason": "缺 7 月原始表"
+    },
+    {
+      "customer_label": "春语医美",
+      "folder": "春语医美",
+      "testable": false,
+      "skip_reason": "缺 7 月原始表"
+    },
+    {
+      "customer_label": "总工会",
+      "folder": "总工会",
+      "testable": false,
+      "skip_reason": "缺 6 月 raw+proc 成对（7 月可 strict）"
+    },
+    {
+      "customer_label": "基准生物",
+      "folder": "基准生物",
+      "testable": false,
+      "skip_reason": "缺 7 月原始表"
+    },
+    {
+      "customer_label": "索菲医美",
+      "folder": "索菲医美",
+      "testable": false,
+      "skip_reason": "缺 6 月 raw+proc 成对（7 月可 strict）"
+    },
+    {
+      "customer_label": "省监狱管理局",
+      "folder": "省监狱管理局医院",
+      "testable": false,
+      "skip_reason": "缺 7 月原始表"
+    },
+    {
+      "customer_label": "呼兰中医",
+      "folder": "呼兰中医院",
+      "testable": true,
+      "skip_reason": ""
+    },
+    {
+      "customer_label": "平房区人民",
+      "folder": "哈尔滨市平房区人民医院",
+      "testable": false,
+      "skip_reason": "缺 7 月原始表"
+    }
+  ]
+}
