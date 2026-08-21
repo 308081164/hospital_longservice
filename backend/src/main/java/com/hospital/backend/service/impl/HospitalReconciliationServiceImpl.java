@@ -6,7 +6,7 @@ import com.hospital.backend.common.Result;
 import com.hospital.backend.service.BillRowBillingNotesSupport;
 import com.hospital.backend.service.PricingEngine;
 import com.hospital.backend.service.PricingRuleCompiler;
-import com.hospital.backend.service.RowSplitter;
+
 import com.hospital.backend.service.CustomerResolver;
 import com.hospital.backend.service.LogisticsFeeCalculator;
 import com.hospital.backend.service.LogisticsPipelineService;
@@ -708,7 +708,7 @@ public class HospitalReconciliationServiceImpl implements HospitalReconciliation
             List<Map<String, Object>> rowsToPrice = new ArrayList<>();
             for (Map<String, Object> row : allRows) {
                 row.put("hospitalName", hospitalName);
-                rowsToPrice.addAll(RowSplitter.expandRow(row, compiledRules));
+                rowsToPrice.add(row);
             }
             List<Map<String, Object>> processedRows = new ArrayList<>();
             int corrected = 0, unchanged = 0, warning = 0, skipped = 0;
