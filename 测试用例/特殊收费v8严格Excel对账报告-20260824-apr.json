@@ -1,0 +1,312 @@
+{
+  "generated": "2026-08-24",
+  "api_base": "http://127.0.0.1:8000",
+  "summary": {
+    "pass": 3,
+    "fail": 1,
+    "skip": 0,
+    "error": 1
+  },
+  "sections": {
+    "month4": [
+      {
+        "hospital": "松电慢病",
+        "customer_label": "松电慢病",
+        "status": "PASS",
+        "message": "完全对应：3 条，目标单价偏差 < 0.01 元",
+        "job_id": 1149,
+        "raw_file": "哈尔滨道外区松电慢性病专科门诊部4月.xlsx",
+        "proc_file": "松电4月账单.xlsx",
+        "expected_count": 3,
+        "warning_count": 3,
+        "pricing_warning_count": 3,
+        "non_pricing_warning_ignored": 0,
+        "matched_count": 3,
+        "missed": [],
+        "extra": [],
+        "price_mismatch": [],
+        "proc_mismatch": [],
+        "dedupe_note": "",
+        "fully_aligned": true,
+        "month": 4,
+        "section": "month4"
+      },
+      {
+        "hospital": "航天风华",
+        "customer_label": "航天风华",
+        "status": "ERROR",
+        "message": "漏检 3",
+        "job_id": 1150,
+        "raw_file": "哈尔滨航天风华医院4月.xlsx",
+        "proc_file": "航天4月账单.xlsx",
+        "expected_count": 3,
+        "warning_count": 264,
+        "pricing_warning_count": 0,
+        "non_pricing_warning_ignored": 264,
+        "matched_count": 0,
+        "missed": [
+          {
+            "diff_type": "MISSED",
+            "sheet": "口腔科",
+            "ship_no": "1591999",
+            "pack_name": "光敏刀-3/z7530",
+            "pack_count": 1.0,
+            "raw_unit": 19.0,
+            "proc_unit": 16.5,
+            "system_unit": null,
+            "proc_verify_unit": 16.5,
+            "pricing_rule": "",
+            "key": "1591999|光敏刀-3/z7530|1"
+          },
+          {
+            "diff_type": "MISSED",
+            "sheet": "口腔科",
+            "ship_no": "1591999",
+            "pack_name": "器械-1件/保/Z1026",
+            "pack_count": 1.0,
+            "raw_unit": 30.0,
+            "proc_unit": 8.0,
+            "system_unit": null,
+            "proc_verify_unit": 8.0,
+            "pricing_rule": "",
+            "key": "1591999|器械-1件/保/Z1026|1"
+          },
+          {
+            "diff_type": "MISSED",
+            "sheet": "口腔科",
+            "ship_no": "1597269",
+            "pack_name": "棉球/Z1526",
+            "pack_count": 30.0,
+            "raw_unit": 5.5,
+            "proc_unit": 2.5,
+            "system_unit": null,
+            "proc_verify_unit": 2.5,
+            "pricing_rule": "",
+            "key": "1597269|棉球/Z1526|30"
+          }
+        ],
+        "extra": [],
+        "price_mismatch": [],
+        "proc_mismatch": [],
+        "dedupe_note": "",
+        "fully_aligned": false,
+        "month": 4,
+        "section": "month4"
+      },
+      {
+        "hospital": "博尚医院",
+        "customer_label": "博尚",
+        "status": "PASS",
+        "message": "零期待校正，零计价 warning（忽略非计价 warning 1 条）",
+        "job_id": 1151,
+        "raw_file": "黑龙江博尚医院4月.xlsx",
+        "proc_file": "博尚4月账单.xlsx",
+        "expected_count": 0,
+        "warning_count": 1,
+        "pricing_warning_count": 0,
+        "non_pricing_warning_ignored": 1,
+        "matched_count": 0,
+        "missed": [],
+        "extra": [],
+        "price_mismatch": [],
+        "proc_mismatch": [],
+        "dedupe_note": "",
+        "fully_aligned": true,
+        "month": 4,
+        "section": "month4"
+      },
+      {
+        "hospital": "道里区妇幼保健院",
+        "customer_label": "道里妇幼",
+        "status": "FAIL",
+        "message": "多报 1",
+        "job_id": 1152,
+        "raw_file": "哈尔滨市道里区妇幼保健院4月.xlsx",
+        "proc_file": "4月__道里妇幼保健4月账单.xlsx",
+        "expected_count": 0,
+        "warning_count": 1,
+        "pricing_warning_count": 1,
+        "non_pricing_warning_ignored": 0,
+        "matched_count": 0,
+        "missed": [],
+        "extra": [
+          {
+            "diff_type": "EXTRA",
+            "sheet": "口腔科",
+            "ship_no": "1596550",
+            "pack_name": "车针-10/z7520",
+            "pack_count": 3,
+            "raw_unit": 13.5,
+            "proc_unit": null,
+            "system_unit": 8.0,
+            "proc_verify_unit": null,
+            "pricing_rule": "通用小件5合1含包材",
+            "key": "1596550|车针-10/z7520|3"
+          }
+        ],
+        "price_mismatch": [],
+        "proc_mismatch": [],
+        "dedupe_note": "",
+        "fully_aligned": false,
+        "month": 4,
+        "section": "month4"
+      },
+      {
+        "hospital": "春语医美",
+        "customer_label": "春语医美",
+        "status": "PASS",
+        "message": "零期待校正，零计价 warning",
+        "job_id": 1153,
+        "raw_file": "春语医疗美容医院4月.xlsx",
+        "proc_file": "4月__春语4月账单.xlsx",
+        "expected_count": 0,
+        "warning_count": 0,
+        "pricing_warning_count": 0,
+        "non_pricing_warning_ignored": 0,
+        "matched_count": 0,
+        "missed": [],
+        "extra": [],
+        "price_mismatch": [],
+        "proc_mismatch": [],
+        "dedupe_note": "",
+        "fully_aligned": true,
+        "month": 4,
+        "section": "month4"
+      }
+    ]
+  },
+  "v8_hospitals": [
+    {
+      "customer_label": "冰城医美",
+      "folder": "哈尔滨冰城医疗美容医院",
+      "testable": true,
+      "skip_reason": ""
+    },
+    {
+      "customer_label": "电机厂",
+      "folder": "国药总医院第二院区",
+      "testable": true,
+      "skip_reason": ""
+    },
+    {
+      "customer_label": "方南南",
+      "folder": "方南南医院",
+      "testable": false,
+      "skip_reason": "缺 7 月原始表"
+    },
+    {
+      "customer_label": "东北农大",
+      "folder": "东北农业大学",
+      "testable": false,
+      "skip_reason": "缺 7 月原始表"
+    },
+    {
+      "customer_label": "工程大学",
+      "folder": "哈尔滨工程大学医院",
+      "testable": false,
+      "skip_reason": "无 6 月 raw+proc 成对（仅 5 月）"
+    },
+    {
+      "customer_label": "松电慢病",
+      "folder": "松电慢病",
+      "testable": false,
+      "skip_reason": "缺 6 月 raw+proc 成对"
+    },
+    {
+      "customer_label": "航天风华",
+      "folder": "航天风华",
+      "testable": false,
+      "skip_reason": "缺 8 月原始表"
+    },
+    {
+      "customer_label": "市五院二门诊",
+      "folder": "哈尔滨市第五医院（二门诊）",
+      "testable": true,
+      "skip_reason": ""
+    },
+    {
+      "customer_label": "九州",
+      "folder": "黑龙江九洲妇科医院",
+      "testable": true,
+      "skip_reason": ""
+    },
+    {
+      "customer_label": "博尚",
+      "folder": "博尚医院",
+      "testable": false,
+      "skip_reason": "缺 7 月 raw+proc 成对"
+    },
+    {
+      "customer_label": "海员松北",
+      "folder": "黑龙江省海员总医院（松北）",
+      "testable": false,
+      "skip_reason": "缺 6 月 raw+proc 成对"
+    },
+    {
+      "customer_label": "省妇幼人口",
+      "folder": "黑龙江省妇幼保健院（人口）",
+      "testable": false,
+      "skip_reason": "缺 6 月 raw+proc 成对（7 月可 strict）"
+    },
+    {
+      "customer_label": "祖研南岗",
+      "folder": "祖研-黑龙江省中医医院（南岗院区）",
+      "testable": true,
+      "skip_reason": ""
+    },
+    {
+      "customer_label": "社会康复",
+      "folder": "黑龙江省社会康复医院",
+      "testable": true,
+      "skip_reason": ""
+    },
+    {
+      "customer_label": "道里妇幼",
+      "folder": "道里区妇幼保健院",
+      "testable": false,
+      "skip_reason": "缺 7 月原始表"
+    },
+    {
+      "customer_label": "春语医美",
+      "folder": "春语医美",
+      "testable": false,
+      "skip_reason": "缺 7 月原始表"
+    },
+    {
+      "customer_label": "总工会",
+      "folder": "总工会",
+      "testable": false,
+      "skip_reason": "缺 6 月 raw+proc 成对（7 月可 strict）"
+    },
+    {
+      "customer_label": "基准生物",
+      "folder": "基准生物",
+      "testable": false,
+      "skip_reason": "缺 7 月原始表"
+    },
+    {
+      "customer_label": "索菲医美",
+      "folder": "索菲医美",
+      "testable": false,
+      "skip_reason": "缺 6 月 raw+proc 成对（7 月可 strict）"
+    },
+    {
+      "customer_label": "省监狱管理局",
+      "folder": "省监狱管理局医院",
+      "testable": false,
+      "skip_reason": "缺 7 月原始表"
+    },
+    {
+      "customer_label": "呼兰中医",
+      "folder": "呼兰中医院",
+      "testable": true,
+      "skip_reason": ""
+    },
+    {
+      "customer_label": "平房区人民",
+      "folder": "哈尔滨市平房区人民医院",
+      "testable": false,
+      "skip_reason": "缺 7 月原始表"
+    }
+  ]
+}

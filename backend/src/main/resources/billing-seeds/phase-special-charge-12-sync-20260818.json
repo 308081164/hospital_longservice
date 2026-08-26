@@ -416,6 +416,7 @@
       ],
       "threshold": 5,
       "foldRatio": 5,
+      "extraCount": 1,
       "maxInstrumentCount": 6,
       "skipPackaging": false
     },
@@ -429,6 +430,7 @@
       ],
       "threshold": 5,
       "foldRatio": 5,
+      "extraCount": 1,
       "minInstrumentCount": 7,
       "skipPackaging": true
     },
@@ -871,6 +873,7 @@
           ],
           "threshold": 5,
           "foldRatio": 5,
+          "extraCount": 1,
           "maxInstrumentCount": 6,
           "skipPackaging": false
         },
@@ -884,6 +887,7 @@
           ],
           "threshold": 5,
           "foldRatio": 5,
+          "extraCount": 1,
           "minInstrumentCount": 7,
           "skipPackaging": true
         }

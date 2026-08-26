@@ -596,6 +596,9 @@ def pick_processed_bill(month: int, files: list[Path], raw_name: str) -> Path | 
     month_prefix = f"{month}月__"
     candidates = [f for f in files if f.name.startswith(month_prefix) and is_bill_file(f.name)]
     if not candidates:
+        # 8.22 批次文件名无 "X月__" 前缀（如 "航天4月账单.xlsx"），按名称中的 "X月" 回退匹配
+        candidates = [f for f in files if is_bill_file(f.name) and extract_month_from_name(f.name) == month]
+    if not candidates:
         return None
 
     raw_range = extract_date_range_token(raw_name)

@@ -334,7 +334,9 @@ public class BillingSeedMigrationRunner implements CommandLineRunner {
             new IncrementalSeed("billing_seed_global_special_rules_20260820_v1",
                     "billing-seeds/phase-global-special-rules-20260820.json"),
             new IncrementalSeed("billing_seed_guoyao_2_double_split_20260820_v1",
-                    "billing-seeds/phase-guoyao-2-double-split-20260820.json")
+                    "billing-seeds/phase-guoyao-2-double-split-20260820.json"),
+            new IncrementalSeed("billing_seed_special_charge_14_sync_20260822_v1",
+                    "billing-seeds/phase-special-charge-14-sync-20260822.json")
     );
 
     private static final String ZYY_D1_P0_MARKER = "billing_seed_zyy_d1_p0_v2";
@@ -482,7 +484,8 @@ public class BillingSeedMigrationRunner implements CommandLineRunner {
                     || "billing-seeds/phase-bill-mirror-fix-20260820.json".equals(incremental.classpathFile())
                     || "billing-seeds/phase-boshang-hybrid-20260820.json".equals(incremental.classpathFile())
                     || "billing-seeds/phase-fold-unitprice-customers-20260820.json".equals(incremental.classpathFile())
-                    || "billing-seeds/phase-guoyao-2-double-split-20260820.json".equals(incremental.classpathFile())) {
+                    || "billing-seeds/phase-guoyao-2-double-split-20260820.json".equals(incremental.classpathFile())
+                    || "billing-seeds/phase-special-charge-14-sync-20260822.json".equals(incremental.classpathFile())) {
                 applyBatchPatchSeedFile(incremental.classpathFile());
             } else if ("billing-seeds/phase-billing-mode-backfill-20260730.json".equals(incremental.classpathFile())) {
                 applyBillingModeBackfillSeedFile(incremental.classpathFile());
@@ -1885,6 +1888,9 @@ public class BillingSeedMigrationRunner implements CommandLineRunner {
             }
             if (ruleNode.hasNonNull("threshold")) {
                 rule.setThreshold(intVal(ruleNode, "threshold", null));
+            }
+            if (ruleNode.hasNonNull("extraCount")) {
+                rule.setExtraCount(intVal(ruleNode, "extraCount", null));
             }
             if (ruleNode.has("keywords")) {
                 rule.setKeywords(toJsonArray(ruleNode.get("keywords")));

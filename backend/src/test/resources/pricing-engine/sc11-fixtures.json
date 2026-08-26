@@ -286,7 +286,7 @@
       "sc11Type": "SC11-T04b",
       "source": "特殊收费(11).xlsx#东北农大#根管锉5.6",
       "customerCode": "NEAU-YY",
-      "hospitalName": "NEAU-YY",
+      "hospitalName": "东北农业大学医院",
       "row": {
         "department": "口腔科",
         "type": "额外包(纸塑袋)",
@@ -299,7 +299,7 @@
       },
       "expect": {
         "status": "warning",
-        "expectedUnitPrice": 16.8
+        "expectedUnitPrice": 16.5
       },
       "billingRef": "测试用例/待匹配/松电东北农大_口腔科针类5合1核对说明.md",
       "valid": true,
@@ -311,7 +311,7 @@
       "sc11Type": "SC11-T04b",
       "source": "特殊收费(11).xlsx#东北农大#根管锉5.6",
       "customerCode": "NEAU-YY",
-      "hospitalName": "NEAU-YY",
+      "hospitalName": "东北农业大学医院",
       "row": {
         "department": "口腔科",
         "type": "额外包(纸塑袋)",
@@ -324,7 +324,7 @@
       },
       "expect": {
         "status": "warning",
-        "expectedUnitPrice": 11.2
+        "expectedUnitPrice": 13.5
       },
       "billingRef": "测试用例/待匹配/松电东北农大_口腔科针类5合1核对说明.md",
       "valid": true,

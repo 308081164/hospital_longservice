@@ -897,24 +897,6 @@ class PricingEngineTest {
     }
 
     @Test
-    void subtractsLowTemperatureBoxAfterPackCountNormalization() {
-        PricingEngine.ProcessedResult result = engine.processRow(row(
-                "任意医院",
-                "单包装包(老肯低温)",
-                "30度镜头-1（盒1）/Z2060",
-                "低温纸塑袋200*600",
-                4,
-                2,
-                28,
-                56
-        ));
-
-        assertThat(result.expectedUnitPrice).isEqualTo(28.0);
-        assertThat(result.correctedTotalPrice).isEqualTo(56.0);
-        assertThat(result.notes).anyMatch(note -> note.contains("单包件数减 1 件"));
-    }
-
-    @Test
     void discountsSecondHospitalNangangByBaseRulePrice() {
         PricingEngine discountEngine = engineWithDiscount("黑龙江省第二医院（南岗区）", 0.7);
         PricingEngine.ProcessedResult result = discountEngine.processRow(row(

@@ -37,7 +37,7 @@ class IngestEntry:
 RAW_FILES: list[tuple[str, str, str, bool, str]] = [
     ("新建文件夹 (3)/冰成7月.xlsx", "哈尔滨冰城医疗美容医院", "7月__冰城原始.xlsx", True, "7月 strict 成对"),
     ("新建文件夹 (3)/电机厂.xlsx", "国药总医院第二院区", "7月__电机厂原始.xlsx", True, "7月 strict 成对"),
-    ("新建文件夹 (3)/上德7月.xlsx", "黑龙江菁华上德生殖妇产医院", "7月__上德原始.xlsx", True, "7月 strict 成对"),
+    ("新建文件夹 (3)/上德7月.xlsx", "黑龙江菁华上德生殖妇产医院", "7月__上德原始.xlsx", False, "标准计费，非特殊计价"),
     ("新建文件夹 (3)/祖研7月.xlsx", "祖研-黑龙江省中医医院（南岗院区）", "7月__祖研南岗原始.xlsx", False, "缺 7 月处理后"),
     ("新建文件夹 (3)/五.xlsx", "哈尔滨市第五医院", "7月__市五院原始.xlsx", False, "主院区原始，无二门诊 proc"),
     ("新建文件夹 (3)/人口.xlsx", "黑龙江省妇幼保健院（人口）", "7月__人口原始.xlsx", False, "v8 省妇幼人口，缺 7 月处理后"),
@@ -74,7 +74,6 @@ SPECIAL_PROC: list[tuple[str, str, str, str]] = [
 ]
 
 STRICT_JULY_FOLDERS = {
-    "黑龙江菁华上德生殖妇产医院",
     "哈尔滨冰城医疗美容医院",
     "国药总医院第二院区",
 }
@@ -183,8 +182,6 @@ def ingest(*, dry_run: bool = False) -> list[IngestEntry]:
         if not dry_run:
             copy_file(rel, hospital, "处理后表格", dest_name)
         strict = hospital in STRICT_JULY_FOLDERS and dest_name == "7月__上德账单.xlsx"
-        if hospital == "黑龙江菁华上德生殖妇产医院":
-            strict = True
         entries.append(
             IngestEntry(
                 source=str(src.relative_to(ROOT)),

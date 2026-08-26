@@ -11,6 +11,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.util.ReflectionTestUtils;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -27,13 +28,15 @@ class BillingRulesManifestReconcilerTest {
     private CustomerProductRuleMapper customerProductRuleMapper;
     @Mock
     private SysSettingMapper sysSettingMapper;
+    @Mock
+    private JdbcTemplate jdbcTemplate;
 
     private BillingRulesManifestReconciler reconciler;
 
     @BeforeEach
     void setUp() {
         reconciler = new BillingRulesManifestReconciler(
-                customerMapper, customerProductRuleMapper, sysSettingMapper);
+                customerMapper, customerProductRuleMapper, sysSettingMapper, jdbcTemplate);
     }
 
     @Test

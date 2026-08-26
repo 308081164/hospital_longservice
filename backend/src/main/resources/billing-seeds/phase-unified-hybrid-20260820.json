@@ -14,7 +14,6 @@
     {"code": "HULAN-RM", "billingPricingMode": "hybrid"},
     {"code": "HULAN-TCM", "billingPricingMode": "hybrid"},
     {"code": "NG-FUCHAN", "billingPricingMode": "hybrid"},
-    {"code": "SHANGDE-FC", "billingPricingMode": "hybrid"},
     {"code": "SHKF-YY", "billingPricingMode": "hybrid"},
     {"code": "TAIPING-RM", "billingPricingMode": "hybrid"},
     {"code": "WJ-HLJ-ZD", "billingPricingMode": "hybrid"},

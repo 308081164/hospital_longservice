@@ -47,8 +47,7 @@ public class UnmatchedProductAnalyzer {
     }
 
     public List<String> defaultNeedleKeywords() {
-        return List.of("针", "小件", "探针", "穿刺针", "缝合针", "车针", "拔髓针",
-                "成型片", "根管针", "根管锉", "支抗钉", "洁牙机尖", "球钻", "挖勺", "手术针", "机扩针", "镍钛锉");
+        return List.of("克氏针", "银质针", "内热针", "车针", "拔髓针", "扩大针", "根扩针", "卷棉子");
     }
 
     public record Suggestion(

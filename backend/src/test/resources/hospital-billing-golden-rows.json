@@ -1920,7 +1920,7 @@
     "expected" : {
       "expectedUnitPrice" : 22.0,
       "correctedTotalPrice" : 22.0,
-      "status" : "unchanged",
+      "status" : "warning",
       "notesContains" : [ "仅特色规则" ]
     },
     "rulesOverlay" : {

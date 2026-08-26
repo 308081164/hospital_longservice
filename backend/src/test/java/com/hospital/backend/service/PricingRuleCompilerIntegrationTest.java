@@ -254,7 +254,7 @@ class PricingRuleCompilerIntegrationTest {
 
         JsonNode compiled = compiler.compile(MAPPER.valueToTree(DefaultPricingTemplate.buildRulesMap()), "折算测试医院");
         JsonNode foldRules = compiled.path("specialRules").path("foldRules");
-        assertThat(foldRules).hasSize(1);
+        assertThat(foldRules).hasSize(3);
         assertThat(foldRules.get(0).path("name").asText()).isEqualTo("客户小件折算");
         assertThat(foldRules.get(0).path("foldRatio").asDouble()).isEqualTo(5.0);
 
@@ -439,7 +439,7 @@ class PricingRuleCompilerIntegrationTest {
         when(productRuleMapper.selectByCustomerId(9L)).thenReturn(List.of());
 
         JsonNode compiled = compiler.compile(MAPPER.valueToTree(DefaultPricingTemplate.buildRulesMap()), "道外人民");
-        assertThat(compiled.path("billingProfile").path("pricingMode").asText()).isEqualTo("standard");
+        assertThat(compiled.path("billingProfile").path("pricingMode").asText()).isEqualTo("hybrid");
         assertThat(compiled.path("billingProfile").path("pathOverride").path("disableLowTemp").asBoolean()).isTrue();
         assertThat(compiled.path("billingProfile").path("pathOverride").path("forceHighTempUnitPrice").asDouble()).isEqualTo(3.0);
     }
@@ -573,7 +573,7 @@ class PricingRuleCompilerIntegrationTest {
         when(productRuleMapper.selectByCustomerId(13L)).thenReturn(List.of());
 
         JsonNode compiled = compiler.compile(MAPPER.valueToTree(DefaultPricingTemplate.buildRulesMap()), "仅特色医院");
-        assertThat(compiled.path("billingProfile").path("pricingMode").asText()).isEqualTo("special_only");
+        assertThat(compiled.path("billingProfile").path("pricingMode").asText()).isEqualTo("hybrid");
 
         PricingEngine engine = new PricingEngine(compiled);
         PricingEngine.ProcessedResult result = engine.processRow(Map.of(
@@ -586,7 +586,7 @@ class PricingRuleCompilerIntegrationTest {
                 "unitPrice", 22,
                 "totalPrice", 22
         ));
-        assertThat(result.pricingRule).contains("special_only");
+        assertThat(result.pricingRule).contains("高温纸塑袋");
     }
 
     @Test

@@ -47,6 +47,8 @@ services:
     depends_on:
       mysql:
         condition: service_healthy
+    ports:
+      - "${BACKEND_PORT:-8088}:8000"
     environment:
       SPRING_PROFILES_ACTIVE: docker
       MYSQL_HOST: mysql

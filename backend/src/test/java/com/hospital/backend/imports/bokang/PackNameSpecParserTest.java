@@ -76,6 +76,12 @@ class PackNameSpecParserTest {
                 Arguments.of("镊子包-5件（带框）/w9050", 5),
                 Arguments.of("扩棒（3-5.5号）-6 /z1526", 6),
                 Arguments.of("窥器1宫颈钳1镊子1/W6050", 3),
+                Arguments.of("外科腹腔镜-16件筐1/W12050", 17),
+                Arguments.of("电切内窥镜-9件筐1", 10),
+                Arguments.of("气腹管-1/Z3040", 1),
+                Arguments.of("克氏针-12/Z7530", 12),
+                Arguments.of("排针-15/Z7526", 15),
+                Arguments.of("套筒-1/Z7520", 1),
                 Arguments.of("洗手服/w12050", null),
                 Arguments.of("刮宫包", null));
     }

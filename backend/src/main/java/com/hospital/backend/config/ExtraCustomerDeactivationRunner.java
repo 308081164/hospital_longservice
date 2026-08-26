@@ -20,11 +20,11 @@ import java.util.List;
 public class ExtraCustomerDeactivationRunner implements CommandLineRunner {
 
     static final List<String> INACTIVE_EXTRA_CODES = List.of(
-            // MasterDataInitializer (13)
-            "HRB-XK", "NEAU-YY", "HRB-SD-MB", "HRB-AM", "HRB-ASM", "HRB-BY", "HRB-CY",
+            // MasterDataInitializer (11)
+            "HRB-XK", "HRB-AM", "HRB-ASM", "HRB-BY", "HRB-CY",
             "HRB-BNXS", "HRB-CJ", "WCSRMYY", "YMYXZX", "HY-HYY", "ZYY-DSFY",
-            // HardcodedRulesMigrationRunner (6)
-            "HL-ZGH", "HLFB-SF", "HRB-DLFB", "HRB-HTFH", "HRB-MHM", "ZXYSJT"
+            // HardcodedRulesMigrationRunner (4)
+            "HLFB-SF", "HRB-DLFB", "HRB-MHM", "ZXYSJT"
     );
 
     private final CustomerMapper customerMapper;

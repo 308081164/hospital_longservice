@@ -1,6 +1,6 @@
 {
   "version": "1",
-  "description": "计价贴合修复：冰城 v8 重激活、上德建档、九洲账单层关闭折扣",
+  "description": "计价贴合修复：冰城 v8 重激活、九洲账单层关闭折扣",
   "deactivateRules": [
     { "code": "BINGCHENG-YM", "ruleName": "环钻27.5" },
     { "code": "BINGCHENG-YM", "ruleName": "环钻包30.5" },
@@ -23,39 +23,6 @@
     { "code": "ZUYAN-NG", "ruleName": "校正价22.0" }
   ],
   "profiles": [
-    {
-      "code": "SHANGDE-FC",
-      "name": "黑龙江菁华上德生殖妇产医院",
-      "billingEnabled": true,
-      "billingPricingMode": "special_only",
-      "aliases": [
-        "上德",
-        "菁华上德",
-        "黑龙江菁华上德生殖妇产医院"
-      ],
-      "productRules": [
-        {
-          "ruleType": "FIXED_PRICE",
-          "name": "上德子痫包16.5",
-          "priority": 5,
-          "price": 16.5,
-          "keywords": ["子痫包-3件/Z1526", "子痫包"],
-          "skipPackaging": true,
-          "skipDiscount": true,
-          "isActive": true
-        },
-        {
-          "ruleType": "FIXED_PRICE",
-          "name": "上德优视加件187",
-          "priority": 6,
-          "price": 187.0,
-          "keywords": ["优视加件-11件/w9050", "优视加件"],
-          "skipPackaging": true,
-          "skipDiscount": true,
-          "isActive": true
-        }
-      ]
-    },
     {
       "code": "JIUZHOU-FK",
       "name": "黑龙江九洲妇科医院",

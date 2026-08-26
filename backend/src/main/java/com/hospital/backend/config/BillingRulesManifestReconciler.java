@@ -14,14 +14,18 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.core.annotation.Order;
 import org.springframework.core.io.ClassPathResource;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Set;
 
 /**
  * 启动时按 classpath billing-rules-manifest.json 全量 upsert productRules（幂等）。
@@ -38,6 +42,7 @@ public class BillingRulesManifestReconciler implements CommandLineRunner {
     private final CustomerMapper customerMapper;
     private final CustomerProductRuleMapper customerProductRuleMapper;
     private final SysSettingMapper sysSettingMapper;
+    private final JdbcTemplate jdbcTemplate;
 
     @Value("${billing.seed.reconcile-enabled:true}")
     private boolean reconcileEnabled;
@@ -73,6 +78,7 @@ public class BillingRulesManifestReconciler implements CommandLineRunner {
             }
             int upserted = 0;
             int customersUpdated = 0;
+            Map<Long, Set<String>> manifestRules = new HashMap<>();
             Iterator<Map.Entry<String, JsonNode>> it = customers.fields();
             while (it.hasNext()) {
                 Map.Entry<String, JsonNode> entry = it.next();
@@ -93,11 +99,21 @@ public class BillingRulesManifestReconciler implements CommandLineRunner {
                 }
                 JsonNode rules = customerNode.path("productRules");
                 if (rules.isArray()) {
+                    Set<String> names = new HashSet<>();
                     for (JsonNode ruleNode : rules) {
                         upsertProductRule(customer.getId(), ruleNode);
+                        String ruleName = text(ruleNode, "name");
+                        if (ruleName != null && !ruleName.isBlank()) {
+                            names.add(ruleName);
+                        }
                         upserted++;
                     }
+                    manifestRules.put(customer.getId(), names);
                 }
+            }
+            int deleted = syncDeleteNonManifestRules(manifestRules);
+            if (deleted > 0) {
+                log.info("Reconcile cleaned up {} non-manifest rules", deleted);
             }
             upsertManifestHash(manifestHash);
             log.info("Billing rules manifest reconcile done: {} rules upserted, {} customers updated, hash={}…",
@@ -105,6 +121,31 @@ public class BillingRulesManifestReconciler implements CommandLineRunner {
         } catch (Exception e) {
             log.error("Billing rules manifest reconcile failed: {}", e.getMessage(), e);
         }
+    }
+
+    /**
+     * 让 DB 的 customer_product_rule 与 manifest 完全一致：
+     * 1) 非 special-pricing 客户（billing_enabled=0 或 standard 模式）删除全部规则；
+     * 2) manifest 内的客户删除不在 manifest 里的规则名。
+     */
+    private int syncDeleteNonManifestRules(Map<Long, Set<String>> manifestRules) {
+        int deleted = 0;
+        // 1) 非特殊计价客户清空规则
+        deleted += jdbcTemplate.update(
+                "DELETE r FROM customer_product_rule r "
+                        + "JOIN customer c ON c.id = r.customer_id "
+                        + "WHERE c.billing_enabled = 0 OR c.billing_pricing_mode = 'standard'");
+        // 2) manifest 客户按规则名清理多余规则
+        for (Map.Entry<Long, Set<String>> entry : manifestRules.entrySet()) {
+            List<CustomerProductRule> existing = customerProductRuleMapper.selectByCustomerId(entry.getKey());
+            for (CustomerProductRule rule : existing) {
+                if (!entry.getValue().contains(rule.getName())) {
+                    customerProductRuleMapper.deleteById(rule.getId());
+                    deleted++;
+                }
+            }
+        }
+        return deleted;
     }
 
     private boolean applyCustomerManifestFields(Customer customer, JsonNode node) {

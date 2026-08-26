@@ -2,8 +2,7 @@
   "source_dir": "铂康/8.14新增",
   "strict_july_folders": [
     "哈尔滨冰城医疗美容医院",
-    "国药总医院第二院区",
-    "黑龙江菁华上德生殖妇产医院"
+    "国药总医院第二院区"
   ],
   "entries": [
     {
@@ -66,8 +65,8 @@
       "hospital": "黑龙江菁华上德生殖妇产医院",
       "kind": "raw",
       "month": 7,
-      "strict_eligible": true,
-      "note": "7月 strict 成对"
+      "strict_eligible": false,
+      "note": "标准计费，非特殊计价"
     },
     {
       "source": "铂康/8.14新增/新建文件夹 (3)/祖研7月.xlsx",
@@ -111,7 +110,7 @@
       "hospital": "黑龙江菁华上德生殖妇产医院",
       "kind": "proc_standard",
       "month": 7,
-      "strict_eligible": true,
+      "strict_eligible": false,
       "note": "标准计费 -1"
     },
     {

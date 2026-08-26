@@ -24,6 +24,9 @@ public class PricingEngine {
     private static final int MAX_CACHE_SIZE = 2000;
     /** 账单展示价与规则价在标准路径下的容差（元），与 S4 TOLERANCE 一致 */
     private static final double DISPLAY_PRICE_TOLERANCE = 0.05;
+    /** 双层包标记：兼容 /双、/(双)、/（双） 三种写法，后接可选右括号。 */
+    private static final java.util.regex.Pattern DOUBLE_BAG_MARK =
+            java.util.regex.Pattern.compile("/[(（]?双[)）]?");
 
     // ---- 缓存：袋尺寸检测器（线程安全，有限容量） ----
     private final JsonNode rules;
@@ -115,8 +118,6 @@ public class PricingEngine {
         boolean hybrid = "hybrid".equalsIgnoreCase(pricingMode);
         boolean preserveOriginalOnMiss = specialOnly;
 
-        boolean isLowTempType = !disableLowTemp
-                && (type.contains("低温") || type.contains("ETO") || type.contains("EO"));
         boolean isZsdInstrumentPack = isZsdInstrumentPackType(type);
 
         boolean dressingPerPack = isDressingPerPackRow(packName, type, instrumentCount, packCategory);
@@ -146,80 +147,23 @@ public class PricingEngine {
             }
         }
 
-        // 低温预处理在单包件数计算之后执行。
-        // 低温包装类型 + 包名含"盒" + 单包件数不为1 → 单包件数减1（盒不收费）
-        if (isLowTempType && packName.contains("盒") && effectiveCount > 0 && effectiveCount != 1) {
-            effectiveCount = Math.max(1, effectiveCount - 1);
-            notes.add("包装类型含低温标识且包名含\"盒\"，单包件数减 1 件（盒不收费）。");
-        }
-
-        // 通用：从包名解析单包器械数
-        // 低温不含"盒"时，或高温包名含"-N/"或"N件"格式时，从包名取单包器械数
-        if (isLowTempType && !packName.contains("盒")) {
-            java.util.regex.Pattern p = java.util.regex.Pattern.compile("(\\d+)\\s*件");
-            java.util.regex.Matcher m = p.matcher(packName);
-            if (m.find()) {
-                int extracted = Integer.parseInt(m.group(1));
-                if (extracted > 0 && extracted != effectiveCount) {
-                    effectiveCount = extracted;
-                    notes.add("包装类型含低温标识且包名不含\"盒\"，按包名中\"件\"前数字取器械数为 " + effectiveCount + "。");
-                }
-            } else {
-                java.util.regex.Pattern p2 = java.util.regex.Pattern.compile("-(\\d+)/");
-                java.util.regex.Matcher m2 = p2.matcher(packName);
-                if (m2.find()) {
-                    int extracted = Integer.parseInt(m2.group(1));
-                    if (extracted > 0 && extracted != effectiveCount) {
-                        effectiveCount = extracted;
-                        notes.add("低温额外包按包名\"-" + extracted + "/\"取器械数为 " + effectiveCount + "。");
-                    }
-                }
-            }
-        } else if (!isLowTempType) {
-            // 高温：从包名解析单包器械数，覆盖Excel instrumentCount不准确的情况
-            java.util.regex.Pattern p = java.util.regex.Pattern.compile("(\\d+)\\s*件");
-            java.util.regex.Matcher m = p.matcher(packName);
-            if (m.find()) {
-                int extracted = Integer.parseInt(m.group(1));
-                if (extracted > 1 && extracted != effectiveCount) {
-                    effectiveCount = extracted;
-                    notes.add("高温包按包名中\"件\"前数字取单包器械数为 " + effectiveCount + "。");
-                }
-            } else {
-                java.util.regex.Pattern p2 = java.util.regex.Pattern.compile("-(\\d+)/");
-                java.util.regex.Matcher m2 = p2.matcher(packName);
-                if (m2.find()) {
-                    int extracted = Integer.parseInt(m2.group(1));
-                    if (extracted > 1 && extracted != effectiveCount) {
-                        effectiveCount = extracted;
-                        notes.add("高温包按包名\"-" + extracted + "/\"取单包器械数为 " + effectiveCount + "。");
-                    }
-                } else {
-                    java.util.regex.Pattern p3 = java.util.regex.Pattern.compile("(\\d{1,2})/");
-                    java.util.regex.Matcher m3 = p3.matcher(packName);
-                    if (m3.find()) {
-                        int extracted = Integer.parseInt(m3.group(1));
-                        if (extracted > 1 && extracted != effectiveCount) {
-                            effectiveCount = extracted;
-                            notes.add("高温包按包名\"" + extracted + "/\"取单包器械数为 " + effectiveCount + "。");
-                        }
-                    }
-                }
-            }
-        }
+ // 计价始终使用Excel器械数（effectiveCount），不从包名覆盖。
+ // 包名解析数量仅用于字段一致性核对（BillRowFieldConsistencyValidator），不影响计价。
 
 
         // 袋尺寸检测（带缓存）。部分特例规则需要先知道袋型，例如“20cm 以下 5 件算 1 件”。
         int bagSize = detectBagSize(packageMaterial + packName);
         boolean isPaperPlastic = packageMaterial.contains("纸塑袋")
                 || type.contains("纸塑袋")
-                || packageMaterial.contains("低温灭菌");
+                || packageMaterial.contains("低温灭菌")
+                || packageMaterial.contains("双层袋");
         boolean isNonWoven = packageMaterial.contains("无纺布") || type.contains("无纺布");
         // 包材优先于类型标签：账单 type 误标纸塑袋但包材为无纺布时仍走无纺布计价
         if (packageMaterial.contains("无纺布") && !packageMaterial.contains("纸塑袋")) {
             isNonWoven = true;
             isPaperPlastic = false;
-        } else if (packageMaterial.contains("纸塑袋") || packageMaterial.contains("低温灭菌")) {
+        } else if (packageMaterial.contains("纸塑袋") || packageMaterial.contains("低温灭菌")
+                || packageMaterial.contains("双层袋")) {
             isPaperPlastic = true;
         }
         int perPackRawInstrumentCount = packCount > 1
@@ -232,7 +176,8 @@ public class PricingEngine {
         boolean isLowTemp = !disableLowTemp && ((type + packName + packageMaterial).contains("低温")
                 || type.contains("ETO") || type.contains("EO")
                 || packageMaterial.contains("低温灭菌"));
-        boolean isDouble = packName.contains("双");
+        boolean isDouble = DOUBLE_BAG_MARK.matcher(packName).find()
+                || packageMaterial.contains("双层袋");
         int zBagSize = isDouble ? extractSizeAfterDouble(packName) : 0;
         SpecialPriceResult preMatchedSpecialPrice = zeroPriceOverride != null
                 ? zeroPriceOverride
@@ -888,8 +833,14 @@ public class PricingEngine {
             int threshold = rule.path("threshold").asInt(5);
             double foldRatio = rule.path("foldRatio").asDouble(5.0);
             int result = foldCount(effectiveCount, threshold, foldRatio);
+            // 折算后额外加计件数（如"针N盒1"的盒固定计 1 件，不参与 5 合 1 折算）
+            int extraCount = rule.path("extraCount").asInt(0);
+            if (extraCount > 0) {
+                result += extraCount;
+            }
             String name = rule.path("name").asText("特殊小件折算");
-            notes.add(name + "，原器械数 " + effectiveCount + " 件，折算为 " + result + " 件。");
+            notes.add(name + "，原器械数 " + effectiveCount + " 件，折算为 " + result + " 件"
+                    + (extraCount > 0 ? "（含额外 " + extraCount + " 件）" : "") + "。");
             boolean skipPackaging = rule.path("skipPackaging").asBoolean(false);
             Double unitPriceOverride = rule.has("unitPrice")
                     ? rule.path("unitPrice").asDouble(Double.NaN)
@@ -1495,17 +1446,19 @@ public class PricingEngine {
         return result;
     }
 
-    /** 从"双"之后提取前两位数字作为纸塑袋尺寸（如 双15 → 15，双75 → 10）；"双"后紧跟汉字则不追加袋费 */
+    /** 从"双"标记之后提取前两位数字作为纸塑袋尺寸（如 /双15 → 15，/(双)Z1526 → 15，/双75 → 10）；"双"标记后紧跟汉字则不追加袋费 */
     private int extractSizeAfterDouble(String input) {
         if (input == null || input.isEmpty()) return 0;
-        int idx = input.indexOf("双");
-        if (idx < 0 || idx + 1 >= input.length()) return 0;
+        java.util.regex.Matcher mark = DOUBLE_BAG_MARK.matcher(input);
+        if (!mark.find()) return 0;
+        int afterIdx = mark.end(); // 跳过"双"标记（含可选右括号）
+        if (afterIdx >= input.length()) return 0;
 
-        char next = input.charAt(idx + 1);
-        // "双"后紧跟汉字 → 不需要额外纸塑袋
+        char next = input.charAt(afterIdx);
+        // "双"标记后紧跟汉字 → 不需要额外纸塑袋
         if (Character.UnicodeBlock.of(next) == Character.UnicodeBlock.CJK_UNIFIED_IDEOGRAPHS) return 0;
 
-        String after = input.substring(idx + 1);
+        String after = input.substring(afterIdx);
         java.util.regex.Matcher m = java.util.regex.Pattern.compile("(\\d{2})").matcher(after);
         if (m.find()) {
             int rawSize = Integer.parseInt(m.group(1));
@@ -1676,7 +1629,6 @@ public class PricingEngine {
             return 35.0;
         }
         JsonNode config = rules.path("lowTemperature").path("paperPlastic");
-        double remainderPrice = config.path("remainderPerPiecePrice").asDouble(22.0);
 
         if (instrumentCount == 1) {
             JsonNode bagConfig = findBagConfig(bagSize, config.path("bagSizes"));
@@ -1695,6 +1647,17 @@ public class PricingEngine {
             return price;
         }
 
+        // 优先查表：2件及以上使用 priceTable 精确匹配（与 Excel 价格表完全一致）
+        JsonNode priceTable = config.path("priceTable");
+        String countKey = String.valueOf(instrumentCount);
+        if (priceTable.has(countKey)) {
+            double tablePrice = priceTable.path(countKey).asDouble();
+            notes.add("低温纸塑袋 " + instrumentCount + " 件按价格表精确匹配 " + fmt(tablePrice) + " 元。");
+            return tablePrice;
+        }
+
+        // 超出价格表范围时，回退到阶梯计算 + 封顶逻辑
+        double remainderPrice = config.path("remainderPerPiecePrice").asDouble(22.0);
         JsonNode tiers = config.path("tierPrices");
         if (instrumentCount <= 5) {
             double cap = findTierCap(tiers, 5, 88);
@@ -1751,13 +1714,23 @@ public class PricingEngine {
 
     private double computeLowTempNonWoven(int instrumentCount, List<String> notes) {
         JsonNode config = rules.path("lowTemperature").path("nonWoven");
-        double remainderPrice = config.path("remainderPerPiecePrice").asDouble(22.0);
 
         if (instrumentCount == 1) {
             notes.add("低温单件无纺布，单价 " + fmt(config.path("minSingleCharge").asDouble()) + " 元。");
             return config.path("minSingleCharge").asDouble();
         }
 
+        // 优先查表：2件及以上使用 priceTable 精确匹配（与 Excel 价格表完全一致）
+        JsonNode priceTable = config.path("priceTable");
+        String countKey = String.valueOf(instrumentCount);
+        if (priceTable.has(countKey)) {
+            double tablePrice = priceTable.path(countKey).asDouble();
+            notes.add("低温无纺布 " + instrumentCount + " 件按价格表精确匹配 " + fmt(tablePrice) + " 元。");
+            return tablePrice;
+        }
+
+        // 超出价格表范围时，回退到阶梯计算 + 封顶逻辑
+        double remainderPrice = config.path("remainderPerPiecePrice").asDouble(22.0);
         JsonNode tiers = config.path("tierPrices");
         if (instrumentCount <= 5) {
             double total = round(instrumentCount * remainderPrice);

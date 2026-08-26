@@ -38,7 +38,7 @@ public final class PackPricingCategoryResolver {
         if (material.contains("无纺布") && !material.contains("纸塑袋")) {
             return MaterialBase.NON_WOVEN;
         }
-        if (material.contains("纸塑袋") || material.contains("低温灭菌")) {
+        if (material.contains("纸塑袋") || material.contains("低温灭菌") || material.contains("双层袋")) {
             return MaterialBase.PAPER;
         }
         if (type.contains("无纺布") && !type.contains("纸塑袋")) {

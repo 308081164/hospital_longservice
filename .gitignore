@@ -31,3 +31,8 @@ Thumbs.db
 **/__pycache__/
 *.pyc
 docs/*.zip
+
+# 助手生成的 HTML 报告与工具链产物（勿提交）
+.trae/
+.trae-html-share-packages/
+pricing-rules-comparison/

@@ -57,6 +57,9 @@ public class CustomerProductRule {
 
     private BigDecimal foldRatio;
 
+    /** 折算后额外加计件数（如"针N盒1"的盒固定计 1 件，不参与 5 合 1 折算） */
+    private Integer extraCount;
+
     /** 原价匹配条件（FR-M3-15） */
     private BigDecimal originalUnitPrice;
 

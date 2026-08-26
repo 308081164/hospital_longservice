@@ -173,7 +173,7 @@ public class HardcodedRulesMigrationRunner implements CommandLineRunner {
 
         // ---- extraFees ----
         ensureExtraFee("HL-ZGH", "镜头租借公司筐加收", 10,
-                bd("8.0"), List.of("镜头"));
+                bd("8.0"), List.of("镜头", "检查镜"));
     }
 
     private void ensureRule(String customerCode, String ruleType, String name, int priority,

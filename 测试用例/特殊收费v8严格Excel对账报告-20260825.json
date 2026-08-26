@@ -1,0 +1,170 @@
+{
+  "generated": "2026-08-25",
+  "api_base": "http://127.0.0.1:8000",
+  "summary": {
+    "pass": 1,
+    "fail": 0,
+    "skip": 0,
+    "error": 0
+  },
+  "sections": {
+    "month5": [
+      {
+        "hospital": "航天风华",
+        "customer_label": "航天风华",
+        "status": "PASS",
+        "message": "零期待校正，零计价 warning",
+        "job_id": 1159,
+        "raw_file": "哈尔滨航天风华医院5月.xlsx",
+        "proc_file": "航天5月账单.xlsx",
+        "expected_count": 0,
+        "warning_count": 0,
+        "pricing_warning_count": 0,
+        "non_pricing_warning_ignored": 0,
+        "matched_count": 0,
+        "missed": [],
+        "extra": [],
+        "price_mismatch": [],
+        "proc_mismatch": [],
+        "dedupe_note": "",
+        "fully_aligned": true,
+        "month": 5,
+        "section": "month5"
+      }
+    ]
+  },
+  "v8_hospitals": [
+    {
+      "customer_label": "冰城医美",
+      "folder": "哈尔滨冰城医疗美容医院",
+      "testable": true,
+      "skip_reason": ""
+    },
+    {
+      "customer_label": "电机厂",
+      "folder": "国药总医院第二院区",
+      "testable": true,
+      "skip_reason": ""
+    },
+    {
+      "customer_label": "方南南",
+      "folder": "方南南医院",
+      "testable": false,
+      "skip_reason": "缺 7 月原始表"
+    },
+    {
+      "customer_label": "东北农大",
+      "folder": "东北农业大学",
+      "testable": false,
+      "skip_reason": "缺 7 月原始表"
+    },
+    {
+      "customer_label": "工程大学",
+      "folder": "哈尔滨工程大学医院",
+      "testable": false,
+      "skip_reason": "无 6 月 raw+proc 成对（仅 5 月）"
+    },
+    {
+      "customer_label": "松电慢病",
+      "folder": "松电慢病",
+      "testable": false,
+      "skip_reason": "缺 6 月 raw+proc 成对"
+    },
+    {
+      "customer_label": "航天风华",
+      "folder": "航天风华",
+      "testable": false,
+      "skip_reason": "缺 8 月原始表"
+    },
+    {
+      "customer_label": "市五院二门诊",
+      "folder": "哈尔滨市第五医院（二门诊）",
+      "testable": true,
+      "skip_reason": ""
+    },
+    {
+      "customer_label": "九州",
+      "folder": "黑龙江九洲妇科医院",
+      "testable": true,
+      "skip_reason": ""
+    },
+    {
+      "customer_label": "博尚",
+      "folder": "博尚医院",
+      "testable": false,
+      "skip_reason": "缺 7 月 raw+proc 成对"
+    },
+    {
+      "customer_label": "海员松北",
+      "folder": "黑龙江省海员总医院（松北）",
+      "testable": false,
+      "skip_reason": "缺 6 月 raw+proc 成对"
+    },
+    {
+      "customer_label": "省妇幼人口",
+      "folder": "黑龙江省妇幼保健院（人口）",
+      "testable": false,
+      "skip_reason": "缺 6 月 raw+proc 成对（7 月可 strict）"
+    },
+    {
+      "customer_label": "祖研南岗",
+      "folder": "祖研-黑龙江省中医医院（南岗院区）",
+      "testable": true,
+      "skip_reason": ""
+    },
+    {
+      "customer_label": "社会康复",
+      "folder": "黑龙江省社会康复医院",
+      "testable": true,
+      "skip_reason": ""
+    },
+    {
+      "customer_label": "道里妇幼",
+      "folder": "道里区妇幼保健院",
+      "testable": false,
+      "skip_reason": "缺 7 月原始表"
+    },
+    {
+      "customer_label": "春语医美",
+      "folder": "春语医美",
+      "testable": false,
+      "skip_reason": "缺 7 月原始表"
+    },
+    {
+      "customer_label": "总工会",
+      "folder": "总工会",
+      "testable": false,
+      "skip_reason": "缺 6 月 raw+proc 成对（7 月可 strict）"
+    },
+    {
+      "customer_label": "基准生物",
+      "folder": "基准生物",
+      "testable": false,
+      "skip_reason": "缺 7 月原始表"
+    },
+    {
+      "customer_label": "索菲医美",
+      "folder": "索菲医美",
+      "testable": false,
+      "skip_reason": "缺 6 月 raw+proc 成对（7 月可 strict）"
+    },
+    {
+      "customer_label": "省监狱管理局",
+      "folder": "省监狱管理局医院",
+      "testable": false,
+      "skip_reason": "缺 7 月原始表"
+    },
+    {
+      "customer_label": "呼兰中医",
+      "folder": "呼兰中医院",
+      "testable": true,
+      "skip_reason": ""
+    },
+    {
+      "customer_label": "平房区人民",
+      "folder": "哈尔滨市平房区人民医院",
+      "testable": false,
+      "skip_reason": "缺 7 月原始表"
+    }
+  ]
+}

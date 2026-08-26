@@ -1,0 +1,163 @@
+{
+  "version": "1",
+  "description": "对照特殊收费(14).xlsx：东北农大根管锉 5.6→5.5；市五院(主院区)新增敷料包固定价；妇幼人口新增镜头加收8",
+  "strictRuleOps": true,
+  "deactivateRules": [
+    {
+      "code": "NEAU-YY",
+      "ruleName": "东北农大根管锉5.6含包材"
+    },
+    {
+      "code": "NEAU-YY",
+      "ruleName": "东北农大根管锉5.6免包材"
+    }
+  ],
+  "newRules": [
+    {
+      "code": "NEAU-YY",
+      "ruleType": "FOLD",
+      "name": "东北农大根管锉5.5含包材",
+      "priority": 8,
+      "keywords": ["根管锉"],
+      "threshold": 5,
+      "foldRatio": 5,
+      "price": 5.5,
+      "maxInstrumentCount": 10,
+      "skipPackaging": false,
+      "skipDiscount": false
+    },
+    {
+      "code": "NEAU-YY",
+      "ruleType": "FOLD",
+      "name": "东北农大根管锉5.5免包材",
+      "priority": 9,
+      "keywords": ["根管锉"],
+      "threshold": 5,
+      "foldRatio": 5,
+      "price": 5.5,
+      "minInstrumentCount": 11,
+      "skipPackaging": true,
+      "skipDiscount": false
+    },
+    {
+      "code": "HRB-WY",
+      "ruleType": "FIXED_PRICE",
+      "name": "市五院妇产科布袋15",
+      "priority": 10,
+      "keywords": ["妇产科布袋"],
+      "price": 15.0,
+      "skipPackaging": true,
+      "skipDiscount": true
+    },
+    {
+      "code": "HRB-WY",
+      "ruleType": "FIXED_PRICE",
+      "name": "市五院妇产科纱条15",
+      "priority": 10,
+      "keywords": ["妇产科纱条"],
+      "price": 15.0,
+      "skipPackaging": true,
+      "skipDiscount": true
+    },
+    {
+      "code": "HRB-WY",
+      "ruleType": "FIXED_PRICE",
+      "name": "市五院小布袋15",
+      "priority": 10,
+      "keywords": ["小布袋"],
+      "price": 15.0,
+      "skipPackaging": true,
+      "skipDiscount": true
+    },
+    {
+      "code": "HRB-WY",
+      "ruleType": "FIXED_PRICE",
+      "name": "市五院纱布15",
+      "priority": 10,
+      "keywords": ["纱布"],
+      "price": 15.0,
+      "skipPackaging": true,
+      "skipDiscount": true
+    },
+    {
+      "code": "HRB-WY",
+      "ruleType": "FIXED_PRICE",
+      "name": "市五院上肢止血带15",
+      "priority": 10,
+      "keywords": ["上肢止血带"],
+      "price": 15.0,
+      "skipPackaging": true,
+      "skipDiscount": true
+    },
+    {
+      "code": "HRB-WY",
+      "ruleType": "FIXED_PRICE",
+      "name": "市五院下肢止血带15",
+      "priority": 10,
+      "keywords": ["下肢止血带"],
+      "price": 15.0,
+      "skipPackaging": true,
+      "skipDiscount": true
+    },
+    {
+      "code": "HRB-WY",
+      "ruleType": "FIXED_PRICE",
+      "name": "市五院驱血带4",
+      "priority": 10,
+      "keywords": ["驱血带"],
+      "price": 4.0,
+      "skipPackaging": true,
+      "skipDiscount": true
+    },
+    {
+      "code": "HRB-WY",
+      "ruleType": "FIXED_PRICE",
+      "name": "市五院手套2.5",
+      "priority": 10,
+      "keywords": ["手套"],
+      "price": 2.5,
+      "skipPackaging": true,
+      "skipDiscount": true
+    },
+    {
+      "code": "HLJ-FY-RK",
+      "ruleType": "EXTRA_FEE",
+      "name": "妇幼人口单极电切镜加收8",
+      "priority": 20,
+      "keywords": ["单极电切镜"],
+      "fee": 8.0,
+      "skipPackaging": true,
+      "skipDiscount": true
+    },
+    {
+      "code": "HLJ-FY-RK",
+      "ruleType": "EXTRA_FEE",
+      "name": "妇幼人口宫腔镜检查新加收8",
+      "priority": 20,
+      "keywords": ["宫腔镜检查新"],
+      "fee": 8.0,
+      "skipPackaging": true,
+      "skipDiscount": true
+    },
+    {
+      "code": "HLJ-FY-RK",
+      "ruleType": "EXTRA_FEE",
+      "name": "妇幼人口0度膀胱镜加收8",
+      "priority": 20,
+      "keywords": ["0°膀胱镜-1", "0°膀胱镜"],
+      "fee": 8.0,
+      "skipPackaging": true,
+      "skipDiscount": true
+    },
+    {
+      "code": "HLJ-FY-RK",
+      "ruleType": "EXTRA_FEE",
+      "name": "妇幼人口30度膀胱镜加收8",
+      "priority": 20,
+      "keywords": ["30°膀胱镜-1", "30°膀胱镜"],
+      "fee": 8.0,
+      "skipPackaging": true,
+      "skipDiscount": true
+    }
+  ]
+}

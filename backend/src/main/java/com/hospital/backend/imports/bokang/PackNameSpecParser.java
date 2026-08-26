@@ -49,6 +49,10 @@ public final class PackNameSpecParser {
             Pattern.compile("[-－](\\d+)件\\s*(?:盒|筐|盘)");
     private static final Pattern HYPHEN_COUNT_BEFORE_BOX =
             Pattern.compile("[-－](\\d+)(?:盒|筐|盘)");
+    /** {@code -N件筐M}：非种植/机扩类包名中，筐仍计为 1 件器械。 */
+    private static final Pattern BASKET_AFTER_HYPHEN_PIECE =
+            Pattern.compile("[-－]\\d+件筐\\d+");
+    private static final Pattern BASKET_COUNT = Pattern.compile("筐(\\d+)");
     private static final Pattern PAREN_BOX_PIECE_COUNT =
             Pattern.compile("带盒([\\d两二三四五六七八九十]+)件");
     private static final Pattern PAREN_GROUP = Pattern.compile("[（(]([^）)]*)[）)]");
@@ -285,6 +289,15 @@ public final class PackNameSpecParser {
                     && isPlantingOrNeedleBoxPack(stem)) {
                 return sumParenthesisContainerCounts(stem)
                         + sumContainerTokensInText(PAREN_GROUP.matcher(stem).replaceAll(""));
+            }
+            if (BASKET_AFTER_HYPHEN_PIECE.matcher(stem).find()) {
+                String withoutParens = PAREN_GROUP.matcher(stem).replaceAll("");
+                Matcher basketMatcher = BASKET_COUNT.matcher(withoutParens);
+                int basketSum = 0;
+                while (basketMatcher.find()) {
+                    basketSum += Integer.parseInt(basketMatcher.group(1));
+                }
+                return sumParenthesisContainerCounts(stem) + basketSum;
             }
             return sumParenthesisContainerCounts(stem);
         }

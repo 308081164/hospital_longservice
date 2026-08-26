@@ -39,6 +39,7 @@ public class SchemaMigrationRunner implements CommandLineRunner {
         migrateLogisticsTables();
         migrateDeptPhysicianTables();
         migrateSysSettingTable();
+        fixSysSettingValueColumnType();
         seedInstrumentPackCategory();
     }
 
@@ -473,12 +474,27 @@ public class SchemaMigrationRunner implements CommandLineRunner {
                 CREATE TABLE sys_setting (
                     id BIGINT AUTO_INCREMENT PRIMARY KEY,
                     setting_key VARCHAR(120) NOT NULL UNIQUE,
-                    setting_value JSON NOT NULL,
+                    setting_value VARCHAR(500) NOT NULL,
                     description VARCHAR(500) NULL,
                     created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
                     updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
                 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4
                 """);
+    }
+
+    /** 历史库中 setting_value 被建为 JSON，无法存 manifest hash 纯字符串，改为 VARCHAR。 */
+    private void fixSysSettingValueColumnType() {
+        if (!tableExists("sys_setting") || !columnExists("sys_setting", "setting_value")) {
+            return;
+        }
+        String dataType = jdbcTemplate.queryForObject(
+                "SELECT data_type FROM information_schema.columns "
+                        + "WHERE table_schema = DATABASE() AND table_name = 'sys_setting' AND column_name = 'setting_value'",
+                String.class);
+        if (dataType != null && "json".equalsIgnoreCase(dataType)) {
+            jdbcTemplate.execute("ALTER TABLE sys_setting MODIFY setting_value VARCHAR(500) NOT NULL");
+            log.info("Changed sys_setting.setting_value from JSON to VARCHAR(500)");
+        }
     }
 
     private void migrateCustomerMasterTables() {

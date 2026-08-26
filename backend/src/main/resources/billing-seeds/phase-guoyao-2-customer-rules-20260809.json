@@ -24,8 +24,7 @@
       "name": "电机厂双按件5.5",
       "priority": 12,
       "price": 5.5,
-      "keywords": ["双"],
-      "excludeKeywords": ["(双)", "/(双)", "双极", "双极线"],
+      "keywords": ["/双"],
       "skipPackaging": false,
       "skipDiscount": true
     },
