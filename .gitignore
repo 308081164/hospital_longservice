@@ -4,6 +4,7 @@
 .env.*.local
 deploy/server.env
 deploy/hospital-migration-*.sql
+deploy/backups/
 
 # 铂康遗留 SQL 转储（含 400MB+ 大文件，仅本地 Docker 挂载使用，勿提交）
 铂康/

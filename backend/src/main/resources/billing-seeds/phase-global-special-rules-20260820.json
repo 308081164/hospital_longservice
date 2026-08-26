@@ -3,7 +3,6 @@
   "description": "对照特殊收费(13).xlsx通用特殊收费：①缝合针按1件含包材FOLD ②软镜固定300元（低温） ③低温等离子「双」固定35元（市二院除外） ④低温阶梯改为查表法（1-40件精确匹配）",
   "pricingRulePatches": [
     {
-      "ruleId": 1,
       "mergeRules": {
         "lowTemperature": {
           "paperPlastic": {

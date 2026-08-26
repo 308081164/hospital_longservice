@@ -39,6 +39,19 @@ INACTIVE_EXTRA_CODES = [
     "ZXYSJT",
 ]
 
+# 种子文件仅以 code 引用客户、未携带规范名时，回退到此映射。
+# 否则 manifest 的 name 会退化为 code，导致编译后的规则 hospitals 字段无法匹配
+# 账单中的医院全称（SpecialCharge11CoverageTest 等 fixture 因此失效）。
+# 来源：HardcodedRulesMigrationRunner.seedMissingCustomers + customer 表 canonical_name。
+CUSTOMER_CANONICAL_NAMES = {
+    "ERYY-SB": "黑龙江省第二医院（松北区）",
+    "HRB-HTFH": "哈尔滨航天风华医院",
+    "HRB-MHM": "哈尔滨美涵美医疗美容有限公司",
+    "HRB-SD-MB": "哈尔滨道外区松电慢性病专科门诊部",
+    "NEAU-YY": "东北农业大学医院",
+    "WCSRMYY": "五常市人民医院",
+}
+
 
 def _text(node: dict[str, Any], key: str, default: str | None = None) -> str | None:
     val = node.get(key, default)
@@ -280,7 +293,7 @@ def build_manifest() -> dict[str, Any]:
         status = entry.get("status")
         manifest_customers[code] = {
             "code": code,
-            "name": entry.get("name", code),
+            "name": entry.get("name") or CUSTOMER_CANONICAL_NAMES.get(code, code),
             "status": status,
             "billingPricingMode": entry.get("billingPricingMode"),
             "standardPricingOverride": entry.get("standardPricingOverride"),

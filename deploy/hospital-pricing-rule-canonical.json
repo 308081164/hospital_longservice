@@ -1,0 +1,467 @@
+{
+  "source": "dev",
+  "base": "http://127.0.0.1:8088",
+  "id": 1,
+  "name": "标准灭菌计费规则",
+  "version": "v2.0",
+  "description": "系统默认模板（自原 PricingEngine / 铂康 id=8 迁移）",
+  "rules": {
+    "needle": {
+      "keywords": [
+        "克氏针",
+        "银质针",
+        "内热针",
+        "车针",
+        "拔髓针",
+        "扩大针",
+        "根扩针",
+        "卷棉子"
+      ],
+      "foldRatio": 5,
+      "threshold": 5
+    },
+    "version": "v2.0",
+    "cleaning": {
+      "removeFirstRow": false,
+      "dropSummaryRows": true,
+      "summaryKeywords": [
+        "合计",
+        "小计",
+        "总计"
+      ],
+      "trimPackagingMaterial": true,
+      "clearInstrumentColumnFormatting": false,
+      "recomputeTotalsWhenPriceChanges": true
+    },
+    "logistics": {
+      "enabled": true,
+      "feePerTrip": 50,
+      "dayBoundaryHour": 20,
+      "mergeWindowDays": 1,
+      "mergeAdjacentDays": false,
+      "defaultLogisticsFee": 50
+    },
+    "packaging": {
+      "items": [
+        {
+          "name": "纱布棉球",
+          "options": [
+            {
+              "label": "大（20cm*20cm*15cm）",
+              "price": 2.5,
+              "keywords": [
+                "20cm*20cm*15cm",
+                "20cm×20cm×15cm",
+                "大（20cm*20cm*15cm）",
+                "大(20cm*20cm*15cm)"
+              ]
+            },
+            {
+              "label": "中（15cm*15cm*10cm）",
+              "price": 2,
+              "keywords": [
+                "15cm*15cm*10cm",
+                "15cm×15cm×10cm",
+                "中（15cm*15cm*10cm）",
+                "中(15cm*15cm*10cm)"
+              ]
+            },
+            {
+              "label": "小（10cm*10cm*5cm）",
+              "price": 1.5,
+              "keywords": [
+                "10cm*10cm*5cm",
+                "10cm×10cm×5cm",
+                "小（10cm*10cm*5cm）",
+                "小(10cm*10cm*5cm)",
+                "10 cm及以下"
+              ]
+            },
+            {
+              "label": "20cm*20cm纸塑袋",
+              "price": 4,
+              "keywords": [
+                "20cm*20cm",
+                "20cm×20cm",
+                "20*20"
+              ]
+            },
+            {
+              "label": "15cm*10cm纸塑袋",
+              "price": 2.5,
+              "keywords": [
+                "15cm*10cm",
+                "15cm×10cm",
+                "15*10"
+              ]
+            }
+          ],
+          "keywords": [
+            "纱布",
+            "棉球",
+            "辅料包"
+          ],
+          "chargePerPack": true
+        },
+        {
+          "name": "rigip",
+          "options": [],
+          "keywords": [
+            "rigip"
+          ],
+          "chargePerPack": true
+        },
+        {
+          "name": "纸塑袋",
+          "options": [],
+          "keywords": [
+            "纸塑袋"
+          ],
+          "chargePerPack": true
+        }
+      ],
+      "enabled": false,
+      "selfPackedKeywords": []
+    },
+    "dressingPack": {
+      "cottonPaperPlastic": {
+        "15": 2.5,
+        "20": 4.0
+      }
+    },
+    "specialRules": {
+      "extraFees": [],
+      "foldRules": [
+        {
+          "name": "通用小件5合1含包材",
+          "keywords": [
+            "克氏针",
+            "银质针",
+            "内热针",
+            "车针",
+            "拔髓针",
+            "扩大针",
+            "根扩针",
+            "卷棉子"
+          ],
+          "priority": 50,
+          "foldRatio": 5,
+          "threshold": 5,
+          "unitPrice": 5.5,
+          "skipPackaging": false,
+          "maxInstrumentCount": 10
+        },
+        {
+          "name": "通用小件5合1免包材",
+          "keywords": [
+            "克氏针",
+            "银质针",
+            "内热针",
+            "车针",
+            "拔髓针",
+            "扩大针",
+            "根扩针",
+            "卷棉子"
+          ],
+          "priority": 51,
+          "foldRatio": 5,
+          "threshold": 5,
+          "unitPrice": 5.5,
+          "skipPackaging": true,
+          "minInstrumentCount": 11
+        },
+        {
+          "name": "通用缝合针按1件含包材",
+          "keywords": [
+            "缝合针"
+          ],
+          "priority": 49,
+          "foldRatio": 99999,
+          "threshold": 99999,
+          "unitPrice": 5.5,
+          "skipPackaging": false
+        }
+      ],
+      "fixedPrices": [
+        {
+          "name": "通用软镜固定300",
+          "price": 300.0,
+          "keywords": [
+            "软镜"
+          ],
+          "priority": 40,
+          "matchMode": "first",
+          "temperature": "LT",
+          "skipDiscount": true,
+          "skipPackaging": true
+        },
+        {
+          "name": "通用双层袋低温固定35",
+          "price": 35.0,
+          "keywords": [
+            "双层袋"
+          ],
+          "priority": 41,
+          "matchMode": "first",
+          "temperature": "LT",
+          "skipDiscount": true,
+          "skipPackaging": true,
+          "maxInstrumentCount": 1
+        }
+      ]
+    },
+    "exportOptions": {
+      "billFilePrefix": "账单_",
+      "defaultPageMargin": "1cm",
+      "warningFilePrefix": "异常_",
+      "includeWarningSheet": true,
+      "settlementFilePrefix": "结款函_"
+    },
+    "lowTemperature": {
+      "nonWoven": {
+        "priceTable": {
+          "1": 35,
+          "2": 44,
+          "3": 66,
+          "4": 88,
+          "5": 88,
+          "6": 110,
+          "7": 132,
+          "8": 154,
+          "9": 165,
+          "10": 165,
+          "11": 187,
+          "12": 209,
+          "13": 231,
+          "14": 253,
+          "15": 253,
+          "16": 275,
+          "17": 297,
+          "18": 300,
+          "19": 300,
+          "20": 300,
+          "21": 322,
+          "22": 344,
+          "23": 366,
+          "24": 388,
+          "25": 388,
+          "26": 410,
+          "27": 432,
+          "28": 454,
+          "29": 465,
+          "30": 465,
+          "31": 487,
+          "32": 509,
+          "33": 531,
+          "34": 553,
+          "35": 553,
+          "36": 575,
+          "37": 597,
+          "38": 600,
+          "39": 600,
+          "40": 600
+        },
+        "tierPrices": [
+          {
+            "count": 20,
+            "price": 300
+          },
+          {
+            "count": 10,
+            "price": 165
+          },
+          {
+            "count": 5,
+            "price": 88
+          }
+        ],
+        "minSingleCharge": 35,
+        "remainderPerPiecePrice": 22
+      },
+      "paperPlastic": {
+        "bagSizes": [
+          {
+            "size": 30,
+            "price": 35,
+            "keywords": [
+              "30cm",
+              "30"
+            ]
+          },
+          {
+            "size": 25,
+            "price": 30,
+            "keywords": [
+              "25cm",
+              "25"
+            ]
+          },
+          {
+            "size": 20,
+            "price": 28,
+            "keywords": [
+              "20cm",
+              "20"
+            ]
+          },
+          {
+            "size": 15,
+            "price": 25,
+            "keywords": [
+              "15cm",
+              "15"
+            ]
+          },
+          {
+            "size": 10,
+            "price": 22,
+            "keywords": [
+              "10cm",
+              "10"
+            ]
+          }
+        ],
+        "priceTable": {
+          "1": 22,
+          "2": 44,
+          "3": 66,
+          "4": 88,
+          "5": 88,
+          "6": 110,
+          "7": 132,
+          "8": 154,
+          "9": 165,
+          "10": 165,
+          "11": 187,
+          "12": 209,
+          "13": 231,
+          "14": 253,
+          "15": 253,
+          "16": 275,
+          "17": 297,
+          "18": 300,
+          "19": 300,
+          "20": 300,
+          "21": 322,
+          "22": 344,
+          "23": 366,
+          "24": 388,
+          "25": 388,
+          "26": 410,
+          "27": 432,
+          "28": 454,
+          "29": 465,
+          "30": 465,
+          "31": 487,
+          "32": 509,
+          "33": 531,
+          "34": 553,
+          "35": 553,
+          "36": 575,
+          "37": 597,
+          "38": 600,
+          "39": 600,
+          "40": 600
+        },
+        "tierPrices": [
+          {
+            "count": 20,
+            "price": 300
+          },
+          {
+            "count": 10,
+            "price": 165
+          },
+          {
+            "count": 5,
+            "price": 88
+          }
+        ]
+      }
+    },
+    "highTemperature": {
+      "nonWoven": {
+        "minCharge": 16.5,
+        "flatRateThreshold": 3,
+        "flatPerPackagePrice": 5.5
+      },
+      "paperPlastic": {
+        "bagSizes": [
+          {
+            "size": 25,
+            "price": 10.5,
+            "keywords": [
+              "25cm",
+              "25",
+              "特大"
+            ]
+          },
+          {
+            "size": 20,
+            "price": 7.5,
+            "keywords": [
+              "20cm",
+              "20",
+              "大"
+            ]
+          },
+          {
+            "size": 15,
+            "price": 5.5,
+            "keywords": [
+              "15cm",
+              "15",
+              "中"
+            ]
+          },
+          {
+            "size": 10,
+            "price": 2.5,
+            "keywords": [
+              "10cm",
+              "10",
+              "小"
+            ]
+          }
+        ],
+        "minCharge": 16.5,
+        "perPackagePrice": 5.5
+      }
+    },
+    "settlementLetter": {
+      "feeItems": [
+        {
+          "key": "sterilize",
+          "label": "灭菌费",
+          "remark": "",
+          "enabled": true,
+          "sortOrder": 1
+        },
+        {
+          "key": "logistics",
+          "label": "物流费",
+          "remark": "",
+          "enabled": true,
+          "sortOrder": 2
+        }
+      ],
+      "rowHeight": 20,
+      "templates": [
+        {
+          "id": "default_template",
+          "name": "默认结款函模板",
+          "titleText": "货款结算单",
+          "templateRef": "default",
+          "hospitalName": "",
+          "matchKeywords": [],
+          "templateSheetName": "结款函"
+        }
+      ],
+      "companyName": "黑龙江省铂康医疗灭菌有限公司",
+      "defaultTemplateId": "default_template",
+      "uppercaseTotalLabel": "大写金额",
+      "dateRangeTextTemplate": "{start} 至 {end}"
+    }
+  },
+  "exportedAt": "2026-08-27 00:11:00"
+}

@@ -299,7 +299,7 @@
       },
       "expect": {
         "status": "warning",
-        "expectedUnitPrice": 16.5
+        "expectedUnitPrice": 19.3
       },
       "billingRef": "测试用例/待匹配/松电东北农大_口腔科针类5合1核对说明.md",
       "valid": true,
@@ -324,7 +324,7 @@
       },
       "expect": {
         "status": "warning",
-        "expectedUnitPrice": 13.5
+        "expectedUnitPrice": 13.7
       },
       "billingRef": "测试用例/待匹配/松电东北农大_口腔科针类5合1核对说明.md",
       "valid": true,

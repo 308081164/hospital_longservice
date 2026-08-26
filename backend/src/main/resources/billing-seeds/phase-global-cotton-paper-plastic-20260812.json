@@ -3,7 +3,6 @@
   "description": "标准规则补写 dressingPack.cottonPaperPlastic：棉球/纱布纸塑袋 ≤15cm=2.5、≥20cm=4（系统标准价 Sheet）",
   "pricingRulePatches": [
     {
-      "ruleId": 1,
       "mergeRules": {
         "dressingPack": {
           "cottonPaperPlastic": {

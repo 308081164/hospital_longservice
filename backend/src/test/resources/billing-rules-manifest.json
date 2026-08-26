@@ -1,7 +1,7 @@
 {
   "version": 1,
-  "generated_at": "2026-08-26T05:24:14.291627+00:00",
-  "manifest_hash": "912813412123af5861422ba422c9d47600e371d75f73c76da5e2bbb87e27f40c",
+  "generated_at": "2026-08-26T16:06:04.209753+00:00",
+  "manifest_hash": "359efbeef76b440f4f1e3e42505c41bde7dce2d9969efd6656751e243e0a23d3",
   "billing_enabled_count": 55,
   "active_billing_enabled_count": 53,
   "customers": {
@@ -673,7 +673,7 @@
     },
     "ERYY-SB": {
       "code": "ERYY-SB",
-      "name": "ERYY-SB",
+      "name": "黑龙江省第二医院（松北区）",
       "status": null,
       "billingPricingMode": "hybrid",
       "standardPricingOverride": null,
@@ -2537,7 +2537,7 @@
     },
     "HRB-HTFH": {
       "code": "HRB-HTFH",
-      "name": "HRB-HTFH",
+      "name": "哈尔滨航天风华医院",
       "status": null,
       "billingPricingMode": "hybrid",
       "standardPricingOverride": null,
@@ -2603,7 +2603,7 @@
     },
     "HRB-MHM": {
       "code": "HRB-MHM",
-      "name": "HRB-MHM",
+      "name": "哈尔滨美涵美医疗美容有限公司",
       "status": "inactive",
       "billingPricingMode": "hybrid",
       "standardPricingOverride": null,
@@ -2655,7 +2655,7 @@
     },
     "HRB-SD-MB": {
       "code": "HRB-SD-MB",
-      "name": "HRB-SD-MB",
+      "name": "哈尔滨道外区松电慢性病专科门诊部",
       "status": null,
       "billingPricingMode": "hybrid",
       "standardPricingOverride": null,
@@ -3698,7 +3698,7 @@
     },
     "NEAU-YY": {
       "code": "NEAU-YY",
-      "name": "NEAU-YY",
+      "name": "东北农业大学医院",
       "status": null,
       "billingPricingMode": "hybrid",
       "standardPricingOverride": null,
@@ -5113,7 +5113,7 @@
     },
     "WCSRMYY": {
       "code": "WCSRMYY",
-      "name": "WCSRMYY",
+      "name": "五常市人民医院",
       "status": "inactive",
       "billingPricingMode": "standard",
       "standardPricingOverride": null,
