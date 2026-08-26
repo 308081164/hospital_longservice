@@ -33,6 +33,7 @@ public class SchemaMigrationRunner implements CommandLineRunner {
         migrateCustomerBillingPolicyTable();
         migrateCustomerProductRuleTemperatureColumn();
         migrateCustomerProductRuleMinBagSizeColumn();
+        migrateCustomerProductRuleExtraCountColumn();
         migrateExportTemplateTable();
         migrateRuleGroupTables();
         migratePhase7L3Tables();
@@ -309,6 +310,11 @@ public class SchemaMigrationRunner implements CommandLineRunner {
     private void migrateCustomerProductRuleMinBagSizeColumn() {
         addColumnIfMissing("customer_product_rule", "min_bag_size_inclusive",
                 "min_bag_size_inclusive INT NULL COMMENT '纸塑袋宽度下限(含)' AFTER max_bag_size_exclusive");
+    }
+
+    private void migrateCustomerProductRuleExtraCountColumn() {
+        addColumnIfMissing("customer_product_rule", "extra_count",
+                "extra_count INT NULL COMMENT '折算后额外加计件数' AFTER fold_ratio");
     }
 
     private void migrateExportTemplateTable() {
