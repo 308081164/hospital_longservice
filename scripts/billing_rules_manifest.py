@@ -52,6 +52,33 @@ CUSTOMER_CANONICAL_NAMES = {
     "WCSRMYY": "五常市人民医院",
 }
 
+# HardcodedRulesMigrationRunner.seedEngineProductRules 直接 seed 的规则（非 seed 文件）。
+# manifest 生成器须显式补录，否则 compare 会把它们误判为 prod 的 extra。
+# 字段命名与 manifest productRules 一致：FIXED_PRICE/PRICE_PER_INSTRUMENT 用 price，
+# FOLD 用 foldRatio+threshold，EXTRA_FEE 用 fee。
+HARDCODED_RULES: dict[str, list[dict[str, Any]]] = {
+    "ERYY-NG": [
+        {"ruleType": "FIXED_PRICE", "name": "黑龙江省第二医院（南岗区）3.6空心钉工具包固定单价", "priority": 10, "price": 205.45, "keywords": ["3.6空心钉工具包"], "skipPackaging": True, "skipDiscount": True},
+        {"ruleType": "FIXED_PRICE", "name": "黑龙江省第二医院（南岗区）3.6空心钉固定单价", "priority": 20, "price": 13.3, "keywords": ["3.6空心钉"], "skipPackaging": True, "skipDiscount": True},
+        {"ruleType": "FIXED_PRICE", "name": "黑龙江省第二医院（南岗区）7.3空心钉固定单价", "priority": 30, "price": 13.3, "keywords": ["7.3空心钉"], "skipPackaging": True, "skipDiscount": True},
+        {"ruleType": "FIXED_PRICE", "name": "黑龙江省第二医院（南岗区）手术衣无纺布固定单价", "priority": 40, "price": 26.6, "keywords": ["手术衣"], "excludeKeywords": ["无纺布"], "skipPackaging": True, "skipDiscount": True},
+        {"ruleType": "FIXED_PRICE", "name": "黑龙江省第二医院（南岗区）手术衣纸塑袋固定单价", "priority": 50, "price": 28.0, "keywords": ["手术衣"], "excludeKeywords": ["纸塑袋"], "skipPackaging": True, "skipDiscount": True},
+        {"ruleType": "FIXED_PRICE", "name": "黑龙江省第二医院（南岗区）钉固定单价", "priority": 60, "price": 140.0, "keywords": ["钉"], "skipPackaging": True, "skipDiscount": True},
+        {"ruleType": "FIXED_PRICE", "name": "黑龙江省第二医院（南岗区）软镜固定单价", "priority": 70, "price": 210.0, "keywords": ["软镜"], "skipPackaging": True, "skipDiscount": True},
+        {"ruleType": "FIXED_PRICE", "name": "黑龙江省第二医院（南岗区）泌尿显微镜头固定单价", "priority": 80, "price": 210.0, "keywords": ["泌尿显微镜头"], "skipPackaging": True, "skipDiscount": True},
+        {"ruleType": "FIXED_PRICE", "name": "黑龙江省第二医院（南岗区）小腔包固定单价", "priority": 90, "price": 49.7, "keywords": ["小腔包"], "skipPackaging": True, "skipDiscount": True},
+    ],
+    "NEAU-YY": [
+        {"ruleType": "PRICE_PER_INSTRUMENT", "name": "东北农业大学医院洁牙机尖每件 5.5 元", "priority": 10, "price": 5.5, "keywords": ["洁牙机尖"], "skipPackaging": True, "skipDiscount": False},
+    ],
+    "HRB-SD-MB": [
+        {"ruleType": "FOLD", "name": "松电机扩针 5 件算 1 件", "priority": 10, "keywords": ["机扩针"], "threshold": 5, "foldRatio": 5},
+    ],
+    "HL-ZGH": [
+        {"ruleType": "EXTRA_FEE", "name": "镜头租借公司筐加收", "priority": 10, "fee": 8.0, "keywords": ["镜头", "检查镜"]},
+    ],
+}
+
 
 def _text(node: dict[str, Any], key: str, default: str | None = None) -> str | None:
     val = node.get(key, default)
@@ -199,6 +226,7 @@ def _apply_enable_billing(
 def build_manifest() -> dict[str, Any]:
     customers: dict[str, dict[str, Any]] = {}
     deactivated: set[tuple[str, str]] = set()
+    pending_price_updates: list[dict[str, Any]] = []
 
     for path in sorted(SEED_DIR.glob("*.json")):
         if path.name in SKIP_FILES:
@@ -236,6 +264,16 @@ def build_manifest() -> dict[str, Any]:
             )
 
         for patch in data.get("ruleUpdates") or []:
+            keys = set(patch)
+            # 纯数值字段更新（setPrice/setFoldRatio/setThreshold）须在所有 newRules 之后应用，
+            # 否则当该文件字母序早于创建规则的 newRules 文件时会被丢弃
+            # （如 phase-fold-unitprice-customers-20260820.json 的 setPrice 5.5）。
+            # 含 setName/setIsActive/关键词的补丁必须内联，与 Java 保持一致的身份/启用态顺序。
+            if ("setPrice" in keys or "setFoldRatio" in keys or "setThreshold" in keys) and not (
+                keys & {"setName", "setIsActive", "setKeywords", "addKeywords", "removeKeywords", "setExcludeKeywords", "addExcludeKeywords"}
+            ):
+                pending_price_updates.append(patch)
+                continue
             code = _text(patch, "code")
             if not code or code not in customers:
                 continue
@@ -279,9 +317,33 @@ def build_manifest() -> dict[str, Any]:
             if rule_name in rules:
                 rules[rule_name]["isActive"] = True
 
+    # 二遍处理：仅纯数值字段更新（setPrice/setFoldRatio/setThreshold）。
+    # 这些更新可能先于 newRules 执行（字母序靠前），须在所有规则创建后统一应用。
+    for patch in pending_price_updates:
+        code = _text(patch, "code")
+        if not code or code not in customers:
+            continue
+        rules = customers[code].setdefault("productRules", {})
+        _apply_rule_update(rules, patch)
+
     for code in INACTIVE_EXTRA_CODES:
         if code in customers:
             customers[code]["status"] = "inactive"
+
+    # 补录 Java HardcodedRulesMigrationRunner 硬编码规则（非 seed 文件）。
+    # 仅当同名规则不存在时插入（对应 Java ensureRule 的 countByCustomerIdAndName 跳过逻辑）。
+    for code, hardcoded in HARDCODED_RULES.items():
+        if code not in customers:
+            continue
+        rules = customers[code].setdefault("productRules", {})
+        for raw in hardcoded:
+            rule = _normalize_rule(raw)
+            name = _rule_name(rule)
+            if not name or name in rules:
+                continue
+            rule["name"] = name
+            rule["isActive"] = True
+            rules[name] = rule
 
     manifest_customers: dict[str, Any] = {}
     for code in sorted(customers):

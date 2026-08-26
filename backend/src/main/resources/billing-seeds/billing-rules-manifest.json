@@ -1,7 +1,7 @@
 {
   "version": 1,
-  "generated_at": "2026-08-26T16:06:04.209753+00:00",
-  "manifest_hash": "359efbeef76b440f4f1e3e42505c41bde7dce2d9969efd6656751e243e0a23d3",
+  "generated_at": "2026-08-26T17:58:43.728003+00:00",
+  "manifest_hash": "e93c0e80954ed9c8751546c1cf34aaad2589fb0eb609994c9654471e33c14645",
   "billing_enabled_count": 55,
   "active_billing_enabled_count": 53,
   "customers": {
@@ -666,10 +666,133 @@
           "skipDiscount": false,
           "isActive": true,
           "matchMode": "first"
+        },
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "黑龙江省第二医院（南岗区）3.6空心钉固定单价",
+          "priority": 20,
+          "price": 13.3,
+          "keywords": [
+            "3.6空心钉"
+          ],
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": true,
+          "matchMode": "first"
+        },
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "黑龙江省第二医院（南岗区）3.6空心钉工具包固定单价",
+          "priority": 10,
+          "price": 205.45,
+          "keywords": [
+            "3.6空心钉工具包"
+          ],
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": true,
+          "matchMode": "first"
+        },
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "黑龙江省第二医院（南岗区）7.3空心钉固定单价",
+          "priority": 30,
+          "price": 13.3,
+          "keywords": [
+            "7.3空心钉"
+          ],
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": true,
+          "matchMode": "first"
+        },
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "黑龙江省第二医院（南岗区）小腔包固定单价",
+          "priority": 90,
+          "price": 49.7,
+          "keywords": [
+            "小腔包"
+          ],
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": true,
+          "matchMode": "first"
+        },
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "黑龙江省第二医院（南岗区）手术衣无纺布固定单价",
+          "priority": 40,
+          "price": 26.6,
+          "keywords": [
+            "手术衣"
+          ],
+          "excludeKeywords": [
+            "无纺布"
+          ],
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": true,
+          "matchMode": "first"
+        },
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "黑龙江省第二医院（南岗区）手术衣纸塑袋固定单价",
+          "priority": 50,
+          "price": 28.0,
+          "keywords": [
+            "手术衣"
+          ],
+          "excludeKeywords": [
+            "纸塑袋"
+          ],
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": true,
+          "matchMode": "first"
+        },
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "黑龙江省第二医院（南岗区）泌尿显微镜头固定单价",
+          "priority": 80,
+          "price": 210.0,
+          "keywords": [
+            "泌尿显微镜头"
+          ],
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": true,
+          "matchMode": "first"
+        },
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "黑龙江省第二医院（南岗区）软镜固定单价",
+          "priority": 70,
+          "price": 210.0,
+          "keywords": [
+            "软镜"
+          ],
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": true,
+          "matchMode": "first"
+        },
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "黑龙江省第二医院（南岗区）钉固定单价",
+          "priority": 60,
+          "price": 140.0,
+          "keywords": [
+            "钉"
+          ],
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": true,
+          "matchMode": "first"
         }
       ],
-      "rule_count": 1,
-      "active_rule_count": 1
+      "rule_count": 10,
+      "active_rule_count": 10
     },
     "ERYY-SB": {
       "code": "ERYY-SB",
@@ -997,7 +1120,8 @@
           "skipPackaging": true,
           "isActive": true,
           "matchMode": "first",
-          "skipDiscount": false
+          "skipDiscount": false,
+          "price": 5.5
         },
         {
           "ruleType": "FOLD",
@@ -1012,7 +1136,8 @@
           "skipPackaging": false,
           "isActive": true,
           "matchMode": "first",
-          "skipDiscount": false
+          "skipDiscount": false,
+          "price": 5.5
         },
         {
           "ruleType": "FIXED_PRICE",
@@ -1498,10 +1623,24 @@
           "skipDiscount": true,
           "isActive": true,
           "matchMode": "first"
+        },
+        {
+          "ruleType": "EXTRA_FEE",
+          "name": "镜头租借公司筐加收",
+          "priority": 10,
+          "fee": 8.0,
+          "keywords": [
+            "镜头",
+            "检查镜"
+          ],
+          "isActive": true,
+          "matchMode": "first",
+          "skipPackaging": false,
+          "skipDiscount": false
         }
       ],
-      "rule_count": 1,
-      "active_rule_count": 1
+      "rule_count": 2,
+      "active_rule_count": 2
     },
     "HLFB-SF": {
       "code": "HLFB-SF",
@@ -2686,6 +2825,20 @@
         },
         {
           "ruleType": "FOLD",
+          "name": "松电机扩针 5 件算 1 件",
+          "priority": 10,
+          "keywords": [
+            "机扩针"
+          ],
+          "threshold": 5,
+          "foldRatio": 5,
+          "isActive": true,
+          "matchMode": "first",
+          "skipPackaging": false,
+          "skipDiscount": false
+        },
+        {
+          "ruleType": "FOLD",
           "name": "松电机扩针5合1免包材",
           "priority": 11,
           "keywords": [
@@ -2745,8 +2898,8 @@
           "skipDiscount": false
         }
       ],
-      "rule_count": 4,
-      "active_rule_count": 2
+      "rule_count": 5,
+      "active_rule_count": 3
     },
     "HRB-SH": {
       "code": "HRB-SH",
@@ -3705,6 +3858,19 @@
       "billingEnabled": true,
       "productRules": [
         {
+          "ruleType": "PRICE_PER_INSTRUMENT",
+          "name": "东北农业大学医院洁牙机尖每件 5.5 元",
+          "priority": 10,
+          "price": 5.5,
+          "keywords": [
+            "洁牙机尖"
+          ],
+          "skipPackaging": true,
+          "skipDiscount": false,
+          "isActive": true,
+          "matchMode": "first"
+        },
+        {
           "ruleType": "FOLD",
           "name": "东北农大口腔科针类5件算1件",
           "priority": 10,
@@ -3820,8 +3986,8 @@
           "skipDiscount": false
         }
       ],
-      "rule_count": 6,
-      "active_rule_count": 4
+      "rule_count": 7,
+      "active_rule_count": 5
     },
     "NG-FUCHAN": {
       "code": "NG-FUCHAN",
@@ -5672,7 +5838,8 @@
           "skipPackaging": true,
           "isActive": true,
           "matchMode": "first",
-          "skipDiscount": false
+          "skipDiscount": false,
+          "price": 5.5
         },
         {
           "ruleType": "FOLD",
@@ -5687,7 +5854,8 @@
           "skipPackaging": false,
           "isActive": true,
           "matchMode": "first",
-          "skipDiscount": false
+          "skipDiscount": false,
+          "price": 5.5
         }
       ],
       "rule_count": 9,

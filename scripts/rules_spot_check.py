@@ -868,7 +868,11 @@ def run_spot_check(
 
     simulate_rule_id = rule_id
     if code == "STANDARD":
-        simulate_rule_id = 1
+        # 解析激活规则 id，而非硬编码 1：生产环境 id=1 可能是「新建方案」占位符，
+        # 真正的通用规则（标准灭菌计费规则）可能位于其他 id（如生产 id=2）。
+        active = client.get("/api/hospital-pricing-rules/active")
+        active_rule = active.get("data") or {}
+        simulate_rule_id = active_rule.get("id")
         hospital = hospital_name or GUOYAO_2_HOSPITAL
 
     results: list[dict[str, Any]] = []
