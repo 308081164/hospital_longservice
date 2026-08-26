@@ -28,6 +28,9 @@ jobs:
       - name: Verify DB migrate manifest
         run: bash scripts/check-migrate-manifest.sh
 
+      - name: Verify billing rules manifest fresh
+        run: bash scripts/check-manifest-fresh.sh
+
       - name: Set up JDK 17
         uses: actions/setup-java@v4
         with:
