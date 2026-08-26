@@ -40,7 +40,7 @@
       "threshold": 5,
       "foldRatio": 5,
       "price": 5.6,
-      "maxInstrumentCount": 10,
+      "maxInstrumentCount": 11,
       "skipPackaging": false
     },
     {
@@ -52,7 +52,7 @@
       "threshold": 5,
       "foldRatio": 5,
       "price": 5.6,
-      "minInstrumentCount": 11,
+      "minInstrumentCount": 12,
       "skipPackaging": true
     },
     {

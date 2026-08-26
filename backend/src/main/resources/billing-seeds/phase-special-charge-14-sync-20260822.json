@@ -1,44 +1,9 @@
 {
   "version": "1",
-  "description": "对照特殊收费(14).xlsx：东北农大根管锉 5.6→5.5；市五院(主院区)新增敷料包固定价；妇幼人口新增镜头加收8",
+  "description": "对照特殊收费(14).xlsx：市五院(主院区)新增敷料包固定价；妇幼人口新增镜头加收8（东北农大根管锉按 Excel(13) 保持 5.6、阈值≤11/>11，此处不再降为 5.5）",
   "strictRuleOps": true,
-  "deactivateRules": [
-    {
-      "code": "NEAU-YY",
-      "ruleName": "东北农大根管锉5.6含包材"
-    },
-    {
-      "code": "NEAU-YY",
-      "ruleName": "东北农大根管锉5.6免包材"
-    }
-  ],
+  "deactivateRules": [],
   "newRules": [
-    {
-      "code": "NEAU-YY",
-      "ruleType": "FOLD",
-      "name": "东北农大根管锉5.5含包材",
-      "priority": 8,
-      "keywords": ["根管锉"],
-      "threshold": 5,
-      "foldRatio": 5,
-      "price": 5.5,
-      "maxInstrumentCount": 10,
-      "skipPackaging": false,
-      "skipDiscount": false
-    },
-    {
-      "code": "NEAU-YY",
-      "ruleType": "FOLD",
-      "name": "东北农大根管锉5.5免包材",
-      "priority": 9,
-      "keywords": ["根管锉"],
-      "threshold": 5,
-      "foldRatio": 5,
-      "price": 5.5,
-      "minInstrumentCount": 11,
-      "skipPackaging": true,
-      "skipDiscount": false
-    },
     {
       "code": "HRB-WY",
       "ruleType": "FIXED_PRICE",

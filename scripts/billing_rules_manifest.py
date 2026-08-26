@@ -19,10 +19,10 @@ LEGACY_TEST_MANIFEST = ROOT / "测试用例/billing_rules_manifest.json"
 SKIP_FILES = {"billing-rules-manifest.json"}
 
 # ExtraCustomerDeactivationRunner.INACTIVE_EXTRA_CODES
+# 注意：须与 Java 侧 ExtraCustomerDeactivationRunner 保持一致。
+# NEAU-YY / HRB-SD-MB / HL-ZGH / HRB-HTFH 是活跃计费客户，不得停用。
 INACTIVE_EXTRA_CODES = [
     "HRB-XK",
-    "NEAU-YY",
-    "HRB-SD-MB",
     "HRB-AM",
     "HRB-ASM",
     "HRB-BY",
@@ -33,10 +33,8 @@ INACTIVE_EXTRA_CODES = [
     "YMYXZX",
     "HY-HYY",
     "ZYY-DSFY",
-    "HL-ZGH",
     "HLFB-SF",
     "HRB-DLFB",
-    "HRB-HTFH",
     "HRB-MHM",
     "ZXYSJT",
 ]

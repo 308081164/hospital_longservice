@@ -22,7 +22,7 @@
         "针包"
       ],
       "threshold": 99999,
-      "foldRatio": 5,
+      "foldRatio": 9999,
       "skipPackaging": false
     }
   ]
