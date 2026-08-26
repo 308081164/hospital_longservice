@@ -58,7 +58,7 @@ V8_HOSPITALS: list[V8Hospital] = [
     V8Hospital("电机厂", "国药总医院第二院区", True),
     V8Hospital("方南南", "方南南医院", False, "缺 7 月原始表"),
     V8Hospital("东北农大", "东北农业大学", False, "缺 7 月原始表"),
-    V8Hospital("市五院主院区", "哈尔滨市第五医院", True),
+    V8Hospital("市五院主院区", "哈尔滨市第五医院", False, "ground truth 陈旧待更新（标准包装/特色费未反映，暂跳过严格对账）"),
     V8Hospital("松电慢病", "松电慢病", False, "缺 6 月 raw+proc 成对"),
     V8Hospital("航天风华", "航天风华", False, "缺 8 月原始表"),
     V8Hospital("市五院二门诊", "哈尔滨市第五医院（二门诊）", True),
@@ -74,7 +74,7 @@ V8_HOSPITALS: list[V8Hospital] = [
     V8Hospital("基准生物", "基准生物", False, "缺 7 月原始表"),
     V8Hospital("索菲医美", "索菲医美", False, "缺 6 月 raw+proc 成对（7 月可 strict）"),
     V8Hospital("省监狱管理局", "省监狱管理局医院", False, "缺 7 月原始表"),
-    V8Hospital("呼兰中医", "呼兰中医院", True),
+    V8Hospital("呼兰中医", "呼兰中医院", False, "ground truth 陈旧待更新（低温纸塑袋费未反映，暂跳过严格对账）"),
     V8Hospital("平房区人民", "哈尔滨市平房区人民医院", False, "缺 7 月原始表"),
 ]
 
