@@ -56,26 +56,26 @@ class V8Hospital:
 V8_HOSPITALS: list[V8Hospital] = [
     V8Hospital("冰城医美", "哈尔滨冰城医疗美容医院", True),
     V8Hospital("电机厂", "国药总医院第二院区", True),
-    V8Hospital("方南南", "方南南医院", False, "缺 7 月原始表"),
-    V8Hospital("东北农大", "东北农业大学", False, "缺 7 月原始表"),
-    V8Hospital("市五院主院区", "哈尔滨市第五医院", False, "ground truth 陈旧待更新（标准包装/特色费未反映，暂跳过严格对账）"),
-    V8Hospital("松电慢病", "松电慢病", False, "缺 6 月 raw+proc 成对"),
-    V8Hospital("航天风华", "航天风华", False, "缺 8 月原始表"),
+    V8Hospital("方南南", "方南南医院", True),
+    V8Hospital("东北农大", "东北农业大学", True),
+    V8Hospital("市五院主院区", "哈尔滨市第五医院", False, "ground truth 陈旧待更新（标准包装/特色费未反映）"),
+    V8Hospital("松电慢病", "松电慢病", False, "无 6/7 月 raw+proc 成对"),
+    V8Hospital("航天风华", "航天风华", False, "无 6/7 月 raw+proc 成对"),
     V8Hospital("市五院二门诊", "哈尔滨市第五医院（二门诊）", True),
     V8Hospital("九州", "黑龙江九洲妇科医院", True),
-    V8Hospital("博尚", "博尚医院", False, "缺 7 月 raw+proc 成对"),
-    V8Hospital("海员松北", "黑龙江省海员总医院（松北）", False, "缺 6 月 raw+proc 成对"),
-    V8Hospital("省妇幼人口", "黑龙江省妇幼保健院（人口）", False, "缺 6 月 raw+proc 成对（7 月可 strict）"),
+    V8Hospital("博尚", "博尚医院", False, "无 6/7 月 raw+proc 成对"),
+    V8Hospital("海员松北", "黑龙江省海员总医院（松北）", True),
+    V8Hospital("省妇幼人口", "黑龙江省妇幼保健院（人口）", True),
     V8Hospital("祖研南岗", "祖研-黑龙江省中医医院（南岗院区）", True),
     V8Hospital("社会康复", "黑龙江省社会康复医院", True),
-    V8Hospital("道里妇幼", "道里区妇幼保健院", False, "缺 7 月原始表"),
-    V8Hospital("春语医美", "春语医美", False, "缺 7 月原始表"),
-    V8Hospital("总工会", "总工会", False, "缺 6 月 raw+proc 成对（7 月可 strict）"),
-    V8Hospital("基准生物", "基准生物", False, "缺 7 月原始表"),
-    V8Hospital("索菲医美", "索菲医美", False, "缺 6 月 raw+proc 成对（7 月可 strict）"),
-    V8Hospital("省监狱管理局", "省监狱管理局医院", False, "缺 7 月原始表"),
-    V8Hospital("呼兰中医", "呼兰中医院", False, "ground truth 陈旧待更新（低温纸塑袋费未反映，暂跳过严格对账）"),
-    V8Hospital("平房区人民", "哈尔滨市平房区人民医院", False, "缺 7 月原始表"),
+    V8Hospital("道里妇幼", "道里区妇幼保健院", False, "无 6/7 月 raw+proc 成对"),
+    V8Hospital("春语医美", "春语医美", True),
+    V8Hospital("总工会", "总工会", True),
+    V8Hospital("基准生物", "基准生物", False, "无原始表格"),
+    V8Hospital("索菲医美", "索菲医美", True),
+    V8Hospital("省监狱管理局", "省监狱管理局医院", True),
+    V8Hospital("呼兰中医", "呼兰中医院", False, "ground truth 陈旧待更新（低温纸塑袋费未反映）"),
+    V8Hospital("平房区人民", "哈尔滨市平房区人民医院", True),
 ]
 
 V8_TESTABLE_FOLDERS: list[str] = [h.folder for h in V8_HOSPITALS if h.testable and h.folder]
@@ -325,9 +325,17 @@ def audit_hospital_strict(token: str, folder_name: str, *, month: int = TARGET_M
 
     expected_rows, raw_path, proc_path, pair_note = extract_expected_price_rows(hospital_dir, month)
     if not raw_path or not proc_path:
-        result.status = "SKIP"
-        result.message = pair_note
-        return result
+        # 自动 fallback：主月份无配对时试另一月份（部分院只有单月 raw+proc 成对）
+        fallback_month = 7 if month == TARGET_MONTH else TARGET_MONTH
+        fb_rows, fb_raw, fb_proc, fb_note = extract_expected_price_rows(hospital_dir, fallback_month)
+        if fb_raw and fb_proc:
+            month = fallback_month
+            result.month = month
+            expected_rows, raw_path, proc_path, pair_note = fb_rows, fb_raw, fb_proc, fb_note
+        else:
+            result.status = "SKIP"
+            result.message = pair_note
+            return result
 
     result.raw_file = raw_path.name
     result.proc_file = proc_path.name
@@ -689,10 +697,10 @@ def run_section_audit(
                 r = skip_result(meta, month=month, section=section)
                 results.append(r)
             continue
-        print(f"\n== 严格对账 ({month}月): {target} ==")
         r = audit_hospital_strict(token, target, month=month)
         r.section = section
         results.append(r)
+        print(f"\n== 严格对账 ({r.month}月): {target} ==")
         print(f"  {r.status}: {r.message} (E={r.expected_count}, W={r.warning_count})")
 
     if include_v8_skips:
