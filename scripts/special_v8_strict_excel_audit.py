@@ -7,7 +7,12 @@ Compare three row sets:
   P — processed Excel unit prices (ground-truth self-check)
 
 PASS iff E.keys == W.keys and all unit prices within target (strict < 0.01 yuan → ERROR).
-Field-consistency warnings (包材名称/器械数 vs 包名) do not count as 多报.
+Field-consistency warnings (包材名称/器械数 vs 包名) do not count as 多报;
+field-consistency warnings that ALSO carry a pricing deviation (≥0.01) are reported
+separately as「字段校验+计价偏差」and do NOT count as 多报 (they need manual review).
+
+审计月份口径：主月份无 raw+proc 成对时按 7→5→4→8→3 顺序自动 fallback，
+使仅有 4/5 月材料的医院也能纳入严格测试。
 """
 
 from __future__ import annotations
@@ -59,16 +64,16 @@ V8_HOSPITALS: list[V8Hospital] = [
     V8Hospital("方南南", "方南南医院", True),
     V8Hospital("东北农大", "东北农业大学", True),
     V8Hospital("市五院主院区", "哈尔滨市第五医院", False, "ground truth 陈旧待更新（标准包装/特色费未反映）"),
-    V8Hospital("松电慢病", "松电慢病", False, "无 6/7 月 raw+proc 成对"),
-    V8Hospital("航天风华", "航天风华", False, "无 6/7 月 raw+proc 成对"),
+    V8Hospital("松电慢病", "松电慢病", True),
+    V8Hospital("航天风华", "航天风华", True),
     V8Hospital("市五院二门诊", "哈尔滨市第五医院（二门诊）", True),
     V8Hospital("九州", "黑龙江九洲妇科医院", True),
-    V8Hospital("博尚", "博尚医院", False, "无 6/7 月 raw+proc 成对"),
+    V8Hospital("博尚", "博尚医院", True),
     V8Hospital("海员松北", "黑龙江省海员总医院（松北）", True),
     V8Hospital("省妇幼人口", "黑龙江省妇幼保健院（人口）", True),
     V8Hospital("祖研南岗", "祖研-黑龙江省中医医院（南岗院区）", True),
     V8Hospital("社会康复", "黑龙江省社会康复医院", True),
-    V8Hospital("道里妇幼", "道里区妇幼保健院", False, "无 6/7 月 raw+proc 成对"),
+    V8Hospital("道里妇幼", "道里区妇幼保健院", True),
     V8Hospital("春语医美", "春语医美", True),
     V8Hospital("总工会", "总工会", True),
     V8Hospital("基准生物", "基准生物", False, "无原始表格"),
@@ -119,11 +124,13 @@ class HospitalStrictResult:
     warning_count: int = 0
     pricing_warning_count: int = 0
     non_pricing_warning_ignored: int = 0
+    field_consistency_pricing_count: int = 0
     matched_count: int = 0
     missed: list[DiffRow] = field(default_factory=list)
     extra: list[DiffRow] = field(default_factory=list)
     price_mismatch: list[DiffRow] = field(default_factory=list)
     proc_mismatch: list[DiffRow] = field(default_factory=list)
+    field_consistency_pricing: list[DiffRow] = field(default_factory=list)
     dedupe_note: str = ""
     fully_aligned: bool = False
     month: int = TARGET_MONTH
@@ -187,6 +194,23 @@ def is_field_consistency_only_warning(row: dict[str, Any]) -> bool:
         return True
     diff = price_diff(unit, expected)
     return diff is None or diff < PRICE_ERROR_TOLERANCE
+
+
+def is_field_consistency_with_pricing(row: dict[str, Any]) -> bool:
+    """字段校验告警同时伴随计价偏差（单价差 ≥ 0.01）。
+
+    这类告警单独说明，不直接计入「多报」：其计价偏差可能由字段不一致引起，
+    需人工核实，不应混入纯计价规则的多报统计。
+    """
+    codes = field_consistency_violation_codes(parse_billing_notes(row))
+    if not codes:
+        return False
+    unit = row.get("unitPrice")
+    expected = row.get("expectedUnitPrice")
+    if unit is None or expected is None:
+        return False
+    diff = price_diff(unit, expected)
+    return diff is not None and diff >= PRICE_ERROR_TOLERANCE
 
 
 def should_exclude_from_pricing_warnings(row: dict[str, Any]) -> bool:
@@ -325,13 +349,17 @@ def audit_hospital_strict(token: str, folder_name: str, *, month: int = TARGET_M
 
     expected_rows, raw_path, proc_path, pair_note = extract_expected_price_rows(hospital_dir, month)
     if not raw_path or not proc_path:
-        # 自动 fallback：主月份无配对时试另一月份（部分院只有单月 raw+proc 成对）
-        fallback_month = 7 if month == TARGET_MONTH else TARGET_MONTH
-        fb_rows, fb_raw, fb_proc, fb_note = extract_expected_price_rows(hospital_dir, fallback_month)
-        if fb_raw and fb_proc:
-            month = fallback_month
-            result.month = month
-            expected_rows, raw_path, proc_path, pair_note = fb_rows, fb_raw, fb_proc, fb_note
+        # 自动 fallback：主月份无配对时按 7→5→4→8→3 顺序尝试其它月份
+        # （部分院只有 4/5 月 raw+proc 成对，6/7 月缺数据）
+        for fb_month in (7, 5, 4, 8, 3):
+            if fb_month == month:
+                continue
+            fb_rows, fb_raw, fb_proc, fb_note = extract_expected_price_rows(hospital_dir, fb_month)
+            if fb_raw and fb_proc:
+                month = fb_month
+                result.month = month
+                expected_rows, raw_path, proc_path, pair_note = fb_rows, fb_raw, fb_proc, fb_note
+                break
         else:
             result.status = "SKIP"
             result.message = pair_note
@@ -368,7 +396,15 @@ def audit_hospital_strict(token: str, folder_name: str, *, month: int = TARGET_M
 
     result.warning_count = len(warnings)
     w_map: dict[str, dict[str, Any]] = {}
+    fc_keys: set[str] = set()
     for w in warnings:
+        if is_field_consistency_with_pricing(w):
+            # 字段校验 + 计价偏差：单独说明，不计入「多报」
+            result.field_consistency_pricing_count += 1
+            key, meta_row = warning_entry(w)
+            fc_keys.add(key)
+            result.field_consistency_pricing.append(diff_from_expected(key, meta_row, "FIELD_CONSISTENCY_PRICING"))
+            continue
         if should_exclude_from_pricing_warnings(w):
             result.non_pricing_warning_ignored += 1
             continue
@@ -384,7 +420,8 @@ def audit_hospital_strict(token: str, folder_name: str, *, month: int = TARGET_M
     matched_keys = e_keys & w_keys
     result.matched_count = len(matched_keys)
 
-    for key in sorted(e_keys - w_keys):
+    # 字段校验+计价偏差覆盖的 E 键不视为漏检（该告警已单独说明）
+    for key in sorted(e_keys - w_keys - fc_keys):
         result.missed.append(diff_from_expected(key, e_map[key], "MISSED"))
 
     for key in sorted(w_keys - e_keys):
@@ -402,7 +439,7 @@ def audit_hospital_strict(token: str, folder_name: str, *, month: int = TARGET_M
 
     has_pricing_error_rows = bool(result.missed or result.price_mismatch or result.proc_mismatch)
     has_extra = bool(result.extra)
-    result.fully_aligned = not has_pricing_error_rows and not has_extra and len(e_map) == len(w_map)
+    result.fully_aligned = not has_pricing_error_rows and not has_extra
 
     if result.expected_count == 0 and result.pricing_warning_count == 0:
         result.status = "PASS"
@@ -442,6 +479,11 @@ def audit_hospital_strict(token: str, folder_name: str, *, month: int = TARGET_M
         result.message = "；".join(parts) if parts else "条目或单价未完全对应"
         if result.non_pricing_warning_ignored:
             result.message += f"；忽略非计价 warning {result.non_pricing_warning_ignored} 条"
+
+    if result.field_consistency_pricing_count:
+        result.message += (
+            f"；字段校验伴计价偏差 {result.field_consistency_pricing_count} 条（单独说明，不计多报）"
+        )
 
     return result
 
@@ -504,20 +546,20 @@ def batch814_skip_results() -> list[HospitalStrictResult]:
 
 def render_section_table(results: list[HospitalStrictResult]) -> list[str]:
     lines = [
-        "| 客户名 | 测试目录 | 状态 | E | W(计价) | 非计价忽略 | 漏检 | 多报 | 计价误差 | 完全对应 | Job |",
-        "|--------|---------|------|---|---------|------------|------|------|----------|---------|-----|",
+        "| 客户名 | 测试目录 | 状态 | E | W(计价) | 非计价忽略 | 字段校验+计价 | 漏检 | 多报 | 计价误差 | 完全对应 | Job |",
+        "|--------|---------|------|---|---------|------------|--------------|------|------|----------|---------|-----|",
     ]
     for r in results:
         fully = "是" if r.fully_aligned else ("—" if r.status == "SKIP" else "否")
         if r.status == "SKIP":
             lines.append(
-                f"| {r.customer_label} | {r.hospital} | SKIP | - | - | - | - | - | {r.message} | - |"
+                f"| {r.customer_label} | {r.hospital} | SKIP | - | - | - | - | - | - | - | {r.message} | - |"
             )
             continue
         job = str(r.job_id) if r.job_id else "-"
         lines.append(
             f"| {r.customer_label} | {r.hospital} | {r.status} | {r.expected_count} | "
-            f"{r.pricing_warning_count} | {r.non_pricing_warning_ignored} | {len(r.missed)} | "
+            f"{r.pricing_warning_count} | {r.non_pricing_warning_ignored} | {r.field_consistency_pricing_count} | {len(r.missed)} | "
             f"{len(r.extra)} | {len(r.price_mismatch)} | "
             f"{fully} | {job} |"
         )
@@ -543,7 +585,9 @@ def render_markdown(
         f"> API：`{api_base}`",
         "> 判定：E/W/P 三方比对；W 仅含计价 correction（单价偏差≥0.01）；"
         "包材/器械字段核对及同价 warning 不计入多报；"
+        "字段校验告警同时伴随计价偏差（≥0.01）→ 单独说明，不计入多报；"
         f"目标单价偏差 ≥ {PRICE_ERROR_TOLERANCE} 元 → ERROR",
+        "> 月份口径：主月份无 raw+proc 成对时按 7→5→4→8→3 自动 fallback（覆盖 4/5 月材料院）",
         "",
         "## 总览",
         "",
@@ -553,14 +597,14 @@ def render_markdown(
 
     section_titles = {
         "july": "## §1 7 月（814 新增）",
-        "june": "## §2 6 月（既有 v8 可测院）",
+        "june": "## §2 4/5/6 月（既有 v8 可测院，含 fallback）",
     }
     for key, results in sections:
         lines.extend(["", section_titles.get(key, f"## {key}"), ""])
         lines.extend(render_section_table(results))
 
     untestable = [h for h in V8_HOSPITALS if not h.testable]
-    lines.extend(["", "## §3 13 院缺材料 / 无法测清单", ""])
+    lines.extend(["", f"## §3 {len(untestable)} 院缺材料 / 无法测清单", ""])
     lines.append("| # | 客户名 | 原因 |")
     lines.append("|---|--------|------|")
     for i, h in enumerate(untestable, 1):
@@ -568,7 +612,8 @@ def render_markdown(
 
     detail_results = [
         r for r in all_results
-        if r.status in {"FAIL", "ERROR"} or r.missed or r.extra or r.price_mismatch
+        if r.status in {"FAIL", "ERROR"}
+        or r.missed or r.extra or r.price_mismatch or r.field_consistency_pricing
     ]
     if detail_results:
         lines.extend(["", "## §4 差异明细附录", ""])
@@ -604,6 +649,7 @@ def render_markdown(
             append_diff_table("多报 extra", r.extra)
             append_diff_table("计价误差 price_error (≥0.01)", r.price_mismatch)
             append_diff_table("ground truth 自洽 proc_mismatch", r.proc_mismatch)
+            append_diff_table("字段校验+计价偏差（单独说明，不计多报）", r.field_consistency_pricing)
 
     return "\n".join(lines) + "\n"
 
