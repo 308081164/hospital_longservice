@@ -375,6 +375,11 @@ def build_manifest() -> dict[str, Any]:
 
     # 最终仅保留 22 家特殊计价客户：删除非严格测试口径的客户。
     customers = {code: entry for code, entry in customers.items() if code in STRICT_KEEP_CODES}
+    # 22 家特殊计价客户全部启用特色账单（历史遗留导致部分客户 billingEnabled=false，
+    # 如航天风华 HRB-HTFH，须强制开启以让 FOLD 等特殊规则生效）。
+    for code in STRICT_KEEP_CODES:
+        if code in customers:
+            customers[code]["billingEnabled"] = True
 
     manifest_customers: dict[str, Any] = {}
     for code in sorted(customers):

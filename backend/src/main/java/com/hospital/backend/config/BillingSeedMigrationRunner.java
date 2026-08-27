@@ -536,10 +536,19 @@ public class BillingSeedMigrationRunner implements CommandLineRunner {
         }
         if (sysSettingMapper.countByKey(STALE_CUSTOMER_CLEANUP_MARKER) == 0) {
             int removed = deleteNonStrictCustomers();
+            enableStrictCustomers();
             insertMarker(STALE_CUSTOMER_CLEANUP_MARKER,
                     "删除非22家特殊计价客户及其孤儿数据（严格测试口径收敛）");
             log.info("Stale customer cleanup: removed {} customers", removed);
         }
+    }
+
+    /** 22 家特殊计价客户全部强制开启特色账单（历史遗留 billing_enabled=0 修正，如航天风华 HRB-HTFH）。 */
+    private void enableStrictCustomers() {
+        jdbcTemplate.update("UPDATE customer SET billing_enabled = 1 WHERE code IN ("
+                + STRICT_KEEP_CODES.stream().map(c -> "'" + c + "'")
+                        .reduce((a, b) -> a + "," + b).orElse("")
+                + ")");
     }
 
     private int deleteNonStrictCustomers() {

@@ -1,9 +1,9 @@
 {
   "version": 1,
-  "generated_at": "2026-08-27T04:53:38.793305+00:00",
-  "manifest_hash": "ca45c211a10c1130507c37f67de43d3504fe1ba4e1419c45ed66d623b090b377",
-  "billing_enabled_count": 21,
-  "active_billing_enabled_count": 21,
+  "generated_at": "2026-08-27T05:07:02.071295+00:00",
+  "manifest_hash": "286ac3db5294640a5d07807b48848472d31480451fbc15f9897c1138ffdfc13b",
+  "billing_enabled_count": 22,
+  "active_billing_enabled_count": 22,
   "customers": {
     "BINGCHENG-YM": {
       "code": "BINGCHENG-YM",
@@ -1566,7 +1566,7 @@
       "status": null,
       "billingPricingMode": "hybrid",
       "standardPricingOverride": null,
-      "billingEnabled": false,
+      "billingEnabled": true,
       "productRules": [
         {
           "ruleType": "FOLD",

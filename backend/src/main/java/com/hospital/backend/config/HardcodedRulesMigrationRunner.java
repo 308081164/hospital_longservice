@@ -81,95 +81,29 @@ public class HardcodedRulesMigrationRunner implements CommandLineRunner {
     }
 
     private void seedMissingCustomers() {
+        // 2026-08-27 严格测试口径收敛：仅保留 22 家特殊计价客户。
+        // 非 22 家客户不再于此 seed，避免每次启动复活已删除客户。
         ensureCustomer("HRB-HTFH", "哈尔滨航天风华医院", null, null, false, true,
                 List.of(alias("哈尔滨航天风华医院", "engine")),
-                List.of(), List.of());
-        ensureCustomer("HRB-MHM", "哈尔滨美涵美医疗美容有限公司", null, null, false, true,
-                List.of(alias("哈尔滨美涵美医疗美容有限公司", "engine")),
-                List.of(), List.of());
-        ensureCustomer("HRB-DLFB", "哈尔滨市道里区妇幼保健院", null, null, false, true,
-                List.of(alias("哈尔滨市道里区妇幼保健院", "engine")),
-                List.of(), List.of());
-        ensureCustomer("HLFB-SF", "黑龙江省妇幼保健院（人口）", null, null, false, true,
-                List.of(alias("黑龙江省妇幼保健院（人口）", "engine"),
-                        alias("黑龙江省妇幼保健院(人口)", "engine")),
                 List.of(), List.of());
         ensureCustomer("HL-ZGH", "黑龙江总工会医院", null, null, false, true,
                 List.of(alias("黑龙江总工会医院", "engine")),
                 List.of(), List.of());
-        ensureCustomer("ZXYSJT", "显著医生集团中西医结合门诊", null, "none", false, true,
-                List.of(alias("显著医生集团中西医结合门诊", "engine")),
-                List.of(), List.of());
     }
 
     private void seedEngineProductRules() {
-        // ---- 省二院松北 fixedPrices (9) ----
-        String sb = "ERYY-SB";
-        ensureRule(sb, "FIXED_PRICE", "黑龙江省第二医院（松北区）3.6空心钉工具包固定单价", 10,
-                bd("190.05"), List.of("3.6空心钉工具包"), null, null, true, true);
-        ensureRule(sb, "FIXED_PRICE", "黑龙江省第二医院（松北区）3.6空心钉固定单价", 20,
-                bd("13.3"), List.of("3.6空心钉"), null, null, true, true);
-        ensureRule(sb, "FIXED_PRICE", "黑龙江省第二医院（松北区）7.3空心钉固定单价", 30,
-                bd("13.3"), List.of("7.3空心钉"), null, null, true, true);
-        ensureRule(sb, "FIXED_PRICE", "黑龙江省第二医院（松北区）手术衣无纺布固定单价", 40,
-                bd("26.6"), List.of("手术衣"), List.of("无纺布"), null, true, true);
-        ensureRule(sb, "FIXED_PRICE", "黑龙江省第二医院（松北区）手术衣纸塑袋固定单价", 50,
-                bd("28.0"), List.of("手术衣"), List.of("纸塑袋"), null, true, true);
-        ensureRule(sb, "FIXED_PRICE", "黑龙江省第二医院（松北区）钉固定单价", 60,
-                bd("35.0"), List.of("钉"), null, null, true, true);
-        ensureRule(sb, "FIXED_PRICE", "黑龙江省第二医院（松北区）软镜固定单价", 70,
-                bd("210.0"), List.of("软镜"), null, null, true, true);
-        ensureRule(sb, "FIXED_PRICE", "黑龙江省第二医院（松北区）泌尿显微镜头固定单价", 80,
-                bd("210.0"), List.of("泌尿显微镜头"), null, null, true, true);
-        ensureRule(sb, "FIXED_PRICE", "黑龙江省第二医院（松北区）小腔包固定单价", 90,
-                bd("53.55"), List.of("小腔包"), null, null, true, true);
-
-        // ---- 省二院南岗 fixedPrices (9) ----
-        String ng = "ERYY-NG";
-        ensureRule(ng, "FIXED_PRICE", "黑龙江省第二医院（南岗区）3.6空心钉工具包固定单价", 10,
-                bd("205.45"), List.of("3.6空心钉工具包"), null, null, true, true);
-        ensureRule(ng, "FIXED_PRICE", "黑龙江省第二医院（南岗区）3.6空心钉固定单价", 20,
-                bd("13.3"), List.of("3.6空心钉"), null, null, true, true);
-        ensureRule(ng, "FIXED_PRICE", "黑龙江省第二医院（南岗区）7.3空心钉固定单价", 30,
-                bd("13.3"), List.of("7.3空心钉"), null, null, true, true);
-        ensureRule(ng, "FIXED_PRICE", "黑龙江省第二医院（南岗区）手术衣无纺布固定单价", 40,
-                bd("26.6"), List.of("手术衣"), List.of("无纺布"), null, true, true);
-        ensureRule(ng, "FIXED_PRICE", "黑龙江省第二医院（南岗区）手术衣纸塑袋固定单价", 50,
-                bd("28.0"), List.of("手术衣"), List.of("纸塑袋"), null, true, true);
-        ensureRule(ng, "FIXED_PRICE", "黑龙江省第二医院（南岗区）钉固定单价", 60,
-                bd("140.0"), List.of("钉"), null, null, true, true);
-        ensureRule(ng, "FIXED_PRICE", "黑龙江省第二医院（南岗区）软镜固定单价", 70,
-                bd("210.0"), List.of("软镜"), null, null, true, true);
-        ensureRule(ng, "FIXED_PRICE", "黑龙江省第二医院（南岗区）泌尿显微镜头固定单价", 80,
-                bd("210.0"), List.of("泌尿显微镜头"), null, null, true, true);
-        ensureRule(ng, "FIXED_PRICE", "黑龙江省第二医院（南岗区）小腔包固定单价", 90,
-                bd("49.7"), List.of("小腔包"), null, null, true, true);
-
-        // ---- 其他 fixedPrices ----
+        // 2026-08-27 严格测试口径收敛：仅保留 22 家特殊计价客户的硬编码规则。
+        // 非 22 家客户的固定价/折算规则不再于此 seed（客户已删除，规则随之作废）。
         ensureRule("NEAU-YY", "PRICE_PER_INSTRUMENT", "东北农业大学医院洁牙机尖每件 5.5 元", 10,
                 bd("5.5"), List.of("洁牙机尖"), null, null, true, false);
         ensureRule("HRB-HTFH", "PRICE_PER_INSTRUMENT", "航天风华挖勺每件 5.5 元", 10,
                 bd("5.5"), List.of("挖勺"), null, null, true, false);
-        ensureRule("ZXYSJT", "FIXED_PRICE", "显著医生集团 30cm 棉球固定单价", 10,
-                bd("4.0"), List.of("棉球"), null, 30, true, false);
 
-        // ---- foldRules (7) ----
+        // ---- foldRules ----
         ensureFoldRule("HRB-SD-MB", "松电机扩针 5 件算 1 件", 10,
                 List.of("机扩针"), null, 5, bd("5"));
         ensureFoldRule("HRB-HTFH", "航天风华镍钛锉 5 件算 1 件", 20,
                 List.of("镍钛锉"), null, 5, bd("5"));
-        ensureFoldRule("HRB-MHM", "美涵吸脂针20cm以下5件算1件", 10,
-                List.of("型号20cm以下", "20cm以下"), null, 5, bd("5"));
-        ensureFoldRule("HY-HYY", "海员总医院松北 5 件算 1 件", 10,
-                List.of(), null, 5, bd("5"));
-        ensureFoldRule("ZYY-DSFY", "中医药大学四院 5 件算 1 件", 10,
-                List.of(), null, 5, bd("5"));
-        ensureFoldRule("HRB-DLFB", "道里妇幼口腔小件 5 件算 1 件", 10,
-                List.of("机扩针", "镍钛锉", "根管锉", "根管针", "洁牙机尖", "车针", "探针", "球钻"),
-                null, 5, bd("5"));
-        ensureFoldRule("HLFB-SF", "省妇幼人口口腔小件 5 件算 1 件", 10,
-                List.of("机扩针", "镍钛锉", "根管锉", "根管针", "洁牙机尖", "车针", "探针", "球钻"),
-                null, 5, bd("5"));
 
         // ---- extraFees ----
         ensureExtraFee("HL-ZGH", "镜头租借公司筐加收", 10,
