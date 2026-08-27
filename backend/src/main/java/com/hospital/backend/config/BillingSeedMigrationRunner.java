@@ -345,6 +345,14 @@ public class BillingSeedMigrationRunner implements CommandLineRunner {
     private static final String P0_MOJIBAKE_DUP_MARKER = "billing_seed_fix_p0_mojibake_dup_20260723_v1";
     /** 五常并行 seed 产生的无科室条件重复规则清理 */
     private static final String WCSRMYY_OR_DEDUP_MARKER = "billing_seed_wcsrm_yy_or_dedup_20260724_v1";
+    /** 删除非 22 家特殊计价客户及其孤儿数据（严格测试口径收敛） */
+    private static final String STALE_CUSTOMER_CLEANUP_MARKER = "billing_seed_stale_customer_cleanup_20260827_v1";
+    /** 最终保留的 22 家特殊计价客户 code（与 scripts/billing_rules_manifest.py STRICT_KEEP_CODES 一致） */
+    private static final java.util.List<String> STRICT_KEEP_CODES = java.util.List.of(
+            "BINGCHENG-YM", "GUOYAO-2", "FNN-YY", "NEAU-YY", "HRB-WY", "HRB-SD-MB", "HRB-HTFH",
+            "HRB-WY-EM", "JIUZHOU-FK", "BOSHANG-YY", "HAIYUAN-SB", "HLJ-FY-RK", "ZUYAN-NG",
+            "SHKF-YY", "DL-FUCHAN", "CHUNYU-YL", "HL-ZGH", "JZSW-BIO", "SUOFEI-YL", "HLJ-JYGLJ-YY",
+            "HULAN-TCM", "PFQ-RM");
 
     private record IncrementalSeed(String markerKey, String classpathFile) {}
 
@@ -526,6 +534,31 @@ public class BillingSeedMigrationRunner implements CommandLineRunner {
             insertMarker(ZYY_D1_P0_1_MARKER, "ZYY-D1 P0.1 收窄腔镜包/王树人/保温杯关键词");
             log.info("ZYY-D1 P0.1 rule fixes applied.");
         }
+        if (sysSettingMapper.countByKey(STALE_CUSTOMER_CLEANUP_MARKER) == 0) {
+            int removed = deleteNonStrictCustomers();
+            insertMarker(STALE_CUSTOMER_CLEANUP_MARKER,
+                    "删除非22家特殊计价客户及其孤儿数据（严格测试口径收敛）");
+            log.info("Stale customer cleanup: removed {} customers", removed);
+        }
+    }
+
+    private int deleteNonStrictCustomers() {
+        // 先删无级联子表孤儿（billing/运营表引用 customer_id 但无外键），再删 customer（
+        // customer_alias/customer_discount/customer_product_rule 有 ON DELETE CASCADE 自动级联）。
+        String staleIdsSubquery = "SELECT id FROM customer WHERE code NOT IN ("
+                + STRICT_KEEP_CODES.stream().map(c -> "'" + c + "'")
+                        .reduce((a, b) -> a + "," + b).orElse("")
+                + ")";
+        for (String table : java.util.List.of(
+                "billing_rule_change_log", "customer_billing_policy", "customer_billing_rule_group",
+                "customer_group_member", "roster_entry", "department_entry", "physician_entry",
+                "external_instrument", "logistics_import", "logistics_card", "export_template")) {
+            jdbcTemplate.update("DELETE FROM " + table + " WHERE customer_id IN (" + staleIdsSubquery + ")");
+        }
+        return jdbcTemplate.update("DELETE FROM customer WHERE code NOT IN ("
+                + STRICT_KEEP_CODES.stream().map(c -> "'" + c + "'")
+                        .reduce((a, b) -> a + "," + b).orElse("")
+                + ")");
     }
 
     private boolean loadSeedClasspathFile(String file) {

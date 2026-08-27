@@ -39,6 +39,34 @@ INACTIVE_EXTRA_CODES = [
     "ZXYSJT",
 ]
 
+# 最终仅保留的 22 家特殊计价客户（严格测试口径）。
+# 须与 BillingSeedMigrationRunner.STRICT_KEEP_CODES 保持一致。
+# 生成 manifest 时删除非 22 家客户，确保清单与部署后的 DB 一致。
+STRICT_KEEP_CODES = [
+    "BINGCHENG-YM",
+    "GUOYAO-2",
+    "FNN-YY",
+    "NEAU-YY",
+    "HRB-WY",
+    "HRB-SD-MB",
+    "HRB-HTFH",
+    "HRB-WY-EM",
+    "JIUZHOU-FK",
+    "BOSHANG-YY",
+    "HAIYUAN-SB",
+    "HLJ-FY-RK",
+    "ZUYAN-NG",
+    "SHKF-YY",
+    "DL-FUCHAN",
+    "CHUNYU-YL",
+    "HL-ZGH",
+    "JZSW-BIO",
+    "SUOFEI-YL",
+    "HLJ-JYGLJ-YY",
+    "HULAN-TCM",
+    "PFQ-RM",
+]
+
 # 种子文件仅以 code 引用客户、未携带规范名时，回退到此映射。
 # 否则 manifest 的 name 会退化为 code，导致编译后的规则 hospitals 字段无法匹配
 # 账单中的医院全称（SpecialCharge11CoverageTest 等 fixture 因此失效）。
@@ -344,6 +372,9 @@ def build_manifest() -> dict[str, Any]:
             rule["name"] = name
             rule["isActive"] = True
             rules[name] = rule
+
+    # 最终仅保留 22 家特殊计价客户：删除非严格测试口径的客户。
+    customers = {code: entry for code, entry in customers.items() if code in STRICT_KEEP_CODES}
 
     manifest_customers: dict[str, Any] = {}
     for code in sorted(customers):

@@ -217,7 +217,7 @@ class RuleFidelityRegressionTest {
     }
 
     @Test
-    void unknownHospitalDoesNotApplyDefaultTemplate() {
+    void unknownHospitalUsesStandardPricingWhenBillingDisabled() {
         ObjectNode compiled = MAPPER.valueToTree(DefaultPricingTemplate.buildRulesMap());
         compiled.putObject("billingProfile").put("enabled", false);
         PricingEngine engine = new PricingEngine(compiled);
@@ -231,8 +231,9 @@ class RuleFidelityRegressionTest {
                 "unitPrice", 16.5,
                 "totalPrice", 16.5
         ));
-        assertThat(result.status).isEqualTo("warning");
-        assertThat(result.pricingRule).isEqualTo("特色账单已关闭");
+        assertThat(result.pricingRule).isNotEqualTo("特色账单已关闭");
+        assertThat(result.pricingRule).contains("高温纸塑袋");
+        assertThat(result.notes).noneMatch(n -> n.contains("无法校验"));
     }
 
     @Test

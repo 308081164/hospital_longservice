@@ -1686,7 +1686,7 @@ class PricingEngineTest {
     }
 
     @Test
-    void ngjyZeroDressingPackWithBillingDisabledStaysUnchanged() {
+    void ngjyZeroDressingPackWithBillingDisabledFallsThroughToStandardPricing() {
         ObjectNode rules = (ObjectNode) defaultRules();
         ObjectNode billingProfile = rules.putObject("billingProfile");
         billingProfile.put("enabled", false);
@@ -1695,10 +1695,8 @@ class PricingEngineTest {
         PricingEngine.ProcessedResult result = disabledEngine.processRow(ngjyDressingPackRow(
                 "手术室", 0, 1, 0, 0));
 
-        assertThat(result.status).isEqualTo("warning");
-        assertThat(result.expectedUnitPrice).isEqualTo(0.0);
-        assertThat(result.difference).isEqualTo(0.0);
-        assertThat(result.pricingRule).isEqualTo("特色账单已关闭");
+        assertThat(result.pricingRule).isNotEqualTo("特色账单已关闭");
+        assertThat(result.notes).noneMatch(n -> n.contains("无法校验"));
     }
 
     private static Map<String, Object> ngjyDressingPackRow(

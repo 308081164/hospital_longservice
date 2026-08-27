@@ -96,8 +96,8 @@ class PricingEngineS5ErrorCorrectionTest {
     }
 
     @Test
-    @DisplayName("EC-BILLING-OFF · billingProfile.enabled=false → unchanged 保留原价")
-    void ecBillingOff_keepsOriginalPrice_unchanged() {
+    @DisplayName("EC-BILLING-OFF · billingProfile.enabled=false → 走通用计价（标准路径），不再保留原价")
+    void ecBillingOff_fallsThroughToStandardPricing() {
         ObjectNode rules = (ObjectNode) PricingEngineTestSupport.defaultRules();
         ObjectNode billingProfile = rules.putObject("billingProfile");
         billingProfile.put("enabled", false);
@@ -114,10 +114,10 @@ class PricingEngineS5ErrorCorrectionTest {
                 88.0));
 
         assertThat(result.status).isEqualTo("warning");
-        assertThat(result.expectedUnitPrice).isEqualTo(88.0);
-        assertThat(result.correctedTotalPrice).isEqualTo(88.0);
-        assertThat(result.pricingRule).isEqualTo("特色账单已关闭");
-        assertThat(result.notes).anyMatch(n -> n.contains("无法校验"));
+        assertThat(result.expectedUnitPrice).isEqualTo(22.0);
+        assertThat(result.pricingRule).isNotEqualTo("特色账单已关闭");
+        assertThat(result.pricingRule).contains("高温纸塑袋");
+        assertThat(result.notes).noneMatch(n -> n.contains("无法校验"));
     }
 
     @Test

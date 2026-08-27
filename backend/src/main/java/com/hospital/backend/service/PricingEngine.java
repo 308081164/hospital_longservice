@@ -95,20 +95,10 @@ public class PricingEngine {
         Double unitPrice = doubleOrNull(row, "unitPrice");
         Double totalPrice = doubleOrNull(row, "totalPrice");
 
-        // 低温类型判定：类型含"低温"、"ETO"、"EO"均为低温处理
+        // 未解析/未启用特色账单统一走通用计价规则：不再早退保留原价、不再产生「特色账单已关闭」告警。
+        // 未启用客户在编译阶段（PricingRuleCompiler）本就不合并 customer_product_rule，
+        // 这里直接落到标准计价路径（高温/低温阶梯、纸塑袋、无纺布、敷料包等通用规则）。
         JsonNode billingProfile = rules.path("billingProfile");
-        if (billingProfile.has("enabled") && !billingProfile.path("enabled").asBoolean(true)) {
-            ProcessedResult disabled = new ProcessedResult();
-            disabled.expectedUnitPrice = unitPrice;
-            disabled.correctedTotalPrice = totalPrice;
-            disabled.difference = 0.0;
-            disabled.status = "warning";
-            disabled.pricingRule = "特色账单已关闭";
-            disabled.notes = new ArrayList<>(notes);
-            disabled.notes.add("客户未解析或未启用特色账单，无法校验，保留原始价格。");
-            disabled.billingNotes = consistencyBillingNotes;
-            return disabled;
-        }
         JsonNode pathOverride = billingProfile.path("pathOverride");
         SpecialPriceResult zeroPriceOverride = resolveZeroPriceOverride(row, pathOverride, unitPrice);
         boolean disableLowTemp = pathOverride.path("disableLowTemp").asBoolean(false);

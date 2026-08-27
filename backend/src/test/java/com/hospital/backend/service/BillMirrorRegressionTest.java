@@ -57,7 +57,7 @@ class BillMirrorRegressionTest {
     }
 
     @Test
-    void unresolvedCustomerBillingDisabledYieldsWarningNotMirrorPass() throws Exception {
+    void unresolvedCustomerBillingDisabledFallsThroughToStandardPricing() throws Exception {
         ObjectNode rules = (ObjectNode) PricingEngineTestSupport.defaultRules();
         ObjectNode billingProfile = rules.putObject("billingProfile");
         billingProfile.put("enabled", false);
@@ -76,11 +76,10 @@ class BillMirrorRegressionTest {
         PricingEngine.ProcessedResult at8 = engine.processRow(withPrice(base, 8.0, 32.0));
         PricingEngine.ProcessedResult at9 = engine.processRow(withPrice(base, 9.0, 36.0));
 
-        assertThat(at8.status).isEqualTo("warning");
-        assertThat(at9.status).isEqualTo("warning");
-        assertThat(at8.expectedUnitPrice).isEqualTo(8.0);
-        assertThat(at9.expectedUnitPrice).isEqualTo(9.0);
-        assertThat(at8.pricingRule).isEqualTo("特色账单已关闭");
+        assertThat(at8.pricingRule).isNotEqualTo("特色账单已关闭");
+        assertThat(at9.pricingRule).isNotEqualTo("特色账单已关闭");
+        assertThat(at8.notes).noneMatch(n -> n.contains("无法校验"));
+        assertThat(at9.notes).noneMatch(n -> n.contains("无法校验"));
     }
 
     private static Map<String, Object> withPrice(Map<String, Object> base, double unitPrice, double totalPrice) {

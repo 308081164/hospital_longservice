@@ -50,7 +50,7 @@ class PricingEngineBillingModeTest {
     }
 
     @Test
-    void billingDisabledKeepsOriginalPrice() throws Exception {
+    void billingDisabledFallsThroughToStandardPricing() throws Exception {
         ObjectNode rules = PricingEngineTestSupport.defaultRules();
         rules.putObject("billingProfile").put("enabled", false);
         PricingEngine engine = new PricingEngine(rules);
@@ -65,8 +65,8 @@ class PricingEngineBillingModeTest {
                 "unitPrice", 11.0,
                 "totalPrice", 11.0
         ));
-        assertThat(result.status).isEqualTo("warning");
-        assertThat(result.pricingRule).isEqualTo("特色账单已关闭");
+        assertThat(result.pricingRule).isNotEqualTo("特色账单已关闭");
+        assertThat(result.notes).noneMatch(n -> n.contains("无法校验"));
     }
 
     @Test
