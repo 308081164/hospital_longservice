@@ -177,6 +177,8 @@ def _apply_rule_update(rules: dict[str, dict[str, Any]], patch: dict[str, Any]) 
         rule["priority"] = patch["setPriority"]
     if "setMatchMode" in patch:
         rule["matchMode"] = patch["setMatchMode"]
+    if "setKeywordMatchMode" in patch:
+        rule["keywordMatchMode"] = patch["setKeywordMatchMode"]
     if "setBillingMode" in patch:
         rule["billingMode"] = patch["setBillingMode"]
     if "setPieceCountSource" in patch:
@@ -307,7 +309,20 @@ def build_manifest() -> dict[str, Any]:
                 pending_price_updates.append(patch)
                 continue
             code = _text(patch, "code")
-            if not code or code not in customers:
+            if not code:
+                continue
+            # Excel17 对齐种子的补丁目标规则由字母序靠后的
+            # phase-special-charge-17-sync-20260830 创建（keyword < special），
+            # 内联应用会被静默丢弃；Java 侧按 INCREMENTAL_SEEDS 顺序应用不受影响。
+            # 仅对该种子的补丁做延后二遍处理；其他种子的补丁保持历史内联语义，
+            # 避免改变已被后续种子取代的历史补丁（如 20260811 整形包改名）的最终状态。
+            if path.name == "phase-keyword-match-mode-excel17-align-20260831.json":
+                patch_rule_name = _text(patch, "ruleName")
+                existing_rules = (customers.get(code) or {}).get("productRules") or {}
+                if code not in customers or (patch_rule_name and patch_rule_name not in existing_rules):
+                    pending_price_updates.append(patch)
+                    continue
+            if code not in customers:
                 continue
             rules = customers[code].setdefault("productRules", {})
             _apply_rule_update(rules, patch)
@@ -349,8 +364,9 @@ def build_manifest() -> dict[str, Any]:
             if rule_name in rules:
                 rules[rule_name]["isActive"] = True
 
-    # 二遍处理：仅纯数值字段更新（setPrice/setFoldRatio/setThreshold）。
-    # 这些更新可能先于 newRules 执行（字母序靠前），须在所有规则创建后统一应用。
+    # 二遍处理：① 纯数值字段更新（setPrice/setFoldRatio/setThreshold）——可能先于
+    # newRules 执行（字母序靠前），须在所有规则创建后统一应用；
+    # ② Excel17 对齐种子中目标规则由字母序靠后文件创建的补丁（见上注释）。
     for patch in pending_price_updates:
         code = _text(patch, "code")
         if not code or code not in customers:

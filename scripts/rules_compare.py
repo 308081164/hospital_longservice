@@ -26,6 +26,7 @@ COMPARE_FIELDS = (
     "isActive",
     "conditionsJson",
     "billingMode",
+    "keywordMatchMode",
 )
 
 
@@ -87,6 +88,7 @@ def normalize_rule(rule: dict[str, Any]) -> dict[str, Any]:
     keywords = rule.get("keywords")
     billing_mode = rule.get("billingMode") or rule.get("billing_mode")
     conditions = rule.get("conditionsJson") or rule.get("conditions_json")
+    keyword_match_mode = rule.get("keywordMatchMode") or rule.get("keyword_match_mode") or "exact_token"
     return {
         "name": str(rule.get("name") or "").strip(),
         "ruleType": str(rule_type),
@@ -98,6 +100,7 @@ def normalize_rule(rule: dict[str, Any]) -> dict[str, Any]:
         "isActive": bool(is_active),
         "conditionsJson": _normalize_conditions_json(conditions),
         "billingMode": str(billing_mode) if billing_mode else None,
+        "keywordMatchMode": str(keyword_match_mode),
     }
 
 
@@ -156,6 +159,8 @@ def diff_rule(expected: dict[str, Any], actual: dict[str, Any]) -> list[str]:
         diffs.append(f"conditionsJson {act['conditionsJson']!r}!={exp['conditionsJson']!r}")
     if exp["billingMode"] is not None and exp["billingMode"] != act["billingMode"]:
         diffs.append(f"billingMode {act['billingMode']!r}!={exp['billingMode']!r}")
+    if exp["keywordMatchMode"] != act["keywordMatchMode"]:
+        diffs.append(f"keywordMatchMode {act['keywordMatchMode']!r}!={exp['keywordMatchMode']!r}")
     return diffs
 
 

@@ -247,6 +247,9 @@ public class BillingRulesManifestReconciler implements CommandLineRunner {
         rule.setSkipPackaging(bool(ruleNode, "skipPackaging", false));
         rule.setSkipDiscount(bool(ruleNode, "skipDiscount", false));
         rule.setMatchMode(text(ruleNode, "matchMode", "first"));
+        if (ruleNode.hasNonNull("keywordMatchMode")) {
+            rule.setKeywordMatchMode(text(ruleNode, "keywordMatchMode"));
+        }
         if (ruleNode.has("acceptedPrices")) {
             rule.setAcceptedPrices(ruleNode.get("acceptedPrices").toString());
         }
