@@ -16,7 +16,22 @@
           </div>
           <div>
             <span class="text-gray-500">{{ t('reconciliation.detail.expectedPrice') }}：</span>
-            <span class="font-medium">{{ formatCurrency(expectedUnitPrice) }}</span>
+            <ElTooltip
+              v-if="ctx.blocksPricingDisplay"
+              placement="top"
+              :content="t('reconciliation.detail.pricingBlockedHint')"
+            >
+              <span class="pricing-blocked-indicator" aria-label="pricing blocked">!</span>
+            </ElTooltip>
+            <span v-else class="font-medium">{{ formatCurrency(expectedUnitPrice) }}</span>
+          </div>
+          <div>
+            <span class="text-gray-500">{{ t('reconciliation.columns.packCount') }}：</span>
+            <span class="font-medium">{{ formatCount(packCount) }}</span>
+          </div>
+          <div>
+            <span class="text-gray-500">{{ t('reconciliation.columns.instrumentCount') }}：</span>
+            <span class="font-medium">{{ formatCount(instrumentCount) }}</span>
           </div>
           <div>
             <span class="text-gray-500">{{ t('pricingFlow.difference') }}：</span>
@@ -163,6 +178,12 @@
     return typeof v === 'number' ? v : null
   })
 
+  const packCount = computed(() => readRowNumber(props.row, 'packCount', 'pack_count'))
+
+  const instrumentCount = computed(() =>
+    readRowNumber(props.row, 'instrumentCount', 'instrument_count')
+  )
+
   const statusLabel = computed(() => formatReconciliationStatusDisplay(String(props.row?.status ?? '')))
 
   const statusTagType = computed(() => {
@@ -199,6 +220,24 @@
     return `${prefix}${value.toFixed(2)}`
   }
 
+  function readRowNumber(
+    row: Record<string, unknown> | null | undefined,
+    camelKey: string,
+    snakeKey: string
+  ): number | null {
+    if (!row) return null
+    const value = row[camelKey] ?? row[snakeKey]
+    if (typeof value === 'number' && Number.isFinite(value)) return value
+    if (value == null || value === '') return null
+    const parsed = Number(value)
+    return Number.isFinite(parsed) ? parsed : null
+  }
+
+  function formatCount(value: number | null | undefined): string {
+    if (value == null) return '—'
+    return String(value)
+  }
+
   function stepLabel(step: PricingFlowStep, index: number): string {
     if (step.kind === 'note') {
       return t('pricingFlow.stepNoteIndex', { index: index + 1 })
@@ -222,5 +261,18 @@
     list-style: none;
     padding: 0;
     margin: 0;
+  }
+
+  .pricing-blocked-indicator {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 18px;
+    height: 18px;
+    font-size: 14px;
+    font-weight: 700;
+    line-height: 1;
+    color: #f56c6c;
+    cursor: help;
   }
 </style>

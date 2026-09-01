@@ -4,7 +4,7 @@
       :type="classification.tagType"
       size="small"
       effect="plain"
-      class="cursor-pointer"
+      :class="{ 'cursor-pointer': clickable }"
       @click.stop="emitOpenDetail"
     >
       {{ t(classification.label) }}
@@ -17,20 +17,13 @@
         size="small"
         type="info"
         effect="plain"
-        class="max-w-[120px] cursor-pointer truncate"
+        class="max-w-[120px] truncate"
+        :class="{ 'cursor-pointer': clickable }"
         @click.stop="emitOpenDetail"
       >
         {{ localizedSummary }}
       </ElTag>
     </ElTooltip>
-    <button
-      v-if="clickable"
-      type="button"
-      class="text-xs text-primary hover:underline"
-      @click.stop="emitOpenDetail"
-    >
-      {{ t('pricingFlow.viewDetail') }}
-    </button>
   </div>
 </template>
 

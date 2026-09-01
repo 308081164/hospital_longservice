@@ -24,6 +24,7 @@ Thumbs.db
 **/target/
 **/node_modules/
 **/dist/
+**/.pnpm-store/
 
 # Python 虚拟环境 / S8 临时导出（勿提交）
 .venv-s8/

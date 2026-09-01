@@ -1,0 +1,69 @@
+{
+  "job_id": 1281,
+  "hospital": "呼兰区红十字医院",
+  "excel": "/Users/yangxinghui/Library/Containers/com.tencent.xinWeChat/Data/Documents/xwechat_files/wxid_7qwn4vnuj7xo22_508c/temp/drag/呼兰红十字1-8月(1).xlsx",
+  "total_rows": 134,
+  "instrument_mismatch_count": 3,
+  "target_rows": [
+    {
+      "sheet": "妇科",
+      "row": 16,
+      "packName": "阴切包-10件盒1",
+      "instrumentCount": 11,
+      "status": "unchanged",
+      "difference": 0.0,
+      "billingNotes": {
+        "policyTraces": [
+          {
+            "label": "未命中折扣策略"
+          }
+        ]
+      }
+    },
+    {
+      "sheet": "妇科",
+      "row": 20,
+      "packName": "产包-16件盒1",
+      "instrumentCount": 17,
+      "status": "unchanged",
+      "difference": 0.0,
+      "billingNotes": {
+        "policyTraces": [
+          {
+            "label": "未命中折扣策略"
+          }
+        ]
+      }
+    },
+    {
+      "sheet": "妇科",
+      "row": 21,
+      "packName": "切开包-13件盒1",
+      "instrumentCount": 14,
+      "status": "unchanged",
+      "difference": 0.0,
+      "billingNotes": {
+        "policyTraces": [
+          {
+            "label": "未命中折扣策略"
+          }
+        ]
+      }
+    },
+    {
+      "sheet": "妇科",
+      "row": 22,
+      "packName": "阴切包-10件盒1",
+      "instrumentCount": 11,
+      "status": "unchanged",
+      "difference": 0.0,
+      "billingNotes": {
+        "policyTraces": [
+          {
+            "label": "未命中折扣策略"
+          }
+        ]
+      }
+    }
+  ]
+}

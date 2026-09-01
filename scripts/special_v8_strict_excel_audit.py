@@ -1,6 +1,11 @@
 #!/usr/bin/env python3
 """Strict Excel audit for special-pricing v8 hospitals.
 
+【路径 A — 特殊计价医院逐家严格测试】
+本脚本是路径 A 的唯一入口。医院清单 = STRICT_KEEP_CODES 22 家 + 正式新引入院；
+材料与账期锁定 2026-08-27 基线（测试用例/特殊计价严格测试-材料锁定.json）。
+禁止用 billing-seed EXPECTED 26 清单（路径 B）跑本脚本。约定详见 docs/测试路径约定.md。
+
 Compare three row sets:
   E — expected corrections from raw vs processed Excel diff
   W — pricing-related import warnings (status=warning), excluding field-consistency-only

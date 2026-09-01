@@ -23,10 +23,19 @@ assertEqual(
   resolveReconciliationHospitalName({
     fileName: '东大肛肠3月账单.xlsx',
     currentName: '门诊部',
+    sheetHospitalDisplayNames: ['黑龙江东大肛肠医院', '门诊部', '手术室']
+  }),
+  '黑龙江东大肛肠医院',
+  'prefer excel sheet hospital name over filename'
+)
+assertEqual(
+  resolveReconciliationHospitalName({
+    fileName: '东大肛肠3月账单.xlsx',
+    currentName: '门诊部',
     sheetHospitalDisplayNames: ['门诊部', '手术室']
   }),
   '东大肛肠',
-  'prefer filename over department sheet names'
+  'fallback to filename when sheet has no hospital name'
 )
 assertEqual(
   displayHospitalNameForJob('门诊部', '东大肛肠3月账单.xlsx'),

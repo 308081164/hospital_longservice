@@ -161,6 +161,7 @@ declare namespace Api {
       name: string
       hospitals?: string[]
       keywords: string[]
+      keywordMatchMode?: 'exact_token' | 'contains'
       threshold: number
       foldRatio: number
       bagSizeEquals?: number
@@ -228,6 +229,7 @@ declare namespace Api {
     interface NeedleConfig {
       threshold: number
       foldRatio: number
+      keywordMatchMode?: 'exact_token' | 'contains'
       keywords: string[]
     }
 
@@ -655,6 +657,8 @@ declare namespace Api {
       threshold?: number
       foldRatio?: number
       fold_ratio?: number
+      keywordMatchMode?: 'exact_token' | 'contains'
+      keyword_match_mode?: 'exact_token' | 'contains'
       skipPackaging?: boolean
       skip_packaging?: boolean
       skipDiscount?: boolean
@@ -691,6 +695,7 @@ declare namespace Api {
       fee?: number
       threshold?: number
       fold_ratio?: number
+      keyword_match_mode?: 'exact_token' | 'contains'
       skip_packaging?: boolean
       skip_discount?: boolean
       is_active?: boolean
@@ -708,6 +713,7 @@ declare namespace Api {
       fee?: number
       threshold?: number
       foldRatio?: number
+      keywordMatchMode?: 'exact_token' | 'contains'
       keywords?: string[]
       excludeKeywords?: string[]
       materials?: string[]

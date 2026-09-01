@@ -1,5 +1,10 @@
 #!/usr/bin/env bash
 # 验证测试/本地库的医院与特色账单种子是否就绪
+#
+# 【路径 B — 规则 / billing-seed 同步检查】
+# 本脚本核对 EXPECTED 26 种子覆盖 + 铂康参考 42 院，属于「规则同步检查」口径，
+# 不能作为「特殊计价医院逐家严格测试」（路径 A）的医院清单或结果。
+# 约定详见 docs/测试路径约定.md
 set -euo pipefail
 
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"

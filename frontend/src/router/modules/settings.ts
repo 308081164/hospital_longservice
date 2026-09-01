@@ -40,6 +40,16 @@ export const settingsRoutes: AppRouteRecord[] = [
           keepAlive: true,
         },
       },
+      {
+        path: 'changelog',
+        name: 'SettingsChangelog',
+        component: '/settings/changelog',
+        meta: {
+          title: 'menus.settings.changelog',
+          icon: 'ri:file-list-3-line',
+          keepAlive: true,
+        },
+      },
     ],
   },
 ]

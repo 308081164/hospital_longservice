@@ -354,7 +354,8 @@
       "title": "设置",
       "appearance": "界面偏好",
       "pricingRules": "计价规则",
-      "versionManagement": "校对版本记录"
+      "versionManagement": "校对版本记录",
+      "changelog": "更新日志"
     },
     "masterData": {
       "title": "主数据",
@@ -598,6 +599,10 @@
         "foldThresholdHint": "超过该件数后按折算比例计费",
         "foldRatio": "折算除数",
         "foldRatioHint": "超出阈值后按「器械数 ÷ 除数」向上取整计费，如除数 5 表示 5 件折算为 1 件",
+        "keywordMatchMode": "默认匹配模式",
+        "keywordMatchModeHint": "下方关键词未标注时统一使用此模式；单个词可加后缀覆盖，如「车针@contains」含词即触发、「车针@exact」严格对齐",
+        "keywordMatchExactToken": "严格对齐（精确 token 边界）",
+        "keywordMatchContains": "含关键词即触发",
         "extraFeeAmount": "加收金额（元）",
         "excludeKeywords": "排除关键词",
         "excludeKeywordsHint": "命中任一排除词则不匹配本规则，如：空心钉",
@@ -610,7 +615,7 @@
         "removePrice": "移除",
         "valueAnyPrice": "多报价 {prices} 元",
         "keywords": "匹配关键词",
-        "keywordsHint": "商品名或场景关键词，逗号分隔",
+        "keywordsHint": "商品名或场景关键词，逗号分隔；单个词可加后缀覆盖匹配模式，如「车针@contains」含词即触发、「车针@exact」严格对齐",
         "materials": "包装材料关键词",
         "materialsHint": "如：无纺布、纸塑袋；须同时命中",
         "temperature": "温度条件",
@@ -648,7 +653,17 @@
         "valueFixed": "{price} 元",
         "valueMultiplier": "{rate} 倍",
         "valueFold": "超 {threshold} 件 × {ratio}",
-        "valueExtraFee": "+{fee} 元"
+        "valueExtraFee": "+{fee} 元",
+        "effectPreview": "规则预览",
+        "effectSummaryFallback": "未命名规则",
+        "showInactiveRules": "显示已停用 ({count})",
+        "hideInactiveRules": "隐藏已停用",
+        "purgeInactiveRules": "清理已停用",
+        "purgeInactiveConfirm": "将永久删除 {count} 条已停用规则，是否继续？",
+        "purgeInactiveDone": "已删除 {count} 条已停用规则",
+        "conflictTitle": "检测到规则匹配签名冲突",
+        "conflictItem": "「{names}」可能重复匹配（相同类型与匹配条件）",
+        "inactiveHiddenHint": "已隐藏 {count} 条停用规则，冲突检测仅针对启用中的规则"
       }
     },
     "help": {
@@ -760,6 +775,11 @@
         "size6": "6 条/页",
         "size9": "9 条/页",
         "size12": "12 条/页"
+      },
+      "scoped": {
+        "entryVersionTitle": "本文件历史版本",
+        "viewAllHistory": "查看全部历史版本",
+        "noVersionsYet": "保存后将在此显示版本记录"
       }
     },
     "detail": {
@@ -805,11 +825,49 @@
       "fieldConsistencyInstrumentCount": "器械件数不一致（INSTRUMENT_COUNT_MISMATCH）",
       "fieldConsistencyLegendRed": "红框：包材尺寸/类别不一致",
       "fieldConsistencyLegendAmber": "琥珀框：包名件数合计与器械数不一致",
+      "validationErrorTag": "字段核对错误",
+      "validationErrorSection": "字段核对错误",
+      "validationErrorHint": "记录信息不全或存在阻断计价的字段问题，请核对原始账单。",
+      "validationWarningSection": "数据异常提示",
+      "validationMissingFields": "字段核对错误-记录信息不全/缺失",
+      "validationBlankPackageMaterial": "字段核对错误-包装材料为空",
+      "validationZeroInstrumentCount": "字段核对错误-器械数为0",
+      "validationZeroUnitPrice": "原始单价数据异常",
+      "validationZeroUnitPriceTag": "单价异常",
+      "validationZeroUnitPriceHint": "原始单价为 0，系统仍会继续尝试计价，请核对导入数据。",
+      "pricingBlockedHint": "字段核对未通过，已阻断规则单价与修正总价展示",
+      "pricingBlockedLegend": "红叹号：字段核对阻断计价",
       "tabRegular": "常规账单",
       "tabExternal": "外来器械 ({count})",
       "suggestedDepartment": "建议科室",
       "billingEmpty": "暂无计费追溯信息",
       "pricingRuleColumn": "计价规则"
+    },
+    "columns": {
+      "rowNumber": "行号",
+      "sheetName": "科室",
+      "deliveryDate": "发货日期",
+      "type": "类型",
+      "packName": "包名",
+      "packageMaterial": "包装材料",
+      "instrumentCount": "器械数",
+      "packCount": "包数",
+      "unitPrice": "原单价",
+      "expectedUnitPrice": "规则单价",
+      "totalPrice": "原总价",
+      "correctedTotalPrice": "修正总价",
+      "difference": "差额",
+      "status": "状态",
+      "suggestedDepartment": "建议科室"
+    },
+    "preview": {
+      "anomalyMode": "异常模式",
+      "currentDisplay": "当前显示",
+      "rowCount": "{count} 行",
+      "rowCountWithTotal": "{current} 行，共 {total} 行",
+      "anomalyLoading": "正在从服务器加载全量数据，数据量较大时请耐心等待...",
+      "sheetFilterLoading": "正在加载科室数据...",
+      "anomalyFilterActive": "当前仅显示异常行（{context}共 {total} 条）"
     },
     "settlementSummary": {
       "title": "月度结算摘要",
@@ -955,6 +1013,25 @@
       "check1": "关闭特色开关 → 重新对账 → 行价与标准阶梯一致",
       "check2": "重新开启 → 特色规则恢复命中",
       "check3": "导出结果与开关状态一致，无残留特色折扣"
+    },
+    "inlineEdit": {
+      "saveChanges": "保存修改",
+      "reprice": "重新计价",
+      "dirtyHint": "有未保存的修改",
+      "saveSuccess": "修改已保存",
+      "repriceStaged": "已重新计价，请点击「保存修改」写入版本"
+    },
+    "notice": {
+      "title": "规则变更通知",
+      "ruleChangedTitle": "计价规则已更新",
+      "viewChangelog": "查看更新日志",
+      "empty": "暂无新通知"
+    }
+  },
+  "settings": {
+    "changelog": {
+      "subtitle": "系统功能更新与规则变更记录",
+      "requireReLogin": "需重新登录"
     }
   },
   "billing": {
@@ -1151,6 +1228,7 @@
   },
   "versionManagement": {
     "list": {
+      "subtitle": "追踪系统所有校对版本的完整生命周期与审计信息。",
       "empty": "暂无数据。",
       "sheetCount": "共 {count} 个科室",
       "versionCount": "共 {count} 个版本",

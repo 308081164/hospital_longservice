@@ -26,6 +26,13 @@ export type FieldConsistencyViolation = {
   packageMaterial?: string
 }
 
+export type BillingValidationViolation = {
+  code: string
+  message: string
+  severity: 'error' | 'warning'
+  missingFields?: string[]
+}
+
 export type FieldConsistencyHighlightField = 'type' | 'packName' | 'packageMaterial' | 'instrumentCount'
 
 export type FieldConsistencyCellTone = 'red' | 'amber' | null
@@ -46,6 +53,10 @@ export type ReconciliationBillingContext = {
   billingNotesType: string | null
   fieldConsistencyViolations: FieldConsistencyViolation[]
   hasFieldConsistencyIssues: boolean
+  billingValidationViolations: BillingValidationViolation[]
+  hasBlockingValidationIssues: boolean
+  hasZeroUnitPriceWarning: boolean
+  blocksPricingDisplay: boolean
 }
 
 export type ReconciliationRowBillingFields = {
@@ -209,6 +220,61 @@ export function extractFieldConsistencyViolations(
     .filter((item): item is FieldConsistencyViolation => item != null)
 }
 
+function parseBillingValidationViolation(raw: unknown): BillingValidationViolation | null {
+  if (!raw || typeof raw !== 'object' || Array.isArray(raw)) return null
+  const obj = raw as Record<string, unknown>
+  const code = obj.code != null ? String(obj.code) : ''
+  const message = obj.message != null ? String(obj.message) : ''
+  if (!code && !message) return null
+  const severityRaw = obj.severity != null ? String(obj.severity).toLowerCase() : 'error'
+  const severity: BillingValidationViolation['severity'] =
+    severityRaw === 'warning' ? 'warning' : 'error'
+  const missingFields = Array.isArray(obj.missingFields)
+    ? obj.missingFields.map((item) => String(item))
+    : undefined
+  return { code, message, severity, missingFields }
+}
+
+export function extractBillingValidationViolations(
+  billingNotes: Record<string, unknown> | null
+): BillingValidationViolation[] {
+  if (!billingNotes) return []
+
+  const nested =
+    billingNotes.billingValidation ??
+    billingNotes.billing_validation ??
+    (billingNotes.type === 'billing_validation' ? billingNotes : null)
+
+  const rawViolations =
+    nested && typeof nested === 'object' && !Array.isArray(nested)
+      ? (nested as Record<string, unknown>).violations
+      : billingNotes.validationViolations ?? billingNotes.validation_violations
+
+  if (!Array.isArray(rawViolations)) return []
+
+  return rawViolations
+    .map((item) => parseBillingValidationViolation(item))
+    .filter((item): item is BillingValidationViolation => item != null)
+}
+
+export function blocksPricingFromBillingNotes(
+  billingNotes: Record<string, unknown> | null,
+  fieldConsistencyViolations: FieldConsistencyViolation[]
+): boolean {
+  if (fieldConsistencyViolations.length > 0) return true
+  if (!billingNotes) return false
+  if (billingNotes.blocksPricing === true) return true
+  const nested = billingNotes.billingValidation ?? billingNotes.billing_validation
+  if (nested && typeof nested === 'object' && !Array.isArray(nested)) {
+    if ((nested as Record<string, unknown>).blocksPricing === true) return true
+  }
+  return extractBillingValidationViolations(billingNotes).some((item) => item.severity === 'error')
+}
+
+export function shouldBlockPricingDisplay(row: Record<string, unknown>): boolean {
+  return parseReconciliationBillingContext(row).blocksPricingDisplay
+}
+
 export function fieldConsistencyViolationLabel(
   code: string,
   t: (key: string) => string
@@ -225,9 +291,28 @@ export function fieldConsistencyViolationLabel(
   }
 }
 
+export function billingValidationViolationLabel(
+  code: string,
+  t: (key: string) => string
+): string {
+  switch (code) {
+    case 'MISSING_FIELDS':
+      return t('reconciliation.detail.validationMissingFields')
+    case 'BLANK_PACKAGE_MATERIAL':
+      return t('reconciliation.detail.validationBlankPackageMaterial')
+    case 'ZERO_INSTRUMENT_COUNT':
+      return t('reconciliation.detail.validationZeroInstrumentCount')
+    case 'ZERO_UNIT_PRICE':
+      return t('reconciliation.detail.validationZeroUnitPrice')
+    default:
+      return code
+  }
+}
+
 /** 根据 violation code 映射需要高亮的表格字段 */
 export function fieldConsistencyAffectedFields(
-  violations: FieldConsistencyViolation[]
+  violations: FieldConsistencyViolation[],
+  billingValidationViolations: BillingValidationViolation[] = []
 ): Set<FieldConsistencyHighlightField> {
   const fields = new Set<FieldConsistencyHighlightField>()
   for (const violation of violations) {
@@ -248,6 +333,31 @@ export function fieldConsistencyAffectedFields(
         break
     }
   }
+  for (const violation of billingValidationViolations) {
+    if (violation.severity !== 'error') continue
+    switch (violation.code) {
+      case 'BLANK_PACKAGE_MATERIAL':
+        fields.add('packageMaterial')
+        break
+      case 'ZERO_INSTRUMENT_COUNT':
+        fields.add('instrumentCount')
+        break
+      case 'MISSING_FIELDS':
+        for (const field of violation.missingFields ?? []) {
+          if (
+            field === 'type' ||
+            field === 'packName' ||
+            field === 'packageMaterial' ||
+            field === 'instrumentCount'
+          ) {
+            fields.add(field)
+          }
+        }
+        break
+      default:
+        break
+    }
+  }
   return fields
 }
 
@@ -257,25 +367,36 @@ export function fieldConsistencyCellTone(
   field: FieldConsistencyHighlightField
 ): FieldConsistencyCellTone {
   const ctx = parseReconciliationBillingContext(row)
-  if (!ctx.hasFieldConsistencyIssues) return null
-  const affected = fieldConsistencyAffectedFields(ctx.fieldConsistencyViolations)
+  if (!ctx.hasFieldConsistencyIssues && !ctx.hasBlockingValidationIssues) return null
+  const affected = fieldConsistencyAffectedFields(
+    ctx.fieldConsistencyViolations,
+    ctx.billingValidationViolations.filter((item) => item.severity === 'error')
+  )
   if (!affected.has(field)) return null
 
-  const hasInstrumentMismatch = ctx.fieldConsistencyViolations.some(
+  const hasAmberInstrumentMismatch = ctx.fieldConsistencyViolations.some(
     (item) => item.code === 'INSTRUMENT_COUNT_MISMATCH'
   )
-  const hasRedMismatch = ctx.fieldConsistencyViolations.some((item) =>
-    ['BAG_SIZE_MISMATCH', 'MATERIAL_CLASS_MISMATCH'].includes(item.code)
-  )
+  const hasRedInstrumentIssue =
+    ctx.billingValidationViolations.some((item) => item.code === 'ZERO_INSTRUMENT_COUNT') ||
+    ctx.fieldConsistencyViolations.some((item) =>
+      ['BAG_SIZE_MISMATCH', 'MATERIAL_CLASS_MISMATCH'].includes(item.code)
+    ) ||
+    ctx.billingValidationViolations.some((item) =>
+      ['BLANK_PACKAGE_MATERIAL', 'MISSING_FIELDS'].includes(item.code)
+    )
 
-  if (field === 'instrumentCount' && hasInstrumentMismatch) {
+  if (field === 'instrumentCount') {
+    if (ctx.billingValidationViolations.some((item) => item.code === 'ZERO_INSTRUMENT_COUNT')) {
+      return 'red'
+    }
+    if (hasAmberInstrumentMismatch) return 'amber'
+  }
+  if (field === 'packName' && hasAmberInstrumentMismatch) {
     return 'amber'
   }
-  if (hasRedMismatch && ['type', 'packName', 'packageMaterial'].includes(field)) {
+  if (hasRedInstrumentIssue || field === 'packageMaterial' || field === 'type') {
     return 'red'
-  }
-  if (field === 'packName' && hasInstrumentMismatch) {
-    return 'amber'
   }
   return 'red'
 }
@@ -292,7 +413,9 @@ export function fieldConsistencyCellClass(
 
 export function fieldConsistencyRowClass(row: Record<string, unknown>): string {
   const ctx = parseReconciliationBillingContext(row)
-  return ctx.hasFieldConsistencyIssues ? 'field-consistency-row' : ''
+  return ctx.hasBlockingValidationIssues || ctx.hasFieldConsistencyIssues
+    ? 'field-consistency-row'
+    : ''
 }
 
 export function parseReconciliationBillingContext(
@@ -346,11 +469,22 @@ export function parseReconciliationBillingContext(
   const discountChain = extractDiscountChain(notes, billingNotes)
   const policyTraces = extractPolicyTraces(billingNotes)
   const fieldConsistencyViolations = extractFieldConsistencyViolations(billingNotes)
+  const billingValidationViolations = extractBillingValidationViolations(billingNotes)
+  const blocksPricingDisplay = blocksPricingFromBillingNotes(
+    billingNotes,
+    fieldConsistencyViolations
+  )
+  const hasBlockingValidationIssues = blocksPricingDisplay
+  const hasZeroUnitPriceWarning = billingValidationViolations.some(
+    (item) => item.code === 'ZERO_UNIT_PRICE'
+  )
   const traceNotes = notes.filter(
     (note) =>
       !note.includes('多报价命中') &&
       !isDiscountNote(note) &&
-      !note.includes('【字段核对】')
+      !note.includes('【字段核对】') &&
+      !note.includes('【字段核对错误】') &&
+      !note.includes('【原始单价数据异常】')
   )
 
   return {
@@ -368,7 +502,11 @@ export function parseReconciliationBillingContext(
     traceNotes,
     billingNotesType,
     fieldConsistencyViolations,
-    hasFieldConsistencyIssues: fieldConsistencyViolations.length > 0
+    hasFieldConsistencyIssues: fieldConsistencyViolations.length > 0,
+    billingValidationViolations,
+    hasBlockingValidationIssues,
+    hasZeroUnitPriceWarning,
+    blocksPricingDisplay
   }
 }
 
@@ -379,6 +517,8 @@ export function hasBillingDetail(row: Record<string, unknown>): boolean {
     ctx.discountChain.length > 0 ||
     ctx.policyTraces.length > 0 ||
     ctx.hasFieldConsistencyIssues ||
+    ctx.hasBlockingValidationIssues ||
+    ctx.hasZeroUnitPriceWarning ||
     ctx.matchedRuleId != null ||
     ctx.traceNotes.length > 0 ||
     ctx.ruleName != null

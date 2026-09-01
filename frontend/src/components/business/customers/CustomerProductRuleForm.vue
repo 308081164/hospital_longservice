@@ -1,5 +1,12 @@
 <template>
   <div class="customer-product-rule-form">
+    <div v-if="effectPreview" class="customer-product-rule-form__preview">
+      <span class="customer-product-rule-form__preview-label">
+        {{ $t('menus.masterData.customerProductRules.effectPreview') }}
+      </span>
+      <span class="customer-product-rule-form__preview-text">{{ effectPreview }}</span>
+    </div>
+
     <RuleFieldGrid :columns="2">
       <div class="customer-product-rule-form__field">
         <label class="customer-product-rule-form__label">
@@ -137,6 +144,24 @@
             :precision="0"
             :tooltip="$t('menus.masterData.customerProductRules.foldRatioHint')"
           />
+          <div class="customer-product-rule-form__field">
+            <label class="customer-product-rule-form__label">
+              {{ $t('menus.masterData.customerProductRules.keywordMatchMode') }}
+            </label>
+            <ElSelect v-model="draft.keywordMatchMode" class="w-full">
+              <ElOption
+                :label="$t('menus.masterData.customerProductRules.keywordMatchExactToken')"
+                value="exact_token"
+              />
+              <ElOption
+                :label="$t('menus.masterData.customerProductRules.keywordMatchContains')"
+                value="contains"
+              />
+            </ElSelect>
+            <p class="customer-product-rule-form__hint">
+              {{ $t('menus.masterData.customerProductRules.keywordMatchModeHint') }}
+            </p>
+          </div>
         </template>
         <RuleNumberField
           v-else-if="draft.ruleType === 'EXTRA_FEE' || draft.ruleType === 'ADD_FEE'"
@@ -290,6 +315,7 @@
 
 <script setup lang="ts">
 import { computed, ref, watch } from 'vue'
+import { useI18n } from 'vue-i18n'
 import RuleFieldGrid from '@/components/business/pricing-rules/RuleFieldGrid.vue'
 import RuleSectionBlock from '@/components/business/pricing-rules/RuleSectionBlock.vue'
 import RuleNumberField from '@/components/business/pricing-rules/RuleNumberField.vue'
@@ -297,6 +323,7 @@ import RuleKeywordField from '@/components/business/pricing-rules/RuleKeywordFie
 import RuleSwitchField from '@/components/business/pricing-rules/RuleSwitchField.vue'
 import {
   appendKeywordIfMissing,
+  formatRuleEffectSummary,
   inferBillingModeFromDraft,
   isProductRequired,
   isSettlementRule,
@@ -316,8 +343,17 @@ const props = defineProps<{
   showActions?: boolean
 }>()
 
+const { t } = useI18n()
+
 const productRequired = computed(() => isProductRequired(props.draft.ruleType))
 const showSettlementOptions = computed(() => !isSettlementRule(props.draft.ruleType))
+
+const effectPreview = computed(() => {
+  const productName = props.draft.productId != null
+    ? resolveProductName(props.draft.productId)
+    : props.draft.productName
+  return formatRuleEffectSummary(props.draft, t, productName)
+})
 
 const bagSizeConstraintEnabled = ref(false)
 
@@ -491,6 +527,29 @@ const foldSplitPreview = computed(() => {
   margin: 4px 0 0;
   font-size: 12px;
   color: var(--el-text-color-secondary);
+}
+
+.customer-product-rule-form__preview {
+  margin-bottom: 16px;
+  padding: 10px 12px;
+  border-radius: 8px;
+  background: var(--el-color-primary-light-9);
+  border: 1px solid var(--el-color-primary-light-7);
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.customer-product-rule-form__preview-label {
+  display: block;
+  margin-bottom: 4px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--el-color-primary);
+}
+
+.customer-product-rule-form__preview-text {
+  color: var(--el-text-color-primary);
+  word-break: break-word;
 }
 
 .accepted-prices {

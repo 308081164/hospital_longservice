@@ -150,6 +150,15 @@ def is_planting_or_needle_box_pack(stem: str) -> bool:
     return any(k in stem for k in keywords)
 
 
+def is_surgical_pack_with_piece_box_count(stem: str) -> bool:
+    dash = stem.find("-")
+    if dash <= 0:
+        dash = stem.find("－")
+    if dash <= 0:
+        return False
+    return stem[:dash].strip().endswith("包")
+
+
 def hyphen_count_before_box(text: str) -> int:
     m = re.search(r"[-－](\d+)(?:盒|筐|盘)", text)
     return int(m.group(1)) if m else 0
@@ -160,12 +169,14 @@ def sum_explicit_containers(stem: str, base_count: int, compact_base: bool) -> i
         return sum_parenthesis_container_counts(stem)
     if re.search(r"[-－]\d+件", stem):
         if SPACED_PIECE_THEN_BOX.search(stem):
-            if is_planting_or_needle_box_pack(stem):
+            if is_planting_or_needle_box_pack(stem) or is_surgical_pack_with_piece_box_count(stem):
                 without_paren = PAREN_GROUP.sub("", stem)
                 return sum_parenthesis_container_counts(stem) + sum_container_tokens(without_paren)
             return sum_parenthesis_container_counts(stem)
         without_paren = PAREN_GROUP.sub("", stem)
         if re.search(r"[-－]\d+件(?:盒|筐|盘)", stem) and is_planting_or_needle_box_pack(stem):
+            return sum_parenthesis_container_counts(stem) + sum_container_tokens(without_paren)
+        if re.search(r"[-－]\d+件盒", stem) and is_surgical_pack_with_piece_box_count(stem):
             return sum_parenthesis_container_counts(stem) + sum_container_tokens(without_paren)
         return sum_parenthesis_container_counts(stem)
     if re.search(r"[-－]\d+件\s*(?:盒|筐|盘)", stem):

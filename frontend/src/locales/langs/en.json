@@ -342,7 +342,8 @@
       "title": "Settings",
       "appearance": "Appearance",
       "pricingRules": "Pricing Rules",
-      "versionManagement": "Reconciliation History"
+      "versionManagement": "Reconciliation History",
+      "changelog": "Changelog"
     },
     "masterData": {
       "title": "Master Data",
@@ -586,6 +587,10 @@
         "foldThresholdHint": "Apply fold ratio above this count",
         "foldRatio": "Fold Divisor",
         "foldRatioHint": "Above threshold, billable count = ceil(instrumentCount / divisor); e.g. 5 means 5 pcs count as 1",
+        "keywordMatchMode": "Default Match Mode",
+        "keywordMatchModeHint": "Applied to unannotated keywords below; a single keyword can override via suffix, e.g. \"needle@contains\" or \"needle@exact\"",
+        "keywordMatchExactToken": "Exact token boundary",
+        "keywordMatchContains": "Contains keyword",
         "extraFeeAmount": "Extra Fee (CNY)",
         "excludeKeywords": "Exclude Keywords",
         "excludeKeywordsHint": "Rule is skipped if any exclude keyword matches, e.g. hollow nail",
@@ -598,7 +603,7 @@
         "removePrice": "Remove",
         "valueAnyPrice": "Multi-price {prices} CNY",
         "keywords": "Match Keywords",
-        "keywordsHint": "Product or scene keywords, comma-separated",
+        "keywordsHint": "Product or scene keywords, comma-separated; a single keyword can override mode via suffix, e.g. \"needle@contains\" or \"needle@exact\"",
         "materials": "Material Keywords",
         "materialsHint": "e.g. non-woven, paper-plastic; all must match",
         "temperature": "Temperature",
@@ -636,7 +641,17 @@
         "valueFixed": "{price} CNY",
         "valueMultiplier": "{rate}x",
         "valueFold": "Over {threshold} pcs × {ratio}",
-        "valueExtraFee": "+{fee} CNY"
+        "valueExtraFee": "+{fee} CNY",
+        "effectPreview": "Rule preview",
+        "effectSummaryFallback": "Unnamed rule",
+        "showInactiveRules": "Show inactive ({count})",
+        "hideInactiveRules": "Hide inactive",
+        "purgeInactiveRules": "Remove inactive",
+        "purgeInactiveConfirm": "Permanently delete {count} inactive rule(s)?",
+        "purgeInactiveDone": "Removed {count} inactive rule(s)",
+        "conflictTitle": "Rule match signature conflicts detected",
+        "conflictItem": "\"{names}\" may match the same rows (same type and conditions)",
+        "inactiveHiddenHint": "{count} inactive rule(s) hidden; conflict check applies to active rules only"
       }
     },
     "help": {
@@ -748,6 +763,11 @@
         "size6": "6 / page",
         "size9": "9 / page",
         "size12": "12 / page"
+      },
+      "scoped": {
+        "entryVersionTitle": "File version history",
+        "viewAllHistory": "View all history",
+        "noVersionsYet": "Version history will appear here after saving"
       }
     },
     "detail": {
@@ -794,10 +814,48 @@
       "fieldConsistencyInstrumentCount": "Instrument count mismatch",
       "fieldConsistencyLegendRed": "Red: bag size or material class mismatch",
       "fieldConsistencyLegendAmber": "Amber: pack-name piece total vs instrument count mismatch",
+      "validationErrorTag": "Field check error",
+      "validationErrorSection": "Field check errors",
+      "validationErrorHint": "Required fields are missing or blocking issues were found. Verify the source bill.",
+      "validationWarningSection": "Data anomaly warnings",
+      "validationMissingFields": "Field check error — incomplete/missing record",
+      "validationBlankPackageMaterial": "Field check error — blank packaging material",
+      "validationZeroInstrumentCount": "Field check error — zero instrument count",
+      "validationZeroUnitPrice": "Abnormal original unit price",
+      "validationZeroUnitPriceTag": "Unit price anomaly",
+      "validationZeroUnitPriceHint": "Original unit price is 0. Pricing still runs; verify imported data.",
+      "pricingBlockedHint": "Field check failed; rule unit price and corrected total are hidden",
+      "pricingBlockedLegend": "Red ! — field check blocked pricing",
       "tabRegular": "Regular bill",
       "tabExternal": "External instruments ({count})",
       "suggestedDepartment": "Suggested dept",
       "pricingRuleColumn": "Pricing rule"
+    },
+    "columns": {
+      "rowNumber": "Row #",
+      "sheetName": "Department",
+      "deliveryDate": "Delivery Date",
+      "type": "Type",
+      "packName": "Pack Name",
+      "packageMaterial": "Packaging",
+      "instrumentCount": "Instruments",
+      "packCount": "Packs",
+      "unitPrice": "Orig. Unit",
+      "expectedUnitPrice": "Rule Unit",
+      "totalPrice": "Orig. Total",
+      "correctedTotalPrice": "Corrected Total",
+      "difference": "Difference",
+      "status": "Status",
+      "suggestedDepartment": "Suggested Dept"
+    },
+    "preview": {
+      "anomalyMode": "Anomaly mode",
+      "currentDisplay": "Showing",
+      "rowCount": "{count} rows",
+      "rowCountWithTotal": "{current} rows, {total} total",
+      "anomalyLoading": "Loading all rows from server, please wait for large datasets...",
+      "sheetFilterLoading": "Loading department data...",
+      "anomalyFilterActive": "Showing anomalies only ({context}{total} rows)"
     },
     "settlementSummary": {
       "title": "Monthly settlement summary",
@@ -915,6 +973,25 @@
       "check1": "Disable special billing → re-reconcile → standard tier prices",
       "check2": "Re-enable → special rules match again",
       "check3": "Export matches switch state, no stale special discounts"
+    },
+    "inlineEdit": {
+      "saveChanges": "Save changes",
+      "reprice": "Reprice",
+      "dirtyHint": "Unsaved changes",
+      "saveSuccess": "Changes saved",
+      "repriceStaged": "Repriced — click Save changes to persist"
+    },
+    "notice": {
+      "title": "Rule change notices",
+      "ruleChangedTitle": "Pricing rule updated",
+      "viewChangelog": "View changelog",
+      "empty": "No new notices"
+    }
+  },
+  "settings": {
+    "changelog": {
+      "subtitle": "Product updates and billing rule changes",
+      "requireReLogin": "Re-login required"
     }
   },
   "billing": {
@@ -1102,6 +1179,7 @@
   },
   "versionManagement": {
     "list": {
+      "subtitle": "Track the full lifecycle and audit trail of all reconciliation versions.",
       "empty": "No data.",
       "sheetCount": "{count} departments",
       "versionCount": "{count} versions",

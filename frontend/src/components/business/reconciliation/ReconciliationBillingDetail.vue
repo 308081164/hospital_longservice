@@ -114,6 +114,34 @@
           </ElTooltip>
 
           <ElTooltip
+            v-if="ctx.hasBlockingValidationIssues"
+            placement="top"
+            :show-after="200"
+          >
+            <template #content>
+              <div class="max-w-sm space-y-1 text-xs">
+                <div v-for="(item, index) in blockingValidationViolations" :key="index">
+                  {{ localizeDisplayText(item.message) }}
+                </div>
+              </div>
+            </template>
+            <ElTag size="small" type="danger" effect="plain">
+              {{ t('reconciliation.detail.validationErrorTag') }}
+            </ElTag>
+          </ElTooltip>
+
+          <ElTooltip
+            v-if="ctx.hasZeroUnitPriceWarning"
+            placement="top"
+            :content="t('reconciliation.detail.validationZeroUnitPriceHint')"
+            :show-after="200"
+          >
+            <ElTag size="small" type="warning" effect="plain">
+              {{ t('reconciliation.detail.validationZeroUnitPriceTag') }}
+            </ElTag>
+          </ElTooltip>
+
+          <ElTooltip
             v-if="ctx.hasFieldConsistencyIssues"
             placement="top"
             :show-after="200"
@@ -242,6 +270,39 @@
           </ol>
         </section>
 
+        <section v-if="blockingValidationViolations.length" class="detail-section">
+          <div class="detail-section-title">{{
+            t('reconciliation.detail.validationErrorSection')
+          }}</div>
+          <ElAlert type="error" :closable="false" show-icon class="mb-2">
+            <template #title>
+              <span class="text-xs">{{ t('reconciliation.detail.validationErrorHint') }}</span>
+            </template>
+          </ElAlert>
+          <ul class="trace-notes-list">
+            <li v-for="(item, index) in blockingValidationViolations" :key="index">
+              <span class="font-medium">{{
+                billingValidationViolationLabel(item.code, t)
+              }}</span>
+              <span class="ml-1">{{ localizeDisplayText(item.message) }}</span>
+            </li>
+          </ul>
+        </section>
+
+        <section v-if="warningValidationViolations.length" class="detail-section">
+          <div class="detail-section-title">{{
+            t('reconciliation.detail.validationWarningSection')
+          }}</div>
+          <ul class="trace-notes-list">
+            <li v-for="(item, index) in warningValidationViolations" :key="index">
+              <span class="font-medium">{{
+                billingValidationViolationLabel(item.code, t)
+              }}</span>
+              <span class="ml-1">{{ localizeDisplayText(item.message) }}</span>
+            </li>
+          </ul>
+        </section>
+
         <section v-if="ctx.hasFieldConsistencyIssues" class="detail-section">
           <div class="detail-section-title">{{
             t('reconciliation.detail.fieldConsistencySection')
@@ -290,6 +351,7 @@
   import { computed } from 'vue'
   import { useI18n } from 'vue-i18n'
   import {
+    billingValidationViolationLabel,
     fieldConsistencyViolationLabel,
     formatReconciliationCurrency,
     hasBillingDetail,
@@ -322,6 +384,12 @@
   const { t } = useI18n()
 
   const ctx = computed(() => parseReconciliationBillingContext(props.row))
+  const blockingValidationViolations = computed(() =>
+    ctx.value.billingValidationViolations.filter((item) => item.severity === 'error')
+  )
+  const warningValidationViolations = computed(() =>
+    ctx.value.billingValidationViolations.filter((item) => item.severity === 'warning')
+  )
   const hasContent = computed(
     () => hasBillingDetail(props.row) || hasPricingDetail(props.row)
   )

@@ -289,6 +289,14 @@
                 @change="markDirty"
               />
             </RuleFieldGrid>
+            <RuleFieldGrid :columns="1">
+              <RuleSelectField
+                v-model="needleMatchMode"
+                label="默认匹配模式"
+                :options="keywordMatchModeOptions"
+                tooltip="未标注的关键词统一使用此模式；单个词可加后缀覆盖，如「车针@contains」含词即触发、「车针@exact」严格对齐"
+              />
+            </RuleFieldGrid>
             <RuleKeywordField
               v-model="nd.keywords"
               class="needle-keywords-field"
@@ -297,7 +305,7 @@
               :rows="5"
               :max-rows="14"
               show-count
-              hint="逗号分隔；客户特色关键词扩展请在特殊计价客户管理中配置"
+              hint="逗号分隔；词后加 @contains 含词即触发、@exact 严格对齐；客户特色关键词扩展请在特殊计价客户管理中配置"
               @change="markDirty"
             />
             <div v-if="selectedRuleId" class="needle-actions">
@@ -547,6 +555,11 @@ const categories: CategoryItem[] = [
   { key: '导出', label: '导出' },
 ]
 
+const keywordMatchModeOptions = [
+  { value: 'exact_token', label: '严格对齐（精确 token 边界）' },
+  { value: 'contains', label: '含关键词即触发' },
+]
+
 const tabCategories = computed(() => categories)
 
 defineOptions({ name: 'HospitalPricingRules' })
@@ -630,7 +643,7 @@ const defaultEmptyRules = (): Api.Hospital.PricingRules => ({
       { name: '纸塑袋', keywords: ['纸塑袋'], chargePerPack: true, options: [] },
     ],
   },
-  needle: { threshold: 5, foldRatio: 5, keywords: ['小件', '探针', '穿刺针', '缝合针', '车针', '拔髓针', '成型片', '根管针', '根管锉', '支抗钉', '洁牙机尖', '球钻', '挖勺'] },
+  needle: { threshold: 5, foldRatio: 5, keywordMatchMode: 'exact_token', keywords: ['小件', '探针', '穿刺针', '缝合针', '车针', '拔髓针', '成型片', '根管针', '根管锉', '支抗钉', '洁牙机尖', '球钻', '挖勺'] },
   cleaning: {
     removeFirstRow: false,
     dropSummaryRows: true,
@@ -707,6 +720,13 @@ const ltnw = computed(() => currentRule.value!.rules.lowTemperature.nonWoven)
 const ltpp = computed(() => currentRule.value!.rules.lowTemperature.paperPlastic)
 const pg = computed(() => currentRule.value!.rules.packaging)
 const nd = computed(() => currentRule.value!.rules.needle)
+const needleMatchMode = computed({
+  get: () => nd.value.keywordMatchMode ?? 'exact_token',
+  set: (val: string) => {
+    nd.value.keywordMatchMode = val === 'contains' ? 'contains' : 'exact_token'
+    markDirty()
+  },
+})
 const cl = computed(() => currentRule.value!.rules.cleaning)
 const lg = computed(() => currentRule.value!.rules.logistics)
 const sl = computed(() => currentRule.value!.rules.settlementLetter)

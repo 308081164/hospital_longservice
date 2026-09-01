@@ -52,17 +52,20 @@ export function buildHospitalNameCandidates(options: {
     candidates.push(trimmed)
   }
 
-  if (options.fileName) {
-    push(inferHospitalNameFromFileName(options.fileName))
-    push(options.fileName.replace(/\.[^.]+$/, '').replace(FILE_YEAR_PREFIX_PATTERN, ''))
+  // 1) Excel 表头区域解析出的医院全称（最可信）
+  for (const name of options.sheetHospitalDisplayNames ?? []) {
+    if (isLikelyHospitalName(name)) push(name)
   }
-  push(options.ruleHospitalName)
-  push(options.ruleName)
+  // 2) 当前条目已解析名称（通常来自 sheet meta）
   if (options.currentName && !isLikelyDepartmentName(options.currentName)) {
     push(options.currentName)
   }
-  for (const name of options.sheetHospitalDisplayNames ?? []) {
-    if (isLikelyHospitalName(name)) push(name)
+  push(options.ruleHospitalName)
+  push(options.ruleName)
+  // 3) 文件名仅作兜底
+  if (options.fileName) {
+    push(inferHospitalNameFromFileName(options.fileName))
+    push(options.fileName.replace(/\.[^.]+$/, '').replace(FILE_YEAR_PREFIX_PATTERN, ''))
   }
 
   return candidates

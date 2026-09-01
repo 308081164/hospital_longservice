@@ -11,6 +11,10 @@ function toNumber(value: unknown, fallback = 0): number {
   return typeof value === 'number' && Number.isFinite(value) ? value : fallback
 }
 
+function normalizeKeywordMatchMode(value: unknown): 'exact_token' | 'contains' {
+  return value === 'contains' ? 'contains' : 'exact_token'
+}
+
 function normalizeBagSizes(value: unknown): Api.Hospital.BagSizeConfig[] {
   if (!Array.isArray(value)) return []
   return value.map((item) => {
@@ -232,7 +236,7 @@ function convertLegacyRules(record: Record<string, unknown>): Record<string, unk
       },
     },
     packaging: createDefaultPackagingRules(),
-    needle: isRecord(record.needle) ? record.needle : { threshold: 5, foldRatio: 5, keywords: ['小件', '探针', '穿刺针', '缝合针', '车针', '拔髓针', '成型片', '根管针', '根管锉', '支抗钉', '洁牙机尖', '球钻', '挖勺'] },
+    needle: isRecord(record.needle) ? record.needle : { threshold: 5, foldRatio: 5, keywordMatchMode: 'exact_token', keywords: ['小件', '探针', '穿刺针', '缝合针', '车针', '拔髓针', '成型片', '根管针', '根管锉', '支抗钉', '洁牙机尖', '球钻', '挖勺'] },
     cleaning: isRecord(record.cleaning)
       ? record.cleaning
       : {
@@ -471,6 +475,7 @@ export function normalizePricingRules(raw: unknown): Api.Hospital.PricingRules {
     needle: {
       threshold: typeof needle.threshold === 'number' ? needle.threshold : 0,
       foldRatio: typeof needle.foldRatio === 'number' ? needle.foldRatio : 0,
+      keywordMatchMode: normalizeKeywordMatchMode(needle.keywordMatchMode),
       keywords: Array.isArray(needle.keywords) ? (needle.keywords as string[]) : [],
     },
     cleaning: {
@@ -494,7 +499,10 @@ export function normalizePricingRules(raw: unknown): Api.Hospital.PricingRules {
         ? (specialRules.fixedPrices as Api.Hospital.SpecialFixedPriceRule[])
         : [],
       foldRules: Array.isArray(specialRules.foldRules)
-        ? (specialRules.foldRules as Api.Hospital.SpecialFoldRule[])
+        ? (specialRules.foldRules as Api.Hospital.SpecialFoldRule[]).map((rule) => ({
+            ...rule,
+            keywordMatchMode: normalizeKeywordMatchMode(rule.keywordMatchMode),
+          }))
         : [],
       extraFees: Array.isArray(specialRules.extraFees)
         ? (specialRules.extraFees as Api.Hospital.SpecialExtraFeeRule[])

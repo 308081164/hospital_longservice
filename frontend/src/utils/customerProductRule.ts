@@ -65,6 +65,7 @@ export interface CustomerProductRuleDraft {
   fee?: number
   threshold?: number
   foldRatio?: number
+  keywordMatchMode?: 'exact_token' | 'contains'
   keywords: string[]
   excludeKeywords: string[]
   materials: string[]
@@ -95,6 +96,7 @@ export function createEmptyProductRuleDraft(
     fee: 1,
     threshold: 10,
     foldRatio: 5,
+    keywordMatchMode: 'exact_token',
     keywords: [],
     excludeKeywords: [],
     materials: [],
@@ -123,6 +125,10 @@ export function ruleFromRecord(rule: Api.MasterData.CustomerProductRule): Custom
     fee: rule.fee,
     threshold: rule.threshold,
     foldRatio: rule.foldRatio ?? rule.fold_ratio,
+    keywordMatchMode: normalizeKeywordMatchModeDraft(
+      (rule as { keywordMatchMode?: string; keyword_match_mode?: string }).keywordMatchMode
+      ?? (rule as { keyword_match_mode?: string }).keyword_match_mode,
+    ),
     keywords: [...(rule.keywords ?? [])],
     excludeKeywords: [...(rule.excludeKeywords ?? (rule as { exclude_keywords?: string[] }).exclude_keywords ?? [])],
     materials: [...(rule.materials ?? [])],
@@ -158,6 +164,10 @@ function inferBillingModeFromRecord(rule: Api.MasterData.CustomerProductRule): B
 
 function normalizeList(values?: string[]): string {
   return JSON.stringify((values ?? []).map((v) => v.trim()).filter(Boolean).sort())
+}
+
+function normalizeKeywordMatchModeDraft(value?: string | null): 'exact_token' | 'contains' {
+  return value === 'contains' ? 'contains' : 'exact_token'
 }
 
 /** Append keyword to list if not already present (trimmed exact match). Mutates `keywords`. */
@@ -316,6 +326,7 @@ export function draftToProductRule(
     fee: draft.ruleType === 'EXTRA_FEE' || draft.ruleType === 'ADD_FEE' ? draft.fee : undefined,
     threshold: draft.ruleType === 'FOLD' ? draft.threshold : undefined,
     foldRatio: draft.ruleType === 'FOLD' ? draft.foldRatio : undefined,
+    keywordMatchMode: draft.ruleType === 'FOLD' ? (draft.keywordMatchMode ?? 'exact_token') : undefined,
     keywords: draft.keywords.length ? [...draft.keywords] : undefined,
     excludeKeywords: draft.excludeKeywords.length ? [...draft.excludeKeywords] : undefined,
     materials: draft.materials.length ? [...draft.materials] : undefined,
@@ -350,6 +361,7 @@ export function draftToSavePayload(
     fee: draft.ruleType === 'EXTRA_FEE' || draft.ruleType === 'ADD_FEE' ? draft.fee : undefined,
     threshold: draft.ruleType === 'FOLD' ? draft.threshold : undefined,
     foldRatio: draft.ruleType === 'FOLD' ? draft.foldRatio : undefined,
+    keywordMatchMode: draft.ruleType === 'FOLD' ? (draft.keywordMatchMode ?? 'exact_token') : undefined,
     keywords: draft.keywords,
     excludeKeywords: draft.excludeKeywords,
     materials: draft.materials,
@@ -490,6 +502,30 @@ export function formatRuleValueLabel(
     return `${price} 元/包`
   }
   return t('menus.masterData.customerProductRules.valueFixed', { price })
+}
+
+/** One-line human-readable summary for rule preview (name · pricing · match). */
+export function formatRuleEffectSummary(
+  draft: CustomerProductRuleDraft,
+  t: RuleLabelFn,
+  productName?: string,
+): string {
+  const asRule = draftToProductRule(draft, productName)
+  const name = resolveProductRuleSaveName(draft, productName)
+    ?? productName?.trim()
+    ?? draft.keywords.map((k) => k.trim()).find(Boolean)
+    ?? t('menus.masterData.customerProductRules.effectSummaryFallback')
+  const pricing = formatRuleValueLabel(asRule, t)
+  const match = formatRuleMatchSummary(asRule)
+  const typeKey = ruleTypeLabelKey(draft.ruleType)
+  return `${name} · ${t(typeKey)} · ${pricing} · ${match}`
+}
+
+export function formatRuleMatchSummaryFromDraft(
+  draft: CustomerProductRuleDraft,
+  productName?: string,
+): string {
+  return formatRuleMatchSummary(draftToProductRule(draft, productName))
 }
 
 function normalizeTemperature(value?: string | null): BillingTemperatureScope | '' {

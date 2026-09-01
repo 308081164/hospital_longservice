@@ -1,0 +1,38 @@
+# Cursor 语义索引排除（仅不进 embedding 索引，Agent 工具与脚本仍可正常读写）
+# 目的：降低索引规模（原 ~78K 文件 / 1.7GB），避免索引导致的卡顿与工具超时。
+
+# 依赖与构建产物
+**/node_modules/
+**/.pnpm-store/
+**/dist/
+**/target/
+**/__pycache__/
+**/.venv*/
+
+# 铂康遗留 SQL/Excel 数据（497MB，仅本地 Docker 挂载使用）
+铂康/
+
+# 部署 dump 与备份（单个 SQL 277MB）
+deploy/*.sql
+deploy/backups/
+
+# 测试材料与历史报告（123MB / 2300+ 文件；Agent 按路径直接读取，无需语义索引）
+测试用例/
+系统内置测试用例/
+pricing-engine-audit-report/
+pricing-rules-comparison/
+
+# 文档附件（63MB 进度规划图片/压缩包）
+docs/进度规划/
+docs/*.zip
+docs/source/
+
+# 二进制与静态资源
+**/*.xlsx
+**/*.xls
+**/*.pdf
+**/*.zip
+**/*.gz
+**/*.ttf
+**/*.docx
+project-handover/_shared/

@@ -351,30 +351,67 @@
         <ElDivider>{{ $t('menus.masterData.customerProductRules.title') }}</ElDivider>
         <div class="product-rules-panel">
           <div class="product-rules-panel__header">
-            <span class="product-rules-panel__count">
-              {{
-                $t('menus.masterData.customerProductRules.ruleCount', {
-                  count: pricingRules.length
-                })
-              }}
-            </span>
-            <ElButton
-              type="primary"
-              size="small"
-              :disabled="isReadOnlyConfig"
-              @click="openCreateRule"
-            >
-              {{ $t('menus.masterData.customerProductRules.add') }}
-            </ElButton>
+            <div class="product-rules-panel__header-left">
+              <span class="product-rules-panel__count">
+                {{
+                  $t('menus.masterData.customerProductRules.ruleCount', {
+                    count: tablePricingRules.length
+                  })
+                }}
+              </span>
+              <span
+                v-if="inactivePricingRuleCount > 0 && !showInactiveRules"
+                class="product-rules-panel__inactive-hint text-xs text-gray-500"
+              >
+                {{
+                  $t('menus.masterData.customerProductRules.inactiveHiddenHint', {
+                    count: inactivePricingRuleCount
+                  })
+                }}
+              </span>
+            </div>
+            <div class="product-rules-panel__header-actions">
+              <ElButton
+                v-if="inactivePricingRuleCount > 0"
+                size="small"
+                link
+                @click="showInactiveRules = !showInactiveRules"
+              >
+                {{
+                  showInactiveRules
+                    ? $t('menus.masterData.customerProductRules.hideInactiveRules')
+                    : $t('menus.masterData.customerProductRules.showInactiveRules', {
+                        count: inactivePricingRuleCount
+                      })
+                }}
+              </ElButton>
+              <ElButton
+                v-if="inactivePricingRuleCount > 0 && !isReadOnlyConfig"
+                size="small"
+                type="danger"
+                link
+                @click="purgeInactiveRules"
+              >
+                {{ $t('menus.masterData.customerProductRules.purgeInactiveRules') }}
+              </ElButton>
+              <ElButton
+                type="primary"
+                size="small"
+                :disabled="isReadOnlyConfig"
+                @click="openCreateRule"
+              >
+                {{ $t('menus.masterData.customerProductRules.add') }}
+              </ElButton>
+            </div>
           </div>
 
-          <div v-if="pricingRules.length === 0" class="product-rules-panel__empty">
+          <div v-if="tablePricingRules.length === 0" class="product-rules-panel__empty">
             {{ $t('menus.masterData.customerProductRules.empty') }}
           </div>
 
           <ElTable
             v-else
-            :data="pricingRules"
+            :data="tablePricingRules"
             size="small"
             border
             class="product-rules-panel__table"
@@ -423,7 +460,7 @@
                   <ElButton
                     link
                     size="small"
-                    :disabled="$index === pricingRules.length - 1"
+                    :disabled="$index === tablePricingRules.length - 1"
                     @click="moveRule($index, 1)"
                     >↓</ElButton
                   >
@@ -484,10 +521,19 @@
         />
 
         <div v-if="ruleConflicts.length" class="rule-conflicts mt-3">
-          <ElAlert type="warning" show-icon :closable="false" title="检测到规则匹配签名冲突">
+          <ElAlert
+            type="warning"
+            show-icon
+            :closable="false"
+            :title="$t('menus.masterData.customerProductRules.conflictTitle')"
+          >
             <ul class="text-xs">
               <li v-for="(c, idx) in ruleConflicts" :key="idx">
-                规则 #{{ (c.ruleIndexes as number[]).join(', #') }} 可能重复匹配
+                {{
+                  $t('menus.masterData.customerProductRules.conflictItem', {
+                    names: formatConflictRuleNames(c)
+                  })
+                }}
               </li>
             </ul>
           </ElAlert>
@@ -623,10 +669,25 @@
     )
   )
 
+  function isPricingRuleActive(rule: Api.MasterData.CustomerProductRule) {
+    return rule.isActive !== false
+  }
+
+  const activePricingRules = computed(() => pricingRules.value.filter(isPricingRuleActive))
+
+  const inactivePricingRuleCount = computed(
+    () => pricingRules.value.length - activePricingRules.value.length
+  )
+
+  const tablePricingRules = computed(() =>
+    showInactiveRules.value ? pricingRules.value : activePricingRules.value
+  )
+
   const billingPolicyState = reactive<BillingPolicyPanelState>(createEmptyBillingPolicyState())
   const deptPhysicianSummary = reactive({ departments: 0, physicians: 0 })
   const exportTemplatePanelRef = ref<InstanceType<typeof CustomerExportTemplatePanel> | null>(null)
-  const ruleConflicts = ref<Array<{ signature: string; ruleIndexes: number[] }>>([])
+  const ruleConflicts = ref<Array<{ signature: string; ruleIndexes: number[]; ruleNames?: string[] }>>([])
+  const showInactiveRules = ref(false)
 
   const form = reactive<
     Api.MasterData.SaveCustomerPayload & {
@@ -881,9 +942,23 @@
     return ''
   }
 
-  function hasRuleConflict(draft: CustomerProductRuleDraft, excludeIdx?: number) {
-    return pricingRules.value.some((rule, idx) => {
-      if (excludeIdx != null && idx === excludeIdx) return false
+  function formatConflictRuleNames(conflict: { ruleNames?: string[]; ruleIndexes: number[] }) {
+    if (conflict.ruleNames?.length) {
+      return conflict.ruleNames.join('、')
+    }
+    return conflict.ruleIndexes.map((i) => `#${i}`).join('、')
+  }
+
+  function pricingRuleIndexOf(rule: Api.MasterData.CustomerProductRule) {
+    return pricingRules.value.indexOf(rule)
+  }
+
+  function hasRuleConflict(draft: CustomerProductRuleDraft, excludePricingIdx?: number) {
+    if (draft.isActive === false) return false
+    const excludeRule =
+      excludePricingIdx != null ? pricingRules.value[excludePricingIdx] : undefined
+    return activePricingRules.value.some((rule) => {
+      if (excludeRule && rule === excludeRule) return false
       return hasSameMatchSignature(draft, ruleFromRecord(rule))
     })
   }
@@ -906,9 +981,11 @@
     ruleDialogVisible.value = true
   }
 
-  function openEditRule(idx: number) {
-    const target = pricingRules.value[idx]
+  function openEditRule(tableIdx: number) {
+    const target = tablePricingRules.value[tableIdx]
     if (!target) return
+    const idx = pricingRuleIndexOf(target)
+    if (idx < 0) return
     ruleDialogMode.value = 'edit'
     editingRuleIdx.value = idx
     Object.assign(ruleDialogDraft, ruleFromRecord(target))
@@ -969,8 +1046,8 @@
     }
   }
 
-  async function confirmRemoveRule(idx: number) {
-    const target = pricingRules.value[idx]
+  async function confirmRemoveRule(tableIdx: number) {
+    const target = tablePricingRules.value[tableIdx]
     if (!target) return
     try {
       await ElMessageBox.confirm(
@@ -978,7 +1055,34 @@
         t('common.tips'),
         { type: 'warning' }
       )
-      removePricingRule(idx)
+      const idx = pricingRuleIndexOf(target)
+      if (idx >= 0) removePricingRule(idx)
+    } catch {
+      // cancelled
+    }
+  }
+
+  async function purgeInactiveRules() {
+    const count = inactivePricingRuleCount.value
+    if (count <= 0) return
+    try {
+      await ElMessageBox.confirm(
+        t('menus.masterData.customerProductRules.purgeInactiveConfirm', { count }),
+        t('common.tips'),
+        { type: 'warning' }
+      )
+      form.productRules = (form.productRules ?? []).filter((r) => {
+        const isPricing =
+          r.ruleType &&
+          PRICING_RULE_TYPES.includes(r.ruleType as (typeof PRICING_RULE_TYPES)[number])
+        if (!isPricing) return true
+        return r.isActive !== false
+      })
+      showInactiveRules.value = false
+      ElMessage.success(
+        t('menus.masterData.customerProductRules.purgeInactiveDone', { count })
+      )
+      void refreshRuleConflicts()
     } catch {
       // cancelled
     }
@@ -1000,16 +1104,14 @@
     void refreshRuleConflicts()
   }
 
-  function moveRule(idx: number, delta: number) {
+  function moveRule(tableIdx: number, delta: number) {
     const rules = form.productRules ?? []
-    const pricingOnly = pricingRules.value
-    const target = pricingOnly[idx]
-    if (!target) return
+    const target = tablePricingRules.value[tableIdx]
+    const swapTarget = tablePricingRules.value[tableIdx + delta]
+    if (!target || !swapTarget) return
     const globalIdx = rules.indexOf(target)
-    const swapTarget = pricingOnly[idx + delta]
-    if (globalIdx < 0 || !swapTarget) return
     const swapGlobalIdx = rules.indexOf(swapTarget)
-    if (swapGlobalIdx < 0) return
+    if (globalIdx < 0 || swapGlobalIdx < 0) return
     const tempPriority = target.priority ?? 100
     target.priority = swapTarget.priority ?? 100
     swapTarget.priority = tempPriority
@@ -1018,12 +1120,13 @@
   }
 
   async function refreshRuleConflicts() {
-    if (!editingId.value || pricingRules.value.length < 2) {
+    const rules = activePricingRules.value
+    if (!editingId.value || rules.length < 2) {
       ruleConflicts.value = []
       return
     }
     try {
-      const payloadRules = pricingRules.value.map((r) => ({
+      const payloadRules = rules.map((r) => ({
         ruleType: r.ruleType,
         productId: r.productId ?? r.product_id,
         variantId: r.variantId ?? r.variant_id,
@@ -1035,16 +1138,19 @@
         maxInstrumentCount: r.maxInstrumentCount ?? r.max_instrument_count
       }))
       const res = await validateRuleConflicts({ customerId: editingId.value, rules: payloadRules })
-      ruleConflicts.value = (res.conflicts ?? []) as Array<{
+      ruleConflicts.value = ((res.conflicts ?? []) as Array<{
         signature: string
         ruleIndexes: number[]
-      }>
+      }>).map((c) => ({
+        ...c,
+        ruleNames: (c.ruleIndexes ?? []).map((i) => ruleDisplayName(rules[i], products.value))
+      }))
     } catch {
       ruleConflicts.value = []
     }
   }
 
-  watch(pricingRules, () => {
+  watch([pricingRules, showInactiveRules], () => {
     if (editingId.value) {
       void refreshRuleConflicts()
     }
@@ -1257,6 +1363,7 @@
 
   function openCreate() {
     editingId.value = null
+    showInactiveRules.value = false
     resetForm()
     syncBillingPolicyStateFromForm()
     drawerVisible.value = true
@@ -1284,6 +1391,7 @@
 
   function openEdit(row: Api.MasterData.CustomerRecord) {
     advancedCollapseActive.value = []
+    showInactiveRules.value = false
     editingId.value = row.id
     form.code = row.code
     form.canonicalName = row.canonical_name
@@ -1428,9 +1536,24 @@
 <style scoped>
   .product-rules-panel__header {
     display: flex;
-    align-items: center;
+    align-items: flex-start;
     justify-content: space-between;
+    gap: 12px;
     margin-bottom: 12px;
+  }
+
+  .product-rules-panel__header-left {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .product-rules-panel__header-actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 4px 8px;
   }
 
   .product-rules-panel__count {

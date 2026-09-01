@@ -1,0 +1,271 @@
+{
+  "generated": "2026-08-31",
+  "baseline_report": "特殊收费v8严格Excel对账报告-20260827.json",
+  "policy": "路径A：22家锁定0827基线材料；新引入院按 7→5→4→8→6→3 探测首个 raw+proc 成对账期",
+  "hospitals": [
+    {
+      "hospital": "哈尔滨冰城医疗美容医院",
+      "customer_label": "冰城医美",
+      "group": "baseline22",
+      "lock_month": 6,
+      "lock_raw_file": "哈尔滨冰城医疗美容医院6月.xlsx",
+      "lock_proc_file": "6月__冰城6月账单.xlsx",
+      "baseline_status": "PASS",
+      "baseline_skip_reason": null
+    },
+    {
+      "hospital": "国药总医院第二院区",
+      "customer_label": "电机厂",
+      "group": "baseline22",
+      "lock_month": 6,
+      "lock_raw_file": "电机厂6月账单.xlsx",
+      "lock_proc_file": "6月__国药总医院第二院区5.26-6.25账单.xlsx",
+      "baseline_status": "PASS",
+      "baseline_skip_reason": null
+    },
+    {
+      "hospital": "方南南医院",
+      "customer_label": "方南南",
+      "group": "baseline22",
+      "lock_month": 7,
+      "lock_raw_file": "7月__方南南原始.xlsx",
+      "lock_proc_file": "7月__方南南账单.xlsx",
+      "baseline_status": "PASS",
+      "baseline_skip_reason": null
+    },
+    {
+      "hospital": "东北农业大学",
+      "customer_label": "东北农大",
+      "group": "baseline22",
+      "lock_month": 7,
+      "lock_raw_file": "7月__东北农大原始.xlsx",
+      "lock_proc_file": "7月__东北农大账单.xlsx",
+      "baseline_status": "FAIL",
+      "baseline_skip_reason": null
+    },
+    {
+      "hospital": "松电慢病",
+      "customer_label": "松电慢病",
+      "group": "baseline22",
+      "lock_month": 5,
+      "lock_raw_file": "哈尔滨道外区松电慢性病专科门诊部5月.xlsx",
+      "lock_proc_file": "松电慢性病5月账单.xlsx",
+      "baseline_status": "PASS",
+      "baseline_skip_reason": null
+    },
+    {
+      "hospital": "航天风华",
+      "customer_label": "航天风华",
+      "group": "baseline22",
+      "lock_month": 5,
+      "lock_raw_file": "哈尔滨航天风华医院5月.xlsx",
+      "lock_proc_file": "航天5月账单.xlsx",
+      "baseline_status": "FAIL",
+      "baseline_skip_reason": null
+    },
+    {
+      "hospital": "哈尔滨市第五医院（二门诊）",
+      "customer_label": "市五院二门诊",
+      "group": "baseline22",
+      "lock_month": 6,
+      "lock_raw_file": "市五院二门诊5.9-6.8账单.xlsx",
+      "lock_proc_file": "5月__市五院__哈尔滨市第五医院（二门诊）2026年5月9日-2026年6月8日账单.xlsx",
+      "baseline_status": "PASS",
+      "baseline_skip_reason": null
+    },
+    {
+      "hospital": "黑龙江九洲妇科医院",
+      "customer_label": "九州",
+      "group": "baseline22",
+      "lock_month": 6,
+      "lock_raw_file": "九洲妇科6月账单.xlsx",
+      "lock_proc_file": "6月__九州特殊账单.xlsx",
+      "baseline_status": "PASS",
+      "baseline_skip_reason": null
+    },
+    {
+      "hospital": "博尚医院",
+      "customer_label": "博尚",
+      "group": "baseline22",
+      "lock_month": 5,
+      "lock_raw_file": "黑龙江博尚医院5月.xlsx",
+      "lock_proc_file": "博尚5月账单.xlsx",
+      "baseline_status": "PASS",
+      "baseline_skip_reason": null
+    },
+    {
+      "hospital": "黑龙江省海员总医院（松北）",
+      "customer_label": "海员松北",
+      "group": "baseline22",
+      "lock_month": 6,
+      "lock_raw_file": "6月__海员松北6月原始.xlsx",
+      "lock_proc_file": "6月__海员松北特殊账单.xlsx",
+      "baseline_status": "PASS",
+      "baseline_skip_reason": null
+    },
+    {
+      "hospital": "黑龙江省妇幼保健院（人口）",
+      "customer_label": "省妇幼人口",
+      "group": "baseline22",
+      "lock_month": 7,
+      "lock_raw_file": "7月__人口原始.xlsx",
+      "lock_proc_file": "7月__人口账单.xlsx",
+      "baseline_status": "FAIL",
+      "baseline_skip_reason": null
+    },
+    {
+      "hospital": "祖研-黑龙江省中医医院（南岗院区）",
+      "customer_label": "祖研南岗",
+      "group": "baseline22",
+      "lock_month": 6,
+      "lock_raw_file": "祖研南岗6月账单.xlsx",
+      "lock_proc_file": "6月__祖研-黑龙江省中医医院（南岗院区）6月账单.xlsx",
+      "baseline_status": "PASS",
+      "baseline_skip_reason": null
+    },
+    {
+      "hospital": "黑龙江省社会康复医院",
+      "customer_label": "社会康复",
+      "group": "baseline22",
+      "lock_month": 6,
+      "lock_raw_file": "社会康复6月账单.xlsx",
+      "lock_proc_file": "6月__省康复6月账单.xlsx",
+      "baseline_status": "PASS",
+      "baseline_skip_reason": null
+    },
+    {
+      "hospital": "道里区妇幼保健院",
+      "customer_label": "道里妇幼",
+      "group": "baseline22",
+      "lock_month": 4,
+      "lock_raw_file": "哈尔滨市道里区妇幼保健院4月.xlsx",
+      "lock_proc_file": "4月__道里妇幼保健4月账单.xlsx",
+      "baseline_status": "PASS",
+      "baseline_skip_reason": null
+    },
+    {
+      "hospital": "春语医美",
+      "customer_label": "春语医美",
+      "group": "baseline22",
+      "lock_month": 6,
+      "lock_raw_file": "春语医疗美容医院6月.xlsx",
+      "lock_proc_file": "6月__春语6月账单.xlsx",
+      "baseline_status": "PASS",
+      "baseline_skip_reason": null
+    },
+    {
+      "hospital": "总工会",
+      "customer_label": "总工会",
+      "group": "baseline22",
+      "lock_month": 7,
+      "lock_raw_file": "7月__总工会7月原始.xlsx",
+      "lock_proc_file": "7月__总工会账单.xlsx",
+      "baseline_status": "FAIL",
+      "baseline_skip_reason": null
+    },
+    {
+      "hospital": "索菲医美",
+      "customer_label": "索菲医美",
+      "group": "baseline22",
+      "lock_month": 7,
+      "lock_raw_file": "7月__索菲7月原始.xlsx",
+      "lock_proc_file": "7月__索菲账单.xlsx",
+      "baseline_status": "PASS",
+      "baseline_skip_reason": null
+    },
+    {
+      "hospital": "省监狱管理局医院",
+      "customer_label": "省监狱管理局",
+      "group": "baseline22",
+      "lock_month": 6,
+      "lock_raw_file": "省监狱管理局医院6月.xlsx",
+      "lock_proc_file": "监狱6月账单.xlsx",
+      "baseline_status": "FAIL",
+      "baseline_skip_reason": null
+    },
+    {
+      "hospital": "哈尔滨市平房区人民医院",
+      "customer_label": "平房区人民",
+      "group": "baseline22",
+      "lock_month": 7,
+      "lock_raw_file": "平房区人民医院7月.xlsx",
+      "lock_proc_file": "7月__平房区人民账单.xlsx",
+      "baseline_status": "FAIL",
+      "baseline_skip_reason": null
+    },
+    {
+      "hospital": "哈尔滨市第五医院",
+      "customer_label": "市五院主院区",
+      "group": "baseline22",
+      "lock_month": 6,
+      "lock_raw_file": null,
+      "lock_proc_file": null,
+      "baseline_status": "SKIP",
+      "baseline_skip_reason": "ground truth 陈旧待更新（标准包装/特色费未反映）"
+    },
+    {
+      "hospital": "基准生物",
+      "customer_label": "基准生物",
+      "group": "baseline22",
+      "lock_month": 6,
+      "lock_raw_file": null,
+      "lock_proc_file": null,
+      "baseline_status": "SKIP",
+      "baseline_skip_reason": "无原始表格"
+    },
+    {
+      "hospital": "呼兰中医院",
+      "customer_label": "呼兰中医",
+      "group": "baseline22",
+      "lock_month": 6,
+      "lock_raw_file": null,
+      "lock_proc_file": null,
+      "baseline_status": "SKIP",
+      "baseline_skip_reason": "ground truth 陈旧待更新（低温纸塑袋费未反映）"
+    },
+    {
+      "hospital": "哈尔滨市呼兰区第一人民医院",
+      "customer_label": "哈尔滨市呼兰区第一人民医院",
+      "customer_code": "HULAN-RM",
+      "group": "new_v17",
+      "lock_month": 5,
+      "lock_raw_file": "呼兰第一人民5月账单.xlsx",
+      "lock_proc_file": "5月__呼兰第一人民医5月账单.xlsx",
+      "baseline_status": null,
+      "baseline_skip_reason": null
+    },
+    {
+      "hospital": "新发红十字医院",
+      "customer_label": "新发红十字医院",
+      "customer_code": "XINFA-HSZ",
+      "group": "new_v17",
+      "lock_month": 5,
+      "lock_raw_file": "新发红十字5月账单.xlsx",
+      "lock_proc_file": "5月__新发红十字5月账单.xlsx",
+      "baseline_status": null,
+      "baseline_skip_reason": null
+    },
+    {
+      "hospital": "黑龙江省远东心脑血管医院",
+      "customer_label": "黑龙江省远东心脑血管医院",
+      "customer_code": "YUANDONG-XN",
+      "group": "new_v17",
+      "lock_month": null,
+      "lock_raw_file": null,
+      "lock_proc_file": null,
+      "baseline_status": null,
+      "baseline_skip_reason": "测试用例目录无 raw+proc 成对账单"
+    },
+    {
+      "hospital": "祖研-黑龙江省中医医院（三辅院区）",
+      "customer_label": "祖研-黑龙江省中医医院（三辅院区）",
+      "customer_code": "ZUYAN-SF",
+      "group": "new_v17",
+      "lock_month": 5,
+      "lock_raw_file": "祖研三辅5月账单.xlsx",
+      "lock_proc_file": "5月__三辅社区服务中心5月账单.xlsx",
+      "baseline_status": null,
+      "baseline_skip_reason": null
+    }
+  ]
+}
