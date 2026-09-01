@@ -39,6 +39,9 @@ public class SaveCustomerProductRuleRequest {
 
     private BigDecimal foldRatio;
 
+    /** 关键词匹配模式：exact_token / contains */
+    private String keywordMatchMode;
+
     private List<String> keywords;
 
     private List<String> excludeKeywords;

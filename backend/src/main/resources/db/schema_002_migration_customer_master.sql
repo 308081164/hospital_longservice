@@ -67,6 +67,7 @@ CREATE TABLE IF NOT EXISTS customer_product_rule (
     multiplier DECIMAL(8,4) NULL,
     threshold INT NULL,
     fold_ratio DECIMAL(8,4) NULL,
+    keyword_match_mode VARCHAR(20) NOT NULL DEFAULT 'exact_token' COMMENT 'exact_token|contains',
     skip_packaging TINYINT(1) DEFAULT 0,
     skip_discount TINYINT(1) DEFAULT 0,
     is_active TINYINT(1) DEFAULT 1,

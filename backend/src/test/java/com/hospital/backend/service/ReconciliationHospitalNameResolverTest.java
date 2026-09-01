@@ -58,6 +58,32 @@ class ReconciliationHospitalNameResolverTest {
     }
 
     @Test
+    void prefersSheetHospitalNameOverFileName() {
+        Customer customer = new Customer();
+        customer.setId(99L);
+        customer.setCanonicalName("呼兰区红十字医院");
+
+        when(customerMapper.selectAll()).thenReturn(List.of());
+        when(customerAliasMapper.selectAllActive()).thenReturn(List.of());
+
+        CustomerAlias alias = new CustomerAlias();
+        alias.setCustomerId(99L);
+        alias.setAlias("呼兰区红十字医院");
+        alias.setMatchType("contains");
+        alias.setPriority(100);
+        alias.setIsActive(true);
+        when(customerAliasMapper.selectAllActive()).thenReturn(List.of(alias));
+        when(customerMapper.selectById(99L)).thenReturn(customer);
+
+        String resolved = resolver.resolve(
+                "呼兰红十字",
+                "呼兰红十字1-8月(1).xlsx",
+                List.of("呼兰区红十字医院"));
+
+        assertThat(resolved).isEqualTo("呼兰区红十字医院");
+    }
+
+    @Test
     void rejectsDepartmentNameAndUsesFileName() {
         when(customerMapper.selectAll()).thenReturn(List.of());
         when(customerAliasMapper.selectAllActive()).thenReturn(List.of());

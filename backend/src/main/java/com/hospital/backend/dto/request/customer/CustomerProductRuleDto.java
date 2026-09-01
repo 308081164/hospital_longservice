@@ -52,6 +52,8 @@ public class CustomerProductRuleDto {
 
     private BigDecimal foldRatio;
 
+    private String keywordMatchMode;
+
     private Boolean skipPackaging;
 
     private Boolean skipDiscount;

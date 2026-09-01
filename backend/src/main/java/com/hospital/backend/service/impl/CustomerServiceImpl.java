@@ -359,6 +359,7 @@ public class CustomerServiceImpl implements CustomerService {
                 request.setFee(dto.getFee());
                 request.setThreshold(dto.getThreshold());
                 request.setFoldRatio(dto.getFoldRatio());
+                request.setKeywordMatchMode(dto.getKeywordMatchMode());
                 request.setKeywords(dto.getKeywords());
                 request.setExcludeKeywords(dto.getExcludeKeywords());
                 request.setMaterials(dto.getMaterials());
@@ -401,6 +402,7 @@ public class CustomerServiceImpl implements CustomerService {
             rule.setMultiplier(dto.getMultiplier());
             rule.setThreshold(dto.getThreshold());
             rule.setFoldRatio(dto.getFoldRatio());
+            rule.setKeywordMatchMode(normalizeKeywordMatchMode(dto.getKeywordMatchMode()));
             rule.setSkipPackaging(dto.getSkipPackaging() != null ? dto.getSkipPackaging() : false);
             rule.setSkipDiscount(dto.getSkipDiscount() != null ? dto.getSkipDiscount() : false);
             rule.setIsActive(dto.getIsActive() != null ? dto.getIsActive() : true);
@@ -537,6 +539,7 @@ public class CustomerServiceImpl implements CustomerService {
         rule.setMaxInstrumentCount(request.getMaxInstrumentCount());
         rule.setThreshold(request.getThreshold());
         rule.setFoldRatio(request.getFoldRatio());
+        rule.setKeywordMatchMode(normalizeKeywordMatchMode(request.getKeywordMatchMode()));
         rule.setFee(request.getFee());
         applyBillingModeFields(rule, request);
         String ruleType = rule.getRuleType();
@@ -671,6 +674,7 @@ public class CustomerServiceImpl implements CustomerService {
                 .fee(rule.getFee())
                 .threshold(rule.getThreshold())
                 .foldRatio(rule.getFoldRatio())
+                .keywordMatchMode(rule.getKeywordMatchMode())
                 .billingMode(rule.getBillingMode())
                 .pieceCountSource(rule.getPieceCountSource())
                 .conditionsJson(rule.getConditionsJson())
@@ -810,6 +814,7 @@ public class CustomerServiceImpl implements CustomerService {
                 : null);
         dto.setThreshold(rule.getThreshold());
         dto.setFoldRatio(rule.getFoldRatio());
+        dto.setKeywordMatchMode(rule.getKeywordMatchMode());
         dto.setSkipPackaging(rule.getSkipPackaging());
         dto.setSkipDiscount(rule.getSkipDiscount());
         dto.setIsActive(rule.getIsActive());
@@ -818,6 +823,13 @@ public class CustomerServiceImpl implements CustomerService {
 
     private String normalizeMatchMode(String matchMode) {
         return matchMode != null && !matchMode.isBlank() ? matchMode.trim() : "first";
+    }
+
+    private String normalizeKeywordMatchMode(String keywordMatchMode) {
+        if (keywordMatchMode == null || keywordMatchMode.isBlank()) {
+            return "exact_token";
+        }
+        return "contains".equalsIgnoreCase(keywordMatchMode.trim()) ? "contains" : "exact_token";
     }
 
     private List<BigDecimal> cleanDecimalList(List<BigDecimal> values) {

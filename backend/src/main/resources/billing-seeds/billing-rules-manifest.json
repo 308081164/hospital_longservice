@@ -1,7 +1,7 @@
 {
   "version": 1,
-  "generated_at": "2026-08-27T05:07:02.071295+00:00",
-  "manifest_hash": "286ac3db5294640a5d07807b48848472d31480451fbc15f9897c1138ffdfc13b",
+  "generated_at": "2026-09-01T01:12:41.193470+00:00",
+  "manifest_hash": "71c9e34e622ecb5fdab13c7d493984c4a1a14a9a03368772dcb4db252c9ae671",
   "billing_enabled_count": 22,
   "active_billing_enabled_count": 22,
   "customers": {
@@ -1008,6 +1008,76 @@
       "productRules": [
         {
           "ruleType": "EXTRA_FEE",
+          "name": "总工会镜头指定名称加收8-1",
+          "priority": 11,
+          "fee": 8.0,
+          "keywords": [
+            "12°镜头-1/Z2060"
+          ],
+          "keywordMatchMode": "exact_token",
+          "skipPackaging": false,
+          "skipDiscount": true,
+          "isActive": true,
+          "matchMode": "first"
+        },
+        {
+          "ruleType": "EXTRA_FEE",
+          "name": "总工会镜头指定名称加收8-2",
+          "priority": 12,
+          "fee": 8.0,
+          "keywords": [
+            "30°镜头，镜鞘-2（带转换帽）/Z2060"
+          ],
+          "keywordMatchMode": "exact_token",
+          "skipPackaging": false,
+          "skipDiscount": true,
+          "isActive": true,
+          "matchMode": "first"
+        },
+        {
+          "ruleType": "EXTRA_FEE",
+          "name": "总工会镜头指定名称加收8-3",
+          "priority": 13,
+          "fee": 8.0,
+          "keywords": [
+            "检查镜-2/Z2060"
+          ],
+          "keywordMatchMode": "exact_token",
+          "skipPackaging": false,
+          "skipDiscount": true,
+          "isActive": true,
+          "matchMode": "first"
+        },
+        {
+          "ruleType": "EXTRA_FEE",
+          "name": "总工会镜头指定名称加收8-4",
+          "priority": 14,
+          "fee": 8.0,
+          "keywords": [
+            "宫腔检查镜30度-2件/Z2060"
+          ],
+          "keywordMatchMode": "exact_token",
+          "skipPackaging": false,
+          "skipDiscount": true,
+          "isActive": true,
+          "matchMode": "first"
+        },
+        {
+          "ruleType": "EXTRA_FEE",
+          "name": "总工会镜头指定名称加收8-5",
+          "priority": 15,
+          "fee": 8.0,
+          "keywords": [
+            "沈大12度镜头-1（新）/Z2060"
+          ],
+          "keywordMatchMode": "exact_token",
+          "skipPackaging": false,
+          "skipDiscount": true,
+          "isActive": true,
+          "matchMode": "first"
+        },
+        {
+          "ruleType": "EXTRA_FEE",
           "name": "总工会镜头铂康盒加收8",
           "priority": 10,
           "fee": 8.0,
@@ -1018,7 +1088,7 @@
           ],
           "skipPackaging": false,
           "skipDiscount": true,
-          "isActive": true,
+          "isActive": false,
           "matchMode": "first"
         },
         {
@@ -1036,8 +1106,8 @@
           "skipDiscount": false
         }
       ],
-      "rule_count": 2,
-      "active_rule_count": 2
+      "rule_count": 7,
+      "active_rule_count": 6
     },
     "HLJ-FY-RK": {
       "code": "HLJ-FY-RK",
@@ -2117,6 +2187,56 @@
       "productRules": [
         {
           "ruleType": "FIXED_PRICE",
+          "name": "市五二门诊驱血带W120150固定35",
+          "priority": 20,
+          "price": 35.0,
+          "keywords": [
+            "驱血带/W12050",
+            "驱血带/W15050",
+            "驱血带/W120",
+            "驱血带/W150"
+          ],
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": true,
+          "matchMode": "first"
+        },
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "市五二门诊驱血带W605070固定25",
+          "priority": 20,
+          "price": 25.0,
+          "keywords": [
+            "驱血带/W6050",
+            "驱血带/W6070",
+            "驱血带/W7060",
+            "驱血带/W7070",
+            "驱血带/W50",
+            "驱血带/W60",
+            "驱血带/W70"
+          ],
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": true,
+          "matchMode": "first"
+        },
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "市五二门诊驱血带W9050固定30",
+          "priority": 20,
+          "price": 30.0,
+          "keywords": [
+            "驱血带/W9050",
+            "驱血带/W9060",
+            "驱血带/W90"
+          ],
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": true,
+          "matchMode": "first"
+        },
+        {
+          "ruleType": "FIXED_PRICE",
           "name": "校正价132.0",
           "priority": 15,
           "price": 132.0,
@@ -2200,8 +2320,8 @@
           "matchMode": "first"
         }
       ],
-      "rule_count": 6,
-      "active_rule_count": 0
+      "rule_count": 9,
+      "active_rule_count": 3
     },
     "HULAN-TCM": {
       "code": "HULAN-TCM",
@@ -2461,7 +2581,8 @@
             "扩大针",
             "拔髓针",
             "探针",
-            "球钻"
+            "球钻",
+            "根管锉@contains"
           ],
           "threshold": 5,
           "foldRatio": 5,
@@ -2484,7 +2605,8 @@
             "扩大针",
             "拔髓针",
             "探针",
-            "球钻"
+            "球钻",
+            "根管锉@contains"
           ],
           "threshold": 5,
           "foldRatio": 5,
@@ -2506,7 +2628,7 @@
           "price": 5.6,
           "minInstrumentCount": 12,
           "skipPackaging": true,
-          "isActive": true,
+          "isActive": false,
           "matchMode": "first",
           "skipDiscount": false
         },
@@ -2522,7 +2644,7 @@
           "price": 5.6,
           "maxInstrumentCount": 11,
           "skipPackaging": false,
-          "isActive": true,
+          "isActive": false,
           "matchMode": "first",
           "skipDiscount": false
         },
@@ -2542,7 +2664,7 @@
         }
       ],
       "rule_count": 7,
-      "active_rule_count": 5
+      "active_rule_count": 3
     },
     "PFQ-RM": {
       "code": "PFQ-RM",
@@ -2613,12 +2735,40 @@
         },
         {
           "ruleType": "FIXED_PRICE",
+          "name": "社会康复ITI种植盒32件指定44",
+          "priority": 5,
+          "price": 44.0,
+          "keywords": [
+            "ITI种植盒-32件盒1/W12050"
+          ],
+          "keywordMatchMode": "exact_token",
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": true,
+          "matchMode": "first"
+        },
+        {
+          "ruleType": "FIXED_PRICE",
           "name": "社会康复ITI种植盒44",
           "priority": 5,
           "price": 44,
           "keywords": [
             "ITI种植盒"
           ],
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": false,
+          "matchMode": "first"
+        },
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "社会康复内提工具盒10件指定44",
+          "priority": 5,
+          "price": 44.0,
+          "keywords": [
+            "内提工具盒10件盒1/W6050"
+          ],
+          "keywordMatchMode": "exact_token",
           "skipPackaging": true,
           "skipDiscount": true,
           "isActive": true,
@@ -2634,6 +2784,20 @@
           ],
           "skipPackaging": true,
           "skipDiscount": true,
+          "isActive": false,
+          "matchMode": "first"
+        },
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "社会康复大车针盒1件指定22",
+          "priority": 5,
+          "price": 22.0,
+          "keywords": [
+            "大车针盒-1/Z1526"
+          ],
+          "keywordMatchMode": "exact_token",
+          "skipPackaging": true,
+          "skipDiscount": true,
           "isActive": true,
           "matchMode": "first"
         },
@@ -2647,7 +2811,7 @@
           ],
           "skipPackaging": true,
           "skipDiscount": true,
-          "isActive": true,
+          "isActive": false,
           "matchMode": "first"
         },
         {
@@ -2658,6 +2822,34 @@
           "keywords": [
             "抛光车针盒"
           ],
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": false,
+          "matchMode": "first"
+        },
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "社会康复抛光车针盒6件盒1指定16.5",
+          "priority": 5,
+          "price": 16.5,
+          "keywords": [
+            "抛光车针盒6件盒1/Z1026"
+          ],
+          "keywordMatchMode": "exact_token",
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": true,
+          "matchMode": "first"
+        },
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "社会康复梁光强器械盒21件指定22",
+          "priority": 5,
+          "price": 22.0,
+          "keywords": [
+            "梁光强器械盒-21件盒1/W6050"
+          ],
+          "keywordMatchMode": "exact_token",
           "skipPackaging": true,
           "skipDiscount": true,
           "isActive": true,
@@ -2676,6 +2868,20 @@
           ],
           "skipPackaging": true,
           "skipDiscount": true,
+          "isActive": false,
+          "matchMode": "first"
+        },
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "社会康复梁光强器械盒粉10件指定16.5",
+          "priority": 5,
+          "price": 16.5,
+          "keywords": [
+            "梁光强器械盒（粉）10件盒1/Z2030"
+          ],
+          "keywordMatchMode": "exact_token",
+          "skipPackaging": true,
+          "skipDiscount": true,
           "isActive": true,
           "matchMode": "first"
         },
@@ -2691,6 +2897,20 @@
           ],
           "skipPackaging": true,
           "skipDiscount": true,
+          "isActive": false,
+          "matchMode": "first"
+        },
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "社会康复环切器械盒14件指定16.5",
+          "priority": 5,
+          "price": 16.5,
+          "keywords": [
+            "环切器械盒-14件盒1/Z2032"
+          ],
+          "keywordMatchMode": "exact_token",
+          "skipPackaging": true,
+          "skipDiscount": true,
           "isActive": true,
           "matchMode": "first"
         },
@@ -2702,6 +2922,34 @@
           "keywords": [
             "环切器械盒"
           ],
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": false,
+          "matchMode": "first"
+        },
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "社会康复登腾种植盒34件指定44",
+          "priority": 5,
+          "price": 44.0,
+          "keywords": [
+            "登腾种植盒-34件盒1/W6050"
+          ],
+          "keywordMatchMode": "exact_token",
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": true,
+          "matchMode": "first"
+        },
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "社会康复登腾种植盒36件指定44",
+          "priority": 5,
+          "price": 44.0,
+          "keywords": [
+            "登腾种植盒-36件盒1/W6050"
+          ],
+          "keywordMatchMode": "exact_token",
           "skipPackaging": true,
           "skipDiscount": true,
           "isActive": true,
@@ -2718,6 +2966,20 @@
           ],
           "skipPackaging": true,
           "skipDiscount": true,
+          "isActive": false,
+          "matchMode": "first"
+        },
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "社会康复百诺工具盒19件指定44",
+          "priority": 5,
+          "price": 44.0,
+          "keywords": [
+            "百诺工具盒-19件盒1/W6050"
+          ],
+          "keywordMatchMode": "exact_token",
+          "skipPackaging": true,
+          "skipDiscount": true,
           "isActive": true,
           "matchMode": "first"
         },
@@ -2729,6 +2991,20 @@
           "keywords": [
             "百诺工具盒"
           ],
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": false,
+          "matchMode": "first"
+        },
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "社会康复种植盒14件W6050指定16.5",
+          "priority": 5,
+          "price": 16.5,
+          "keywords": [
+            "种植盒-14件盒1/W6050"
+          ],
+          "keywordMatchMode": "exact_token",
           "skipPackaging": true,
           "skipDiscount": true,
           "isActive": true,
@@ -2749,12 +3025,54 @@
           ],
           "skipPackaging": true,
           "skipDiscount": true,
+          "isActive": false,
+          "matchMode": "first"
+        },
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "社会康复种植盒蓝白12件指定16.5",
+          "priority": 5,
+          "price": 16.5,
+          "keywords": [
+            "种植盒（蓝白）12件 盒1/Z2032"
+          ],
+          "keywordMatchMode": "exact_token",
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": true,
+          "matchMode": "first"
+        },
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "社会康复种植盒金属12件指定16.5",
+          "priority": 5,
+          "price": 16.5,
+          "keywords": [
+            "种植盒（金属）12件盒1/Z2032"
+          ],
+          "keywordMatchMode": "exact_token",
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": true,
+          "matchMode": "first"
+        },
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "社会康复种植盒黄绿8件指定16.5",
+          "priority": 5,
+          "price": 16.5,
+          "keywords": [
+            "种植盒（黄绿）8件盒1/Z2032"
+          ],
+          "keywordMatchMode": "exact_token",
+          "skipPackaging": true,
+          "skipDiscount": true,
           "isActive": true,
           "matchMode": "first"
         }
       ],
-      "rule_count": 11,
-      "active_rule_count": 10
+      "rule_count": 25,
+      "active_rule_count": 14
     },
     "SUOFEI-YL": {
       "code": "SUOFEI-YL",

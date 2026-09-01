@@ -336,7 +336,13 @@ public class BillingSeedMigrationRunner implements CommandLineRunner {
             new IncrementalSeed("billing_seed_guoyao_2_double_split_20260820_v1",
                     "billing-seeds/phase-guoyao-2-double-split-20260820.json"),
             new IncrementalSeed("billing_seed_special_charge_14_sync_20260822_v1",
-                    "billing-seeds/phase-special-charge-14-sync-20260822.json")
+                    "billing-seeds/phase-special-charge-14-sync-20260822.json"),
+            new IncrementalSeed("billing_seed_special_charge_17_sync_20260830_v1",
+                    "billing-seeds/phase-special-charge-17-sync-20260830.json"),
+            new IncrementalSeed("billing_seed_delete_superseded_rules_20260830_v1",
+                    "billing-seeds/phase-delete-superseded-rules-20260830.json"),
+            new IncrementalSeed("billing_seed_keyword_match_mode_excel17_align_20260831_v1",
+                    "billing-seeds/phase-keyword-match-mode-excel17-align-20260831.json")
     );
 
     private static final String ZYY_D1_P0_MARKER = "billing_seed_zyy_d1_p0_v2";
@@ -493,7 +499,10 @@ public class BillingSeedMigrationRunner implements CommandLineRunner {
                     || "billing-seeds/phase-boshang-hybrid-20260820.json".equals(incremental.classpathFile())
                     || "billing-seeds/phase-fold-unitprice-customers-20260820.json".equals(incremental.classpathFile())
                     || "billing-seeds/phase-guoyao-2-double-split-20260820.json".equals(incremental.classpathFile())
-                    || "billing-seeds/phase-special-charge-14-sync-20260822.json".equals(incremental.classpathFile())) {
+                    || "billing-seeds/phase-special-charge-14-sync-20260822.json".equals(incremental.classpathFile())
+                    || "billing-seeds/phase-special-charge-17-sync-20260830.json".equals(incremental.classpathFile())
+                    || "billing-seeds/phase-delete-superseded-rules-20260830.json".equals(incremental.classpathFile())
+                    || "billing-seeds/phase-keyword-match-mode-excel17-align-20260831.json".equals(incremental.classpathFile())) {
                 applyBatchPatchSeedFile(incremental.classpathFile());
             } else if ("billing-seeds/phase-billing-mode-backfill-20260730.json".equals(incremental.classpathFile())) {
                 applyBillingModeBackfillSeedFile(incremental.classpathFile());
@@ -1223,6 +1232,14 @@ public class BillingSeedMigrationRunner implements CommandLineRunner {
                     rule.setPieceCountSource(text(patch, "setPieceCountSource"));
                     changed = true;
                 }
+                if (patch.has("setKeywordMatchMode")) {
+                    rule.setKeywordMatchMode(text(patch, "setKeywordMatchMode"));
+                    changed = true;
+                }
+                if (patch.has("setPriority")) {
+                    rule.setPriority(intVal(patch, "setPriority", 100));
+                    changed = true;
+                }
                 if (changed) {
                     customerProductRuleMapper.updateById(rule);
                     log.info("Batch patch updated rule {}/{}", code, ruleName);
@@ -1249,16 +1266,10 @@ public class BillingSeedMigrationRunner implements CommandLineRunner {
                 log.info("Batch patch inserted rule {}/{}", code, name);
             }
             for (JsonNode deact : root.path("deactivateRules")) {
-                String code = text(deact, "code");
-                String ruleName = text(deact, "ruleName");
-                Customer customer = customerMapper.selectByCode(code);
-                if (customer == null) {
-                    if (strictRuleOps) {
-                        throw new IllegalStateException("Batch patch deactivateRules customer not found: " + code);
-                    }
-                    continue;
-                }
-                deactivateProductRule(customer.getId(), ruleName, strictRuleOps);
+                deleteProductRuleByBatchPatch(deact, strictRuleOps);
+            }
+            for (JsonNode del : root.path("deleteRules")) {
+                deleteProductRuleByBatchPatch(del, strictRuleOps);
             }
             for (JsonNode act : root.path("activateRules")) {
                 String code = text(act, "code");
@@ -1723,6 +1734,35 @@ public class BillingSeedMigrationRunner implements CommandLineRunner {
         log.info("Deactivated customer product rule: {} (customerId={})", ruleName, customerId);
     }
 
+    private void deleteProductRuleByBatchPatch(JsonNode node, boolean strict) {
+        String code = text(node, "code");
+        String ruleName = text(node, "ruleName");
+        Customer customer = customerMapper.selectByCode(code);
+        if (customer == null) {
+            if (strict) {
+                throw new IllegalStateException("Batch patch deleteRules customer not found: " + code);
+            }
+            return;
+        }
+        deleteProductRule(customer.getId(), ruleName, strict);
+    }
+
+    private void deleteProductRule(Long customerId, String ruleName) {
+        deleteProductRule(customerId, ruleName, false);
+    }
+
+    private void deleteProductRule(Long customerId, String ruleName, boolean strict) {
+        CustomerProductRule rule = findProductRuleByName(customerId, ruleName);
+        if (rule == null) {
+            if (strict) {
+                throw new IllegalStateException("Delete rule not found: customerId=" + customerId + ", rule=" + ruleName);
+            }
+            return;
+        }
+        customerProductRuleMapper.deleteById(rule.getId());
+        log.info("Deleted customer product rule: {} (customerId={})", ruleName, customerId);
+    }
+
     private void activateProductRule(Long customerId, String ruleName) {
         activateProductRule(customerId, ruleName, false);
     }
@@ -1961,6 +2001,10 @@ public class BillingSeedMigrationRunner implements CommandLineRunner {
             rule.setSkipPackaging(bool(ruleNode, "skipPackaging", false));
             rule.setSkipDiscount(bool(ruleNode, "skipDiscount", false));
             rule.setMatchMode(text(ruleNode, "matchMode", "first"));
+            rule.setKeywordMatchMode(
+                    ruleNode.hasNonNull("keywordMatchMode")
+                            ? text(ruleNode, "keywordMatchMode")
+                            : "exact_token");
             if (ruleNode.has("acceptedPrices")) {
                 rule.setAcceptedPrices(ruleNode.get("acceptedPrices").toString());
             }

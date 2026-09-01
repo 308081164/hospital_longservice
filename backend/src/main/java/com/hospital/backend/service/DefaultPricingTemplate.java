@@ -68,6 +68,7 @@ public final class DefaultPricingTemplate {
         rules.put("needle", Map.of(
                 "threshold", 5,
                 "foldRatio", 5,
+                "keywordMatchMode", "exact_token",
                 "keywords", List.of("克氏针", "银质针", "内热针", "车针", "拔髓针", "扩大针", "根扩针", "卷棉子")
         ));
         rules.put("cleaning", Map.of(

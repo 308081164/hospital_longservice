@@ -1,0 +1,20 @@
+{
+  "description": "清理已被新规则替代的旧规则（此前 deactivate 仅停用，现物理删除以避免签名冲突与误解）",
+  "strictRuleOps": false,
+  "deleteRules": [
+    { "code": "NEAU-YY", "ruleName": "东北农大根管锉5.6含包材" },
+    { "code": "NEAU-YY", "ruleName": "东北农大根管锉5.6免包材" },
+    { "code": "HL-ZGH", "ruleName": "总工会镜头铂康盒加收8" },
+    { "code": "HL-ZGH", "ruleName": "镜头租借公司筐加收" },
+    { "code": "SHKF-YY", "ruleName": "社会康复ITI种植盒44" },
+    { "code": "SHKF-YY", "ruleName": "社会康复内提工具盒44" },
+    { "code": "SHKF-YY", "ruleName": "社会康复大车针盒22" },
+    { "code": "SHKF-YY", "ruleName": "社会康复抛光车针盒16.5" },
+    { "code": "SHKF-YY", "ruleName": "社会康复梁光强器械盒22" },
+    { "code": "SHKF-YY", "ruleName": "社会康复梁光强器械盒粉16.5" },
+    { "code": "SHKF-YY", "ruleName": "社会康复环切器械盒16.5" },
+    { "code": "SHKF-YY", "ruleName": "社会康复登腾种植盒44" },
+    { "code": "SHKF-YY", "ruleName": "社会康复百诺工具盒44" },
+    { "code": "SHKF-YY", "ruleName": "社会康复种植盒16.5" }
+  ]
+}

@@ -72,6 +72,9 @@ public class CustomerProductRuleResponse {
 
     private Integer threshold;
 
+    @JsonProperty("keyword_match_mode")
+    private String keywordMatchMode;
+
     @JsonProperty("skip_packaging")
     private Boolean skipPackaging;
 

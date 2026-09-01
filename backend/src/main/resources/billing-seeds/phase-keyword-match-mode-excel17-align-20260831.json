@@ -1,0 +1,537 @@
+{
+  "description": "特殊收费(17).xlsx 口径对齐：①固定价/加收类「包名称带X」规则 keywordMatchMode 显式设为 contains（修复 keyword_match_mode 列默认 exact_token 导致的包含规则失配，恢复 0827 基线组合文本包含行为）；②折算(FOLD)规则保持 0827 基线 exact_token 包名分词匹配（\"针\"类模式词命中\"针5盒1\"而不误伤\"车针排/持针器\"）；③新发转换器规则关键词按 Excel 占位词惯例去除「几件」（同祖研三辅「美容科排针-多少件（盘1）」→「美容科排针」先例），优先级 12→9（Excel ②转换器场景须先于①胶帽通用规则评估，否则被 胶帽>5(p11) 永远遮蔽）；④删除硬编码残留的「镜头租借公司筐加收」（v17 已用指定名称规则替代并删除，HardcodedRulesMigrationRunner 已同步移除）。裸名严格对应规则（社会康复/总工会/冰城/博尚/省妇幼镜头/呼兰中医阑尾外科包）保持 exact_token 不变。",
+  "strictRuleOps": false,
+  "ruleUpdates": [
+    {
+      "code": "GUOYAO-2",
+      "ruleName": "电机厂缝合针8元",
+      "setKeywordMatchMode": "contains"
+    },
+    {
+      "code": "GUOYAO-2",
+      "ruleName": "电机厂双按件5.5外层袋",
+      "setKeywordMatchMode": "contains"
+    },
+    {
+      "code": "GUOYAO-2",
+      "ruleName": "电机厂双按件5.5内层袋",
+      "setKeywordMatchMode": "contains"
+    },
+    {
+      "code": "GUOYAO-2",
+      "ruleName": "电机厂双按件5.5含外层袋",
+      "setKeywordMatchMode": "contains"
+    },
+    {
+      "code": "GUOYAO-2",
+      "ruleName": "电机厂双按件5.5免包材",
+      "setKeywordMatchMode": "contains"
+    },
+    {
+      "code": "GUOYAO-2",
+      "ruleName": "电机厂双内层纸塑袋加价2.5",
+      "setKeywordMatchMode": "contains"
+    },
+    {
+      "code": "GUOYAO-2",
+      "ruleName": "电机厂指针5合1含包材",
+      "setKeywordMatchMode": "exact_token",
+      "note": "折算规则：0827 基线为包名 exact_token 分词匹配（\"针\"类模式词命中\"针5盒1\"而不误伤\"车针排\"），Excel 包名称带场景由 v17 新规则的 @contains 后缀承担；恢复基线"
+    },
+    {
+      "code": "GUOYAO-2",
+      "ruleName": "电机厂指针5合1免包材",
+      "setKeywordMatchMode": "exact_token",
+      "note": "折算规则：0827 基线为包名 exact_token 分词匹配（\"针\"类模式词命中\"针5盒1\"而不误伤\"车针排\"），Excel 包名称带场景由 v17 新规则的 @contains 后缀承担；恢复基线"
+    },
+    {
+      "code": "GUOYAO-2",
+      "ruleName": "电机厂棉球W605070固定25",
+      "setKeywordMatchMode": "contains"
+    },
+    {
+      "code": "GUOYAO-2",
+      "ruleName": "电机厂棉球W9050固定30",
+      "setKeywordMatchMode": "contains"
+    },
+    {
+      "code": "GUOYAO-2",
+      "ruleName": "电机厂棉球W120150固定35",
+      "setKeywordMatchMode": "contains"
+    },
+    {
+      "code": "GUOYAO-2",
+      "ruleName": "电机厂纱布W605070固定25",
+      "setKeywordMatchMode": "contains"
+    },
+    {
+      "code": "GUOYAO-2",
+      "ruleName": "电机厂纱布W9050固定30",
+      "setKeywordMatchMode": "contains"
+    },
+    {
+      "code": "GUOYAO-2",
+      "ruleName": "电机厂纱布W120150固定35",
+      "setKeywordMatchMode": "contains"
+    },
+    {
+      "code": "GUOYAO-2",
+      "ruleName": "电机厂敷料W605070固定25棉球_W6050",
+      "setKeywordMatchMode": "contains"
+    },
+    {
+      "code": "GUOYAO-2",
+      "ruleName": "电机厂敷料W605070固定25棉球_W6070",
+      "setKeywordMatchMode": "contains"
+    },
+    {
+      "code": "GUOYAO-2",
+      "ruleName": "电机厂敷料W605070固定25棉球_W7060",
+      "setKeywordMatchMode": "contains"
+    },
+    {
+      "code": "GUOYAO-2",
+      "ruleName": "电机厂敷料W605070固定25棉球_W7070",
+      "setKeywordMatchMode": "contains"
+    },
+    {
+      "code": "GUOYAO-2",
+      "ruleName": "电机厂敷料W9050固定30棉球_W9050",
+      "setKeywordMatchMode": "contains"
+    },
+    {
+      "code": "GUOYAO-2",
+      "ruleName": "电机厂敷料W9050固定30棉球_W9060",
+      "setKeywordMatchMode": "contains"
+    },
+    {
+      "code": "GUOYAO-2",
+      "ruleName": "电机厂敷料W120150固定35棉球_W12050",
+      "setKeywordMatchMode": "contains"
+    },
+    {
+      "code": "GUOYAO-2",
+      "ruleName": "电机厂敷料W120150固定35棉球_W15050",
+      "setKeywordMatchMode": "contains"
+    },
+    {
+      "code": "GUOYAO-2",
+      "ruleName": "电机厂敷料W605070固定25纱布_W6050",
+      "setKeywordMatchMode": "contains"
+    },
+    {
+      "code": "GUOYAO-2",
+      "ruleName": "电机厂敷料W605070固定25纱布_W6070",
+      "setKeywordMatchMode": "contains"
+    },
+    {
+      "code": "GUOYAO-2",
+      "ruleName": "电机厂敷料W605070固定25纱布_W7060",
+      "setKeywordMatchMode": "contains"
+    },
+    {
+      "code": "GUOYAO-2",
+      "ruleName": "电机厂敷料W605070固定25纱布_W7070",
+      "setKeywordMatchMode": "contains"
+    },
+    {
+      "code": "GUOYAO-2",
+      "ruleName": "电机厂敷料W9050固定30纱布_W9050",
+      "setKeywordMatchMode": "contains"
+    },
+    {
+      "code": "GUOYAO-2",
+      "ruleName": "电机厂敷料W9050固定30纱布_W9060",
+      "setKeywordMatchMode": "contains"
+    },
+    {
+      "code": "GUOYAO-2",
+      "ruleName": "电机厂敷料W120150固定35纱布_W12050",
+      "setKeywordMatchMode": "contains"
+    },
+    {
+      "code": "GUOYAO-2",
+      "ruleName": "电机厂敷料W120150固定35纱布_W15050",
+      "setKeywordMatchMode": "contains"
+    },
+    {
+      "code": "FNN-YY",
+      "ruleName": "方南南小件5合1含包材",
+      "setKeywordMatchMode": "exact_token",
+      "note": "折算规则：0827 基线为包名 exact_token 分词匹配（\"针\"类模式词命中\"针5盒1\"而不误伤\"车针排\"），Excel 包名称带场景由 v17 新规则的 @contains 后缀承担；恢复基线"
+    },
+    {
+      "code": "FNN-YY",
+      "ruleName": "方南南小件5合1免包材",
+      "setKeywordMatchMode": "exact_token",
+      "note": "折算规则：0827 基线为包名 exact_token 分词匹配（\"针\"类模式词命中\"针5盒1\"而不误伤\"车针排\"），Excel 包名称带场景由 v17 新规则的 @contains 后缀承担；恢复基线"
+    },
+    {
+      "code": "NEAU-YY",
+      "ruleName": "东北农大小件5合1含包材",
+      "setKeywordMatchMode": "exact_token",
+      "note": "折算规则：0827 基线为包名 exact_token 分词匹配（\"针\"类模式词命中\"针5盒1\"而不误伤\"车针排\"），Excel 包名称带场景由 v17 新规则的 @contains 后缀承担；恢复基线"
+    },
+    {
+      "code": "NEAU-YY",
+      "ruleName": "东北农大小件5合1免包材",
+      "setKeywordMatchMode": "exact_token",
+      "note": "折算规则：0827 基线为包名 exact_token 分词匹配（\"针\"类模式词命中\"针5盒1\"而不误伤\"车针排\"），Excel 包名称带场景由 v17 新规则的 @contains 后缀承担；恢复基线"
+    },
+    {
+      "code": "HRB-SD-MB",
+      "ruleName": "松电机扩针5合1含包材",
+      "setKeywordMatchMode": "exact_token",
+      "note": "折算规则：0827 基线为包名 exact_token 分词匹配（\"针\"类模式词命中\"针5盒1\"而不误伤\"车针排\"），Excel 包名称带场景由 v17 新规则的 @contains 后缀承担；恢复基线"
+    },
+    {
+      "code": "HRB-SD-MB",
+      "ruleName": "松电机扩针5合1免包材",
+      "setKeywordMatchMode": "exact_token",
+      "note": "折算规则：0827 基线为包名 exact_token 分词匹配（\"针\"类模式词命中\"针5盒1\"而不误伤\"车针排\"），Excel 包名称带场景由 v17 新规则的 @contains 后缀承担；恢复基线"
+    },
+    {
+      "code": "HRB-SD-MB",
+      "ruleName": "松电机扩针 5 件算 1 件",
+      "setKeywordMatchMode": "exact_token",
+      "note": "折算规则：0827 基线为包名 exact_token 分词匹配（\"针\"类模式词命中\"针5盒1\"而不误伤\"车针排\"），Excel 包名称带场景由 v17 新规则的 @contains 后缀承担；恢复基线"
+    },
+    {
+      "code": "HRB-HTFH",
+      "ruleName": "航天风华镍钛锉5合1含包材",
+      "setKeywordMatchMode": "exact_token",
+      "note": "折算规则：0827 基线为包名 exact_token 分词匹配（\"针\"类模式词命中\"针5盒1\"而不误伤\"车针排\"），Excel 包名称带场景由 v17 新规则的 @contains 后缀承担；恢复基线"
+    },
+    {
+      "code": "HRB-HTFH",
+      "ruleName": "航天风华镍钛锉5合1免包材",
+      "setKeywordMatchMode": "exact_token",
+      "note": "折算规则：0827 基线为包名 exact_token 分词匹配（\"针\"类模式词命中\"针5盒1\"而不误伤\"车针排\"），Excel 包名称带场景由 v17 新规则的 @contains 后缀承担；恢复基线"
+    },
+    {
+      "code": "HRB-HTFH",
+      "ruleName": "航天风华镍钛锉 5 件算 1 件",
+      "setKeywordMatchMode": "exact_token",
+      "note": "折算规则：0827 基线为包名 exact_token 分词匹配（\"针\"类模式词命中\"针5盒1\"而不误伤\"车针排\"），Excel 包名称带场景由 v17 新规则的 @contains 后缀承担；恢复基线"
+    },
+    {
+      "code": "HRB-WY-EM",
+      "ruleName": "市五二门诊驱血带W605070固定25",
+      "setKeywordMatchMode": "contains"
+    },
+    {
+      "code": "HRB-WY-EM",
+      "ruleName": "市五二门诊驱血带W9050固定30",
+      "setKeywordMatchMode": "contains"
+    },
+    {
+      "code": "HRB-WY-EM",
+      "ruleName": "市五二门诊驱血带W120150固定35",
+      "setKeywordMatchMode": "contains"
+    },
+    {
+      "code": "JIUZHOU-FK",
+      "ruleName": "方盘5.5",
+      "setKeywordMatchMode": "contains"
+    },
+    {
+      "code": "HAIYUAN-SB",
+      "ruleName": "海员胶帽≤5按1件",
+      "setKeywordMatchMode": "exact_token",
+      "note": "折算规则：0827 基线为包名 exact_token 分词匹配（\"针\"类模式词命中\"针5盒1\"而不误伤\"车针排\"），Excel 包名称带场景由 v17 新规则的 @contains 后缀承担；恢复基线"
+    },
+    {
+      "code": "HAIYUAN-SB",
+      "ruleName": "海员胶帽>5折算22",
+      "setKeywordMatchMode": "exact_token",
+      "note": "折算规则：0827 基线为包名 exact_token 分词匹配（\"针\"类模式词命中\"针5盒1\"而不误伤\"车针排\"），Excel 包名称带场景由 v17 新规则的 @contains 后缀承担；恢复基线"
+    },
+    {
+      "code": "HLJ-FY-RK",
+      "ruleName": "妇幼人口密封件≤5按1件",
+      "setKeywordMatchMode": "exact_token",
+      "note": "折算规则：0827 基线为包名 exact_token 分词匹配（\"针\"类模式词命中\"针5盒1\"而不误伤\"车针排\"），Excel 包名称带场景由 v17 新规则的 @contains 后缀承担；恢复基线"
+    },
+    {
+      "code": "HLJ-FY-RK",
+      "ruleName": "妇幼人口密封件>5折算22",
+      "setKeywordMatchMode": "exact_token",
+      "note": "折算规则：0827 基线为包名 exact_token 分词匹配（\"针\"类模式词命中\"针5盒1\"而不误伤\"车针排\"），Excel 包名称带场景由 v17 新规则的 @contains 后缀承担；恢复基线"
+    },
+    {
+      "code": "HLJ-FY-RK",
+      "ruleName": "妇幼人口针包按1件含包材",
+      "setKeywordMatchMode": "exact_token",
+      "note": "折算规则：0827 基线为包名 exact_token 分词匹配（\"针\"类模式词命中\"针5盒1\"而不误伤\"车针排\"），Excel 包名称带场景由 v17 新规则的 @contains 后缀承担；恢复基线"
+    },
+    {
+      "code": "HLJ-FY-RK",
+      "ruleName": "妇幼人口针盒针5合1含包材",
+      "setKeywordMatchMode": "exact_token",
+      "note": "折算规则：0827 基线为包名 exact_token 分词匹配（\"针\"类模式词命中\"针5盒1\"而不误伤\"车针排\"），Excel 包名称带场景由 v17 新规则的 @contains 后缀承担；恢复基线"
+    },
+    {
+      "code": "HLJ-FY-RK",
+      "ruleName": "妇幼人口针盒针5合1免包材",
+      "setKeywordMatchMode": "exact_token",
+      "note": "折算规则：0827 基线为包名 exact_token 分词匹配（\"针\"类模式词命中\"针5盒1\"而不误伤\"车针排\"），Excel 包名称带场景由 v17 新规则的 @contains 后缀承担；恢复基线"
+    },
+    {
+      "code": "HLJ-FY-RK",
+      "ruleName": "妇幼人口根管锉5合1含包材",
+      "setKeywordMatchMode": "exact_token",
+      "note": "折算规则：0827 基线为包名 exact_token 分词匹配（\"针\"类模式词命中\"针5盒1\"而不误伤\"车针排\"），Excel 包名称带场景由 v17 新规则的 @contains 后缀承担；恢复基线"
+    },
+    {
+      "code": "HLJ-FY-RK",
+      "ruleName": "妇幼人口根管锉5合1免包材",
+      "setKeywordMatchMode": "exact_token",
+      "note": "折算规则：0827 基线为包名 exact_token 分词匹配（\"针\"类模式词命中\"针5盒1\"而不误伤\"车针排\"），Excel 包名称带场景由 v17 新规则的 @contains 后缀承担；恢复基线"
+    },
+    {
+      "code": "HLJ-FY-RK",
+      "ruleName": "妇幼人口针类组件5合1含包材",
+      "setKeywordMatchMode": "exact_token",
+      "note": "折算规则：0827 基线为包名 exact_token 分词匹配（\"针\"类模式词命中\"针5盒1\"而不误伤\"车针排\"），Excel 包名称带场景由 v17 新规则的 @contains 后缀承担；恢复基线"
+    },
+    {
+      "code": "HLJ-FY-RK",
+      "ruleName": "妇幼人口针类组件5合1免包材",
+      "setKeywordMatchMode": "exact_token",
+      "note": "折算规则：0827 基线为包名 exact_token 分词匹配（\"针\"类模式词命中\"针5盒1\"而不误伤\"车针排\"），Excel 包名称带场景由 v17 新规则的 @contains 后缀承担；恢复基线"
+    },
+    {
+      "code": "HLJ-FY-RK",
+      "ruleName": "妇幼人口机扩锉5合1含包材",
+      "setKeywordMatchMode": "exact_token",
+      "note": "折算规则：0827 基线为包名 exact_token 分词匹配（\"针\"类模式词命中\"针5盒1\"而不误伤\"车针排\"），Excel 包名称带场景由 v17 新规则的 @contains 后缀承担；恢复基线"
+    },
+    {
+      "code": "HLJ-FY-RK",
+      "ruleName": "妇幼人口机扩锉5合1免包材",
+      "setKeywordMatchMode": "exact_token",
+      "note": "折算规则：0827 基线为包名 exact_token 分词匹配（\"针\"类模式词命中\"针5盒1\"而不误伤\"车针排\"），Excel 包名称带场景由 v17 新规则的 @contains 后缀承担；恢复基线"
+    },
+    {
+      "code": "HLJ-FY-RK",
+      "ruleName": "妇幼人口机扩针5合1含包材",
+      "setKeywordMatchMode": "exact_token",
+      "note": "折算规则：0827 基线为包名 exact_token 分词匹配（\"针\"类模式词命中\"针5盒1\"而不误伤\"车针排\"），Excel 包名称带场景由 v17 新规则的 @contains 后缀承担；恢复基线"
+    },
+    {
+      "code": "HLJ-FY-RK",
+      "ruleName": "妇幼人口机扩针5合1免包材",
+      "setKeywordMatchMode": "exact_token",
+      "note": "折算规则：0827 基线为包名 exact_token 分词匹配（\"针\"类模式词命中\"针5盒1\"而不误伤\"车针排\"），Excel 包名称带场景由 v17 新规则的 @contains 后缀承担；恢复基线"
+    },
+    {
+      "code": "HLJ-FY-RK",
+      "ruleName": "妇幼人口荡洗针5合1含包材",
+      "setKeywordMatchMode": "exact_token",
+      "note": "折算规则：0827 基线为包名 exact_token 分词匹配（\"针\"类模式词命中\"针5盒1\"而不误伤\"车针排\"），Excel 包名称带场景由 v17 新规则的 @contains 后缀承担；恢复基线"
+    },
+    {
+      "code": "HLJ-FY-RK",
+      "ruleName": "妇幼人口荡洗针5合1免包材",
+      "setKeywordMatchMode": "exact_token",
+      "note": "折算规则：0827 基线为包名 exact_token 分词匹配（\"针\"类模式词命中\"针5盒1\"而不误伤\"车针排\"），Excel 包名称带场景由 v17 新规则的 @contains 后缀承担；恢复基线"
+    },
+    {
+      "code": "HLJ-FY-RK",
+      "ruleName": "妇幼人口加长锉5合1含包材",
+      "setKeywordMatchMode": "exact_token",
+      "note": "折算规则：0827 基线为包名 exact_token 分词匹配（\"针\"类模式词命中\"针5盒1\"而不误伤\"车针排\"），Excel 包名称带场景由 v17 新规则的 @contains 后缀承担；恢复基线"
+    },
+    {
+      "code": "HLJ-FY-RK",
+      "ruleName": "妇幼人口加长锉5合1免包材",
+      "setKeywordMatchMode": "exact_token",
+      "note": "折算规则：0827 基线为包名 exact_token 分词匹配（\"针\"类模式词命中\"针5盒1\"而不误伤\"车针排\"），Excel 包名称带场景由 v17 新规则的 @contains 后缀承担；恢复基线"
+    },
+    {
+      "code": "HLJ-FY-RK",
+      "ruleName": "妇幼人口洗髓针5合1含包材",
+      "setKeywordMatchMode": "exact_token",
+      "note": "折算规则：0827 基线为包名 exact_token 分词匹配（\"针\"类模式词命中\"针5盒1\"而不误伤\"车针排\"），Excel 包名称带场景由 v17 新规则的 @contains 后缀承担；恢复基线"
+    },
+    {
+      "code": "HLJ-FY-RK",
+      "ruleName": "妇幼人口洗髓针5合1免包材",
+      "setKeywordMatchMode": "exact_token",
+      "note": "折算规则：0827 基线为包名 exact_token 分词匹配（\"针\"类模式词命中\"针5盒1\"而不误伤\"车针排\"），Excel 包名称带场景由 v17 新规则的 @contains 后缀承担；恢复基线"
+    },
+    {
+      "code": "HLJ-FY-RK",
+      "ruleName": "妇幼人口彩色锉5合1含包材",
+      "setKeywordMatchMode": "exact_token",
+      "note": "折算规则：0827 基线为包名 exact_token 分词匹配（\"针\"类模式词命中\"针5盒1\"而不误伤\"车针排\"），Excel 包名称带场景由 v17 新规则的 @contains 后缀承担；恢复基线"
+    },
+    {
+      "code": "HLJ-FY-RK",
+      "ruleName": "妇幼人口彩色锉5合1免包材",
+      "setKeywordMatchMode": "exact_token",
+      "note": "折算规则：0827 基线为包名 exact_token 分词匹配（\"针\"类模式词命中\"针5盒1\"而不误伤\"车针排\"），Excel 包名称带场景由 v17 新规则的 @contains 后缀承担；恢复基线"
+    },
+    {
+      "code": "HLJ-FY-RK",
+      "ruleName": "妇幼人口手扩锉5合1含包材",
+      "setKeywordMatchMode": "exact_token",
+      "note": "折算规则：0827 基线为包名 exact_token 分词匹配（\"针\"类模式词命中\"针5盒1\"而不误伤\"车针排\"），Excel 包名称带场景由 v17 新规则的 @contains 后缀承担；恢复基线"
+    },
+    {
+      "code": "HLJ-FY-RK",
+      "ruleName": "妇幼人口手扩锉5合1免包材",
+      "setKeywordMatchMode": "exact_token",
+      "note": "折算规则：0827 基线为包名 exact_token 分词匹配（\"针\"类模式词命中\"针5盒1\"而不误伤\"车针排\"），Excel 包名称带场景由 v17 新规则的 @contains 后缀承担；恢复基线"
+    },
+    {
+      "code": "ZUYAN-NG",
+      "ruleName": "祖研排针10合1含包材",
+      "setKeywordMatchMode": "exact_token",
+      "note": "折算规则：0827 基线为包名 exact_token 分词匹配（\"针\"类模式词命中\"针5盒1\"而不误伤\"车针排\"），Excel 包名称带场景由 v17 新规则的 @contains 后缀承担；恢复基线"
+    },
+    {
+      "code": "ZUYAN-NG",
+      "ruleName": "祖研排针10合1免包材",
+      "setKeywordMatchMode": "exact_token",
+      "note": "折算规则：0827 基线为包名 exact_token 分词匹配（\"针\"类模式词命中\"针5盒1\"而不误伤\"车针排\"），Excel 包名称带场景由 v17 新规则的 @contains 后缀承担；恢复基线"
+    },
+    {
+      "code": "DL-FUCHAN",
+      "ruleName": "道里妇幼棉花针5合1含包材",
+      "setKeywordMatchMode": "exact_token",
+      "note": "折算规则：0827 基线为包名 exact_token 分词匹配（\"针\"类模式词命中\"针5盒1\"而不误伤\"车针排\"），Excel 包名称带场景由 v17 新规则的 @contains 后缀承担；恢复基线"
+    },
+    {
+      "code": "DL-FUCHAN",
+      "ruleName": "道里妇幼棉花针5合1免包材",
+      "setKeywordMatchMode": "exact_token",
+      "note": "折算规则：0827 基线为包名 exact_token 分词匹配（\"针\"类模式词命中\"针5盒1\"而不误伤\"车针排\"），Excel 包名称带场景由 v17 新规则的 @contains 后缀承担；恢复基线"
+    },
+    {
+      "code": "DL-FUCHAN",
+      "ruleName": "道里妇幼洗髓针5合1含包材",
+      "setKeywordMatchMode": "exact_token",
+      "note": "折算规则：0827 基线为包名 exact_token 分词匹配（\"针\"类模式词命中\"针5盒1\"而不误伤\"车针排\"），Excel 包名称带场景由 v17 新规则的 @contains 后缀承担；恢复基线"
+    },
+    {
+      "code": "DL-FUCHAN",
+      "ruleName": "道里妇幼洗髓针5合1免包材",
+      "setKeywordMatchMode": "exact_token",
+      "note": "折算规则：0827 基线为包名 exact_token 分词匹配（\"针\"类模式词命中\"针5盒1\"而不误伤\"车针排\"），Excel 包名称带场景由 v17 新规则的 @contains 后缀承担；恢复基线"
+    },
+    {
+      "code": "CHUNYU-YL",
+      "ruleName": "春语塑料管≤10按1件",
+      "setKeywordMatchMode": "exact_token",
+      "note": "折算规则：0827 基线为包名 exact_token 分词匹配（\"针\"类模式词命中\"针5盒1\"而不误伤\"车针排\"），Excel 包名称带场景由 v17 新规则的 @contains 后缀承担；恢复基线"
+    },
+    {
+      "code": "CHUNYU-YL",
+      "ruleName": "春语塑料管>10折算22",
+      "setKeywordMatchMode": "exact_token",
+      "note": "折算规则：0827 基线为包名 exact_token 分词匹配（\"针\"类模式词命中\"针5盒1\"而不误伤\"车针排\"），Excel 包名称带场景由 v17 新规则的 @contains 后缀承担；恢复基线"
+    },
+    {
+      "code": "JZSW-BIO",
+      "ruleName": "氩氦刀（EO）150元",
+      "setKeywordMatchMode": "contains"
+    },
+    {
+      "code": "SUOFEI-YL",
+      "ruleName": "索菲面吸针按件5.5",
+      "setKeywordMatchMode": "contains"
+    },
+    {
+      "code": "HLJ-JYGLJ-YY",
+      "ruleName": "监狱密封件≤5按1件",
+      "setKeywordMatchMode": "exact_token",
+      "note": "折算规则：0827 基线为包名 exact_token 分词匹配（\"针\"类模式词命中\"针5盒1\"而不误伤\"车针排\"），Excel 包名称带场景由 v17 新规则的 @contains 后缀承担；恢复基线"
+    },
+    {
+      "code": "HLJ-JYGLJ-YY",
+      "ruleName": "监狱密封件>5折算22",
+      "setKeywordMatchMode": "exact_token",
+      "note": "折算规则：0827 基线为包名 exact_token 分词匹配（\"针\"类模式词命中\"针5盒1\"而不误伤\"车针排\"），Excel 包名称带场景由 v17 新规则的 @contains 后缀承担；恢复基线"
+    },
+    {
+      "code": "HULAN-TCM",
+      "ruleName": "呼兰中医胶帽5合1含包材",
+      "setKeywordMatchMode": "exact_token",
+      "note": "折算规则：0827 基线为包名 exact_token 分词匹配（\"针\"类模式词命中\"针5盒1\"而不误伤\"车针排\"），Excel 包名称带场景由 v17 新规则的 @contains 后缀承担；恢复基线"
+    },
+    {
+      "code": "HULAN-TCM",
+      "ruleName": "呼兰中医胶帽5合1免包材",
+      "setKeywordMatchMode": "exact_token",
+      "note": "折算规则：0827 基线为包名 exact_token 分词匹配（\"针\"类模式词命中\"针5盒1\"而不误伤\"车针排\"），Excel 包名称带场景由 v17 新规则的 @contains 后缀承担；恢复基线"
+    },
+    {
+      "code": "PFQ-RM",
+      "ruleName": "平房人民针盒针5合1含包材",
+      "setKeywordMatchMode": "exact_token",
+      "note": "折算规则：0827 基线为包名 exact_token 分词匹配（\"针\"类模式词命中\"针5盒1\"而不误伤\"车针排\"），Excel 包名称带场景由 v17 新规则的 @contains 后缀承担；恢复基线"
+    },
+    {
+      "code": "PFQ-RM",
+      "ruleName": "平房人民针盒针5合1免包材",
+      "setKeywordMatchMode": "exact_token",
+      "note": "折算规则：0827 基线为包名 exact_token 分词匹配（\"针\"类模式词命中\"针5盒1\"而不误伤\"车针排\"），Excel 包名称带场景由 v17 新规则的 @contains 后缀承担；恢复基线"
+    },
+    {
+      "code": "HRB-WY",
+      "ruleName": "市五院妇产科布袋15",
+      "setKeywordMatchMode": "contains"
+    },
+    {
+      "code": "HRB-WY",
+      "ruleName": "市五院妇产科纱条15",
+      "setKeywordMatchMode": "contains"
+    },
+    {
+      "code": "HRB-WY",
+      "ruleName": "市五院小布袋15",
+      "setKeywordMatchMode": "contains"
+    },
+    {
+      "code": "HRB-WY",
+      "ruleName": "市五院纱布15",
+      "setKeywordMatchMode": "contains"
+    },
+    {
+      "code": "HRB-WY",
+      "ruleName": "市五院上肢止血带15",
+      "setKeywordMatchMode": "contains"
+    },
+    {
+      "code": "HRB-WY",
+      "ruleName": "市五院下肢止血带15",
+      "setKeywordMatchMode": "contains"
+    },
+    {
+      "code": "HRB-WY",
+      "ruleName": "市五院驱血带4",
+      "setKeywordMatchMode": "contains"
+    },
+    {
+      "code": "HRB-WY",
+      "ruleName": "市五院手套2.5",
+      "setKeywordMatchMode": "contains"
+    },
+    {
+      "code": "XINFA-HSZ",
+      "ruleName": "新发转换器胶帽5合1加盒22",
+      "setKeywords": [
+        "转换器1胶帽@contains"
+      ],
+      "setPriority": 9,
+      "note": "优先级 12→9：Excel ②转换器场景须先于①胶帽通用规则评估，否则被 胶帽>5(p11) 永远遮蔽；关键词按 Excel 占位词惯例去除「几件」"
+    }
+  ],
+  "deleteRules": [
+    {
+      "code": "HL-ZGH",
+      "ruleName": "镜头租借公司筐加收"
+    }
+  ]
+}

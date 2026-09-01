@@ -1,0 +1,554 @@
+{
+  "version": "1",
+  "description": "对照特殊收费(17).xlsx：合并单元格解析；严格区分包名称带(contains)与指定名称(exact_token)。新增/更新：呼兰一院棉花针、新发胶帽/转换器、祖研三辅美容科排针、远东双按件、市五二门诊驱血带敷料分档、总工会镜头指定名称加收、社会康复盒类指定名称固定价；东北农大根管锉回归通用5.5五合一。",
+  "profiles": [
+    {
+      "code": "HULAN-RM",
+      "name": "呼兰区第一人民医院",
+      "billingEnabled": true,
+      "billingPricingMode": "hybrid",
+      "aliases": ["呼兰一院", "呼兰区第一人民医院", "哈尔滨市呼兰区第一人民医院"],
+      "discounts": [{"name": "呼兰7折", "rate": 0.7}]
+    },
+    {
+      "code": "XINFA-HSZ",
+      "name": "新发红十字医院",
+      "billingEnabled": true,
+      "billingPricingMode": "hybrid",
+      "aliases": ["新发红十字", "新发红十字医院"]
+    },
+    {
+      "code": "ZUYAN-SF",
+      "name": "祖研-黑龙江省中医医院（三辅院区）",
+      "billingEnabled": true,
+      "billingPricingMode": "hybrid",
+      "aliases": ["祖研三辅", "三辅院区"]
+    },
+    {
+      "code": "YUANDONG-XN",
+      "name": "黑龙江省远东心脑血管医院",
+      "billingEnabled": true,
+      "billingPricingMode": "hybrid",
+      "aliases": ["远东", "远东心脑血管", "黑龙江省远东心脑血管医院"]
+    }
+  ],
+  "strictRuleOps": true,
+  "customerUpdates": [
+    {
+      "code": "XINFA-HSZ",
+      "billingEnabled": true,
+      "billingPricingMode": "hybrid"
+    },
+    {
+      "code": "HULAN-RM",
+      "billingEnabled": true,
+      "billingPricingMode": "hybrid"
+    },
+    {
+      "code": "ZUYAN-SF",
+      "billingEnabled": true,
+      "billingPricingMode": "hybrid"
+    },
+    {
+      "code": "YUANDONG-XN",
+      "billingEnabled": true,
+      "billingPricingMode": "hybrid"
+    }
+  ],
+  "deactivateRules": [
+    {
+      "code": "NEAU-YY",
+      "ruleName": "东北农大根管锉5.6含包材"
+    },
+    {
+      "code": "NEAU-YY",
+      "ruleName": "东北农大根管锉5.6免包材"
+    },
+    {
+      "code": "HL-ZGH",
+      "ruleName": "总工会镜头铂康盒加收8"
+    },
+    {
+      "code": "HL-ZGH",
+      "ruleName": "镜头租借公司筐加收"
+    },
+    {
+      "code": "SHKF-YY",
+      "ruleName": "社会康复ITI种植盒44"
+    },
+    {
+      "code": "SHKF-YY",
+      "ruleName": "社会康复内提工具盒44"
+    },
+    {
+      "code": "SHKF-YY",
+      "ruleName": "社会康复大车针盒22"
+    },
+    {
+      "code": "SHKF-YY",
+      "ruleName": "社会康复抛光车针盒16.5"
+    },
+    {
+      "code": "SHKF-YY",
+      "ruleName": "社会康复梁光强器械盒22"
+    },
+    {
+      "code": "SHKF-YY",
+      "ruleName": "社会康复梁光强器械盒粉16.5"
+    },
+    {
+      "code": "SHKF-YY",
+      "ruleName": "社会康复环切器械盒16.5"
+    },
+    {
+      "code": "SHKF-YY",
+      "ruleName": "社会康复登腾种植盒44"
+    },
+    {
+      "code": "SHKF-YY",
+      "ruleName": "社会康复百诺工具盒44"
+    },
+    {
+      "code": "SHKF-YY",
+      "ruleName": "社会康复种植盒16.5"
+    }
+  ],
+  "ruleUpdates": [
+    {
+      "code": "NEAU-YY",
+      "ruleName": "东北农大小件5合1含包材",
+      "addKeywords": [
+        "根管锉@contains"
+      ]
+    },
+    {
+      "code": "NEAU-YY",
+      "ruleName": "东北农大小件5合1免包材",
+      "addKeywords": [
+        "根管锉@contains"
+      ]
+    }
+  ],
+  "newRules": [
+    {
+      "code": "HULAN-RM",
+      "ruleType": "FOLD",
+      "name": "呼兰一院棉花针5合1含包材",
+      "priority": 10,
+      "keywords": [
+        "棉花针@contains"
+      ],
+      "threshold": 5,
+      "foldRatio": 5,
+      "skipPackaging": false,
+      "skipDiscount": false,
+      "maxInstrumentCount": 10
+    },
+    {
+      "code": "HULAN-RM",
+      "ruleType": "FOLD",
+      "name": "呼兰一院棉花针5合1免包材",
+      "priority": 11,
+      "keywords": [
+        "棉花针@contains"
+      ],
+      "threshold": 5,
+      "foldRatio": 5,
+      "skipPackaging": true,
+      "skipDiscount": false,
+      "minInstrumentCount": 11
+    },
+    {
+      "code": "XINFA-HSZ",
+      "ruleType": "FOLD",
+      "name": "新发胶帽≤5按1件含包材",
+      "priority": 10,
+      "keywords": [
+        "胶帽@contains"
+      ],
+      "threshold": 5,
+      "foldRatio": 5,
+      "maxInstrumentCount": 5,
+      "skipPackaging": false,
+      "temperature": "LT"
+    },
+    {
+      "code": "XINFA-HSZ",
+      "ruleType": "FOLD",
+      "name": "新发胶帽>5折算22",
+      "priority": 11,
+      "keywords": [
+        "胶帽@contains"
+      ],
+      "threshold": 5,
+      "foldRatio": 5,
+      "minInstrumentCount": 6,
+      "price": 22.0,
+      "skipPackaging": true,
+      "temperature": "LT"
+    },
+    {
+      "code": "XINFA-HSZ",
+      "ruleType": "FOLD",
+      "name": "新发转换器胶帽5合1加盒22",
+      "priority": 12,
+      "keywords": [
+        "转换器1胶帽几件@contains"
+      ],
+      "threshold": 5,
+      "foldRatio": 5,
+      "extraCount": 1,
+      "price": 22.0,
+      "skipPackaging": true,
+      "temperature": "LT"
+    },
+    {
+      "code": "ZUYAN-SF",
+      "ruleType": "FIXED_PRICE",
+      "name": "祖研三辅美容科排针≤20固定16.5",
+      "priority": 10,
+      "price": 16.5,
+      "keywords": [
+        "美容科排针@contains"
+      ],
+      "maxInstrumentCount": 20,
+      "skipPackaging": true,
+      "skipDiscount": true
+    },
+    {
+      "code": "ZUYAN-SF",
+      "ruleType": "FOLD",
+      "name": "祖研三辅美容科排针>20十合1加盒",
+      "priority": 11,
+      "keywords": [
+        "美容科排针@contains"
+      ],
+      "threshold": 10,
+      "foldRatio": 10,
+      "extraCount": 1,
+      "minInstrumentCount": 21,
+      "skipPackaging": true,
+      "skipDiscount": true
+    },
+    {
+      "code": "YUANDONG-XN",
+      "ruleType": "PRICE_PER_INSTRUMENT",
+      "name": "远东双<3按件5.5含包材",
+      "priority": 10,
+      "price": 5.5,
+      "keywords": [
+        "双@contains"
+      ],
+      "maxInstrumentCount": 2,
+      "skipPackaging": false,
+      "skipDiscount": true
+    },
+    {
+      "code": "YUANDONG-XN",
+      "ruleType": "PRICE_PER_INSTRUMENT",
+      "name": "远东双≥3按件5.5免包材",
+      "priority": 11,
+      "price": 5.5,
+      "keywords": [
+        "双@contains"
+      ],
+      "minInstrumentCount": 3,
+      "skipPackaging": true,
+      "skipDiscount": true
+    },
+    {
+      "code": "HRB-WY-EM",
+      "ruleType": "FIXED_PRICE",
+      "name": "市五二门诊驱血带W605070固定25",
+      "priority": 20,
+      "price": 25.0,
+      "keywords": [
+        "驱血带/W6050",
+        "驱血带/W6070",
+        "驱血带/W7060",
+        "驱血带/W7070",
+        "驱血带/W50",
+        "驱血带/W60",
+        "驱血带/W70"
+      ],
+      "skipPackaging": true,
+      "skipDiscount": true
+    },
+    {
+      "code": "HRB-WY-EM",
+      "ruleType": "FIXED_PRICE",
+      "name": "市五二门诊驱血带W9050固定30",
+      "priority": 20,
+      "price": 30.0,
+      "keywords": [
+        "驱血带/W9050",
+        "驱血带/W9060",
+        "驱血带/W90"
+      ],
+      "skipPackaging": true,
+      "skipDiscount": true
+    },
+    {
+      "code": "HRB-WY-EM",
+      "ruleType": "FIXED_PRICE",
+      "name": "市五二门诊驱血带W120150固定35",
+      "priority": 20,
+      "price": 35.0,
+      "keywords": [
+        "驱血带/W12050",
+        "驱血带/W15050",
+        "驱血带/W120",
+        "驱血带/W150"
+      ],
+      "skipPackaging": true,
+      "skipDiscount": true
+    },
+    {
+      "code": "HL-ZGH",
+      "ruleType": "EXTRA_FEE",
+      "name": "总工会镜头指定名称加收8-1",
+      "priority": 11,
+      "fee": 8.0,
+      "keywords": [
+        "12°镜头-1/Z2060"
+      ],
+      "keywordMatchMode": "exact_token",
+      "skipPackaging": false,
+      "skipDiscount": true
+    },
+    {
+      "code": "HL-ZGH",
+      "ruleType": "EXTRA_FEE",
+      "name": "总工会镜头指定名称加收8-2",
+      "priority": 12,
+      "fee": 8.0,
+      "keywords": [
+        "30°镜头，镜鞘-2（带转换帽）/Z2060"
+      ],
+      "keywordMatchMode": "exact_token",
+      "skipPackaging": false,
+      "skipDiscount": true
+    },
+    {
+      "code": "HL-ZGH",
+      "ruleType": "EXTRA_FEE",
+      "name": "总工会镜头指定名称加收8-3",
+      "priority": 13,
+      "fee": 8.0,
+      "keywords": [
+        "检查镜-2/Z2060"
+      ],
+      "keywordMatchMode": "exact_token",
+      "skipPackaging": false,
+      "skipDiscount": true
+    },
+    {
+      "code": "HL-ZGH",
+      "ruleType": "EXTRA_FEE",
+      "name": "总工会镜头指定名称加收8-4",
+      "priority": 14,
+      "fee": 8.0,
+      "keywords": [
+        "宫腔检查镜30度-2件/Z2060"
+      ],
+      "keywordMatchMode": "exact_token",
+      "skipPackaging": false,
+      "skipDiscount": true
+    },
+    {
+      "code": "HL-ZGH",
+      "ruleType": "EXTRA_FEE",
+      "name": "总工会镜头指定名称加收8-5",
+      "priority": 15,
+      "fee": 8.0,
+      "keywords": [
+        "沈大12度镜头-1（新）/Z2060"
+      ],
+      "keywordMatchMode": "exact_token",
+      "skipPackaging": false,
+      "skipDiscount": true
+    },
+    {
+      "code": "SHKF-YY",
+      "ruleType": "FIXED_PRICE",
+      "name": "社会康复抛光车针盒6件盒1指定16.5",
+      "priority": 5,
+      "price": 16.5,
+      "keywords": [
+        "抛光车针盒6件盒1/Z1026"
+      ],
+      "keywordMatchMode": "exact_token",
+      "skipPackaging": true,
+      "skipDiscount": true
+    },
+    {
+      "code": "SHKF-YY",
+      "ruleType": "FIXED_PRICE",
+      "name": "社会康复环切器械盒14件指定16.5",
+      "priority": 5,
+      "price": 16.5,
+      "keywords": [
+        "环切器械盒-14件盒1/Z2032"
+      ],
+      "keywordMatchMode": "exact_token",
+      "skipPackaging": true,
+      "skipDiscount": true
+    },
+    {
+      "code": "SHKF-YY",
+      "ruleType": "FIXED_PRICE",
+      "name": "社会康复种植盒黄绿8件指定16.5",
+      "priority": 5,
+      "price": 16.5,
+      "keywords": [
+        "种植盒（黄绿）8件盒1/Z2032"
+      ],
+      "keywordMatchMode": "exact_token",
+      "skipPackaging": true,
+      "skipDiscount": true
+    },
+    {
+      "code": "SHKF-YY",
+      "ruleType": "FIXED_PRICE",
+      "name": "社会康复种植盒金属12件指定16.5",
+      "priority": 5,
+      "price": 16.5,
+      "keywords": [
+        "种植盒（金属）12件盒1/Z2032"
+      ],
+      "keywordMatchMode": "exact_token",
+      "skipPackaging": true,
+      "skipDiscount": true
+    },
+    {
+      "code": "SHKF-YY",
+      "ruleType": "FIXED_PRICE",
+      "name": "社会康复种植盒蓝白12件指定16.5",
+      "priority": 5,
+      "price": 16.5,
+      "keywords": [
+        "种植盒（蓝白）12件 盒1/Z2032"
+      ],
+      "keywordMatchMode": "exact_token",
+      "skipPackaging": true,
+      "skipDiscount": true
+    },
+    {
+      "code": "SHKF-YY",
+      "ruleType": "FIXED_PRICE",
+      "name": "社会康复种植盒14件W6050指定16.5",
+      "priority": 5,
+      "price": 16.5,
+      "keywords": [
+        "种植盒-14件盒1/W6050"
+      ],
+      "keywordMatchMode": "exact_token",
+      "skipPackaging": true,
+      "skipDiscount": true
+    },
+    {
+      "code": "SHKF-YY",
+      "ruleType": "FIXED_PRICE",
+      "name": "社会康复梁光强器械盒粉10件指定16.5",
+      "priority": 5,
+      "price": 16.5,
+      "keywords": [
+        "梁光强器械盒（粉）10件盒1/Z2030"
+      ],
+      "keywordMatchMode": "exact_token",
+      "skipPackaging": true,
+      "skipDiscount": true
+    },
+    {
+      "code": "SHKF-YY",
+      "ruleType": "FIXED_PRICE",
+      "name": "社会康复梁光强器械盒21件指定22",
+      "priority": 5,
+      "price": 22.0,
+      "keywords": [
+        "梁光强器械盒-21件盒1/W6050"
+      ],
+      "keywordMatchMode": "exact_token",
+      "skipPackaging": true,
+      "skipDiscount": true
+    },
+    {
+      "code": "SHKF-YY",
+      "ruleType": "FIXED_PRICE",
+      "name": "社会康复大车针盒1件指定22",
+      "priority": 5,
+      "price": 22.0,
+      "keywords": [
+        "大车针盒-1/Z1526"
+      ],
+      "keywordMatchMode": "exact_token",
+      "skipPackaging": true,
+      "skipDiscount": true
+    },
+    {
+      "code": "SHKF-YY",
+      "ruleType": "FIXED_PRICE",
+      "name": "社会康复内提工具盒10件指定44",
+      "priority": 5,
+      "price": 44.0,
+      "keywords": [
+        "内提工具盒10件盒1/W6050"
+      ],
+      "keywordMatchMode": "exact_token",
+      "skipPackaging": true,
+      "skipDiscount": true
+    },
+    {
+      "code": "SHKF-YY",
+      "ruleType": "FIXED_PRICE",
+      "name": "社会康复百诺工具盒19件指定44",
+      "priority": 5,
+      "price": 44.0,
+      "keywords": [
+        "百诺工具盒-19件盒1/W6050"
+      ],
+      "keywordMatchMode": "exact_token",
+      "skipPackaging": true,
+      "skipDiscount": true
+    },
+    {
+      "code": "SHKF-YY",
+      "ruleType": "FIXED_PRICE",
+      "name": "社会康复ITI种植盒32件指定44",
+      "priority": 5,
+      "price": 44.0,
+      "keywords": [
+        "ITI种植盒-32件盒1/W12050"
+      ],
+      "keywordMatchMode": "exact_token",
+      "skipPackaging": true,
+      "skipDiscount": true
+    },
+    {
+      "code": "SHKF-YY",
+      "ruleType": "FIXED_PRICE",
+      "name": "社会康复登腾种植盒34件指定44",
+      "priority": 5,
+      "price": 44.0,
+      "keywords": [
+        "登腾种植盒-34件盒1/W6050"
+      ],
+      "keywordMatchMode": "exact_token",
+      "skipPackaging": true,
+      "skipDiscount": true
+    },
+    {
+      "code": "SHKF-YY",
+      "ruleType": "FIXED_PRICE",
+      "name": "社会康复登腾种植盒36件指定44",
+      "priority": 5,
+      "price": 44.0,
+      "keywords": [
+        "登腾种植盒-36件盒1/W6050"
+      ],
+      "keywordMatchMode": "exact_token",
+      "skipPackaging": true,
+      "skipDiscount": true
+    }
+  ]
+}

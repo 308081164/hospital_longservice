@@ -57,6 +57,9 @@ public class CustomerProductRule {
 
     private BigDecimal foldRatio;
 
+    /** 关键词匹配模式：exact_token（严格对齐，默认）/ contains（含关键词即触发） */
+    private String keywordMatchMode = "exact_token";
+
     /** 折算后额外加计件数（如"针N盒1"的盒固定计 1 件，不参与 5 合 1 折算） */
     private Integer extraCount;
 

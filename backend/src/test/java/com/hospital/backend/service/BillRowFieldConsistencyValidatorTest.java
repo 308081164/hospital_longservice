@@ -1,5 +1,6 @@
 package com.hospital.backend.service;
 
+import com.hospital.backend.imports.bokang.PackNameSpecParser;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
@@ -350,5 +351,33 @@ class BillRowFieldConsistencyValidatorTest {
         assertThat(billingNotes.get("type")).isEqualTo("field_consistency");
         assertThat(billingNotes.get("violations")).isInstanceOf(List.class);
         assertThat((List<?>) billingNotes.get("violations")).hasSize(2);
+    }
+
+    @Test
+    void hulanRedCrossGynecologyPackWithPieceBoxMatchesInstrumentCount() {
+        List<BillRowFieldConsistencyValidator.Violation> violations =
+                BillRowFieldConsistencyValidator.validate(
+                        "额外包(无纺布)",
+                        "切开包-13件盒1",
+                        "无纺布-90×90-50g",
+                        14,
+                        1);
+
+        assertThat(violations).isEmpty();
+    }
+
+    @Test
+    void hulanRedCrossGynecologyPacksMatchInstrumentCount() {
+        for (String packName : List.of("阴切包-10件盒1", "产包-16件盒1")) {
+            int expected = PackNameSpecParser.extractTotalPieceCountFromPackName(packName);
+            List<BillRowFieldConsistencyValidator.Violation> violations =
+                    BillRowFieldConsistencyValidator.validate(
+                            "额外包(无纺布)",
+                            packName,
+                            "无纺布-90×90-50g",
+                            expected,
+                            1);
+            assertThat(violations).as(packName).isEmpty();
+        }
     }
 }

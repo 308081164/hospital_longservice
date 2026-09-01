@@ -456,8 +456,15 @@ public class PricingRuleCompiler {
         if (Boolean.TRUE.equals(rule.getSkipDiscount())) {
             node.put("skipHospitalDiscount", true);
         }
+        appendKeywordMatchMode(node, rule);
         appendRuleConditions(node, rule);
         return node;
+    }
+
+    private void appendKeywordMatchMode(ObjectNode node, CustomerProductRule rule) {
+        if (rule.getKeywordMatchMode() != null && !rule.getKeywordMatchMode().isBlank()) {
+            node.put("keywordMatchMode", rule.getKeywordMatchMode().trim());
+        }
     }
 
     private void appendRuleConditions(ObjectNode node, CustomerProductRule rule) {
@@ -637,6 +644,9 @@ public class PricingRuleCompiler {
         }
         node.put("threshold", rule.getThreshold() != null ? rule.getThreshold() : 5);
         node.put("foldRatio", rule.getFoldRatio() != null ? rule.getFoldRatio().doubleValue() : 5.0);
+        if (rule.getKeywordMatchMode() != null && !rule.getKeywordMatchMode().isBlank()) {
+            node.put("keywordMatchMode", rule.getKeywordMatchMode().trim());
+        }
         if (rule.getExtraCount() != null && rule.getExtraCount() > 0) {
             node.put("extraCount", rule.getExtraCount());
         }
@@ -688,6 +698,7 @@ public class PricingRuleCompiler {
         if (Boolean.TRUE.equals(rule.getSkipDiscount())) {
             node.put("skipHospitalDiscount", true);
         }
+        appendKeywordMatchMode(node, rule);
         return node;
     }
 

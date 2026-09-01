@@ -34,7 +34,11 @@ public class ReconciliationHospitalNameResolver {
     private final CustomerResolver customerResolver;
 
     public String resolve(String hospitalNameParam, String sourceFileName) {
-        for (String candidate : buildCandidates(hospitalNameParam, sourceFileName)) {
+        return resolve(hospitalNameParam, sourceFileName, List.of());
+    }
+
+    public String resolve(String hospitalNameParam, String sourceFileName, List<String> sheetHospitalNames) {
+        for (String candidate : buildCandidates(hospitalNameParam, sourceFileName, sheetHospitalNames)) {
             if (isLikelyDepartmentName(candidate)) {
                 continue;
             }
@@ -44,13 +48,24 @@ public class ReconciliationHospitalNameResolver {
             }
         }
 
-        for (String candidate : buildCandidates(hospitalNameParam, sourceFileName)) {
+        for (String candidate : buildCandidates(hospitalNameParam, sourceFileName, sheetHospitalNames)) {
             if (!isLikelyDepartmentName(candidate)) {
                 return candidate;
             }
         }
 
         return "未命名医院";
+    }
+
+    public boolean isLikelyHospitalName(String name) {
+        if (name == null || name.isBlank() || isLikelyDepartmentName(name)) {
+            return false;
+        }
+        String trimmed = name.trim();
+        if (trimmed.contains("发货单汇总表")) {
+            return false;
+        }
+        return HOSPITAL_SUFFIX.matcher(trimmed).find() || trimmed.length() >= 6;
     }
 
     public boolean isLikelyDepartmentName(String name) {
@@ -85,9 +100,19 @@ public class ReconciliationHospitalNameResolver {
         return base.trim();
     }
 
-    private List<String> buildCandidates(String hospitalNameParam, String sourceFileName) {
+    private List<String> buildCandidates(
+            String hospitalNameParam, String sourceFileName, List<String> sheetHospitalNames) {
         Set<String> ordered = new LinkedHashSet<>();
-        addCandidate(ordered, hospitalNameParam);
+        if (sheetHospitalNames != null) {
+            for (String name : sheetHospitalNames) {
+                if (isLikelyHospitalName(name)) {
+                    addCandidate(ordered, name);
+                }
+            }
+        }
+        if (!isLikelyDepartmentName(hospitalNameParam)) {
+            addCandidate(ordered, hospitalNameParam);
+        }
         addCandidate(ordered, inferFromFileName(sourceFileName));
         if (sourceFileName != null && !sourceFileName.isBlank()) {
             String base = sourceFileName.trim();
@@ -101,6 +126,7 @@ public class ReconciliationHospitalNameResolver {
             }
             addCandidate(ordered, FILE_YEAR_PREFIX.matcher(base).replaceFirst("").trim());
         }
+        addCandidate(ordered, hospitalNameParam);
         return new ArrayList<>(ordered);
     }
 

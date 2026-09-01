@@ -104,10 +104,6 @@ public class HardcodedRulesMigrationRunner implements CommandLineRunner {
                 List.of("机扩针"), null, 5, bd("5"));
         ensureFoldRule("HRB-HTFH", "航天风华镍钛锉 5 件算 1 件", 20,
                 List.of("镍钛锉"), null, 5, bd("5"));
-
-        // ---- extraFees ----
-        ensureExtraFee("HL-ZGH", "镜头租借公司筐加收", 10,
-                bd("8.0"), List.of("镜头", "检查镜"));
     }
 
     private void ensureRule(String customerCode, String ruleType, String name, int priority,
@@ -159,27 +155,6 @@ public class HardcodedRulesMigrationRunner implements CommandLineRunner {
         rule.setIsActive(true);
         customerProductRuleMapper.insert(rule);
         log.info("Migrated fold rule: {} → {}", customerCode, name);
-    }
-
-    private void ensureExtraFee(String customerCode, String name, int priority,
-                                BigDecimal fee, List<String> keywords) {
-        Customer customer = customerMapper.selectByCode(customerCode);
-        if (customer == null) {
-            return;
-        }
-        if (customerProductRuleMapper.countByCustomerIdAndName(customer.getId(), name) > 0) {
-            return;
-        }
-        CustomerProductRule rule = new CustomerProductRule();
-        rule.setCustomerId(customer.getId());
-        rule.setRuleType("EXTRA_FEE");
-        rule.setName(name);
-        rule.setPriority(priority);
-        rule.setFee(fee);
-        rule.setKeywords(keywords != null ? JsonUtils.toJson(keywords) : null);
-        rule.setIsActive(true);
-        customerProductRuleMapper.insert(rule);
-        log.info("Migrated extra fee: {} → {}", customerCode, name);
     }
 
     private void seedEreryyPhase1Profile() {

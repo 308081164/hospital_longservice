@@ -279,7 +279,7 @@ public final class PackNameSpecParser {
         }
         if (Pattern.compile("[-－]\\d+件").matcher(stem).find()) {
             if (SPACED_PIECE_THEN_BOX.matcher(stem).find()) {
-                if (isPlantingOrNeedleBoxPack(stem)) {
+                if (isPlantingOrNeedleBoxPack(stem) || isSurgicalPackWithPieceBoxCount(stem)) {
                     return sumParenthesisContainerCounts(stem)
                             + sumContainerTokensInText(PAREN_GROUP.matcher(stem).replaceAll(""));
                 }
@@ -287,6 +287,11 @@ public final class PackNameSpecParser {
             }
             if (Pattern.compile("[-－]\\d+件(?:盒|筐|盘)").matcher(stem).find()
                     && isPlantingOrNeedleBoxPack(stem)) {
+                return sumParenthesisContainerCounts(stem)
+                        + sumContainerTokensInText(PAREN_GROUP.matcher(stem).replaceAll(""));
+            }
+            if (Pattern.compile("[-－]\\d+件盒").matcher(stem).find()
+                    && isSurgicalPackWithPieceBoxCount(stem)) {
                 return sumParenthesisContainerCounts(stem)
                         + sumContainerTokensInText(PAREN_GROUP.matcher(stem).replaceAll(""));
             }
@@ -348,6 +353,17 @@ public final class PackNameSpecParser {
                 || stem.contains("扩针")
                 || stem.contains("ITI")
                 || stem.contains("登腾");
+    }
+
+    /**
+     * 妇科/外科标准器械包（族名以「包」结尾）的 {@code -N件盒M}：盒内器械 N 件 + 盒本身计 1 件。
+     */
+    private static boolean isSurgicalPackWithPieceBoxCount(String stem) {
+        int dash = stem.indexOf('-');
+        if (dash <= 0) {
+            return false;
+        }
+        return stem.substring(0, dash).trim().endsWith("包");
     }
 
     private static int sumParenthesisContainerCounts(String stem) {

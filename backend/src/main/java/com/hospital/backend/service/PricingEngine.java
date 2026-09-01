@@ -206,6 +206,7 @@ public class PricingEngine {
 
         // 针数量规则 + 小件器械折算（针数量规则优先：包名含"针+数字"时按公式拆分）
         JsonNode needle = rules.path("needle");
+        String needleMatchMode = BillingConditionEvaluator.resolveKeywordMatchMode(needle);
         java.util.regex.Pattern needleQtyPattern = java.util.regex.Pattern.compile("针(\\d+)");
         java.util.regex.Matcher needleQtyMatcher = needleQtyPattern.matcher(packName);
         boolean appliedNeedleRule = false;
@@ -217,7 +218,7 @@ public class PricingEngine {
             String afterNeedle = parts.length > 1 ? parts[1] : "";
             // "针N"后是否还有器械名（如"钢丝4"），用于区分纯小件与混合器械
             boolean hasOtherItems = java.util.regex.Pattern.compile("[\\u4e00-\\u9fff]+\\d+").matcher(afterNeedle).find();
-            boolean isSmallItemKeyword = matchesKeywordsBoundary(packName, needle.path("keywords"));
+            boolean isSmallItemKeyword = matchesKeywordsBoundary(packName, needle.path("keywords"), needleMatchMode);
             // 若"针"是小件关键词的一部分（如"克氏针"）且针后无其他器械，跳过拆分
             if (isSmallItemKeyword && !hasOtherItems) {
                 // 不应用针数量拆分，交给下方小件关键词规则处理
@@ -242,7 +243,7 @@ public class PricingEngine {
         }
         if (!skipGlobalNeedleAndSmallFold && preMatchedSpecialPrice == null && !appliedSpecialFoldRule
                 && !appliedNeedleRule && !isLiposuctionNeedleLongVariant(packName) && !isZsdInstrumentPack) {
-            SmallItemSplit smallSplit = findSmallItemSplit(packName, needle.path("keywords"));
+            SmallItemSplit smallSplit = findSmallItemSplit(packName, needle.path("keywords"), needleMatchMode);
             if (smallSplit != null) {
                 int threshold = needle.path("threshold").asInt(5);
                 double foldRatio = needle.path("foldRatio").asDouble(5.0);
@@ -525,7 +526,7 @@ public class PricingEngine {
         }
 
         if (!skipPackaging && instrumentCount > 10
-                && matchesKeywordsBoundary(packName, needle.path("keywords"))
+                && matchesKeywordsBoundary(packName, needle.path("keywords"), needleMatchMode)
                 && !appliedSpecialFoldRule) {
             skipPackaging = true;
             notes.add("小件器械超过 10 件，按客户标准不加袋子钱。");
@@ -816,7 +817,10 @@ public class PricingEngine {
         foldRules.forEach(sortedRules::add);
         sortedRules.sort(java.util.Comparator.comparingInt(r -> r.path("priority").asInt(100)));
         for (JsonNode rule : sortedRules) {
-            if (!BillingConditionEvaluator.matchesKeywordsExactToken(str(row, "packName"), rule.path("keywords"))) {
+            // 折算规则门控默认 exact_token（2026-08-27 基线行为：包名分词匹配，
+            // "针"类模式词命中"针5盒1"而不误伤"车针排"）；规则显式 contains 或关键词带 @contains 后缀时走包含
+            String foldMatchMode = BillingConditionEvaluator.resolveKeywordMatchMode(rule, BillingConditionEvaluator.KEYWORD_MATCH_EXACT_TOKEN);
+            if (!BillingConditionEvaluator.matchesKeywordsByMode(str(row, "packName"), rule.path("keywords"), foldMatchMode)) {
                 continue;
             }
             if (!BillingConditionEvaluator.matchesRule(rule, ctx)) continue;
@@ -1031,7 +1035,7 @@ public class PricingEngine {
         List<SpecialFeeResult> matchedFees = new ArrayList<>();
         if (extraFees.isArray()) {
             for (JsonNode rule : extraFees) {
-                SpecialFeeResult matched = matchExtraFeeRule(rule, combined, hospitalName, bagSize, billingCount);
+                SpecialFeeResult matched = matchExtraFeeRule(rule, str(row, "packName"), combined, hospitalName, bagSize, billingCount);
                 if (matched != null) {
                     matchedFees.add(matched);
                 }
@@ -1040,9 +1044,9 @@ public class PricingEngine {
         return matchedFees;
     }
 
-    private SpecialFeeResult matchExtraFeeRule(JsonNode rule, String combined, String hospitalName, int bagSize, int effectiveCount) {
+    private SpecialFeeResult matchExtraFeeRule(JsonNode rule, String packName, String combined, String hospitalName, int bagSize, int effectiveCount) {
         if (!hospitalMatches(rule, hospitalName)) return null;
-        if (!matchesRuleKeywords(combined, rule.path("keywords"))) return null;
+        if (!BillingConditionEvaluator.matchesRuleKeywords(rule, packName, combined)) return null;
         if (!bagSizeMatches(rule, bagSize)) return null;
         int minCount = rule.path("minInstrumentCount").asInt(Integer.MIN_VALUE);
         int maxCount = rule.path("maxInstrumentCount").asInt(Integer.MAX_VALUE);
@@ -2016,14 +2020,14 @@ public class PricingEngine {
         return false;
     }
 
-    private boolean matchesKeywordsBoundary(String text, JsonNode keywords) {
-        return BillingConditionEvaluator.matchesKeywordsExactToken(text, keywords);
+    private boolean matchesKeywordsBoundary(String text, JsonNode keywords, String mode) {
+        return BillingConditionEvaluator.matchesKeywordsByMode(text, keywords, mode);
     }
 
-    /** 查找包名中精准匹配的小件关键词及其位置，用于区分大件/小件混合包 */
-    private SmallItemSplit findSmallItemSplit(String text, JsonNode keywords) {
+    /** 查找包名中命中（按匹配模式）的小件关键词及其位置，用于区分大件/小件混合包 */
+    private SmallItemSplit findSmallItemSplit(String text, JsonNode keywords, String mode) {
         BillingConditionEvaluator.ExactTokenKeywordMatch match =
-                BillingConditionEvaluator.findLongestExactTokenKeyword(text, keywords);
+                BillingConditionEvaluator.findKeywordByMode(text, keywords, mode);
         if (match == null) {
             return null;
         }
