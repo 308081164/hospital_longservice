@@ -1,6 +1,6 @@
 import { computed, ref } from 'vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
-import { useI18n } from 'vue-i18n'
+import { $t } from '@/locales'
 import {
   repriceReconciliation,
   updateHospitalReconciliationRows
@@ -28,7 +28,9 @@ export function isAnomalyEditableRow(row: Record<string, unknown>): boolean {
 }
 
 export function useReconciliationEntryEditing() {
-  const { t } = useI18n()
+  // 本组合式函数会在事件回调中被延迟实例化（ensureEntryEditor），
+  // 不能使用仅限 setup 顶层调用的 useI18n()，改用全局 $t
+  const t = $t
   const dirtyRows = ref(new Map<string, Record<string, unknown>>())
   const dirtyFields = ref(new Map<string, Set<string>>())
   const isSaving = ref(false)
