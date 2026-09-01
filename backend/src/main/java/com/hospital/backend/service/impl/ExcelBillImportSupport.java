@@ -7,6 +7,7 @@ import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.usermodel.WorkbookFactory;
 
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.text.DecimalFormat;
@@ -22,11 +23,28 @@ import java.util.Set;
  */
 final class ExcelBillImportSupport {
 
+    private static final java.util.regex.Pattern HOSPITAL_SUFFIX = java.util.regex.Pattern.compile(
+            "(医院|诊所|集团|中心|卫生院|卫生服务中心|医疗美容|妇产医院|肛肠医院)$");
+
     private ExcelBillImportSupport() {
     }
 
+    record WorkbookParseResult(List<Map<String, Object>> rows, List<String> hospitalDisplayNames) {
+    }
+
     static List<Map<String, Object>> parseWorkbook(InputStream inputStream) throws IOException {
+        return parseWorkbookData(inputStream).rows();
+    }
+
+    static List<String> extractHospitalDisplayNames(byte[] fileBytes) throws IOException {
+        try (InputStream in = new ByteArrayInputStream(fileBytes)) {
+            return parseWorkbookData(in).hospitalDisplayNames();
+        }
+    }
+
+    static WorkbookParseResult parseWorkbookData(InputStream inputStream) throws IOException {
         List<Map<String, Object>> allRows = new ArrayList<>();
+        LinkedHashSet<String> hospitalDisplayNames = new LinkedHashSet<>();
         try (Workbook workbook = WorkbookFactory.create(inputStream)) {
             for (int s = 0; s < workbook.getNumberOfSheets(); s++) {
                 Sheet sheet = workbook.getSheetAt(s);
@@ -39,6 +57,7 @@ final class ExcelBillImportSupport {
                 if (headerIdx < 0) {
                     continue;
                 }
+                collectHospitalDisplayNames(matrix, headerIdx, hospitalDisplayNames);
                 Map<String, Integer> headerMap = buildHeaderMap(matrix.get(headerIdx));
                 boolean combinedSheet = isCombinedImportSheet(sheetName, headerMap);
                 String currentDept = sheetName;
@@ -89,7 +108,41 @@ final class ExcelBillImportSupport {
                 }
             }
         }
-        return allRows;
+        return new WorkbookParseResult(allRows, List.copyOf(hospitalDisplayNames));
+    }
+
+    private static void collectHospitalDisplayNames(
+            List<List<Object>> matrix, int headerRowIndex, Set<String> out) {
+        int scanEnd = Math.min(matrix.size(), headerRowIndex + 8);
+        for (int r = 0; r < scanEnd; r++) {
+            List<Object> row = matrix.get(r);
+            for (Object cell : row) {
+                String text = sanitizeStr(cell);
+                if (text.isBlank()) {
+                    continue;
+                }
+                if ((text.contains("医院") || text.contains("诊所")) && isLikelyHospitalDisplayName(text)) {
+                    out.add(text.trim());
+                }
+            }
+        }
+    }
+
+    static boolean isLikelyHospitalDisplayName(String name) {
+        if (name == null || name.isBlank()) {
+            return false;
+        }
+        String trimmed = name.trim();
+        if (trimmed.contains("发货单汇总表")) {
+            return false;
+        }
+        if (isInlineDepartmentMarkerRow(trimmed, "", "", "")) {
+            return false;
+        }
+        if (trimmed.contains("医院") && trimmed.contains("至")) {
+            return false;
+        }
+        return HOSPITAL_SUFFIX.matcher(trimmed).find() || trimmed.length() >= 6;
     }
 
     private static List<List<Object>> readSheetMatrix(Sheet sheet) {
@@ -114,6 +167,23 @@ final class ExcelBillImportSupport {
                         } else {
                             double v = cell.getNumericCellValue();
                             rowData.add(v == Math.floor(v) && !Double.isInfinite(v) ? (long) v : v);
+                        }
+                    }
+                    case FORMULA -> {
+                        // 公式单元格读取 Excel 保存时缓存的计算结果（即 Excel 中显示的数值），
+                        // 否则器械数等列会被当作空串抹掉
+                        switch (cell.getCachedFormulaResultType()) {
+                            case NUMERIC -> {
+                                if (DateUtil.isCellDateFormatted(cell)) {
+                                    rowData.add(cell.getLocalDateTimeCellValue().toLocalDate().toString());
+                                } else {
+                                    double v = cell.getNumericCellValue();
+                                    rowData.add(v == Math.floor(v) && !Double.isInfinite(v) ? (long) v : v);
+                                }
+                            }
+                            case STRING -> rowData.add(cell.getStringCellValue());
+                            case BOOLEAN -> rowData.add(cell.getBooleanCellValue());
+                            default -> rowData.add("");
                         }
                     }
                     case STRING -> rowData.add(cell.getStringCellValue());
