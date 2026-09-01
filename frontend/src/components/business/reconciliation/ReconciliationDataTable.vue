@@ -476,8 +476,9 @@
     text-align: left;
   }
 
+  /* 宽度 100% 适配列宽：固定 100px 在 80px 器械数列中会被裁掉一截 */
   .detail-cell-input {
-    width: 100px;
+    width: 100%;
     padding: 4px 8px;
     font-size: 12px;
     text-align: right;
@@ -497,8 +498,9 @@
     opacity: 1;
   }
 
+  /* 宽度 100% 适配列宽：固定 95px 在 90px 状态列中会被裁掉一截 */
   .detail-cell-select {
-    width: 95px;
+    width: 100%;
     padding: 4px;
     font-size: 12px;
     background: #fff;
@@ -570,5 +572,26 @@
     line-height: 1;
     color: #f56c6c;
     cursor: help;
+  }
+
+  /* 列总宽超出容器时显示原生横向滚动条：Element Plus 的 el-scrollbar__wrap--hidden-default
+     会隐藏原生滚动条、自定义滚动条又仅悬停可见，导致右侧列被裁剪且用户无从察觉 */
+  .reconciliation-data-table :deep(.el-scrollbar__wrap) {
+    scrollbar-width: thin;
+  }
+
+  .reconciliation-data-table :deep(.el-scrollbar__wrap)::-webkit-scrollbar {
+    display: block;
+    width: 8px;
+    height: 8px;
+  }
+
+  .reconciliation-data-table :deep(.el-scrollbar__wrap)::-webkit-scrollbar-thumb {
+    background: var(--el-border-color-dark, #c0c4cc);
+    border-radius: 4px;
+  }
+
+  .reconciliation-data-table :deep(.el-scrollbar__wrap)::-webkit-scrollbar-track {
+    background: transparent;
   }
 </style>
