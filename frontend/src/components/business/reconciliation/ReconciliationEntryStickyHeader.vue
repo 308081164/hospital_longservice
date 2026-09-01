@@ -27,8 +27,9 @@
       </ElButton>
     </div>
 
-    <!-- Row 2: sheet segments + save -->
-    <div v-if="showToolbar" class="sticky-row sticky-row--sheets">
+    <!-- Row 2: sheet segments + save；解析成功（有 workbook）即需展示，
+         否则新上传条目永远没有「校对并保存」入口（processedRows 处理后才产生） -->
+    <div v-if="entry.workbook" class="sticky-row sticky-row--sheets">
       <div class="sheet-segmented" role="tablist">
         <button
           v-if="entry.savedJobId"
