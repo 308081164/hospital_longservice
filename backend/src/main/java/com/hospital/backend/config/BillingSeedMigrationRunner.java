@@ -353,12 +353,13 @@ public class BillingSeedMigrationRunner implements CommandLineRunner {
     private static final String WCSRMYY_OR_DEDUP_MARKER = "billing_seed_wcsrm_yy_or_dedup_20260724_v1";
     /** 删除非 22 家特殊计价客户及其孤儿数据（严格测试口径收敛） */
     private static final String STALE_CUSTOMER_CLEANUP_MARKER = "billing_seed_stale_customer_cleanup_20260827_v1";
-    /** 最终保留的 22 家特殊计价客户 code（与 scripts/billing_rules_manifest.py STRICT_KEEP_CODES 一致） */
+    /** 最终保留的 26 家特殊计价客户 code（与 scripts/billing_rules_manifest.py STRICT_KEEP_CODES 一致）：历史 22 家 + 2026-08 新引入 4 家 */
     private static final java.util.List<String> STRICT_KEEP_CODES = java.util.List.of(
             "BINGCHENG-YM", "GUOYAO-2", "FNN-YY", "NEAU-YY", "HRB-WY", "HRB-SD-MB", "HRB-HTFH",
             "HRB-WY-EM", "JIUZHOU-FK", "BOSHANG-YY", "HAIYUAN-SB", "HLJ-FY-RK", "ZUYAN-NG",
             "SHKF-YY", "DL-FUCHAN", "CHUNYU-YL", "HL-ZGH", "JZSW-BIO", "SUOFEI-YL", "HLJ-JYGLJ-YY",
-            "HULAN-TCM", "PFQ-RM");
+            "HULAN-TCM", "PFQ-RM",
+            "HULAN-RM", "XINFA-HSZ", "YUANDONG-XN", "ZUYAN-SF");
 
     private record IncrementalSeed(String markerKey, String classpathFile) {}
 

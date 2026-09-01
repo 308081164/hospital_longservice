@@ -39,9 +39,9 @@ INACTIVE_EXTRA_CODES = [
     "ZXYSJT",
 ]
 
-# 最终仅保留的 22 家特殊计价客户（严格测试口径）。
+# 最终仅保留的 26 家特殊计价客户（严格测试口径）：历史 22 家 + 2026-08 新引入 4 家。
 # 须与 BillingSeedMigrationRunner.STRICT_KEEP_CODES 保持一致。
-# 生成 manifest 时删除非 22 家客户，确保清单与部署后的 DB 一致。
+# 生成 manifest 时删除非 26 家客户，确保清单与部署后的 DB 一致。
 STRICT_KEEP_CODES = [
     "BINGCHENG-YM",
     "GUOYAO-2",
@@ -65,6 +65,10 @@ STRICT_KEEP_CODES = [
     "HLJ-JYGLJ-YY",
     "HULAN-TCM",
     "PFQ-RM",
+    "HULAN-RM",
+    "XINFA-HSZ",
+    "YUANDONG-XN",
+    "ZUYAN-SF",
 ]
 
 # 种子文件仅以 code 引用客户、未携带规范名时，回退到此映射。
@@ -373,9 +377,9 @@ def build_manifest() -> dict[str, Any]:
             rule["isActive"] = True
             rules[name] = rule
 
-    # 最终仅保留 22 家特殊计价客户：删除非严格测试口径的客户。
+    # 最终仅保留 26 家特殊计价客户：删除非严格测试口径的客户。
     customers = {code: entry for code, entry in customers.items() if code in STRICT_KEEP_CODES}
-    # 22 家特殊计价客户全部启用特色账单（历史遗留导致部分客户 billingEnabled=false，
+    # 26 家特殊计价客户全部启用特色账单（历史遗留导致部分客户 billingEnabled=false，
     # 如航天风华 HRB-HTFH，须强制开启以让 FOLD 等特殊规则生效）。
     for code in STRICT_KEEP_CODES:
         if code in customers:

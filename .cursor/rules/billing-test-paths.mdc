@@ -13,7 +13,7 @@ alwaysApply: true
 
 | 项 | 约定 |
 |----|------|
-| 医院清单 | `BillingSeedMigrationRunner.STRICT_KEEP_CODES`（历史 22 家）+ 后续正式新引入的特殊计价院（当前 +4：HULAN-RM / XINFA-HSZ / YUANDONG-XN / ZUYAN-SF） |
+| 医院清单 | `BillingSeedMigrationRunner.STRICT_KEEP_CODES`（共 26 家：历史 22 家 + 2026-08 新引入 4 家 HULAN-RM / XINFA-HSZ / YUANDONG-XN / ZUYAN-SF，已全部并入该常量） |
 | 材料 | 与 **2026-08-27 基线报告**（`测试用例/特殊收费v8严格Excel对账报告-20260827.json`）相同的 raw+proc 账期与文件；新引入医院只在 `测试用例/<院名>/` 下按同一规则（raw vs proc 成对账期）扩展材料 |
 | 账期 | **锁定基线月份**，禁止擅自改用「最优账期」；只有基线标记 SKIP（缺材料）的院才允许按 7→5→4→8→6→3 fallback |
 | 脚本入口 | `scripts/special_v8_strict_excel_audit.py`（`./bin/hospital-cli audit strict-v8`） |
