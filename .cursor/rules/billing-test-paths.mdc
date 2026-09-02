@@ -38,3 +38,11 @@ alwaysApply: true
 - 问的是「算价对不对、和客户处理后 Excel 是否一致」→ **路径 A**
 - 问的是「种子/规则有没有录进去、和清单是否一致」→ **路径 B**
 - 两者都要做时：分开跑、分开写报告、分开汇报，标题写明路径名
+
+## 规则变更守则（强制）
+
+任何计费规则增删改（种子、关键词、匹配模式、价格参数）必须遵守
+`docs/计费规则迁移与验收规范.md`：关键词匹配模式按 Excel 措辞判定（「包名称带X」= 词级
+`@contains`）；FIXED_PRICE 必须 `skipPackaging+skipDiscount`；变更后必须通过
+G1 生成器丢弃闸门（`billing_rules_manifest.py --write` 零 FATAL）、G2 关键词失配复扫、
+G3 `rules compare --all` 零漂移；Excel 版本更新后必须跑 G4 Excel↔manifest 逐条对账。

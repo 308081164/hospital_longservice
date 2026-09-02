@@ -7,6 +7,7 @@ import argparse
 import copy
 import hashlib
 import json
+import sys
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
@@ -158,13 +159,20 @@ def _merge_profile_rules(
         existing[name] = rule
 
 
-def _apply_rule_update(rules: dict[str, dict[str, Any]], patch: dict[str, Any]) -> None:
+def _apply_rule_update(rules: dict[str, dict[str, Any]], patch: dict[str, Any]) -> bool:
+    """应用一条 ruleUpdates 补丁。返回 False 表示目标规则不存在、补丁被丢弃。
+
+    丢弃必须向上冒泡记录——历史上 phase-special-charge-12-sync-20260818 的密封件补词
+    补丁曾因目标规则由字母序靠后的文件创建而被静默丢弃（2026-09-02 全量对账发现），
+    此类静默丢弃会导致 manifest 与 Java 侧最终状态不一致，且 reconcile 会把 DB 拉回
+    缺失状态。调用方必须收集返回值并在汇总处告警。
+    """
     rule_name = _text(patch, "ruleName")
     if not rule_name:
-        return
+        return False
     rule = rules.get(rule_name)
     if rule is None:
-        return
+        return False
     if "setPrice" in patch:
         rule["price"] = patch["setPrice"]
     if "setFoldRatio" in patch:
@@ -218,6 +226,7 @@ def _apply_rule_update(rules: dict[str, dict[str, Any]], patch: dict[str, Any]) 
             del rules[rule_name]
             rule["name"] = new_name
             rules[new_name] = rule
+    return True
 
 
 def _apply_customer_update(customers: dict[str, dict[str, Any]], patch: dict[str, Any]) -> None:
@@ -261,6 +270,9 @@ def build_manifest() -> dict[str, Any]:
     customers: dict[str, dict[str, Any]] = {}
     deactivated: set[tuple[str, str]] = set()
     pending_price_updates: list[dict[str, Any]] = []
+    # ruleUpdates 补丁被丢弃（目标客户/规则不存在）的记录：(种子文件, 客户code, 规则名)。
+    # 历史教训：静默丢弃会导致 manifest 与 Java 侧最终状态不一致（2026-09-02 水管膜片事件）。
+    dropped_rule_updates: list[tuple[str, str, str]] = []
 
     for path in sorted(SEED_DIR.glob("*.json")):
         if path.name in SKIP_FILES:
@@ -311,17 +323,25 @@ def build_manifest() -> dict[str, Any]:
             code = _text(patch, "code")
             if not code:
                 continue
-            # Excel17 对齐种子的补丁目标规则由字母序靠后的
-            # phase-special-charge-17-sync-20260830 创建（keyword < special），
-            # 内联应用会被静默丢弃；Java 侧按 INCREMENTAL_SEEDS 顺序应用不受影响。
-            # 仅对该种子的补丁做延后二遍处理；其他种子的补丁保持历史内联语义，
-            # 避免改变已被后续种子取代的历史补丁（如 20260811 整形包改名）的最终状态。
-            # phase-special-charge-contains-keyword-fix-20260902 同理：其海员胶帽补丁
-            # 目标规则由字母序靠后的 phase-special-v8-rules-20260814 创建（charge < v8），
-            # Java 侧该种子在 INCREMENTAL_SEEDS 末尾执行、目标规则已存在，故此处延后对齐。
+            # 以下种子的补丁目标规则由字母序靠后的文件创建，内联应用会被静默丢弃；
+            # Java 侧按 INCREMENTAL_SEEDS 顺序应用不受影响。对这些种子的补丁在目标规则
+            # 尚不存在时做延后二遍处理（pending_price_updates 按文件字母序追加，二遍按
+            # 追加顺序应用，故同目标规则的多个延后补丁以后者覆盖前者——与 Java 顺序一致）：
+            #   - phase-special-charge-12-sync-20260818：密封件补词补丁，目标规则由
+            #     phase-special-v8-rules-20260814 创建（charge < v8），2026-09-02 全量
+            #     Excel↔manifest 对账发现其曾被静默丢弃（水管膜片缺失）。
+            #   - phase-keyword-match-mode-excel17-align-20260831：目标规则由
+            #     phase-special-charge-17-sync-20260830 创建（keyword < special）。
+            #   - phase-special-charge-contains-keyword-fix-20260902 /
+            #     phase-special-charge-keyword-contains-align-20260902：海员胶帽/密封件等
+            #     补丁目标规则由字母序靠后的 phase-special-v8-rules-20260814 创建。
+            # 其他种子的补丁保持历史内联语义，避免改变已被后续种子取代的历史补丁
+            # （如 20260811 整形包改名）的最终状态。
             if path.name in {
+                "phase-special-charge-12-sync-20260818.json",
                 "phase-keyword-match-mode-excel17-align-20260831.json",
                 "phase-special-charge-contains-keyword-fix-20260902.json",
+                "phase-special-charge-keyword-contains-align-20260902.json",
             }:
                 patch_rule_name = _text(patch, "ruleName")
                 existing_rules = (customers.get(code) or {}).get("productRules") or {}
@@ -329,9 +349,11 @@ def build_manifest() -> dict[str, Any]:
                     pending_price_updates.append(patch)
                     continue
             if code not in customers:
+                dropped_rule_updates.append((path.name, code, _text(patch, "ruleName") or ""))
                 continue
             rules = customers[code].setdefault("productRules", {})
-            _apply_rule_update(rules, patch)
+            if not _apply_rule_update(rules, patch):
+                dropped_rule_updates.append((path.name, code, _text(patch, "ruleName") or ""))
 
         for raw in data.get("newRules") or []:
             code = _text(raw, "code")
@@ -382,22 +404,16 @@ def build_manifest() -> dict[str, Any]:
             if rule_name in rules:
                 rules[rule_name]["isActive"] = True
 
-    # 二遍处理：① 纯数值字段更新（setPrice/setFoldRatio/setThreshold）——可能先于
-    # newRules 执行（字母序靠前），须在所有规则创建后统一应用；
-    # ② Excel17 对齐种子中目标规则由字母序靠后文件创建的补丁（见上注释）。
-    for patch in pending_price_updates:
-        code = _text(patch, "code")
-        if not code or code not in customers:
-            continue
-        rules = customers[code].setdefault("productRules", {})
-        _apply_rule_update(rules, patch)
-
     for code in INACTIVE_EXTRA_CODES:
         if code in customers:
             customers[code]["status"] = "inactive"
 
     # 补录 Java HardcodedRulesMigrationRunner 硬编码规则（非 seed 文件）。
     # 仅当同名规则不存在时插入（对应 Java ensureRule 的 countByCustomerIdAndName 跳过逻辑）。
+    # 注意：Java 侧 HardcodedRulesMigrationRunner @Order(110) 先于 BillingSeedMigrationRunner
+    # @Order(115) 执行，种子补丁可以作用于硬编码规则（如 excel17-align 对
+    # 「松电机扩针 5 件算 1 件」的 setKeywordMatchMode）。因此硬编码规则必须先于
+    # 二遍补丁应用插入，否则此类补丁会被静默丢弃（2026-09-02 全量对账发现）。
     for code, hardcoded in HARDCODED_RULES.items():
         if code not in customers:
             continue
@@ -411,6 +427,18 @@ def build_manifest() -> dict[str, Any]:
             rule["isActive"] = True
             rules[name] = rule
 
+    # 二遍处理：① 纯数值字段更新（setPrice/setFoldRatio/setThreshold）——可能先于
+    # newRules 执行（字母序靠前），须在所有规则创建后统一应用；
+    # ② 延后名单中目标规则由字母序靠后文件（或硬编码）创建的补丁（见上注释）。
+    for patch in pending_price_updates:
+        code = _text(patch, "code")
+        if not code or code not in customers:
+            dropped_rule_updates.append(("<deferred>", code or "", _text(patch, "ruleName") or ""))
+            continue
+        rules = customers[code].setdefault("productRules", {})
+        if not _apply_rule_update(rules, patch):
+            dropped_rule_updates.append(("<deferred>", code, _text(patch, "ruleName") or ""))
+
     # 最终仅保留 26 家特殊计价客户：删除非严格测试口径的客户。
     customers = {code: entry for code, entry in customers.items() if code in STRICT_KEEP_CODES}
     # 26 家特殊计价客户全部启用特色账单（历史遗留导致部分客户 billingEnabled=false，
@@ -418,6 +446,40 @@ def build_manifest() -> dict[str, Any]:
     for code in STRICT_KEEP_CODES:
         if code in customers:
             customers[code]["billingEnabled"] = True
+
+    # 丢弃补丁基线：以下历史补丁的丢弃是「最终状态一致」的（目标规则后被改名/重建/
+    # 删除，或 Java 侧同样无-op），其最终状态已被各院严格基线对账验证。任何基线之外
+    # 的新丢弃都会使构建失败——这是防止「补丁静默丢失」（2026-09-02 水管膜片事件）
+    # 回潮的硬闸门：新种子的补丁若因规则名笔误或缺少延后配置而被丢弃，此处直接报错。
+    KNOWN_CONSISTENT_DROPS = {
+        ("phase-batch-p0.1.json", "BINGCHENG-YM", "整形包54.5"),
+        ("phase-bingcheng-ym-per-piece-20260811.json", "BINGCHENG-YM", "≥3件按件5.5元"),
+        ("phase-bingcheng-ym-rollback-per-piece-20260811.json", "BINGCHENG-YM", "≥3件按件5.5元"),
+        ("phase-bingcheng-ym-rollback-per-piece-20260811.json", "BINGCHENG-YM", "整形包54.5"),
+        ("phase-bingcheng-ym-rollback-per-piece-20260811.json", "BINGCHENG-YM", "脂充包54.5"),
+        ("phase-hrb-bc-med-beauty-20260723.json", "BINGCHENG-YM", "整形包54.5"),
+        ("phase-hrb-bc-med-beauty-fix-20260724-v2.json", "BINGCHENG-YM", "整形包54.5"),
+        ("phase-hrb-bc-med-beauty-fix-20260724.json", "BINGCHENG-YM", "整形包54.5"),
+        ("phase-s7-sanjing-hulan-wailai-keywords-20260723.json", "HULAN-RM", "PDF外来器械骨电钻11.55"),
+        ("phase-s7-sanjing-hulan-wailai-keywords-20260723.json", "HULAN-RM", "PDF外来器械植入物3.85"),
+        ("<deferred>", "HRB-HTFH", "航天风华镍钛锉 5 件算 1 件"),
+    }
+    fatal_drops: list[tuple[str, str, str]] = []
+    for seed, code, rule_name in dropped_rule_updates:
+        if (seed, code, rule_name) in KNOWN_CONSISTENT_DROPS:
+            continue
+        entry = customers.get(code)
+        if entry and rule_name and rule_name in (entry.get("productRules") or {}):
+            # 目标规则在最终 manifest 中存在但补丁未应用——必须修复
+            # （把种子加入延后名单或修正规则名），否则 manifest 与预期不符。
+            fatal_drops.append((seed, code, rule_name))
+        else:
+            print(
+                f"WARN: ruleUpdates 补丁未应用（目标规则不存在，与 Java 侧一致）: "
+                f"seed={seed} code={code} rule={rule_name}",
+                file=sys.stderr,
+            )
+    dropped_rule_updates = fatal_drops
 
     manifest_customers: dict[str, Any] = {}
     for code in sorted(customers):
@@ -453,6 +515,10 @@ def build_manifest() -> dict[str, Any]:
         "manifest_hash": manifest_hash,
         "billing_enabled_count": enabled_count,
         "active_billing_enabled_count": active_enabled_count,
+        "dropped_rule_updates": [
+            {"seed": seed, "code": code, "ruleName": rule_name}
+            for seed, code, rule_name in dropped_rule_updates
+        ],
         "customers": manifest_customers,
     }
 
@@ -464,6 +530,23 @@ def main() -> int:
     args = parser.parse_args()
 
     manifest = build_manifest()
+    dropped = manifest.get("dropped_rule_updates") or []
+    if dropped:
+        # 静默丢弃的 ruleUpdates 补丁是严重事故信号（manifest 会与 Java 侧最终状态不一致，
+        # reconcile 会把 DB 拉回缺失状态）。任何非空丢弃都必须显式修复：把补丁所在种子加入
+        # 延后名单（见 build_manifest 注释）或修正补丁目标规则名。此处直接失败以杜绝回潮。
+        print(
+            "FATAL: ruleUpdates 补丁被丢弃（目标规则/客户不存在），manifest 不可信：",
+            file=sys.stderr,
+        )
+        for item in dropped:
+            print(
+                f"  - seed={item['seed']} code={item['code']} rule={item['ruleName']}",
+                file=sys.stderr,
+            )
+        return 2
+    # 通过丢弃检查后该字段必为空列表，不写入 manifest 文件（保持既有结构不变）。
+    manifest.pop("dropped_rule_updates", None)
     if args.code:
         code = args.code.strip().upper()
         entry = manifest["customers"].get(code)

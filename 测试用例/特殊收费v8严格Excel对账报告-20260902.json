@@ -8,13 +8,13 @@
     "error": 0
   },
   "sections": {
-    "month6": [
+    "month7": [
       {
         "hospital": "黑龙江省妇幼保健院（人口）",
         "customer_label": "省妇幼人口",
         "status": "FAIL",
         "message": "多报 7；忽略非计价 warning 1 条；字段校验伴计价偏差 1 条（单独说明，不计多报）",
-        "job_id": 1478,
+        "job_id": 1479,
         "raw_file": "7月__人口原始.xlsx",
         "proc_file": "7月__人口账单.xlsx",
         "expected_count": 0,
@@ -137,7 +137,7 @@
         "dedupe_note": "",
         "fully_aligned": false,
         "month": 7,
-        "section": "month6"
+        "section": "month7"
       }
     ]
   },

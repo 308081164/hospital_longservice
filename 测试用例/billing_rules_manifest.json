@@ -1,7 +1,7 @@
 {
   "version": 1,
-  "generated_at": "2026-09-02T15:09:33.869161+00:00",
-  "manifest_hash": "73f116c16b942b6f2ca3a1801dc6958af3bc73d9812cde47ad9b5bd5e3125436",
+  "generated_at": "2026-09-02T15:51:32.469107+00:00",
+  "manifest_hash": "af072391fc75b31033ef40c3c9f3948ed6f3f65f2772602af249ad047d662568",
   "billing_enabled_count": 29,
   "active_billing_enabled_count": 29,
   "customers": {
@@ -341,8 +341,8 @@
           "name": "春语塑料管>10折算22",
           "priority": 11,
           "keywords": [
-            "塑料管",
-            "管子"
+            "塑料管@contains",
+            "管子@contains"
           ],
           "threshold": 10,
           "foldRatio": 10,
@@ -360,8 +360,8 @@
           "name": "春语塑料管≤10按1件",
           "priority": 10,
           "keywords": [
-            "塑料管",
-            "管子"
+            "塑料管@contains",
+            "管子@contains"
           ],
           "threshold": 10,
           "foldRatio": 10,
@@ -390,7 +390,7 @@
           "name": "道里妇幼棉花针5合1免包材",
           "priority": 11,
           "keywords": [
-            "棉花针"
+            "棉花针@contains"
           ],
           "threshold": 5,
           "foldRatio": 5,
@@ -406,7 +406,7 @@
           "name": "道里妇幼棉花针5合1含包材",
           "priority": 10,
           "keywords": [
-            "棉花针"
+            "棉花针@contains"
           ],
           "threshold": 5,
           "foldRatio": 5,
@@ -422,7 +422,7 @@
           "name": "道里妇幼洗髓针5合1免包材",
           "priority": 13,
           "keywords": [
-            "洗髓针"
+            "洗髓针@contains"
           ],
           "threshold": 5,
           "foldRatio": 5,
@@ -438,7 +438,7 @@
           "name": "道里妇幼洗髓针5合1含包材",
           "priority": 12,
           "keywords": [
-            "洗髓针"
+            "洗髓针@contains"
           ],
           "threshold": 5,
           "foldRatio": 5,
@@ -466,10 +466,10 @@
           "name": "方南南小件5合1免包材",
           "priority": 11,
           "keywords": [
-            "P钻",
-            "根管锉",
-            "光滑针",
-            "机扩针"
+            "P钻@contains",
+            "根管锉@contains",
+            "光滑针@contains",
+            "机扩针@contains"
           ],
           "threshold": 5,
           "foldRatio": 5,
@@ -485,10 +485,10 @@
           "name": "方南南小件5合1含包材",
           "priority": 10,
           "keywords": [
-            "P钻",
-            "根管锉",
-            "光滑针",
-            "机扩针"
+            "P钻@contains",
+            "根管锉@contains",
+            "光滑针@contains",
+            "机扩针@contains"
           ],
           "threshold": 5,
           "foldRatio": 5,
@@ -626,7 +626,7 @@
           "name": "电机厂指针5合1",
           "priority": 14,
           "keywords": [
-            "指针"
+            "指针@contains"
           ],
           "threshold": 5,
           "foldRatio": 5,
@@ -640,7 +640,7 @@
           "name": "电机厂指针5合1免包材",
           "priority": 15,
           "keywords": [
-            "指针"
+            "指针@contains"
           ],
           "threshold": 5,
           "foldRatio": 5,
@@ -657,7 +657,7 @@
           "name": "电机厂指针5合1含包材",
           "priority": 14,
           "keywords": [
-            "指针"
+            "指针@contains"
           ],
           "threshold": 5,
           "foldRatio": 5,
@@ -1424,7 +1424,7 @@
           "name": "妇幼人口加长锉5合1免包材",
           "priority": 11,
           "keywords": [
-            "加长锉"
+            "加长锉@contains"
           ],
           "threshold": 5,
           "foldRatio": 5,
@@ -1440,7 +1440,7 @@
           "name": "妇幼人口加长锉5合1含包材",
           "priority": 10,
           "keywords": [
-            "加长锉"
+            "加长锉@contains"
           ],
           "threshold": 5,
           "foldRatio": 5,
@@ -1512,8 +1512,9 @@
           "name": "妇幼人口密封件>5折算22",
           "priority": 11,
           "keywords": [
-            "密封件",
-            "密封胶圈"
+            "密封件@contains",
+            "密封胶圈@contains",
+            "水管膜片@contains"
           ],
           "threshold": 5,
           "foldRatio": 5,
@@ -1531,8 +1532,9 @@
           "name": "妇幼人口密封件≤5按1件",
           "priority": 10,
           "keywords": [
-            "密封件",
-            "密封胶圈"
+            "密封件@contains",
+            "密封胶圈@contains",
+            "水管膜片@contains"
           ],
           "threshold": 5,
           "foldRatio": 5,
@@ -1549,7 +1551,7 @@
           "name": "妇幼人口彩色锉5合1免包材",
           "priority": 11,
           "keywords": [
-            "彩色锉"
+            "彩色锉@contains"
           ],
           "threshold": 5,
           "foldRatio": 5,
@@ -1565,7 +1567,7 @@
           "name": "妇幼人口彩色锉5合1含包材",
           "priority": 10,
           "keywords": [
-            "彩色锉"
+            "彩色锉@contains"
           ],
           "threshold": 5,
           "foldRatio": 5,
@@ -1581,7 +1583,7 @@
           "name": "妇幼人口手扩锉5合1免包材",
           "priority": 11,
           "keywords": [
-            "手扩锉"
+            "手扩锉@contains"
           ],
           "threshold": 5,
           "foldRatio": 5,
@@ -1597,7 +1599,7 @@
           "name": "妇幼人口手扩锉5合1含包材",
           "priority": 10,
           "keywords": [
-            "手扩锉"
+            "手扩锉@contains"
           ],
           "threshold": 5,
           "foldRatio": 5,
@@ -1659,7 +1661,7 @@
           "name": "妇幼人口机扩锉5合1免包材",
           "priority": 11,
           "keywords": [
-            "机扩锉"
+            "机扩锉@contains"
           ],
           "threshold": 5,
           "foldRatio": 5,
@@ -1675,7 +1677,7 @@
           "name": "妇幼人口机扩锉5合1含包材",
           "priority": 10,
           "keywords": [
-            "机扩锉"
+            "机扩锉@contains"
           ],
           "threshold": 5,
           "foldRatio": 5,
@@ -1723,7 +1725,7 @@
           "name": "妇幼人口洗髓针5合1免包材",
           "priority": 11,
           "keywords": [
-            "洗髓针"
+            "洗髓针@contains"
           ],
           "threshold": 5,
           "foldRatio": 5,
@@ -1739,7 +1741,7 @@
           "name": "妇幼人口洗髓针5合1含包材",
           "priority": 10,
           "keywords": [
-            "洗髓针"
+            "洗髓针@contains"
           ],
           "threshold": 5,
           "foldRatio": 5,
@@ -1866,7 +1868,7 @@
           "name": "妇幼人口针类组件5合1免包材",
           "priority": 11,
           "keywords": [
-            "针类组件"
+            "针类组件@contains"
           ],
           "threshold": 5,
           "foldRatio": 5,
@@ -1882,7 +1884,7 @@
           "name": "妇幼人口针类组件5合1含包材",
           "priority": 10,
           "keywords": [
-            "针类组件"
+            "针类组件@contains"
           ],
           "threshold": 5,
           "foldRatio": 5,
@@ -1923,8 +1925,8 @@
           "name": "监狱密封件>5折算22",
           "priority": 11,
           "keywords": [
-            "密封件",
-            "密封胶圈"
+            "密封件@contains",
+            "密封胶圈@contains"
           ],
           "threshold": 5,
           "foldRatio": 5,
@@ -1942,8 +1944,8 @@
           "name": "监狱密封件≤5按1件",
           "priority": 10,
           "keywords": [
-            "密封件",
-            "密封胶圈"
+            "密封件@contains",
+            "密封胶圈@contains"
           ],
           "threshold": 5,
           "foldRatio": 5,
@@ -1972,7 +1974,7 @@
           "name": "航天风华镍钛锉5合1免包材",
           "priority": 19,
           "keywords": [
-            "镍钛锉"
+            "镍钛锉@contains"
           ],
           "threshold": 5,
           "foldRatio": 5,
@@ -1988,7 +1990,7 @@
           "name": "航天风华镍钛锉5合1含包材",
           "priority": 18,
           "keywords": [
-            "镍钛锉"
+            "镍钛锉@contains"
           ],
           "threshold": 5,
           "foldRatio": 5,
@@ -2039,21 +2041,22 @@
           "name": "松电机扩针 5 件算 1 件",
           "priority": 10,
           "keywords": [
-            "机扩针"
+            "机扩针@contains"
           ],
           "threshold": 5,
           "foldRatio": 5,
           "isActive": true,
           "matchMode": "first",
           "skipPackaging": false,
-          "skipDiscount": false
+          "skipDiscount": false,
+          "keywordMatchMode": "exact_token"
         },
         {
           "ruleType": "FOLD",
           "name": "松电机扩针5合1免包材",
           "priority": 11,
           "keywords": [
-            "机扩针",
+            "机扩针@contains",
             "车针",
             "扩大针",
             "根管针",
@@ -2077,7 +2080,7 @@
           "name": "松电机扩针5合1含包材",
           "priority": 10,
           "keywords": [
-            "机扩针",
+            "机扩针@contains",
             "车针",
             "扩大针",
             "根管针",
@@ -3128,9 +3131,9 @@
           "name": "东北农大小件5合1免包材",
           "priority": 11,
           "keywords": [
-            "根管针",
-            "机锉",
-            "牙探针",
+            "根管针@contains",
+            "机锉@contains",
+            "牙探针@contains",
             "机扩针",
             "车针",
             "扩大针",
@@ -3153,9 +3156,9 @@
           "name": "东北农大小件5合1含包材",
           "priority": 10,
           "keywords": [
-            "根管针",
-            "机锉",
-            "牙探针",
+            "根管针@contains",
+            "机锉@contains",
+            "牙探针@contains",
             "机扩针",
             "车针",
             "扩大针",
@@ -3940,7 +3943,7 @@
           "name": "排针10盘算1件",
           "priority": 10,
           "keywords": [
-            "排针"
+            "排针@contains"
           ],
           "threshold": 10,
           "foldRatio": 5.5,
@@ -4056,7 +4059,7 @@
           "name": "祖研排针10合1免包材",
           "priority": 11,
           "keywords": [
-            "排针"
+            "排针@contains"
           ],
           "threshold": 10,
           "foldRatio": 10,
@@ -4073,7 +4076,7 @@
           "name": "祖研排针10合1含包材",
           "priority": 10,
           "keywords": [
-            "排针"
+            "排针@contains"
           ],
           "threshold": 10,
           "foldRatio": 10,
