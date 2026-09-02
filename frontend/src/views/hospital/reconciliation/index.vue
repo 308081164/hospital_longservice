@@ -136,6 +136,7 @@
     </div>
   </div>
   <ReconciliationJobDialogs
+    ref="jobDialogsRef"
     :active-rule="activeRule"
     :operator-name="operatorName"
     @patch-history="patchHistoryItem"
@@ -897,6 +898,7 @@
     ref,
     reactive,
     computed,
+    provide,
     watch,
     onMounted,
     onActivated,
@@ -927,6 +929,7 @@
   } from '@/utils/reconciliationHospitalName'
   import ReconciliationEntryPanel from '@/components/business/reconciliation/ReconciliationEntryPanel.vue'
   import ReconciliationJobDialogs from '@/components/business/reconciliation/ReconciliationJobDialogs.vue'
+  import { reconciliationJobActionsKey } from '@/composables/reconciliationJobActionsKey'
   import ReconciliationNoticeBell from '@/components/business/reconciliation/ReconciliationNoticeBell.vue'
   import PricingFlowDrawer from '@/components/business/reconciliation/PricingFlowDrawer.vue'
   import BillingRoleBadge from '@/components/business/BillingRoleBadge.vue'
@@ -1158,6 +1161,16 @@
 
   const userStore = useUserStore()
   const operatorName = ref(userStore.info.userName || '')
+
+  // ReconciliationJobDialogs 与条目卡片是平级节点，其内部 provide 的
+  // reconciliationJobActionsKey 无法到达条目头部（inject 得 null，按钮静默失效），
+  // 需由本页面（条目头部的祖先）转发 provide
+  const jobDialogsRef = ref<InstanceType<typeof ReconciliationJobDialogs> | null>(null)
+  provide(reconciliationJobActionsKey, {
+    openDetail: (item) => jobDialogsRef.value?.openDetail(item),
+    openReview: (item) => jobDialogsRef.value?.openReview(item),
+    requestExport: (item, type) => jobDialogsRef.value?.requestExport(item, type)
+  })
 
   const exportAnomalyDialogVisible = ref(false)
   const exportAnomalyTarget = ref<UploadEntry | null>(null)
