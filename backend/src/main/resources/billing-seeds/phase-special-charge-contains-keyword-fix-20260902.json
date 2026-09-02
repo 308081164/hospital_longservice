@@ -1,0 +1,42 @@
+{
+  "version": "1",
+  "description": "「包名称带X」包含语义关键词修复（2026-09-02）：Excel 特殊收费(17)/(2) 中呼兰中医院④、海员总院（松北）①的「包名称带“胶帽”」与黑龙江省妇幼保健院（人口）②的「包名称带“根管锉”」均为包含关系，但规则按 exact_token 配置，真实包名「胶帽组件-25件/Z1530」（帽后邻CJK「组」）与「加长根管锉-6/Z7520」（根前邻CJK「长」）词中失配，规则不生效落入标准计价。改为词级 @contains（包名范围内包含匹配，与东北农大「根管锉@contains」既有先例一致）；规则级 exact_token 保留，文本范围仍限包名，不扩大误伤面。呼兰/海员胶帽规则的温度约束（低温等离子）保持不变。",
+  "ruleUpdates": [
+    {
+      "code": "HULAN-TCM",
+      "ruleName": "呼兰中医胶帽5合1含包材",
+      "setKeywords": ["胶帽@contains"],
+      "note": "Excel：包名称带“胶帽”（包含）；真实包名 胶帽组件-25件/Z1530、胶帽(小)，exact_token 对前者词中失配"
+    },
+    {
+      "code": "HULAN-TCM",
+      "ruleName": "呼兰中医胶帽5合1免包材",
+      "setKeywords": ["胶帽@contains"],
+      "note": "同上"
+    },
+    {
+      "code": "HLJ-FY-RK",
+      "ruleName": "妇幼人口根管锉5合1含包材",
+      "setKeywords": ["根管锉@contains"],
+      "note": "Excel：包名称带“根管锉”（包含）；真实包名 加长根管锉-6/Z7520 词中失配（根前为CJK「长」），客户5/6月账该行33元、7月处理后账13.5元=ceil(6/5)×5.5+2.5"
+    },
+    {
+      "code": "HLJ-FY-RK",
+      "ruleName": "妇幼人口根管锉5合1免包材",
+      "setKeywords": ["根管锉@contains"],
+      "note": "同上"
+    },
+    {
+      "code": "HAIYUAN-SB",
+      "ruleName": "海员胶帽≤5按1件",
+      "setKeywords": ["胶帽@contains"],
+      "note": "Excel：包名称带“胶帽”（包含）；现有包名 胶帽-10/Z1526 在 exact_token 下已可命中，改为包含语义与 Excel 对齐，防止 胶帽组件 类变体复发同问题；现有数据行为不变"
+    },
+    {
+      "code": "HAIYUAN-SB",
+      "ruleName": "海员胶帽>5折算22",
+      "setKeywords": ["胶帽@contains"],
+      "note": "同上"
+    }
+  ]
+}

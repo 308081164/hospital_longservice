@@ -316,7 +316,13 @@ def build_manifest() -> dict[str, Any]:
             # 内联应用会被静默丢弃；Java 侧按 INCREMENTAL_SEEDS 顺序应用不受影响。
             # 仅对该种子的补丁做延后二遍处理；其他种子的补丁保持历史内联语义，
             # 避免改变已被后续种子取代的历史补丁（如 20260811 整形包改名）的最终状态。
-            if path.name == "phase-keyword-match-mode-excel17-align-20260831.json":
+            # phase-special-charge-contains-keyword-fix-20260902 同理：其海员胶帽补丁
+            # 目标规则由字母序靠后的 phase-special-v8-rules-20260814 创建（charge < v8），
+            # Java 侧该种子在 INCREMENTAL_SEEDS 末尾执行、目标规则已存在，故此处延后对齐。
+            if path.name in {
+                "phase-keyword-match-mode-excel17-align-20260831.json",
+                "phase-special-charge-contains-keyword-fix-20260902.json",
+            }:
                 patch_rule_name = _text(patch, "ruleName")
                 existing_rules = (customers.get(code) or {}).get("productRules") or {}
                 if code not in customers or (patch_rule_name and patch_rule_name not in existing_rules):
