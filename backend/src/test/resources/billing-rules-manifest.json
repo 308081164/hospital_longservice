@@ -1,10 +1,50 @@
 {
   "version": 1,
-  "generated_at": "2026-09-01T02:48:07.038480+00:00",
-  "manifest_hash": "848df59948b83462eb991da59e67a16ac1d109b166317c7b6e31f17bf7690280",
-  "billing_enabled_count": 26,
-  "active_billing_enabled_count": 26,
+  "generated_at": "2026-09-02T13:19:31.187616+00:00",
+  "manifest_hash": "4477995cda529eed16abf64ab32bf52d1c7537da0dcb557e6010f9af8b129431",
+  "billing_enabled_count": 29,
+  "active_billing_enabled_count": 29,
   "customers": {
+    "AOLAN-YY": {
+      "code": "AOLAN-YY",
+      "name": "奥兰医院",
+      "status": null,
+      "billingPricingMode": "hybrid",
+      "standardPricingOverride": null,
+      "billingEnabled": true,
+      "productRules": [
+        {
+          "ruleType": "PRICE_PER_INSTRUMENT",
+          "name": "奥兰双<3按件5.5含包材",
+          "priority": 10,
+          "price": 5.5,
+          "keywords": [
+            "双@contains"
+          ],
+          "maxInstrumentCount": 2,
+          "skipPackaging": false,
+          "skipDiscount": true,
+          "isActive": true,
+          "matchMode": "first"
+        },
+        {
+          "ruleType": "PRICE_PER_INSTRUMENT",
+          "name": "奥兰双≥3按件5.5免包材",
+          "priority": 11,
+          "price": 5.5,
+          "keywords": [
+            "双@contains"
+          ],
+          "minInstrumentCount": 3,
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": true,
+          "matchMode": "first"
+        }
+      ],
+      "rule_count": 2,
+      "active_rule_count": 2
+    },
     "BINGCHENG-YM": {
       "code": "BINGCHENG-YM",
       "name": "哈尔滨冰城医疗美容医院",
@@ -972,24 +1012,10 @@
           "isActive": true,
           "matchMode": "first",
           "keywordMatchMode": "contains"
-        },
-        {
-          "ruleType": "FIXED_PRICE",
-          "name": "电机厂缝合针8元",
-          "priority": 10,
-          "price": 8.0,
-          "keywords": [
-            "缝合针"
-          ],
-          "skipPackaging": true,
-          "skipDiscount": true,
-          "isActive": true,
-          "matchMode": "first",
-          "keywordMatchMode": "contains"
         }
       ],
-      "rule_count": 33,
-      "active_rule_count": 30
+      "rule_count": 32,
+      "active_rule_count": 29
     },
     "HAIYUAN-SB": {
       "code": "HAIYUAN-SB",
@@ -1130,24 +1156,10 @@
           "skipDiscount": true,
           "isActive": false,
           "matchMode": "first"
-        },
-        {
-          "ruleType": "EXTRA_FEE",
-          "name": "镜头租借公司筐加收",
-          "priority": 10,
-          "fee": 8.0,
-          "keywords": [
-            "镜头",
-            "检查镜"
-          ],
-          "isActive": true,
-          "matchMode": "first",
-          "skipPackaging": false,
-          "skipDiscount": false
         }
       ],
-      "rule_count": 7,
-      "active_rule_count": 6
+      "rule_count": 6,
+      "active_rule_count": 5
     },
     "HLJ-FY-RK": {
       "code": "HLJ-FY-RK",
@@ -1568,7 +1580,8 @@
           "name": "妇幼人口针盒针5合1免包材",
           "priority": 11,
           "keywords": [
-            "针"
+            "针",
+            "个针"
           ],
           "threshold": 5,
           "foldRatio": 5,
@@ -1585,7 +1598,8 @@
           "name": "妇幼人口针盒针5合1含包材",
           "priority": 10,
           "keywords": [
-            "针"
+            "针",
+            "个针"
           ],
           "threshold": 5,
           "foldRatio": 5,
@@ -2403,6 +2417,45 @@
       "rule_count": 9,
       "active_rule_count": 3
     },
+    "HRB-XK-YY": {
+      "code": "HRB-XK-YY",
+      "name": "哈尔滨市胸科医院",
+      "status": null,
+      "billingPricingMode": "hybrid",
+      "standardPricingOverride": null,
+      "billingEnabled": true,
+      "productRules": [
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "胸科小件ETO固定25",
+          "priority": 11,
+          "price": 25.0,
+          "keywords": [
+            "小件@contains"
+          ],
+          "temperature": "LT",
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": true,
+          "matchMode": "first"
+        },
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "胸科手术衣W9050固定20",
+          "priority": 10,
+          "price": 20.0,
+          "keywords": [
+            "手术衣（打包好的）/W9050"
+          ],
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": true,
+          "matchMode": "first"
+        }
+      ],
+      "rule_count": 2,
+      "active_rule_count": 2
+    },
     "HULAN-RM": {
       "code": "HULAN-RM",
       "name": "呼兰区第一人民医院",
@@ -2934,7 +2987,8 @@
           "name": "平房人民针盒针5合1免包材",
           "priority": 11,
           "keywords": [
-            "针"
+            "针",
+            "缝合针"
           ],
           "threshold": 5,
           "foldRatio": 5,
@@ -2952,7 +3006,8 @@
           "name": "平房人民针盒针5合1含包材",
           "priority": 10,
           "keywords": [
-            "针"
+            "针",
+            "缝合针"
           ],
           "threshold": 5,
           "foldRatio": 5,
@@ -2967,6 +3022,79 @@
       ],
       "rule_count": 2,
       "active_rule_count": 2
+    },
+    "SENHAI-YY": {
+      "code": "SENHAI-YY",
+      "name": "哈尔滨森海医院",
+      "status": null,
+      "billingPricingMode": "hybrid",
+      "standardPricingOverride": null,
+      "billingEnabled": true,
+      "productRules": [
+        {
+          "ruleType": "PRICE_PER_INSTRUMENT",
+          "name": "森海双<3按件5.5含包材",
+          "priority": 10,
+          "price": 5.5,
+          "keywords": [
+            "双@contains"
+          ],
+          "maxInstrumentCount": 2,
+          "skipPackaging": false,
+          "skipDiscount": true,
+          "isActive": true,
+          "matchMode": "first"
+        },
+        {
+          "ruleType": "PRICE_PER_INSTRUMENT",
+          "name": "森海双≥3按件5.5免包材",
+          "priority": 11,
+          "price": 5.5,
+          "keywords": [
+            "双@contains"
+          ],
+          "minInstrumentCount": 3,
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": true,
+          "matchMode": "first"
+        },
+        {
+          "ruleType": "FOLD",
+          "name": "森海胶帽>5折算22",
+          "priority": 13,
+          "keywords": [
+            "胶帽@contains"
+          ],
+          "threshold": 5,
+          "foldRatio": 5,
+          "minInstrumentCount": 6,
+          "price": 22.0,
+          "skipPackaging": true,
+          "temperature": "LT",
+          "isActive": true,
+          "matchMode": "first",
+          "skipDiscount": false
+        },
+        {
+          "ruleType": "FOLD",
+          "name": "森海胶帽≤5按1件含包材",
+          "priority": 12,
+          "keywords": [
+            "胶帽@contains"
+          ],
+          "threshold": 5,
+          "foldRatio": 5,
+          "maxInstrumentCount": 5,
+          "skipPackaging": false,
+          "temperature": "LT",
+          "isActive": true,
+          "matchMode": "first",
+          "skipDiscount": false
+        }
+      ],
+      "rule_count": 4,
+      "active_rule_count": 4
     },
     "SHKF-YY": {
       "code": "SHKF-YY",

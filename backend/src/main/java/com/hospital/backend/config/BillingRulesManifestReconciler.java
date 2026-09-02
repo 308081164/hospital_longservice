@@ -65,11 +65,13 @@ public class BillingRulesManifestReconciler implements CommandLineRunner {
                 log.warn("Billing rules manifest has no manifest_hash, skipped");
                 return;
             }
+            // 始终全量 reconcile（幂等）：hash 相同也继续执行。
+            // 历史教训（2026-09-02 平房区人民 0.5/针事故）：生产通过 UI/手工 SQL 加入的非 manifest 规则，
+            // 在 hash 未变的多次部署中被 skip 逻辑跳过而长期残留并参与计价；只有每次启动都清理才能杜绝漂移。
             SysSetting existing = sysSettingMapper.selectByKey(MANIFEST_HASH_KEY);
             if (existing != null && manifestHash.equals(existing.getSettingValue())) {
-                log.info("Billing rules manifest unchanged (hash={}…), reconcile skipped",
+                log.info("Billing rules manifest unchanged (hash={}…), reconcile still runs to clean drift",
                         manifestHash.substring(0, Math.min(12, manifestHash.length())));
-                return;
             }
             JsonNode customers = root.path("customers");
             if (!customers.isObject()) {

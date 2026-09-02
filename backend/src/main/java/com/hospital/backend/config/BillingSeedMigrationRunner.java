@@ -342,7 +342,11 @@ public class BillingSeedMigrationRunner implements CommandLineRunner {
             new IncrementalSeed("billing_seed_delete_superseded_rules_20260830_v1",
                     "billing-seeds/phase-delete-superseded-rules-20260830.json"),
             new IncrementalSeed("billing_seed_keyword_match_mode_excel17_align_20260831_v1",
-                    "billing-seeds/phase-keyword-match-mode-excel17-align-20260831.json")
+                    "billing-seeds/phase-keyword-match-mode-excel17-align-20260831.json"),
+            new IncrementalSeed("billing_seed_special_charge_2_sync_20260902_v1",
+                    "billing-seeds/phase-special-charge-2-sync-20260902.json"),
+            new IncrementalSeed("billing_seed_needle_fold_keyword_fix_20260902_v1",
+                    "billing-seeds/phase-special-charge-needle-fold-keyword-fix-20260902.json")
     );
 
     private static final String ZYY_D1_P0_MARKER = "billing_seed_zyy_d1_p0_v2";
@@ -353,13 +357,14 @@ public class BillingSeedMigrationRunner implements CommandLineRunner {
     private static final String WCSRMYY_OR_DEDUP_MARKER = "billing_seed_wcsrm_yy_or_dedup_20260724_v1";
     /** 删除非 22 家特殊计价客户及其孤儿数据（严格测试口径收敛） */
     private static final String STALE_CUSTOMER_CLEANUP_MARKER = "billing_seed_stale_customer_cleanup_20260827_v1";
-    /** 最终保留的 26 家特殊计价客户 code（与 scripts/billing_rules_manifest.py STRICT_KEEP_CODES 一致）：历史 22 家 + 2026-08 新引入 4 家 */
+    /** 最终保留的 29 家特殊计价客户 code（与 scripts/billing_rules_manifest.py STRICT_KEEP_CODES 一致）：历史 22 家 + 2026-08 新引入 4 家 + 2026-09 特殊收费(2) 新引入 3 家 */
     private static final java.util.List<String> STRICT_KEEP_CODES = java.util.List.of(
             "BINGCHENG-YM", "GUOYAO-2", "FNN-YY", "NEAU-YY", "HRB-WY", "HRB-SD-MB", "HRB-HTFH",
             "HRB-WY-EM", "JIUZHOU-FK", "BOSHANG-YY", "HAIYUAN-SB", "HLJ-FY-RK", "ZUYAN-NG",
             "SHKF-YY", "DL-FUCHAN", "CHUNYU-YL", "HL-ZGH", "JZSW-BIO", "SUOFEI-YL", "HLJ-JYGLJ-YY",
             "HULAN-TCM", "PFQ-RM",
-            "HULAN-RM", "XINFA-HSZ", "YUANDONG-XN", "ZUYAN-SF");
+            "HULAN-RM", "XINFA-HSZ", "YUANDONG-XN", "ZUYAN-SF",
+            "AOLAN-YY", "HRB-XK-YY", "SENHAI-YY");
 
     private record IncrementalSeed(String markerKey, String classpathFile) {}
 
@@ -503,7 +508,9 @@ public class BillingSeedMigrationRunner implements CommandLineRunner {
                     || "billing-seeds/phase-special-charge-14-sync-20260822.json".equals(incremental.classpathFile())
                     || "billing-seeds/phase-special-charge-17-sync-20260830.json".equals(incremental.classpathFile())
                     || "billing-seeds/phase-delete-superseded-rules-20260830.json".equals(incremental.classpathFile())
-                    || "billing-seeds/phase-keyword-match-mode-excel17-align-20260831.json".equals(incremental.classpathFile())) {
+                    || "billing-seeds/phase-keyword-match-mode-excel17-align-20260831.json".equals(incremental.classpathFile())
+                    || "billing-seeds/phase-special-charge-2-sync-20260902.json".equals(incremental.classpathFile())
+                    || "billing-seeds/phase-special-charge-needle-fold-keyword-fix-20260902.json".equals(incremental.classpathFile())) {
                 applyBatchPatchSeedFile(incremental.classpathFile());
             } else if ("billing-seeds/phase-billing-mode-backfill-20260730.json".equals(incremental.classpathFile())) {
                 applyBillingModeBackfillSeedFile(incremental.classpathFile());

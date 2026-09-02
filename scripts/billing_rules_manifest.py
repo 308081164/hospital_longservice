@@ -39,9 +39,9 @@ INACTIVE_EXTRA_CODES = [
     "ZXYSJT",
 ]
 
-# 最终仅保留的 26 家特殊计价客户（严格测试口径）：历史 22 家 + 2026-08 新引入 4 家。
+# 最终仅保留的 29 家特殊计价客户（严格测试口径）：历史 22 家 + 2026-08 新引入 4 家 + 2026-09 特殊收费(2) 新引入 3 家。
 # 须与 BillingSeedMigrationRunner.STRICT_KEEP_CODES 保持一致。
-# 生成 manifest 时删除非 26 家客户，确保清单与部署后的 DB 一致。
+# 生成 manifest 时删除非 29 家客户，确保清单与部署后的 DB 一致。
 STRICT_KEEP_CODES = [
     "BINGCHENG-YM",
     "GUOYAO-2",
@@ -69,6 +69,9 @@ STRICT_KEEP_CODES = [
     "XINFA-HSZ",
     "YUANDONG-XN",
     "ZUYAN-SF",
+    "AOLAN-YY",
+    "HRB-XK-YY",
+    "SENHAI-YY",
 ]
 
 # 种子文件仅以 code 引用客户、未携带规范名时，回退到此映射。
@@ -105,9 +108,6 @@ HARDCODED_RULES: dict[str, list[dict[str, Any]]] = {
     ],
     "HRB-SD-MB": [
         {"ruleType": "FOLD", "name": "松电机扩针 5 件算 1 件", "priority": 10, "keywords": ["机扩针"], "threshold": 5, "foldRatio": 5},
-    ],
-    "HL-ZGH": [
-        {"ruleType": "EXTRA_FEE", "name": "镜头租借公司筐加收", "priority": 10, "fee": 8.0, "keywords": ["镜头", "检查镜"]},
     ],
 }
 
@@ -352,6 +352,18 @@ def build_manifest() -> dict[str, Any]:
             rules = entry.setdefault("productRules", {})
             if rule_name in rules:
                 rules[rule_name]["isActive"] = False
+
+        # deleteRules 是硬删除（Java deleteProductRule → deleteById），
+        # 须从 manifest 移除整条规则，否则 reconciler 会按 manifest 把它重建回 DB。
+        for delop in data.get("deleteRules") or []:
+            code = _text(delop, "code")
+            rule_name = _text(delop, "ruleName")
+            if not code or not rule_name:
+                continue
+            deactivated.discard((code, rule_name))
+            entry = customers.get(code)
+            if entry and rule_name in (entry.get("productRules") or {}):
+                del entry["productRules"][rule_name]
 
         for act in data.get("activateRules") or []:
             code = _text(act, "code")

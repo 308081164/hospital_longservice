@@ -166,7 +166,7 @@ print(json.dumps(data, ensure_ascii=False, indent=2))
 Path("测试用例/billing_rules_parity_report.json").write_text(
     json.dumps(data, ensure_ascii=False, indent=2) + "\n", encoding="utf-8"
 )
-if missing or changed or override_drift or billing_drift or not billing_count_ok:
+if missing or changed or extra or override_drift or billing_drift or not billing_count_ok:
     print(
         f"rules parity FAIL: missing={missing} changed={changed} extra={extra} "
         f"override_drift={override_drift} billing_enabled_drift={billing_drift} "
@@ -174,8 +174,6 @@ if missing or changed or override_drift or billing_drift or not billing_count_ok
         file=sys.stderr,
     )
     sys.exit(1)
-if extra:
-    print(f"::warning::rules extra={extra} (legacy/UI rules, non-blocking)")
 PY
 
 echo ">> rules spot-check STANDARD (标准价：棉球敷料 + 高温纸塑件费)"
