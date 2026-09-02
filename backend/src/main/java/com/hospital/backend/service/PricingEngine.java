@@ -211,11 +211,21 @@ public class PricingEngine {
         java.util.regex.Matcher needleQtyMatcher = needleQtyPattern.matcher(packName);
         boolean appliedNeedleRule = false;
         boolean skipNeedleRuleForFuyiW9050 = packName.toLowerCase().contains("w9050");
+        // 气腹针是腹腔镜全价器械（非 5 合 1 小件，全局小件关键词亦未收录），
+        // 「气腹针N」的 N 为实件数，不参与针数量拆分（同 吸脂针长型号/W9050 的既有排除先例）
+        boolean foundNeedleQty = false;
+        while (needleQtyMatcher.find()) {
+            int matchStart = needleQtyMatcher.start();
+            if (matchStart >= 2 && "气腹".equals(packName.substring(matchStart - 2, matchStart))) {
+                continue;
+            }
+            foundNeedleQty = true;
+            break;
+        }
         if (!skipGlobalNeedleAndSmallFold && preMatchedSpecialPrice == null && !appliedSpecialFoldRule
-                && !isZsdInstrumentPack && !skipNeedleRuleForFuyiW9050 && needleQtyMatcher.find()) {
-            String[] parts = packName.split("针\\d+", 2);
-            String beforeNeedle = parts[0];
-            String afterNeedle = parts.length > 1 ? parts[1] : "";
+                && !isZsdInstrumentPack && !skipNeedleRuleForFuyiW9050 && foundNeedleQty) {
+            String beforeNeedle = packName.substring(0, needleQtyMatcher.start());
+            String afterNeedle = packName.substring(needleQtyMatcher.end());
             // "针N"后是否还有器械名（如"钢丝4"），用于区分纯小件与混合器械
             boolean hasOtherItems = java.util.regex.Pattern.compile("[\\u4e00-\\u9fff]+\\d+").matcher(afterNeedle).find();
             boolean isSmallItemKeyword = matchesKeywordsBoundary(packName, needle.path("keywords"), needleMatchMode);

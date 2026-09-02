@@ -2212,6 +2212,43 @@ class PricingEngineTest {
     }
 
     @Test
+    void veressNeedleCountIsNotFoldedByGlobalNeedleSplit() {
+        // 气腹针为腹腔镜全价器械（全局小件关键词未收录），「气腹针N」不参与针数量 5 合 1 拆分
+        PricingEngine engine = new PricingEngine(defaultRules());
+        PricingEngine.ProcessedResult result = engine.processRow(row(
+                "哈尔滨市平房区人民医院",
+                "额外包(低温等离子)",
+                "戳卡4转换器1气腹针1",
+                "低温纸塑袋",
+                6,
+                1,
+                110,
+                110
+        ));
+
+        assertThat(result.notes).noneMatch(n -> n.contains("针折算"));
+        assertThat(result.notes).noneMatch(n -> n.contains("折算为"));
+    }
+
+    @Test
+    void nonVeressNeedleCountStillSplitsByGlobalNeedleRule() {
+        // 非气腹针的「针N」仍走全局针数量拆分（如 针10 → 10÷5=2 件）
+        PricingEngine engine = new PricingEngine(defaultRules());
+        PricingEngine.ProcessedResult result = engine.processRow(row(
+                "哈尔滨市平房区人民医院",
+                "额外包(低温等离子)",
+                "针10",
+                "低温纸塑袋",
+                10,
+                1,
+                44,
+                44
+        ));
+
+        assertThat(result.notes).anyMatch(n -> n.contains("针折算"));
+    }
+
+    @Test
     void hrbCjHighTempPaperPlasticChargesFivePointFivePerItemFromThreePieces() {
         ObjectNode rules = (ObjectNode) defaultRules();
         ObjectNode billingProfile = rules.putObject("billingProfile");
