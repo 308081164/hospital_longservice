@@ -1,0 +1,20 @@
+{
+  "version": "1",
+  "description": "人口（HLJ-FY-RK）特殊收费规则修复（2026-09-02）：Excel 特殊收费(17)「黑龙江省妇幼保健院（人口）」段 ②-⑥ 均为「包名称带X」包含语义。1) 垫片规则此前从未落库（Excel ④）→ 按机扩针同构补齐 5合1 含/免包材规则对，词级 @contains；2) 机扩针/荡洗针/针包规则关键词 exact_token → 词级 @contains（与根管锉/胶帽既有先例一致，防止 CJK 前缀变体词中失配，如 加长机扩针-6）；3) 全冠套装(7个针) 按 Excel ⑧「一套5.5*8+2.5包材=46.5元」单独定价：针盒针⑦两条规则关键词移除「个针」（⑦的「针」继续覆盖 全冠套装(针7盒1) 变体走折算公式，7月基线 16.5 不变），新增 EXTRA_FEE +2.5（关键词 个针，exact_token 词边界天然排除 针7盒1 变体），8件高温纸塑袋标准价 44 + 2.5 = 46.5 与 Excel⑧ 及 9月账单一致。",
+  "newRules": [
+    {"code": "HLJ-FY-RK", "ruleType": "FOLD", "name": "妇幼人口垫片5合1含包材", "priority": 10, "keywords": ["垫片@contains"], "threshold": 5, "foldRatio": 5, "maxInstrumentCount": 10, "skipPackaging": false},
+    {"code": "HLJ-FY-RK", "ruleType": "FOLD", "name": "妇幼人口垫片5合1免包材", "priority": 11, "keywords": ["垫片@contains"], "threshold": 5, "foldRatio": 5, "minInstrumentCount": 11, "skipPackaging": true},
+    {"code": "HLJ-FY-RK", "ruleType": "EXTRA_FEE", "name": "妇幼人口全冠套装个针包材2.5", "priority": 20, "keywords": ["个针"], "fee": 2.5, "skipPackaging": true, "skipDiscount": true}
+  ],
+  "ruleUpdates": [
+    {"code": "HLJ-FY-RK", "ruleName": "妇幼人口机扩针5合1含包材", "setKeywords": ["机扩针@contains"], "note": "Excel③：包名称带“机扩针”（包含）；exact_token 对 CJK 前缀变体（如 加长机扩针-6）词中失配"},
+    {"code": "HLJ-FY-RK", "ruleName": "妇幼人口机扩针5合1免包材", "setKeywords": ["机扩针@contains"], "note": "同上"},
+    {"code": "HLJ-FY-RK", "ruleName": "妇幼人口荡洗针5合1含包材", "setKeywords": ["荡洗针@contains"], "note": "Excel⑥：包名称带“荡洗针”（包含）"},
+    {"code": "HLJ-FY-RK", "ruleName": "妇幼人口荡洗针5合1免包材", "setKeywords": ["荡洗针@contains"], "note": "同上"},
+    {"code": "HLJ-FY-RK", "ruleName": "妇幼人口针包5合1含包材", "setKeywords": ["针包@contains"], "note": "Excel⑤：包名称带“针包”（包含）"},
+    {"code": "HLJ-FY-RK", "ruleName": "妇幼人口针包5合1免包材", "setKeywords": ["针包@contains"], "note": "同上"},
+    {"code": "HLJ-FY-RK", "ruleName": "妇幼人口针包按1件含包材", "setKeywords": ["针包@contains"], "note": "同上"},
+    {"code": "HLJ-FY-RK", "ruleName": "妇幼人口针盒针5合1含包材", "setKeywords": ["针"], "note": "Excel⑧：全冠套装(7个针) 单独定价 46.5（5.5*8+2.5），不走⑦折算；移除「个针」后⑦的「针」继续覆盖 全冠套装(针7盒1) 变体"},
+    {"code": "HLJ-FY-RK", "ruleName": "妇幼人口针盒针5合1免包材", "setKeywords": ["针"], "note": "同上"}
+  ]
+}
