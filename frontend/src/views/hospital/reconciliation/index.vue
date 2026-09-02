@@ -12,7 +12,15 @@
 
 
     <div class="grid grid-cols-1 gap-6">
-      <ElCard shadow="never" class="reconciliation-workspace">
+      <ElCard
+        shadow="never"
+        class="reconciliation-workspace"
+        :class="{ 'workspace-dragover': isDragOverWorkspace }"
+        @dragenter.prevent="onWorkspaceDragEnter"
+        @dragover.prevent
+        @dragleave.prevent="onWorkspaceDragLeave"
+        @drop.prevent="onWorkspaceDrop"
+      >
         <div class="workspace-header">
           <div class="workspace-header__leading">
             <div class="flex items-center gap-2">
@@ -1369,6 +1377,39 @@
     addUploadEntry(uploadFile.raw)
   }
 
+  // 整个工作区卡片作为拖放区（重构后 ElUpload 不再带 drag，需原生事件补齐）
+  const workspaceDragDepth = ref(0)
+  const isDragOverWorkspace = ref(false)
+
+  function onWorkspaceDragEnter(event: DragEvent) {
+    if (!event.dataTransfer?.types?.includes('Files')) return
+    workspaceDragDepth.value += 1
+    isDragOverWorkspace.value = true
+  }
+
+  function onWorkspaceDragLeave() {
+    workspaceDragDepth.value = Math.max(0, workspaceDragDepth.value - 1)
+    if (workspaceDragDepth.value === 0) isDragOverWorkspace.value = false
+  }
+
+  function onWorkspaceDrop(event: DragEvent) {
+    workspaceDragDepth.value = 0
+    isDragOverWorkspace.value = false
+    const files = Array.from(event.dataTransfer?.files ?? [])
+    const excelFiles = files.filter((f) => /\.(xls|xlsx)$/i.test(f.name))
+    if (excelFiles.length === 0) {
+      if (files.length > 0) ElMessage.warning('仅支持 .xls / .xlsx 格式的账单文件')
+      return
+    }
+    for (const file of excelFiles) {
+      if (file.size > MAX_FILE_SIZE) {
+        ElMessage.warning(`文件 "${file.name}" 超过 20MB 大小限制，请压缩后重新上传`)
+        continue
+      }
+      addUploadEntry(file)
+    }
+  }
+
   /** 处理并保存：调用后端引擎，一步完成 Excel 读取 → 规则校对 → 保存 */
   async function handleProcessEntry(entry: UploadEntry) {
     const rule = entry.rule ?? activeRule.value
@@ -1794,6 +1835,14 @@
     background: var(--el-fill-color-lighter, #f5f7fa);
     border: 1px dashed var(--el-border-color-lighter, #ebeef5);
     border-radius: 8px;
+  }
+
+  .reconciliation-workspace.workspace-dragover {
+    border-color: var(--el-color-primary);
+    background: var(--el-color-primary-light-9, #ecf5ff);
+    transition:
+      border-color 0.15s,
+      background 0.15s;
   }
 
   .workspace-empty__text {
