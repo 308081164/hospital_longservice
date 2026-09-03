@@ -560,7 +560,9 @@ public class PricingEngine {
         }
 
         // 标准纸塑袋器械包：袋费已在高温/低温纸塑阶梯或 FOLD 内联包材中计取，不走 packaging 模块。
-        if (packCategory == PackPricingCategory.INSTRUMENT_PAPER && isPaperPlastic) {
+        // 院级 FOLD 含包材规则仍须走 packaging 模块（如方南南小件5合1含包材）。
+        if (packCategory == PackPricingCategory.INSTRUMENT_PAPER && isPaperPlastic
+                && !(appliedSpecialFoldRule && !foldSkipPackaging)) {
             skipPackaging = true;
         }
 
