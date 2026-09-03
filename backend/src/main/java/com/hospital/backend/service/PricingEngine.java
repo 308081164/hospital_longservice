@@ -197,16 +197,20 @@ public class PricingEngine {
             forceHighTempPerItem = foldUnitPriceOverride;
         }
 
-        // 高温纸塑 ≥3 件：按账单器械数×5.5，不应用全局针数拆分/小件折算（院级 FOLD 特色规则仍保留）
-        boolean skipGlobalNeedleAndSmallFold = highTempPaperPlasticRow && !isLowTemp
-                && perPackRawInstrumentCount >= 3;
-        if (skipGlobalNeedleAndSmallFold && !appliedSpecialFoldRule) {
-            effectiveCount = Math.max(1, perPackRawInstrumentCount);
-        }
-
         // 针数量规则 + 小件器械折算（针数量规则优先：包名含"针+数字"时按公式拆分）
         JsonNode needle = rules.path("needle");
         String needleMatchMode = BillingConditionEvaluator.resolveKeywordMatchMode(needle);
+
+        // 高温纸塑 ≥3 件：按账单器械数×5.5，不应用全局针数拆分/小件折算（院级 FOLD 特色规则仍保留）。
+        // 包名命中小件关键词（车针/克氏针等）时仍须走折算，不可因单包≥3件而按实件×5.5。
+        boolean matchesSmallItemKeyword = matchesKeywordsBoundary(
+                packName, needle.path("keywords"), needleMatchMode);
+        boolean skipGlobalNeedleAndSmallFold = highTempPaperPlasticRow && !isLowTemp
+                && perPackRawInstrumentCount >= 3
+                && !matchesSmallItemKeyword;
+        if (skipGlobalNeedleAndSmallFold && !appliedSpecialFoldRule) {
+            effectiveCount = Math.max(1, perPackRawInstrumentCount);
+        }
         java.util.regex.Pattern needleQtyPattern = java.util.regex.Pattern.compile("针(\\d+)");
         java.util.regex.Matcher needleQtyMatcher = needleQtyPattern.matcher(packName);
         boolean appliedNeedleRule = false;
@@ -553,6 +557,11 @@ public class PricingEngine {
                 pricingRule = pricingRule + " + 纸塑袋费";
                 notes.add("按件计价叠加纸塑袋费 " + fmt(bagAddon) + " 元。");
             }
+        }
+
+        // 标准纸塑袋器械包：袋费已在高温/低温纸塑阶梯或 FOLD 内联包材中计取，不走 packaging 模块。
+        if (packCategory == PackPricingCategory.INSTRUMENT_PAPER && isPaperPlastic) {
+            skipPackaging = true;
         }
 
         // 包装收费
@@ -1850,7 +1859,12 @@ public class PricingEngine {
 
         JsonNode options = matchedItem.path("options");
         if (!options.isArray() || options.size() == 0) {
-            notes.add("命中包装收费项目\"" + matchedItem.path("name").asText() + "\"，但该项目未配置具体选项价格，请先在计费规则中配置价格，或手动核定包装费。");
+            String itemName = matchedItem.path("name").asText("");
+            // 纸塑袋费已并入标准灭菌阶梯；rules_json 中「纸塑袋」占位项无 options 时不应误告警。
+            if ("纸塑袋".equals(itemName) && containsPackagingKeyword(combined, "纸塑袋")) {
+                return new PackagingResult();
+            }
+            notes.add("命中包装收费项目\"" + itemName + "\"，但该项目未配置具体选项价格，请先在计费规则中配置价格，或手动核定包装费。");
             PackagingResult pr = new PackagingResult();
             pr.warning = true;
             return pr;
