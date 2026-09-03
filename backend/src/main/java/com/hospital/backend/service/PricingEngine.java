@@ -215,8 +215,7 @@ public class PricingEngine {
         // 「气腹针N」的 N 为实件数，不参与针数量拆分（同 吸脂针长型号/W9050 的既有排除先例）
         boolean foundNeedleQty = false;
         while (needleQtyMatcher.find()) {
-            int matchStart = needleQtyMatcher.start();
-            if (matchStart >= 2 && "气腹".equals(packName.substring(matchStart - 2, matchStart))) {
+            if (isVeressNeedleAt(packName, needleQtyMatcher.start())) {
                 continue;
             }
             foundNeedleQty = true;
@@ -235,9 +234,14 @@ public class PricingEngine {
             } else {
                 int needleQty = Integer.parseInt(needleQtyMatcher.group(1));
                 double foldRatio = needle.path("foldRatio").asDouble(5.0);
-                int nonNeedleCount = extractLastNumber(beforeNeedle);
+                // 非针器械数按包名全部「器械名+数字」段求和（如 剪刀2止血钳1探针1 → 2+1=3），
+                // 避免只取末位数字丢失前段件数；无「汉字+数字」段时退回末位数字语义（兼容 （5号） 等写法）
+                int nonNeedleCount = sumAllNumbers(beforeNeedle);
+                if (nonNeedleCount == 0) {
+                    nonNeedleCount = extractLastNumber(beforeNeedle);
+                }
                 if (hasOtherItems) {
-                    nonNeedleCount += extractFirstNumber(afterNeedle);
+                    nonNeedleCount += sumAllNumbers(afterNeedle);
                 }
                 if (nonNeedleCount == 0) {
                     nonNeedleCount = Math.max(1, effectiveCount - needleQty);
@@ -2129,13 +2133,13 @@ public class PricingEngine {
         return 0;
     }
 
-    /** 从字符串中提取第一个数字，未找到时返回 0 */
-    private int extractFirstNumber(String s) {
-        java.util.regex.Matcher m = java.util.regex.Pattern.compile("(\\d+)").matcher(s);
-        if (m.find()) {
-            return Integer.parseInt(m.group(1));
+    /** 「针N」匹配是否气腹针：「气腹」与「针」之间允许空白分隔（如 气腹 针1，含全角空格）。 */
+    private static boolean isVeressNeedleAt(String packName, int needleStart) {
+        int i = needleStart - 1;
+        while (i >= 0 && Character.isSpaceChar(packName.charAt(i))) {
+            i--;
         }
-        return 0;
+        return i >= 1 && "气腹".equals(packName.substring(i - 1, i + 1));
     }
 
     /** 从字符串中提取所有"器械名+数字"模式的数字求和（只计中文紧接的数字，排除 Z7537 等编码） */

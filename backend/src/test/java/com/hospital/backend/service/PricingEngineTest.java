@@ -2249,6 +2249,158 @@ class PricingEngineTest {
     }
 
     @Test
+    void veressNeedleTailMultiSegmentPackCountsAllPieces() {
+        // 气腹针在结尾的多数字包名：不拆分，按 Excel 器械数 6 件计价（低温 6 件=88+22=110）
+        PricingEngine engine = new PricingEngine(defaultRules());
+        PricingEngine.ProcessedResult result = engine.processRow(row(
+                "哈尔滨市平房区人民医院",
+                "额外包(低温等离子)",
+                "腹腔镜下胆囊切除（戳卡4转换器1气腹针1）/Z1026",
+                "低温纸塑袋200*600",
+                6,
+                1,
+                110,
+                110
+        ));
+
+        assertThat(result.notes).noneMatch(n -> n.contains("针折算"));
+        assertThat(result.correctedTotalPrice).isEqualTo(110.0);
+    }
+
+    @Test
+    void veressNeedleTailSevenPiecesCharges132() {
+        // 戳卡5转换器1气腹针1 ×7 低温 → 7 件（88+2×22=132）
+        PricingEngine engine = new PricingEngine(defaultRules());
+        PricingEngine.ProcessedResult result = engine.processRow(row(
+                "哈尔滨市平房区人民医院",
+                "额外包(低温等离子)",
+                "腹腔镜下胆囊切除（戳卡5转换器1气腹针1）/Z1026",
+                "低温纸塑袋200*600",
+                7,
+                1,
+                132,
+                132
+        ));
+
+        assertThat(result.notes).noneMatch(n -> n.contains("针折算"));
+        assertThat(result.correctedTotalPrice).isEqualTo(132.0);
+    }
+
+    @Test
+    void veressNeedleInMiddleMultiSegmentPackCountsAllPieces() {
+        // 气腹针在中间：戳卡5气腹针1转换器1 ×7 低温 → 7 件=132
+        PricingEngine engine = new PricingEngine(defaultRules());
+        PricingEngine.ProcessedResult result = engine.processRow(row(
+                "哈尔滨市平房区人民医院",
+                "额外包(低温等离子)",
+                "戳卡5气腹针1转换器1/z2565",
+                "低温纸塑袋200*600",
+                7,
+                1,
+                132,
+                132
+        ));
+
+        assertThat(result.notes).noneMatch(n -> n.contains("针折算"));
+        assertThat(result.correctedTotalPrice).isEqualTo(132.0);
+    }
+
+    @Test
+    void multiSegmentPackWithoutNeedleKeepsExcelCount() {
+        // 回归：无气腹针的两数字包名 戳卡5转换器1 ×6 低温 → 6 件=110（行为不变）
+        PricingEngine engine = new PricingEngine(defaultRules());
+        PricingEngine.ProcessedResult result = engine.processRow(row(
+                "哈尔滨市平房区人民医院",
+                "额外包(低温等离子)",
+                "腹腔镜下胆囊切除（戳卡5转换器1）/Z1026",
+                "低温纸塑袋200*600",
+                6,
+                1,
+                110,
+                110
+        ));
+
+        assertThat(result.notes).noneMatch(n -> n.contains("针折算"));
+        assertThat(result.correctedTotalPrice).isEqualTo(110.0);
+    }
+
+    @Test
+    void veressNeedleHyphenFormNotSplit() {
+        // 回归：气腹针-1 横线形态本就不触发针拆分，行为不变（1 件按袋型 20cm=28）
+        PricingEngine engine = new PricingEngine(defaultRules());
+        PricingEngine.ProcessedResult result = engine.processRow(row(
+                "哈尔滨市平房区人民医院",
+                "额外包(低温等离子)",
+                "气腹针-1/z1026",
+                "低温纸塑袋200*600",
+                1,
+                1,
+                28,
+                28
+        ));
+
+        assertThat(result.notes).noneMatch(n -> n.contains("针折算"));
+        assertThat(result.correctedTotalPrice).isEqualTo(28.0);
+    }
+
+    @Test
+    void needleSplitSumsAllSegmentsBeforeNeedle() {
+        // 多数字段包名触发针拆分时，非针器械数覆盖针前全部数字段：
+        // 剪刀2止血钳1探针1 → 非针 2+1=3 件 + 针折算 1 件 = 4 件（低温 4 件 tier=88）
+        PricingEngine engine = new PricingEngine(defaultRules());
+        PricingEngine.ProcessedResult result = engine.processRow(row(
+                "哈尔滨市平房区人民医院",
+                "额外包(低温等离子)",
+                "剪刀2止血钳1探针1/z1526",
+                "低温纸塑袋200*600",
+                4,
+                1,
+                88,
+                88
+        ));
+
+        assertThat(result.notes).anyMatch(n -> n.contains("非针器械 3 件"));
+        assertThat(result.correctedTotalPrice).isEqualTo(88.0);
+    }
+
+    @Test
+    void needleSplitSumsSegmentsAfterNeedle() {
+        // 针后多段同样求全和：弯针4盘1 → 针前 36+28+4=68 + 针后 盘1=1，非针 69 件 + 针折算 1 件 = 70 件
+        PricingEngine engine = new PricingEngine(defaultRules());
+        PricingEngine.ProcessedResult result = engine.processRow(row(
+                "黑龙江中医药大学附属第一医院",
+                "额外包(无纺布)",
+                "镊子36吸管28喉镜4弯针4盘1/W6050",
+                "无纺布-60×60-50g",
+                73,
+                1,
+                321.2,
+                321.2
+        ));
+
+        assertThat(result.notes).anyMatch(n -> n.contains("非针器械 69 件"));
+    }
+
+    @Test
+    void veressNeedleWithSpaceBeforeNeedleStillSkipped() {
+        // 「气腹」与「针」之间有空白分隔时仍识别为气腹针，不参与拆分（6 件=110）
+        PricingEngine engine = new PricingEngine(defaultRules());
+        PricingEngine.ProcessedResult result = engine.processRow(row(
+                "哈尔滨市平房区人民医院",
+                "额外包(低温等离子)",
+                "腹腔镜下胆囊切除（戳卡4转换器1气腹 针1）/Z1026",
+                "低温纸塑袋200*600",
+                6,
+                1,
+                110,
+                110
+        ));
+
+        assertThat(result.notes).noneMatch(n -> n.contains("针折算"));
+        assertThat(result.correctedTotalPrice).isEqualTo(110.0);
+    }
+
+    @Test
     void hrbCjHighTempPaperPlasticChargesFivePointFivePerItemFromThreePieces() {
         ObjectNode rules = (ObjectNode) defaultRules();
         ObjectNode billingProfile = rules.putObject("billingProfile");
