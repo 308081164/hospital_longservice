@@ -166,7 +166,8 @@ export function repriceReconciliation(jobId: number) {
   })
 }
 
-/** 后端引擎导入：上传 Excel + 规则 → 后端处理全部行并保存，一步完成 */
+/** 后端引擎导入：上传 Excel + 规则 → 后端处理全部行并保存，一步完成。
+ * 大医院账单可达数万行，处理常超过默认 15s；超时需与 nginx proxy_read_timeout 对齐。 */
 export function importHospitalReconciliation(payload: {
   file: File
   ruleId: number
@@ -182,5 +183,7 @@ export function importHospitalReconciliation(payload: {
     url: '/api/hospital-reconciliations/import',
     data: formData,
     headers: { 'Content-Type': 'multipart/form-data' },
+    // 10 分钟：市五院级 3 万+ 行账单实测后端可成功，但默认 15s 会先超时误报「解析失败」
+    timeout: 600_000,
   })
 }

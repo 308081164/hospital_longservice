@@ -123,8 +123,14 @@
                     rows: entry.workbook.rows.length
                   })
                 }}
+                <span
+                  v-if="(entry.status === 'error' || entry.status === 'process_error') && entry.errorMessage"
+                  class="text-red-500 ml-2"
+                >
+                  {{ entry.errorMessage }}
+                </span>
               </template>
-              <template v-else-if="entry.status === 'error'">
+              <template v-else-if="entry.status === 'error' || entry.status === 'process_error'">
                 <span class="text-red-500">{{ entry.errorMessage }}</span>
               </template>
               <template v-else>{{ t('reconciliation.upload.parsing') }}</template>
@@ -292,7 +298,15 @@
     return ''
   }
 
-  type EntryStatus = 'pending' | 'parsing' | 'parsed' | 'processing' | 'saving' | 'saved' | 'error'
+  type EntryStatus =
+    | 'pending'
+    | 'parsing'
+    | 'parsed'
+    | 'processing'
+    | 'saving'
+    | 'saved'
+    | 'error'
+    | 'process_error'
 
   interface UploadEntry {
     id: string
@@ -918,6 +932,7 @@
   } from '@/api/hospital/pricingRulesApi'
   import {
     importHospitalReconciliation,
+    listHospitalReconciliations,
     getReconciliationRows,
     getUnmatchedProducts,
     type UnmatchedProductItem
@@ -1016,7 +1031,8 @@
         processed: { type: 'success', label: '已校对' },
         saving: { type: 'warning', label: '保存中' },
         saved: { type: 'success', label: '已保存' },
-        error: { type: 'danger', label: '解析失败' }
+        error: { type: 'danger', label: '解析失败' },
+        process_error: { type: 'danger', label: '处理失败' }
       }
       return () => {
         const info = map[props.status] || { type: 'info', label: props.status }
@@ -1431,6 +1447,7 @@
     entry.status = 'processing'
     entry.processingProgress = 0
     entry.processedRows = []
+    entry.errorMessage = ''
     try {
       const saved = await importHospitalReconciliation({
         file: entry.file,
@@ -1438,35 +1455,80 @@
         operatorName: operatorName.value.trim() || '未命名操作人',
         hospitalName: entry.hospitalName.trim() || undefined
       })
-
-      entry.savedJobId = saved.id
-      entry.hospitalName = saved.hospitalName || entry.hospitalName
-      entry.savedSheetRowCounts = saved.sheetRowCounts ?? null
-      entry.savedSheetWarningCounts = saved.sheetWarningCounts ?? null
-      entry.selectedSheetFilter = null
-      // 使用后端预计算的汇总数据
-      entry.savedSummary = {
-        total: saved.totalRows ?? 0,
-        corrected: saved.correctedRows ?? 0,
-        unchanged: saved.unchangedRows ?? 0,
-        warning: saved.warningRows ?? 0,
-        skipped: saved.skippedRows ?? 0,
-        totalDifference: saved.totalDifference ?? 0,
-        originalTotalPrice: saved.originalTotalPrice ?? 0,
-        correctedTotalPrice: saved.correctedTotalPrice ?? 0
-      }
-      entry.displayTotal = saved.totalRows ?? 0
-      entry.displayPage = 1
-      // 分页加载第一页行数据（不依赖 saved.rows，避免巨大 JSON）
-      // 和历史列表并行请求，互不依赖
-      await Promise.all([loadEntryPage(entry, 1), refreshEntryHistory(), refreshUnmatchedCount(entry)])
-
-      entry.status = 'saved'
+      await applySavedImportResult(entry, saved)
       ElMessage.success(`「${entry.file.name}」已保存，版本 V${saved.versionNo}`)
       highlightJob(saved.id)
     } catch (error) {
-      entry.status = 'error'
-      entry.errorMessage = error instanceof Error ? error.message : '校对保存失败'
+      // 大账单（如市五院 3 万+ 行）后端可能已落库，但客户端默认超时会先失败。
+      // 超时后按「医院+文件名」找回最近成功 job，避免误报「解析失败」。
+      const recovered = await tryRecoverRecentImportJob(entry)
+      if (recovered) {
+        await applySavedImportResult(entry, recovered)
+        ElMessage.success(
+          `「${entry.file.name}」后端已完成处理（客户端等待超时后已自动找回），版本 V${recovered.versionNo}`
+        )
+        highlightJob(recovered.id)
+        return
+      }
+      entry.status = 'process_error'
+      const raw = error instanceof Error ? error.message : '校对保存失败'
+      entry.errorMessage = /timeout|timed out|ECONNABORTED|exceeded/i.test(raw)
+        ? `处理超时：大账单可能仍在后端完成，请到历史版本中查看「${entry.file.name}」。原始错误：${raw}`
+        : raw
+    }
+  }
+
+  async function applySavedImportResult(
+    entry: UploadEntry,
+    saved: Api.Hospital.ReconciliationJob
+  ) {
+    entry.savedJobId = saved.id
+    entry.hospitalName = saved.hospitalName || entry.hospitalName
+    entry.savedSheetRowCounts = saved.sheetRowCounts ?? null
+    entry.savedSheetWarningCounts = saved.sheetWarningCounts ?? null
+    entry.selectedSheetFilter = null
+    entry.savedSummary = {
+      total: saved.totalRows ?? 0,
+      corrected: saved.correctedRows ?? 0,
+      unchanged: saved.unchangedRows ?? 0,
+      warning: saved.warningRows ?? 0,
+      skipped: saved.skippedRows ?? 0,
+      totalDifference: saved.totalDifference ?? 0,
+      originalTotalPrice: saved.originalTotalPrice ?? 0,
+      correctedTotalPrice: saved.correctedTotalPrice ?? 0
+    }
+    entry.displayTotal = saved.totalRows ?? 0
+    entry.displayPage = 1
+    await Promise.all([loadEntryPage(entry, 1), refreshEntryHistory(), refreshUnmatchedCount(entry)])
+    entry.status = 'saved'
+    entry.errorMessage = ''
+  }
+
+  /** 超时后按医院名+源文件名找回最近 15 分钟内已落库的导入任务 */
+  async function tryRecoverRecentImportJob(
+    entry: UploadEntry
+  ): Promise<Api.Hospital.ReconciliationJob | null> {
+    try {
+      const hospital = entry.hospitalName.trim()
+      const jobs = await listHospitalReconciliations(hospital || undefined)
+      const fileName = entry.file.name
+      const now = Date.now()
+      const candidates = jobs
+        .filter(
+          (job) =>
+            job.sourceFileName === fileName ||
+            job.sourceFileName?.endsWith(`_${fileName}`) ||
+            job.sourceFileName?.endsWith(fileName)
+        )
+        .filter((job) => (job.totalRows ?? 0) > 0)
+        .filter((job) => {
+          const created = Date.parse(job.createdAt)
+          return Number.isFinite(created) && now - created <= 15 * 60 * 1000
+        })
+        .sort((a, b) => b.id - a.id)
+      return candidates[0] ?? null
+    } catch {
+      return null
     }
   }
 

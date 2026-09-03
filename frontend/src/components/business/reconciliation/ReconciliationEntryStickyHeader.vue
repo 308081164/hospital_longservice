@@ -68,16 +68,20 @@
         <ElButton
           type="primary"
           size="small"
-          :disabled="entry.status !== 'parsed' || !activeRule || isRuleLoading"
+          :disabled="
+            !['parsed', 'process_error'].includes(entry.status) || !activeRule || isRuleLoading
+          "
           :loading="entry.status === 'processing'"
           @click="emit('process')"
         >
           {{
             entry.status === 'processing'
               ? '处理中…'
-              : entry.savedJobId
-                ? savedVersionLabel || '已保存'
-                : '校对并保存'
+              : entry.status === 'process_error'
+                ? '重新处理'
+                : entry.savedJobId
+                  ? savedVersionLabel || '已保存'
+                  : '校对并保存'
           }}
         </ElButton>
       </div>
