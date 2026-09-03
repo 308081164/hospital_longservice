@@ -12,6 +12,11 @@ WORKDIR /app
 
 ENV TZ=Asia/Shanghai
 
+ARG GIT_SHA=local
+ARG BUILD_TIME=unknown
+ENV APP_GIT_SHA=${GIT_SHA}
+ENV APP_BUILD_TIME=${BUILD_TIME}
+
 RUN apt-get update \
     && apt-get install -y --no-install-recommends curl default-mysql-client \
     && rm -rf /var/lib/apt/lists/*
@@ -22,7 +27,8 @@ COPY docker-entrypoint.sh /app/docker-entrypoint.sh
 COPY src/main/resources/db ./db
 
 RUN chmod +x /app/docker-entrypoint.sh \
-    && mkdir -p uploads/hospital-reconciliations storage/hospital-reconciliations
+    && mkdir -p uploads/hospital-reconciliations storage/hospital-reconciliations \
+    && printf 'git.sha=%s\nbuild.time=%s\n' "${GIT_SHA}" "${BUILD_TIME}" > /app/build-info.properties
 
 EXPOSE 8000
 

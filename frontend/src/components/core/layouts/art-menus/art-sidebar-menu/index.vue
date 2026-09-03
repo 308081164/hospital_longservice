@@ -109,6 +109,8 @@
         </ElMenu>
       </ElScrollbar>
 
+      <SystemVersionBadge />
+
       <!-- 双列菜单右侧折叠按钮 -->
       <div class="dual-menu-collapse-btn" v-if="isDualMenu" @click="toggleMenuVisibility">
         <ArtSvgIcon
@@ -137,6 +139,7 @@
   import { isIframe } from '@/utils/navigation'
   import { handleMenuJump } from '@/utils/navigation'
   import SidebarSubmenu from './widget/SidebarSubmenu.vue'
+  import SystemVersionBadge from './widget/SystemVersionBadge.vue'
   import { useCommon } from '@/hooks/core/useCommon'
   import { useWindowSize, useTimeoutFn } from '@vueuse/core'
 
@@ -209,12 +212,15 @@
     return currentMenu?.children ?? []
   })
 
-  // 双列菜单收起时的滚动条样式
+  // 双列菜单收起时的滚动条样式（底部预留版本徽章高度）
   const scrollbarStyle = computed(() => {
     const isCollapsed = isDualMenu.value && !menuOpen.value
+    const badgeReserve = menuOpen.value ? '72px' : '36px'
     return {
       transform: isCollapsed ? 'translateY(-50px)' : 'translateY(0)',
-      height: isCollapsed ? 'calc(100% + 50px)' : 'calc(100% - 60px)',
+      height: isCollapsed
+        ? `calc(100% + 50px - ${badgeReserve})`
+        : `calc(100% - 60px - ${badgeReserve})`,
       transition: 'transform 0.3s ease'
     }
   })

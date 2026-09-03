@@ -40,6 +40,9 @@ services:
     build:
       context: ./backend
       dockerfile: Dockerfile
+      args:
+        GIT_SHA: ${APP_GIT_SHA:-local}
+        BUILD_TIME: ${APP_BUILD_TIME:-}
     image: hospital-backend:latest
     container_name: hospital-backend
     restart: unless-stopped
@@ -57,6 +60,8 @@ services:
       MYSQL_USER: ${MYSQL_USER:-hospital}
       MYSQL_PASSWORD: ${MYSQL_PASSWORD}
       APP_JWT_SECRET: ${APP_JWT_SECRET}
+      APP_GIT_SHA: ${APP_GIT_SHA:-local}
+      APP_BUILD_TIME: ${APP_BUILD_TIME:-}
       APP_COMPANY_BANK_ACCOUNT: ${APP_COMPANY_BANK_ACCOUNT:-}
       APP_COMPANY_BANK_NAME: ${APP_COMPANY_BANK_NAME:-}
       IMPORT_BOKANG_DATA: ${IMPORT_BOKANG_DATA:-0}
@@ -87,8 +92,8 @@ services:
       context: ./frontend
       dockerfile: Dockerfile
       args:
-        # 可选：export APP_BUILD_ID=$(date +%Y%m%d%H%M%S) 后 build，便于区分镜像版本
-        APP_BUILD_ID: ${APP_BUILD_ID:-}
+        # 与后端同源：export APP_GIT_SHA=$(git rev-parse HEAD) 后 build，便于 UI 对版
+        APP_BUILD_ID: ${APP_GIT_SHA:-${APP_BUILD_ID:-}}
     image: hospital-frontend:latest
     container_name: hospital-frontend
     restart: unless-stopped

@@ -38,6 +38,8 @@ public class BillingRulesManifestReconciler implements CommandLineRunner {
 
     private static final String MANIFEST_FILE = "billing-seeds/billing-rules-manifest.json";
     private static final String MANIFEST_HASH_KEY = "billing_rules_manifest_hash";
+    private static final String MANIFEST_GENERATED_AT_KEY = "billing_rules_manifest_generated_at";
+    private static final String MANIFEST_RECONCILED_AT_KEY = "billing_rules_manifest_reconciled_at";
 
     private final CustomerMapper customerMapper;
     private final CustomerProductRuleMapper customerProductRuleMapper;
@@ -118,6 +120,10 @@ public class BillingRulesManifestReconciler implements CommandLineRunner {
                 log.info("Reconcile cleaned up {} non-manifest rules", deleted);
             }
             upsertManifestHash(manifestHash);
+            upsertSetting(MANIFEST_GENERATED_AT_KEY, text(root, "generated_at"),
+                    "ISO timestamp of billing-rules-manifest.json generation");
+            upsertSetting(MANIFEST_RECONCILED_AT_KEY, java.time.Instant.now().toString(),
+                    "ISO timestamp of last billing-rules-manifest reconcile on this instance");
             log.info("Billing rules manifest reconcile done: {} rules upserted, {} customers updated, hash={}…",
                     upserted, customersUpdated, manifestHash.substring(0, Math.min(12, manifestHash.length())));
         } catch (Exception e) {
@@ -283,15 +289,25 @@ public class BillingRulesManifestReconciler implements CommandLineRunner {
     }
 
     private void upsertManifestHash(String hash) {
-        SysSetting existing = sysSettingMapper.selectByKey(MANIFEST_HASH_KEY);
+        upsertSetting(MANIFEST_HASH_KEY, hash, "SHA256 of billing-rules-manifest.json customers payload");
+    }
+
+    private void upsertSetting(String key, String value, String description) {
+        if (value == null || value.isBlank()) {
+            return;
+        }
+        SysSetting existing = sysSettingMapper.selectByKey(key);
         if (existing == null) {
             SysSetting marker = new SysSetting();
-            marker.setSettingKey(MANIFEST_HASH_KEY);
-            marker.setSettingValue(hash);
-            marker.setDescription("SHA256 of billing-rules-manifest.json customers payload");
+            marker.setSettingKey(key);
+            marker.setSettingValue(value);
+            marker.setDescription(description);
             sysSettingMapper.insert(marker);
         } else {
-            existing.setSettingValue(hash);
+            existing.setSettingValue(value);
+            if (description != null && !description.isBlank()) {
+                existing.setDescription(description);
+            }
             sysSettingMapper.updateByKey(existing);
         }
     }

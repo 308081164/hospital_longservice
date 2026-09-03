@@ -11,6 +11,7 @@ import com.hospital.backend.entity.User;
 import com.hospital.backend.mapper.UserMapper;
 import com.hospital.backend.security.JwtTokenProvider;
 import com.hospital.backend.security.UserDetailsImpl;
+import com.hospital.backend.service.SystemVersionInfoService;
 import io.jsonwebtoken.Claims;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -30,6 +31,7 @@ public class AuthController {
     private final UserMapper userMapper;
     private final JwtTokenProvider jwtTokenProvider;
     private final PasswordEncoder passwordEncoder;
+    private final SystemVersionInfoService systemVersionInfoService;
 
     @Value("${app.jwt.access-token-expire-minutes}")
     private long accessTokenExpireMinutes;
@@ -126,10 +128,6 @@ public class AuthController {
 
     @GetMapping("/version")
     public Result<?> version() {
-        return Result.success(java.util.Map.of(
-                "version", "1.0.0",
-                "app_title", "Hospital Backend",
-                "project_name", "hospital-backend"
-        ));
+        return Result.success(systemVersionInfoService.current());
     }
 }

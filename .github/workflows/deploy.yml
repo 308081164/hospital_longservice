@@ -85,7 +85,12 @@ jobs:
           max_attempts: 4
           retry_wait_seconds: 45
           warning_on_retry: true
-          command: docker buildx build --push -t "${{ steps.images.outputs.backend }}" ./backend
+          command: >
+            docker buildx build --push
+            --build-arg GIT_SHA="${{ github.sha }}"
+            --build-arg BUILD_TIME="$(date -u +%Y-%m-%dT%H:%M:%SZ)"
+            -t "${{ steps.images.outputs.backend }}"
+            ./backend
 
       - name: Build and push frontend
         uses: nick-fields/retry@v3
@@ -94,7 +99,11 @@ jobs:
           max_attempts: 4
           retry_wait_seconds: 45
           warning_on_retry: true
-          command: docker buildx build --push -t "${{ steps.images.outputs.frontend }}" ./frontend
+          command: >
+            docker buildx build --push
+            --build-arg APP_BUILD_ID="${{ github.sha }}"
+            -t "${{ steps.images.outputs.frontend }}"
+            ./frontend
 
       - name: Deploy to server
         env:
