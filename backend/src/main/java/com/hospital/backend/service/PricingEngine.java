@@ -653,6 +653,7 @@ public class PricingEngine {
         result.pricingRule = pricingRule;
         result.notes = notes;
         result.matchedRuleId = matchedRuleId;
+        result.pricingPath = resolveEffectivePricingPath(specialPrice, pricingRule);
         if (specialPrice != null) {
             result.matchedPriceOption = specialPrice.matchedPriceOption;
             if (specialPrice.anyPriceMode) {
@@ -660,11 +661,13 @@ public class PricingEngine {
                         specialPrice, anyPriceAccepted, unitPrice, notes);
             } else {
                 result.billingNotes = buildRowBillingNotes(
-                        notes, type, packName, packageMaterial, hospitalName, skipHospitalDiscount, matchedRuleId);
+                        notes, type, packName, packageMaterial, hospitalName, skipHospitalDiscount,
+                        matchedRuleId, specialPrice.ruleName, result.pricingPath);
             }
         } else {
             result.billingNotes = buildRowBillingNotes(
-                    notes, type, packName, packageMaterial, hospitalName, skipHospitalDiscount, matchedRuleId);
+                    notes, type, packName, packageMaterial, hospitalName, skipHospitalDiscount,
+                    matchedRuleId, null, result.pricingPath);
         }
         result.billingNotes = mergeBillingNotes(result.billingNotes, consistencyBillingNotes);
         return result;
@@ -688,6 +691,33 @@ public class PricingEngine {
         return merged;
     }
 
+    private String resolveEffectivePricingPath(SpecialPriceResult specialPrice, String pricingRule) {
+        if (specialPrice != null) {
+            return "fixed";
+        }
+        if ("special_only 未命中特色规则".equals(pricingRule)) {
+            return "preserve";
+        }
+        if (pricingRule != null && isStandardSterilizationPricingRule(pricingRule)) {
+            return "standard";
+        }
+        return null;
+    }
+
+    private boolean isStandardSterilizationPricingRule(String pricingRule) {
+        if (pricingRule == null || pricingRule.isBlank()) {
+            return false;
+        }
+        return pricingRule.contains("高温")
+                || pricingRule.contains("低温")
+                || pricingRule.contains("敷料")
+                || pricingRule.contains("路径覆盖")
+                || pricingRule.contains("阶梯")
+                || pricingRule.contains("纸塑")
+                || pricingRule.contains("无纺布")
+                || pricingRule.contains("产品主数据公开价格");
+    }
+
     private Map<String, Object> buildRowBillingNotes(
             List<String> notes,
             String type,
@@ -695,11 +725,20 @@ public class PricingEngine {
             String packageMaterial,
             String hospitalName,
             boolean skipHospitalDiscount,
-            Long matchedRuleId) {
+            Long matchedRuleId,
+            String ruleName,
+            String effectivePricingPath) {
         Map<String, Object> billingNotes = new LinkedHashMap<>();
         if (matchedRuleId != null) {
             billingNotes.put("matchedRuleId", matchedRuleId);
             billingNotes.put("matched_rule_id", matchedRuleId);
+        }
+        if (ruleName != null && !ruleName.isBlank()) {
+            billingNotes.put("ruleName", ruleName);
+        }
+        if (effectivePricingPath != null && !effectivePricingPath.isBlank()) {
+            billingNotes.put("effectivePricingPath", effectivePricingPath);
+            billingNotes.put("effective_pricing_path", effectivePricingPath);
         }
         List<Map<String, Object>> discountChain = buildDiscountChain(notes);
         if (!discountChain.isEmpty()) {
@@ -2171,6 +2210,8 @@ public class PricingEngine {
         public List<String> notes = new ArrayList<>();
         public Long matchedRuleId;
         public Double matchedPriceOption;
+        /** 实际计价路径：fixed=客户校正/固定价，standard=标准灭菌阶梯，preserve=保留原价 */
+        public String pricingPath;
         public Map<String, Object> billingNotes;
     }
 

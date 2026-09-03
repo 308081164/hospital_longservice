@@ -734,6 +734,9 @@ public class HospitalReconciliationServiceImpl implements HospitalReconciliation
                 row.put("matchedRuleId", pr.matchedRuleId);
                 row.put("matchedPriceOption", pr.matchedPriceOption);
                 row.put("billingNotes", pr.billingNotes);
+                if (pr.pricingPath != null && !pr.pricingPath.isBlank()) {
+                    row.put("pricingPath", pr.pricingPath);
+                }
                 processedRows.add(row);
 
                 switch (pr.status) {
@@ -2295,6 +2298,9 @@ public class HospitalReconciliationServiceImpl implements HospitalReconciliation
         rowMap.put("matchedRuleId", pr.matchedRuleId);
         rowMap.put("matchedPriceOption", pr.matchedPriceOption);
         rowMap.put("billingNotes", pr.billingNotes);
+        if (pr.pricingPath != null && !pr.pricingPath.isBlank()) {
+            rowMap.put("pricingPath", pr.pricingPath);
+        }
 
         if (pr.expectedUnitPrice == null) {
             rowMap.put("correctedTotalPrice", pr.correctedTotalPrice);

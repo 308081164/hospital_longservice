@@ -123,7 +123,7 @@
     hasBillingDetail,
     parseReconciliationBillingContext
   } from '@/utils/reconciliationBillingNotes'
-  import { buildPricingFlowTimeline, type PricingFlowStep } from '@/utils/reconciliationPricingPath'
+  import { buildPricingFlowTimeline, readEffectivePricingPath, type PricingFlowStep } from '@/utils/reconciliationPricingPath'
   import {
     formatPricingPathDisplay,
     formatReconciliationStatusDisplay,
@@ -202,8 +202,8 @@
   })
 
   const pricingPathLabel = computed(() => {
-    const raw = props.row?.pricingPath ?? props.row?.pricing_path
-    return raw == null || raw === '' ? '' : formatPricingPathDisplay(String(raw))
+    const raw = readEffectivePricingPath(props.row ?? {})
+    return raw === '' ? '' : formatPricingPathDisplay(raw)
   })
 
   function localizeDisplayText(value: string): string {

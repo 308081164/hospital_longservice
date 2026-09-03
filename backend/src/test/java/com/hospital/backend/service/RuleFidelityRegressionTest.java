@@ -285,4 +285,28 @@ class RuleFidelityRegressionTest {
         assertThat(youshiResult.status).isEqualTo("warning");
         assertThat(youshiResult.expectedUnitPrice).isEqualTo(187.0);
     }
+
+    @Test
+    void zuyanSfCorrectionPriceUsesFixedPricingPath() throws Exception {
+        JsonNode rules = RuleFidelityTestSupport.compileForCustomerCode("ZUYAN-SF");
+        PricingEngine engine = new PricingEngine(rules);
+        PricingEngine.ProcessedResult result = engine.processRow(Map.of(
+                "hospitalName", "祖研-黑龙江省中医医院（三辅院区）",
+                "department", "皮肤门诊(二)",
+                "type", "高温无纺布-90×90-50g",
+                "packName", "美容科排针包50件盘1/W6050",
+                "packageMaterial", "无纺布-90×90-50g",
+                "instrumentCount", 153,
+                "packCount", 3,
+                "unitPrice", 33.0,
+                "totalPrice", 99.0
+        ));
+        assertThat(result.status).isEqualTo("unchanged");
+        assertThat(result.expectedUnitPrice).isEqualTo(33.0);
+        assertThat(result.pricingRule).isEqualTo("校正价33.0");
+        assertThat(result.pricingPath).isEqualTo("fixed");
+        assertThat(result.billingNotes).isNotNull();
+        assertThat(result.billingNotes.get("effectivePricingPath")).isEqualTo("fixed");
+        assertThat(result.billingNotes.get("ruleName")).isEqualTo("校正价33.0");
+    }
 }
