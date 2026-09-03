@@ -1152,6 +1152,7 @@
   },
   "pricingPath": {
     "specialHit": "Special rule",
+    "customerFixed": "Customer correction price",
     "standard": "Standard sterilization",
     "preserve": "Preserve original",
     "disabled": "Special billing off",
@@ -1169,6 +1170,8 @@
     "copySuccess": "Rule summary copied",
     "copyFailed": "Copy failed",
     "stepSummary": "Matched rule summary",
+    "stepCustomerFixed": "Customer correction price matched",
+    "stepProductMatch": "Product identification",
     "stepRuleMeta": "Linked rule",
     "stepMultiPrice": "Multi-price match",
     "stepNote": "Pricing note",

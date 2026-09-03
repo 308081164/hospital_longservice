@@ -197,16 +197,20 @@ public class PricingEngine {
             forceHighTempPerItem = foldUnitPriceOverride;
         }
 
-        // 高温纸塑 ≥3 件：按账单器械数×5.5，不应用全局针数拆分/小件折算（院级 FOLD 特色规则仍保留）
-        boolean skipGlobalNeedleAndSmallFold = highTempPaperPlasticRow && !isLowTemp
-                && perPackRawInstrumentCount >= 3;
-        if (skipGlobalNeedleAndSmallFold && !appliedSpecialFoldRule) {
-            effectiveCount = Math.max(1, perPackRawInstrumentCount);
-        }
-
         // 针数量规则 + 小件器械折算（针数量规则优先：包名含"针+数字"时按公式拆分）
         JsonNode needle = rules.path("needle");
         String needleMatchMode = BillingConditionEvaluator.resolveKeywordMatchMode(needle);
+
+        // 高温纸塑 ≥3 件：按账单器械数×5.5，不应用全局针数拆分/小件折算（院级 FOLD 特色规则仍保留）。
+        // 包名命中小件关键词（车针/克氏针等）时仍须走折算，不可因单包≥3件而按实件×5.5。
+        boolean matchesSmallItemKeyword = matchesKeywordsBoundary(
+                packName, needle.path("keywords"), needleMatchMode);
+        boolean skipGlobalNeedleAndSmallFold = highTempPaperPlasticRow && !isLowTemp
+                && perPackRawInstrumentCount >= 3
+                && !matchesSmallItemKeyword;
+        if (skipGlobalNeedleAndSmallFold && !appliedSpecialFoldRule) {
+            effectiveCount = Math.max(1, perPackRawInstrumentCount);
+        }
         java.util.regex.Pattern needleQtyPattern = java.util.regex.Pattern.compile("针(\\d+)");
         java.util.regex.Matcher needleQtyMatcher = needleQtyPattern.matcher(packName);
         boolean appliedNeedleRule = false;
@@ -555,6 +559,11 @@ public class PricingEngine {
             }
         }
 
+        // 标准纸塑袋器械包：袋费已在高温/低温纸塑阶梯或 FOLD 内联包材中计取，不走 packaging 模块。
+        if (packCategory == PackPricingCategory.INSTRUMENT_PAPER && isPaperPlastic) {
+            skipPackaging = true;
+        }
+
         // 包装收费
         if (!skipPackaging) {
             PackagingResult pkg = computePackagingCharge(row, materialBillingCount, notes);
@@ -653,6 +662,7 @@ public class PricingEngine {
         result.pricingRule = pricingRule;
         result.notes = notes;
         result.matchedRuleId = matchedRuleId;
+        result.pricingPath = resolveEffectivePricingPath(specialPrice, pricingRule);
         if (specialPrice != null) {
             result.matchedPriceOption = specialPrice.matchedPriceOption;
             if (specialPrice.anyPriceMode) {
@@ -660,11 +670,13 @@ public class PricingEngine {
                         specialPrice, anyPriceAccepted, unitPrice, notes);
             } else {
                 result.billingNotes = buildRowBillingNotes(
-                        notes, type, packName, packageMaterial, hospitalName, skipHospitalDiscount, matchedRuleId);
+                        notes, type, packName, packageMaterial, hospitalName, skipHospitalDiscount,
+                        matchedRuleId, specialPrice.ruleName, result.pricingPath);
             }
         } else {
             result.billingNotes = buildRowBillingNotes(
-                    notes, type, packName, packageMaterial, hospitalName, skipHospitalDiscount, matchedRuleId);
+                    notes, type, packName, packageMaterial, hospitalName, skipHospitalDiscount,
+                    matchedRuleId, null, result.pricingPath);
         }
         result.billingNotes = mergeBillingNotes(result.billingNotes, consistencyBillingNotes);
         return result;
@@ -688,6 +700,33 @@ public class PricingEngine {
         return merged;
     }
 
+    private String resolveEffectivePricingPath(SpecialPriceResult specialPrice, String pricingRule) {
+        if (specialPrice != null) {
+            return "fixed";
+        }
+        if ("special_only 未命中特色规则".equals(pricingRule)) {
+            return "preserve";
+        }
+        if (pricingRule != null && isStandardSterilizationPricingRule(pricingRule)) {
+            return "standard";
+        }
+        return null;
+    }
+
+    private boolean isStandardSterilizationPricingRule(String pricingRule) {
+        if (pricingRule == null || pricingRule.isBlank()) {
+            return false;
+        }
+        return pricingRule.contains("高温")
+                || pricingRule.contains("低温")
+                || pricingRule.contains("敷料")
+                || pricingRule.contains("路径覆盖")
+                || pricingRule.contains("阶梯")
+                || pricingRule.contains("纸塑")
+                || pricingRule.contains("无纺布")
+                || pricingRule.contains("产品主数据公开价格");
+    }
+
     private Map<String, Object> buildRowBillingNotes(
             List<String> notes,
             String type,
@@ -695,11 +734,20 @@ public class PricingEngine {
             String packageMaterial,
             String hospitalName,
             boolean skipHospitalDiscount,
-            Long matchedRuleId) {
+            Long matchedRuleId,
+            String ruleName,
+            String effectivePricingPath) {
         Map<String, Object> billingNotes = new LinkedHashMap<>();
         if (matchedRuleId != null) {
             billingNotes.put("matchedRuleId", matchedRuleId);
             billingNotes.put("matched_rule_id", matchedRuleId);
+        }
+        if (ruleName != null && !ruleName.isBlank()) {
+            billingNotes.put("ruleName", ruleName);
+        }
+        if (effectivePricingPath != null && !effectivePricingPath.isBlank()) {
+            billingNotes.put("effectivePricingPath", effectivePricingPath);
+            billingNotes.put("effective_pricing_path", effectivePricingPath);
         }
         List<Map<String, Object>> discountChain = buildDiscountChain(notes);
         if (!discountChain.isEmpty()) {
@@ -1811,7 +1859,12 @@ public class PricingEngine {
 
         JsonNode options = matchedItem.path("options");
         if (!options.isArray() || options.size() == 0) {
-            notes.add("命中包装收费项目\"" + matchedItem.path("name").asText() + "\"，但该项目未配置具体选项价格，请先在计费规则中配置价格，或手动核定包装费。");
+            String itemName = matchedItem.path("name").asText("");
+            // 纸塑袋费已并入标准灭菌阶梯；rules_json 中「纸塑袋」占位项无 options 时不应误告警。
+            if ("纸塑袋".equals(itemName) && containsPackagingKeyword(combined, "纸塑袋")) {
+                return new PackagingResult();
+            }
+            notes.add("命中包装收费项目\"" + itemName + "\"，但该项目未配置具体选项价格，请先在计费规则中配置价格，或手动核定包装费。");
             PackagingResult pr = new PackagingResult();
             pr.warning = true;
             return pr;
@@ -2171,6 +2224,8 @@ public class PricingEngine {
         public List<String> notes = new ArrayList<>();
         public Long matchedRuleId;
         public Double matchedPriceOption;
+        /** 实际计价路径：fixed=客户校正/固定价，standard=标准灭菌阶梯，preserve=保留原价 */
+        public String pricingPath;
         public Map<String, Object> billingNotes;
     }
 

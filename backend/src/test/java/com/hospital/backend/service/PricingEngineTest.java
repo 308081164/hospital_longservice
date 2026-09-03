@@ -1630,6 +1630,9 @@ class PricingEngineTest {
 
         assertThat(result.expectedUnitPrice).isEqualTo(8.0);
         assertThat(result.notes).anyMatch(n -> n.contains("校正价8.0") || n.contains("纸塑袋"));
+        assertThat(result.pricingPath).isEqualTo("fixed");
+        assertThat(result.billingNotes).isNotNull();
+        assertThat(result.billingNotes.get("effectivePricingPath")).isEqualTo("fixed");
     }
 
     @Test

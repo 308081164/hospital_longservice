@@ -1201,6 +1201,7 @@
   },
   "pricingPath": {
     "specialHit": "特色规则",
+    "customerFixed": "客户校正价",
     "standard": "标准灭菌",
     "preserve": "保留原价",
     "disabled": "特色已关闭",
@@ -1218,6 +1219,8 @@
     "copySuccess": "已复制规则摘要",
     "copyFailed": "复制失败",
     "stepSummary": "命中规则摘要",
+    "stepCustomerFixed": "命中客户校正价",
+    "stepProductMatch": "产品识别",
     "stepRuleMeta": "关联规则",
     "stepMultiPrice": "多报价匹配",
     "stepNote": "计价说明",
