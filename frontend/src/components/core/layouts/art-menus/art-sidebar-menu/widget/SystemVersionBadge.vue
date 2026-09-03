@@ -22,7 +22,11 @@
 </template>
 
 <script setup lang="ts">
-  import { fetchSystemVersion, type SystemVersionInfo } from '@/api/system/versionApi'
+  import {
+    fetchSystemVersion,
+    isSystemVersionInfoComplete,
+    type SystemVersionInfo
+  } from '@/api/system/versionApi'
   import { useSettingStore } from '@/store/modules/setting'
 
   defineOptions({ name: 'SystemVersionBadge' })
@@ -31,24 +35,32 @@
   const { menuOpen } = storeToRefs(settingStore)
 
   const info = ref<SystemVersionInfo | null>(null)
+  /** API 失败或旧版后端（无 gitShaShort 等字段） */
+  const backendUnavailable = ref(false)
   const frontendSha = typeof __APP_VERSION__ === 'string' ? __APP_VERSION__ : ''
 
   const display = computed(() => {
-    const gitSha = info.value?.gitShaShort || short(frontendSha) || 'local'
-    const buildTime = info.value?.buildTimeDisplay || '—'
-    const rulesHash = info.value?.rulesManifestHashShort || '—'
+    const i = info.value
+    const gitSha = i?.gitShaShort || short(frontendSha) || 'local'
+    const fallback = backendUnavailable.value ? '后端未就绪' : '—'
+    const buildTime = i?.buildTimeDisplay || fallback
+    const rulesHash = i?.rulesManifestHashShort || fallback
     const rulesTime =
-      info.value?.rulesReconciledAtDisplay || info.value?.rulesGeneratedAtDisplay || ''
+      i?.rulesReconciledAtDisplay || i?.rulesGeneratedAtDisplay || ''
     return { gitSha, buildTime, rulesHash, rulesTime }
   })
 
   const tooltipText = computed(() => {
     const i = info.value
+    const fallback = backendUnavailable.value ? '后端未就绪' : '—'
     const lines = [
       `系统 ${i?.gitSha || short(frontendSha) || 'local'}`,
-      `更新 ${i?.buildTimeDisplay || i?.buildTime || '—'}`,
-      `规则 ${i?.rulesManifestHashShort || '—'} · ${i?.rulesReconciledAtDisplay || i?.rulesGeneratedAtDisplay || '—'}`,
-      frontendSha && frontendSha !== i?.gitSha ? `前端构建 ${short(frontendSha)}` : ''
+      `更新 ${i?.buildTimeDisplay || i?.buildTime || fallback}`,
+      `规则 ${i?.rulesManifestHashShort || fallback} · ${i?.rulesReconciledAtDisplay || i?.rulesGeneratedAtDisplay || fallback}`,
+      backendUnavailable.value && frontendSha ? `前端构建 ${short(frontendSha)}` : '',
+      !backendUnavailable.value && frontendSha && frontendSha !== i?.gitSha
+        ? `前端构建 ${short(frontendSha)}`
+        : ''
     ].filter(Boolean)
     return lines.join('\n')
   })
@@ -60,10 +72,14 @@
 
   onMounted(async () => {
     try {
-      info.value = await fetchSystemVersion()
+      const data = await fetchSystemVersion()
+      if (isSystemVersionInfoComplete(data)) {
+        info.value = data
+      } else {
+        backendUnavailable.value = true
+      }
     } catch {
-      // 未登录/后端未就绪时仍展示前端构建号，避免空白
-      info.value = null
+      backendUnavailable.value = true
     }
   })
 </script>
