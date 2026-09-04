@@ -1,0 +1,109 @@
+# 生产漂移巡检：定时比对「生产实际运行版本/规则 hash」与「main HEAD」。
+# 覆盖历史事故场景：
+#   - CI 单测失败阻断 deploy（49201f9b 针盒 FOLD 修复在 main 上但生产未更新，无人察觉）
+#   - 部署中途失败/部分部署（89bc9893）
+#   - 规则 manifest 已提交但生产 reconcile 失败或漂移（6652c4be extraCount NULL）
+# 失败时 GitHub 会向仓库 watcher 发送 Actions 失败通知邮件（无需额外 webhook）。
+name: Prod Drift Watchdog
+
+on:
+  schedule:
+    - cron: "*/20 * * * *"
+  workflow_dispatch:
+
+# 巡检只读，允许多实例但无意义，串行即可
+concurrency:
+  group: prod-drift-watchdog
+  cancel-in-progress: false
+
+env:
+  PROD_HOST: ${{ vars.PROD_HOST || '39.102.213.51' }}
+  PROD_PORT: ${{ vars.PROD_PORT || '8853' }}
+  # main HEAD 提交年龄在此宽限分钟内时，允许生产停留在前一个提交（部署在途）
+  GRACE_MINUTES: 30
+
+jobs:
+  drift-check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout main
+        uses: actions/checkout@v4
+        with:
+          ref: main
+          # 需要完整历史：生产可能落后多个提交，merge-base/rev-list 依赖祖先链
+          fetch-depth: 0
+
+      - name: Fetch prod version
+        id: prod
+        run: |
+          set -e
+          BODY="$(curl -sf --connect-timeout 8 "http://${PROD_HOST}:${PROD_PORT}/api/v1/base/version")"
+          echo "$BODY"
+          echo "$BODY" > /tmp/prod_version.json
+          echo "git_sha=$(jq -r '.data.gitSha // ""' /tmp/prod_version.json)" >> "$GITHUB_OUTPUT"
+          echo "rules_hash=$(jq -r '.data.rulesManifestHash // ""' /tmp/prod_version.json)" >> "$GITHUB_OUTPUT"
+          echo "reconcile_status=$(jq -r '.data.rulesReconcileStatus // ""' /tmp/prod_version.json)" >> "$GITHUB_OUTPUT"
+          echo "reconciled_at=$(jq -r '.data.rulesReconciledAt // ""' /tmp/prod_version.json)" >> "$GITHUB_OUTPUT"
+          echo "build_time=$(jq -r '.data.buildTime // ""' /tmp/prod_version.json)" >> "$GITHUB_OUTPUT"
+
+      - name: Check version drift vs main HEAD
+        run: |
+          set -e
+          MAIN_SHA="$(git rev-parse HEAD)"
+          PROD_SHA="${{ steps.prod.outputs.git_sha }}"
+          echo "main HEAD: $MAIN_SHA"
+          echo "prod     : $PROD_SHA"
+
+          if [ "$PROD_SHA" = "$MAIN_SHA" ]; then
+            echo "OK: 生产版本与 main HEAD 一致"
+            exit 0
+          fi
+
+          MAIN_AGE_MIN=$(( ($(date +%s) - $(git log -1 --format=%ct HEAD)) / 60 ))
+          echo "main HEAD 提交年龄: ${MAIN_AGE_MIN} 分钟（宽限 ${GRACE_MINUTES}）"
+          if [ "$MAIN_AGE_MIN" -lt "$GRACE_MINUTES" ]; then
+            PREV_SHA="$(git rev-parse HEAD~1 2>/dev/null || echo '')"
+            if [ -n "$PREV_SHA" ] && [ "$PROD_SHA" = "$PREV_SHA" ]; then
+              echo "OK: main 刚更新（部署在途宽限内），生产为前一提交 $PREV_SHA"
+              exit 0
+            fi
+          fi
+
+          if ! git merge-base --is-ancestor "$PROD_SHA" HEAD 2>/dev/null; then
+            echo "::error::生产版本 $PROD_SHA 不是 main 的祖先（生产跑了未合并/已回滚的代码）"
+            exit 1
+          fi
+          BEHIND="$(git rev-list --count "$PROD_SHA"..HEAD 2>/dev/null || echo '?')"
+          echo "::error::生产落后 main ${BEHIND} 个提交（prod=$PROD_SHA main=$MAIN_SHA）——部署缺失或被阻断，请检查最近 Actions 运行"
+          exit 1
+
+      - name: Check rules manifest drift
+        run: |
+          set -e
+          PROD_RULES="${{ steps.prod.outputs.rules_hash }}"
+          REPO_RULES="$(jq -r '.manifest_hash // ""' backend/src/main/resources/billing-seeds/billing-rules-manifest.json)"
+          echo "repo manifest : $REPO_RULES"
+          echo "prod manifest : $PROD_RULES"
+          if [ -z "$REPO_RULES" ]; then
+            echo "::warning::仓库 manifest 无 manifest_hash 字段"
+            exit 0
+          fi
+          if [ "$PROD_RULES" != "$REPO_RULES" ]; then
+            echo "::error::生产规则 manifest hash 与 main 不一致——reconcile 失败或部署缺失"
+            exit 1
+          fi
+          echo "OK: 规则 manifest hash 一致"
+
+      - name: Check reconcile status marker
+        run: |
+          STATUS="${{ steps.prod.outputs.reconcile_status }}"
+          if [ -z "$STATUS" ]; then
+            echo " reconcile 状态字段不存在（旧版后端），以 hash 对版为准"
+            exit 0
+          fi
+          echo "reconcile status: $STATUS"
+          case "$STATUS" in
+            OK*) echo "OK: reconcile 状态正常" ;;
+            *) echo "::error::生产 manifest reconcile 状态异常: $STATUS"; exit 1 ;;
+          esac

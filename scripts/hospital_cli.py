@@ -623,7 +623,7 @@ def pick_smoke_job_id(profile: str) -> int | None:
     return None
 
 
-def run_smoke(client: ApiClient, *, profile: str) -> CliReport:
+def run_smoke(client: ApiClient, *, profile: str, expect_sha: str | None = None) -> CliReport:
     report = CliReport("smoke", profile, client.mode, client.api_base, time.time())
 
     try:
@@ -638,6 +638,18 @@ def run_smoke(client: ApiClient, *, profile: str) -> CliReport:
         version = client.version()
         ver = (version.get("data") or {}).get("version") or version.get("msg")
         report.add(StepResult("L1_version", "L1", version.get("code") == 200, str(ver), {"raw": version}))
+        if expect_sha:
+            actual_sha = str((version.get("data") or {}).get("gitSha") or "")
+            sha_ok = bool(actual_sha) and actual_sha.startswith(expect_sha)
+            report.add(
+                StepResult(
+                    "L1_version_sha_parity",
+                    "L1",
+                    sha_ok,
+                    f"期望 {expect_sha[:8]} / 实际 {actual_sha[:8] or '未知'}",
+                    {"expected_sha": expect_sha, "actual_sha": actual_sha},
+                )
+            )
     except Exception as exc:
         report.add(StepResult("L1_version", "L1", False, str(exc)))
 
@@ -765,6 +777,158 @@ def run_deploy_check(client: ApiClient, *, profile: str, expected: int, skip_mys
                     {"mysql_enabled": mysql_count, "api_enabled": enabled},
                 )
             )
+
+    report.finished_at = time.time()
+    return report
+
+
+def _parse_iso(ts: str | None) -> float | None:
+    if not ts:
+        return None
+    try:
+        from datetime import datetime, timezone
+
+        return datetime.fromisoformat(str(ts).replace("Z", "+00:00")).astimezone(timezone.utc).timestamp()
+    except (ValueError, TypeError):
+        return None
+
+
+def git_head_sha() -> str | None:
+    try:
+        out = subprocess.check_output(
+            ["git", "rev-parse", "HEAD"], text=True, cwd=str(ROOT), stderr=subprocess.DEVNULL
+        )
+        return out.strip() or None
+    except (subprocess.CalledProcessError, FileNotFoundError):
+        return None
+
+
+def local_manifest_meta(manifest_path: Path | None = None) -> dict[str, Any]:
+    path = manifest_path or (ROOT / "backend/src/main/resources/billing-seeds/billing-rules-manifest.json")
+    try:
+        data = json.loads(path.read_text(encoding="utf-8"))
+        return {
+            "hash": data.get("manifest_hash") or "",
+            "billing_enabled_count": data.get("billing_enabled_count"),
+            "path": str(path),
+        }
+    except (OSError, json.JSONDecodeError):
+        return {"hash": "", "billing_enabled_count": None, "path": str(path)}
+
+
+def run_status(
+    client: ApiClient,
+    *,
+    profile: str,
+    expect_sha: str | None,
+    expect_rules_hash: str | None,
+    check_billing_count: bool,
+) -> CliReport:
+    """一键生产体检：版本对版 + 规则 hash 对版 + reconcile 状态/新鲜度 + billing_enabled 计数。"""
+    report = CliReport("status", profile, client.mode, client.api_base, time.time())
+
+    try:
+        client.health()
+        report.add(StepResult("L0_health", "L0", True, "ok"))
+    except Exception as exc:
+        report.add(StepResult("L0_health", "L0", False, str(exc)))
+        report.finished_at = time.time()
+        return report
+
+    try:
+        version = client.version()
+    except Exception as exc:
+        report.add(StepResult("L1_version", "L1", False, str(exc)))
+        report.finished_at = time.time()
+        return report
+
+    data = version.get("data") or {}
+    git_sha = str(data.get("gitSha") or "")
+    build_time = str(data.get("buildTime") or "")
+    rules_hash = str(data.get("rulesManifestHash") or "")
+    reconciled_at = str(data.get("rulesReconciledAt") or "")
+    reconcile_status = str(data.get("rulesReconcileStatus") or "")
+    report.add(
+        StepResult(
+            "L1_version",
+            "L1",
+            version.get("code") == 200 and bool(git_sha) and git_sha != "local",
+            f"gitSha={git_sha[:8] or '未知'} build={build_time}",
+            {"raw": version},
+        )
+    )
+
+    expected_sha = expect_sha if expect_sha is not None else git_head_sha()
+    if expected_sha:
+        sha_ok = bool(git_sha) and git_sha.startswith(expected_sha)
+        report.add(
+            StepResult(
+                "L1_version_sha_parity",
+                "L1",
+                sha_ok,
+                f"期望 {expected_sha[:8]} / 生产 {git_sha[:8] or '未知'}",
+                {"expected_sha": expected_sha, "actual_sha": git_sha},
+            )
+        )
+    else:
+        report.add(StepResult("L1_version_sha_parity", "L1", True, "未指定期望 sha（--expect-sha），跳过"))
+
+    meta = local_manifest_meta()
+    expected_rules_hash = expect_rules_hash if expect_rules_hash is not None else meta["hash"]
+    if expected_rules_hash:
+        rules_ok = bool(rules_hash) and rules_hash == expected_rules_hash
+        report.add(
+            StepResult(
+                "L6_rules_hash_parity",
+                "L6",
+                rules_ok,
+                f"期望 {expected_rules_hash[:12]}… / 生产 {rules_hash[:12] or '未知'}…",
+                {"expected_rules_hash": expected_rules_hash, "actual_rules_hash": rules_hash},
+            )
+        )
+    else:
+        report.add(StepResult("L6_rules_hash_parity", "L6", True, f"本地 manifest 不可读（{meta['path']}），跳过"))
+
+    if reconcile_status:
+        status_ok = reconcile_status.startswith("OK")
+        report.add(
+            StepResult(
+                "L6_reconcile_status",
+                "L6",
+                status_ok,
+                reconcile_status[:120],
+                {"rulesReconcileStatus": reconcile_status},
+            )
+        )
+    else:
+        # 旧版后端无该字段：回退到「reconciledAt 不早于 buildTime」新鲜度判定
+        build_ts = _parse_iso(build_time)
+        reconciled_ts = _parse_iso(reconciled_at)
+        fresh = build_ts is not None and reconciled_ts is not None and reconciled_ts >= build_ts
+        detail = (
+            f"reconciledAt={reconciled_at} buildTime={build_time}"
+            if build_ts is not None and reconciled_ts is not None
+            else "无 reconcile 状态字段且时间不可解析"
+        )
+        report.add(StepResult("L6_reconcile_status", "L6", fresh, detail + "（回退新鲜度判定）"))
+
+    if check_billing_count and meta["billing_enabled_count"] is not None:
+        try:
+            client.login(force=True)
+            rows = client.customers()
+            enabled = count_billing_enabled(rows)
+            expected_count = int(meta["billing_enabled_count"])
+            report.add(
+                StepResult(
+                    "L8_billing_enabled_api",
+                    "L8",
+                    enabled == expected_count,
+                    f"API billing_enabled=1: {enabled} / manifest 期望 {expected_count}",
+                    {"enabled": enabled, "expected": expected_count},
+                )
+            )
+        except Exception as exc:
+            report.add(StepResult("L8_billing_enabled_api", "L8", False, str(exc)))
 
     report.finished_at = time.time()
     return report
@@ -988,7 +1152,7 @@ def cmd_rules_verify_deploy(args: argparse.Namespace) -> int:
 
 def cmd_smoke(args: argparse.Namespace) -> int:
     client = resolve_client(args)
-    report = run_smoke(client, profile=args.profile)
+    report = run_smoke(client, profile=args.profile, expect_sha=getattr(args, "expect_sha", None))
     print_report(report, as_json=args.json)
     return 0 if report.ok else 1
 
@@ -996,6 +1160,19 @@ def cmd_smoke(args: argparse.Namespace) -> int:
 def cmd_deploy_check(args: argparse.Namespace) -> int:
     client = resolve_client(args)
     report = run_deploy_check(client, profile=args.profile, expected=args.expected, skip_mysql=args.skip_mysql)
+    print_report(report, as_json=args.json)
+    return 0 if report.ok else 1
+
+
+def cmd_status(args: argparse.Namespace) -> int:
+    client = resolve_client(args)
+    report = run_status(
+        client,
+        profile=args.profile,
+        expect_sha=args.expect_sha,
+        expect_rules_hash=args.expect_rules_hash,
+        check_billing_count=not args.skip_billing_count,
+    )
     print_report(report, as_json=args.json)
     return 0 if report.ok else 1
 
@@ -1131,7 +1308,15 @@ def build_parser() -> argparse.ArgumentParser:
 
     p_smoke = sub.add_parser("smoke", help="L0-L5 健康/登录/export-v2 探测")
     add_common_flags(p_smoke)
+    p_smoke.add_argument("--expect-sha", help="断言 /version gitSha 以该 SHA 开头（部署对版）")
     p_smoke.set_defaults(func=cmd_smoke)
+
+    p_status = sub.add_parser("status", help="一键体检：版本/规则 hash/reconcile 状态/billing 计数")
+    add_common_flags(p_status)
+    p_status.add_argument("--expect-sha", help="断言生产 gitSha（默认取本地 git HEAD）")
+    p_status.add_argument("--expect-rules-hash", help="断言生产规则 manifest hash（默认取本地 manifest）")
+    p_status.add_argument("--skip-billing-count", action="store_true", help="跳过 billing_enabled 计数（免登录）")
+    p_status.set_defaults(func=cmd_status)
 
     p_deploy = sub.add_parser("deploy-check", help="L7-L8 billing_enabled API vs MySQL")
     add_common_flags(p_deploy)

@@ -57,6 +57,21 @@ else
   echo "    缺失（backend 启动后将写入）"
 fi
 
+echo "==> manifest reconcile 状态 marker"
+RECONCILE_STATUS=$(mysql_q "SELECT setting_value FROM sys_setting WHERE setting_key='billing_rules_manifest_reconcile_status' LIMIT 1" || true)
+if [ -n "$RECONCILE_STATUS" ]; then
+  echo "    status: ${RECONCILE_STATUS:0:120}"
+  case "$RECONCILE_STATUS" in
+    OK*) : ;;
+    *)
+      echo "错误: 生产 manifest reconcile 状态异常（规则可能未全量落库）: ${RECONCILE_STATUS:0:160}" >&2
+      exit 1
+      ;;
+  esac
+else
+  echo "    缺失（旧版 backend 无此 marker，以 hash 对版为准）"
+fi
+
 ENABLED=$(mysql_q "SELECT COUNT(*) FROM customer WHERE billing_enabled=1")
 ACTIVE_ENABLED=$(mysql_q "SELECT COUNT(*) FROM customer WHERE billing_enabled=1 AND (status IS NULL OR status='' OR status='active')")
 DISABLED=$(mysql_q "SELECT COUNT(*) FROM customer WHERE billing_enabled=0")

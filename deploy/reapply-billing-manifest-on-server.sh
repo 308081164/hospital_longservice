@@ -9,8 +9,14 @@ if [ ! -f .env ]; then
   echo "错误: .env 不存在" >&2
   exit 1
 fi
+# CI 部署传入的镜像引用（不可变 SHA 标签）优先于 .env 中的 :latest，
+# 否则本脚本 force-recreate 会把 backend 回退到服务器本地缓存的旧 :latest 镜像。
+CI_IMAGE_BACKEND="${IMAGE_BACKEND:-}"
+CI_IMAGE_FRONTEND="${IMAGE_FRONTEND:-}"
 # shellcheck disable=SC1091
 set -a && source .env && set +a
+[ -n "$CI_IMAGE_BACKEND" ] && export IMAGE_BACKEND="$CI_IMAGE_BACKEND"
+[ -n "$CI_IMAGE_FRONTEND" ] && export IMAGE_FRONTEND="$CI_IMAGE_FRONTEND"
 
 MANIFEST="${DEPLOY_PATH}/backend/src/main/resources/billing-seeds/billing-rules-manifest.json"
 if [ ! -f "$MANIFEST" ]; then
@@ -36,8 +42,16 @@ export EXPECTED_ACTIVE_BILLING_ENABLED="$EXPECTED_ACTIVE_ENABLED"
 
 echo "==> manifest 期望 billingEnabled=${EXPECTED_ENABLED} active=${EXPECTED_ACTIVE_ENABLED}"
 
-echo "==> 重启 backend（触发 manifest reconcile）"
-docker compose -f docker-compose.prod.yml up -d --no-deps --force-recreate backend
+# 幂等：backend 已在目标镜像上运行则跳过重启（启动时 reconciler 已执行过），避免部署流水线中的二次重启。
+TARGET_IMAGE="${IMAGE_BACKEND:-}"
+CURRENT_IMAGE="$(docker inspect hospital-backend --format '{{.Config.Image}}' 2>/dev/null || true)"
+if [ -n "$TARGET_IMAGE" ] && [ "$CURRENT_IMAGE" = "$TARGET_IMAGE" ] \
+  && curl -sf --connect-timeout 3 http://127.0.0.1:8853/api/v1/base/health >/dev/null 2>&1; then
+  echo "==> backend 已在目标镜像运行（${TARGET_IMAGE}），跳过 force-recreate"
+else
+  echo "==> 重启 backend（触发 manifest reconcile）当前=${CURRENT_IMAGE:-未知} 目标=${TARGET_IMAGE:-compose 默认}"
+  docker compose -f docker-compose.prod.yml up -d --no-deps --force-recreate backend
+fi
 
 echo "==> 等待 backend"
 backend_healthy=0

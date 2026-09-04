@@ -40,6 +40,7 @@ public class BillingRulesManifestReconciler implements CommandLineRunner {
     private static final String MANIFEST_HASH_KEY = "billing_rules_manifest_hash";
     private static final String MANIFEST_GENERATED_AT_KEY = "billing_rules_manifest_generated_at";
     private static final String MANIFEST_RECONCILED_AT_KEY = "billing_rules_manifest_reconciled_at";
+    private static final String MANIFEST_RECONCILE_STATUS_KEY = "billing_rules_manifest_reconcile_status";
 
     private final CustomerMapper customerMapper;
     private final CustomerProductRuleMapper customerProductRuleMapper;
@@ -124,10 +125,24 @@ public class BillingRulesManifestReconciler implements CommandLineRunner {
                     "ISO timestamp of billing-rules-manifest.json generation");
             upsertSetting(MANIFEST_RECONCILED_AT_KEY, java.time.Instant.now().toString(),
                     "ISO timestamp of last billing-rules-manifest reconcile on this instance");
+            upsertSetting(MANIFEST_RECONCILE_STATUS_KEY, "OK " + java.time.Instant.now(),
+                    "OK <ts> / FAILED <ts> <msg> of last billing-rules-manifest reconcile");
             log.info("Billing rules manifest reconcile done: {} rules upserted, {} customers updated, hash={}…",
                     upserted, customersUpdated, manifestHash.substring(0, Math.min(12, manifestHash.length())));
         } catch (Exception e) {
+            // 失败必须可观测：除日志外落库状态 marker，供 /version 端点、verify 脚本与漂移巡检判定。
+            // 历史事故：reconcile 静默失败时 backend 仍健康、旧 hash 不变，漂移长期无人发现。
             log.error("Billing rules manifest reconcile failed: {}", e.getMessage(), e);
+            try {
+                String msg = e.getMessage() == null ? e.getClass().getSimpleName() : e.getMessage();
+                if (msg.length() > 180) {
+                    msg = msg.substring(0, 180);
+                }
+                upsertSetting(MANIFEST_RECONCILE_STATUS_KEY, "FAILED " + java.time.Instant.now() + " " + msg,
+                        "OK <ts> / FAILED <ts> <msg> of last billing-rules-manifest reconcile");
+            } catch (Exception markerError) {
+                log.error("Failed to persist reconcile status marker: {}", markerError.getMessage());
+            }
         }
     }
 

@@ -7,6 +7,7 @@ BACKEND_CONTAINER="${BACKEND_CONTAINER:-hospital-backend}"
 HOST_API_BASE="${HOST_API_BASE:-http://127.0.0.1:8853}"
 CONTAINER_API_BASE="http://127.0.0.1:8000"
 SMOKE_JOB_ID="${SMOKE_JOB_ID:-77}"
+EXPECT_SHA="${EXPECT_SHA:-}"
 JSON_OUT=0
 ADMIN_USER="${ADMIN_USERNAME:-admin}"
 ADMIN_PASS="${ADMIN_PASSWORD:-${APP_ADMIN_PASSWORD:-admin123}}"
@@ -19,12 +20,13 @@ while [ $# -gt 0 ]; do
       [ $# -gt 0 ] && HOST_API_BASE="$1"
       ;;
     --job-id) SMOKE_JOB_ID="$2"; shift ;;
+    --expect-sha) EXPECT_SHA="$2"; shift ;;
     --mode|--profile)
       shift
       [ $# -gt 0 ] && shift
       ;;
     -h|--help)
-      echo "用法: $0 [--json] [--job-id ID]" >&2
+      echo "用法: $0 [--json] [--job-id ID] [--expect-sha SHA]" >&2
       exit 0
       ;;
     *) echo "未知参数: $1" >&2; exit 2 ;;
@@ -96,6 +98,13 @@ version_body=""
 if version_body=$(api_curl --connect-timeout 5 "${CONTAINER_API_BASE}/api/v1/base/version" 2>/dev/null); then
   if json_code_ok "$version_body"; then
     add_step "L1_version" "L1" 1 "$(json_field "$version_body" version || echo ok)"
+    if [ -n "$EXPECT_SHA" ]; then
+      actual_sha=$(json_field "$version_body" gitSha)
+      case "$actual_sha" in
+        "$EXPECT_SHA"*) add_step "L1_version_sha_parity" "L1" 1 "期望 ${EXPECT_SHA} / 实际 ${actual_sha}" ;;
+        *) add_step "L1_version_sha_parity" "L1" 0 "期望 ${EXPECT_SHA} / 实际 ${actual_sha:-未知}" ;;
+      esac
+    fi
   else
     add_step "L1_version" "L1" 0 "version 非 200"
   fi

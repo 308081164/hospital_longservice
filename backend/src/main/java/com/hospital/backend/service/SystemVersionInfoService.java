@@ -28,6 +28,7 @@ public class SystemVersionInfoService {
     public static final String MANIFEST_HASH_KEY = "billing_rules_manifest_hash";
     public static final String MANIFEST_GENERATED_AT_KEY = "billing_rules_manifest_generated_at";
     public static final String MANIFEST_RECONCILED_AT_KEY = "billing_rules_manifest_reconciled_at";
+    public static final String MANIFEST_RECONCILE_STATUS_KEY = "billing_rules_manifest_reconcile_status";
 
     private static final ZoneId SHANGHAI = ZoneId.of("Asia/Shanghai");
     private static final DateTimeFormatter DISPLAY =
@@ -47,6 +48,7 @@ public class SystemVersionInfoService {
         String rulesHash = setting(MANIFEST_HASH_KEY);
         String rulesGeneratedAt = setting(MANIFEST_GENERATED_AT_KEY);
         String rulesReconciledAt = setting(MANIFEST_RECONCILED_AT_KEY);
+        String rulesReconcileStatus = setting(MANIFEST_RECONCILE_STATUS_KEY);
 
         // 启动后首次部署若 DB 尚未写入 generated_at，回退读 classpath manifest
         if (isBlank(rulesGeneratedAt) || isBlank(rulesHash)) {
@@ -70,6 +72,8 @@ public class SystemVersionInfoService {
         payload.put("rulesGeneratedAtDisplay", displayTime(rulesGeneratedAt));
         payload.put("rulesReconciledAt", rulesReconciledAt == null ? "" : rulesReconciledAt);
         payload.put("rulesReconciledAtDisplay", displayTime(rulesReconciledAt));
+        payload.put("rulesReconcileStatus", rulesReconcileStatus == null ? "" : rulesReconcileStatus);
+        payload.put("rulesReconcileOk", rulesReconcileStatus != null && rulesReconcileStatus.startsWith("OK"));
         payload.put("version", shortSha(sha));
         payload.put("app_title", "Hospital Backend");
         payload.put("project_name", "hospital-backend");

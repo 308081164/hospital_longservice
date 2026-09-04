@@ -7,8 +7,10 @@ on:
   workflow_dispatch:
 
 concurrency:
+  # 禁止取消进行中的部署：历史事故（89bc9893）中取消发生在「frontend 已 stop/rm、尚未 recreate」
+  # 窗口内，造成部分部署。改为排队串行，后续 push 等待前一个部署完整结束。
   group: deploy-${{ github.ref }}
-  cancel-in-progress: true
+  cancel-in-progress: false
 
 env:
   REGISTRY: ghcr.io
@@ -67,6 +69,9 @@ jobs:
           OWNER_LC=$(echo "$OWNER" | tr '[:upper:]' '[:lower:]')
           echo "backend=$REGISTRY/$OWNER_LC/hospital-backend:latest" >> $GITHUB_OUTPUT
           echo "frontend=$REGISTRY/$OWNER_LC/hospital-frontend:latest" >> $GITHUB_OUTPUT
+          # 不可变 SHA 标签：部署只认 SHA 标签，杜绝 :latest 拉取漂移/缓存旧镜像
+          echo "backend_sha=$REGISTRY/$OWNER_LC/hospital-backend:${GITHUB_SHA}" >> $GITHUB_OUTPUT
+          echo "frontend_sha=$REGISTRY/$OWNER_LC/hospital-frontend:${GITHUB_SHA}" >> $GITHUB_OUTPUT
 
       - name: Log in to Container Registry
         uses: docker/login-action@v3
@@ -90,6 +95,7 @@ jobs:
             --build-arg GIT_SHA="${{ github.sha }}"
             --build-arg BUILD_TIME="$(date -u +%Y-%m-%dT%H:%M:%SZ)"
             -t "${{ steps.images.outputs.backend }}"
+            -t "${{ steps.images.outputs.backend_sha }}"
             ./backend
 
       - name: Build and push frontend
@@ -103,6 +109,7 @@ jobs:
             docker buildx build --push
             --build-arg APP_BUILD_ID="${{ github.sha }}"
             -t "${{ steps.images.outputs.frontend }}"
+            -t "${{ steps.images.outputs.frontend_sha }}"
             ./frontend
 
       - name: Deploy to server
@@ -149,8 +156,8 @@ jobs:
 
       - name: Pull service images on server (runner SSH)
         env:
-          IMAGE_BACKEND: ${{ steps.images.outputs.backend }}
-          IMAGE_FRONTEND: ${{ steps.images.outputs.frontend }}
+          IMAGE_BACKEND: ${{ steps.images.outputs.backend_sha }}
+          IMAGE_FRONTEND: ${{ steps.images.outputs.frontend_sha }}
           DEPLOY_PATH: ${{ secrets.DEPLOY_PATH }}
           GHCR_USER: ${{ secrets.GHCR_USERNAME }}
           GHCR_TOKEN: ${{ secrets.GHCR_READ_TOKEN }}
@@ -190,8 +197,8 @@ jobs:
       - name: Deploy stack on server (mysql + backend)
         uses: appleboy/ssh-action@v1.2.5
         env:
-          IMAGE_BACKEND: ${{ steps.images.outputs.backend }}
-          IMAGE_FRONTEND: ${{ steps.images.outputs.frontend }}
+          IMAGE_BACKEND: ${{ steps.images.outputs.backend_sha }}
+          IMAGE_FRONTEND: ${{ steps.images.outputs.frontend_sha }}
           DEPLOY_PATH: ${{ secrets.DEPLOY_PATH }}
           GHCR_USER: ${{ secrets.GHCR_USERNAME }}
           GHCR_TOKEN: ${{ secrets.GHCR_READ_TOKEN }}
@@ -224,9 +231,9 @@ jobs:
             export IMAGE_BACKEND="${CI_IMAGE_BACKEND}"
             export IMAGE_FRONTEND="${CI_IMAGE_FRONTEND}"
 
-            # 共享网络栈：先停 frontend；MySQL 仅保证运行（避免每次 force-recreate 导致空窗）
-            docker compose -f docker-compose.prod.yml stop frontend 2>/dev/null || true
-            docker compose -f docker-compose.prod.yml rm -f frontend 2>/dev/null || true
+            # MySQL 仅保证运行（避免每次 force-recreate 导致空窗）。
+            # 注意：不再提前 stop/rm frontend —— 旧 frontend 一直服务到「Recreate frontend」步骤，
+            # 消除「backend 失败导致 frontend 也被停掉」的额外停机窗口。
             docker compose -f docker-compose.prod.yml up -d mysql
             echo "DEPLOY_STAGE=mysql_container_started"
             for i in $(seq 1 30); do
@@ -283,11 +290,49 @@ jobs:
           run_ssh "docker logs --tail 300 hospital-backend 2>&1" || true
           exit 1
 
+      - name: Assert backend version parity (hard gate)
+        env:
+          SSH_HOST: ${{ secrets.SSH_HOST }}
+          SSH_USER: ${{ secrets.SSH_USER }}
+          SSH_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+          SSH_PORT: ${{ secrets.SSH_PORT }}
+          GITHUB_SHA: ${{ github.sha }}
+          EXPECTED_IMAGE: ${{ steps.images.outputs.backend_sha }}
+        run: |
+          set -e
+          PORT="${SSH_PORT:-22}"
+          mkdir -p ~/.ssh
+          printf '%s\n' "$SSH_KEY" > ~/.ssh/deploy_parity_key
+          chmod 600 ~/.ssh/deploy_parity_key
+          ssh-keyscan -p "$PORT" -H "$SSH_HOST" >> ~/.ssh/known_hosts 2>/dev/null || true
+
+          run_ssh () {
+            ssh -i ~/.ssh/deploy_parity_key -o StrictHostKeyChecking=no -p "$PORT" "$SSH_USER@$SSH_HOST" "$@"
+          }
+
+          echo "==> 校验生产 backend 版本 == 本次提交 ${GITHUB_SHA}"
+          VER_BODY="$(run_ssh "curl -sS --connect-timeout 5 http://127.0.0.1:8853/api/v1/base/version")"
+          echo "$VER_BODY"
+          ACTUAL_SHA="$(printf '%s' "$VER_BODY" | python3 -c 'import sys,json; print((json.load(sys.stdin).get("data") or {}).get("gitSha") or "")')"
+          if [ "$ACTUAL_SHA" != "$GITHUB_SHA" ]; then
+            echo "错误: 生产 backend gitSha=${ACTUAL_SHA:-未知} != 期望 ${GITHUB_SHA}（旧容器/旧镜像仍在服务）" >&2
+            run_ssh "docker inspect hospital-backend --format 'container_image={{.Config.Image}} image_id={{.Image}}'" || true
+            exit 1
+          fi
+
+          echo "==> 校验 backend 容器镜像 == ${EXPECTED_IMAGE}"
+          CONTAINER_IMAGE="$(run_ssh "docker inspect hospital-backend --format '{{.Config.Image}}'")"
+          if [ "$CONTAINER_IMAGE" != "$EXPECTED_IMAGE" ]; then
+            echo "错误: backend 容器镜像=${CONTAINER_IMAGE} != 期望 ${EXPECTED_IMAGE}" >&2
+            exit 1
+          fi
+          echo "backend 版本 parity OK（${ACTUAL_SHA}）"
+
       - name: Recreate frontend on server
         uses: appleboy/ssh-action@v1.2.5
         env:
-          IMAGE_BACKEND: ${{ steps.images.outputs.backend }}
-          IMAGE_FRONTEND: ${{ steps.images.outputs.frontend }}
+          IMAGE_BACKEND: ${{ steps.images.outputs.backend_sha }}
+          IMAGE_FRONTEND: ${{ steps.images.outputs.frontend_sha }}
           DEPLOY_PATH: ${{ secrets.DEPLOY_PATH }}
           GHCR_USER: ${{ secrets.GHCR_USERNAME }}
           GHCR_TOKEN: ${{ secrets.GHCR_READ_TOKEN }}
@@ -318,7 +363,16 @@ jobs:
               ls -la deploy/ 2>/dev/null || true
               exit 1
             fi
+            # 此刻才替换 frontend（backend 已通过版本 parity 硬闸门）
+            docker compose -f docker-compose.prod.yml stop frontend 2>/dev/null || true
+            docker compose -f docker-compose.prod.yml rm -f frontend 2>/dev/null || true
             docker compose -f docker-compose.prod.yml up -d --no-deps --force-recreate frontend
+            ACTUAL_FE_IMAGE="$(docker inspect hospital-frontend --format '{{.Config.Image}}')"
+            if [ "$ACTUAL_FE_IMAGE" != "$IMAGE_FRONTEND" ]; then
+              echo "错误: frontend 容器镜像=${ACTUAL_FE_IMAGE} != 期望 ${IMAGE_FRONTEND}" >&2
+              exit 1
+            fi
+            echo "frontend 镜像 parity OK（${ACTUAL_FE_IMAGE}）"
 
       - name: Sync billing deploy scripts to server (before reapply)
         env:
@@ -351,12 +405,16 @@ jobs:
 
       - name: Reconcile billing manifest and verify on server
         uses: appleboy/ssh-action@v1.2.5
+        env:
+          IMAGE_BACKEND: ${{ steps.images.outputs.backend_sha }}
+          IMAGE_FRONTEND: ${{ steps.images.outputs.frontend_sha }}
         with:
           host: ${{ secrets.SSH_HOST }}
           username: ${{ secrets.SSH_USER }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           port: ${{ secrets.SSH_PORT || 22 }}
           command_timeout: 15m
+          envs: IMAGE_BACKEND,IMAGE_FRONTEND
           script: |
             set -e
             DPATH="${{ secrets.DEPLOY_PATH || '/mnt/newdisk/app/Hospital' }}"
@@ -382,18 +440,21 @@ jobs:
 
       - name: Post-deploy CLI smoke
         uses: appleboy/ssh-action@v1.2.5
+        env:
+          GITHUB_SHA: ${{ github.sha }}
         with:
           host: ${{ secrets.SSH_HOST }}
           username: ${{ secrets.SSH_USER }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           port: ${{ secrets.SSH_PORT || 22 }}
           command_timeout: 10m
+          envs: GITHUB_SHA
           script: |
             set -e
             DPATH="${{ secrets.DEPLOY_PATH || '/mnt/newdisk/app/Hospital' }}"
             cd "$DPATH"
             chmod +x deploy/run-prod-verify.sh deploy/prod-smoke-docker.sh 2>/dev/null || true
-            bash deploy/run-prod-verify.sh smoke --json
+            bash deploy/run-prod-verify.sh smoke --json --expect-sha "$GITHUB_SHA"
 
   post-deploy-parity-gate:
     needs: build-and-push
@@ -419,6 +480,7 @@ jobs:
           DEPLOY_PATH: ${{ secrets.DEPLOY_PATH || '/mnt/newdisk/app/Hospital' }}
           SMOKE_USER: ${{ secrets.SMOKE_USER }}
           SMOKE_PASS: ${{ secrets.SMOKE_PASS }}
+          SMOKE_EXPECT_SHA: ${{ github.sha }}
         run: |
           chmod +x bin/hospital-cli scripts/run_prod_parity_gate.sh
           bash scripts/run_prod_parity_gate.sh

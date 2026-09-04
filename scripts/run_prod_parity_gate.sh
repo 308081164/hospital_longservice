@@ -130,8 +130,14 @@ fi
 ensure_prod_credentials
 
 chmod +x bin/hospital-cli 2>/dev/null || true
+# 部署对版：CI 传入 SMOKE_EXPECT_SHA（通常为 github.sha）时，smoke 断言生产版本一致
+SMOKE_SHA_ARGS=()
+if [ -n "${SMOKE_EXPECT_SHA:-}" ]; then
+  SMOKE_SHA_ARGS+=(--expect-sha "$SMOKE_EXPECT_SHA")
+  echo ">> 版本对版期望 SHA: ${SMOKE_EXPECT_SHA}"
+fi
 echo ">> smoke"
-if ! ./bin/hospital-cli smoke --mode direct --profile prod --api "$API_BASE" --json > /tmp/parity_smoke.json; then
+if ! ./bin/hospital-cli smoke --mode direct --profile prod --api "$API_BASE" --json "${SMOKE_SHA_ARGS[@]}" > /tmp/parity_smoke.json; then
   cat /tmp/parity_smoke.json 2>/dev/null || true
   echo "smoke 失败" >&2
   exit 1
