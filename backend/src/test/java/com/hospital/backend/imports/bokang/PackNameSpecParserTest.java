@@ -50,6 +50,7 @@ class PackNameSpecParserTest {
                 Arguments.of("电切内窥镜-9件盒1", 9),
                 Arguments.of("种植9件盒1/w7050", 10),
                 Arguments.of("抛光车针盒6件盒1/Z1026", 7),
+                Arguments.of("针盒1针58/z1026", 59),
                 Arguments.of("外科器械包-9（筐1）/w7050", 10),
                 Arguments.of("ICL器械-8件（盒1）/W6050", 8),
                 Arguments.of("旧轧皮机（2号）-2件盒1/W12050", 2),

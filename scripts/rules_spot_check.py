@@ -649,6 +649,9 @@ HAIYUAN_SB_SPOT_CHECKS: list[dict[str, Any]] = [
     },
 ]
 
+HLJ_FY_RK_HOSPITAL = "黑龙江省妇幼保健院（人口）"
+PFQ_RM_HOSPITAL = "哈尔滨市平房区人民医院"
+
 HLJ_FY_RK_SPOT_CHECKS: list[dict[str, Any]] = [
     {
         "name": "妇幼人口密封件3件28",
@@ -662,6 +665,35 @@ HLJ_FY_RK_SPOT_CHECKS: list[dict[str, Any]] = [
         "totalPrice": 28.0,
         "expectedUnitPrice": 28.0,
         "priceTol": 1.0,
+    },
+    {
+        "name": "妇幼人口针盒针8针1盒9件16.5",
+        "department": "口腔科",
+        "packName": "全冠套装(针-8盒-1)/Z1526",
+        "type": "额外包（纸塑袋）",
+        "packageMaterial": "高温纸塑袋15cm",
+        "instrumentCount": 9,
+        "packCount": 1,
+        "unitPrice": 16.5,
+        "totalPrice": 16.5,
+        "expectedUnitPrice": 16.5,
+        "priceTol": 0.02,
+    },
+]
+
+PFQ_RM_SPOT_CHECKS: list[dict[str, Any]] = [
+    {
+        "name": "平房人民针盒1针58件71.5",
+        "department": "口腔科",
+        "packName": "针盒1针58/z1026",
+        "type": "额外包（纸塑袋）",
+        "packageMaterial": "高温纸塑袋15cm",
+        "instrumentCount": 59,
+        "packCount": 1,
+        "unitPrice": 71.5,
+        "totalPrice": 71.5,
+        "expectedUnitPrice": 71.5,
+        "priceTol": 0.02,
     },
 ]
 
@@ -781,6 +813,7 @@ SPOT_CHECK_PRESETS: dict[str, list[dict[str, Any]]] = {
     "HLJ-JYGLJ-YY": HLJ_JYGLJ_YY_SPOT_CHECKS,
     "HAIYUAN-SB": HAIYUAN_SB_SPOT_CHECKS,
     "HLJ-FY-RK": HLJ_FY_RK_SPOT_CHECKS,
+    "PFQ-RM": PFQ_RM_SPOT_CHECKS,
     "CHUNYU-YL": CHUNYU_YL_SPOT_CHECKS,
     "BOSHANG-YY": BOSHANG_YY_SPOT_CHECKS,
     "DL-FUCHAN": DL_FUCHAN_SPOT_CHECKS,
@@ -865,6 +898,10 @@ def run_spot_check(
         hospital = HRB_WY_HOSPITAL
     if code == "BINGCHENG-YM":
         hospital = BINGCHENG_YM_HOSPITAL
+    if code == "HLJ-FY-RK":
+        hospital = HLJ_FY_RK_HOSPITAL
+    if code == "PFQ-RM":
+        hospital = PFQ_RM_HOSPITAL
 
     simulate_rule_id = rule_id
     if code == "STANDARD":

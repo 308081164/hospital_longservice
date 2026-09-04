@@ -3706,4 +3706,87 @@ class PricingEngineTest {
         assertThat(noBagResult.notes).anyMatch(n -> n.contains("折算为 3 件"));
         assertThat(noBagResult.notes).noneMatch(n -> n.contains("含袋费"));
     }
+
+    @Test
+    void renkouNeedleBoxFoldEightNeedlesOneBoxCountsThreePieces() throws Exception {
+        ObjectNode rules = (ObjectNode) defaultRules();
+        rules.putObject("billingProfile").put("enabled", true).put("pricingMode", "hybrid");
+        ArrayNode foldRules = ((ObjectNode) rules.path("specialRules")).withArray("foldRules");
+        ObjectNode noBag = foldRules.addObject();
+        noBag.put("name", "妇幼人口针盒针5合1免包材");
+        noBag.putArray("hospitals").add("黑龙江省妇幼保健院（人口）");
+        noBag.putArray("keywords").add("针");
+        noBag.put("threshold", 5);
+        noBag.put("foldRatio", 5);
+        noBag.put("extraCount", 1);
+        noBag.put("minInstrumentCount", 7);
+        noBag.put("skipPackaging", true);
+
+        PricingEngine engine = new PricingEngine(rules);
+        PricingEngine.ProcessedResult result = engine.processRow(row(
+                "黑龙江省妇幼保健院（人口）",
+                "额外包（纸塑袋）",
+                "全冠套装(针-8盒-1)/Z1526",
+                "高温纸塑袋15cm",
+                9, 1, 16.5, 16.5));
+
+        assertThat(result.expectedUnitPrice).isEqualTo(16.5);
+        assertThat(result.notes).anyMatch(n -> n.contains("折算为 3 件"));
+        assertThat(result.notes).anyMatch(n -> n.contains("含额外 1 件"));
+    }
+
+    @Test
+    void pfqNeedleBoxFoldSubtractsBoxBeforeFiveInOne() throws Exception {
+        ObjectNode rules = (ObjectNode) defaultRules();
+        rules.putObject("billingProfile").put("enabled", true).put("pricingMode", "hybrid");
+        ArrayNode foldRules = ((ObjectNode) rules.path("specialRules")).withArray("foldRules");
+        ObjectNode noBag = foldRules.addObject();
+        noBag.put("name", "平房人民针盒针5合1免包材");
+        noBag.putArray("hospitals").add("哈尔滨市平房区人民医院");
+        noBag.putArray("keywords").add("针").add("缝合针");
+        noBag.put("threshold", 5);
+        noBag.put("foldRatio", 5);
+        noBag.put("extraCount", 1);
+        noBag.put("minInstrumentCount", 7);
+        noBag.put("skipPackaging", true);
+
+        PricingEngine engine = new PricingEngine(rules);
+        PricingEngine.ProcessedResult result = engine.processRow(row(
+                "哈尔滨市平房区人民医院",
+                "额外包（纸塑袋）",
+                "针盒1针58/z1026",
+                "高温纸塑袋15cm",
+                59, 1, 71.5, 71.5));
+
+        assertThat(result.expectedUnitPrice).isEqualTo(71.5);
+        assertThat(result.pricingRule).contains("平房人民针盒针5合1免包材");
+        assertThat(result.notes).anyMatch(n -> n.contains("折算为 13 件"));
+        assertThat(result.notes).anyMatch(n -> n.contains("含额外 1 件"));
+    }
+
+    @Test
+    void needleBoxFoldWithoutExtraCountUsesFullInstrumentCount() throws Exception {
+        ObjectNode rules = (ObjectNode) defaultRules();
+        rules.putObject("billingProfile").put("enabled", true).put("pricingMode", "hybrid");
+        ArrayNode foldRules = ((ObjectNode) rules.path("specialRules")).withArray("foldRules");
+        ObjectNode noBag = foldRules.addObject();
+        noBag.put("name", "平房人民针盒针5合1免包材");
+        noBag.putArray("hospitals").add("哈尔滨市平房区人民医院");
+        noBag.putArray("keywords").add("针");
+        noBag.put("threshold", 5);
+        noBag.put("foldRatio", 5);
+        noBag.put("minInstrumentCount", 7);
+        noBag.put("skipPackaging", true);
+
+        PricingEngine engine = new PricingEngine(rules);
+        PricingEngine.ProcessedResult result = engine.processRow(row(
+                "哈尔滨市平房区人民医院",
+                "额外包（纸塑袋）",
+                "针盒1针58/z1026",
+                "高温纸塑袋15cm",
+                59, 1, 66.0, 66.0));
+
+        assertThat(result.expectedUnitPrice).isEqualTo(66.0);
+        assertThat(result.notes).anyMatch(n -> n.contains("折算为 12 件"));
+    }
 }
