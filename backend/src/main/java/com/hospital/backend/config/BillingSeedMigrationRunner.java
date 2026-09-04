@@ -354,7 +354,9 @@ public class BillingSeedMigrationRunner implements CommandLineRunner {
             new IncrementalSeed("billing_seed_renkou_contains_fix_20260902_v1",
                     "billing-seeds/phase-special-charge-renkou-contains-fix-20260902.json"),
             new IncrementalSeed("billing_seed_keyword_contains_align_20260902_v1",
-                    "billing-seeds/phase-special-charge-keyword-contains-align-20260902.json")
+                    "billing-seeds/phase-special-charge-keyword-contains-align-20260902.json"),
+            new IncrementalSeed("billing_seed_needle_box_extracount_20260904_v1",
+                    "billing-seeds/phase-special-charge-needle-box-extracount-20260904.json")
     );
 
     private static final String ZYY_D1_P0_MARKER = "billing_seed_zyy_d1_p0_v2";
@@ -1258,6 +1260,14 @@ public class BillingSeedMigrationRunner implements CommandLineRunner {
                 }
                 if (patch.has("setPriority")) {
                     rule.setPriority(intVal(patch, "setPriority", 100));
+                    changed = true;
+                }
+                if (patch.has("setExtraCount")) {
+                    if (patch.get("setExtraCount").isNull()) {
+                        rule.setExtraCount(null);
+                    } else {
+                        rule.setExtraCount(intVal(patch, "setExtraCount", null));
+                    }
                     changed = true;
                 }
                 if (changed) {

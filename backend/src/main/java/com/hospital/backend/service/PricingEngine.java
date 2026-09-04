@@ -180,6 +180,7 @@ public class PricingEngine {
         // 器械包(ZSD) 按单包器械总数阶梯计费，包名含「克氏针」等小件词也不折算。
         boolean appliedSpecialFoldRule = false;
         boolean foldSkipPackaging = false;
+        boolean foldHasExtraCount = false;
         Double foldUnitPriceOverride = null;
         Long foldMatchedRuleId = null;
         String foldMatchedRuleName = null;
@@ -189,6 +190,7 @@ public class PricingEngine {
             effectiveCount = foldResult.effectiveCount();
             appliedSpecialFoldRule = foldResult.matched();
             foldSkipPackaging = foldResult.skipPackaging();
+            foldHasExtraCount = foldResult.hasExtraCount();
             foldUnitPriceOverride = foldResult.unitPriceOverride();
             foldMatchedRuleId = foldResult.ruleId();
             foldMatchedRuleName = foldResult.ruleName();
@@ -449,11 +451,18 @@ public class PricingEngine {
                     pricingRule = "路径覆盖：高温固定单价";
                     notes.add("按路径覆盖高温单价 " + fmt(forceHighTempPerItem) + " 元/件 × "
                             + materialBillingCount + " 件 = " + fmt(expectedUnitPrice) + " 元。");
-                    if (appliedSpecialFoldRule && !skipPackaging) {
+                } else if (appliedSpecialFoldRule && (foldSkipPackaging || foldHasExtraCount)) {
+                    // 针盒针（extraCount）或免包材 FOLD：按折算件数×把价计件费；含包材叠加标准袋费。
+                    // 不可走 computeHighTempPaperPlastic（免包材会重复计袋费，针盒含包材袋规价≠标准2.5）。
+                    double perItem = rules.path("highTemperature").path("paperPlastic").path("perPackagePrice").asDouble(5.5);
+                    expectedUnitPrice = computeForceHighTempUnitPrice(perItem, materialBillingCount);
+                    notes.add("按特色折算单价 " + fmt(perItem) + " 元/件 × "
+                            + materialBillingCount + " 件 = " + fmt(expectedUnitPrice) + " 元。");
+                    if (!skipPackaging) {
                         double bagFee = (bagSize > 0 && bagSize < 20) ? 2.5 : 4.0;
                         expectedUnitPrice = round(expectedUnitPrice + bagFee);
-                        pricingRule = pricingRule + " + 标准包材费";
                         notes.add("含包材规则，叠加标准包材费 " + fmt(bagFee) + " 元。");
+                        skipPackaging = true;
                     }
                 } else {
                     int displaySize = bagSize > 25 ? 25 : bagSize;
@@ -862,7 +871,7 @@ public class PricingEngine {
     private FoldApplyResult applyFoldRuleList(Map<String, Object> row, JsonNode foldRules, String combined, int bagSize,
                                               int effectiveCount, List<String> notes) {
         if (!foldRules.isArray()) {
-            return new FoldApplyResult(effectiveCount, false, false, null, null, null);
+            return new FoldApplyResult(effectiveCount, false, false, null, null, null, false);
         }
         BillingConditionEvaluator.RowContext ctx = new BillingConditionEvaluator.RowContext(
                 str(row, "type"),
@@ -890,9 +899,14 @@ public class PricingEngine {
             if (!BillingConditionEvaluator.matchesRule(rule, ctx)) continue;
             int threshold = rule.path("threshold").asInt(5);
             double foldRatio = rule.path("foldRatio").asDouble(5.0);
-            int result = foldCount(effectiveCount, threshold, foldRatio);
             // 折算后额外加计件数（如"针N盒1"的盒固定计 1 件，不参与 5 合 1 折算）
             int extraCount = rule.path("extraCount").asInt(0);
+            int foldInput = effectiveCount;
+            if (extraCount > 0 && effectiveCount > extraCount) {
+                // 器械总数含盒时，仅针对针数做 5 合 1 折算，盒以 extraCount 固定追加
+                foldInput = effectiveCount - extraCount;
+            }
+            int result = foldCount(foldInput, threshold, foldRatio);
             if (extraCount > 0) {
                 result += extraCount;
             }
@@ -907,13 +921,14 @@ public class PricingEngine {
                 unitPriceOverride = null;
             }
             Long ruleId = rule.has("ruleId") ? rule.path("ruleId").asLong() : null;
-            return new FoldApplyResult(result, skipPackaging, true, unitPriceOverride, ruleId, name);
+            return new FoldApplyResult(result, skipPackaging, true, unitPriceOverride, ruleId, name, extraCount > 0);
         }
-        return new FoldApplyResult(effectiveCount, false, false, null, null, null);
+        return new FoldApplyResult(effectiveCount, false, false, null, null, null, false);
     }
 
     private record FoldApplyResult(int effectiveCount, boolean skipPackaging, boolean matched,
-                                   Double unitPriceOverride, Long ruleId, String ruleName) {}
+                                   Double unitPriceOverride, Long ruleId, String ruleName,
+                                   boolean hasExtraCount) {}
 
     private SpecialPriceResult findSpecialFixedPrice(
             Map<String, Object> row, int bagSize, int effectiveCount,

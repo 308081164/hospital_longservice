@@ -1,0 +1,26 @@
+{
+  "version": "1",
+  "description": "针盒针5合1 FOLD 规则 extraCount 回填（2026-09-04）：12-sync 种子插入时部分环境 extra_count 列为 NULL，导致「[针/5进位＋1盒]×5.5」漏计盒固定 1 件（如 针7盒1 应 (2+1)×5.5=16.5 却变成 2×5.5+袋费）。人口/平房四条针盒规则统一回填 extraCount=1。",
+  "ruleUpdates": [
+    {
+      "code": "HLJ-FY-RK",
+      "ruleName": "妇幼人口针盒针5合1含包材",
+      "setExtraCount": 1
+    },
+    {
+      "code": "HLJ-FY-RK",
+      "ruleName": "妇幼人口针盒针5合1免包材",
+      "setExtraCount": 1
+    },
+    {
+      "code": "PFQ-RM",
+      "ruleName": "平房人民针盒针5合1含包材",
+      "setExtraCount": 1
+    },
+    {
+      "code": "PFQ-RM",
+      "ruleName": "平房人民针盒针5合1免包材",
+      "setExtraCount": 1
+    }
+  ]
+}

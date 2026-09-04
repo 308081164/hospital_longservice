@@ -3658,4 +3658,52 @@ class PricingEngineTest {
         assertThat(result.expectedUnitPrice).isEqualTo(300.0);
         assertThat(result.pricingRule).contains("软镜固定300");
     }
+
+    @Test
+    void renkouNeedleBoxFoldUsesPerItemNotPaperPlasticTier() throws Exception {
+        ObjectNode rules = (ObjectNode) defaultRules();
+        rules.putObject("billingProfile").put("enabled", true).put("pricingMode", "hybrid");
+        ArrayNode foldRules = ((ObjectNode) rules.path("specialRules")).withArray("foldRules");
+        ObjectNode withBag = foldRules.addObject();
+        withBag.put("name", "妇幼人口针盒针5合1含包材");
+        withBag.putArray("hospitals").add("黑龙江省妇幼保健院（人口）");
+        withBag.putArray("keywords").add("针");
+        withBag.put("threshold", 5);
+        withBag.put("foldRatio", 5);
+        withBag.put("extraCount", 1);
+        withBag.put("maxInstrumentCount", 6);
+        ObjectNode noBag = foldRules.addObject();
+        noBag.put("name", "妇幼人口针盒针5合1免包材");
+        noBag.putArray("hospitals").add("黑龙江省妇幼保健院（人口）");
+        noBag.putArray("keywords").add("针");
+        noBag.put("threshold", 5);
+        noBag.put("foldRatio", 5);
+        noBag.put("extraCount", 1);
+        noBag.put("minInstrumentCount", 7);
+        noBag.put("skipPackaging", true);
+
+        PricingEngine engine = new PricingEngine(rules);
+
+        PricingEngine.ProcessedResult withBagResult = engine.processRow(row(
+                "黑龙江省妇幼保健院（人口）",
+                "额外包（纸塑袋）",
+                "全冠套装(针5盒1)/Z1526",
+                "高温纸塑袋15cm",
+                6, 1, 13.5, 13.5));
+        assertThat(withBagResult.expectedUnitPrice).isEqualTo(13.5);
+        assertThat(withBagResult.pricingRule).contains("妇幼人口针盒针5合1含包材");
+        assertThat(withBagResult.notes).noneMatch(n -> n.contains("高温纸塑袋件数"));
+        assertThat(withBagResult.notes).anyMatch(n -> n.contains("折算为 2 件"));
+
+        PricingEngine.ProcessedResult noBagResult = engine.processRow(row(
+                "黑龙江省妇幼保健院（人口）",
+                "额外包（纸塑袋）",
+                "全冠套装(针7盒1)/Z1526",
+                "高温纸塑袋15cm",
+                8, 1, 16.5, 16.5));
+        assertThat(noBagResult.expectedUnitPrice).isEqualTo(16.5);
+        assertThat(noBagResult.pricingRule).contains("妇幼人口针盒针5合1免包材");
+        assertThat(noBagResult.notes).anyMatch(n -> n.contains("折算为 3 件"));
+        assertThat(noBagResult.notes).noneMatch(n -> n.contains("含袋费"));
+    }
 }
