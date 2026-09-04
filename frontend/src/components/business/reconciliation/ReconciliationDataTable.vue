@@ -138,7 +138,23 @@
         width="70"
         sortable
         align="right"
-      />
+      >
+        <template #default="{ row }">
+          <input
+            v-if="isInlineEditable(row, 'packCount')"
+            :value="row['packCount']"
+            type="number"
+            min="1"
+            step="1"
+            class="detail-cell-input"
+            @input="
+              (e: Event) =>
+                emitFieldChange(row, 'packCount', Number((e.target as HTMLInputElement).value))
+            "
+          />
+          <template v-else>{{ row['packCount'] }}</template>
+        </template>
+      </ElTableColumn>
       <ElTableColumn
         :label="columnLabel('unitPrice')"
         width="100"
@@ -303,6 +319,24 @@
           </span>
         </template>
       </ElTableColumn>
+      <ElTableColumn
+        v-if="mode === 'detail' && rowRepriceEnabled"
+        label="操作"
+        width="104"
+        fixed="right"
+      >
+        <template #default="{ row }">
+          <button
+            v-if="isAnomalyEditableRow(row)"
+            type="button"
+            class="detail-cell-btn-primary"
+            :disabled="repricingRowId === row['id']"
+            @click="emitRepriceRow(row)"
+          >
+            {{ repricingRowId === row['id'] ? '重算中…' : '保存并重算' }}
+          </button>
+        </template>
+      </ElTableColumn>
     </ElTable>
   </div>
 </template>
@@ -329,6 +363,10 @@
       maxHeight?: string
       editable?: boolean
       editableSourceFields?: boolean
+      /** 是否显示单行「保存并重算」操作列（仅 detail 模式生效） */
+      rowRepriceEnabled?: boolean
+      /** 正在重算的行 ID（按钮 loading/禁用态） */
+      repricingRowId?: number | null
       rosterHintMap?: Map<number, RosterMatchHint>
       rowClassName?: (ctx: { row: Record<string, unknown> }) => string
       rowSelectable?: (row: Record<string, unknown>) => boolean
@@ -339,6 +377,8 @@
       maxHeight: '500px',
       editable: false,
       editableSourceFields: false,
+      rowRepriceEnabled: false,
+      repricingRowId: null,
       rosterHintMap: undefined,
       rowClassName: undefined,
       rowSelectable: undefined
@@ -352,6 +392,7 @@
     'row-field-change': [row: Record<string, unknown>, field: string, value: unknown]
     'row-change': [row: Record<string, unknown>]
     'fix-single-row': [row: Record<string, unknown>]
+    'reprice-row': [row: Record<string, unknown>]
   }>()
 
   const { t } = useI18n()
@@ -420,6 +461,10 @@
 
   function emitFixSingleRow(row: Record<string, unknown>) {
     emit('fix-single-row', row)
+  }
+
+  function emitRepriceRow(row: Record<string, unknown>) {
+    emit('reprice-row', row)
   }
 </script>
 
@@ -532,6 +577,28 @@
 
   .detail-cell-btn-warning:hover {
     background: #f5dab1;
+  }
+
+  .detail-cell-btn-primary {
+    display: inline-block;
+    padding: 4px 8px;
+    font-size: 12px;
+    color: #fff;
+    white-space: nowrap;
+    cursor: pointer;
+    background: #409eff;
+    border: 1px solid #409eff;
+    border-radius: 4px;
+    transition: background 0.2s;
+  }
+
+  .detail-cell-btn-primary:hover:not(:disabled) {
+    background: #66b1ff;
+  }
+
+  .detail-cell-btn-primary:disabled {
+    cursor: not-allowed;
+    opacity: 0.6;
   }
 
   .detail-cell-tag {

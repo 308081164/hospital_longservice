@@ -348,14 +348,19 @@
         show-sheet-column
         max-height="500"
         :editable="detailData?.reviewStatus === 'pending'"
+        :editable-source-fields="canEditReconciliationRows"
+        :row-reprice-enabled="canEditReconciliationRows"
+        :repricing-row-id="repricingRowId"
         :roster-hint-map="detailRosterHintMap"
         :row-class-name="detailRowClassName"
         :row-selectable="detailRowSelectable"
         @selection-change="onDetailSelectionChange"
         @open-pricing-flow="openPricingFlowDetail"
         @row-edit="onDetailRowEdit"
+        @row-field-change="onDetailRowFieldChange"
         @row-change="onDetailRowChange"
         @fix-single-row="handleFixSingleRow"
+        @reprice-row="handleRepriceRow"
       />
 
       <div class="mt-3 flex items-center justify-between">
@@ -473,6 +478,7 @@
   import { useUserStore } from '@/store/modules/user'
   import {
     repriceReconciliation,
+    repriceReconciliationRow,
     updateHospitalReconciliationReview,
     createHospitalReconciliationExportLog,
     getReconciliationDetail,
@@ -697,6 +703,53 @@
       row['difference'] = Math.round((ctp - tp) * 100) / 100
     } else {
       row['difference'] = null
+    }
+  }
+
+  // 源字段（类型/包装材料/器械数/包数）与状态的内联编辑：直接写入行对象，
+  // 随后的「保存并重算」会把这些值提交给后端引擎重算
+  function onDetailRowFieldChange(row: Record<string, unknown>, field: string, value: unknown) {
+    if (field === 'correctedTotalPrice') return // 由 row-edit 统一解析数值并重算差额
+    row[field] = value
+    if (field === 'status') void updateDetailSummary()
+  }
+
+  const repricingRowId = ref<number | null>(null)
+
+  async function handleRepriceRow(row: Record<string, unknown>) {
+    if (!detailData.value || repricingRowId.value != null) return
+    const rowId = row['id'] as number | undefined
+    if (rowId == null) {
+      ElMessage.error('该行缺少 ID，无法单行重算')
+      return
+    }
+    repricingRowId.value = rowId
+    try {
+      const result = await repriceReconciliationRow(detailData.value.id, rowId, {
+        type: row['type'] != null ? String(row['type']) : undefined,
+        packageMaterial:
+          row['packageMaterial'] != null ? String(row['packageMaterial']) : undefined,
+        instrumentCount: (row['instrumentCount'] as number | null) ?? undefined,
+        packCount: (row['packCount'] as number | null) ?? undefined
+      })
+      const updatedRow = result.row
+      const pageRows = detailRowsCache.value.get(detailPage.value)
+      if (pageRows) {
+        const index = pageRows.findIndex((item) => item['id'] === updatedRow['id'])
+        if (index >= 0) {
+          const nextPage = [...pageRows]
+          nextPage[index] = updatedRow
+          detailRowsCache.value.set(detailPage.value, nextPage)
+          detailRowsCache.value = new Map(detailRowsCache.value)
+        }
+      }
+      detailData.value = { ...detailData.value, ...result.job }
+      emit('patch-history', result.job)
+      ElMessage.success('已保存并重算该行')
+    } catch (error) {
+      ElMessage.error(error instanceof Error ? error.message : '单行重算失败')
+    } finally {
+      repricingRowId.value = null
     }
   }
 

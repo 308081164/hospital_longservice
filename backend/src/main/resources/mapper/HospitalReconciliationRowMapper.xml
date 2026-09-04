@@ -101,6 +101,41 @@
         </foreach>
     </insert>
 
+    <select id="selectById" resultMap="RowResultMap">
+        SELECT * FROM hospital_reconciliation_row
+        WHERE id = #{id}
+    </select>
+
+    <update id="update">
+        UPDATE hospital_reconciliation_row
+        SET sheet_name = #{sheetName},
+            `row_number` = #{rowNumber},
+            delivery_date = #{deliveryDate},
+            order_no = #{orderNo},
+            `type` = #{type},
+            category_no = #{categoryNo},
+            pack_name = #{packName},
+            package_material = #{packageMaterial},
+            pack_count = #{packCount},
+            instrument_count = #{instrumentCount},
+            unit_price = #{unitPrice},
+            total_price = #{totalPrice},
+            expected_unit_price = #{expectedUnitPrice},
+            corrected_total_price = #{correctedTotalPrice},
+            difference = #{difference},
+            `status` = #{status},
+            pricing_rule = #{pricingRule},
+            matched_product_id = #{matchedProductId},
+            matched_variant_id = #{matchedVariantId},
+            pricing_path = #{pricingPath},
+            notes_json = #{notesJson},
+            matched_rule_id = #{matchedRuleId},
+            matched_price_option = #{matchedPriceOption},
+            billing_notes = #{billingNotes},
+            is_urgent = #{isUrgent, jdbcType=TINYINT}
+        WHERE id = #{id}
+    </update>
+
     <select id="selectByJobIdOrderBySheetNameAscRowNumberAsc" resultMap="RowResultMap">
         SELECT * FROM hospital_reconciliation_row
         WHERE job_id = #{jobId}

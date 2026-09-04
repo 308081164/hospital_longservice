@@ -166,6 +166,27 @@ export function repriceReconciliation(jobId: number) {
   })
 }
 
+/** 单行保存并重算：提交人工修正字段 → 后端引擎仅重算该行并原地持久化，返回最新行与任务摘要 */
+export interface RepriceRowResult {
+  row: Record<string, unknown>
+  job: Api.Hospital.ReconciliationJob
+}
+
+export interface RepriceRowFields {
+  type?: string
+  packageMaterial?: string
+  instrumentCount?: number | null
+  packCount?: number | null
+}
+
+export function repriceReconciliationRow(jobId: number, rowId: number, fields: RepriceRowFields) {
+  return request.request<RepriceRowResult>({
+    url: `/api/hospital-reconciliations/${jobId}/rows/${rowId}/reprice`,
+    method: 'POST',
+    data: fields,
+  })
+}
+
 /** 后端引擎导入：上传 Excel + 规则 → 后端处理全部行并保存，一步完成。
  * 大医院账单可达数万行，处理常超过默认 15s；超时需与 nginx proxy_read_timeout 对齐。 */
 export function importHospitalReconciliation(payload: {

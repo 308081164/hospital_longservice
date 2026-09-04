@@ -6,6 +6,7 @@ import com.hospital.backend.dto.request.hospital.ExportAnomaliesRequest;
 import com.hospital.backend.dto.request.hospital.HospitalBillTemplateExportRequest;
 import com.hospital.backend.dto.request.hospital.HospitalSettlementTemplateExportRequest;
 import com.hospital.backend.dto.request.hospital.ReconciliationReviewRequest;
+import com.hospital.backend.dto.request.hospital.RepriceRowRequest;
 import com.hospital.backend.dto.response.logistics.LogisticsAllocationPreviewResponse;
 import com.hospital.backend.dto.response.hospital.ReconciliationExportLogResponse;
 import com.hospital.backend.dto.response.hospital.ReconciliationJobResponse;
@@ -41,6 +42,8 @@ public interface HospitalReconciliationService {
             com.hospital.backend.dto.request.hospital.UpdateRowsUrgentRequest request);
 
     Result<Map<String, Object>> reprice(Long jobId);
+
+    Result<Map<String, Object>> repriceRow(Long jobId, Long rowId, RepriceRowRequest request);
 
     Result<ReconciliationExportLogResponse> createExportLog(Long jobId, CreateExportLogRequest request);
 

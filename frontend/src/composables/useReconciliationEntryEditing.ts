@@ -5,6 +5,7 @@ import {
   repriceReconciliation,
   updateHospitalReconciliationRows
 } from '@/api/hospital/reconciliationsApi'
+import { parseReconciliationBillingContext } from '@/utils/reconciliationBillingNotes'
 
 const SOURCE_FIELDS = new Set(['packageMaterial', 'instrumentCount', 'type'])
 
@@ -23,6 +24,9 @@ export function isAnomalyEditableRow(row: Record<string, unknown>): boolean {
     if (notes.blocksPricing === true) return true
     const validation = notes.billingValidation as Record<string, unknown> | undefined
     if (validation?.blocksPricing === true) return true
+    // 字段一致性异常（包材/器械数与包名不匹配）的行也允许人工编辑源字段后重算
+    const ctx = parseReconciliationBillingContext(row)
+    if (ctx.hasFieldConsistencyIssues || ctx.hasBlockingValidationIssues) return true
   }
   return false
 }

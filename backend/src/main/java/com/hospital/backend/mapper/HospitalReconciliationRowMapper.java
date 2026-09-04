@@ -13,6 +13,10 @@ public interface HospitalReconciliationRowMapper {
 
     void batchInsert(@Param("list") List<HospitalReconciliationRow> rows);
 
+    HospitalReconciliationRow selectById(Long id);
+
+    void update(HospitalReconciliationRow row);
+
     List<HospitalReconciliationRow> selectByJobIdOrderBySheetNameAscRowNumberAsc(Long jobId);
 
     List<HospitalReconciliationRow> selectPageByJobId(@Param("jobId") Long jobId, @Param("offset") int offset, @Param("size") int size);

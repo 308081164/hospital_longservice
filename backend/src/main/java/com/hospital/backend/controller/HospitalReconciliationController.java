@@ -7,6 +7,7 @@ import com.hospital.backend.dto.request.hospital.ExportAnomaliesRequest;
 import com.hospital.backend.dto.request.hospital.HospitalBillTemplateExportRequest;
 import com.hospital.backend.dto.request.hospital.HospitalSettlementTemplateExportRequest;
 import com.hospital.backend.dto.request.hospital.ReconciliationReviewRequest;
+import com.hospital.backend.dto.request.hospital.RepriceRowRequest;
 import com.hospital.backend.dto.response.hospital.ReconciliationExportLogResponse;
 import com.hospital.backend.dto.response.hospital.ReconciliationJobResponse;
 import com.hospital.backend.dto.response.hospital.TemplateRefResponse;
@@ -106,6 +107,15 @@ public class HospitalReconciliationController {
     @PostMapping("/hospital-reconciliations/{jobId}/reprice")
     public Result<Map<String, Object>> reprice(@PathVariable Long jobId) {
         return hospitalReconciliationService.reprice(jobId);
+    }
+
+    /** 单行保存并重算：应用人工修正字段 → 引擎重算该行 → 原地持久化 */
+    @PostMapping("/hospital-reconciliations/{jobId}/rows/{rowId}/reprice")
+    public Result<Map<String, Object>> repriceRow(
+            @PathVariable Long jobId,
+            @PathVariable Long rowId,
+            @RequestBody(required = false) RepriceRowRequest request) {
+        return hospitalReconciliationService.repriceRow(jobId, rowId, request);
     }
 
     @PostMapping("/hospital-reconciliations/{jobId}/exports")

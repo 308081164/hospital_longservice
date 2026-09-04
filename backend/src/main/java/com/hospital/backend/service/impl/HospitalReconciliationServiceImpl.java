@@ -1276,6 +1276,103 @@ public class HospitalReconciliationServiceImpl implements HospitalReconciliation
         }
     }
 
+    /**
+     * 【单行保存并重算】—— 人工修正冲突字段后，仅重算该行并原地持久化
+     *
+     * POST /api/hospital-reconciliations/{jobId}/rows/{rowId}/reprice
+     *
+     * 与「一键修正」（全量预览、不落库）不同，本接口面向逐行「修复-验证」场景：
+     * 1. 将请求中的人工修正字段（type/packageMaterial/instrumentCount/packCount）覆盖到目标行；
+     * 2. 用 PricingEngine 仅重算该行（与全量 reprice 同一引擎入口，结果口径一致）；
+     * 3. 原地更新行记录，并同步 job 的 rowsJson 与汇总统计，保证行表与 rowsJson 一致。
+     *
+     * 设计说明：逐行修复通常需要连续调整多行，若每次保存都生成新版本会造成版本风暴，
+     * 因此本接口在 pending 任务内原地更新，不创建新版本；批量保存仍走 PUT rows 版本化流程。
+     *
+     * @param jobId   核对任务 ID
+     * @param rowId   明细行 ID（必须属于该任务）
+     * @param request 人工修正字段（均可选，null 表示不修改）
+     * @return 重算后的行数据 + 任务最新摘要
+     */
+    @Transactional
+    public Result<Map<String, Object>> repriceRow(Long jobId, Long rowId, RepriceRowRequest request) {
+        HospitalReconciliationJob job = jobMapper.selectById(jobId);
+        if (job == null) {
+            return Result.fail(404, "核对任务不存在");
+        }
+        if (!"pending".equals(job.getReviewStatus())) {
+            return Result.fail(400, "该版本已审核，不可修改");
+        }
+        if (job.getRuleId() == null) {
+            return Result.fail(400, "该任务未关联计费规则，无法重新定价");
+        }
+        HospitalPricingRule ruleEntity = pricingRuleMapper.selectById(job.getRuleId());
+        if (ruleEntity == null) {
+            return Result.fail(404, "关联的计费规则不存在");
+        }
+        HospitalReconciliationRow row = rowMapper.selectById(rowId);
+        if (row == null || !jobId.equals(row.getJobId())) {
+            return Result.fail(404, "明细行不存在");
+        }
+
+        try {
+            JsonNode rulesJson = JsonUtils.getObjectMapper().readTree(ruleEntity.getRulesJson());
+            if (rulesJson == null) {
+                return Result.fail(500, "规则数据解析失败");
+            }
+
+            Map<String, Object> rowMap = rowEntityToMap(row);
+            applyManualFieldOverrides(rowMap, request);
+            rowMap.put("hospitalName", job.getHospitalName());
+            enrichProductMatch(rowMap);
+            PricingEngine engine = buildPricingEngine(rulesJson, job.getHospitalName());
+            PricingEngine.ProcessedResult pr = engine.processRow(rowMap);
+            applyBatchCorrection(rowMap, pr);
+
+            fillRowEntityFromMap(row, rowMap);
+            rowMapper.update(row);
+
+            // 同步 rowsJson 与汇总统计：行表为主、rowsJson 为辅，两处必须一致
+            List<Map<String, Object>> allRows = rowMapper.selectByJobIdOrderBySheetNameAscRowNumberAsc(jobId)
+                    .stream()
+                    .map(this::rowEntityToMap)
+                    .collect(Collectors.toList());
+            job.setRowsJson(JsonUtils.toJson(allRows));
+            applySummaryFromRows(job, allRows);
+            computeSheetStats(job, allRows);
+            recomputeJobPriceTotals(job, allRows);
+            applyLogisticsToJob(job, rulesJson, job.getHospitalName(), allRows);
+            jobMapper.updateById(job);
+
+            Map<String, Object> result = new LinkedHashMap<>();
+            result.put("row", rowMap);
+            result.put("job", buildJobResponse(job, false));
+            return Result.success(result);
+        } catch (Exception e) {
+            log.error("单行重算失败 jobId={} rowId={}: {}", jobId, rowId, e.getMessage(), e);
+            return Result.fail(500, "单行重算失败: " + e.getMessage());
+        }
+    }
+
+    /** 将人工修正的冲突字段覆盖到行数据（null 字段不修改） */
+    private void applyManualFieldOverrides(Map<String, Object> rowMap, RepriceRowRequest request) {
+        if (request == null) {
+            return;
+        }
+        if (request.getType() != null) {
+            rowMap.put("type", request.getType().trim());
+        }
+        if (request.getPackageMaterial() != null) {
+            rowMap.put("packageMaterial", request.getPackageMaterial().trim());
+        }
+        if (request.getInstrumentCount() != null) {
+            rowMap.put("instrumentCount", request.getInstrumentCount());
+        }
+        if (request.getPackCount() != null) {
+            rowMap.put("packCount", request.getPackCount());
+        }
+    }
+
     // ========================================================================
     //  第二节：导出日志记录
     //  Section 2: Export Logging
@@ -5455,44 +5552,7 @@ public class HospitalReconciliationServiceImpl implements HospitalReconciliation
         for (Map<String, Object> rowData : rowsData) {
             HospitalReconciliationRow row = new HospitalReconciliationRow();
             row.setJobId(jobId);
-            row.setSheetName(valueToString(rowData.get("sheetName"), ""));
-            row.setRowNumber(safeGetInt(rowData, "rowNumber", 0));
-            row.setDeliveryDate(valueToString(rowData.get("deliveryDate"), ""));
-            row.setOrderNo(valueToString(rowData.get("orderNo"), ""));
-            row.setType(valueToString(rowData.get("type"), ""));
-            row.setCategoryNo(valueToString(rowData.get("categoryNo"), ""));
-            row.setPackName(valueToString(rowData.get("packName"), ""));
-            row.setPackageMaterial(valueToString(rowData.get("packageMaterial"), ""));
-            row.setPackCount(safeGetInt(rowData, "packCount", 0));
-            row.setInstrumentCount(safeGetInt(rowData, "instrumentCount", 0));
-            row.setUnitPrice(safeGetDoubleObj(rowData, "unitPrice"));
-            row.setTotalPrice(safeGetDoubleObj(rowData, "totalPrice"));
-            row.setExpectedUnitPrice(safeGetDoubleObj(rowData, "expectedUnitPrice"));
-            row.setCorrectedTotalPrice(safeGetDoubleObj(rowData, "correctedTotalPrice"));
-            row.setDifference(safeGetDoubleObj(rowData, "difference"));
-            row.setStatus(valueToString(rowData.get("status"), "unchanged"));
-            row.setPricingRule(valueToString(rowData.get("pricingRule"), ""));
-            row.setMatchedProductId(longVal(rowData, "matchedProductId", "matched_product_id"));
-            row.setMatchedVariantId(longVal(rowData, "matchedVariantId", "matched_variant_id"));
-            row.setPricingPath(valueToString(rowData.get("pricingPath"), null));
-            row.setNotesJson(JsonUtils.toJson(rowData.get("notes")));
-            row.setMatchedRuleId(longVal(rowData, "matchedRuleId", "matched_rule_id"));
-            Object matchedPriceOption = rowData.get("matchedPriceOption");
-            if (matchedPriceOption == null) {
-                matchedPriceOption = rowData.get("matched_price_option");
-            }
-            row.setMatchedPriceOption(matchedPriceOption instanceof Number
-                    ? ((Number) matchedPriceOption).doubleValue() : null);
-            Object billingNotes = rowData.get("billingNotes");
-            if (billingNotes == null) {
-                billingNotes = rowData.get("billing_notes");
-            }
-            row.setBillingNotes(billingNotes != null ? JsonUtils.toJson(billingNotes) : null);
-            Object isUrgent = rowData.get("isUrgent");
-            if (isUrgent == null) {
-                isUrgent = rowData.get("is_urgent");
-            }
-            row.setIsUrgent(parseBooleanFlag(isUrgent));
+            fillRowEntityFromMap(row, rowData);
             entities.add(row);
         }
 
@@ -5501,6 +5561,48 @@ public class HospitalReconciliationServiceImpl implements HospitalReconciliation
             int end = Math.min(start + BATCH_SIZE, entities.size());
             rowMapper.batchInsert(entities.subList(start, end));
         }
+    }
+
+    /** 将行数据 Map 填充到行实体（不设置 jobId / id，调用方负责） */
+    private void fillRowEntityFromMap(HospitalReconciliationRow row, Map<String, Object> rowData) {
+        row.setSheetName(valueToString(rowData.get("sheetName"), ""));
+        row.setRowNumber(safeGetInt(rowData, "rowNumber", 0));
+        row.setDeliveryDate(valueToString(rowData.get("deliveryDate"), ""));
+        row.setOrderNo(valueToString(rowData.get("orderNo"), ""));
+        row.setType(valueToString(rowData.get("type"), ""));
+        row.setCategoryNo(valueToString(rowData.get("categoryNo"), ""));
+        row.setPackName(valueToString(rowData.get("packName"), ""));
+        row.setPackageMaterial(valueToString(rowData.get("packageMaterial"), ""));
+        row.setPackCount(safeGetInt(rowData, "packCount", 0));
+        row.setInstrumentCount(safeGetInt(rowData, "instrumentCount", 0));
+        row.setUnitPrice(safeGetDoubleObj(rowData, "unitPrice"));
+        row.setTotalPrice(safeGetDoubleObj(rowData, "totalPrice"));
+        row.setExpectedUnitPrice(safeGetDoubleObj(rowData, "expectedUnitPrice"));
+        row.setCorrectedTotalPrice(safeGetDoubleObj(rowData, "correctedTotalPrice"));
+        row.setDifference(safeGetDoubleObj(rowData, "difference"));
+        row.setStatus(valueToString(rowData.get("status"), "unchanged"));
+        row.setPricingRule(valueToString(rowData.get("pricingRule"), ""));
+        row.setMatchedProductId(longVal(rowData, "matchedProductId", "matched_product_id"));
+        row.setMatchedVariantId(longVal(rowData, "matchedVariantId", "matched_variant_id"));
+        row.setPricingPath(valueToString(rowData.get("pricingPath"), null));
+        row.setNotesJson(JsonUtils.toJson(rowData.get("notes")));
+        row.setMatchedRuleId(longVal(rowData, "matchedRuleId", "matched_rule_id"));
+        Object matchedPriceOption = rowData.get("matchedPriceOption");
+        if (matchedPriceOption == null) {
+            matchedPriceOption = rowData.get("matched_price_option");
+        }
+        row.setMatchedPriceOption(matchedPriceOption instanceof Number
+                ? ((Number) matchedPriceOption).doubleValue() : null);
+        Object billingNotes = rowData.get("billingNotes");
+        if (billingNotes == null) {
+            billingNotes = rowData.get("billing_notes");
+        }
+        row.setBillingNotes(billingNotes != null ? JsonUtils.toJson(billingNotes) : null);
+        Object isUrgent = rowData.get("isUrgent");
+        if (isUrgent == null) {
+            isUrgent = rowData.get("is_urgent");
+        }
+        row.setIsUrgent(parseBooleanFlag(isUrgent));
     }
 
     // ========================================================================
