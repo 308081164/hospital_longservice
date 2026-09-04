@@ -524,7 +524,8 @@ public class BillingSeedMigrationRunner implements CommandLineRunner {
                     || "billing-seeds/phase-special-charge-contains-keyword-fix-20260902.json".equals(incremental.classpathFile())
                     || "billing-seeds/phase-special-charge-zgh-fixed-price-20260902.json".equals(incremental.classpathFile())
                     || "billing-seeds/phase-special-charge-renkou-contains-fix-20260902.json".equals(incremental.classpathFile())
-                    || "billing-seeds/phase-special-charge-keyword-contains-align-20260902.json".equals(incremental.classpathFile())) {
+                    || "billing-seeds/phase-special-charge-keyword-contains-align-20260902.json".equals(incremental.classpathFile())
+                    || "billing-seeds/phase-special-charge-needle-box-extracount-20260904.json".equals(incremental.classpathFile())) {
                 applyBatchPatchSeedFile(incremental.classpathFile());
             } else if ("billing-seeds/phase-billing-mode-backfill-20260730.json".equals(incremental.classpathFile())) {
                 applyBillingModeBackfillSeedFile(incremental.classpathFile());
