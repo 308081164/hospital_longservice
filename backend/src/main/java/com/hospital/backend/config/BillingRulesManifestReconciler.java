@@ -228,6 +228,13 @@ public class BillingRulesManifestReconciler implements CommandLineRunner {
         if (ruleNode.hasNonNull("threshold")) {
             rule.setThreshold(intVal(ruleNode, "threshold", null));
         }
+        if (ruleNode.has("extraCount")) {
+            if (ruleNode.get("extraCount").isNull()) {
+                rule.setExtraCount(null);
+            } else {
+                rule.setExtraCount(intVal(ruleNode, "extraCount", null));
+            }
+        }
         if (ruleNode.has("keywords")) {
             rule.setKeywords(toJsonArray(ruleNode.get("keywords")));
         }

@@ -3,6 +3,7 @@ package com.hospital.backend.config;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.hospital.backend.entity.Customer;
+import com.hospital.backend.entity.CustomerProductRule;
 import com.hospital.backend.mapper.CustomerMapper;
 import com.hospital.backend.mapper.CustomerProductRuleMapper;
 import com.hospital.backend.mapper.SysSettingMapper;
@@ -17,7 +18,9 @@ import org.springframework.test.util.ReflectionTestUtils;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class BillingRulesManifestReconcilerTest {
@@ -76,5 +79,22 @@ class BillingRulesManifestReconcilerTest {
                 reconciler, "applyCustomerManifestFields", customer, node);
 
         assertFalse(changed);
+    }
+
+    @Test
+    void upsertProductRule_syncsExtraCountFromManifest() throws Exception {
+        when(customerProductRuleMapper.selectByCustomerId(76L)).thenReturn(java.util.List.of());
+
+        ObjectNode ruleNode = new ObjectMapper().createObjectNode()
+                .put("name", "妇幼人口针盒针5合1含包材")
+                .put("ruleType", "FOLD")
+                .put("extraCount", 1)
+                .put("threshold", 5);
+
+        ReflectionTestUtils.invokeMethod(reconciler, "upsertProductRule", 76L, ruleNode);
+
+        var captor = org.mockito.ArgumentCaptor.forClass(CustomerProductRule.class);
+        verify(customerProductRuleMapper).insert(captor.capture());
+        assertEquals(1, captor.getValue().getExtraCount());
     }
 }
