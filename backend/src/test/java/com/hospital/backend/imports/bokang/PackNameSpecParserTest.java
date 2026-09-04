@@ -86,6 +86,20 @@ class PackNameSpecParserTest {
                 Arguments.of("克氏针-12/Z7530", 12),
                 Arguments.of("排针-15/Z7526", 15),
                 Arguments.of("套筒-1/Z7520", 1),
+                // 括号内连字符：外套无连字符时参与计数（妇幼人口 全冠套装）
+                Arguments.of("全冠套装（针-8盒-1）", 9),
+                Arguments.of("全冠套装(针-8盒-1)/W9050", 9),
+                // 外套有连字符时括号内规格区间仍忽略
+                Arguments.of("扩棒（3-5.5号）-6/z1526", 6),
+                // 紧凑复合括号内容器不双重计数（针7（盒1）→ 8 而非 9）
+                Arguments.of("针7（盒1）", 8),
+                Arguments.of("针7盒1", 8),
+                Arguments.of("针7盒1/z1026", 8),
+                // 生产复核样本：市五院 / 平房区人民
+                Arguments.of("开口器4件/Z1526", 4),
+                Arguments.of("车针-5件/Z7520", 5),
+                Arguments.of("戳卡4转换器1气腹针1/Z1026", 6),
+                Arguments.of("腹腔镜下胆囊切除（戳卡4转换器1气腹针1）/Z1026", 6),
                 Arguments.of("洗手服/w12050", null),
                 Arguments.of("刮宫包", null));
     }

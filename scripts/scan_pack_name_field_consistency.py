@@ -166,7 +166,9 @@ def hyphen_count_before_box(text: str) -> int:
 
 def sum_explicit_containers(stem: str, base_count: int, compact_base: bool) -> int:
     if compact_base:
-        return sum_parenthesis_container_counts(stem)
+        # 紧凑复合在含括号的整串上逐段求和，盒/筐/盘已计入（针7（盒1）→ 8）；
+        # 再叠加括号容器会双重计数（→ 9）。
+        return 0
     if re.search(r"[-－]\d+件", stem):
         if SPACED_PIECE_THEN_BOX.search(stem):
             if is_planting_or_needle_box_pack(stem) or is_surgical_pack_with_piece_box_count(stem):
@@ -208,6 +210,16 @@ def extract_base(stem: str) -> tuple[int | None, bool]:
         found = True
     if found:
         return hs, False
+    # 外套无连字符时，括号内连字符参与计数：全冠套装（针-8盒-1）→ 9。
+    # 外套有连字符时括号内一律忽略（扩棒（3-5.5号）-6 → 6，括号内是规格区间）。
+    paren_hs = 0
+    paren_found = False
+    for pm in PAREN_GROUP.finditer(stem):
+        for m in PIECE_COUNT.finditer(pm.group(1)):
+            paren_hs += int(m.group(1))
+            paren_found = True
+    if paren_found:
+        return paren_hs, False
     m = STANDALONE_PIECE.search(stem)
     if m:
         return int(m.group(1)), False

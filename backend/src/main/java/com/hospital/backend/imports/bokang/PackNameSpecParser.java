@@ -136,7 +136,8 @@ public final class PackNameSpecParser {
      * 从包名（斜杠订单后缀之前）提取器械件数合计。
      * <p>优先级：
      * <ol>
-     *   <li>若存在 {@code -N} / {@code -N件}，累加全部（如 止血钳-2剪-1 → 3，排针-12 → 12）</li>
+     *   <li>若存在 {@code -N} / {@code -N件}，累加全部（如 止血钳-2剪-1 → 3，排针-12 → 12）；
+     *       外套无连字符时括号内连字符参与计数（全冠套装（针-8盒-1）→ 9）</li>
      *   <li>否则若 stem 含 {@code N件}（无连字符），取该 N（如 宫腔镜包26件 → 26）</li>
      *   <li>否则若 stem 含多段「汉字/字母+数字」（无连字符），累加各段（如 盆1碗1 → 2）</li>
      *   <li>否则若 stem 末尾为「汉字/字母 + 数字」，取该数字（如 排针20 → 20）</li>
@@ -244,6 +245,21 @@ public final class PackNameSpecParser {
         if (foundHyphen) {
             return new BasePieceCount(hyphenSum, false);
         }
+        // 外套无连字符时，括号内连字符参与计数：全冠套装（针-8盒-1）→ 9。
+        // 外套有连字符时括号内一律忽略（扩棒（3-5.5号）-6 → 6，括号内是规格区间）。
+        int parenHyphenSum = 0;
+        boolean foundParenHyphen = false;
+        Matcher parenGroups = PAREN_GROUP.matcher(stem);
+        while (parenGroups.find()) {
+            Matcher innerHyphen = PIECE_COUNT.matcher(parenGroups.group(1));
+            while (innerHyphen.find()) {
+                parenHyphenSum += Integer.parseInt(innerHyphen.group(1));
+                foundParenHyphen = true;
+            }
+        }
+        if (foundParenHyphen) {
+            return new BasePieceCount(parenHyphenSum, false);
+        }
         Matcher standalonePieceMatcher = STANDALONE_PIECE_COUNT.matcher(stem);
         if (standalonePieceMatcher.find()) {
             return new BasePieceCount(Integer.parseInt(standalonePieceMatcher.group(1)), false);
@@ -275,7 +291,9 @@ public final class PackNameSpecParser {
 
     private static int sumExplicitContainerCounts(String stem, int baseCount, boolean compactCompound) {
         if (compactCompound) {
-            return sumParenthesisContainerCounts(stem);
+            // 紧凑复合在含括号的整串上逐段求和，盒/筐/盘已计入（针7（盒1）→ 8）；
+            // 再叠加括号容器会双重计数（→ 9）。
+            return 0;
         }
         if (Pattern.compile("[-－]\\d+件").matcher(stem).find()) {
             if (SPACED_PIECE_THEN_BOX.matcher(stem).find()) {
