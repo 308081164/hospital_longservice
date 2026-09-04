@@ -6,6 +6,16 @@
         <span class="file-strip__name" :title="fileName">{{ fileName }}</span>
         <slot name="status-badge" />
         <ElTooltip
+          v-if="hospitalDisplayName"
+          content="从 Excel 内容识别的医院全称（用于规则匹配与入库）"
+          placement="top"
+        >
+          <span class="file-strip__hospital" :title="hospitalDisplayName">
+            <ElIcon class="file-strip__hospital-icon"><OfficeBuilding /></ElIcon>
+            {{ hospitalDisplayName }}
+          </span>
+        </ElTooltip>
+        <ElTooltip
           v-if="ruleLabel"
           :content="ruleTooltip"
           placement="top"
@@ -273,7 +283,7 @@
 
 <script setup lang="ts">
   import { computed, inject } from 'vue'
-  import { ArrowDown, Loading, QuestionFilled } from '@element-plus/icons-vue'
+  import { ArrowDown, Loading, OfficeBuilding, QuestionFilled } from '@element-plus/icons-vue'
   import { useI18n } from 'vue-i18n'
   import { reconciliationJobActionsKey } from '@/composables/reconciliationJobActionsKey'
   import type { ReconciliationHistoryGroup } from '@/composables/useReconciliationHistory'
@@ -323,6 +333,8 @@
   const { formatNumber, formatSignedNumber } = useReconciliationTableColumns()
   const { canReviewReconciliation, canExport } = useBillingPermission()
   const actions = inject(reconciliationJobActionsKey, null)
+
+  const hospitalDisplayName = computed(() => props.entry.hospitalName?.trim() ?? '')
 
   const canExportPerm = computed(() => canExport.value)
 
@@ -404,6 +416,28 @@
     background: #fff;
     border: 1px solid var(--el-border-color-lighter, #ebeef5);
     border-radius: 4px;
+  }
+
+  .file-strip__hospital {
+    display: inline-flex;
+    gap: 4px;
+    align-items: center;
+    max-width: 320px;
+    padding: 1px 8px;
+    overflow: hidden;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--el-color-primary);
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    background: var(--el-color-primary-light-9, #ecf5ff);
+    border: 1px solid var(--el-color-primary-light-7, #c6e2ff);
+    border-radius: 4px;
+  }
+
+  .file-strip__hospital-icon {
+    flex-shrink: 0;
+    font-size: 13px;
   }
 
   .file-strip__meta {
