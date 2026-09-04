@@ -16,14 +16,16 @@
           </div>
           <div>
             <span class="text-gray-500">{{ t('reconciliation.detail.expectedPrice') }}：</span>
-            <ElTooltip
-              v-if="ctx.blocksPricingDisplay"
-              placement="top"
-              :content="t('reconciliation.detail.pricingBlockedHint')"
-            >
-              <span class="pricing-blocked-indicator" aria-label="pricing blocked">!</span>
-            </ElTooltip>
-            <span v-else class="font-medium">{{ formatCurrency(expectedUnitPrice) }}</span>
+            <span class="pricing-value-with-indicator">
+              <span class="font-medium">{{ formatCurrency(expectedUnitPrice) }}</span>
+              <ElTooltip
+                v-if="showValidationIndicator"
+                placement="top"
+                :content="validationIndicatorTooltip"
+              >
+                <span class="pricing-blocked-indicator" aria-label="validation issue">!</span>
+              </ElTooltip>
+            </span>
           </div>
           <div>
             <span class="text-gray-500">{{ t('reconciliation.columns.packCount') }}：</span>
@@ -121,7 +123,9 @@
   import {
     formatReconciliationCurrency,
     hasBillingDetail,
-    parseReconciliationBillingContext
+    parseReconciliationBillingContext,
+    shouldShowValidationIndicator,
+    validationIndicatorMessages
   } from '@/utils/reconciliationBillingNotes'
   import { buildPricingFlowTimeline, readEffectivePricingPath, type PricingFlowStep } from '@/utils/reconciliationPricingPath'
   import {
@@ -172,6 +176,16 @@
   })
 
   const expectedUnitPrice = computed(() => ctx.value.expectedUnitPrice)
+
+  const showValidationIndicator = computed(() =>
+    props.row ? shouldShowValidationIndicator(props.row) : false
+  )
+
+  const validationIndicatorTooltip = computed(() => {
+    if (!props.row) return t('reconciliation.detail.pricingBlockedHint')
+    const messages = validationIndicatorMessages(props.row)
+    return messages.length > 0 ? messages.join('\n') : t('reconciliation.detail.pricingBlockedHint')
+  })
 
   const difference = computed(() => {
     const v = props.row?.difference
@@ -263,8 +277,15 @@
     margin: 0;
   }
 
+  .pricing-value-with-indicator {
+    display: inline-flex;
+    gap: 4px;
+    align-items: center;
+  }
+
   .pricing-blocked-indicator {
     display: inline-flex;
+    flex-shrink: 0;
     align-items: center;
     justify-content: center;
     width: 18px;

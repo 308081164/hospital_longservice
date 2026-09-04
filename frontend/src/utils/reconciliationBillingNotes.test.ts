@@ -1,0 +1,86 @@
+import {
+  blocksPricingFromBillingNotes,
+  parseReconciliationBillingContext,
+  shouldBlockPricingDisplay,
+  shouldShowValidationIndicator,
+  validationIndicatorMessages
+} from './reconciliationBillingNotes.ts'
+
+function assertEqual(actual: unknown, expected: unknown, message: string) {
+  if (actual !== expected) {
+    throw new Error(`${message}: expected ${JSON.stringify(expected)}, got ${JSON.stringify(actual)}`)
+  }
+}
+
+function assertTrue(value: boolean, message: string) {
+  if (!value) throw new Error(message)
+}
+
+const fieldConsistencyRow = {
+  expectedUnitPrice: 8,
+  correctedTotalPrice: 8,
+  billingNotes: {
+    fieldConsistency: {
+      type: 'field_consistency',
+      violations: [
+        {
+          code: 'INSTRUMENT_COUNT_MISMATCH',
+          message: '包名件数合计 3 与器械数列 2 不一致'
+        }
+      ]
+    }
+  }
+}
+
+const fieldCtx = parseReconciliationBillingContext(fieldConsistencyRow)
+assertTrue(fieldCtx.hasFieldConsistencyIssues, 'field consistency should be detected')
+assertEqual(fieldCtx.blocksPricingDisplay, false, 'field consistency must not block pricing display')
+assertEqual(shouldBlockPricingDisplay(fieldConsistencyRow), false, 'shouldBlockPricingDisplay is false')
+assertEqual(shouldShowValidationIndicator(fieldConsistencyRow), true, 'indicator should show')
+assertTrue(
+  validationIndicatorMessages(fieldConsistencyRow).includes('包名件数合计 3 与器械数列 2 不一致'),
+  'indicator tooltip should include violation message'
+)
+
+const billingValidationRow = {
+  expectedUnitPrice: 10,
+  correctedTotalPrice: 10,
+  billingNotes: {
+    billingValidation: {
+      violations: [
+        {
+          code: 'BLANK_PACKAGE_MATERIAL',
+          severity: 'error',
+          message: '包装材料为空'
+        }
+      ]
+    }
+  }
+}
+
+const validationCtx = parseReconciliationBillingContext(billingValidationRow)
+assertTrue(validationCtx.hasBlockingValidationIssues, 'billing validation error should be detected')
+assertEqual(validationCtx.blocksPricingDisplay, false, 'validation error must not block pricing display')
+assertEqual(shouldBlockPricingDisplay(billingValidationRow), false, 'shouldBlockPricingDisplay is false')
+assertEqual(shouldShowValidationIndicator(billingValidationRow), true, 'indicator should show')
+
+const explicitBlockNotes = {
+  blocksPricing: true,
+  fieldConsistency: {
+    type: 'field_consistency',
+    violations: [{ code: 'BAG_SIZE_MISMATCH', message: '尺寸不一致' }]
+  }
+}
+
+assertEqual(blocksPricingFromBillingNotes(explicitBlockNotes), true, 'explicit blocksPricing still blocks')
+assertEqual(
+  shouldBlockPricingDisplay({
+    billingNotes: explicitBlockNotes,
+    expectedUnitPrice: null,
+    correctedTotalPrice: null
+  }),
+  true,
+  'explicit blocksPricing row still blocks display'
+)
+
+console.log('reconciliationBillingNotes.test.ts: all assertions passed')

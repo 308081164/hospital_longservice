@@ -258,17 +258,33 @@ export function extractBillingValidationViolations(
 }
 
 export function blocksPricingFromBillingNotes(
-  billingNotes: Record<string, unknown> | null,
-  fieldConsistencyViolations: FieldConsistencyViolation[]
+  billingNotes: Record<string, unknown> | null
 ): boolean {
-  if (fieldConsistencyViolations.length > 0) return true
   if (!billingNotes) return false
   if (billingNotes.blocksPricing === true) return true
   const nested = billingNotes.billingValidation ?? billingNotes.billing_validation
   if (nested && typeof nested === 'object' && !Array.isArray(nested)) {
     if ((nested as Record<string, unknown>).blocksPricing === true) return true
   }
-  return extractBillingValidationViolations(billingNotes).some((item) => item.severity === 'error')
+  return false
+}
+
+/** 字段核对/校验异常时在数值后展示红叹号（不阻断计价结果展示）。 */
+export function shouldShowValidationIndicator(row: Record<string, unknown>): boolean {
+  const ctx = parseReconciliationBillingContext(row)
+  return ctx.hasFieldConsistencyIssues || ctx.hasBlockingValidationIssues
+}
+
+export function validationIndicatorMessages(row: Record<string, unknown>): string[] {
+  const ctx = parseReconciliationBillingContext(row)
+  const messages: string[] = []
+  for (const item of ctx.fieldConsistencyViolations) {
+    if (item.message) messages.push(item.message)
+  }
+  for (const item of ctx.billingValidationViolations) {
+    if (item.severity === 'error' && item.message) messages.push(item.message)
+  }
+  return messages
 }
 
 export function shouldBlockPricingDisplay(row: Record<string, unknown>): boolean {
@@ -470,11 +486,10 @@ export function parseReconciliationBillingContext(
   const policyTraces = extractPolicyTraces(billingNotes)
   const fieldConsistencyViolations = extractFieldConsistencyViolations(billingNotes)
   const billingValidationViolations = extractBillingValidationViolations(billingNotes)
-  const blocksPricingDisplay = blocksPricingFromBillingNotes(
-    billingNotes,
-    fieldConsistencyViolations
+  const blocksPricingDisplay = blocksPricingFromBillingNotes(billingNotes)
+  const hasBlockingValidationIssues = billingValidationViolations.some(
+    (item) => item.severity === 'error'
   )
-  const hasBlockingValidationIssues = blocksPricingDisplay
   const hasZeroUnitPriceWarning = billingValidationViolations.some(
     (item) => item.code === 'ZERO_UNIT_PRICE'
   )

@@ -156,14 +156,16 @@
         align="right"
       >
         <template #default="{ row }">
-          <ElTooltip
-            v-if="shouldBlockPricing(row)"
-            placement="top"
-            :content="t('reconciliation.detail.pricingBlockedHint')"
-          >
-            <span class="pricing-blocked-indicator" aria-label="pricing blocked">!</span>
-          </ElTooltip>
-          <span v-else>{{ formatNumber(row['expectedUnitPrice'] as number | null) }}</span>
+          <span class="pricing-value-with-indicator">
+            <span>{{ formatNumber(row['expectedUnitPrice'] as number | null) }}</span>
+            <ElTooltip
+              v-if="shouldShowValidationIndicator(row)"
+              placement="top"
+              :content="validationIndicatorTooltip(row)"
+            >
+              <span class="pricing-blocked-indicator" aria-label="validation issue">!</span>
+            </ElTooltip>
+          </span>
         </template>
       </ElTableColumn>
       <ElTableColumn
@@ -183,24 +185,28 @@
         align="right"
       >
         <template #default="{ row }">
-          <template v-if="shouldBlockPricing(row)">
-            <ElTooltip placement="top" :content="t('reconciliation.detail.pricingBlockedHint')">
-              <span class="pricing-blocked-indicator" aria-label="pricing blocked">!</span>
+          <span class="pricing-value-with-indicator">
+            <input
+              v-if="isInlineEditable(row, 'correctedTotalPrice')"
+              :value="row['correctedTotalPrice']"
+              type="number"
+              step="0.01"
+              min="0"
+              class="detail-cell-input"
+              @input="
+                (e: Event) =>
+                  emitFieldChange(row, 'correctedTotalPrice', (e.target as HTMLInputElement).value)
+              "
+            />
+            <span v-else>{{ formatNumber(row['correctedTotalPrice'] as number | null) }}</span>
+            <ElTooltip
+              v-if="shouldShowValidationIndicator(row)"
+              placement="top"
+              :content="validationIndicatorTooltip(row)"
+            >
+              <span class="pricing-blocked-indicator" aria-label="validation issue">!</span>
             </ElTooltip>
-          </template>
-          <input
-            v-else-if="isInlineEditable(row, 'correctedTotalPrice')"
-            :value="row['correctedTotalPrice']"
-            type="number"
-            step="0.01"
-            min="0"
-            class="detail-cell-input"
-            @input="
-              (e: Event) =>
-                emitFieldChange(row, 'correctedTotalPrice', (e.target as HTMLInputElement).value)
-            "
-          />
-          <span v-else>{{ formatNumber(row['correctedTotalPrice'] as number | null) }}</span>
+          </span>
         </template>
       </ElTableColumn>
       <ElTableColumn
@@ -315,7 +321,10 @@
   import ReconciliationBillingDetail from '@/components/business/reconciliation/ReconciliationBillingDetail.vue'
   import { useReconciliationTableColumns } from '@/composables/useReconciliationTableColumns'
   import { isAnomalyEditableRow } from '@/composables/useReconciliationEntryEditing'
-  import { shouldBlockPricingDisplay } from '@/utils/reconciliationBillingNotes'
+  import {
+    shouldShowValidationIndicator,
+    validationIndicatorMessages
+  } from '@/utils/reconciliationBillingNotes'
   import { hasPricingDetail } from '@/utils/reconciliationPricingPath'
 
   const props = withDefaults(
@@ -368,8 +377,10 @@
     return { prop: 'rowNumber', order: 'ascending' as const }
   })
 
-  function shouldBlockPricing(row: Record<string, unknown>): boolean {
-    return shouldBlockPricingDisplay(row)
+  function validationIndicatorTooltip(row: Record<string, unknown>): string {
+    const messages = validationIndicatorMessages(row)
+    if (messages.length > 0) return messages.join('\n')
+    return t('reconciliation.detail.pricingBlockedHint')
   }
 
   function hasRowDifference(row: Record<string, unknown>): boolean {
@@ -561,8 +572,16 @@
     border: 1px solid #e6a23c;
   }
 
+  .pricing-value-with-indicator {
+    display: inline-flex;
+    gap: 4px;
+    align-items: center;
+    justify-content: flex-end;
+  }
+
   .pricing-blocked-indicator {
     display: inline-flex;
+    flex-shrink: 0;
     align-items: center;
     justify-content: center;
     width: 18px;
