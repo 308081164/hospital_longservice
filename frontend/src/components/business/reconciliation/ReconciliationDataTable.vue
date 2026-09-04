@@ -226,11 +226,6 @@
           <span v-else>{{ formatSignedNumber(row['difference'] as number | null) }}</span>
         </template>
       </ElTableColumn>
-      <ElTableColumn type="expand" width="42" :label="t('table.column.expand')">
-        <template #default="{ row }">
-          <ReconciliationBillingDetail v-if="hasPricingDetail(row)" :row="row" expanded />
-        </template>
-      </ElTableColumn>
       <ElTableColumn :label="t('reconciliation.detail.pricingRuleColumn')" min-width="140">
         <template #default="{ row }">
           <PricingPathTag :row="row" @open-detail="emitOpenPricingFlow" />
@@ -325,7 +320,6 @@
     shouldShowValidationIndicator,
     validationIndicatorMessages
   } from '@/utils/reconciliationBillingNotes'
-  import { hasPricingDetail } from '@/utils/reconciliationPricingPath'
 
   const props = withDefaults(
     defineProps<{
