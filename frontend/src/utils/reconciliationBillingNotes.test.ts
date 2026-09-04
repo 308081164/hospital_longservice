@@ -83,4 +83,16 @@ assertEqual(
   'explicit blocksPricing row still blocks display'
 )
 
+const unchangedRow = { ...fieldConsistencyRow, status: 'unchanged' }
+assertEqual(
+  shouldShowValidationIndicator(unchangedRow),
+  false,
+  'indicator hidden when row marked as 无需修改 (unchanged)'
+)
+assertEqual(
+  shouldShowValidationIndicator({ ...fieldConsistencyRow, status: 'warning' }),
+  true,
+  'indicator still shows for other statuses'
+)
+
 console.log('reconciliationBillingNotes.test.ts: all assertions passed')

@@ -271,6 +271,8 @@ export function blocksPricingFromBillingNotes(
 
 /** 字段核对/校验异常时在数值后展示红叹号（不阻断计价结果展示）。 */
 export function shouldShowValidationIndicator(row: Record<string, unknown>): boolean {
+  // 人工标记「无需修改」的行视为已确认，不再提示红叹号
+  if (row['status'] === 'unchanged') return false
   const ctx = parseReconciliationBillingContext(row)
   return ctx.hasFieldConsistencyIssues || ctx.hasBlockingValidationIssues
 }
