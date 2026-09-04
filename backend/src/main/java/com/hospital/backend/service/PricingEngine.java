@@ -451,6 +451,12 @@ public class PricingEngine {
                     pricingRule = "路径覆盖：高温固定单价";
                     notes.add("按路径覆盖高温单价 " + fmt(forceHighTempPerItem) + " 元/件 × "
                             + materialBillingCount + " 件 = " + fmt(expectedUnitPrice) + " 元。");
+                    if (appliedSpecialFoldRule && !skipPackaging) {
+                        double bagFee = (bagSize > 0 && bagSize < 20) ? 2.5 : 4.0;
+                        expectedUnitPrice = round(expectedUnitPrice + bagFee);
+                        pricingRule = pricingRule + " + 标准包材费";
+                        notes.add("含包材规则，叠加标准包材费 " + fmt(bagFee) + " 元。");
+                    }
                 } else if (appliedSpecialFoldRule && (foldSkipPackaging || foldHasExtraCount)) {
                     // 针盒针（extraCount）或免包材 FOLD：按折算件数×把价计件费；含包材叠加标准袋费。
                     // 不可走 computeHighTempPaperPlastic（免包材会重复计袋费，针盒含包材袋规价≠标准2.5）。
