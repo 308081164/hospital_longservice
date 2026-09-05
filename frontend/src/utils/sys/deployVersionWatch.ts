@@ -1,65 +1,51 @@
-import { h } from 'vue'
-import { ElButton, ElNotification } from 'element-plus'
-
 /**
- * 部署版本监听：轮询 /api/v1/base/version，发现后端部署了新版本时
- * 弹出常驻通知引导用户刷新，避免 SPA 长开标签页一直运行旧 bundle
- * （历史上曾因旧缓存导致「新功能已部署但用户看不到」的误判）。
+ * 部署版本监听（P0 强制版）：轮询前端 /version.json 与后端 /api/v1/base/version，
+ * 任一通道发现新版本部署即交给 versionEnforcer 强制升级（清缓存 + 阻断 + 硬刷新），
+ * 不再给用户「留在旧版本」的选择。
  */
 
-const POLL_INTERVAL_MS = 60_000
-const VERSION_URL = '/api/v1/base/version'
+import { reportBackendSha, reportServerFrontendVersion } from './versionEnforcer'
 
-let currentSha: string | null = null
-let notifiedSha: string | null = null
+const POLL_INTERVAL_MS = 30_000
+const BACKEND_VERSION_URL = '/api/v1/base/version'
+const FRONTEND_VERSION_URL = '/version.json'
+
 let timer: ReturnType<typeof setInterval> | null = null
 let started = false
 
-async function fetchDeploySha(): Promise<string | null> {
+async function fetchBackendSha(): Promise<string | null> {
   try {
-    const resp = await fetch(VERSION_URL, { cache: 'no-store' })
+    const resp = await fetch(BACKEND_VERSION_URL, { cache: 'no-store' })
     if (!resp.ok) return null
     const body = await resp.json()
-    const sha = body?.data?.gitShaShort ?? body?.data?.gitSha ?? null
+    // 优先完整 gitSha（与 X-App-Version 响应头一致），短 sha 仅作兜底
+    const sha = body?.data?.gitSha ?? body?.data?.gitShaShort ?? null
     return typeof sha === 'string' && sha ? sha : null
   } catch {
     return null
   }
 }
 
-function notifyNewVersion(sha: string) {
-  if (notifiedSha === sha) return
-  notifiedSha = sha
-  ElNotification({
-    title: '系统已更新',
-    message: h('div', null, [
-      h('p', { style: 'margin: 0 0 8px' }, `检测到新版本（${sha}）已部署，当前页面为旧版本。`),
-      h(
-        ElButton,
-        {
-          type: 'primary',
-          size: 'small',
-          onClick: () => window.location.reload()
-        },
-        () => '立即刷新'
-      )
-    ]),
-    type: 'warning',
-    duration: 0,
-    position: 'bottom-right'
-  })
+async function fetchServerFrontendVersion(): Promise<string | null> {
+  try {
+    const resp = await fetch(`${FRONTEND_VERSION_URL}?_t=${Date.now()}`, { cache: 'no-store' })
+    if (!resp.ok) return null
+    const body = await resp.json()
+    const version = body?.version ?? null
+    return typeof version === 'string' && version ? version : null
+  } catch {
+    // dev 环境无 version.json（vite 回退返回 HTML，json 解析失败）→ 跳过
+    return null
+  }
 }
 
 async function checkDeployVersion() {
-  const sha = await fetchDeploySha()
-  if (!sha) return
-  if (!currentSha) {
-    currentSha = sha
-    return
-  }
-  if (sha !== currentSha) {
-    notifyNewVersion(sha)
-  }
+  const [frontendVersion, backendSha] = await Promise.all([
+    fetchServerFrontendVersion(),
+    fetchBackendSha()
+  ])
+  reportServerFrontendVersion(frontendVersion)
+  reportBackendSha(backendSha)
 }
 
 function onVisibilityChange() {

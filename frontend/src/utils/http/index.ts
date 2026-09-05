@@ -20,6 +20,7 @@ import { ApiStatus } from './status'
 import { HttpError, handleError, showError, showSuccess } from './error'
 import { $t } from '@/locales'
 import { BaseResponse } from '@/types'
+import { isVersionBlocked, reportBackendSha } from '@/utils/sys/versionEnforcer'
 
 /** 请求配置常量 */
 const REQUEST_TIMEOUT = 15000
@@ -27,6 +28,8 @@ const LOGOUT_DELAY = 500
 const MAX_RETRIES = 0
 const RETRY_DELAY = 1000
 const UNAUTHORIZED_DEBOUNCE_TIME = 3000
+/** 版本失配阻断专用错误码（非 HTTP 状态码，避免与业务码冲突；此类错误不弹 toast） */
+const VERSION_BLOCKED_CODE = 4700
 
 /** 401防抖状态 */
 let isUnauthorizedErrorShown = false
@@ -64,6 +67,10 @@ const axiosInstance = axios.create({
 /** 请求拦截器 */
 axiosInstance.interceptors.request.use(
   (request: InternalAxiosRequestConfig) => {
+    // 已检测到新版本部署：阻断一切新请求，旧版本彻底不可用
+    if (isVersionBlocked()) {
+      return Promise.reject(createHttpError('系统已更新，旧版本已停用', VERSION_BLOCKED_CODE))
+    }
     const { accessToken } = useUserStore()
     if (accessToken) request.headers.set('Authorization', `Bearer ${accessToken}`)
 
@@ -83,17 +90,25 @@ axiosInstance.interceptors.request.use(
 /** 响应拦截器 */
 axiosInstance.interceptors.response.use(
   (response: AxiosResponse<BaseResponse>) => {
+    // 每个响应都携带 X-App-Version：后端若在运行期间重新部署，立即触发强制升级
+    reportBackendSha((response.headers?.['x-app-version'] as string) ?? null)
     const body = response.data as unknown as Record<string, unknown>
     // 后端主 API 使用 { code, msg, data } 包裹格式
     if (body.code !== undefined) {
       if (body.code === ApiStatus.success) return response
       if (body.code === ApiStatus.unauthorized) handleUnauthorizedError(body.msg as string)
-      throw createHttpError((body.msg as string) || $t('httpMsg.requestFailed'), body.code as number)
+      throw createHttpError(
+        (body.msg as string) || $t('httpMsg.requestFailed'),
+        body.code as number
+      )
     }
     // 医院 API 等返回纯数据（无 code 字段），2xx 直接放行
     return response
   },
   (error) => {
+    if (error.response) {
+      reportBackendSha((error.response.headers?.['x-app-version'] as string) ?? null)
+    }
     if (error.response?.status === ApiStatus.unauthorized) handleUnauthorizedError()
     return Promise.reject(handleError(error))
   }
@@ -191,7 +206,11 @@ async function request<T = any>(config: ExtendedAxiosRequestConfig): Promise<T> 
     // { code, msg, data } 包裹格式 → 提取 data；纯数据格式 → 直接返回
     return (body.code !== undefined ? body.data : body) as T
   } catch (error) {
-    if (error instanceof HttpError && error.code !== ApiStatus.unauthorized) {
+    if (
+      error instanceof HttpError &&
+      error.code !== ApiStatus.unauthorized &&
+      error.code !== VERSION_BLOCKED_CODE
+    ) {
       const showMsg = config.showErrorMessage !== false
       showError(error, showMsg)
     }

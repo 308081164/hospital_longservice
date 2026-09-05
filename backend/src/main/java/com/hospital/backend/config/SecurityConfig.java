@@ -121,6 +121,8 @@ public class SecurityConfig {
         ));
         config.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"));
         config.setAllowedHeaders(Arrays.asList("Content-Type", "Authorization", "X-Requested-With"));
+        // 允许前端 JS 读取版本头（AppVersionHeaderFilter 输出，用于检测后端重新部署）
+        config.setExposedHeaders(List.of(AppVersionHeaderFilter.VERSION_HEADER));
         config.setAllowCredentials(true);
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();

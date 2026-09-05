@@ -1,7 +1,10 @@
 /**
  * 检测当前页面 JS 是否与服务器 index.html 引用的入口 chunk 一致。
  * Docker 重建后若用户未刷新，可能仍运行旧 bundle（/assets/ 为 immutable 长期缓存）。
+ * 失配时走 versionEnforcer 强制通道：清缓存/登录态 + 立即硬刷新（应用挂载前执行，无倒计时）。
  */
+import { enforceVersionUpgrade } from './versionEnforcer'
+
 const ENTRY_SCRIPT_RE = /\/assets\/index-[A-Za-z0-9_-]+\.js/
 
 function currentEntryScriptSrc(): string | null {
@@ -35,7 +38,7 @@ export async function checkDeployStaleAndReload(): Promise<void> {
 
     const loadedPath = new URL(loaded, window.location.origin).pathname
     if (loadedPath !== deployed) {
-      window.location.reload()
+      enforceVersionUpgrade('stale-entry-chunk', { immediate: true })
     }
   } catch {
     // 离线或 nginx 未就绪时忽略

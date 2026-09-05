@@ -1,6 +1,7 @@
-import { defineConfig, loadEnv } from 'vite'
+import { defineConfig, loadEnv, type Plugin } from 'vite'
 import vue from '@vitejs/plugin-vue'
 import path from 'path'
+import fs from 'fs'
 import { fileURLToPath } from 'url'
 import vueDevTools from 'vite-plugin-vue-devtools'
 import viteCompression from 'vite-plugin-compression'
@@ -18,6 +19,25 @@ export default ({ mode }: { mode: string }) => {
 
   console.log(`🚀 API_URL = ${VITE_API_URL}`)
   console.log(`🚀 VERSION = ${VITE_VERSION}`)
+
+  // 构建产物写入 dist/version.json（前端版本指纹）：
+  // 运行时轮询它与 bundle 内置的 __APP_VERSION__ 比对，不一致即判定有新部署。
+  // nginx 必须以 no-cache 提供该文件（见 frontend/nginx.conf / deploy/nginx-frontend-shared-net.conf）。
+  const emitVersionJsonPlugin = (): Plugin => ({
+    name: 'emit-version-json',
+    apply: 'build',
+    closeBundle() {
+      const outDir = path.resolve(root, 'dist')
+      fs.mkdirSync(outDir, { recursive: true })
+      fs.writeFileSync(
+        path.join(outDir, 'version.json'),
+        JSON.stringify({
+          version: VITE_VERSION || '',
+          buildTime: new Date().toISOString()
+        })
+      )
+    }
+  })
 
   return defineConfig({
     define: {
@@ -58,11 +78,12 @@ export default ({ mode }: { mode: string }) => {
       }
     },
     esbuild: {
-      drop: ['console', 'debugger'],
+      drop: ['console', 'debugger']
     },
     plugins: [
       vue(),
       tailwindcss(),
+      emitVersionJsonPlugin(),
       // 自动按需导入 API
       AutoImport({
         imports: ['vue', 'vue-router', 'pinia', '@vueuse/core'],
