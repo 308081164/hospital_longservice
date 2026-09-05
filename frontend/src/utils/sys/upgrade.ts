@@ -113,10 +113,19 @@ class VersionManager {
 
   /**
    * 检查是否需要重新登录
+   *
+   * 仅对语义化版本号（如 3.0.2）生效；生产部署版本为 git SHA 或
+   * docker-时间戳构建号，与 mock 日志的语义化版本做字符串比较没有
+   * 意义且可能误判，直接跳过（部署强制刷新由 versionEnforcer 负责）。
    */
   private shouldRequireReLogin(storedVersion: string): boolean {
+    const semverLike = /^\d+\.\d+(\.\d+)*$/
     const normalizedCurrent = this.normalizeVersion(StorageConfig.CURRENT_VERSION)
     const normalizedStored = this.normalizeVersion(storedVersion)
+
+    if (!semverLike.test(normalizedCurrent) || !semverLike.test(normalizedStored)) {
+      return false
+    }
 
     return upgradeLogList.value.some((item) => {
       const itemVersion = this.normalizeVersion(item.version)
@@ -127,9 +136,14 @@ class VersionManager {
   }
 
   /**
-   * 从版本号或升级日志解析可读的升级时间
+   * 解析可读的升级时间
+   *
+   * 优先级：版本号内嵌时间戳（docker-YYYYMMDDHHmmss 本地构建）→
+   * 版本号命中升级日志 → 运行时真实构建时间（/version.json →
+   * /api/v1/base/version）。查不到就返回 null，绝不回退到
+   * 模板 mock 日志的日期（历史事故：公告长期显示 2026-03-15）。
    */
-  private resolveUpgradeTime(version: string): string | null {
+  private async resolveUpgradeTime(version: string): Promise<string | null> {
     const embeddedTimestamp = version.match(/(\d{14})\b/)
     if (embeddedTimestamp) {
       const stamp = embeddedTimestamp[1]
@@ -144,19 +158,82 @@ class VersionManager {
       return matchedLog.date
     }
 
-    return upgradeLogList.value[0]?.date ?? null
+    return this.fetchRealBuildTime()
+  }
+
+  /**
+   * 运行时获取真实构建时间：优先前端构建指纹 /version.json（与
+   * __APP_VERSION__ 同源、nginx no-cache、未登录可访问），回退后端
+   * /api/v1/base/version（permitAll）。均失败返回 null。
+   */
+  private async fetchRealBuildTime(): Promise<string | null> {
+    try {
+      const resp = await fetch(`/version.json?_t=${Date.now()}`, { cache: 'no-store' })
+      if (resp.ok) {
+        const body = await resp.json()
+        const formatted = this.formatBuildTime(body?.buildTime)
+        if (formatted) return formatted
+      }
+    } catch {
+      // dev 环境无 version.json（vite 回退返回 HTML）→ 尝试后端接口
+    }
+
+    try {
+      const resp = await fetch('/api/v1/base/version', { cache: 'no-store' })
+      if (resp.ok) {
+        const body = await resp.json()
+        const display = body?.data?.buildTimeDisplay
+        if (typeof display === 'string' && display) return display
+        const formatted = this.formatBuildTime(body?.data?.buildTime)
+        if (formatted) return formatted
+      }
+    } catch {
+      // 后端不可达 → 放弃展示升级时间
+    }
+
+    return null
+  }
+
+  /** ISO 时间统一格式化为 Asia/Shanghai 的 YYYY-MM-DD HH:mm */
+  private formatBuildTime(raw: unknown): string | null {
+    if (typeof raw !== 'string' || !raw) return null
+    const date = new Date(raw)
+    if (Number.isNaN(date.getTime())) return null
+    return new Intl.DateTimeFormat('zh-CN', {
+      timeZone: 'Asia/Shanghai',
+      year: 'numeric',
+      month: '2-digit',
+      day: '2-digit',
+      hour: '2-digit',
+      minute: '2-digit',
+      hour12: false
+    })
+      .format(date)
+      .replace(/\//g, '-')
+  }
+
+  /** 版本号展示：git SHA 取短 sha，其余原样 */
+  private displayVersion(version: string): string {
+    return /^[0-9a-f]{40}$/i.test(version) ? version.slice(0, 8) : version
   }
 
   /**
    * 构建升级通知消息
    */
-  private buildUpgradeMessage(requireReLogin: boolean): string {
-    const { title: content } = upgradeLogList.value[0]
-    const upgradeTime = this.resolveUpgradeTime(StorageConfig.CURRENT_VERSION)
+  private async buildUpgradeMessage(requireReLogin: boolean): Promise<string> {
+    const normalizedCurrent = this.normalizeVersion(StorageConfig.CURRENT_VERSION)
+    const matchedLog = upgradeLogList.value.find(
+      (item) => this.normalizeVersion(item.version) === normalizedCurrent
+    )
+    // 仅在版本号命中升级日志时引用其文案；git SHA 部署永远命中不了
+    // 模板 mock 日志，使用准确的中性描述，不再展示与实际变更无关的文案
+    const content =
+      matchedLog?.title ?? '本次更新包含功能改进与问题修复，如有疑问请联系系统管理员。'
+    const upgradeTime = await this.resolveUpgradeTime(StorageConfig.CURRENT_VERSION)
 
     const messageParts = [
       `<p style="color: var(--art-gray-800) !important; padding-bottom: 5px;">`,
-      `系统已升级到 ${StorageConfig.CURRENT_VERSION} 版本，此次更新带来了以下改进：`,
+      `系统已升级到 ${this.displayVersion(StorageConfig.CURRENT_VERSION)} 版本，此次更新带来了以下改进：`,
       `</p>`
     ]
 
@@ -235,7 +312,7 @@ class VersionManager {
       }
 
       const requireReLogin = this.shouldRequireReLogin(storedVersion)
-      const message = this.buildUpgradeMessage(requireReLogin)
+      const message = await this.buildUpgradeMessage(requireReLogin)
 
       // 显示升级通知
       this.showUpgradeNotification(message)
