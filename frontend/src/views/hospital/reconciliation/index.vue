@@ -1,5 +1,5 @@
 <template>
-  <div class="p-6">
+  <div class="p-4">
     <ElAlert
       v-if="!activeRule && !isRuleLoading"
       type="warning"
@@ -916,6 +916,7 @@
     watch,
     onMounted,
     onActivated,
+    onDeactivated,
     onBeforeUnmount,
     defineComponent,
     h,
@@ -1248,15 +1249,38 @@
     { immediate: false }
   )
 
-  // 在离开页面前提醒用户未保存的数据
+  // 在离开页面前提醒用户未保存的数据。
+  // 本路由 keepAlive=true，切走只是 deactivated 不会 unmount，监听必须随
+  // onDeactivated 摘除，否则泄漏到整个会话：用户在任意页面按 F5/Cmd+R 都会被
+  // 「离开此页面？」原生对话框拦截，表现为浏览器刷新完全失效。
+  // 已 saved / error 的条目不阻断刷新——出错条目必须允许用户自由刷新重试。
+  const UNSAVED_ENTRY_STATUSES: EntryStatus[] = [
+    'pending',
+    'parsing',
+    'parsed',
+    'processing',
+    'saving'
+  ]
+
+  function hasUnsavedEntries(): boolean {
+    return uploadEntries.value.some((entry) => UNSAVED_ENTRY_STATUSES.includes(entry.status))
+  }
+
   function beforeUnloadHandler(e: BeforeUnloadEvent) {
-    if (uploadEntries.value.length > 0) {
+    if (hasUnsavedEntries()) {
       e.preventDefault()
       e.returnValue = ''
     }
   }
-  onMounted(() => window.addEventListener('beforeunload', beforeUnloadHandler))
-  onBeforeUnmount(() => window.removeEventListener('beforeunload', beforeUnloadHandler))
+
+  const addBeforeUnloadListener = () => window.addEventListener('beforeunload', beforeUnloadHandler)
+  const removeBeforeUnloadListener = () =>
+    window.removeEventListener('beforeunload', beforeUnloadHandler)
+
+  onMounted(addBeforeUnloadListener)
+  onActivated(addBeforeUnloadListener)
+  onDeactivated(removeBeforeUnloadListener)
+  onBeforeUnmount(removeBeforeUnloadListener)
 
   let skipNextActivatedHistoryLoad = false
 
@@ -1872,6 +1896,10 @@
 
   .logistics-allocation-collapse :deep(.el-collapse-item__content) {
     padding: 0 16px 12px;
+  }
+
+  .reconciliation-workspace :deep(.el-card__body) {
+    padding: 14px 16px;
   }
 
   .workspace-header {
