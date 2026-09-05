@@ -4,7 +4,10 @@
       <template #header>
         <div class="flex items-center justify-between">
           <span class="text-lg font-semibold">{{ $t('menus.masterData.customers') }}</span>
-          <ElButton type="primary" @click="openCreate">新增客户</ElButton>
+          <div class="flex items-center gap-2">
+            <ElButton @click="simulatorVisible = true">规则试算</ElButton>
+            <ElButton type="primary" @click="openCreate">新增客户</ElButton>
+          </div>
         </div>
       </template>
 
@@ -511,8 +514,6 @@
           @save="handleRuleDialogSave"
         />
 
-        <RuleSimulator :customer-id="editingId" :default-hospital-name="form.canonicalName" />
-
         <CustomerRuleToolsPanel
           :customer-id="editingId"
           :read-only="isReadOnlyConfig"
@@ -551,6 +552,8 @@
         >
       </template>
     </ElDrawer>
+
+    <RuleSimulatorDialog v-model:visible="simulatorVisible" :customers="customers" />
   </div>
 </template>
 
@@ -576,7 +579,7 @@
   import CustomerBillingPolicyPanel from '@/components/business/customers/CustomerBillingPolicyPanel.vue'
   import CustomerExportTemplatePanel from '@/components/business/customers/CustomerExportTemplatePanel.vue'
   import CustomerProductRuleDialog from '@/components/business/customers/CustomerProductRuleDialog.vue'
-  import RuleSimulator from '@/components/business/customers/RuleSimulator.vue'
+  import RuleSimulatorDialog from '@/components/business/customers/RuleSimulatorDialog.vue'
   import CustomerRuleToolsPanel from '@/components/business/customers/CustomerRuleToolsPanel.vue'
   import BillingRoleBadge from '@/components/business/BillingRoleBadge.vue'
   import BillingRegressionHint from '@/components/business/reconciliation/BillingRegressionHint.vue'
@@ -642,6 +645,7 @@
   const ruleDialogMode = ref<'create' | 'edit'>('create')
   const editingRuleIdx = ref<number | null>(null)
   const drawerVisible = ref(false)
+  const simulatorVisible = ref(false)
   /** 路径覆盖 / 月度结算：默认折叠，点击标题展开 */
   const advancedCollapseActive = ref<string[]>([])
   const editingId = ref<number | null>(null)

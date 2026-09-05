@@ -1,6 +1,6 @@
 <template>
   <div class="rule-simulator">
-    <div class="rule-simulator__header">
+    <div v-if="showHeader" class="rule-simulator__header">
       <span class="rule-simulator__title">规则试算器</span>
       <ElTag v-if="customerId" size="small" type="info">客户 ID: {{ customerId }}</ElTag>
     </div>
@@ -79,92 +79,103 @@
 </template>
 
 <script setup lang="ts">
-import { reactive, ref } from 'vue'
-import { ElMessage } from 'element-plus'
-import { simulateBillingRule } from '@/api/billing/billingRulesApi'
+  import { reactive, ref, watch } from 'vue'
+  import { ElMessage } from 'element-plus'
+  import { simulateBillingRule } from '@/api/billing/billingRulesApi'
 
-const props = defineProps<{
-  customerId?: number | null
-  defaultHospitalName?: string
-}>()
+  const props = withDefaults(
+    defineProps<{
+      customerId?: number | null
+      defaultHospitalName?: string
+      showHeader?: boolean
+    }>(),
+    { showHeader: true }
+  )
 
-const hospitalName = ref(props.defaultHospitalName ?? '')
-const loading = ref(false)
-const result = ref<Api.Billing.RuleSimulateResult | null>(null)
+  const hospitalName = ref(props.defaultHospitalName ?? '')
 
-const sampleRow = reactive({
-  packName: '',
-  type: '',
-  packageMaterial: '',
-  instrumentCount: 1,
-  packCount: 1,
-  unitPrice: 0,
-  totalPrice: 0,
-})
+  watch(
+    () => props.defaultHospitalName,
+    (name) => {
+      hospitalName.value = name ?? ''
+    }
+  )
+  const loading = ref(false)
+  const result = ref<Api.Billing.RuleSimulateResult | null>(null)
 
-async function runSimulate() {
-  if (!props.customerId) {
-    ElMessage.warning('请先保存客户后再试算')
-    return
+  const sampleRow = reactive({
+    packName: '',
+    type: '',
+    packageMaterial: '',
+    instrumentCount: 1,
+    packCount: 1,
+    unitPrice: 0,
+    totalPrice: 0
+  })
+
+  async function runSimulate() {
+    if (!props.customerId) {
+      ElMessage.warning('请先选择客户')
+      return
+    }
+    if (!hospitalName.value.trim()) {
+      ElMessage.warning('请填写医院名称')
+      return
+    }
+    loading.value = true
+    try {
+      result.value = await simulateBillingRule({
+        customerId: props.customerId,
+        hospitalName: hospitalName.value.trim(),
+        sampleRow: { ...sampleRow }
+      })
+    } catch (e: unknown) {
+      ElMessage.error(e instanceof Error ? e.message : '试算失败')
+    } finally {
+      loading.value = false
+    }
   }
-  if (!hospitalName.value.trim()) {
-    ElMessage.warning('请填写医院名称')
-    return
-  }
-  loading.value = true
-  try {
-    result.value = await simulateBillingRule({
-      customerId: props.customerId,
-      hospitalName: hospitalName.value.trim(),
-      sampleRow: { ...sampleRow },
-    })
-  } catch (e: unknown) {
-    ElMessage.error(e instanceof Error ? e.message : '试算失败')
-  } finally {
-    loading.value = false
-  }
-}
 </script>
 
 <style scoped>
-.rule-simulator {
-  border: 1px dashed var(--el-border-color);
-  border-radius: 8px;
-  padding: 16px;
-  margin-top: 12px;
-}
+  .rule-simulator {
+    border: 1px dashed var(--el-border-color);
+    border-radius: 8px;
+    padding: 16px;
+    margin-top: 12px;
+  }
 
-.rule-simulator__header {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  margin-bottom: 4px;
-}
+  .rule-simulator__header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 4px;
+  }
 
-.rule-simulator__title {
-  font-weight: 600;
-}
+  .rule-simulator__title {
+    font-weight: 600;
+  }
 
-.rule-simulator__hint {
-  font-size: 12px;
-  color: var(--el-text-color-secondary);
-  margin-bottom: 12px;
-}
+  .rule-simulator__hint {
+    font-size: 12px;
+    color: var(--el-text-color-secondary);
+    margin-bottom: 12px;
+  }
 
-.rule-simulator__result {
-  margin-top: 16px;
-}
+  .rule-simulator__result {
+    margin-top: 16px;
+  }
 
-.rule-simulator__section-title {
-  font-size: 13px;
-  font-weight: 600;
-  margin: 12px 0 6px;
-}
+  .rule-simulator__section-title {
+    font-size: 13px;
+    font-weight: 600;
+    margin: 12px 0 6px;
+  }
 
-.rule-simulator__notes ul {
-  margin: 0;
-  padding-left: 18px;
-  font-size: 12px;
-  color: var(--el-text-color-regular);
-}
+  .rule-simulator__notes ul {
+    margin: 0;
+    padding-left: 18px;
+    font-size: 12px;
+    color: var(--el-text-color-regular);
+  }
 </style>
