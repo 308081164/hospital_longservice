@@ -294,6 +294,7 @@
   import { useReconciliationTableColumns } from '@/composables/useReconciliationTableColumns'
   import { useBillingPermission } from '@/composables/useBillingPermission'
   import { exportTypeI18nKey, resolveJobExportTypes } from '@/utils/hospitalExportCapabilities'
+  import { inferHospitalNameFromFileName } from '@/utils/reconciliationHospitalName'
 
   const props = defineProps<{
     fileName: string
@@ -334,7 +335,11 @@
   const { canReviewReconciliation, canExport } = useBillingPermission()
   const actions = inject(reconciliationJobActionsKey, null)
 
-  const hospitalDisplayName = computed(() => props.entry.hospitalName?.trim() ?? '')
+  // entry.hospitalName 正常在解析后必然非空；文件名兜底防御异常路径（如未来新增
+  // 条目来源忘设 hospitalName），确保徽章始终可见，杜绝「识别成功却不显示」
+  const hospitalDisplayName = computed(
+    () => props.entry.hospitalName?.trim() || inferHospitalNameFromFileName(props.fileName)
+  )
 
   const canExportPerm = computed(() => canExport.value)
 
