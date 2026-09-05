@@ -16,6 +16,7 @@
   import zh from 'element-plus/es/locale/lang/zh-cn'
   import en from 'element-plus/es/locale/lang/en'
   import { systemUpgrade } from './utils/sys'
+  import { startDeployVersionWatch } from './utils/sys/deployVersionWatch'
   import { toggleTransition } from './utils/ui/animation'
   import { checkStorageCompatibility } from './utils/storage'
   import { initializeTheme } from './hooks/core/useTheme'
@@ -37,5 +38,6 @@
     checkStorageCompatibility()
     toggleTransition(false)
     systemUpgrade()
+    startDeployVersionWatch()
   })
 </script>
