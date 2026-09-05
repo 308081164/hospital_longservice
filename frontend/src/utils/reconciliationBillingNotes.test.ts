@@ -1,5 +1,8 @@
 import {
   blocksPricingFromBillingNotes,
+  fieldConsistencyCellClass,
+  fieldConsistencyCellTone,
+  fieldConsistencyRowClass,
   parseReconciliationBillingContext,
   shouldBlockPricingDisplay,
   shouldShowValidationIndicator,
@@ -93,6 +96,55 @@ assertEqual(
   shouldShowValidationIndicator({ ...fieldConsistencyRow, status: 'warning' }),
   true,
   'indicator still shows for other statuses'
+)
+
+// 无需修改（unchanged）必须同时清除整行与单元格高亮
+assertTrue(
+  fieldConsistencyRowClass(fieldConsistencyRow) !== '',
+  'row class present for row with field consistency issues'
+)
+assertEqual(
+  fieldConsistencyRowClass(unchangedRow),
+  '',
+  'row highlight cleared when row marked as 无需修改 (unchanged)'
+)
+assertEqual(
+  fieldConsistencyRowClass({ ...billingValidationRow, status: 'unchanged' }),
+  '',
+  'row highlight cleared for billing validation row marked unchanged'
+)
+assertTrue(
+  fieldConsistencyRowClass({ ...fieldConsistencyRow, status: 'warning' }) !== '',
+  'row highlight still present for other statuses'
+)
+
+assertTrue(
+  fieldConsistencyCellTone(fieldConsistencyRow, 'packName') != null,
+  'cell tone present for affected field'
+)
+assertEqual(
+  fieldConsistencyCellTone(unchangedRow, 'packName'),
+  null,
+  'cell tone cleared when row marked as 无需修改 (unchanged)'
+)
+assertEqual(
+  fieldConsistencyCellTone(unchangedRow, 'instrumentCount'),
+  null,
+  'cell tone cleared for instrumentCount when unchanged'
+)
+assertEqual(
+  fieldConsistencyCellClass(unchangedRow, 'packName'),
+  '',
+  'cell class cleared when row marked as 无需修改 (unchanged)'
+)
+assertEqual(
+  fieldConsistencyCellTone({ ...billingValidationRow, status: 'unchanged' }, 'packageMaterial'),
+  null,
+  'cell tone cleared for billing validation row marked unchanged'
+)
+assertTrue(
+  fieldConsistencyCellTone({ ...fieldConsistencyRow, status: 'warning' }, 'packName') != null,
+  'cell tone still present for other statuses'
 )
 
 console.log('reconciliationBillingNotes.test.ts: all assertions passed')

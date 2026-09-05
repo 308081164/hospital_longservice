@@ -384,6 +384,8 @@ export function fieldConsistencyCellTone(
   row: Record<string, unknown>,
   field: FieldConsistencyHighlightField
 ): FieldConsistencyCellTone {
+  // 人工标记「无需修改」的行视为已确认，不再做单元格高亮
+  if (row['status'] === 'unchanged') return null
   const ctx = parseReconciliationBillingContext(row)
   if (!ctx.hasFieldConsistencyIssues && !ctx.hasBlockingValidationIssues) return null
   const affected = fieldConsistencyAffectedFields(
@@ -430,6 +432,8 @@ export function fieldConsistencyCellClass(
 }
 
 export function fieldConsistencyRowClass(row: Record<string, unknown>): string {
+  // 人工标记「无需修改」的行视为已确认，不再做整行高亮
+  if (row['status'] === 'unchanged') return ''
   const ctx = parseReconciliationBillingContext(row)
   return ctx.hasBlockingValidationIssues || ctx.hasFieldConsistencyIssues
     ? 'field-consistency-row'
