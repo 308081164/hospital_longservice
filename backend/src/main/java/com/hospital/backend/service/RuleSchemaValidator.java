@@ -66,9 +66,14 @@ public class RuleSchemaValidator {
             if (needle.path("foldRatio").asInt(-1) < 0) {
                 errors.add("小件折算比例不能小于 0");
             }
-            if (!needle.has("keywords") || !needle.path("keywords").isArray()
-                    || needle.path("keywords").isEmpty()) {
+            JsonNode keywordConfigs = needle.path("keywordConfigs");
+            boolean hasKeywordConfigs = keywordConfigs.isArray() && !keywordConfigs.isEmpty();
+            if ((!needle.has("keywords") || !needle.path("keywords").isArray()
+                    || needle.path("keywords").isEmpty()) && !hasKeywordConfigs) {
                 errors.add("小件识别关键词不能为空");
+            }
+            if (keywordConfigs.isArray()) {
+                validateNeedleKeywordConfigs(keywordConfigs, errors);
             }
         }
 
@@ -158,6 +163,41 @@ public class RuleSchemaValidator {
         JsonNode pp = lt.path("paperPlastic");
         validateTierPrices(pp.path("tierPrices"), "低温纸塑袋", errors);
         validateBagSizes(pp.path("bagSizes"), "低温纸塑袋", errors);
+    }
+
+    /** 小件关键词独立配置校验：关键词非空且不重复，匹配模式/触发件数/折算比例合法。 */
+    private void validateNeedleKeywordConfigs(JsonNode keywordConfigs, List<String> errors) {
+        java.util.Set<String> seen = new java.util.HashSet<>();
+        for (int i = 0; i < keywordConfigs.size(); i++) {
+            JsonNode cfg = keywordConfigs.get(i);
+            String label = "小件独立配置第 " + (i + 1) + " 条";
+            String keyword = cfg.path("keyword").asText("").trim();
+            if (keyword.isEmpty()) {
+                errors.add(label + "关键词不能为空");
+                continue;
+            }
+            String normalized = BillingConditionEvaluator.normalizeMatchText(keyword).toLowerCase();
+            if (!seen.add(normalized)) {
+                errors.add("小件独立配置关键词「" + keyword + "」重复");
+            }
+            String matchMode = cfg.path("matchMode").asText("");
+            if (!matchMode.isBlank() && !isValidNeedleMatchMode(matchMode)) {
+                errors.add(label + "匹配模式无效：" + matchMode);
+            }
+            if (cfg.has("threshold") && cfg.path("threshold").asInt(-1) < 0) {
+                errors.add(label + "触发件数不能小于 0");
+            }
+            if (cfg.has("foldRatio") && cfg.path("foldRatio").asDouble(0) <= 0) {
+                errors.add(label + "折算比例必须大于 0");
+            }
+        }
+    }
+
+    private static boolean isValidNeedleMatchMode(String matchMode) {
+        return switch (matchMode.trim().toLowerCase()) {
+            case "contains", "exact", "exact_token", "exacttoken" -> true;
+            default -> false;
+        };
     }
 
     private void validateBagSizes(JsonNode bagSizes, String label, List<String> errors) {

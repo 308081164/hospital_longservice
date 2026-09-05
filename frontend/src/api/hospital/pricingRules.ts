@@ -15,6 +15,26 @@ function normalizeKeywordMatchMode(value: unknown): 'exact_token' | 'contains' {
   return value === 'contains' ? 'contains' : 'exact_token'
 }
 
+function normalizeNeedleKeywordConfigs(value: unknown): Api.Hospital.NeedleKeywordConfig[] {
+  if (!Array.isArray(value)) return []
+  const seen = new Set<string>()
+  const result: Api.Hospital.NeedleKeywordConfig[] = []
+  for (const item of value) {
+    const cfg = isRecord(item) ? item : {}
+    const keyword = typeof cfg.keyword === 'string' ? cfg.keyword.trim() : ''
+    if (!keyword) continue
+    const normalized = keyword.toLowerCase()
+    if (seen.has(normalized)) continue
+    seen.add(normalized)
+    const entry: Api.Hospital.NeedleKeywordConfig = { keyword }
+    if (cfg.matchMode !== undefined) entry.matchMode = normalizeKeywordMatchMode(cfg.matchMode)
+    if (typeof cfg.threshold === 'number' && Number.isFinite(cfg.threshold)) entry.threshold = cfg.threshold
+    if (typeof cfg.foldRatio === 'number' && Number.isFinite(cfg.foldRatio)) entry.foldRatio = cfg.foldRatio
+    result.push(entry)
+  }
+  return result
+}
+
 function normalizeBagSizes(value: unknown): Api.Hospital.BagSizeConfig[] {
   if (!Array.isArray(value)) return []
   return value.map((item) => {
@@ -347,6 +367,20 @@ export function validatePricingRules(rules: Partial<Api.Hospital.PricingRules>):
   } else {
     if (rules.needle.threshold < 0) errors.push('小件识别触发件数不能小于 0')
     if (rules.needle.foldRatio < 0) errors.push('小件折算比例不能小于 0')
+    const keywordConfigs = rules.needle.keywordConfigs ?? []
+    const seenKeywords = new Set<string>()
+    keywordConfigs.forEach((cfg, index) => {
+      const label = `小件独立配置第 ${index + 1} 条`
+      if (!cfg.keyword.trim()) {
+        errors.push(`${label}关键词不能为空`)
+        return
+      }
+      const normalized = cfg.keyword.trim().toLowerCase()
+      if (seenKeywords.has(normalized)) errors.push(`小件独立配置关键词「${cfg.keyword}」重复`)
+      seenKeywords.add(normalized)
+      if (cfg.threshold !== undefined && cfg.threshold < 0) errors.push(`${label}触发件数不能小于 0`)
+      if (cfg.foldRatio !== undefined && cfg.foldRatio <= 0) errors.push(`${label}折算比例必须大于 0`)
+    })
   }
 
   if (!rules.cleaning) errors.push('缺少清洗规则')
@@ -477,6 +511,7 @@ export function normalizePricingRules(raw: unknown): Api.Hospital.PricingRules {
       foldRatio: typeof needle.foldRatio === 'number' ? needle.foldRatio : 0,
       keywordMatchMode: normalizeKeywordMatchMode(needle.keywordMatchMode),
       keywords: Array.isArray(needle.keywords) ? (needle.keywords as string[]) : [],
+      keywordConfigs: normalizeNeedleKeywordConfigs(needle.keywordConfigs),
     },
     cleaning: {
       removeFirstRow: Boolean(cleaning.removeFirstRow),

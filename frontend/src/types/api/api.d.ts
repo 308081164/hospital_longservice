@@ -225,12 +225,22 @@ declare namespace Api {
       paperPlastic: LowTempPaperPlasticConfig
     }
 
+    /** 小件关键词独立配置：单个关键词可覆盖匹配模式/触发件数/折算比例 */
+    interface NeedleKeywordConfig {
+      keyword: string
+      matchMode?: 'exact_token' | 'contains'
+      threshold?: number
+      foldRatio?: number
+    }
+
     /** 小件识别配置 */
     interface NeedleConfig {
       threshold: number
       foldRatio: number
       keywordMatchMode?: 'exact_token' | 'contains'
       keywords: string[]
+      /** 关键词独立配置列表，与 keywords 共存；缺省字段回退到全局默认 */
+      keywordConfigs: NeedleKeywordConfig[]
     }
 
     /** 清洗规则配置 */

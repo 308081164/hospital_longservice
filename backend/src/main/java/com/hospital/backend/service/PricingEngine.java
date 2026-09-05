@@ -2,6 +2,7 @@ package com.hospital.backend.service;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ArrayNode;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.*;
@@ -202,11 +203,13 @@ public class PricingEngine {
         // 针数量规则 + 小件器械折算（针数量规则优先：包名含"针+数字"时按公式拆分）
         JsonNode needle = rules.path("needle");
         String needleMatchMode = BillingConditionEvaluator.resolveKeywordMatchMode(needle);
+        // 有效关键词 = keywordConfigs 独立配置词（含逐词匹配模式） ∪ 普通 keywords
+        JsonNode needleKeywords = effectiveNeedleKeywords(needle);
 
         // 高温纸塑 ≥3 件：按账单器械数×5.5，不应用全局针数拆分/小件折算（院级 FOLD 特色规则仍保留）。
         // 包名命中小件关键词（车针/克氏针等）时仍须走折算，不可因单包≥3件而按实件×5.5。
         boolean matchesSmallItemKeyword = matchesKeywordsBoundary(
-                packName, needle.path("keywords"), needleMatchMode);
+                packName, needleKeywords, needleMatchMode);
         boolean skipGlobalNeedleAndSmallFold = highTempPaperPlasticRow && !isLowTemp
                 && perPackRawInstrumentCount >= 3
                 && !matchesSmallItemKeyword;
@@ -233,13 +236,17 @@ public class PricingEngine {
             String afterNeedle = packName.substring(needleQtyMatcher.end());
             // "针N"后是否还有器械名（如"钢丝4"），用于区分纯小件与混合器械
             boolean hasOtherItems = java.util.regex.Pattern.compile("[\\u4e00-\\u9fff]+\\d+").matcher(afterNeedle).find();
-            boolean isSmallItemKeyword = matchesKeywordsBoundary(packName, needle.path("keywords"), needleMatchMode);
+            boolean isSmallItemKeyword = matchesKeywordsBoundary(packName, needleKeywords, needleMatchMode);
             // 若"针"是小件关键词的一部分（如"克氏针"）且针后无其他器械，跳过拆分
             if (isSmallItemKeyword && !hasOtherItems) {
                 // 不应用针数量拆分，交给下方小件关键词规则处理
             } else {
                 int needleQty = Integer.parseInt(needleQtyMatcher.group(1));
-                double foldRatio = needle.path("foldRatio").asDouble(5.0);
+                // 命中带独立配置的小件关键词时，针折算沿用该关键词的折算比例
+                BillingConditionEvaluator.ExactTokenKeywordMatch needleKwMatch =
+                        BillingConditionEvaluator.findKeywordByMode(packName, needleKeywords, needleMatchMode);
+                double foldRatio = resolveNeedleFoldParams(needle,
+                        needleKwMatch != null ? needleKwMatch.keyword() : null).foldRatio();
                 // 非针器械数按包名全部「器械名+数字」段求和（如 剪刀2止血钳1探针1 → 2+1=3），
                 // 避免只取末位数字丢失前段件数；无「汉字+数字」段时退回末位数字语义（兼容 （5号） 等写法）
                 int nonNeedleCount = sumAllNumbers(beforeNeedle);
@@ -263,10 +270,12 @@ public class PricingEngine {
         }
         if (!skipGlobalNeedleAndSmallFold && preMatchedSpecialPrice == null && !appliedSpecialFoldRule
                 && !appliedNeedleRule && !isLiposuctionNeedleLongVariant(packName) && !isZsdInstrumentPack) {
-            SmallItemSplit smallSplit = findSmallItemSplit(packName, needle.path("keywords"), needleMatchMode);
+            SmallItemSplit smallSplit = findSmallItemSplit(packName, needleKeywords, needleMatchMode);
             if (smallSplit != null) {
-                int threshold = needle.path("threshold").asInt(5);
-                double foldRatio = needle.path("foldRatio").asDouble(5.0);
+                // 命中关键词带独立配置（keywordConfigs）时，触发件数/折算比例按该关键词覆盖全局默认
+                NeedleFoldParams needleFoldParams = resolveNeedleFoldParams(needle, smallSplit.keyword);
+                int threshold = needleFoldParams.threshold();
+                double foldRatio = needleFoldParams.foldRatio();
                 int originalCount = effectiveCount;
 
                 String beforeKw = smallSplit.compactText.substring(0, smallSplit.position);
@@ -559,7 +568,7 @@ public class PricingEngine {
         }
 
         if (!skipPackaging && instrumentCount > 10
-                && matchesKeywordsBoundary(packName, needle.path("keywords"), needleMatchMode)
+                && matchesKeywordsBoundary(packName, needleKeywords, needleMatchMode)
                 && !appliedSpecialFoldRule) {
             skipPackaging = true;
             notes.add("小件器械超过 10 件，按客户标准不加袋子钱。");
@@ -2126,6 +2135,88 @@ public class PricingEngine {
         split.position = match.position();
         split.compactText = match.compactText();
         return split;
+    }
+
+    /** 小件折算生效参数：命中关键词带 keywordConfigs 独立配置时覆盖全局触发件数/折算比例。 */
+    record NeedleFoldParams(int threshold, double foldRatio) {}
+
+    /**
+     * 合并小件识别有效关键词：keywordConfigs 独立配置关键词优先（其 matchMode 转为 @contains/@exact
+     * 后缀，复用逐词模式解析），普通 keywords 中未被配置覆盖的词原样保留（词级 @后缀 仍然有效）。
+     * 未配置 keywordConfigs 时等价于原 keywords 数组，保持既有行为不变。
+     */
+    static ArrayNode effectiveNeedleKeywords(JsonNode needle) {
+        ArrayNode result = mapper.createArrayNode();
+        Set<String> covered = new HashSet<>();
+        JsonNode configs = needle.path("keywordConfigs");
+        if (configs.isArray()) {
+            for (JsonNode cfg : configs) {
+                String kw = cfg.path("keyword").asText("").trim();
+                if (kw.isEmpty()) {
+                    continue;
+                }
+                result.add(kw + needleMatchModeSuffix(cfg.path("matchMode").asText("")));
+                covered.add(BillingConditionEvaluator.normalizeMatchText(kw).toLowerCase());
+            }
+        }
+        JsonNode keywords = needle.path("keywords");
+        if (keywords.isArray()) {
+            for (JsonNode kwNode : keywords) {
+                for (BillingConditionEvaluator.ParsedKeyword pk
+                        : BillingConditionEvaluator.parseKeywordList(kwNode.asText(""))) {
+                    if (pk.keyword().isBlank()) {
+                        continue;
+                    }
+                    if (covered.add(BillingConditionEvaluator.normalizeMatchText(pk.keyword()).toLowerCase())) {
+                        result.add(pk.mode() != null ? pk.keyword() + "@" + pk.mode() : pk.keyword());
+                    }
+                }
+            }
+        }
+        return result;
+    }
+
+    /** 独立配置 matchMode 转关键词 @后缀；未设置或非法值返回空串（沿用全局默认匹配模式）。 */
+    private static String needleMatchModeSuffix(String matchMode) {
+        if (matchMode == null) {
+            return "";
+        }
+        return switch (matchMode.trim().toLowerCase()) {
+            case "contains" -> "@contains";
+            case "exact", "exact_token", "exacttoken" -> "@exact";
+            default -> "";
+        };
+    }
+
+    /** 解析命中关键词的触发件数/折算比例：命中 keywordConfigs 独立配置时覆盖全局默认值。 */
+    static NeedleFoldParams resolveNeedleFoldParams(JsonNode needle, String matchedKeyword) {
+        int threshold = needle.path("threshold").asInt(5);
+        double foldRatio = needle.path("foldRatio").asDouble(5.0);
+        if (matchedKeyword == null || matchedKeyword.isBlank()) {
+            return new NeedleFoldParams(threshold, foldRatio);
+        }
+        JsonNode configs = needle.path("keywordConfigs");
+        if (!configs.isArray()) {
+            return new NeedleFoldParams(threshold, foldRatio);
+        }
+        String target = BillingConditionEvaluator.normalizeMatchText(matchedKeyword).toLowerCase();
+        for (JsonNode cfg : configs) {
+            String kw = cfg.path("keyword").asText("").trim();
+            if (kw.isEmpty()
+                    || !BillingConditionEvaluator.normalizeMatchText(kw).toLowerCase().equals(target)) {
+                continue;
+            }
+            int cfgThreshold = cfg.path("threshold").asInt(-1);
+            if (cfgThreshold >= 0) {
+                threshold = cfgThreshold;
+            }
+            double cfgFoldRatio = cfg.path("foldRatio").asDouble(-1);
+            if (cfgFoldRatio > 0) {
+                foldRatio = cfgFoldRatio;
+            }
+            break;
+        }
+        return new NeedleFoldParams(threshold, foldRatio);
     }
 
     private Double computeForceHighTempUnitPrice(double forceHighTempPerItem, int effectiveCount) {

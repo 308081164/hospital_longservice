@@ -277,7 +277,36 @@ public class HospitalPricingRuleServiceImpl implements HospitalPricingRuleServic
         Map<String, Object> needle = rules.computeIfAbsent("needle", k -> new LinkedHashMap<>()) instanceof Map
                 ? (Map<String, Object>) rules.get("needle")
                 : new LinkedHashMap<>();
-        needle.put("keywords", new ArrayList<>(request.getKeywords()));
+        if (request.getKeywords() != null) {
+            needle.put("keywords", new ArrayList<>(request.getKeywords()));
+        }
+        if (request.getKeywordConfigs() != null) {
+            List<Map<String, Object>> configs = new ArrayList<>();
+            for (BatchNeedleKeywordsRequest.NeedleKeywordConfigItem item : request.getKeywordConfigs()) {
+                Map<String, Object> cfg = new LinkedHashMap<>();
+                cfg.put("keyword", item.getKeyword() != null ? item.getKeyword().trim() : "");
+                if (item.getMatchMode() != null && !item.getMatchMode().isBlank()) {
+                    cfg.put("matchMode", item.getMatchMode().trim());
+                }
+                if (item.getThreshold() != null) {
+                    cfg.put("threshold", item.getThreshold());
+                }
+                if (item.getFoldRatio() != null) {
+                    cfg.put("foldRatio", item.getFoldRatio());
+                }
+                configs.add(cfg);
+            }
+            needle.put("keywordConfigs", configs);
+        }
+        if (request.getThreshold() != null) {
+            needle.put("threshold", request.getThreshold());
+        }
+        if (request.getFoldRatio() != null) {
+            needle.put("foldRatio", request.getFoldRatio());
+        }
+        if (request.getKeywordMatchMode() != null && !request.getKeywordMatchMode().isBlank()) {
+            needle.put("keywordMatchMode", request.getKeywordMatchMode().trim());
+        }
 
         Result<Void> validation = validateRules(rules);
         if (validation.getCode() != 200) {

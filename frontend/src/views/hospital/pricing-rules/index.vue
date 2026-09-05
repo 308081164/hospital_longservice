@@ -272,20 +272,20 @@
             <RuleFieldGrid :columns="2">
               <RuleNumberField
                 v-model="nd.threshold"
-                label="触发件数"
+                label="默认触发件数"
                 kind="integer"
                 :precision="0"
                 :step="1"
-                tooltip="器械数不超过该值时触发小件折算逻辑"
+                tooltip="器械数不超过该值时触发小件折算逻辑；可被下方关键词独立配置覆盖"
                 @change="markDirty"
               />
               <RuleNumberField
                 v-model="nd.foldRatio"
-                label="折算比例"
+                label="默认折算比例"
                 kind="integer"
                 :precision="0"
                 :step="1"
-                tooltip="命中小件关键词后，约每 N 件折算为 1 件计费"
+                tooltip="命中小件关键词后，约每 N 件折算为 1 件计费；可被下方关键词独立配置覆盖"
                 @change="markDirty"
               />
             </RuleFieldGrid>
@@ -308,14 +308,22 @@
               hint="逗号分隔；词后加 @contains 含词即触发、@exact 严格对齐；客户特色关键词扩展请在特殊计价客户管理中配置"
               @change="markDirty"
             />
+            <RuleNeedleKeywordConfigTable
+              v-model="needleKeywordConfigs"
+              class="needle-keyword-configs"
+              :default-threshold="nd.threshold"
+              :default-fold-ratio="nd.foldRatio"
+              :default-match-mode="needleMatchMode"
+              @change="markDirty"
+            />
             <div v-if="selectedRuleId" class="needle-actions">
               <ElButton size="small" type="primary" :loading="needleBatchSaving" @click="handleBatchSaveNeedleKeywords">
-                批量保存关键词
+                保存小件识别规则
               </ElButton>
               <ElButton size="small" :loading="needleImpactLoading" @click="handleNeedleImpactPreview">
                 影响预览
               </ElButton>
-              <span class="needle-actions__hint">保存后立即写入数据库并生成版本快照</span>
+              <span class="needle-actions__hint">保存后立即写入数据库并生成版本快照（含关键词独立配置）</span>
             </div>
           </RuleCategoryPanel>
 
@@ -534,6 +542,7 @@ import RuleTierPriceTable from '@/components/business/pricing-rules/RuleTierPric
 import RulePackagingTable from '@/components/business/pricing-rules/RulePackagingTable.vue'
 import RuleSettlementTemplateTable from '@/components/business/pricing-rules/RuleSettlementTemplateTable.vue'
 import RuleFeeItemTable from '@/components/business/pricing-rules/RuleFeeItemTable.vue'
+import RuleNeedleKeywordConfigTable from '@/components/business/pricing-rules/RuleNeedleKeywordConfigTable.vue'
 import {
   listSettlementTemplates,
   type BackendTemplateRef,
@@ -643,7 +652,7 @@ const defaultEmptyRules = (): Api.Hospital.PricingRules => ({
       { name: '纸塑袋', keywords: ['纸塑袋'], chargePerPack: true, options: [] },
     ],
   },
-  needle: { threshold: 5, foldRatio: 5, keywordMatchMode: 'exact_token', keywords: ['小件', '探针', '穿刺针', '缝合针', '车针', '拔髓针', '成型片', '根管针', '根管锉', '支抗钉', '洁牙机尖', '球钻', '挖勺'] },
+  needle: { threshold: 5, foldRatio: 5, keywordMatchMode: 'exact_token', keywords: ['小件', '探针', '穿刺针', '缝合针', '车针', '拔髓针', '成型片', '根管针', '根管锉', '支抗钉', '洁牙机尖', '球钻', '挖勺'], keywordConfigs: [] },
   cleaning: {
     removeFirstRow: false,
     dropSummaryRows: true,
@@ -725,6 +734,12 @@ const needleMatchMode = computed({
   set: (val: string) => {
     nd.value.keywordMatchMode = val === 'contains' ? 'contains' : 'exact_token'
     markDirty()
+  },
+})
+const needleKeywordConfigs = computed<Api.Hospital.NeedleKeywordConfig[]>({
+  get: () => nd.value.keywordConfigs ?? [],
+  set: (val) => {
+    nd.value.keywordConfigs = val
   },
 })
 const cl = computed(() => currentRule.value!.rules.cleaning)
@@ -949,18 +964,33 @@ async function handleRevisionCommand(revisionId: number) {
 
 async function handleBatchSaveNeedleKeywords() {
   if (!selectedRuleId.value || !currentRule.value) return
+  const configs = (nd.value.keywordConfigs ?? []).filter((c) => c.keyword.trim())
+  if (!nd.value.keywords.length && !configs.length) {
+    ElMessage.warning('请至少保留一个识别关键词或一条关键词独立配置')
+    return
+  }
   needleBatchSaving.value = true
   try {
     const operator = useUserStore().userInfo?.userName
-    const updated = await batchUpdateNeedleKeywords(selectedRuleId.value, [...nd.value.keywords], operator)
+    const updated = await batchUpdateNeedleKeywords(
+      selectedRuleId.value,
+      {
+        keywords: [...nd.value.keywords],
+        keywordConfigs: configs.map((c) => ({ ...c, keyword: c.keyword.trim() })),
+        threshold: nd.value.threshold,
+        foldRatio: nd.value.foldRatio,
+        keywordMatchMode: needleMatchMode.value,
+      },
+      operator,
+    )
     const idx = ruleList.value.findIndex((r) => r.id === updated.id)
     if (idx >= 0) ruleList.value[idx] = updated
     dirty.value = false
     jsonText.value = exportRulesToJson(updated.rules)
     await loadRevisions(updated.id)
-    ElMessage.success('关键词已批量保存')
+    ElMessage.success('小件识别规则已保存')
   } catch {
-    ElMessage.error('批量保存失败')
+    ElMessage.error('保存失败')
   } finally {
     needleBatchSaving.value = false
   }
@@ -1346,6 +1376,10 @@ onMounted(async () => {
 
 .needle-keywords-field {
   margin-top: 20px;
+}
+
+.needle-keyword-configs {
+  margin-top: 16px;
 }
 
 .needle-actions__hint {

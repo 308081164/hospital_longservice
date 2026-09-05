@@ -99,10 +99,20 @@ export function rollbackPricingRuleRevision(ruleId: number, revisionId: number, 
   }).then((record) => ensureNormalized(record as Record<string, unknown>))
 }
 
-export function batchUpdateNeedleKeywords(ruleId: number, keywords: string[], operator?: string) {
+export function batchUpdateNeedleKeywords(
+  ruleId: number,
+  needle: {
+    keywords: string[]
+    keywordConfigs?: Api.Hospital.NeedleKeywordConfig[]
+    threshold?: number
+    foldRatio?: number
+    keywordMatchMode?: string
+  },
+  operator?: string,
+) {
   return request.put<Record<string, unknown>>({
     url: `/api/hospital-pricing-rules/${ruleId}/needle-keywords/batch`,
-    data: { keywords, operator },
+    data: { ...needle, operator },
   }).then((record) => ensureNormalized(record as Record<string, unknown>))
 }
 

@@ -3789,4 +3789,135 @@ class PricingEngineTest {
         assertThat(result.expectedUnitPrice).isEqualTo(66.0);
         assertThat(result.notes).anyMatch(n -> n.contains("折算为 12 件"));
     }
+
+    // ================================================================
+    //  小件关键词独立配置（needle.keywordConfigs）
+    // ================================================================
+
+    @Test
+    void needleKeywordConfigOverridesThresholdAndFoldRatioForMatchedKeyword() {
+        // 克氏针独立配置 触发3/折算3：9 件 > 3 → 9÷3=3 件（全局 5/5 则折 2 件）
+        ObjectNode rules = (ObjectNode) defaultRules();
+        ArrayNode configs = ((ObjectNode) rules.path("needle")).putArray("keywordConfigs");
+        ObjectNode cfg = configs.addObject();
+        cfg.put("keyword", "克氏针");
+        cfg.put("threshold", 3);
+        cfg.put("foldRatio", 3);
+
+        PricingEngine configEngine = new PricingEngine(rules);
+        PricingEngine.ProcessedResult configured = configEngine.processRow(row(
+                "哈尔滨市平房区人民医院",
+                "额外包(纸塑袋)",
+                "克氏针-9/Z7520",
+                "高温纸塑袋75*200",
+                9, 1, 49.5, 49.5));
+        assertThat(configured.expectedUnitPrice).isEqualTo(16.5);
+        assertThat(configured.notes).anyMatch(n -> n.contains("单包器械数 9 件 > 3"));
+
+        // 未配置的车针仍走全局默认 5/5：9 件 > 5 → ⌈9÷5⌉=2 件（<3 件含 10cm 袋费 2.5：11+2.5=13.5）
+        PricingEngine.ProcessedResult fallback = configEngine.processRow(row(
+                "哈尔滨市平房区人民医院",
+                "额外包(纸塑袋)",
+                "车针-9/Z7520",
+                "高温纸塑袋75*200",
+                9, 1, 49.5, 49.5));
+        assertThat(fallback.expectedUnitPrice).isEqualTo(13.5);
+        assertThat(fallback.notes).anyMatch(n -> n.contains("单包器械数 9 件 > 5"));
+    }
+
+    @Test
+    void needleKeywordConfigMatchModeContainsOverridesGlobalExactToken() {
+        // 全局 exact_token 下「小车针排」不命中「车针」；独立配置 contains 后命中并折算
+        ObjectNode rules = (ObjectNode) defaultRules();
+        ArrayNode configs = ((ObjectNode) rules.path("needle")).putArray("keywordConfigs");
+        ObjectNode cfg = configs.addObject();
+        cfg.put("keyword", "车针");
+        cfg.put("matchMode", "contains");
+
+        PricingEngine configEngine = new PricingEngine(rules);
+        PricingEngine.ProcessedResult result = configEngine.processRow(row(
+                "哈尔滨市平房区人民医院",
+                "额外包(纸塑袋)",
+                "小车针排-9/Z7520",
+                "高温纸塑袋75*200",
+                9, 1, 49.5, 49.5));
+        // 命中后按全局 5/5 折算：9 件 > 5 → ⌈9÷5⌉=2 件（<3 件含 10cm 袋费 2.5：11+2.5=13.5）
+        assertThat(result.expectedUnitPrice).isEqualTo(13.5);
+        assertThat(result.notes).anyMatch(n -> n.contains("小件关键词"));
+
+        // 无独立配置时，全局 exact_token 不命中嵌在中文词内的「车针」，按实件计费
+        PricingEngine defaultEngine = new PricingEngine(defaultRules());
+        PricingEngine.ProcessedResult untouched = defaultEngine.processRow(row(
+                "哈尔滨市平房区人民医院",
+                "额外包(纸塑袋)",
+                "小车针排-9/Z7520",
+                "高温纸塑袋75*200",
+                9, 1, 49.5, 49.5));
+        assertThat(untouched.expectedUnitPrice).isEqualTo(49.5);
+        assertThat(untouched.notes).noneMatch(n -> n.contains("小件关键词"));
+    }
+
+    @Test
+    void needleKeywordConfigIntroducesKeywordOutsidePlainList() {
+        // 排针不在普通 keywords 列表中，仅通过独立配置生效：触发10/折算10
+        ObjectNode rules = (ObjectNode) defaultRules();
+        ArrayNode configs = ((ObjectNode) rules.path("needle")).putArray("keywordConfigs");
+        ObjectNode cfg = configs.addObject();
+        cfg.put("keyword", "排针");
+        cfg.put("threshold", 10);
+        cfg.put("foldRatio", 10);
+
+        PricingEngine configEngine = new PricingEngine(rules);
+        PricingEngine.ProcessedResult result = configEngine.processRow(row(
+                "哈尔滨市平房区人民医院",
+                "额外包(纸塑袋)",
+                "排针-20/Z7520",
+                "高温纸塑袋75*200",
+                20, 1, 110, 110));
+        // 20 件 > 10 → ⌈20÷10⌉=2 件（<3 件含 10cm 袋费 2.5：11+2.5=13.5）
+        assertThat(result.expectedUnitPrice).isEqualTo(13.5);
+        assertThat(result.notes).anyMatch(n -> n.contains("折算为 2 件"));
+    }
+
+    @Test
+    void needleKeywordConfigAppliesToMixedLargeSmallPack() {
+        // 混合包：止血钳2（大件按实） + 克氏针9（独立配置 3:1 → 折 3 件） = 5 件
+        ObjectNode rules = (ObjectNode) defaultRules();
+        ArrayNode configs = ((ObjectNode) rules.path("needle")).putArray("keywordConfigs");
+        ObjectNode cfg = configs.addObject();
+        cfg.put("keyword", "克氏针");
+        cfg.put("threshold", 3);
+        cfg.put("foldRatio", 3);
+
+        PricingEngine configEngine = new PricingEngine(rules);
+        PricingEngine.ProcessedResult result = configEngine.processRow(row(
+                "哈尔滨市平房区人民医院",
+                "额外包(纸塑袋)",
+                "止血钳2克氏针9/Z7520",
+                "高温纸塑袋75*200",
+                11, 1, 60.5, 60.5));
+        assertThat(result.expectedUnitPrice).isEqualTo(27.5);
+        assertThat(result.notes).anyMatch(n -> n.contains("小件 9 件（折 3 件）"));
+    }
+
+    @Test
+    void needleQuantitySplitUsesMatchedKeywordConfigFoldRatio() {
+        // 「针N」拆分遇到带独立配置的小件关键词时，针折算比例按关键词配置（5÷3=2）
+        ObjectNode rules = (ObjectNode) defaultRules();
+        ArrayNode configs = ((ObjectNode) rules.path("needle")).putArray("keywordConfigs");
+        ObjectNode cfg = configs.addObject();
+        cfg.put("keyword", "克氏针");
+        cfg.put("threshold", 3);
+        cfg.put("foldRatio", 3);
+
+        PricingEngine configEngine = new PricingEngine(rules);
+        PricingEngine.ProcessedResult result = configEngine.processRow(row(
+                "哈尔滨市平房区人民医院",
+                "额外包(纸塑袋)",
+                "克氏针5钢丝4/Z7520",
+                "高温纸塑袋75*200",
+                9, 1, 49.5, 49.5));
+        assertThat(result.expectedUnitPrice).isEqualTo(33.0);
+        assertThat(result.notes).anyMatch(n -> n.contains("5÷3=2"));
+    }
 }
