@@ -202,27 +202,25 @@ public class BaselineRuleSyncServiceImpl implements BaselineRuleSyncService {
             rule.setName(name);
         }
         rule.setRuleType(text(ruleNode, "ruleType", "FIXED_PRICE"));
-        if (ruleNode.hasNonNull("billingMode")) {
-            rule.setBillingMode(text(ruleNode, "billingMode"));
-        }
+        rule.setBillingMode(textOrNull(ruleNode, "billingMode"));
         if (ruleNode.hasNonNull("pieceCountSource")) {
             rule.setPieceCountSource(text(ruleNode, "pieceCountSource"));
         }
         rule.setPriority(intVal(ruleNode, "priority", 100));
-        if (ruleNode.hasNonNull("price")) {
-            rule.setPrice(decimal(ruleNode, "price"));
-        }
-        if (ruleNode.hasNonNull("fee")) {
-            rule.setFee(decimal(ruleNode, "fee"));
-        }
+        rule.setPrice(ruleNode.hasNonNull("price") ? decimal(ruleNode, "price") : null);
+        rule.setFee(ruleNode.hasNonNull("fee") ? decimal(ruleNode, "fee") : null);
         if (ruleNode.has("materials")) {
             rule.setMaterials(toJsonArray(ruleNode.get("materials")));
         }
         if (ruleNode.hasNonNull("foldRatio")) {
             rule.setFoldRatio(decimal(ruleNode, "foldRatio"));
+        } else {
+            rule.setFoldRatio(null);
         }
-        if (ruleNode.hasNonNull("threshold")) {
+        if (ruleNode.has("threshold") && !ruleNode.get("threshold").isNull()) {
             rule.setThreshold(intVal(ruleNode, "threshold", null));
+        } else {
+            rule.setThreshold(null);
         }
         if (ruleNode.has("extraCount")) {
             rule.setExtraCount(ruleNode.get("extraCount").isNull() ? null : intVal(ruleNode, "extraCount", null));
@@ -251,19 +249,20 @@ public class BaselineRuleSyncServiceImpl implements BaselineRuleSyncService {
         rule.setSkipPackaging(bool(ruleNode, "skipPackaging", false));
         rule.setSkipDiscount(bool(ruleNode, "skipDiscount", false));
         rule.setMatchMode(text(ruleNode, "matchMode", "first"));
-        if (ruleNode.hasNonNull("keywordMatchMode")) {
-            rule.setKeywordMatchMode(text(ruleNode, "keywordMatchMode"));
-        }
+        rule.setKeywordMatchMode(textOrNull(ruleNode, "keywordMatchMode"));
         if (ruleNode.has("acceptedPrices")) {
             rule.setAcceptedPrices(ruleNode.get("acceptedPrices").toString());
         }
+        String conditionsJson = null;
         if (ruleNode.hasNonNull("conditionsJson")) {
-            rule.setConditionsJson(ruleNode.get("conditionsJson").asText());
+            JsonNode conditionsNode = ruleNode.get("conditionsJson");
+            conditionsJson = conditionsNode.isTextual() ? conditionsNode.asText() : conditionsNode.toString();
         }
         if (ruleNode.has("acceptedTypes")) {
-            rule.setConditionsJson(BillingConditionEvaluator.mergeAcceptedTypesIntoConditions(
-                    rule.getConditionsJson(), ruleNode.get("acceptedTypes")));
+            conditionsJson = BillingConditionEvaluator.mergeAcceptedTypesIntoConditions(
+                    conditionsJson, ruleNode.get("acceptedTypes"));
         }
+        rule.setConditionsJson(conditionsJson);
         if (ruleNode.has("isActive")) {
             rule.setIsActive(bool(ruleNode, "isActive", true));
         } else if (insert) {
@@ -296,6 +295,14 @@ public class BaselineRuleSyncServiceImpl implements BaselineRuleSyncService {
 
     private static String text(JsonNode node, String field) {
         return text(node, field, null);
+    }
+
+    private static String textOrNull(JsonNode node, String field) {
+        if (node == null || !node.has(field) || node.get(field).isNull()) {
+            return null;
+        }
+        String value = node.get(field).asText();
+        return value.isBlank() ? null : value;
     }
 
     private static String text(JsonNode node, String field, String defaultValue) {

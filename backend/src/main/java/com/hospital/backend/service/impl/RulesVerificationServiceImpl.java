@@ -10,6 +10,7 @@ import com.hospital.backend.entity.SysSetting;
 import com.hospital.backend.mapper.CustomerMapper;
 import com.hospital.backend.mapper.CustomerProductRuleMapper;
 import com.hospital.backend.mapper.SysSettingMapper;
+import com.hospital.backend.service.BillingConditionEvaluator;
 import com.hospital.backend.service.RulesVerificationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -196,7 +197,7 @@ public class RulesVerificationServiceImpl implements RulesVerificationService {
     private Map<String, Object> normalizeFromJson(JsonNode rule) {
         Map<String, Object> map = new LinkedHashMap<>();
         map.put("ruleType", rule.path("ruleType").asText("FIXED_PRICE"));
-        map.put("price", decimal(rule.path("price")));
+        map.put("price", effectivePriceFromJson(rule));
         map.put("keywords", sortedKeywords(rule.path("keywords")));
         map.put("priority", rule.has("priority") ? rule.get("priority").asInt(100) : 100);
         map.put("foldRatio", decimal(rule.path("foldRatio")));
@@ -205,14 +206,14 @@ public class RulesVerificationServiceImpl implements RulesVerificationService {
         map.put("isActive", !rule.has("isActive") || rule.get("isActive").asBoolean(true));
         map.put("billingMode", textOrNull(rule, "billingMode"));
         map.put("keywordMatchMode", textOrNull(rule, "keywordMatchMode"));
-        map.put("conditionsJson", normalizeConditions(rule.path("conditionsJson")));
+        map.put("conditionsJson", normalizeConditionsText(resolveConditionsJsonFromJson(rule)));
         return map;
     }
 
     private Map<String, Object> normalizeFromEntity(CustomerProductRule rule) {
         Map<String, Object> map = new LinkedHashMap<>();
         map.put("ruleType", rule.getRuleType());
-        map.put("price", rule.getPrice());
+        map.put("price", effectivePriceFromEntity(rule));
         map.put("keywords", parseKeywordList(rule.getKeywords()));
         map.put("priority", rule.getPriority() != null ? rule.getPriority() : 100);
         map.put("foldRatio", rule.getFoldRatio());
@@ -222,6 +223,37 @@ public class RulesVerificationServiceImpl implements RulesVerificationService {
         map.put("keywordMatchMode", rule.getKeywordMatchMode());
         map.put("conditionsJson", normalizeConditionsText(rule.getConditionsJson()));
         return map;
+    }
+
+    /** 与 BaselineRuleSyncServiceImpl 导入路径一致：conditionsJson + acceptedTypes 合并。 */
+    static String resolveConditionsJsonFromJson(JsonNode rule) {
+        String conditionsJson = null;
+        if (rule.hasNonNull("conditionsJson")) {
+            JsonNode node = rule.get("conditionsJson");
+            conditionsJson = node.isTextual() ? node.asText() : node.toString();
+        }
+        if (rule.has("acceptedTypes")) {
+            conditionsJson = BillingConditionEvaluator.mergeAcceptedTypesIntoConditions(
+                    conditionsJson, rule.get("acceptedTypes"));
+        }
+        return conditionsJson;
+    }
+
+    static BigDecimal effectivePriceFromJson(JsonNode rule) {
+        if (rule.hasNonNull("price")) {
+            return decimal(rule.path("price"));
+        }
+        if (rule.hasNonNull("fee")) {
+            return decimal(rule.path("fee"));
+        }
+        return null;
+    }
+
+    static BigDecimal effectivePriceFromEntity(CustomerProductRule rule) {
+        if (rule.getPrice() != null) {
+            return rule.getPrice();
+        }
+        return rule.getFee();
     }
 
     private boolean ruleSignatureEquals(Map<String, Object> a, Map<String, Object> b) {
@@ -309,15 +341,6 @@ public class RulesVerificationServiceImpl implements RulesVerificationService {
         }
     }
 
-    private static String normalizeConditions(JsonNode node) {
-        if (node.isMissingNode() || node.isNull()) {
-            return null;
-        }
-        if (node.isTextual()) {
-            return normalizeConditionsText(node.asText());
-        }
-        return node.toString();
-    }
 
     private static String normalizeConditionsText(String raw) {
         if (raw == null || raw.isBlank()) {

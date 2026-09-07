@@ -48,7 +48,7 @@
         VALUES (#{customerId}, #{ruleType}, #{billingMode}, #{pieceCountSource}, #{matchMode}, #{name}, #{priority}, #{productId}, #{variantId}, #{keywords},
                 #{excludeKeywords}, #{materials}, #{conditionsJson}, #{temperature}, #{bagSizeEquals}, #{minBagSizeInclusive}, #{maxBagSizeExclusive},
                 #{minInstrumentCount}, #{maxInstrumentCount}, #{price}, #{originalUnitPrice}, #{acceptedPrices}, #{fee},
-                #{multiplier}, #{threshold}, #{foldRatio}, COALESCE(#{keywordMatchMode}, 'exact_token'), #{extraCount}, #{skipPackaging}, #{skipDiscount}, #{isActive},
+                #{multiplier}, #{threshold}, #{foldRatio}, #{keywordMatchMode}, #{extraCount}, #{skipPackaging}, #{skipDiscount}, #{isActive},
                 NOW(), NOW())
     </insert>
 
@@ -97,7 +97,7 @@
             multiplier = #{multiplier},
             threshold = #{threshold},
             fold_ratio = #{foldRatio},
-            keyword_match_mode = COALESCE(#{keywordMatchMode}, 'exact_token'),
+            keyword_match_mode = #{keywordMatchMode},
             extra_count = #{extraCount},
             skip_packaging = #{skipPackaging},
             skip_discount = #{skipDiscount},
