@@ -33,6 +33,8 @@ class PackNameSpecParserTest {
         return Stream.of(
                 Arguments.of("粉刺针-3/Z7526", 3),
                 Arguments.of("止血钳-2剪-1/Z1530", 3),
+                // 人口医院 镜补包：斜杠前两段独立数字求和 1+1=2（2026-09-07 器械数补缺回归）
+                Arguments.of("镜补包-1剪刀-1/Z2032", 2),
                 Arguments.of("排针-12/Z7526", 12),
                 Arguments.of("排针20/Z1026", 20),
                 Arguments.of("止血钳3/Z1530", 3),

@@ -1,0 +1,34 @@
+{
+  "version": "1",
+  "description": "人口（HLJ-FY-RK）镜头0元锁价35补录（2026-09-07）：客户在生产UI手工配置的「腹腔镜镜头/宫腔镜镜头 0元导入→35元」规则不在 seed/manifest，2026-09-07 四次部署重启被 BillingRulesManifestReconciler 清除（与电机厂高温纸塑袋3.5同机制）。按客户账单口径补录为 ZERO_PRICE_OVERRIDE（仅0元导入行生效，不影响低温28元正常计价行），关键词严格限定完整词「腹腔镜镜头」「宫腔镜镜头」（非FOLD规则缺省contains，与规范第三节一致）——绝不用宽泛「镜/镜头」，避免误伤镜补包/关节镜镜头/镜头。同时按 Excel特殊收费⒁ 将「妇幼人口新腹腔镜镜头加收8」关键词收窄为「新腹腔镜镜头」：Excel 仅约定新腹腔镜镜头低温单包装标准+8，过宽词「腹腔镜镜头」会在高温0元行的35元锁价上再叠8元（43元），即客户此前反馈的「重复收费8元」；收窄后 高温0元腹腔镜镜头=35、低温新腹腔镜镜头单包装=28+8=36 不变、低温腹腔镜镜头-1/z2060=28（与9月账单一致）。",
+  "newRules": [
+    {
+      "code": "HLJ-FY-RK",
+      "ruleType": "ZERO_PRICE_OVERRIDE",
+      "name": "妇幼人口腹腔镜镜头0元锁价35",
+      "priority": 10,
+      "keywords": ["腹腔镜镜头"],
+      "price": 35.0,
+      "skipPackaging": true,
+      "skipDiscount": true
+    },
+    {
+      "code": "HLJ-FY-RK",
+      "ruleType": "ZERO_PRICE_OVERRIDE",
+      "name": "妇幼人口宫腔镜镜头0元锁价35",
+      "priority": 10,
+      "keywords": ["宫腔镜镜头"],
+      "price": 35.0,
+      "skipPackaging": true,
+      "skipDiscount": true
+    }
+  ],
+  "ruleUpdates": [
+    {
+      "code": "HLJ-FY-RK",
+      "ruleName": "妇幼人口新腹腔镜镜头加收8",
+      "setKeywords": ["新腹腔镜镜头"],
+      "note": "Excel特殊收费⒁仅约定「新腹腔镜镜头」低温单包装标准+8；移除过宽词「腹腔镜镜头」，避免高温0元腹腔镜镜头行在0元锁价35上重复+8（重复收费8元事故），低温腹腔镜镜头-1/z2060 回到标准28元与9月账单一致"
+    }
+  ]
+}

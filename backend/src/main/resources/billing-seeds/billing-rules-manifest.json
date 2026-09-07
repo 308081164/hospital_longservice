@@ -1,7 +1,7 @@
 {
   "version": 1,
-  "generated_at": "2026-09-07T04:00:17.116432+00:00",
-  "manifest_hash": "aeafe194f30db3f2a79188af8492c7628a066e4617324e40101d3d3dc5826169",
+  "generated_at": "2026-09-07T08:09:10.463558+00:00",
+  "manifest_hash": "01836c66115726ff7229db58f16020cb6e65f7069beee13551669c1031fd7764",
   "billing_enabled_count": 29,
   "active_billing_enabled_count": 29,
   "customers": {
@@ -1522,6 +1522,19 @@
           "matchMode": "first"
         },
         {
+          "ruleType": "ZERO_PRICE_OVERRIDE",
+          "name": "妇幼人口宫腔镜镜头0元锁价35",
+          "priority": 10,
+          "keywords": [
+            "宫腔镜镜头"
+          ],
+          "price": 35.0,
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": true,
+          "matchMode": "first"
+        },
+        {
           "ruleType": "FOLD",
           "name": "妇幼人口密封件>5折算22",
           "priority": 11,
@@ -1630,8 +1643,7 @@
           "priority": 20,
           "fee": 8.0,
           "keywords": [
-            "新腹腔镜镜头",
-            "腹腔镜镜头"
+            "新腹腔镜镜头"
           ],
           "skipPackaging": true,
           "skipDiscount": true,
@@ -1765,6 +1777,19 @@
           "matchMode": "first",
           "skipDiscount": false,
           "keywordMatchMode": "exact_token"
+        },
+        {
+          "ruleType": "ZERO_PRICE_OVERRIDE",
+          "name": "妇幼人口腹腔镜镜头0元锁价35",
+          "priority": 10,
+          "keywords": [
+            "腹腔镜镜头"
+          ],
+          "price": 35.0,
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": true,
+          "matchMode": "first"
         },
         {
           "ruleType": "FOLD",
@@ -1910,8 +1935,8 @@
           "keywordMatchMode": "exact_token"
         }
       ],
-      "rule_count": 33,
-      "active_rule_count": 31
+      "rule_count": 35,
+      "active_rule_count": 33
     },
     "HLJ-JYGLJ-YY": {
       "code": "HLJ-JYGLJ-YY",

@@ -85,6 +85,18 @@ public class PricingEngine {
         String hospitalName = str(row, "hospitalName");
         int instrumentCount = intVal(row, "instrumentCount");
         int packCount = Math.max(1, intVal(row, "packCount"));
+        // 器械数列缺失(≤0)且包名可解析件数时按「包名件数合计 × 包数」补缺（只补缺，不覆盖账单
+        // 非零原值——「计价始终使用 Excel 器械数」的既有约定不变）；敷料包类型豁免（器械数允许为 0）。
+        // 补缺后 镜补包-1剪刀-1/Z2032 这类包名可解析的行不再误报「器械数为0」字段核验错误。
+        if (instrumentCount <= 0 && !type.contains("敷料包")) {
+            Integer namePieceCount =
+                    com.hospital.backend.imports.bokang.PackNameSpecParser.extractTotalPieceCountFromPackName(packName);
+            if (namePieceCount != null && namePieceCount > 0) {
+                instrumentCount = namePieceCount * packCount;
+                notes.add("器械数列缺失，按包名件数合计 " + namePieceCount
+                        + " × 包数 " + packCount + " 补齐为 " + instrumentCount + " 件。");
+            }
+        }
         List<BillRowFieldConsistencyValidator.Violation> consistencyViolations =
                 BillRowFieldConsistencyValidator.validate(
                         type, packName, packageMaterial, instrumentCount, packCount);

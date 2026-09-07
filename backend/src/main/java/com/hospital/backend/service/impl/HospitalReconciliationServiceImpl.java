@@ -6193,6 +6193,17 @@ public class HospitalReconciliationServiceImpl implements HospitalReconciliation
                 row.put("instrumentCount", match.getInstrumentCountHint());
             }
         });
+        // 器械数列缺失(≤0)且产品匹配未提供 hint 时，按包名件数合计×包数补齐并落库展示
+        // （与 PricingEngine.processRow 的补缺口径一致；敷料包类型豁免）。
+        if (safeGetInt(row, "instrumentCount", 0) <= 0
+                && !valueToString(row.get("type"), "").contains("敷料包")) {
+            Integer namePieceCount =
+                    com.hospital.backend.imports.bokang.PackNameSpecParser.extractTotalPieceCountFromPackName(
+                            valueToString(row.get("packName"), ""));
+            if (namePieceCount != null && namePieceCount > 0) {
+                row.put("instrumentCount", namePieceCount * Math.max(1, safeGetInt(row, "packCount", 1)));
+            }
+        }
     }
 
     private Long longVal(Map<String, Object> map, String... keys) {
