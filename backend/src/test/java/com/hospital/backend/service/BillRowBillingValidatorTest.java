@@ -106,6 +106,56 @@ class BillRowBillingValidatorTest {
     }
 
     @Test
+    void zeroUnitPriceOnNonDressingPackReportsViolation() {
+        List<BillRowBillingValidator.Violation> violations =
+                BillRowBillingValidator.validate("额外包(纸塑袋)", "高温纸塑袋75*200", 3, 0.0);
+
+        assertThat(violations).extracting(BillRowBillingValidator.Violation::code)
+                .containsExactly(BillRowBillingValidator.CODE_ZERO_UNIT_PRICE);
+        assertThat(violations.get(0).severity())
+                .isEqualTo(BillRowBillingValidator.SEVERITY_ERROR);
+        assertThat(violations.get(0).message()).contains("单价为 0");
+    }
+
+    @Test
+    void zeroUnitPriceOnDressingPackIsNotExempt() {
+        // 敷料包豁免仅针对包装材料/器械数；0 元导入的敷料包正是需要被发现的行
+        List<BillRowBillingValidator.Violation> violations =
+                BillRowBillingValidator.validate("敷料包(纸塑袋)", "", 0, 0.0);
+
+        assertThat(violations).extracting(BillRowBillingValidator.Violation::code)
+                .containsExactly(BillRowBillingValidator.CODE_ZERO_UNIT_PRICE);
+    }
+
+    @Test
+    void positiveUnitPriceHasNoZeroPriceViolation() {
+        List<BillRowBillingValidator.Violation> violations =
+                BillRowBillingValidator.validate("额外包(纸塑袋)", "高温纸塑袋75*200", 3, 8.0);
+
+        assertThat(violations).isEmpty();
+    }
+
+    @Test
+    void nullUnitPriceSkipsZeroPriceCheck() {
+        List<BillRowBillingValidator.Violation> violations =
+                BillRowBillingValidator.validate("额外包(纸塑袋)", "高温纸塑袋75*200", 3, null);
+
+        assertThat(violations).isEmpty();
+    }
+
+    @Test
+    void zeroUnitPriceCombinesWithOtherViolations() {
+        List<BillRowBillingValidator.Violation> violations =
+                BillRowBillingValidator.validate("器械包(ZSD)", "", 0, 0.0);
+
+        assertThat(violations).extracting(BillRowBillingValidator.Violation::code)
+                .containsExactly(
+                        BillRowBillingValidator.CODE_ZERO_UNIT_PRICE,
+                        BillRowBillingValidator.CODE_BLANK_PACKAGE_MATERIAL,
+                        BillRowBillingValidator.CODE_ZERO_INSTRUMENT_COUNT);
+    }
+
+    @Test
     void toBillingNotesBuildsBillingValidationPayload() {
         List<BillRowBillingValidator.Violation> violations =
                 BillRowBillingValidator.validate("额外包(纸塑袋)", "", 0);

@@ -95,8 +95,9 @@ public class PricingEngine {
         Map<String, Object> consistencyBillingNotes =
                 BillRowFieldConsistencyValidator.toBillingNotes(consistencyViolations);
         // error 级字段校验须在包材推断补全之前执行：核对的是账单原始列，而非引擎补全后的值。
+        Double unitPrice = doubleOrNull(row, "unitPrice");
         List<BillRowBillingValidator.Violation> billingViolations =
-                BillRowBillingValidator.validate(type, packageMaterial, instrumentCount);
+                BillRowBillingValidator.validate(type, packageMaterial, instrumentCount, unitPrice);
         boolean forceBillingValidationWarning = !billingViolations.isEmpty();
         for (BillRowBillingValidator.Violation violation : billingViolations) {
             notes.add("【字段核对错误】" + violation.message());
@@ -110,7 +111,6 @@ public class PricingEngine {
                 PackPricingCategoryResolver.resolve(
                         type, packName, packageMaterial, instrumentCount, packCount);
         PackPricingCategory packCategory = packCategoryResolution.category();
-        Double unitPrice = doubleOrNull(row, "unitPrice");
         Double totalPrice = doubleOrNull(row, "totalPrice");
 
         // 未解析/未启用特色账单统一走通用计价规则：不再早退保留原价、不再产生「特色账单已关闭」告警。
@@ -184,9 +184,13 @@ public class PricingEngine {
         boolean isLowTemp = !disableLowTemp && ((type + packName + packageMaterial).contains("低温")
                 || type.contains("ETO") || type.contains("EO")
                 || packageMaterial.contains("低温灭菌"));
-        boolean isDouble = DOUBLE_BAG_MARK.matcher(packName).find()
-                || packageMaterial.contains("双层袋");
-        int zBagSize = isDouble ? extractSizeAfterDouble(packName) : 0;
+        boolean doubleMarkInName = DOUBLE_BAG_MARK.matcher(packName).find();
+        boolean isDouble = doubleMarkInName || packageMaterial.contains("双层袋");
+        int zBagSize = doubleMarkInName ? extractSizeAfterDouble(packName) : 0;
+        // 「/双」后接任意内容均认定双层袋：标记后未带尺寸数字时，第二层袋按外层袋尺寸计费。
+        if (doubleMarkInName && zBagSize <= 0) {
+            zBagSize = bagSize;
+        }
         SpecialPriceResult preMatchedSpecialPrice = zeroPriceOverride != null
                 ? zeroPriceOverride
                 : findSpecialFixedPrice(row, bagSize, effectiveCount, matchedProductId, matchedVariantId);
@@ -1603,17 +1607,13 @@ public class PricingEngine {
         return result;
     }
 
-    /** 从"双"标记之后提取前两位数字作为纸塑袋尺寸（如 /双15 → 15，/(双)Z1526 → 15，/双75 → 10）；"双"标记后紧跟汉字则不追加袋费 */
+    /** 从"双"标记之后提取前两位数字作为纸塑袋尺寸（如 /双15 → 15，/(双)Z1526 → 15，/双75 → 10）；无数字时返回 0，由调用方按外层袋尺寸兜底 */
     private int extractSizeAfterDouble(String input) {
         if (input == null || input.isEmpty()) return 0;
         java.util.regex.Matcher mark = DOUBLE_BAG_MARK.matcher(input);
         if (!mark.find()) return 0;
         int afterIdx = mark.end(); // 跳过"双"标记（含可选右括号）
         if (afterIdx >= input.length()) return 0;
-
-        char next = input.charAt(afterIdx);
-        // "双"标记后紧跟汉字 → 不需要额外纸塑袋
-        if (Character.UnicodeBlock.of(next) == Character.UnicodeBlock.CJK_UNIFIED_IDEOGRAPHS) return 0;
 
         String after = input.substring(afterIdx);
         java.util.regex.Matcher m = java.util.regex.Pattern.compile("(\\d{2})").matcher(after);

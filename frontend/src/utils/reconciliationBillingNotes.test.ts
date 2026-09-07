@@ -225,4 +225,63 @@ assertEqual(
   'no pricing alert when none present'
 )
 
+// ---- 单价为 0 字段核验告警（ZERO_UNIT_PRICE） ----
+
+const zeroUnitPriceRow = {
+  expectedUnitPrice: 16.5,
+  correctedTotalPrice: 16.5,
+  status: 'warning',
+  billingNotes: {
+    billingValidation: {
+      type: 'billing_validation',
+      violations: [
+        {
+          code: 'ZERO_UNIT_PRICE',
+          severity: 'error',
+          message: '单价为 0，请确认是否漏填或免费项目'
+        }
+      ]
+    }
+  },
+  notes: ['【字段核对错误】单价为 0，请确认是否漏填或免费项目']
+}
+const zeroUnitPriceCtx = parseReconciliationBillingContext(zeroUnitPriceRow)
+assertTrue(zeroUnitPriceCtx.hasZeroUnitPriceWarning, 'zero unit price warning should be detected')
+assertTrue(
+  zeroUnitPriceCtx.hasBlockingValidationIssues,
+  'zero unit price is an error-level billing validation issue'
+)
+assertEqual(
+  zeroUnitPriceCtx.blocksPricingDisplay,
+  false,
+  'zero unit price must not block pricing display (照常计价)'
+)
+assertEqual(
+  shouldShowValidationIndicator(zeroUnitPriceRow),
+  true,
+  'red exclamation indicator shows for zero unit price'
+)
+assertTrue(
+  validationIndicatorMessages(zeroUnitPriceRow).includes('单价为 0，请确认是否漏填或免费项目'),
+  'indicator tooltip includes zero unit price message'
+)
+assertTrue(
+  zeroUnitPriceCtx.traceNotes.every((note) => !note.includes('【字段核对错误】')),
+  'zero unit price note excluded from generic traceNotes'
+)
+assertEqual(
+  shouldShowValidationIndicator({ ...zeroUnitPriceRow, status: 'unchanged' }),
+  false,
+  'indicator hidden for zero unit price row marked as 无需修改 (unchanged)'
+)
+assertEqual(
+  parseReconciliationBillingContext({
+    expectedUnitPrice: 8,
+    correctedTotalPrice: 8,
+    billingNotes: null
+  }).hasZeroUnitPriceWarning,
+  false,
+  'no zero unit price warning when billingNotes absent'
+)
+
 console.log('reconciliationBillingNotes.test.ts: all assertions passed')

@@ -141,6 +141,82 @@ class PricingEngineTest {
         assertThat(extractBillingValidationCodes(result.billingNotes)).isEmpty();
     }
 
+    @Test
+    void zeroUnitPriceFlagsBillingValidationButPricingStillRuns() {
+        PricingEngine.ProcessedResult result = engine.processRow(row(
+                "测试医院",
+                "额外包(纸塑袋)",
+                "剪刀-3/z1530",
+                "高温纸塑袋75*200",
+                3,
+                1,
+                0.0,
+                0.0
+        ));
+
+        // 不阻断计价：3 件高温纸塑按 5.5 元/件 = 16.5 元照常算出
+        assertThat(result.expectedUnitPrice).isEqualTo(16.5);
+        assertThat(result.status).isEqualTo("warning");
+        assertThat(result.notes).anyMatch(note -> note.contains("【字段核对错误】单价为 0"));
+        assertThat(extractBillingValidationCodes(result.billingNotes))
+                .contains(BillRowBillingValidator.CODE_ZERO_UNIT_PRICE);
+    }
+
+    @Test
+    void positiveUnitPriceHasNoZeroUnitPriceViolation() {
+        PricingEngine.ProcessedResult result = engine.processRow(row(
+                "测试医院",
+                "额外包(纸塑袋)",
+                "剪刀-3/z1530",
+                "高温纸塑袋75*200",
+                3,
+                1,
+                16.5,
+                16.5
+        ));
+
+        assertThat(result.notes).noneMatch(note -> note.contains("【字段核对错误】"));
+        assertThat(extractBillingValidationCodes(result.billingNotes))
+                .doesNotContain(BillRowBillingValidator.CODE_ZERO_UNIT_PRICE);
+    }
+
+    @Test
+    void slashDoubleWithArbitrarySuffixIsRecognizedAsDoubleBag() {
+        // 新规则：「/双」后接任意内容均认定双层袋；无尺寸数字时第二层按外层袋尺寸计费。
+        // 单件高温纸塑 10cm 袋：5.5 件费 + 2.5 袋费 = 8.0；双层再加第二层 10cm 袋费 2.5 → 10.5。
+        PricingEngine.ProcessedResult singleLayer = engine.processRow(row(
+                "测试医院", "额外包(纸塑袋)", "剪刀-1", "高温纸塑袋75*200", 1, 1, 8.0, 8.0));
+        assertThat(singleLayer.expectedUnitPrice).isEqualTo(8.0);
+        assertThat(singleLayer.pricingRule).doesNotContain("(双)");
+
+        for (String packName : new String[]{"剪刀-1/双纸塑", "剪刀-1/双无纺布", "剪刀-1/双随便什么"}) {
+            PricingEngine.ProcessedResult doubleLayer = engine.processRow(row(
+                    "测试医院", "额外包(纸塑袋)", packName, "高温纸塑袋75*200", 1, 1, 10.5, 10.5));
+            assertThat(doubleLayer.expectedUnitPrice).as(packName).isEqualTo(10.5);
+            assertThat(doubleLayer.pricingRule).as(packName).contains("高温纸塑袋(双)");
+        }
+    }
+
+    @Test
+    void slashDoubleWithDigitsStillUsesDigitSize() {
+        // 「/双」后带两位数字时仍按数字取第二层尺寸：/双15 → 15cm 袋费 5.5，合计 5.5+2.5+5.5=13.5。
+        PricingEngine.ProcessedResult result = engine.processRow(row(
+                "测试医院", "额外包(纸塑袋)", "剪刀-1/双15", "高温纸塑袋75*200", 1, 1, 13.5, 13.5));
+
+        assertThat(result.expectedUnitPrice).isEqualTo(13.5);
+        assertThat(result.pricingRule).contains("高温纸塑袋(双)");
+    }
+
+    @Test
+    void doubleCharWithoutSlashIsNotRecognizedAsDoubleBag() {
+        // 边界：「双」字前面没有「/」（如「双眼皮包」）不得误判为双层袋。
+        PricingEngine.ProcessedResult result = engine.processRow(row(
+                "测试医院", "额外包(纸塑袋)", "双眼皮包-1", "高温纸塑袋75*200", 1, 1, 8.0, 8.0));
+
+        assertThat(result.expectedUnitPrice).isEqualTo(8.0);
+        assertThat(result.pricingRule).doesNotContain("(双)");
+    }
+
     @SuppressWarnings("unchecked")
     private static List<String> extractBillingValidationCodes(Map<String, Object> billingNotes) {
         if (billingNotes == null) {
