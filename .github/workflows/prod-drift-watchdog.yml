@@ -17,7 +17,6 @@ concurrency:
   cancel-in-progress: false
 
 env:
-  PROD_HOST: ${{ vars.PROD_HOST || '39.102.213.51' }}
   PROD_PORT: ${{ vars.PROD_PORT || '8853' }}
   # main HEAD 提交年龄在此宽限分钟内时，允许生产停留在前一个提交（部署在途）
   GRACE_MINUTES: 30
@@ -34,14 +33,47 @@ jobs:
           # 需要完整历史：生产可能落后多个提交，merge-base/rev-list 依赖祖先链
           fetch-depth: 0
 
+      # 生产 API 对外路径（公网 IP:8853）对 GitHub runner 等境外源 IP 会被挂起约 30s 后
+      # 返回 {"code":500}（HTTP 200 包装业务错误，curl -f 无法识别，曾导致本工作流从未成功）。
+      # 因此与 deploy.yml 的版本 parity 闸门一致：SSH 到服务器本机回环口取版本。
       - name: Fetch prod version
         id: prod
+        env:
+          SSH_HOST: ${{ secrets.SSH_HOST }}
+          SSH_USER: ${{ secrets.SSH_USER }}
+          SSH_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+          SSH_PORT: ${{ secrets.SSH_PORT }}
         run: |
           set -e
-          BODY="$(curl -sf --connect-timeout 8 "http://${PROD_HOST}:${PROD_PORT}/api/v1/base/version")"
+          PORT="${SSH_PORT:-22}"
+          mkdir -p ~/.ssh
+          printf '%s\n' "$SSH_KEY" > ~/.ssh/prod_drift_key
+          chmod 600 ~/.ssh/prod_drift_key
+          ssh-keyscan -p "$PORT" -H "$SSH_HOST" >> ~/.ssh/known_hosts 2>/dev/null || true
+
+          run_ssh () {
+            ssh -i ~/.ssh/prod_drift_key -o StrictHostKeyChecking=no -o ConnectTimeout=10 -p "$PORT" "$SSH_USER@$SSH_HOST" "$@"
+          }
+
+          BODY=""
+          for attempt in 1 2 3; do
+            BODY="$(run_ssh "curl -sS --connect-timeout 5 --max-time 15 http://127.0.0.1:${PROD_PORT}/api/v1/base/version" 2>/dev/null || true)"
+            if [ -n "$BODY" ] && [ -n "$(printf '%s' "$BODY" | jq -r '.data.gitSha // ""' 2>/dev/null)" ]; then
+              break
+            fi
+            echo "::warning::第 ${attempt} 次获取生产版本失败或响应异常，5s 后重试"
+            sleep 5
+          done
+
           echo "$BODY"
+          GIT_SHA="$(printf '%s' "$BODY" | jq -r '.data.gitSha // ""' 2>/dev/null || true)"
+          if [ -z "$GIT_SHA" ]; then
+            echo "::error::无法获取生产版本（3 次尝试均失败），原始响应: ${BODY:-<empty>}"
+            exit 1
+          fi
+
           echo "$BODY" > /tmp/prod_version.json
-          echo "git_sha=$(jq -r '.data.gitSha // ""' /tmp/prod_version.json)" >> "$GITHUB_OUTPUT"
+          echo "git_sha=${GIT_SHA}" >> "$GITHUB_OUTPUT"
           echo "rules_hash=$(jq -r '.data.rulesManifestHash // ""' /tmp/prod_version.json)" >> "$GITHUB_OUTPUT"
           echo "reconcile_status=$(jq -r '.data.rulesReconcileStatus // ""' /tmp/prod_version.json)" >> "$GITHUB_OUTPUT"
           echo "reconciled_at=$(jq -r '.data.rulesReconciledAt // ""' /tmp/prod_version.json)" >> "$GITHUB_OUTPUT"
@@ -54,6 +86,11 @@ jobs:
           PROD_SHA="${{ steps.prod.outputs.git_sha }}"
           echo "main HEAD: $MAIN_SHA"
           echo "prod     : $PROD_SHA"
+
+          if [ -z "$PROD_SHA" ]; then
+            echo "::error::生产 gitSha 为空——版本接口异常或响应结构变更，请检查 Fetch prod version 步骤日志"
+            exit 1
+          fi
 
           if [ "$PROD_SHA" = "$MAIN_SHA" ]; then
             echo "OK: 生产版本与 main HEAD 一致"
