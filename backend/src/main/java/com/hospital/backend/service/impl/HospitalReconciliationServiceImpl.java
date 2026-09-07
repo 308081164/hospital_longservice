@@ -1737,7 +1737,7 @@ public class HospitalReconciliationServiceImpl implements HospitalReconciliation
                         diff
                 ));
                 if (includeFieldConsistency) {
-                    dataRow.add(BillRowBillingNotesSupport.summarizeFieldConsistencyViolations(row.getBillingNotes()));
+                    dataRow.add(BillRowBillingNotesSupport.summarizeAllFieldCheckViolations(row.getBillingNotes()));
                 }
                 rows.add(dataRow);
             }
@@ -1779,7 +1779,7 @@ public class HospitalReconciliationServiceImpl implements HospitalReconciliation
             return true;
         }
         return includeFieldConsistency
-                && BillRowBillingNotesSupport.hasFieldConsistencyViolations(row.getBillingNotes());
+                && BillRowBillingNotesSupport.hasAnyFieldCheckViolations(row.getBillingNotes());
     }
 
     /**

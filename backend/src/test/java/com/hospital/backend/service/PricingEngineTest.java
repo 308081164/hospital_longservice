@@ -68,6 +68,101 @@ class PricingEngineTest {
     }
 
     @Test
+    void blankPackageMaterialOnNonDressingPackForcesWarningWithBillingValidation() {
+        PricingEngine.ProcessedResult result = engine.processRow(row(
+                "测试医院",
+                "额外包(纸塑袋)",
+                "剪刀-3/z1530",
+                "",
+                3,
+                1,
+                8.0,
+                8.0
+        ));
+
+        assertThat(result.status).isEqualTo("warning");
+        assertThat(result.notes).anyMatch(note -> note.contains("【字段核对错误】包装材料为空"));
+        assertThat(result.billingNotes).isNotNull();
+        assertThat(extractBillingValidationCodes(result.billingNotes))
+                .contains(BillRowBillingValidator.CODE_BLANK_PACKAGE_MATERIAL)
+                .doesNotContain(BillRowBillingValidator.CODE_ZERO_INSTRUMENT_COUNT);
+    }
+
+    @Test
+    void zeroInstrumentCountOnNonDressingPackForcesWarningWithBillingValidation() {
+        PricingEngine.ProcessedResult result = engine.processRow(row(
+                "测试医院",
+                "额外包(纸塑袋)",
+                "持针器/z1029",
+                "高温纸塑袋75*200",
+                0,
+                1,
+                8.0,
+                8.0
+        ));
+
+        assertThat(result.status).isEqualTo("warning");
+        assertThat(result.notes).anyMatch(note -> note.contains("【字段核对错误】器械数为0"));
+        assertThat(extractBillingValidationCodes(result.billingNotes))
+                .contains(BillRowBillingValidator.CODE_ZERO_INSTRUMENT_COUNT);
+    }
+
+    @Test
+    void dressingPackWithBlankMaterialAndZeroCountIsExemptFromBillingValidation() {
+        PricingEngine.ProcessedResult result = engine.processRow(row(
+                "测试医院",
+                "敷料包(纸塑袋)",
+                "弯盘-1/z2032",
+                "",
+                0,
+                1,
+                8.0,
+                8.0
+        ));
+
+        assertThat(result.notes).noneMatch(note -> note.contains("【字段核对错误】"));
+        assertThat(extractBillingValidationCodes(result.billingNotes)).isEmpty();
+    }
+
+    @Test
+    void nonDressingPackWithBothFieldsFilledHasNoBillingValidation() {
+        PricingEngine.ProcessedResult result = engine.processRow(row(
+                "测试医院",
+                "额外包(纸塑袋)",
+                "剪刀-3/z1530",
+                "高温纸塑袋75*200",
+                3,
+                1,
+                8.0,
+                8.0
+        ));
+
+        assertThat(result.notes).noneMatch(note -> note.contains("【字段核对错误】"));
+        assertThat(extractBillingValidationCodes(result.billingNotes)).isEmpty();
+    }
+
+    @SuppressWarnings("unchecked")
+    private static List<String> extractBillingValidationCodes(Map<String, Object> billingNotes) {
+        if (billingNotes == null) {
+            return List.of();
+        }
+        Object nested = billingNotes.get("billingValidation") != null
+                ? billingNotes.get("billingValidation")
+                : ("billing_validation".equals(billingNotes.get("type")) ? billingNotes : null);
+        if (!(nested instanceof Map<?, ?> nestedMap)
+                || !(nestedMap.get("violations") instanceof List<?> list)) {
+            return List.of();
+        }
+        List<String> codes = new ArrayList<>();
+        for (Object item : list) {
+            if (item instanceof Map<?, ?> map && map.get("code") != null) {
+                codes.add(String.valueOf(map.get("code")));
+            }
+        }
+        return codes;
+    }
+
+    @Test
     void fieldConsistencyMultiInstrumentPackNameMatchesInstrumentCount() {
         PricingEngine.ProcessedResult result = engine.processRow(row(
                 "测试医院",
@@ -207,7 +302,9 @@ class PricingEngineTest {
                 154));
         assertThat(twoPacks.expectedUnitPrice).isEqualTo(77.0);
         assertThat(twoPacks.correctedTotalPrice).isEqualTo(154.0);
-        assertThat(twoPacks.status).isEqualTo("unchanged");
+        // 非敷料包包装材料为空 → 字段核对错误，行状态强制 warning
+        assertThat(twoPacks.status).isEqualTo("warning");
+        assertThat(twoPacks.notes).anyMatch(note -> note.contains("【字段核对错误】包装材料为空"));
         assertThat(twoPacks.pricingRule).contains("眼包5.5元/件");
 
         PricingEngine.ProcessedResult sixPacks = pricingEngine.processRow(row(
@@ -221,7 +318,8 @@ class PricingEngineTest {
                 462));
         assertThat(sixPacks.expectedUnitPrice).isEqualTo(77.0);
         assertThat(sixPacks.correctedTotalPrice).isEqualTo(462.0);
-        assertThat(sixPacks.status).isEqualTo("unchanged");
+        assertThat(sixPacks.status).isEqualTo("warning");
+        assertThat(sixPacks.notes).anyMatch(note -> note.contains("【字段核对错误】包装材料为空"));
 
         PricingEngine.ProcessedResult wrongUnit = pricingEngine.processRow(row(
                 "悦美芳华医疗门诊医院",
@@ -560,7 +658,9 @@ class PricingEngineTest {
                 22.0
         ));
         assertThat(jiaomaoOne.expectedUnitPrice).isEqualTo(22.0);
-        assertThat(jiaomaoOne.status).isEqualTo("unchanged");
+        // 非敷料包包装材料为空 → 字段核对错误，行状态强制 warning
+        assertThat(jiaomaoOne.status).isEqualTo("warning");
+        assertThat(jiaomaoOne.notes).anyMatch(note -> note.contains("【字段核对错误】包装材料为空"));
 
         PricingEngine.ProcessedResult gongsha = shEngine.processRow(row(
                 hospital,
@@ -2490,7 +2590,9 @@ class PricingEngineTest {
                 5.5,
                 5.5));
         assertThat(onePiece.expectedUnitPrice).isEqualTo(5.5);
-        assertThat(onePiece.status).isEqualTo("unchanged");
+        // 非敷料包包装材料为空 → 字段核对错误，行状态强制 warning
+        assertThat(onePiece.status).isEqualTo("warning");
+        assertThat(onePiece.notes).anyMatch(note -> note.contains("【字段核对错误】包装材料为空"));
 
         PricingEngine.ProcessedResult twoPieces = pricingEngine.processRow(row(
                 "哈尔滨长健医院",
@@ -2502,7 +2604,8 @@ class PricingEngineTest {
                 11,
                 11));
         assertThat(twoPieces.expectedUnitPrice).isEqualTo(11.0);
-        assertThat(twoPieces.status).isEqualTo("unchanged");
+        assertThat(twoPieces.status).isEqualTo("warning");
+        assertThat(twoPieces.notes).anyMatch(note -> note.contains("【字段核对错误】包装材料为空"));
     }
 
     @Test

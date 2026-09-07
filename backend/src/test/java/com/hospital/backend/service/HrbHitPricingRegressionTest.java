@@ -46,10 +46,11 @@ class HrbHitPricingRegressionTest {
 
     @Test
     void plantingBoxShouldBill24PiecesAt5_5() {
+        // 非敷料包包装材料为空 → 字段核对错误，行状态为 warning（计价结果不受影响）
         assertExpectedPrice(
                 row("种植盒-23件 盒1/w6050", "器械包(ZSD)", "", 24, 1, 132.0, 132.0),
                 132.0,
-                "unchanged");
+                "warning");
     }
 
     @Test

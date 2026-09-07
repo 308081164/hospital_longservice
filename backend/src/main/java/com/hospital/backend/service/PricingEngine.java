@@ -86,6 +86,15 @@ public class PricingEngine {
         }
         Map<String, Object> consistencyBillingNotes =
                 BillRowFieldConsistencyValidator.toBillingNotes(consistencyViolations);
+        // error 级字段校验须在包材推断补全之前执行：核对的是账单原始列，而非引擎补全后的值。
+        List<BillRowBillingValidator.Violation> billingViolations =
+                BillRowBillingValidator.validate(type, packageMaterial, instrumentCount);
+        boolean forceBillingValidationWarning = !billingViolations.isEmpty();
+        for (BillRowBillingValidator.Violation violation : billingViolations) {
+            notes.add("【字段核对错误】" + violation.message());
+        }
+        Map<String, Object> billingValidationNotes =
+                BillRowBillingValidator.toBillingNotes(billingViolations);
         packageMaterial = inferPricingPackageMaterial(type, packageMaterial, notes);
         packageMaterial = normalizeFuyiImportMaterial(type, packName, packageMaterial, notes);
         row.put("packageMaterial", packageMaterial);
@@ -679,6 +688,9 @@ public class PricingEngine {
         if (forceConsistencyWarning) {
             status = "warning";
         }
+        if (forceBillingValidationWarning) {
+            status = "warning";
+        }
 
         ProcessedResult result = new ProcessedResult();
         result.expectedUnitPrice = expectedUnitPrice;
@@ -704,26 +716,38 @@ public class PricingEngine {
                     notes, type, packName, packageMaterial, hospitalName, skipHospitalDiscount,
                     matchedRuleId, null, result.pricingPath);
         }
-        result.billingNotes = mergeBillingNotes(result.billingNotes, consistencyBillingNotes);
+        result.billingNotes = mergeBillingNotes(
+                result.billingNotes, consistencyBillingNotes, billingValidationNotes);
         return result;
     }
 
     private Map<String, Object> mergeBillingNotes(
             Map<String, Object> primary,
-            Map<String, Object> consistency) {
-        if (consistency == null || consistency.isEmpty()) {
-            return primary;
+            Map<String, Object> consistency,
+            Map<String, Object> billingValidation) {
+        Map<String, Object> merged = primary == null || primary.isEmpty()
+                ? new LinkedHashMap<>()
+                : new LinkedHashMap<>(primary);
+        if (consistency != null && !consistency.isEmpty()) {
+            if (merged.isEmpty()) {
+                merged.putAll(consistency);
+            } else {
+                merged.put("fieldConsistency", consistency);
+                merged.put("field_consistency", consistency);
+                if ("field_consistency".equals(consistency.get("type"))) {
+                    merged.put("consistencyViolations", consistency.get("violations"));
+                }
+            }
         }
-        if (primary == null || primary.isEmpty()) {
-            return consistency;
+        if (billingValidation != null && !billingValidation.isEmpty()) {
+            if (merged.isEmpty()) {
+                merged.putAll(billingValidation);
+            } else {
+                merged.put("billingValidation", billingValidation);
+                merged.put("billing_validation", billingValidation);
+            }
         }
-        Map<String, Object> merged = new LinkedHashMap<>(primary);
-        merged.put("fieldConsistency", consistency);
-        merged.put("field_consistency", consistency);
-        if ("field_consistency".equals(consistency.get("type"))) {
-            merged.put("consistencyViolations", consistency.get("violations"));
-        }
-        return merged;
+        return merged.isEmpty() ? null : merged;
     }
 
     private String resolveEffectivePricingPath(SpecialPriceResult specialPrice, String pricingRule) {
