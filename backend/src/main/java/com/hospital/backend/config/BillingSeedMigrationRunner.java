@@ -356,7 +356,9 @@ public class BillingSeedMigrationRunner implements CommandLineRunner {
             new IncrementalSeed("billing_seed_keyword_contains_align_20260902_v1",
                     "billing-seeds/phase-special-charge-keyword-contains-align-20260902.json"),
             new IncrementalSeed("billing_seed_needle_box_extracount_20260904_v1",
-                    "billing-seeds/phase-special-charge-needle-box-extracount-20260904.json")
+                    "billing-seeds/phase-special-charge-needle-box-extracount-20260904.json"),
+            new IncrementalSeed("billing_seed_guoyao_2_szs_fixed_price_20260907_v1",
+                    "billing-seeds/phase-guoyao-2-szs-fixed-price-20260907.json")
     );
 
     private static final String ZYY_D1_P0_MARKER = "billing_seed_zyy_d1_p0_v2";
@@ -525,7 +527,8 @@ public class BillingSeedMigrationRunner implements CommandLineRunner {
                     || "billing-seeds/phase-special-charge-zgh-fixed-price-20260902.json".equals(incremental.classpathFile())
                     || "billing-seeds/phase-special-charge-renkou-contains-fix-20260902.json".equals(incremental.classpathFile())
                     || "billing-seeds/phase-special-charge-keyword-contains-align-20260902.json".equals(incremental.classpathFile())
-                    || "billing-seeds/phase-special-charge-needle-box-extracount-20260904.json".equals(incremental.classpathFile())) {
+                    || "billing-seeds/phase-special-charge-needle-box-extracount-20260904.json".equals(incremental.classpathFile())
+                    || "billing-seeds/phase-guoyao-2-szs-fixed-price-20260907.json".equals(incremental.classpathFile())) {
                 applyBatchPatchSeedFile(incremental.classpathFile());
             } else if ("billing-seeds/phase-billing-mode-backfill-20260730.json".equals(incremental.classpathFile())) {
                 applyBillingModeBackfillSeedFile(incremental.classpathFile());

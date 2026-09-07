@@ -228,6 +228,21 @@ public final class PricingEngineTestSupport {
             if (ruleNode.hasNonNull("matchMode")) {
                 rule.setMatchMode(ruleNode.path("matchMode").asText());
             }
+            if (ruleNode.hasNonNull("keywordMatchMode")) {
+                rule.setKeywordMatchMode(ruleNode.path("keywordMatchMode").asText());
+            }
+            if (ruleNode.hasNonNull("billingMode")) {
+                rule.setBillingMode(ruleNode.path("billingMode").asText());
+            }
+            if (ruleNode.hasNonNull("pieceCountSource")) {
+                rule.setPieceCountSource(ruleNode.path("pieceCountSource").asText());
+            }
+            if (ruleNode.hasNonNull("extraCount")) {
+                rule.setExtraCount(ruleNode.path("extraCount").asInt());
+            }
+            if (ruleNode.hasNonNull("originalUnitPrice")) {
+                rule.setOriginalUnitPrice(BigDecimal.valueOf(ruleNode.path("originalUnitPrice").asDouble()));
+            }
             if (ruleNode.hasNonNull("skipPackaging")) {
                 rule.setSkipPackaging(ruleNode.path("skipPackaging").asBoolean());
             }

@@ -117,6 +117,51 @@ class RuleFidelityRegressionTest {
     }
 
     @Test
+    void guoyao2ShuangzhisuFixedPriceMatchesByContains() throws Exception {
+        JsonNode rules = RuleFidelityTestSupport.compileForCustomerCode("GUOYAO-2");
+        PricingEngine engine = new PricingEngine(rules);
+        // 「双纸塑」以词中形态出现（后邻 CJK「袋」）：exact_token 永不命中，contains 包含语义命中。
+        // 客户在生产手工配置的同名规则为精确匹配，且未走种子/manifest 通道被 reconcile 清除（R4），
+        // 本用例锁定补录后的 contains 语义与 FIXED_PRICE 一口价惯例（skipPackaging+skipDiscount）。
+        PricingEngine.ProcessedResult result = engine.processRow(Map.of(
+                "hospitalName", "国药总医院第二院区",
+                "department", "手术室",
+                "type", "额外包(纸塑袋)",
+                "packName", "双纸塑袋-1/Z1526",
+                "packageMaterial", "高温纸塑袋150*260",
+                "instrumentCount", 1,
+                "packCount", 1,
+                "unitPrice", 16.5,
+                "totalPrice", 16.5
+        ));
+        assertThat(result.expectedUnitPrice).isEqualTo(3.5);
+        assertThat(result.pricingRule).contains("电机厂高温纸塑袋");
+        assertThat(result.pricingRule).doesNotContain("纸塑袋费");
+        assertThat(result.pricingPath).isEqualTo("fixed");
+        assertThat(result.status).isEqualTo("warning");
+    }
+
+    @Test
+    void guoyao2ShuangzhisuFixedPriceDoesNotHitPlainPaperPlasticRows() throws Exception {
+        JsonNode rules = RuleFidelityTestSupport.compileForCustomerCode("GUOYAO-2");
+        PricingEngine engine = new PricingEngine(rules);
+        PricingEngine.ProcessedResult result = engine.processRow(Map.of(
+                "hospitalName", "国药总医院第二院区",
+                "department", "手术室",
+                "type", "额外包(纸塑袋)",
+                "packName", "止血钳-1/Z1029",
+                "packageMaterial", "高温纸塑袋100*290",
+                "instrumentCount", 1,
+                "packCount", 1,
+                "unitPrice", 8.0,
+                "totalPrice", 8.0
+        ));
+        assertThat(result.expectedUnitPrice).isEqualTo(8.0);
+        assertThat(result.pricingRule).doesNotContain("电机厂高温纸塑袋");
+        assertThat(result.status).isEqualTo("unchanged");
+    }
+
+    @Test
     void jiuzhouHybridCalculatesStandardPriceForNonSpecialRow() throws Exception {
         JsonNode rules = RuleFidelityTestSupport.compileForCustomerCode("JIUZHOU-FK");
         PricingEngine engine = new PricingEngine(rules);

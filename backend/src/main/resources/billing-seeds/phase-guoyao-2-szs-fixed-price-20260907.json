@@ -1,0 +1,7 @@
+{
+  "version": "1",
+  "description": "电机厂（GUOYAO-2）高温纸塑袋固定价3.5元规则落库（2026-09-07）：客户在生产 UI 手工配置「电机厂高温纸塑袋」固定价规则（3.5元、关键词双纸塑、包名称精确匹配、不计包装费/不计折扣），因未走种子/manifest 通道，后端启动时 BillingRulesManifestReconciler.syncDeleteNonManifestRules 按非 manifest 规则将其清除，规则反复「不生效」（R4 类事故：生产手工建规则绕行 manifest）。按客户配置口径补录进种子：FIXED_PRICE 3.5 元、skipPackaging+skipDiscount（FIXED_PRICE 一口价惯例）；匹配模式按规范第三节 FIXED_PRICE 缺省 contains（组合文本子串包含），纠正客户侧「精确匹配」误配——exact_token 要求「双纸塑」以独立 token 出现在包名中，真实包名（如 咬骨钳-1/(双)Z1526、膀胱镜-1/双/Z2060）永不可能命中，客户真实意图为「包名称带双纸塑」的包含语义。",
+  "newRules": [
+    {"code": "GUOYAO-2", "ruleType": "FIXED_PRICE", "name": "电机厂高温纸塑袋", "priority": 30, "price": 3.5, "keywords": ["双纸塑"], "skipPackaging": true, "skipDiscount": true, "isActive": true, "matchMode": "first", "keywordMatchMode": "contains"}
+  ]
+}

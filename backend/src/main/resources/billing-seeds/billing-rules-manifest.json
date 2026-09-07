@@ -1,7 +1,7 @@
 {
   "version": 1,
-  "generated_at": "2026-09-02T15:51:32.469107+00:00",
-  "manifest_hash": "af072391fc75b31033ef40c3c9f3948ed6f3f65f2772602af249ad047d662568",
+  "generated_at": "2026-09-07T04:00:17.116432+00:00",
+  "manifest_hash": "aeafe194f30db3f2a79188af8492c7628a066e4617324e40101d3d3dc5826169",
   "billing_enabled_count": 29,
   "active_billing_enabled_count": 29,
   "customers": {
@@ -1012,10 +1012,24 @@
           "isActive": true,
           "matchMode": "first",
           "keywordMatchMode": "contains"
+        },
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "电机厂高温纸塑袋",
+          "priority": 30,
+          "price": 3.5,
+          "keywords": [
+            "双纸塑"
+          ],
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": true,
+          "matchMode": "first",
+          "keywordMatchMode": "contains"
         }
       ],
-      "rule_count": 32,
-      "active_rule_count": 29
+      "rule_count": 33,
+      "active_rule_count": 30
     },
     "HAIYUAN-SB": {
       "code": "HAIYUAN-SB",
