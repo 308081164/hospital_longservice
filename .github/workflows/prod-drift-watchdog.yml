@@ -33,9 +33,11 @@ jobs:
           # 需要完整历史：生产可能落后多个提交，merge-base/rev-list 依赖祖先链
           fetch-depth: 0
 
-      # 生产 API 对外路径（公网 IP:8853）对 GitHub runner 等境外源 IP 会被挂起约 30s 后
-      # 返回 {"code":500}（HTTP 200 包装业务错误，curl -f 无法识别，曾导致本工作流从未成功）。
-      # 因此与 deploy.yml 的版本 parity 闸门一致：SSH 到服务器本机回环口取版本。
+      # 2026-09-05 晚起，生产宿主机对 GitHub runner（Azure 境外 IP）的入站连接出现干扰：
+      # 8853 直连被挂起约 30s 后返回 {"code":500}（HTTP 200 包装业务错误，curl -f 无法识别），
+      # SSH 22 在密钥交换阶段被 RST（同期 deploy.yml 亦因此失败）。故按
+      # SSH 回环 → 公网 nginx(8854) → 公网直连(8853) 顺序探测，任一通路返回合法版本 JSON 即采纳，
+      # 并输出各通路诊断信息，便于定位宿主机侧封禁。
       - name: Fetch prod version
         id: prod
         env:
@@ -43,32 +45,64 @@ jobs:
           SSH_USER: ${{ secrets.SSH_USER }}
           SSH_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
           SSH_PORT: ${{ secrets.SSH_PORT }}
+          PROD_HOST: ${{ vars.PROD_HOST || '39.102.213.51' }}
+          PROD_HTTP_PORT: ${{ vars.PROD_HTTP_PORT || '8854' }}
         run: |
           set -e
-          PORT="${SSH_PORT:-22}"
-          mkdir -p ~/.ssh
-          printf '%s\n' "$SSH_KEY" > ~/.ssh/prod_drift_key
-          chmod 600 ~/.ssh/prod_drift_key
-          ssh-keyscan -p "$PORT" -H "$SSH_HOST" >> ~/.ssh/known_hosts 2>/dev/null || true
+          BODY=""
 
-          run_ssh () {
-            ssh -i ~/.ssh/prod_drift_key -o StrictHostKeyChecking=no -o ConnectTimeout=10 -p "$PORT" "$SSH_USER@$SSH_HOST" "$@"
+          extract_sha () {
+            printf '%s' "$1" | jq -r '.data.gitSha // ""' 2>/dev/null || true
           }
 
-          BODY=""
-          for attempt in 1 2 3; do
-            BODY="$(run_ssh "curl -sS --connect-timeout 5 --max-time 15 http://127.0.0.1:${PROD_PORT}/api/v1/base/version" 2>/dev/null || true)"
-            if [ -n "$BODY" ] && [ -n "$(printf '%s' "$BODY" | jq -r '.data.gitSha // ""' 2>/dev/null)" ]; then
-              break
+          try_adopt () {
+            if [ -n "$(extract_sha "$2")" ]; then
+              BODY="$2"
+              echo "==> 通路「$1」获取生产版本成功"
+              return 0
             fi
-            echo "::warning::第 ${attempt} 次获取生产版本失败或响应异常，5s 后重试"
-            sleep 5
-          done
+            return 1
+          }
+
+          # 通路 A：SSH 到服务器本机回环口（与 deploy.yml 版本 parity 闸门同路径）
+          if [ -n "${SSH_HOST:-}" ] && [ -n "${SSH_KEY:-}" ]; then
+            PORT="${SSH_PORT:-22}"
+            mkdir -p ~/.ssh
+            printf '%s\n' "$SSH_KEY" > ~/.ssh/prod_drift_key
+            chmod 600 ~/.ssh/prod_drift_key
+            ssh-keyscan -p "$PORT" -H "$SSH_HOST" >> ~/.ssh/known_hosts 2>/dev/null || true
+            for attempt in 1 2; do
+              OUT="$(ssh -i ~/.ssh/prod_drift_key -o StrictHostKeyChecking=no -o ConnectTimeout=10 -p "$PORT" "$SSH_USER@$SSH_HOST" "curl -sS --connect-timeout 5 --max-time 15 http://127.0.0.1:${PROD_PORT}/api/v1/base/version" 2>&1)" || true
+              if try_adopt "SSH 回环" "$OUT"; then
+                break
+              fi
+              echo "::warning::通路 A（SSH 回环）第 ${attempt} 次失败: $(printf '%s' "$OUT" | head -c 200)"
+              sleep 3
+            done
+          else
+            echo "::warning::SSH secrets 未配置，跳过通路 A"
+          fi
+
+          # 通路 B：公网 8854（前端 nginx 同源反代 backend）
+          if [ -z "$(extract_sha "$BODY")" ]; then
+            OUT="$(curl -sS --connect-timeout 8 --max-time 45 "http://${PROD_HOST}:${PROD_HTTP_PORT}/api/v1/base/version" 2>&1)" || true
+            if ! try_adopt "公网 ${PROD_HTTP_PORT} nginx" "$OUT"; then
+              echo "::warning::通路 B（公网 ${PROD_HTTP_PORT}）失败: $(printf '%s' "$OUT" | head -c 200)"
+            fi
+          fi
+
+          # 通路 C：公网 8853 直连 backend（历史默认路径）
+          if [ -z "$(extract_sha "$BODY")" ]; then
+            OUT="$(curl -sS --connect-timeout 8 --max-time 45 "http://${PROD_HOST}:${PROD_PORT}/api/v1/base/version" 2>&1)" || true
+            if ! try_adopt "公网 ${PROD_PORT} 直连" "$OUT"; then
+              echo "::warning::通路 C（公网 ${PROD_PORT}）失败: $(printf '%s' "$OUT" | head -c 200)"
+            fi
+          fi
 
           echo "$BODY"
-          GIT_SHA="$(printf '%s' "$BODY" | jq -r '.data.gitSha // ""' 2>/dev/null || true)"
+          GIT_SHA="$(extract_sha "$BODY")"
           if [ -z "$GIT_SHA" ]; then
-            echo "::error::无法获取生产版本（3 次尝试均失败），原始响应: ${BODY:-<empty>}"
+            echo "::error::无法获取生产版本：SSH 回环 / 公网 ${PROD_HTTP_PORT} / 公网 ${PROD_PORT} 三条通路均失败——疑为宿主机对 GitHub runner IP 的入站干扰（安全组/云防火墙/fail2ban），请登录服务器核查"
             exit 1
           fi
 
