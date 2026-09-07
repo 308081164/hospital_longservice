@@ -28,6 +28,14 @@ public class PricingEngine {
     /** 双层包标记：兼容 /双、/(双)、/（双） 三种写法，后接可选右括号。 */
     private static final java.util.regex.Pattern DOUBLE_BAG_MARK =
             java.util.regex.Pattern.compile("/[(（]?双[)）]?");
+    /**
+     * 计价退化告警备注前缀：凡因未识别规格/类型而保留账单原价、或按兜底价暂计的条目，
+     * 备注以此前缀开头，processRow 末尾汇总为结构化 pricingAlert 写入 billingNotes，
+     * 前端对账表格据此渲染醒目告警（琥珀色），提示人工核对。
+     */
+    private static final String PRICING_ALERT_PREFIX = "【计价告警】";
+    /** pricingAlert 在 billingNotes 中的类型标识（前端解析依据）。 */
+    private static final String PRICING_ALERT_TYPE = "pricing_fallback";
 
     // ---- 缓存：袋尺寸检测器（线程安全，有限容量） ----
     private final JsonNode rules;
@@ -367,7 +375,8 @@ public class PricingEngine {
                                 + fmt(expectedUnitPrice) + " 元/包，总价=单价×包数(" + packCount + ")。");
                     } else {
                         pricingRule = "敷料包(纸塑袋)+棉球——未识别规格";
-                        notes.add("敷料包(纸塑袋)+棉球未能识别纸塑袋规格，保留原始价格。");
+                        notes.add(PRICING_ALERT_PREFIX
+                                + "敷料包(纸塑袋)+棉球未能识别纸塑袋规格，已按账单原价暂计，请人工核对。");
                         requiresReview = true;
                     }
                     skipPackaging = true;
@@ -396,16 +405,16 @@ public class PricingEngine {
                         double defaultPrice = defaultDressingPackPrice();
                         expectedUnitPrice = defaultPrice;
                         pricingRule = "敷料包(无纺布包)驱血带——默认价";
-                        notes.add("驱血带未能识别 W 码规格，0 元导入按默认小敷料包 "
-                                + fmt(defaultPrice) + " 元。");
+                        notes.add(PRICING_ALERT_PREFIX + "驱血带未能识别 W 码规格，0 元导入按默认小敷料包 "
+                                + fmt(defaultPrice) + " 元暂计，请人工核对。");
                         requiresReview = true;
                     } else {
                         pricingRule = measure != null
                                 ? "敷料包(无纺布包)驱血带——未匹配定价"
                                 : "敷料包(无纺布包)驱血带——未识别规格";
-                        notes.add(measure != null
-                                ? "驱血带未能匹配无纺布敷料分档，保留原始价格。"
-                                : "驱血带未能识别无纺布 W 码规格，保留原始价格。");
+                        notes.add(PRICING_ALERT_PREFIX + (measure != null
+                                ? "驱血带未能匹配无纺布敷料分档，已按账单原价暂计，请人工核对。"
+                                : "驱血带未能识别无纺布 W 码规格，已按账单原价暂计，请人工核对。"));
                         requiresReview = true;
                     }
                     skipPackaging = true;
@@ -420,19 +429,21 @@ public class PricingEngine {
                                     + fmt(expectedUnitPrice) + " 元。");
                         } else {
                             pricingRule = "敷料包(无纺布包)——未匹配定价";
-                            notes.add("敷料包规格 " + measure + " 未命中定价表（<90→25, =90→30, 1.2~1.5→35），保留原始价格。");
+                            notes.add(PRICING_ALERT_PREFIX + "敷料包规格 " + measure
+                                    + " 未命中定价表（<90→25, =90→30, 1.2~1.5→35），已按账单原价暂计，请人工核对。");
                             requiresReview = true;
                         }
                     } else if (isZeroImport(unitPrice, totalPrice)) {
                         double defaultPrice = defaultDressingPackPrice();
                         expectedUnitPrice = defaultPrice;
                         pricingRule = "敷料包(无纺布包)——0元导入默认价";
-                        notes.add("敷料包未能识别规格尺寸，0 元导入按标准小敷料包默认单价 "
-                                + fmt(defaultPrice) + " 元。");
+                        notes.add(PRICING_ALERT_PREFIX + "敷料包未能识别规格尺寸，0 元导入按标准小敷料包默认单价 "
+                                + fmt(defaultPrice) + " 元暂计，请人工核对。");
                         requiresReview = true;
                     } else {
                         pricingRule = "敷料包(无纺布包)——未识别规格";
-                        notes.add("敷料包(无纺布包)未能识别到规格尺寸，保留原始价格。");
+                        notes.add(PRICING_ALERT_PREFIX
+                                + "敷料包(无纺布包)未能识别到规格尺寸，已按账单原价暂计，请人工核对。");
                         requiresReview = true;
                     }
                     skipPackaging = true;
@@ -534,7 +545,8 @@ public class PricingEngine {
             }
             case UNKNOWN -> {
             pricingRule = "未识别包装类型，保留原价";
-            notes.add("包装材料\"" + packageMaterial + "\"未能识别为纸塑袋或无纺布，已保留原始价格，请检查包装材料列填写是否正确，或手动调整单价。");
+            notes.add(PRICING_ALERT_PREFIX + "包装材料\"" + packageMaterial
+                    + "\"未能识别为纸塑袋或无纺布，已按账单原价暂计，请检查包装材料列填写是否正确，并人工核对单价。");
             requiresReview = true;
             }
             }
@@ -655,7 +667,8 @@ public class PricingEngine {
 
         if (expectedUnitPrice == null || correctedTotalPrice == null) {
             status = "skipped";
-            notes.add("无法根据当前规则自动计算价格（可能因包装类型或袋尺寸未识别），请人工核定单价和总价。");
+            notes.add(PRICING_ALERT_PREFIX
+                    + "无法根据当前规则自动计算价格（可能因包装类型或袋尺寸未识别），请人工核定单价和总价。");
         } else if (anyPriceAccepted) {
             status = "unchanged";
             difference = 0.0;
@@ -688,6 +701,14 @@ public class PricingEngine {
             status = "warning";
         }
 
+        // 汇总计价退化告警：凡未识别规格/类型而保留账单原价、或按兜底价暂计的条目，统一打告警标记。
+        // 若兜底价恰好等于账单价而被判为 unchanged（如低温纸塑袋未识别尺寸按 22 元兜底），
+        // 强制升级为 warning，确保退化条目在对账表格中标出醒目提醒、不被静默跳过。
+        List<String> pricingAlerts = collectPricingAlerts(notes);
+        if (!pricingAlerts.isEmpty() && "unchanged".equals(status)) {
+            status = "warning";
+        }
+
         ProcessedResult result = new ProcessedResult();
         result.expectedUnitPrice = expectedUnitPrice;
         result.correctedTotalPrice = correctedTotalPrice;
@@ -714,7 +735,35 @@ public class PricingEngine {
         }
         result.billingNotes = mergeBillingNotes(
                 result.billingNotes, consistencyBillingNotes, billingValidationNotes);
+        if (!pricingAlerts.isEmpty()) {
+            result.billingNotes = attachPricingAlert(result.billingNotes, pricingAlerts);
+        }
         return result;
+    }
+
+    /** 收集备注中的计价退化告警（去除前缀后的告警文案列表）。 */
+    private static List<String> collectPricingAlerts(List<String> notes) {
+        List<String> alerts = new ArrayList<>();
+        for (String note : notes) {
+            if (note != null && note.startsWith(PRICING_ALERT_PREFIX)) {
+                alerts.add(note.substring(PRICING_ALERT_PREFIX.length()));
+            }
+        }
+        return alerts;
+    }
+
+    /** 将计价退化告警写入 billingNotes（pricingAlert / pricing_alert 双键，前端据此渲染醒目告警）。 */
+    private static Map<String, Object> attachPricingAlert(
+            Map<String, Object> billingNotes, List<String> pricingAlerts) {
+        Map<String, Object> merged = billingNotes == null || billingNotes.isEmpty()
+                ? new LinkedHashMap<>()
+                : new LinkedHashMap<>(billingNotes);
+        Map<String, Object> alert = new LinkedHashMap<>();
+        alert.put("type", PRICING_ALERT_TYPE);
+        alert.put("messages", new ArrayList<>(pricingAlerts));
+        merged.put("pricingAlert", alert);
+        merged.put("pricing_alert", alert);
+        return merged;
     }
 
     private Map<String, Object> mergeBillingNotes(
@@ -1646,7 +1695,7 @@ public class PricingEngine {
         JsonNode config = rules.path("highTemperature").path("paperPlastic");
         JsonNode bagConfig = findBagConfig(effectiveSize, config.path("bagSizes"));
         if (bagConfig == null) {
-            notes.add("未识别高温纸塑袋尺寸，无法精确匹配袋费，请人工复核。");
+            notes.add(PRICING_ALERT_PREFIX + "未识别高温纸塑袋尺寸，无法精确匹配袋费，请人工复核。");
             return null;
         }
         double perPackagePrice = config.path("perPackagePrice").asDouble();
@@ -1741,7 +1790,7 @@ public class PricingEngine {
         if (instrumentCount == 1) {
             JsonNode bagConfig = findBagConfig(bagSize, config.path("bagSizes"));
             if (bagConfig == null) {
-                notes.add("未识别低温纸塑袋尺寸，按最低 22 元计费。");
+                notes.add(PRICING_ALERT_PREFIX + "未识别低温纸塑袋尺寸，按最低 22 元兜底计费，请人工核对。");
                 return 22.0;
             }
             double price = bagConfig.path("price").asDouble();
@@ -1916,7 +1965,8 @@ public class PricingEngine {
             if ("纸塑袋".equals(itemName) && containsPackagingKeyword(combined, "纸塑袋")) {
                 return new PackagingResult();
             }
-            notes.add("命中包装收费项目\"" + itemName + "\"，但该项目未配置具体选项价格，请先在计费规则中配置价格，或手动核定包装费。");
+            notes.add(PRICING_ALERT_PREFIX + "命中包装收费项目\"" + itemName
+                    + "\"，但该项目未配置具体选项价格，请先在计费规则中配置价格，或手动核定包装费。");
             PackagingResult pr = new PackagingResult();
             pr.warning = true;
             return pr;
@@ -1930,7 +1980,8 @@ public class PricingEngine {
             }
         }
         if (matchedOption == null) {
-            notes.add("命中包装收费项目\"" + matchedItem.path("name").asText() + "\"，但未识别到具体包装规格大小，请人工选择对应规格或手动调整包装费。");
+            notes.add(PRICING_ALERT_PREFIX + "命中包装收费项目\"" + matchedItem.path("name").asText()
+                    + "\"，但未识别到具体包装规格大小，请人工选择对应规格或手动调整包装费。");
             PackagingResult pr = new PackagingResult();
             pr.warning = true;
             return pr;

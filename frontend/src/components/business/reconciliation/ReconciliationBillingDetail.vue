@@ -12,6 +12,19 @@
     <template v-else>
       <div v-if="!expanded" class="compact-view">
         <div class="flex flex-wrap items-center gap-1">
+          <ElTooltip v-if="showPricingAlert" placement="top" :show-after="200">
+            <template #content>
+              <div class="max-w-sm space-y-1 text-xs">
+                <div v-for="(msg, index) in ctx.pricingAlerts" :key="index">
+                  {{ localizeDisplayText(msg) }}
+                </div>
+              </div>
+            </template>
+            <ElTag size="small" type="warning" effect="dark" class="pricing-alert-tag">
+              {{ t('reconciliation.detail.pricingAlertTag') }}
+            </ElTag>
+          </ElTooltip>
+
           <ElTag
             v-if="ctx.isMultiPrice"
             :type="ctx.isMatched ? 'success' : ctx.isMismatch ? 'warning' : 'info'"
@@ -182,6 +195,20 @@
       </div>
 
       <div v-else class="expanded-view space-y-3 px-2 py-1">
+        <section v-if="showPricingAlert" class="detail-section">
+          <div class="detail-section-title">{{ t('reconciliation.detail.pricingAlertSection') }}</div>
+          <ElAlert type="warning" :closable="false" show-icon class="mb-2">
+            <template #title>
+              <span class="text-xs">{{ t('reconciliation.detail.pricingAlertHint') }}</span>
+            </template>
+          </ElAlert>
+          <ul class="trace-notes-list">
+            <li v-for="(msg, index) in ctx.pricingAlerts" :key="index">
+              {{ localizeDisplayText(msg) }}
+            </li>
+          </ul>
+        </section>
+
         <section v-if="pricingRuleSummary" class="detail-section">
           <div class="detail-section-title">{{ t('pricingFlow.ruleSummary') }}</div>
           <div class="detail-value text-sm">{{ localizedPricingRuleSummary }}</div>
@@ -384,6 +411,10 @@
   const { t } = useI18n()
 
   const ctx = computed(() => parseReconciliationBillingContext(props.row))
+  // 人工标记「无需修改」(unchanged) 的行视为已确认，不再提示计价退化告警
+  const showPricingAlert = computed(
+    () => props.row['status'] !== 'unchanged' && ctx.value.hasPricingAlert
+  )
   const blockingValidationViolations = computed(() =>
     ctx.value.billingValidationViolations.filter((item) => item.severity === 'error')
   )

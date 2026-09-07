@@ -1,10 +1,12 @@
 import {
   blocksPricingFromBillingNotes,
+  extractPricingAlerts,
   fieldConsistencyCellClass,
   fieldConsistencyCellTone,
   fieldConsistencyRowClass,
   parseReconciliationBillingContext,
   shouldBlockPricingDisplay,
+  shouldShowPricingAlert,
   shouldShowValidationIndicator,
   validationIndicatorMessages
 } from './reconciliationBillingNotes.ts'
@@ -145,6 +147,82 @@ assertEqual(
 assertTrue(
   fieldConsistencyCellTone({ ...fieldConsistencyRow, status: 'warning' }, 'packName') != null,
   'cell tone still present for other statuses'
+)
+
+// ---- 计价退化告警（未识别规格/类型 → 保留原价/兜底价） ----
+
+// 结构化 billingNotes.pricingAlert 优先
+const pricingAlertRow = {
+  expectedUnitPrice: 30,
+  correctedTotalPrice: 30,
+  status: 'warning',
+  billingNotes: {
+    pricingAlert: {
+      type: 'pricing_fallback',
+      messages: ['敷料包(无纺布包)未能识别到规格尺寸，已按账单原价暂计，请人工核对。']
+    }
+  },
+  notes: ['【计价告警】敷料包(无纺布包)未能识别到规格尺寸，已按账单原价暂计，请人工核对。']
+}
+const pricingAlertCtx = parseReconciliationBillingContext(pricingAlertRow)
+assertTrue(pricingAlertCtx.hasPricingAlert, 'pricing alert should be detected from structured billingNotes')
+assertEqual(
+  pricingAlertCtx.pricingAlerts.length,
+  1,
+  'structured pricingAlert messages parsed (note prefix deduped)'
+)
+assertEqual(
+  pricingAlertCtx.pricingAlerts[0],
+  '敷料包(无纺布包)未能识别到规格尺寸，已按账单原价暂计，请人工核对。',
+  'pricing alert message content'
+)
+assertTrue(
+  shouldShowPricingAlert(pricingAlertRow),
+  'pricing alert shows for warning status'
+)
+assertTrue(
+  pricingAlertCtx.traceNotes.every((note) => !note.includes('【计价告警】')),
+  'pricing alert notes excluded from generic traceNotes (shown in dedicated section)'
+)
+
+// 回退：仅 notes 前缀（无结构化 billingNotes）也能识别
+const noteOnlyAlertRow = {
+  expectedUnitPrice: 22,
+  correctedTotalPrice: 22,
+  status: 'warning',
+  notes: ['【计价告警】未识别低温纸塑袋尺寸，按最低 22 元兜底计费，请人工核对。']
+}
+const noteOnlyCtx = parseReconciliationBillingContext(noteOnlyAlertRow)
+assertTrue(noteOnlyCtx.hasPricingAlert, 'pricing alert detected from note prefix fallback')
+assertEqual(
+  noteOnlyCtx.pricingAlerts[0],
+  '未识别低温纸塑袋尺寸，按最低 22 元兜底计费，请人工核对。',
+  'note prefix fallback strips prefix'
+)
+
+// skipped（无法计价）也要展示告警
+assertTrue(
+  shouldShowPricingAlert({ ...noteOnlyAlertRow, status: 'skipped' }),
+  'pricing alert shows for skipped status'
+)
+
+// 人工标记「无需修改」(unchanged) 后不再提示
+assertEqual(
+  shouldShowPricingAlert({ ...pricingAlertRow, status: 'unchanged' }),
+  false,
+  'pricing alert hidden when row marked as 无需修改 (unchanged)'
+)
+
+// 无告警行不受影响
+assertEqual(
+  extractPricingAlerts(null, ['普通备注']).length,
+  0,
+  'no pricing alert for normal notes'
+)
+assertEqual(
+  shouldShowPricingAlert({ status: 'warning', notes: ['普通备注'] }),
+  false,
+  'no pricing alert when none present'
 )
 
 console.log('reconciliationBillingNotes.test.ts: all assertions passed')

@@ -162,6 +162,28 @@ class PricingEngineTest {
         return codes;
     }
 
+    /** 提取 billingNotes 中的计价退化告警文案（pricingAlert/pricing_alert 双键兼容）。 */
+    @SuppressWarnings("unchecked")
+    private static List<String> extractPricingAlertMessages(Map<String, Object> billingNotes) {
+        if (billingNotes == null) {
+            return List.of();
+        }
+        Object nested = billingNotes.get("pricingAlert") != null
+                ? billingNotes.get("pricingAlert")
+                : billingNotes.get("pricing_alert");
+        if (!(nested instanceof Map<?, ?> nestedMap)
+                || !(nestedMap.get("messages") instanceof List<?> list)) {
+            return List.of();
+        }
+        List<String> messages = new ArrayList<>();
+        for (Object item : list) {
+            if (item != null) {
+                messages.add(String.valueOf(item));
+            }
+        }
+        return messages;
+    }
+
     @Test
     void fieldConsistencyMultiInstrumentPackNameMatchesInstrumentCount() {
         PricingEngine.ProcessedResult result = engine.processRow(row(
@@ -2129,7 +2151,7 @@ class PricingEngineTest {
     }
 
     @Test
-    void cottonBallUnrecognizedSpecWithMatchingPriceIsUnchanged() {
+    void cottonBallUnrecognizedSpecKeepsOriginalPriceAndAlerts() {
         ObjectNode rules = (ObjectNode) defaultRules();
         rules.putObject("billingProfile").put("enabled", true).put("pricingMode", "standard");
 
@@ -2141,9 +2163,120 @@ class PricingEngineTest {
                 "",
                 3, 3, 4, 12));
 
+        // 未识别规格 → 保留账单原价（4 元），但状态必须为 warning 并打出计价告警，不得静默降级
         assertThat(result.expectedUnitPrice).isEqualTo(4.0);
-        assertThat(result.status).isEqualTo("unchanged");
         assertThat(result.pricingRule).contains("未识别规格");
+        assertThat(result.status).isEqualTo("warning");
+        assertThat(extractPricingAlertMessages(result.billingNotes))
+                .anyMatch(msg -> msg.contains("棉球") && msg.contains("人工核对"));
+    }
+
+    @Test
+    void dressingNonWovenTourniquetUnrecognizedSpecKeepsOriginalPriceAndAlerts() {
+        PricingEngine.ProcessedResult result = engine.processRow(row(
+                "测试医院",
+                "敷料包(无纺布包)",
+                "驱血带",
+                "无纺布",
+                1, 1, 30, 30));
+
+        assertThat(result.expectedUnitPrice).isEqualTo(30.0);
+        assertThat(result.pricingRule).contains("驱血带").contains("未识别规格");
+        assertThat(result.status).isEqualTo("warning");
+        assertThat(extractPricingAlertMessages(result.billingNotes))
+                .anyMatch(msg -> msg.contains("驱血带") && msg.contains("人工核对"));
+    }
+
+    @Test
+    void dressingNonWovenPackUnrecognizedSpecKeepsOriginalPriceAndAlerts() {
+        PricingEngine.ProcessedResult result = engine.processRow(row(
+                "测试医院",
+                "敷料包(无纺布包)",
+                "普通敷料包",
+                "无纺布",
+                1, 1, 28, 28));
+
+        assertThat(result.expectedUnitPrice).isEqualTo(28.0);
+        assertThat(result.pricingRule).contains("敷料包(无纺布包)——未识别规格");
+        assertThat(result.status).isEqualTo("warning");
+        assertThat(extractPricingAlertMessages(result.billingNotes))
+                .anyMatch(msg -> msg.contains("未能识别到规格尺寸") && msg.contains("人工核对"));
+    }
+
+    @Test
+    void unknownPackageTypeKeepsOriginalPriceAndAlerts() {
+        PricingEngine.ProcessedResult result = engine.processRow(row(
+                "测试医院",
+                "器械包",
+                "普通器械",
+                "塑料袋",
+                1, 1, 10, 10));
+
+        assertThat(result.expectedUnitPrice).isEqualTo(10.0);
+        assertThat(result.pricingRule).contains("未识别包装类型");
+        assertThat(result.status).isEqualTo("warning");
+        assertThat(extractPricingAlertMessages(result.billingNotes))
+                .anyMatch(msg -> msg.contains("未能识别为纸塑袋或无纺布") && msg.contains("人工核对"));
+    }
+
+    @Test
+    void highTempPaperPlasticUnrecognizedBagSizeIsSkippedAndAlerts() {
+        PricingEngine.ProcessedResult result = engine.processRow(row(
+                "测试医院",
+                "额外包(纸塑袋)",
+                "普通器械",
+                "高温纸塑袋",
+                1, 1, 10, 10));
+
+        // 高温袋尺寸未识别 → 无法计价（skipped），但必须打出计价告警提示人工核定
+        assertThat(result.expectedUnitPrice).isNull();
+        assertThat(result.status).isEqualTo("skipped");
+        assertThat(extractPricingAlertMessages(result.billingNotes))
+                .anyMatch(msg -> msg.contains("未识别高温纸塑袋尺寸"));
+    }
+
+    @Test
+    void lowTempPaperPlasticUnrecognizedBagSizeFallsBackTo22AndAlertsEvenWhenBillMatches() {
+        PricingEngine.ProcessedResult result = engine.processRow(row(
+                "测试医院",
+                "额外包(低温等离子)",
+                "普通器械",
+                "低温纸塑袋",
+                1, 1, 22, 22));
+
+        // 低温袋尺寸未识别 → 按最低 22 元兜底；即便账单价恰好等于 22 元，也必须升级为 warning 并打出告警
+        assertThat(result.expectedUnitPrice).isEqualTo(22.0);
+        assertThat(result.status).isEqualTo("warning");
+        assertThat(extractPricingAlertMessages(result.billingNotes))
+                .anyMatch(msg -> msg.contains("未识别低温纸塑袋尺寸") && msg.contains("22"));
+    }
+
+    @Test
+    void packagingFeeUnrecognizedOptionKeepsPriceAndAlerts() {
+        ObjectNode rules = (ObjectNode) defaultRules();
+        ObjectNode packaging = rules.putObject("packaging");
+        packaging.put("enabled", true);
+        ArrayNode items = packaging.putArray("items");
+        ObjectNode item = items.addObject();
+        item.put("name", "无纺布包装");
+        item.putArray("keywords").add("无纺布");
+        item.put("chargePerPack", true);
+        ArrayNode options = item.putArray("options");
+        options.addObject().put("label", "大包").put("price", 10)
+                .set("keywords", MAPPER.createArrayNode().add("大包"));
+
+        PricingEngine engine = new PricingEngine(rules);
+        PricingEngine.ProcessedResult result = engine.processRow(row(
+                "测试医院",
+                "器械包",
+                "普通器械-3",
+                "无纺布",
+                3, 1, 16.5, 16.5));
+
+        // 命中包装收费项目但未识别规格 → 包装费不叠加，状态 warning 并打出告警
+        assertThat(result.status).isEqualTo("warning");
+        assertThat(extractPricingAlertMessages(result.billingNotes))
+                .anyMatch(msg -> msg.contains("未识别到具体包装规格"));
     }
 
     @ParameterizedTest(name = "golden row: {0}")

@@ -33,6 +33,9 @@ export type BillingValidationViolation = {
   missingFields?: string[]
 }
 
+/** 计价退化告警备注前缀（与后端 PricingEngine PRICING_ALERT_PREFIX 对齐）。 */
+export const PRICING_ALERT_PREFIX = '【计价告警】'
+
 export type FieldConsistencyHighlightField = 'type' | 'packName' | 'packageMaterial' | 'instrumentCount'
 
 export type FieldConsistencyCellTone = 'red' | 'amber' | null
@@ -57,6 +60,8 @@ export type ReconciliationBillingContext = {
   hasBlockingValidationIssues: boolean
   hasZeroUnitPriceWarning: boolean
   blocksPricingDisplay: boolean
+  pricingAlerts: string[]
+  hasPricingAlert: boolean
 }
 
 export type ReconciliationRowBillingFields = {
@@ -255,6 +260,35 @@ export function extractBillingValidationViolations(
   return rawViolations
     .map((item) => parseBillingValidationViolation(item))
     .filter((item): item is BillingValidationViolation => item != null)
+}
+
+/**
+ * 提取计价退化告警（未识别规格/类型而保留账单原价或按兜底价暂计）。
+ * 优先读结构化 billingNotes.pricingAlert/pricing_alert，其次回退解析 notes 中的【计价告警】前缀。
+ */
+export function extractPricingAlerts(
+  billingNotes: Record<string, unknown> | null,
+  notes: string[] = []
+): string[] {
+  const alerts: string[] = []
+  const raw = billingNotes?.pricingAlert ?? billingNotes?.pricing_alert
+  if (raw && typeof raw === 'object' && !Array.isArray(raw)) {
+    const messages = (raw as Record<string, unknown>).messages
+    if (Array.isArray(messages)) {
+      for (const item of messages) {
+        const text = item != null ? String(item).trim() : ''
+        if (text) alerts.push(text)
+      }
+    }
+  }
+  for (const note of notes) {
+    if (typeof note !== 'string') continue
+    const trimmed = note.trim()
+    if (!trimmed.startsWith(PRICING_ALERT_PREFIX)) continue
+    const text = trimmed.slice(PRICING_ALERT_PREFIX.length).trim()
+    if (text && !alerts.includes(text)) alerts.push(text)
+  }
+  return alerts
 }
 
 export function blocksPricingFromBillingNotes(
@@ -499,13 +533,15 @@ export function parseReconciliationBillingContext(
   const hasZeroUnitPriceWarning = billingValidationViolations.some(
     (item) => item.code === 'ZERO_UNIT_PRICE'
   )
+  const pricingAlerts = extractPricingAlerts(billingNotes, notes)
   const traceNotes = notes.filter(
     (note) =>
       !note.includes('多报价命中') &&
       !isDiscountNote(note) &&
       !note.includes('【字段核对】') &&
       !note.includes('【字段核对错误】') &&
-      !note.includes('【原始单价数据异常】')
+      !note.includes('【原始单价数据异常】') &&
+      !note.includes(PRICING_ALERT_PREFIX)
   )
 
   return {
@@ -527,8 +563,19 @@ export function parseReconciliationBillingContext(
     billingValidationViolations,
     hasBlockingValidationIssues,
     hasZeroUnitPriceWarning,
-    blocksPricingDisplay
+    blocksPricingDisplay,
+    pricingAlerts,
+    hasPricingAlert: pricingAlerts.length > 0
   }
+}
+
+/**
+ * 是否在数值/备注区展示计价退化告警。
+ * 与红叹号一致：人工标记「无需修改」(unchanged) 的行视为已确认，不再提示。
+ */
+export function shouldShowPricingAlert(row: Record<string, unknown>): boolean {
+  if (row['status'] === 'unchanged') return false
+  return parseReconciliationBillingContext(row).hasPricingAlert
 }
 
 export function hasBillingDetail(row: Record<string, unknown>): boolean {
@@ -540,6 +587,7 @@ export function hasBillingDetail(row: Record<string, unknown>): boolean {
     ctx.hasFieldConsistencyIssues ||
     ctx.hasBlockingValidationIssues ||
     ctx.hasZeroUnitPriceWarning ||
+    ctx.hasPricingAlert ||
     ctx.matchedRuleId != null ||
     ctx.traceNotes.length > 0 ||
     ctx.ruleName != null
