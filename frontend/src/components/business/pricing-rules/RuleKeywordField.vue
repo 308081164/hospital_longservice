@@ -11,12 +11,19 @@
       :placeholder="placeholder"
       type="textarea"
       :autosize="autosizeConfig"
-      :class="{ 'rule-keyword-field__textarea--large': size === 'large' }"
+      :class="{
+        'rule-keyword-field__textarea--large': size === 'large',
+        'is-error': Boolean(errorMessage),
+      }"
       @focus="focused = true"
       @blur="handleBlur"
       @input="onInput"
     />
-    <p v-if="hint" class="rule-keyword-field__hint">
+    <p v-if="errorMessage" class="rule-keyword-field__error">{{ errorMessage }}</p>
+    <p v-for="warning in warningMessages" :key="warning" class="rule-keyword-field__warning">
+      {{ warning }}
+    </p>
+    <p v-if="hint && !errorMessage" class="rule-keyword-field__hint">
       {{ hint }}
       <span v-if="showCount" class="rule-keyword-field__count">（共 {{ modelValue.length }} 个）</span>
     </p>
@@ -25,6 +32,7 @@
 
 <script setup lang="ts">
 import { computed, ref, watch } from 'vue'
+import { keywordAdjacencyWarnings, validateKeywords } from '@/utils/customerProductRule'
 
 defineOptions({ name: 'RuleKeywordField' })
 
@@ -38,12 +46,17 @@ const props = withDefaults(defineProps<{
   maxRows?: number
   size?: 'default' | 'large'
   showCount?: boolean
+  /** 为 true 时对空关键词报错（主匹配关键词字段） */
+  required?: boolean
+  keywordMatchMode?: 'exact_token' | 'contains'
 }>(), {
   placeholder: '多个关键词用逗号分隔',
   rows: 2,
   maxRows: undefined,
   size: 'default',
   showCount: false,
+  required: false,
+  keywordMatchMode: 'contains',
 })
 
 const autosizeConfig = computed(() => {
@@ -59,6 +72,15 @@ const emit = defineEmits<{
 
 const focused = ref(false)
 const textValue = ref('')
+
+const errorMessage = computed(() => {
+  if (!props.required && props.modelValue.every((k) => !k.trim())) {
+    return null
+  }
+  return validateKeywords(props.modelValue)
+})
+
+const warningMessages = computed(() => keywordAdjacencyWarnings(props.modelValue, props.keywordMatchMode))
 
 function formatKeywords(keywords: string[]): string {
   return keywords.join(', ')
@@ -139,6 +161,18 @@ function handleBlur() {
   color: var(--el-text-color-secondary);
 }
 
+.rule-keyword-field__error {
+  margin: 6px 0 0;
+  font-size: 12px;
+  color: var(--el-color-danger);
+}
+
+.rule-keyword-field__warning {
+  margin: 4px 0 0;
+  font-size: 12px;
+  color: var(--el-color-warning);
+}
+
 .rule-keyword-field__count {
   color: var(--el-text-color-placeholder);
 }
@@ -151,5 +185,9 @@ function handleBlur() {
   min-height: 140px;
   line-height: 1.6;
   font-size: 13px;
+}
+
+.rule-keyword-field :deep(.is-error .el-textarea__inner) {
+  box-shadow: 0 0 0 1px var(--el-color-danger) inset;
 }
 </style>

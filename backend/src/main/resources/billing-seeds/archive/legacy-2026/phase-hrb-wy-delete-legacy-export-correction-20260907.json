@@ -1,0 +1,18 @@
+{
+  "description": "市五院（HRB-WY）彻底删除历史校正价 6 条 + export/外来器械专用规则 6 条（仅保留 Excel 敷料包 8 条）",
+  "strictRuleOps": false,
+  "deleteRules": [
+    { "code": "HRB-WY", "ruleName": "市五export DMD光源1号35" },
+    { "code": "HRB-WY", "ruleName": "市五export DMD光源3号35" },
+    { "code": "HRB-WY", "ruleName": "市五export 磨头Z102688" },
+    { "code": "HRB-WY", "ruleName": "市五export 胸外镜头W90605035" },
+    { "code": "HRB-WY", "ruleName": "市五export 胸腔镜99" },
+    { "code": "HRB-WY", "ruleName": "市五export 骨六电钻16.5" },
+    { "code": "HRB-WY", "ruleName": "校正价132.0" },
+    { "code": "HRB-WY", "ruleName": "校正价16.5" },
+    { "code": "HRB-WY", "ruleName": "校正价22.0" },
+    { "code": "HRB-WY", "ruleName": "校正价44.0" },
+    { "code": "HRB-WY", "ruleName": "校正价88.0" },
+    { "code": "HRB-WY", "ruleName": "校正价99.0" }
+  ]
+}

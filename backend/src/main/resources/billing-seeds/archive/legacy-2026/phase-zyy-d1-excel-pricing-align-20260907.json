@@ -1,0 +1,21 @@
+{
+  "version": "1",
+  "description": "附一 ZYY-D1：附一收费标准 Excel 口径回正 — 30°腹腔镜 30.38、换药包(120布) 21.99（纠正 pricing-align-close CSV 漂移）",
+  "ruleUpdates": [
+    {
+      "code": "ZYY-D1",
+      "ruleName": "换药包120布组合价",
+      "setPrice": 21.99
+    },
+    {
+      "code": "ZYY-D1",
+      "ruleName": "30°腹腔镜组合价",
+      "setPrice": 30.38
+    },
+    {
+      "code": "ZYY-D1",
+      "ruleName": "30度腹腔镜ground30.38",
+      "setPrice": 30.38
+    }
+  ]
+}

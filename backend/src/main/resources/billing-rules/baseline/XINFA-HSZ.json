@@ -1,0 +1,67 @@
+{
+  "customerCode": "XINFA-HSZ",
+  "customerName": "新发红十字医院",
+  "billingEnabled": true,
+  "billingPricingMode": "hybrid",
+  "productRules": [
+    {
+      "ruleType": "FOLD",
+      "name": "新发胶帽>5折算22",
+      "priority": 11,
+      "keywords": [
+        "胶帽@contains"
+      ],
+      "threshold": 5,
+      "foldRatio": 5,
+      "minInstrumentCount": 6,
+      "price": 22.0,
+      "skipPackaging": true,
+      "temperature": "LT",
+      "isActive": true,
+      "matchMode": "first",
+      "skipDiscount": false,
+      "acceptedTypes": [
+        "额外包低温等离子"
+      ]
+    },
+    {
+      "ruleType": "FOLD",
+      "name": "新发胶帽≤5按1件含包材",
+      "priority": 10,
+      "keywords": [
+        "胶帽@contains"
+      ],
+      "threshold": 5,
+      "foldRatio": 5,
+      "maxInstrumentCount": 5,
+      "skipPackaging": false,
+      "temperature": "LT",
+      "isActive": true,
+      "matchMode": "first",
+      "skipDiscount": false,
+      "acceptedTypes": [
+        "额外包低温等离子"
+      ]
+    },
+    {
+      "ruleType": "FOLD",
+      "name": "新发转换器胶帽5合1加盒22",
+      "priority": 9,
+      "keywords": [
+        "转换器1胶帽@contains"
+      ],
+      "threshold": 5,
+      "foldRatio": 5,
+      "extraCount": 1,
+      "price": 22.0,
+      "skipPackaging": true,
+      "temperature": "LT",
+      "isActive": true,
+      "matchMode": "first",
+      "skipDiscount": false,
+      "acceptedTypes": [
+        "额外包低温等离子"
+      ]
+    }
+  ]
+}

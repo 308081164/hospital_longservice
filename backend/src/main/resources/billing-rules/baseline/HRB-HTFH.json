@@ -1,0 +1,46 @@
+{
+  "customerCode": "HRB-HTFH",
+  "customerName": "哈尔滨航天风华医院",
+  "billingEnabled": true,
+  "billingPricingMode": "hybrid",
+  "productRules": [
+    {
+      "ruleType": "FOLD",
+      "name": "航天风华镍钛锉5合1免包材",
+      "priority": 19,
+      "keywords": [
+        "镍钛锉@contains"
+      ],
+      "threshold": 5,
+      "foldRatio": 5,
+      "minInstrumentCount": 11,
+      "skipPackaging": true,
+      "isActive": true,
+      "matchMode": "first",
+      "skipDiscount": false,
+      "keywordMatchMode": "exact_token",
+      "acceptedTypes": [
+        "额外包（纸塑袋）"
+      ]
+    },
+    {
+      "ruleType": "FOLD",
+      "name": "航天风华镍钛锉5合1含包材",
+      "priority": 18,
+      "keywords": [
+        "镍钛锉@contains"
+      ],
+      "threshold": 5,
+      "foldRatio": 5,
+      "maxInstrumentCount": 10,
+      "skipPackaging": false,
+      "isActive": true,
+      "matchMode": "first",
+      "skipDiscount": false,
+      "keywordMatchMode": "exact_token",
+      "acceptedTypes": [
+        "额外包（纸塑袋）"
+      ]
+    }
+  ]
+}

@@ -148,11 +148,10 @@ if grep -q '"ok": false' /tmp/parity_smoke.json 2>/dev/null; then
   exit 1
 fi
 
-echo ">> rules compare (--all, fail on missing/changed only)"
-./bin/hospital-cli rules compare --all --mode direct --profile prod \
-  --api "$API_BASE" --json > /tmp/parity_rules.json || {
-  cat /tmp/parity_rules.json 2>/dev/null || true
-  echo "rules compare 执行失败" >&2
+echo ">> rules verify (--all, baseline vs prod API)"
+./bin/hospital-cli rules verify --all --profile prod --fail-on-drift \
+  --api "$API_BASE" || {
+  echo "rules verify 执行失败" >&2
   exit 1
 }
 python3 - <<'PY'
@@ -160,26 +159,15 @@ import json
 import sys
 from pathlib import Path
 
-data = json.loads(Path("/tmp/parity_rules.json").read_text(encoding="utf-8"))
-summary = data.get("summary") or {}
-missing = int(summary.get("total_missing") or 0)
-changed = int(summary.get("total_changed") or 0)
-extra = int(summary.get("total_extra") or 0)
-override_drift = int(summary.get("override_drift_count") or 0)
-billing_drift = int(summary.get("billing_enabled_drift_count") or 0)
-billing_count_ok = summary.get("billing_enabled_count_ok", True)
-print(json.dumps(data, ensure_ascii=False, indent=2))
-Path("测试用例/billing_rules_parity_report.json").write_text(
-    json.dumps(data, ensure_ascii=False, indent=2) + "\n", encoding="utf-8"
-)
-if missing or changed or extra or override_drift or billing_drift or not billing_count_ok:
-    print(
-        f"rules parity FAIL: missing={missing} changed={changed} extra={extra} "
-        f"override_drift={override_drift} billing_enabled_drift={billing_drift} "
-        f"billing_count_ok={billing_count_ok}",
-        file=sys.stderr,
-    )
-    sys.exit(1)
+report_path = Path("测试用例/billing_rules_verify_report.json")
+if report_path.is_file():
+    data = json.loads(report_path.read_text(encoding="utf-8"))
+    print(json.dumps(data, ensure_ascii=False, indent=2))
+    if not data.get("ok"):
+        print(f"rules verify FAIL: {len(data.get('errors') or [])} errors", file=sys.stderr)
+        sys.exit(1)
+else:
+    print("WARN: verify report not found, skipped secondary parse", file=sys.stderr)
 PY
 
 echo ">> rules spot-check STANDARD (标准价：棉球敷料 + 高温纸塑件费)"

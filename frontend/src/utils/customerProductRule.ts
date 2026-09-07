@@ -49,6 +49,57 @@ export function isProductRequired(ruleType: CustomerProductRuleType): boolean {
   return ruleType === 'FIXED_PRICE' || ruleType === 'PRICE_PER_INSTRUMENT' || ruleType === 'MULTIPLIER'
 }
 
+export function defaultKeywordMatchMode(ruleType: CustomerProductRuleType): 'exact_token' | 'contains' {
+  return ruleType === 'FOLD' ? 'exact_token' : 'contains'
+}
+
+const CJK_RE = /[\u3400-\u4dbf\u4e00-\u9fff]/
+
+function stripKeywordSuffix(kw: string): string {
+  return kw.replace(/@(contains|exact)$/i, '').trim()
+}
+
+export function validateKeywords(keywords: string[]): string | null {
+  const cleaned = keywords.map((k) => k.trim()).filter(Boolean)
+  if (cleaned.length === 0) {
+    return '请至少填写一个匹配关键词'
+  }
+  for (const kw of cleaned) {
+    if (kw.includes('@contains') && kw.includes('@exact')) {
+      return `关键词「${kw}」不能同时使用 @contains 与 @exact`
+    }
+    const suffixMatches = kw.match(/@(contains|exact)/gi) ?? []
+    if (suffixMatches.length > 1) {
+      return `关键词「${kw}」包含多个匹配后缀，请只保留 @contains 或 @exact`
+    }
+    for (const suffix of suffixMatches) {
+      if (!/@(contains|exact)$/i.test(kw)) {
+        return `关键词「${kw}」的 ${suffix} 须写在词尾（如 根管锉@contains）`
+      }
+    }
+    const base = stripKeywordSuffix(kw)
+    if (!base) {
+      return '关键词不能只包含匹配后缀，请填写实际匹配词'
+    }
+  }
+  return null
+}
+
+/** 非阻断提示：CJK 邻接时 exact_token 可能词中失配 */
+export function keywordAdjacencyWarnings(
+  keywords: string[],
+  matchMode: 'exact_token' | 'contains' = 'contains',
+): string[] {
+  if (matchMode === 'contains') return []
+  const warnings: string[] = []
+  for (const kw of keywords.map((k) => stripKeywordSuffix(k)).filter(Boolean)) {
+    if (CJK_RE.test(kw)) {
+      warnings.push(`「${kw}」在精确词匹配下，若包名中存在 CJK 前缀/后缀变体可能无法命中，可考虑 @contains`)
+    }
+  }
+  return warnings
+}
+
 export function isSettlementRule(ruleType: CustomerProductRuleType): boolean {
   return ruleType === 'FOLD' || ruleType === 'EXTRA_FEE' || ruleType === 'ADD_FEE'
 }
@@ -96,7 +147,7 @@ export function createEmptyProductRuleDraft(
     fee: 1,
     threshold: 10,
     foldRatio: 5,
-    keywordMatchMode: 'exact_token',
+    keywordMatchMode: 'contains',
     keywords: [],
     excludeKeywords: [],
     materials: [],
@@ -326,7 +377,7 @@ export function draftToProductRule(
     fee: draft.ruleType === 'EXTRA_FEE' || draft.ruleType === 'ADD_FEE' ? draft.fee : undefined,
     threshold: draft.ruleType === 'FOLD' ? draft.threshold : undefined,
     foldRatio: draft.ruleType === 'FOLD' ? draft.foldRatio : undefined,
-    keywordMatchMode: draft.ruleType === 'FOLD' ? (draft.keywordMatchMode ?? 'exact_token') : undefined,
+    keywordMatchMode: draft.keywordMatchMode ?? defaultKeywordMatchMode(draft.ruleType),
     keywords: draft.keywords.length ? [...draft.keywords] : undefined,
     excludeKeywords: draft.excludeKeywords.length ? [...draft.excludeKeywords] : undefined,
     materials: draft.materials.length ? [...draft.materials] : undefined,
@@ -361,7 +412,7 @@ export function draftToSavePayload(
     fee: draft.ruleType === 'EXTRA_FEE' || draft.ruleType === 'ADD_FEE' ? draft.fee : undefined,
     threshold: draft.ruleType === 'FOLD' ? draft.threshold : undefined,
     foldRatio: draft.ruleType === 'FOLD' ? draft.foldRatio : undefined,
-    keywordMatchMode: draft.ruleType === 'FOLD' ? (draft.keywordMatchMode ?? 'exact_token') : undefined,
+    keywordMatchMode: draft.keywordMatchMode ?? defaultKeywordMatchMode(draft.ruleType),
     keywords: draft.keywords,
     excludeKeywords: draft.excludeKeywords,
     materials: draft.materials,
@@ -415,6 +466,8 @@ export function validateProductRuleDraft(draft: CustomerProductRuleDraft): strin
   } else if (draft.ruleType === 'EXTRA_FEE' || draft.ruleType === 'ADD_FEE') {
     if (!draft.fee || draft.fee <= 0) return '加收金额必须大于 0'
   }
+  const keywordError = validateKeywords(draft.keywords)
+  if (keywordError) return keywordError
   if (hasKeywordOverlap(draft.keywords, draft.excludeKeywords)) {
     return '排除关键词不能与匹配关键词重复'
   }

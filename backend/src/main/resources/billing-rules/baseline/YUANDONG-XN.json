@@ -1,0 +1,42 @@
+{
+  "customerCode": "YUANDONG-XN",
+  "customerName": "黑龙江省远东心脑血管医院",
+  "billingEnabled": true,
+  "billingPricingMode": "hybrid",
+  "productRules": [
+    {
+      "ruleType": "PRICE_PER_INSTRUMENT",
+      "name": "远东双<3按件5.5含包材",
+      "priority": 10,
+      "price": 5.5,
+      "keywords": [
+        "双@contains"
+      ],
+      "maxInstrumentCount": 2,
+      "skipPackaging": false,
+      "skipDiscount": true,
+      "isActive": true,
+      "matchMode": "first",
+      "acceptedTypes": [
+        "额外包（纸塑袋）"
+      ]
+    },
+    {
+      "ruleType": "PRICE_PER_INSTRUMENT",
+      "name": "远东双≥3按件5.5免包材",
+      "priority": 11,
+      "price": 5.5,
+      "keywords": [
+        "双@contains"
+      ],
+      "minInstrumentCount": 3,
+      "skipPackaging": true,
+      "skipDiscount": true,
+      "isActive": true,
+      "matchMode": "first",
+      "acceptedTypes": [
+        "额外包（纸塑袋）"
+      ]
+    }
+  ]
+}

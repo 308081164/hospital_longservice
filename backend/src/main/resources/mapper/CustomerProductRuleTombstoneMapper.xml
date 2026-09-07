@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hospital.backend.mapper.CustomerProductRuleTombstoneMapper">
+
+    <resultMap id="CustomerProductRuleTombstoneResultMap" type="com.hospital.backend.entity.CustomerProductRuleTombstone">
+        <id property="id" column="id"/>
+        <result property="productRuleId" column="product_rule_id"/>
+        <result property="customerId" column="customer_id"/>
+        <result property="customerCode" column="customer_code"/>
+        <result property="ruleName" column="rule_name"/>
+        <result property="ruleSnapshot" column="rule_snapshot"/>
+        <result property="manifestHash" column="manifest_hash"/>
+        <result property="quarantineReason" column="quarantine_reason"/>
+        <result property="quarantinedAt" column="quarantined_at"/>
+        <result property="restoredAt" column="restored_at"/>
+        <result property="restoredBy" column="restored_by"/>
+    </resultMap>
+
+    <insert id="insert" parameterType="com.hospital.backend.entity.CustomerProductRuleTombstone" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO customer_product_rule_tombstone (
+            product_rule_id, customer_id, customer_code, rule_name, rule_snapshot,
+            manifest_hash, quarantine_reason, quarantined_at
+        ) VALUES (
+            #{productRuleId}, #{customerId}, #{customerCode}, #{ruleName}, #{ruleSnapshot},
+            #{manifestHash}, #{quarantineReason}, NOW()
+        )
+    </insert>
+
+    <select id="selectActiveByCustomerId" resultMap="CustomerProductRuleTombstoneResultMap">
+        SELECT * FROM customer_product_rule_tombstone
+        WHERE customer_id = #{customerId} AND restored_at IS NULL
+        ORDER BY quarantined_at DESC, id DESC
+    </select>
+
+    <select id="selectAllActive" resultMap="CustomerProductRuleTombstoneResultMap">
+        SELECT * FROM customer_product_rule_tombstone
+        WHERE restored_at IS NULL
+        ORDER BY quarantined_at DESC, id DESC
+        LIMIT #{limit}
+    </select>
+
+    <select id="selectLatestActiveByRuleId" resultMap="CustomerProductRuleTombstoneResultMap">
+        SELECT * FROM customer_product_rule_tombstone
+        WHERE product_rule_id = #{productRuleId} AND restored_at IS NULL
+        ORDER BY quarantined_at DESC, id DESC
+        LIMIT 1
+    </select>
+
+    <select id="selectById" resultMap="CustomerProductRuleTombstoneResultMap">
+        SELECT * FROM customer_product_rule_tombstone WHERE id = #{id}
+    </select>
+
+    <update id="markRestored">
+        UPDATE customer_product_rule_tombstone
+        SET restored_at = NOW(), restored_by = #{restoredBy}
+        WHERE id = #{id} AND restored_at IS NULL
+    </update>
+
+    <select id="countActive" resultType="long">
+        SELECT COUNT(*) FROM customer_product_rule_tombstone WHERE restored_at IS NULL
+    </select>
+
+</mapper>

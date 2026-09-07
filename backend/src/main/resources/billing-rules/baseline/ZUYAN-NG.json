@@ -1,0 +1,48 @@
+{
+  "customerCode": "ZUYAN-NG",
+  "customerName": "祖研-黑龙江省中医医院（南岗院区）",
+  "billingEnabled": true,
+  "billingPricingMode": "hybrid",
+  "productRules": [
+    {
+      "ruleType": "FOLD",
+      "name": "祖研排针10合1免包材",
+      "priority": 11,
+      "keywords": [
+        "排针@contains"
+      ],
+      "threshold": 10,
+      "foldRatio": 10,
+      "minInstrumentCount": 21,
+      "skipPackaging": true,
+      "isActive": true,
+      "matchMode": "first",
+      "skipDiscount": false,
+      "price": 5.5,
+      "keywordMatchMode": "exact_token",
+      "acceptedTypes": [
+        "额外包（纸塑袋）"
+      ]
+    },
+    {
+      "ruleType": "FOLD",
+      "name": "祖研排针10合1含包材",
+      "priority": 10,
+      "keywords": [
+        "排针@contains"
+      ],
+      "threshold": 10,
+      "foldRatio": 10,
+      "maxInstrumentCount": 20,
+      "skipPackaging": false,
+      "isActive": true,
+      "matchMode": "first",
+      "skipDiscount": false,
+      "price": 5.5,
+      "keywordMatchMode": "exact_token",
+      "acceptedTypes": [
+        "额外包（纸塑袋）"
+      ]
+    }
+  ]
+}

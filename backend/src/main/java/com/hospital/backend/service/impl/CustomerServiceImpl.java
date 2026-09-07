@@ -3,6 +3,7 @@ package com.hospital.backend.service.impl;
 import com.hospital.backend.common.JsonUtils;
 import com.hospital.backend.common.Result;
 import com.hospital.backend.dto.request.customer.*;
+import com.hospital.backend.dto.response.billing.RuleVerificationResult;
 import com.hospital.backend.dto.response.customer.CustomerBillingPolicyResponse;
 import com.hospital.backend.dto.response.customer.CustomerProductRuleResponse;
 import com.hospital.backend.dto.response.customer.CustomerResponse;
@@ -11,7 +12,12 @@ import com.hospital.backend.mapper.*;
 import com.hospital.backend.service.CustomerService;
 import com.hospital.backend.service.BillingMode;
 import com.hospital.backend.service.BillingModeInference;
+import com.hospital.backend.config.BaselineRuleIndex;
 import com.hospital.backend.service.BillingRuleGroupSyncService;
+import com.hospital.backend.service.PricingRuleCompileCache;
+import com.hospital.backend.service.RuleChangeAuditService;
+import com.hospital.backend.service.RulesVerificationService;
+import com.hospital.backend.service.impl.RuleQuarantineServiceImpl;
 import com.hospital.backend.util.ProductRuleNameUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -39,9 +45,14 @@ public class CustomerServiceImpl implements CustomerService {
     private final BillingRuleGroupSyncService billingRuleGroupSyncService;
     private final DepartmentEntryMapper departmentEntryMapper;
     private final PhysicianEntryMapper physicianEntryMapper;
+    private final RuleChangeAuditService ruleChangeAuditService;
+    private final BaselineRuleIndex baselineRuleIndex;
+    private final RulesVerificationService rulesVerificationService;
+    private final PricingRuleCompileCache compileCache;
 
     private static final Set<String> PRICING_RULE_TYPES = Set.of(
-            "FIXED_PRICE", "PRICE_PER_INSTRUMENT", "MULTIPLIER", "FOLD", "EXTRA_FEE", "ADD_FEE");
+            "FIXED_PRICE", "PRICE_PER_INSTRUMENT", "MULTIPLIER", "FOLD", "EXTRA_FEE", "ADD_FEE",
+            "ZERO_PRICE_OVERRIDE");
 
     private static final Set<String> PRODUCT_BOUND_RULE_TYPES = Set.of(
             "FIXED_PRICE", "PRICE_PER_INSTRUMENT", "MULTIPLIER");
@@ -132,12 +143,13 @@ public class CustomerServiceImpl implements CustomerService {
 
     @Override
     public Result<List<CustomerProductRuleResponse>> listProductRules(Long customerId) {
-        if (customerMapper.selectById(customerId) == null) {
+        Customer customer = customerMapper.selectById(customerId);
+        if (customer == null) {
             return Result.fail(404, "客户不存在");
         }
         List<CustomerProductRuleResponse> data = productRuleMapper.selectByCustomerId(customerId).stream()
                 .filter(rule -> PRICING_RULE_TYPES.contains(rule.getRuleType()))
-                .map(this::toProductRuleResponse)
+                .map(rule -> toProductRuleResponse(rule, customer))
                 .collect(Collectors.toList());
         return Result.success(data);
     }
@@ -159,7 +171,20 @@ public class CustomerServiceImpl implements CustomerService {
         }
         CustomerProductRule rule = buildProductRuleEntity(customerId, request);
         productRuleMapper.insert(rule);
-        return Result.success(toProductRuleResponse(productRuleMapper.selectById(rule.getId())));
+        CustomerProductRule saved = productRuleMapper.selectById(rule.getId());
+        ruleChangeAuditService.logChange(
+                customerId,
+                null,
+                saved.getId(),
+                "CREATE",
+                "PRODUCT_RULE",
+                null,
+                RuleQuarantineServiceImpl.snapshotRule(saved),
+                "ui",
+                "UI 创建规则：" + saved.getName());
+        compileCache.invalidateCustomer(customerId);
+        Customer customer = customerMapper.selectById(customerId);
+        return Result.success(toProductRuleResponse(saved, customer, true));
     }
 
     @Override
@@ -178,9 +203,22 @@ public class CustomerServiceImpl implements CustomerService {
         if (duplicate != null) {
             return Result.fail(400, "该商品在相同匹配条件下已配置独立计价策略");
         }
+        Map<String, Object> before = RuleQuarantineServiceImpl.snapshotRule(rule);
         applyProductRuleRequest(rule, request);
         productRuleMapper.updateById(rule);
-        return Result.success(toProductRuleResponse(productRuleMapper.selectById(ruleId)));
+        CustomerProductRule saved = productRuleMapper.selectById(ruleId);
+        ruleChangeAuditService.logChange(
+                customerId,
+                null,
+                ruleId,
+                "UPDATE",
+                "PRODUCT_RULE",
+                before,
+                RuleQuarantineServiceImpl.snapshotRule(saved),
+                "ui",
+                "UI 更新规则：" + saved.getName());
+        compileCache.invalidateCustomer(customerId);
+        return Result.success(toProductRuleResponse(saved, customerMapper.selectById(customerId), true));
     }
 
     @Override
@@ -190,7 +228,20 @@ public class CustomerServiceImpl implements CustomerService {
         if (rule == null || !customerId.equals(rule.getCustomerId())) {
             return Result.fail(404, "计价策略不存在");
         }
-        productRuleMapper.deleteById(ruleId);
+        Map<String, Object> before = RuleQuarantineServiceImpl.snapshotRule(rule);
+        rule.setIsActive(false);
+        productRuleMapper.updateById(rule);
+        ruleChangeAuditService.logChange(
+                customerId,
+                null,
+                ruleId,
+                "DELETE",
+                "PRODUCT_RULE",
+                before,
+                Map.of("isActive", false),
+                "ui",
+                "UI 软删除规则：" + rule.getName());
+        compileCache.invalidateCustomer(customerId);
         return Result.success(Map.of("success", true));
     }
 
@@ -402,7 +453,7 @@ public class CustomerServiceImpl implements CustomerService {
             rule.setMultiplier(dto.getMultiplier());
             rule.setThreshold(dto.getThreshold());
             rule.setFoldRatio(dto.getFoldRatio());
-            rule.setKeywordMatchMode(normalizeKeywordMatchMode(dto.getKeywordMatchMode()));
+            rule.setKeywordMatchMode(normalizeKeywordMatchMode(dto.getKeywordMatchMode(), dto.getRuleType()));
             rule.setSkipPackaging(dto.getSkipPackaging() != null ? dto.getSkipPackaging() : false);
             rule.setSkipDiscount(dto.getSkipDiscount() != null ? dto.getSkipDiscount() : false);
             rule.setIsActive(dto.getIsActive() != null ? dto.getIsActive() : true);
@@ -539,7 +590,7 @@ public class CustomerServiceImpl implements CustomerService {
         rule.setMaxInstrumentCount(request.getMaxInstrumentCount());
         rule.setThreshold(request.getThreshold());
         rule.setFoldRatio(request.getFoldRatio());
-        rule.setKeywordMatchMode(normalizeKeywordMatchMode(request.getKeywordMatchMode()));
+        rule.setKeywordMatchMode(normalizeKeywordMatchMode(request.getKeywordMatchMode(), request.getRuleType()));
         rule.setFee(request.getFee());
         applyBillingModeFields(rule, request);
         String ruleType = rule.getRuleType();
@@ -648,8 +699,22 @@ public class CustomerServiceImpl implements CustomerService {
         return json.trim();
     }
 
-    private CustomerProductRuleResponse toProductRuleResponse(CustomerProductRule rule) {
+    private CustomerProductRuleResponse toProductRuleResponse(CustomerProductRule rule, Customer customer) {
+        return toProductRuleResponse(rule, customer, false);
+    }
+
+    private CustomerProductRuleResponse toProductRuleResponse(
+            CustomerProductRule rule, Customer customer, boolean withVerification) {
         Product product = rule.getProductId() != null ? productMapper.selectById(rule.getProductId()) : null;
+        boolean baselineAligned = true;
+        RuleVerificationResult verification = null;
+        if (customer != null && baselineRuleIndex.hasBaseline(customer.getCode())) {
+            verification = rulesVerificationService.verifyCustomer(customer.getCode());
+            baselineAligned = verification.isOk();
+            if (!withVerification) {
+                verification = null;
+            }
+        }
         return CustomerProductRuleResponse.builder()
                 .id(rule.getId())
                 .customerId(rule.getCustomerId())
@@ -681,6 +746,8 @@ public class CustomerServiceImpl implements CustomerService {
                 .skipPackaging(rule.getSkipPackaging())
                 .skipDiscount(rule.getSkipDiscount())
                 .isActive(rule.getIsActive())
+                .baselineAligned(baselineAligned)
+                .verification(verification)
                 .createdAt(rule.getCreatedAt())
                 .updatedAt(rule.getUpdatedAt())
                 .build();
@@ -825,11 +892,14 @@ public class CustomerServiceImpl implements CustomerService {
         return matchMode != null && !matchMode.isBlank() ? matchMode.trim() : "first";
     }
 
-    private String normalizeKeywordMatchMode(String keywordMatchMode) {
-        if (keywordMatchMode == null || keywordMatchMode.isBlank()) {
+    private String normalizeKeywordMatchMode(String keywordMatchMode, String ruleType) {
+        if (keywordMatchMode != null && !keywordMatchMode.isBlank()) {
+            return "contains".equalsIgnoreCase(keywordMatchMode.trim()) ? "contains" : "exact_token";
+        }
+        if ("FOLD".equalsIgnoreCase(ruleType)) {
             return "exact_token";
         }
-        return "contains".equalsIgnoreCase(keywordMatchMode.trim()) ? "contains" : "exact_token";
+        return "contains";
     }
 
     private List<BigDecimal> cleanDecimalList(List<BigDecimal> values) {

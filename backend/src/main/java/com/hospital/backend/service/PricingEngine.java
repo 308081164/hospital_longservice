@@ -357,6 +357,11 @@ public class PricingEngine {
             if (specialPrice.ruleId != null) {
                 matchedRuleId = specialPrice.ruleId;
             }
+            if (specialPrice.manualReview) {
+                requiresReview = true;
+                notes.add(PRICING_ALERT_PREFIX
+                        + "命中电机厂「包名称带双」相关规则，当前规则细节待客户确认，请人工核对。");
+            }
         } else if (preserveOriginalOnMiss) {
             Double forcedPrice = computeForceHighTempUnitPrice(forceHighTempPerItem, materialBillingCount);
             if (forcedPrice != null) {
@@ -596,6 +601,11 @@ public class PricingEngine {
                 notes.add(specialFee.note);
                 if (matchedRuleId == null && specialFee.ruleId != null) {
                     matchedRuleId = specialFee.ruleId;
+                }
+                if (specialFee.manualReview) {
+                    requiresReview = true;
+                    notes.add(PRICING_ALERT_PREFIX
+                            + "命中电机厂「包名称带双」相关规则，当前规则细节待客户确认，请人工核对。");
                 }
             }
         }
@@ -1145,6 +1155,7 @@ public class PricingEngine {
         result.acceptedPrices = acceptedPrices;
         result.skipPackaging = rule.path("skipPackaging").asBoolean(false);
         result.skipHospitalDiscount = rule.path("skipHospitalDiscount").asBoolean(false);
+        result.manualReview = rule.path("manualReview").asBoolean(false);
         result.note = result.ruleName + computation.noteSuffix();
         if (result.anyPriceMode) {
             result.note += "（多报价候选：" + formatPriceList(acceptedPrices) + "）";
@@ -1237,6 +1248,7 @@ public class PricingEngine {
         result.ruleName = rule.path("name").asText("特殊加收");
         result.note = result.ruleName + "，加收 " + fmt(result.fee) + " 元。";
         result.ruleId = rule.has("ruleId") ? rule.path("ruleId").asLong() : null;
+        result.manualReview = rule.path("manualReview").asBoolean(false);
         return result;
     }
 
@@ -2449,6 +2461,7 @@ public class PricingEngine {
         String note;
         boolean skipPackaging;
         boolean skipHospitalDiscount;
+        boolean manualReview;
         Long ruleId;
         boolean anyPriceMode;
         List<Double> acceptedPrices = List.of();
@@ -2459,6 +2472,7 @@ public class PricingEngine {
         double fee;
         String ruleName;
         String note;
+        boolean manualReview;
         Long ruleId;
     }
 

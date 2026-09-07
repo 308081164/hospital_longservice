@@ -38,7 +38,6 @@ public class HardcodedRulesMigrationRunner implements CommandLineRunner {
         seedSysSettings();
         seedDefaultPricingRuleTemplate();
         seedMissingCustomers();
-        seedEngineProductRules();
         seedEreryyPhase1Profile();
         markMigrationComplete();
     }
@@ -89,72 +88,6 @@ public class HardcodedRulesMigrationRunner implements CommandLineRunner {
         ensureCustomer("HL-ZGH", "黑龙江总工会医院", null, null, false, true,
                 List.of(alias("黑龙江总工会医院", "engine")),
                 List.of(), List.of());
-    }
-
-    private void seedEngineProductRules() {
-        // 2026-08-27 严格测试口径收敛：仅保留 22 家特殊计价客户的硬编码规则。
-        // 非 22 家客户的固定价/折算规则不再于此 seed（客户已删除，规则随之作废）。
-        ensureRule("NEAU-YY", "PRICE_PER_INSTRUMENT", "东北农业大学医院洁牙机尖每件 5.5 元", 10,
-                bd("5.5"), List.of("洁牙机尖"), null, null, true, false);
-        ensureRule("HRB-HTFH", "PRICE_PER_INSTRUMENT", "航天风华挖勺每件 5.5 元", 10,
-                bd("5.5"), List.of("挖勺"), null, null, true, false);
-
-        // ---- foldRules ----
-        ensureFoldRule("HRB-SD-MB", "松电机扩针 5 件算 1 件", 10,
-                List.of("机扩针"), null, 5, bd("5"));
-        ensureFoldRule("HRB-HTFH", "航天风华镍钛锉 5 件算 1 件", 20,
-                List.of("镍钛锉"), null, 5, bd("5"));
-    }
-
-    private void ensureRule(String customerCode, String ruleType, String name, int priority,
-                            BigDecimal price, List<String> keywords, List<String> materials,
-                            Integer bagSizeEquals, boolean skipPackaging, boolean skipDiscount) {
-        Customer customer = customerMapper.selectByCode(customerCode);
-        if (customer == null) {
-            log.warn("Customer {} not found, skip rule {}", customerCode, name);
-            return;
-        }
-        if (customerProductRuleMapper.countByCustomerIdAndName(customer.getId(), name) > 0) {
-            return;
-        }
-        CustomerProductRule rule = new CustomerProductRule();
-        rule.setCustomerId(customer.getId());
-        rule.setRuleType(ruleType);
-        rule.setName(name);
-        rule.setPriority(priority);
-        rule.setPrice(price);
-        rule.setKeywords(keywords != null ? JsonUtils.toJson(keywords) : null);
-        rule.setMaterials(materials != null ? JsonUtils.toJson(materials) : null);
-        rule.setBagSizeEquals(bagSizeEquals);
-        rule.setSkipPackaging(skipPackaging);
-        rule.setSkipDiscount(skipDiscount);
-        rule.setIsActive(true);
-        customerProductRuleMapper.insert(rule);
-        log.info("Migrated product rule: {} → {}", customerCode, name);
-    }
-
-    private void ensureFoldRule(String customerCode, String name, int priority,
-                                List<String> keywords, Integer maxBagSizeExclusive,
-                                int threshold, BigDecimal foldRatio) {
-        Customer customer = customerMapper.selectByCode(customerCode);
-        if (customer == null) {
-            return;
-        }
-        if (customerProductRuleMapper.countByCustomerIdAndName(customer.getId(), name) > 0) {
-            return;
-        }
-        CustomerProductRule rule = new CustomerProductRule();
-        rule.setCustomerId(customer.getId());
-        rule.setRuleType("FOLD");
-        rule.setName(name);
-        rule.setPriority(priority);
-        rule.setKeywords(keywords != null && !keywords.isEmpty() ? JsonUtils.toJson(keywords) : null);
-        rule.setMaxBagSizeExclusive(maxBagSizeExclusive);
-        rule.setThreshold(threshold);
-        rule.setFoldRatio(foldRatio);
-        rule.setIsActive(true);
-        customerProductRuleMapper.insert(rule);
-        log.info("Migrated fold rule: {} → {}", customerCode, name);
     }
 
     private void seedEreryyPhase1Profile() {

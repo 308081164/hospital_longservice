@@ -1,8 +1,10 @@
 package com.hospital.backend.service;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -353,8 +355,46 @@ public final class BillingConditionEvaluator {
             return true;
         }
         String mode = resolveKeywordMatchMode(rule);
-        String text = KEYWORD_MATCH_EXACT_TOKEN.equals(mode) ? packName : combinedText;
+        String text = resolveKeywordMatchText(rule, packName, combinedText, mode);
         return matchesRuleKeywords(text, rule.path("keywords"), mode);
+    }
+
+    /**
+     * 规则限定 Excel「类型/包类型」时，关键词仅在包名上判定（包名称带X），避免类型列误伤。
+     */
+    public static String resolveKeywordMatchText(
+            JsonNode rule, String packName, String combinedText, String defaultMode) {
+        String mode = defaultMode != null && !defaultMode.isBlank()
+                ? defaultMode
+                : resolveKeywordMatchMode(rule);
+        if (hasPackTypeConstraint(rule)) {
+            return packName == null ? "" : packName;
+        }
+        return KEYWORD_MATCH_EXACT_TOKEN.equals(mode) ? packName : combinedText;
+    }
+
+    public static boolean hasPackTypeConstraint(JsonNode rule) {
+        if (rule == null) {
+            return false;
+        }
+        JsonNode acceptedTypes = rule.path("acceptedTypes");
+        if (acceptedTypes.isArray() && !acceptedTypes.isEmpty()) {
+            return true;
+        }
+        return hasTypeCondition(rule.path("conditions"));
+    }
+
+    private static boolean hasTypeCondition(JsonNode conditions) {
+        if (!conditions.isArray()) {
+            return false;
+        }
+        for (JsonNode cond : conditions) {
+            String field = cond.path("field").asText("");
+            if ("type".equalsIgnoreCase(field) || "packType".equalsIgnoreCase(field)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     public static boolean bagSizeMatches(JsonNode rule, int bagSize) {
@@ -527,7 +567,122 @@ public final class BillingConditionEvaluator {
         if (!originalUnitPriceMatches(rule, ctx.unitPrice())) {
             return false;
         }
+        if (!packTypeMatches(rule, ctx.type())) {
+            return false;
+        }
         return departmentMatches(rule, ctx.department());
+    }
+
+    /**
+     * Excel「类型/包装材料」列门控：无 acceptedTypes / type 条件时不过滤（向后兼容）。
+     */
+    public static boolean packTypeMatches(JsonNode rule, String rowType) {
+        JsonNode acceptedTypes = rule.path("acceptedTypes");
+        if (acceptedTypes.isArray() && !acceptedTypes.isEmpty()) {
+            return matchesAcceptedPackTypeList(acceptedTypes, rowType);
+        }
+        JsonNode conditions = rule.path("conditions");
+        if (conditions.isArray()) {
+            for (JsonNode cond : conditions) {
+                String field = cond.path("field").asText("");
+                if ("type".equalsIgnoreCase(field) || "packType".equalsIgnoreCase(field)) {
+                    return matchesAcceptedPackTypeList(cond.path("value"), rowType);
+                }
+            }
+        }
+        return true;
+    }
+
+    public static boolean matchesAcceptedPackTypeList(JsonNode acceptedTypes, String rowType) {
+        if (acceptedTypes == null || !acceptedTypes.isArray() || acceptedTypes.isEmpty()) {
+            return true;
+        }
+        if (rowType == null || rowType.isBlank()) {
+            return false;
+        }
+        for (JsonNode expected : acceptedTypes) {
+            if (packTypeEquivalent(expected.asText(""), rowType)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * 对齐 Excel「敷料包（无纺布）」与账单「敷料包(无纺布包)」等写法。
+     */
+    public static boolean packTypeEquivalent(String expected, String actual) {
+        String e = canonicalPackTypeLabel(expected);
+        String a = canonicalPackTypeLabel(actual);
+        if (e.equals(a)) {
+            return true;
+        }
+        if (dressingNonWovenPackType(e) && dressingNonWovenPackType(a)) {
+            return true;
+        }
+        if (extraPaperPlasticPackType(e) && extraPaperPlasticPackType(a)) {
+            return true;
+        }
+        if (extraLowTempPlasmaPackType(e) && extraLowTempPlasmaPackType(a)) {
+            return true;
+        }
+        if (extraNonWovenPackType(e) && extraNonWovenPackType(a)) {
+            return true;
+        }
+        if (extraEtoPackType(e) && extraEtoPackType(a)) {
+            return true;
+        }
+        if (lowTempEtoComboPackType(e) && lowTempEtoComboPackType(a)) {
+            return true;
+        }
+        if (instrumentPackType(e) && instrumentPackType(a)) {
+            return true;
+        }
+        if (singlePackLowTempPackType(e) && singlePackLowTempPackType(a)) {
+            return true;
+        }
+        return false;
+    }
+
+    public static String canonicalPackTypeLabel(String type) {
+        if (type == null) {
+            return "";
+        }
+        return normalizeMatchText(type)
+                .replace("(无纺布包)", "(无纺布)")
+                .toLowerCase();
+    }
+
+    private static boolean dressingNonWovenPackType(String canonical) {
+        return canonical.contains("敷料包") && canonical.contains("无纺布");
+    }
+
+    private static boolean extraPaperPlasticPackType(String canonical) {
+        return canonical.contains("额外包") && canonical.contains("纸塑袋");
+    }
+
+    private static boolean extraLowTempPlasmaPackType(String canonical) {
+        return canonical.contains("额外包") && canonical.contains("低温等离子");
+    }
+
+    private static boolean extraNonWovenPackType(String canonical) {
+        return canonical.contains("额外包") && canonical.contains("无纺布") && !canonical.contains("纸塑袋");
+    }
+
+    private static boolean extraEtoPackType(String canonical) {
+        return canonical.contains("额外包") && canonical.contains("eto");
+    }
+
+    private static boolean lowTempEtoComboPackType(String canonical) {
+        return canonical.contains("低温等离子") && canonical.contains("eto");
+    }
+
+    private static boolean instrumentPackType(String canonical) {
+        return canonical.contains("器械包");
+    }
+
+    private static boolean singlePackLowTempPackType(String canonical) {
+        return canonical.contains("单包装") && canonical.contains("低温");
     }
 
     public static boolean originalUnitPriceMatches(JsonNode rule, Double unitPrice) {
@@ -569,6 +724,86 @@ public final class BillingConditionEvaluator {
             }
         }
         return false;
+    }
+
+    public static String mergeAcceptedTypesIntoConditions(String conditionsJson, JsonNode acceptedTypes) {
+        if (acceptedTypes == null || !acceptedTypes.isArray() || acceptedTypes.isEmpty()) {
+            return conditionsJson;
+        }
+        List<Map<String, Object>> conditions = new ArrayList<>();
+        if (conditionsJson != null && !conditionsJson.isBlank()) {
+            try {
+                JsonNode parsed = new ObjectMapper().readTree(conditionsJson);
+                if (parsed.isArray()) {
+                    for (JsonNode item : parsed) {
+                        Map<String, Object> copy = new LinkedHashMap<>();
+                        item.fields().forEachRemaining(e -> copy.put(e.getKey(), jsonValue(e.getValue())));
+                        conditions.add(copy);
+                    }
+                }
+            } catch (Exception ignored) {
+                // fall through with empty conditions
+            }
+        }
+        conditions.removeIf(c -> "type".equals(c.get("field")) || "packType".equals(c.get("field")));
+        Map<String, Object> typeCondition = new LinkedHashMap<>();
+        typeCondition.put("field", "type");
+        typeCondition.put("operator", "in");
+        List<String> values = new ArrayList<>();
+        for (JsonNode item : acceptedTypes) {
+            values.add(item.asText());
+        }
+        typeCondition.put("value", values);
+        conditions.add(typeCondition);
+        try {
+            return new ObjectMapper().writeValueAsString(conditions);
+        } catch (Exception e) {
+            return conditionsJson;
+        }
+    }
+
+    private static Object jsonValue(JsonNode node) {
+        if (node == null || node.isNull()) {
+            return null;
+        }
+        if (node.isArray()) {
+            List<Object> values = new ArrayList<>();
+            node.forEach(child -> values.add(jsonValue(child)));
+            return values;
+        }
+        if (node.isBoolean()) {
+            return node.booleanValue();
+        }
+        if (node.isNumber()) {
+            return node.numberValue();
+        }
+        return node.asText();
+    }
+
+    public static List<String> parseAcceptedTypeList(String conditionsJson) {
+        List<String> types = new ArrayList<>();
+        if (conditionsJson == null || conditionsJson.isBlank()) {
+            return types;
+        }
+        try {
+            JsonNode node = new com.fasterxml.jackson.databind.ObjectMapper().readTree(conditionsJson);
+            if (node.isArray()) {
+                for (JsonNode cond : node) {
+                    String field = cond.path("field").asText("");
+                    if ("type".equalsIgnoreCase(field) || "packType".equalsIgnoreCase(field)) {
+                        JsonNode value = cond.path("value");
+                        if (value.isArray()) {
+                            value.forEach(v -> types.add(v.asText()));
+                        } else if (value.isTextual()) {
+                            types.add(value.asText());
+                        }
+                    }
+                }
+            }
+        } catch (Exception ignored) {
+            // ignore
+        }
+        return types;
     }
 
     public static List<String> parseDepartmentList(String conditionsJson) {

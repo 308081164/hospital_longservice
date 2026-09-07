@@ -11,6 +11,9 @@ export interface SystemVersionInfo {
   rulesGeneratedAtDisplay: string
   rulesReconciledAt: string
   rulesReconciledAtDisplay: string
+  rulesBaselineHash?: string
+  rulesBaselineHashShort?: string
+  rulesVerifyStatus?: boolean
   version: string
 }
 

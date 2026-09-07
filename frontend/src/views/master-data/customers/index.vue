@@ -425,6 +425,14 @@
             >
               <template #default="{ row }">
                 <span class="font-medium">{{ ruleDisplayName(row, products) }}</span>
+                <ElTag
+                  v-if="row.baseline_aligned === false && row.isActive !== false"
+                  size="small"
+                  type="warning"
+                  class="ml-1"
+                >
+                  {{ $t('menus.masterData.customerProductRules.baselineDrift') }}
+                </ElTag>
               </template>
             </ElTableColumn>
             <ElTableColumn
@@ -936,7 +944,8 @@
       fee: draft.fee,
       threshold: draft.threshold,
       foldRatio: draft.foldRatio,
-      isActive: draft.isActive
+      isActive: draft.isActive,
+      baseline_aligned: rule.baseline_aligned ?? rule.baselineAligned
     }
   }
 

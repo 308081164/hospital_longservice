@@ -144,24 +144,6 @@
             :precision="0"
             :tooltip="$t('menus.masterData.customerProductRules.foldRatioHint')"
           />
-          <div class="customer-product-rule-form__field">
-            <label class="customer-product-rule-form__label">
-              {{ $t('menus.masterData.customerProductRules.keywordMatchMode') }}
-            </label>
-            <ElSelect v-model="draft.keywordMatchMode" class="w-full">
-              <ElOption
-                :label="$t('menus.masterData.customerProductRules.keywordMatchExactToken')"
-                value="exact_token"
-              />
-              <ElOption
-                :label="$t('menus.masterData.customerProductRules.keywordMatchContains')"
-                value="contains"
-              />
-            </ElSelect>
-            <p class="customer-product-rule-form__hint">
-              {{ $t('menus.masterData.customerProductRules.keywordMatchModeHint') }}
-            </p>
-          </div>
         </template>
         <RuleNumberField
           v-else-if="draft.ruleType === 'EXTRA_FEE' || draft.ruleType === 'ADD_FEE'"
@@ -177,10 +159,30 @@
       :subtitle="$t('menus.masterData.customerProductRules.matchConditionsHint')"
       class="customer-product-rule-form__section"
     >
+      <div class="customer-product-rule-form__field customer-product-rule-form__field--full">
+        <label class="customer-product-rule-form__label">
+          {{ $t('menus.masterData.customerProductRules.keywordMatchMode') }}
+        </label>
+        <ElSelect v-model="draft.keywordMatchMode" class="w-full">
+          <ElOption
+            :label="$t('menus.masterData.customerProductRules.keywordMatchContains')"
+            value="contains"
+          />
+          <ElOption
+            :label="$t('menus.masterData.customerProductRules.keywordMatchExactToken')"
+            value="exact_token"
+          />
+        </ElSelect>
+        <p class="customer-product-rule-form__hint">
+          {{ $t('menus.masterData.customerProductRules.keywordMatchModeHint') }}
+        </p>
+      </div>
       <RuleKeywordField
         v-model="draft.keywords"
         :label="$t('menus.masterData.customerProductRules.keywords')"
         :hint="$t('menus.masterData.customerProductRules.keywordsHint')"
+        :keyword-match-mode="draft.keywordMatchMode ?? defaultKeywordMatchMode(draft.ruleType)"
+        required
         size="large"
         :rows="2"
         :max-rows="6"
@@ -329,6 +331,7 @@ import {
   isSettlementRule,
   syncPrimaryKeyword,
   syncRuleTypeFromBillingMode,
+  defaultKeywordMatchMode,
   type CustomerProductRuleDraft,
   type CustomerProductRuleType,
 } from '@/utils/customerProductRule'
@@ -442,6 +445,7 @@ function resolveProductName(productId: number): string | undefined {
 }
 
 function handleRuleTypeChange(ruleType: CustomerProductRuleType) {
+  props.draft.keywordMatchMode = defaultKeywordMatchMode(ruleType)
   if (isSettlementRule(ruleType)) {
     props.draft.skipPackaging = false
     props.draft.skipDiscount = false

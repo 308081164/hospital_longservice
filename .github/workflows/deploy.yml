@@ -30,8 +30,23 @@ jobs:
       - name: Verify DB migrate manifest
         run: bash scripts/check-migrate-manifest.sh
 
-      - name: Verify billing rules manifest fresh
-        run: bash scripts/check-manifest-fresh.sh
+      - name: Assert no startup auto-import
+        run: bash scripts/assert_no_startup_import.sh
+
+      - name: Assert no new phase seeds
+        run: bash scripts/assert_no_new_phase_seeds.sh
+
+      - name: Baseline manifest parity check
+        run: python3 scripts/baseline_to_manifest.py --check
+
+      - name: Baseline index present (29 hospitals)
+        run: test -f backend/src/main/resources/billing-rules/index.json && python3 scripts/check_strict_hospital_alignment.py
+
+      - name: G2 keyword gap scan (non-blocking findings)
+        run: python3 scripts/run_keyword_gap_gate.py || true
+
+      - name: G5 strict hospital list alignment
+        run: python3 scripts/check_strict_hospital_alignment.py
 
       - name: Set up JDK 17
         uses: actions/setup-java@v4
@@ -42,7 +57,7 @@ jobs:
 
       - name: Run backend unit tests (golden rows + pricing)
         working-directory: backend
-        run: mvn -q test -Dtest=PricingEngineTest#goldenRowsRegression,PricingRuleCompilerIntegrationTest,CustomerServiceImplTest,RuleEntrySemanticsTest,PricingRuleCompilerSemanticTest,SpecialCharge11CoverageTest,PricingEngineSpecialRulesTest,PricingEngineStandardPathTest,PricingEngineBillingModeTest,RuleTypeCoverageGateTest,RuleFidelityRegressionTest
+        run: mvn -q test -Dtest=PricingEngineTest#goldenRowsRegression,PricingRuleCompilerIntegrationTest,CustomerServiceImplTest,RuleEntrySemanticsTest,PricingRuleCompilerSemanticTest,SpecialCharge11CoverageTest,PricingEngineSpecialRulesTest,PricingEngineStandardPathTest,PricingEngineBillingModeTest,RuleTypeCoverageGateTest,RuleFidelityRegressionTest,PricingEngineTestSupportFidelityTest,RuleQuarantineServiceTest
 
       - name: Set up pnpm
         uses: pnpm/action-setup@v4
@@ -142,6 +157,7 @@ jobs:
             deploy/nginx-hospital.conf \
             deploy/nginx-frontend-shared-net.conf \
             deploy/verify-billing-on-server.sh \
+            deploy/reapply-billing-baseline-on-server.sh \
             deploy/reapply-billing-manifest-on-server.sh \
             deploy/reapply-billing-p0-6-on-server.sh \
             deploy/apply-p0-6-billing-sql.sh \
@@ -243,9 +259,9 @@ jobs:
               fi
               sleep 2
             done
-            if [ -f deploy/reapply-billing-manifest-on-server.sh ]; then
-              echo "DEPLOY_STAGE=billing_manifest_reconcile_deferred"
-              echo "billingEnabled 将在 backend 启动后由 manifest reconciler 同步"
+            if [ -f deploy/reapply-billing-baseline-on-server.sh ]; then
+              echo "DEPLOY_STAGE=billing_baseline_sync_deferred"
+              echo "计费规则将在 backend 启动后由 baseline sync runner 同步"
             fi
             docker compose -f docker-compose.prod.yml up -d --no-deps --force-recreate backend
             echo "DEPLOY_STAGE=backend_container_started"
@@ -391,6 +407,7 @@ jobs:
             "${SSH_USER}@${SSH_HOST}" "mkdir -p '${DEPLOY_PATH}/deploy/sql'"
           scp -i ~/.ssh/deploy_billing_key -o StrictHostKeyChecking=no -P "${SSH_PORT}" \
             deploy/verify-billing-on-server.sh \
+            deploy/reapply-billing-baseline-on-server.sh \
             deploy/reapply-billing-manifest-on-server.sh \
             deploy/reapply-billing-p0-6-on-server.sh \
             deploy/apply-p0-6-billing-sql.sh \
@@ -403,7 +420,7 @@ jobs:
             deploy/sql/p0-6-billing-toggle.sql \
             "${SSH_USER}@${SSH_HOST}:${DEPLOY_PATH}/deploy/sql/"
 
-      - name: Reconcile billing manifest and verify on server
+      - name: Reconcile billing baseline and verify on server
         uses: appleboy/ssh-action@v1.2.5
         env:
           IMAGE_BACKEND: ${{ steps.images.outputs.backend_sha }}
@@ -425,15 +442,16 @@ jobs:
               ls -la backend/src/main/resources/billing-seeds/ 2>/dev/null || true
               exit 1
             fi
-            chmod +x deploy/verify-billing-on-server.sh deploy/reapply-billing-manifest-on-server.sh \
+            chmod +x deploy/verify-billing-on-server.sh deploy/reapply-billing-baseline-on-server.sh \
+              deploy/reapply-billing-manifest-on-server.sh \
               deploy/verify-billing-api-on-server.sh deploy/mysql-hospital-cli.sh 2>/dev/null || true
             echo "==> deploy 目录（billing 脚本）"
             ls -la deploy/*.sh "$MANIFEST" 2>/dev/null || ls -la deploy/ || true
             echo "==> backend 连库诊断"
             bash deploy/mysql-hospital-cli.sh --print-target 2>/dev/null || true
             docker inspect hospital-backend --format '{{range .Config.Env}}{{println .}}{{end}}' 2>/dev/null | grep '^MYSQL_' || true
-            bash deploy/reapply-billing-manifest-on-server.sh || {
-              echo "==== manifest reconcile 失败，backend 日志 ===="
+            bash deploy/reapply-billing-baseline-on-server.sh || {
+              echo "==== baseline sync 失败，backend 日志 ===="
               docker logs hospital-backend 2>&1 | tail -80 || true
               exit 1
             }

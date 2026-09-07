@@ -239,9 +239,9 @@
       "packName": "胸外镜头-1（盒1）W905060",
       "packCount": 1,
       "billInstrumentCount": 1,
-      "expectedPerPack": 1,
-      "expectedTotal": 1,
-      "behavior": "match"
+      "expectedPerPack": 2,
+      "expectedTotal": 2,
+      "behavior": "mismatch"
     },
     {
       "id": "R025",
@@ -249,9 +249,9 @@
       "packName": "胸外镜头-1（盒1）W9050",
       "packCount": 1,
       "billInstrumentCount": 1,
-      "expectedPerPack": 1,
-      "expectedTotal": 1,
-      "behavior": "match"
+      "expectedPerPack": 2,
+      "expectedTotal": 2,
+      "behavior": "mismatch"
     },
     {
       "id": "R026",
@@ -259,9 +259,9 @@
       "packName": "胸外镜头30°-1（盒1）W9050",
       "packCount": 1,
       "billInstrumentCount": 1,
-      "expectedPerPack": 1,
-      "expectedTotal": 1,
-      "behavior": "match"
+      "expectedPerPack": 2,
+      "expectedTotal": 2,
+      "behavior": "mismatch"
     },
     {
       "id": "R027",
@@ -409,9 +409,9 @@
       "packName": "旧轧皮机（2号）-2件盒1/W12050",
       "packCount": 1,
       "billInstrumentCount": 3,
-      "expectedPerPack": 2,
-      "expectedTotal": 2,
-      "behavior": "mismatch"
+      "expectedPerPack": 3,
+      "expectedTotal": 3,
+      "behavior": "match"
     },
     {
       "id": "R042",
@@ -419,9 +419,9 @@
       "packName": "旧轧皮机（1号）-2件盒1/W9050",
       "packCount": 1,
       "billInstrumentCount": 3,
-      "expectedPerPack": 2,
-      "expectedTotal": 2,
-      "behavior": "mismatch"
+      "expectedPerPack": 3,
+      "expectedTotal": 3,
+      "behavior": "match"
     },
     {
       "id": "R043",
@@ -429,9 +429,9 @@
       "packName": "姜龙显微器械-6件盒1/W7050",
       "packCount": 1,
       "billInstrumentCount": 7,
-      "expectedPerPack": 6,
-      "expectedTotal": 6,
-      "behavior": "mismatch"
+      "expectedPerPack": 7,
+      "expectedTotal": 7,
+      "behavior": "match"
     },
     {
       "id": "R044",
@@ -439,9 +439,9 @@
       "packName": "0103机器人（低温）-5件盒1",
       "packCount": 1,
       "billInstrumentCount": 6,
-      "expectedPerPack": 5,
-      "expectedTotal": 5,
-      "behavior": "mismatch"
+      "expectedPerPack": 6,
+      "expectedTotal": 6,
+      "behavior": "match"
     },
     {
       "id": "R045",
@@ -499,9 +499,9 @@
       "packName": "25°镜头1件 盒1/z2060",
       "packCount": 1,
       "billInstrumentCount": 1,
-      "expectedPerPack": 1,
-      "expectedTotal": 1,
-      "behavior": "match"
+      "expectedPerPack": 2,
+      "expectedTotal": 2,
+      "behavior": "mismatch"
     },
     {
       "id": "R051",
@@ -509,9 +509,9 @@
       "packName": "激光镜-4件 盒1",
       "packCount": 1,
       "billInstrumentCount": 4,
-      "expectedPerPack": 4,
-      "expectedTotal": 4,
-      "behavior": "match"
+      "expectedPerPack": 5,
+      "expectedTotal": 5,
+      "behavior": "mismatch"
     },
     {
       "id": "R052",
@@ -519,9 +519,9 @@
       "packName": "激光镜-4件 盒1/W15050",
       "packCount": 1,
       "billInstrumentCount": 4,
-      "expectedPerPack": 4,
-      "expectedTotal": 4,
-      "behavior": "match"
+      "expectedPerPack": 5,
+      "expectedTotal": 5,
+      "behavior": "mismatch"
     },
     {
       "id": "R053",
@@ -659,9 +659,9 @@
       "packName": "镊子包21件 盘1/W7050",
       "packCount": 1,
       "billInstrumentCount": 22,
-      "expectedPerPack": 21,
-      "expectedTotal": 21,
-      "behavior": "mismatch"
+      "expectedPerPack": 22,
+      "expectedTotal": 22,
+      "behavior": "match"
     },
     {
       "id": "R067",

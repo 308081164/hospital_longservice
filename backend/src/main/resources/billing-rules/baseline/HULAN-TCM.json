@@ -1,0 +1,113 @@
+{
+  "customerCode": "HULAN-TCM",
+  "customerName": "呼兰中医院",
+  "billingEnabled": true,
+  "billingPricingMode": "hybrid",
+  "productRules": [
+    {
+      "ruleType": "EXTRA_FEE",
+      "name": "呼兰中医外科包包材加价13",
+      "priority": 11,
+      "fee": 13.0,
+      "keywords": [
+        "外科包"
+      ],
+      "skipPackaging": true,
+      "skipDiscount": true,
+      "isActive": true,
+      "matchMode": "first",
+      "acceptedTypes": [
+        "器械包"
+      ]
+    },
+    {
+      "ruleType": "PRICE_PER_INSTRUMENT",
+      "name": "呼兰中医外科包按件5.5",
+      "priority": 10,
+      "price": 5.5,
+      "keywords": [
+        "外科包"
+      ],
+      "skipPackaging": true,
+      "skipDiscount": true,
+      "isActive": true,
+      "matchMode": "first",
+      "acceptedTypes": [
+        "器械包"
+      ]
+    },
+    {
+      "ruleType": "FOLD",
+      "name": "呼兰中医胶帽5合1免包材",
+      "priority": 11,
+      "keywords": [
+        "胶帽@contains"
+      ],
+      "threshold": 5,
+      "foldRatio": 5,
+      "minInstrumentCount": 6,
+      "skipPackaging": true,
+      "price": 22.0,
+      "temperature": "LT",
+      "isActive": true,
+      "matchMode": "first",
+      "skipDiscount": false,
+      "keywordMatchMode": "exact_token",
+      "acceptedTypes": [
+        "额外包低温等离子"
+      ]
+    },
+    {
+      "ruleType": "FOLD",
+      "name": "呼兰中医胶帽5合1含包材",
+      "priority": 10,
+      "keywords": [
+        "胶帽@contains"
+      ],
+      "threshold": 5,
+      "foldRatio": 5,
+      "maxInstrumentCount": 5,
+      "skipPackaging": false,
+      "temperature": "LT",
+      "isActive": true,
+      "matchMode": "first",
+      "skipDiscount": false,
+      "keywordMatchMode": "exact_token",
+      "acceptedTypes": [
+        "额外包低温等离子"
+      ]
+    },
+    {
+      "ruleType": "EXTRA_FEE",
+      "name": "呼兰中医阑尾包包材加价13",
+      "priority": 11,
+      "fee": 13.0,
+      "keywords": [
+        "铂康-阑尾包"
+      ],
+      "skipPackaging": true,
+      "skipDiscount": true,
+      "isActive": true,
+      "matchMode": "first",
+      "acceptedTypes": [
+        "器械包"
+      ]
+    },
+    {
+      "ruleType": "PRICE_PER_INSTRUMENT",
+      "name": "呼兰中医阑尾包按件5.5",
+      "priority": 10,
+      "price": 5.5,
+      "keywords": [
+        "铂康-阑尾包"
+      ],
+      "skipPackaging": true,
+      "skipDiscount": true,
+      "isActive": true,
+      "matchMode": "first",
+      "acceptedTypes": [
+        "器械包"
+      ]
+    }
+  ]
+}

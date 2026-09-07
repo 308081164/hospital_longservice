@@ -324,7 +324,7 @@ class BillRowFieldConsistencyValidatorTest {
     }
 
     @Test
-    void customerReviewLensSpacedBoxDoesNotAddExtraPiece() {
+    void spacedBoxTokenCountsTowardInstrumentTotal() {
         List<BillRowFieldConsistencyValidator.Violation> violations =
                 BillRowFieldConsistencyValidator.validate(
                         "额外包(纸塑袋)",
@@ -333,7 +333,9 @@ class BillRowFieldConsistencyValidatorTest {
                         4,
                         1);
 
-        assertThat(violations).isEmpty();
+        assertThat(violations)
+                .extracting(BillRowFieldConsistencyValidator.Violation::code)
+                .contains(BillRowFieldConsistencyValidator.CODE_INSTRUMENT_COUNT_MISMATCH);
     }
 
     @Test

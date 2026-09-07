@@ -1,0 +1,59 @@
+{
+  "customerCode": "BOSHANG-YY",
+  "customerName": "博尚医院",
+  "billingEnabled": true,
+  "billingPricingMode": "hybrid",
+  "productRules": [
+    {
+      "ruleType": "FIXED_PRICE",
+      "name": "博尚旋切器44",
+      "priority": 11,
+      "price": 44.0,
+      "keywords": [
+        "旋切器1胶帽4/Z2045",
+        "旋切器1胶帽4"
+      ],
+      "skipPackaging": true,
+      "skipDiscount": true,
+      "isActive": true,
+      "matchMode": "first",
+      "acceptedTypes": [
+        "额外包低温等离子"
+      ]
+    },
+    {
+      "ruleType": "FIXED_PRICE",
+      "name": "博尚旋切器戳卡66",
+      "priority": 10,
+      "price": 66.0,
+      "keywords": [
+        "旋切器1戳卡1胶帽4/Z2045",
+        "旋切器1戳卡1胶帽4"
+      ],
+      "skipPackaging": true,
+      "skipDiscount": true,
+      "isActive": true,
+      "matchMode": "first",
+      "acceptedTypes": [
+        "额外包低温等离子"
+      ]
+    },
+    {
+      "ruleType": "FIXED_PRICE",
+      "name": "博尚旋切器线66",
+      "priority": 12,
+      "price": 66.0,
+      "keywords": [
+        "旋切器1线1胶帽4/Z2045",
+        "旋切器1线1胶帽4"
+      ],
+      "skipPackaging": true,
+      "skipDiscount": true,
+      "isActive": true,
+      "matchMode": "first",
+      "acceptedTypes": [
+        "额外包低温等离子"
+      ]
+    }
+  ]
+}

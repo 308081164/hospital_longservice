@@ -1,0 +1,25 @@
+{
+  "customerCode": "JIUZHOU-FK",
+  "customerName": "黑龙江九洲妇科医院",
+  "billingEnabled": true,
+  "billingPricingMode": "hybrid",
+  "productRules": [
+    {
+      "ruleType": "FIXED_PRICE",
+      "name": "方盘5.5",
+      "priority": 10,
+      "price": 5.5,
+      "keywords": [
+        "方盘"
+      ],
+      "skipPackaging": true,
+      "skipDiscount": true,
+      "isActive": true,
+      "matchMode": "first",
+      "keywordMatchMode": "contains",
+      "acceptedTypes": [
+        "额外包"
+      ]
+    }
+  ]
+}

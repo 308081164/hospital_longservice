@@ -984,6 +984,69 @@ def print_report(report: CliReport, *, as_json: bool) -> None:
     print(f"结果: {'PASS' if report.ok else 'FAIL'} ({report.to_dict()['duration_sec']}s)")
 
 
+def cmd_rules_verify(args: argparse.Namespace) -> int:
+    script = ROOT / "scripts/rules_verify.py"
+    api = getattr(args, "api", None) or "http://127.0.0.1:8088"
+    cmd = [sys.executable, str(script), "--base-url", api]
+    if args.all:
+        cmd.append("--all")
+    if getattr(args, "code", None):
+        cmd.extend(["--customer", args.code])
+    if args.fail_on_drift:
+        cmd.append("--fail-on-drift")
+    proc = subprocess.run(cmd, cwd=str(ROOT))
+    return proc.returncode
+
+
+def _query_path(path: str, params: dict[str, str]) -> str:
+    if not params:
+        return path
+    from urllib.parse import urlencode
+
+    return f"{path}?{urlencode(params)}"
+
+
+def cmd_rules_export(args: argparse.Namespace) -> int:
+    client = resolve_client(args)
+    client.login(force=True)
+    params: dict[str, str] = {}
+    if args.all:
+        params["all"] = "true"
+    elif args.code:
+        params["customerCode"] = args.code
+    else:
+        print("需要 --code 或 --all", file=sys.stderr)
+        return 2
+    data = client.get(_query_path("/api/v1/billing-rules/export", params))
+    if args.out:
+        args.out.parent.mkdir(parents=True, exist_ok=True)
+        args.out.write_text(json.dumps(data, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+        print(f"Wrote {args.out}")
+    else:
+        print(json.dumps(data, ensure_ascii=False, indent=2))
+    return 0
+
+
+def cmd_rules_import_baseline(args: argparse.Namespace) -> int:
+    client = resolve_client(args)
+    client.login(force=True)
+    params: dict[str, str] = {"dryRun": str(args.dry_run).lower()}
+    if args.all:
+        params["all"] = "true"
+    elif args.code:
+        params["customerCode"] = args.code
+    else:
+        print("需要 --code 或 --all", file=sys.stderr)
+        return 2
+    body: dict[str, object] = {}
+    if args.file:
+        body = json.loads(args.file.read_text(encoding="utf-8"))
+    path = _query_path("/api/v1/billing-rules/import/baseline", params)
+    data = client.post_json(path, body)
+    print(json.dumps(data, ensure_ascii=False, indent=2))
+    return 0 if data.get("code") == 200 else 1
+
+
 def cmd_rules_compare(args: argparse.Namespace) -> int:
     if not args.code and not args.all:
         print("需要 --code 或 --all", file=sys.stderr)
@@ -1010,6 +1073,69 @@ def cmd_rules_compare(args: argparse.Namespace) -> int:
     if args.fail_on_drift and not report.get("ok"):
         return 1
     return 0
+
+
+def cmd_rules_quarantine_list(args: argparse.Namespace) -> int:
+    client = resolve_client(args)
+    client.login(force=True)
+    params: dict[str, Any] = {}
+    if args.customer_id:
+        params["customerId"] = args.customer_id
+    if args.limit:
+        params["limit"] = args.limit
+    data = client.get("/api/v1/billing-rules/quarantine", params=params)
+    rows = data.get("data") if isinstance(data, dict) else data
+    if args.json:
+        print(json.dumps(rows, ensure_ascii=False, indent=2, default=str))
+    else:
+        for row in rows or []:
+            print(
+                f"[{row.get('id')}] {row.get('customerCode')} / {row.get('ruleName')} "
+                f"@ {row.get('quarantinedAt')} — {row.get('quarantineReason')}"
+            )
+    return 0
+
+
+def cmd_rules_quarantine_restore(args: argparse.Namespace) -> int:
+    client = resolve_client(args)
+    client.login(force=True)
+    tid = args.tombstone_id
+    path = _query_path(
+        f"/api/v1/billing-rules/quarantine/{tid}/restore",
+        {"operatorName": args.operator or "hospital-cli"},
+    )
+    client.post_json(path, {})
+    print(f"restored tombstone {tid}")
+    if args.seed_draft:
+        draft = client.get(f"/api/v1/billing-rules/quarantine/{tid}/seed-draft")
+        payload = draft.get("data") if isinstance(draft, dict) else draft
+        out = args.out or (ROOT / f"测试用例/quarantine-seed-draft-{tid}.json")
+        out.parent.mkdir(parents=True, exist_ok=True)
+        out.write_text(json.dumps(payload, ensure_ascii=False, indent=2), encoding="utf-8")
+        print(f"seed draft -> {out}")
+    return 0
+
+
+def cmd_rules_impact(args: argparse.Namespace) -> int:
+    import subprocess
+
+    cmd = [
+        sys.executable,
+        str(SCRIPTS / "rules_impact_replay.py"),
+        "--customer-id",
+        str(args.customer_id),
+        "--hospital-name",
+        args.hospital,
+        "--limit",
+        str(args.limit),
+    ]
+    if args.base_url:
+        cmd.extend(["--base-url", args.base_url])
+    if args.code:
+        cmd.extend(["--code", args.code])
+    if args.out:
+        cmd.extend(["--out", str(args.out)])
+    return subprocess.call(cmd)
 
 
 def cmd_rules_doc(args: argparse.Namespace) -> int:
@@ -1434,6 +1560,52 @@ def build_parser() -> argparse.ArgumentParser:
         help="额外跑 spot-check 的 code（默认 --code 时同 code）",
     )
     p_rvd.set_defaults(func=cmd_rules_verify_deploy)
+
+    p_rq = rules_sub.add_parser("quarantine", help="查看/恢复被 manifest 隔离的规则")
+    rq_sub = p_rq.add_subparsers(dest="quarantine_cmd", required=True)
+    p_rql = rq_sub.add_parser("list", help="列出隔离规则")
+    add_common_flags(p_rql)
+    p_rql.add_argument("--customer-id", type=int, help="按客户过滤")
+    p_rql.add_argument("--limit", type=int, default=100)
+    p_rql.set_defaults(func=cmd_rules_quarantine_list)
+    p_rqr = rq_sub.add_parser("restore", help="恢复隔离规则")
+    add_common_flags(p_rqr)
+    p_rqr.add_argument("tombstone_id", type=int)
+    p_rqr.add_argument("--operator", default="hospital-cli")
+    p_rqr.add_argument("--seed-draft", action="store_true", help="同时导出种子补丁草稿")
+    p_rqr.add_argument("--out", type=Path)
+    p_rqr.set_defaults(func=cmd_rules_quarantine_restore)
+
+    p_ri = rules_sub.add_parser("impact", help="真实包名语料批量 simulate 回放")
+    add_common_flags(p_ri)
+    p_ri.add_argument("--customer-id", type=int, required=True)
+    p_ri.add_argument("--hospital", required=True)
+    p_ri.add_argument("--code", help="customer code（语料提示）")
+    p_ri.add_argument("--limit", type=int, default=50)
+    p_ri.add_argument("--out", type=Path)
+    p_ri.set_defaults(func=cmd_rules_impact)
+
+    p_rv = rules_sub.add_parser("verify", help="baseline vs API 统一门禁")
+    add_common_flags(p_rv)
+    p_rv.add_argument("--code", help="单院 customer code")
+    p_rv.add_argument("--all", action="store_true")
+    p_rv.add_argument("--fail-on-drift", action="store_true")
+    p_rv.set_defaults(func=cmd_rules_verify)
+
+    p_re = rules_sub.add_parser("export", help="DB 导出为 baseline 格式")
+    add_common_flags(p_re)
+    p_re.add_argument("--code", help="单院 code")
+    p_re.add_argument("--all", action="store_true")
+    p_re.add_argument("--out", type=Path)
+    p_re.set_defaults(func=cmd_rules_export)
+
+    p_rib = rules_sub.add_parser("import", help="baseline JSON 显式导入 DB")
+    add_common_flags(p_rib)
+    p_rib.add_argument("--code", help="单院 code")
+    p_rib.add_argument("--all", action="store_true")
+    p_rib.add_argument("--file", type=Path, help="baseline JSON；省略则用 classpath")
+    p_rib.add_argument("--dry-run", action="store_true")
+    p_rib.set_defaults(func=cmd_rules_import_baseline)
 
     p_report = sub.add_parser("report", help="占位：请用各子命令 --json")
     p_report.set_defaults(func=lambda _a: (print("使用 smoke/deploy-check/verify --json", file=sys.stderr) or 2))

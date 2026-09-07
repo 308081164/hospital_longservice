@@ -1,0 +1,537 @@
+{
+  "customerCode": "HLJ-FY-RK",
+  "customerName": "黑龙江省妇幼保健院（人口）",
+  "billingEnabled": true,
+  "billingPricingMode": "hybrid",
+  "productRules": [
+    {
+      "ruleType": "EXTRA_FEE",
+      "name": "妇幼人口0度膀胱镜加收8",
+      "priority": 20,
+      "keywords": [
+        "0°膀胱镜-1",
+        "0°膀胱镜"
+      ],
+      "fee": 8.0,
+      "skipPackaging": true,
+      "skipDiscount": true,
+      "isActive": true,
+      "matchMode": "first",
+      "acceptedTypes": [
+        "单包装（低温老肯）"
+      ]
+    },
+    {
+      "ruleType": "EXTRA_FEE",
+      "name": "妇幼人口30度膀胱镜加收8",
+      "priority": 20,
+      "keywords": [
+        "30°膀胱镜-1",
+        "30°膀胱镜"
+      ],
+      "fee": 8.0,
+      "skipPackaging": true,
+      "skipDiscount": true,
+      "isActive": true,
+      "matchMode": "first",
+      "acceptedTypes": [
+        "单包装（低温老肯）"
+      ]
+    },
+    {
+      "ruleType": "EXTRA_FEE",
+      "name": "妇幼人口单极电切镜加收8",
+      "priority": 20,
+      "keywords": [
+        "单极电切镜"
+      ],
+      "fee": 8.0,
+      "skipPackaging": true,
+      "skipDiscount": true,
+      "isActive": true,
+      "matchMode": "first",
+      "acceptedTypes": [
+        "器械包（低温等离子）"
+      ]
+    },
+    {
+      "ruleType": "EXTRA_FEE",
+      "name": "妇幼人口宫腔镜检查新加收8",
+      "priority": 20,
+      "keywords": [
+        "宫腔镜检查新"
+      ],
+      "fee": 8.0,
+      "skipPackaging": true,
+      "skipDiscount": true,
+      "isActive": true,
+      "matchMode": "first",
+      "acceptedTypes": [
+        "单包装（低温老肯）"
+      ]
+    },
+    {
+      "ruleType": "EXTRA_FEE",
+      "name": "妇幼人口新腹腔镜镜头加收8",
+      "priority": 20,
+      "fee": 8.0,
+      "keywords": [
+        "新腹腔镜镜头"
+      ],
+      "skipPackaging": true,
+      "skipDiscount": true,
+      "isActive": true,
+      "matchMode": "first",
+      "acceptedTypes": [
+        "单包装（低温老肯）"
+      ]
+    },
+    {
+      "ruleType": "FOLD",
+      "name": "妇幼人口密封件≤5按1件",
+      "priority": 10,
+      "keywords": [
+        "密封件@contains",
+        "密封胶圈@contains",
+        "水管膜片@contains",
+        "垫片@contains"
+      ],
+      "threshold": 5,
+      "foldRatio": 5,
+      "maxInstrumentCount": 5,
+      "temperature": "LT",
+      "skipPackaging": false,
+      "isActive": true,
+      "matchMode": "first",
+      "skipDiscount": false,
+      "keywordMatchMode": "exact_token",
+      "acceptedTypes": [
+        "额外包低温等离子"
+      ]
+    },
+    {
+      "ruleType": "FOLD",
+      "name": "妇幼人口密封件>5折算22",
+      "priority": 11,
+      "keywords": [
+        "密封件@contains",
+        "密封胶圈@contains",
+        "水管膜片@contains",
+        "垫片@contains"
+      ],
+      "threshold": 5,
+      "foldRatio": 5,
+      "price": 22.0,
+      "minInstrumentCount": 6,
+      "temperature": "LT",
+      "skipPackaging": true,
+      "isActive": true,
+      "matchMode": "first",
+      "skipDiscount": false,
+      "keywordMatchMode": "exact_token",
+      "acceptedTypes": [
+        "额外包低温等离子"
+      ]
+    },
+    {
+      "ruleType": "FOLD",
+      "name": "妇幼人口加长锉5合1含包材",
+      "priority": 10,
+      "keywords": [
+        "加长锉@contains"
+      ],
+      "threshold": 5,
+      "foldRatio": 5,
+      "maxInstrumentCount": 10,
+      "skipPackaging": false,
+      "isActive": true,
+      "matchMode": "first",
+      "skipDiscount": false,
+      "keywordMatchMode": "exact_token",
+      "acceptedTypes": [
+        "额外包（纸塑袋）"
+      ]
+    },
+    {
+      "ruleType": "FOLD",
+      "name": "妇幼人口加长锉5合1免包材",
+      "priority": 11,
+      "keywords": [
+        "加长锉@contains"
+      ],
+      "threshold": 5,
+      "foldRatio": 5,
+      "minInstrumentCount": 11,
+      "skipPackaging": true,
+      "isActive": true,
+      "matchMode": "first",
+      "skipDiscount": false,
+      "keywordMatchMode": "exact_token",
+      "acceptedTypes": [
+        "额外包（纸塑袋）"
+      ]
+    },
+    {
+      "ruleType": "FOLD",
+      "name": "妇幼人口彩色锉5合1含包材",
+      "priority": 10,
+      "keywords": [
+        "彩色锉@contains"
+      ],
+      "threshold": 5,
+      "foldRatio": 5,
+      "maxInstrumentCount": 10,
+      "skipPackaging": false,
+      "isActive": true,
+      "matchMode": "first",
+      "skipDiscount": false,
+      "keywordMatchMode": "exact_token",
+      "acceptedTypes": [
+        "额外包（纸塑袋）"
+      ]
+    },
+    {
+      "ruleType": "FOLD",
+      "name": "妇幼人口彩色锉5合1免包材",
+      "priority": 11,
+      "keywords": [
+        "彩色锉@contains"
+      ],
+      "threshold": 5,
+      "foldRatio": 5,
+      "minInstrumentCount": 11,
+      "skipPackaging": true,
+      "isActive": true,
+      "matchMode": "first",
+      "skipDiscount": false,
+      "keywordMatchMode": "exact_token",
+      "acceptedTypes": [
+        "额外包（纸塑袋）"
+      ]
+    },
+    {
+      "ruleType": "FOLD",
+      "name": "妇幼人口手扩锉5合1含包材",
+      "priority": 10,
+      "keywords": [
+        "手扩锉@contains"
+      ],
+      "threshold": 5,
+      "foldRatio": 5,
+      "maxInstrumentCount": 10,
+      "skipPackaging": false,
+      "isActive": true,
+      "matchMode": "first",
+      "skipDiscount": false,
+      "keywordMatchMode": "exact_token",
+      "acceptedTypes": [
+        "额外包（纸塑袋）"
+      ]
+    },
+    {
+      "ruleType": "FOLD",
+      "name": "妇幼人口手扩锉5合1免包材",
+      "priority": 11,
+      "keywords": [
+        "手扩锉@contains"
+      ],
+      "threshold": 5,
+      "foldRatio": 5,
+      "minInstrumentCount": 11,
+      "skipPackaging": true,
+      "isActive": true,
+      "matchMode": "first",
+      "skipDiscount": false,
+      "keywordMatchMode": "exact_token",
+      "acceptedTypes": [
+        "额外包（纸塑袋）"
+      ]
+    },
+    {
+      "ruleType": "FOLD",
+      "name": "妇幼人口机扩针5合1含包材",
+      "priority": 10,
+      "keywords": [
+        "机扩针@contains"
+      ],
+      "threshold": 5,
+      "foldRatio": 5,
+      "maxInstrumentCount": 10,
+      "skipPackaging": false,
+      "isActive": true,
+      "matchMode": "first",
+      "skipDiscount": false,
+      "keywordMatchMode": "exact_token",
+      "acceptedTypes": [
+        "额外包（纸塑袋）"
+      ]
+    },
+    {
+      "ruleType": "FOLD",
+      "name": "妇幼人口机扩针5合1免包材",
+      "priority": 11,
+      "keywords": [
+        "机扩针@contains"
+      ],
+      "threshold": 5,
+      "foldRatio": 5,
+      "minInstrumentCount": 11,
+      "skipPackaging": true,
+      "isActive": true,
+      "matchMode": "first",
+      "skipDiscount": false,
+      "keywordMatchMode": "exact_token",
+      "acceptedTypes": [
+        "额外包（纸塑袋）"
+      ]
+    },
+    {
+      "ruleType": "FOLD",
+      "name": "妇幼人口机扩锉5合1含包材",
+      "priority": 10,
+      "keywords": [
+        "机扩锉@contains"
+      ],
+      "threshold": 5,
+      "foldRatio": 5,
+      "maxInstrumentCount": 10,
+      "skipPackaging": false,
+      "isActive": true,
+      "matchMode": "first",
+      "skipDiscount": false,
+      "keywordMatchMode": "exact_token",
+      "acceptedTypes": [
+        "额外包（纸塑袋）"
+      ]
+    },
+    {
+      "ruleType": "FOLD",
+      "name": "妇幼人口机扩锉5合1免包材",
+      "priority": 11,
+      "keywords": [
+        "机扩锉@contains"
+      ],
+      "threshold": 5,
+      "foldRatio": 5,
+      "minInstrumentCount": 11,
+      "skipPackaging": true,
+      "isActive": true,
+      "matchMode": "first",
+      "skipDiscount": false,
+      "keywordMatchMode": "exact_token",
+      "acceptedTypes": [
+        "额外包（纸塑袋）"
+      ]
+    },
+    {
+      "ruleType": "FOLD",
+      "name": "妇幼人口根管锉5合1含包材",
+      "priority": 10,
+      "keywords": [
+        "根管锉@contains"
+      ],
+      "threshold": 5,
+      "foldRatio": 5,
+      "maxInstrumentCount": 10,
+      "skipPackaging": false,
+      "isActive": true,
+      "matchMode": "first",
+      "skipDiscount": false,
+      "keywordMatchMode": "exact_token",
+      "acceptedTypes": [
+        "额外包（纸塑袋）"
+      ]
+    },
+    {
+      "ruleType": "FOLD",
+      "name": "妇幼人口根管锉5合1免包材",
+      "priority": 11,
+      "keywords": [
+        "根管锉@contains"
+      ],
+      "threshold": 5,
+      "foldRatio": 5,
+      "minInstrumentCount": 11,
+      "skipPackaging": true,
+      "isActive": true,
+      "matchMode": "first",
+      "skipDiscount": false,
+      "keywordMatchMode": "exact_token",
+      "acceptedTypes": [
+        "额外包（纸塑袋）"
+      ]
+    },
+    {
+      "ruleType": "FOLD",
+      "name": "妇幼人口洗髓针5合1含包材",
+      "priority": 10,
+      "keywords": [
+        "洗髓针@contains"
+      ],
+      "threshold": 5,
+      "foldRatio": 5,
+      "maxInstrumentCount": 10,
+      "skipPackaging": false,
+      "isActive": true,
+      "matchMode": "first",
+      "skipDiscount": false,
+      "keywordMatchMode": "exact_token",
+      "acceptedTypes": [
+        "额外包（纸塑袋）"
+      ]
+    },
+    {
+      "ruleType": "FOLD",
+      "name": "妇幼人口洗髓针5合1免包材",
+      "priority": 11,
+      "keywords": [
+        "洗髓针@contains"
+      ],
+      "threshold": 5,
+      "foldRatio": 5,
+      "minInstrumentCount": 11,
+      "skipPackaging": true,
+      "isActive": true,
+      "matchMode": "first",
+      "skipDiscount": false,
+      "keywordMatchMode": "exact_token",
+      "acceptedTypes": [
+        "额外包（纸塑袋）"
+      ]
+    },
+    {
+      "ruleType": "FOLD",
+      "name": "妇幼人口荡洗针5合1含包材",
+      "priority": 10,
+      "keywords": [
+        "荡洗针@contains"
+      ],
+      "threshold": 5,
+      "foldRatio": 5,
+      "maxInstrumentCount": 10,
+      "skipPackaging": false,
+      "isActive": true,
+      "matchMode": "first",
+      "skipDiscount": false,
+      "keywordMatchMode": "exact_token",
+      "acceptedTypes": [
+        "额外包（纸塑袋）"
+      ]
+    },
+    {
+      "ruleType": "FOLD",
+      "name": "妇幼人口荡洗针5合1免包材",
+      "priority": 11,
+      "keywords": [
+        "荡洗针@contains"
+      ],
+      "threshold": 5,
+      "foldRatio": 5,
+      "minInstrumentCount": 11,
+      "skipPackaging": true,
+      "isActive": true,
+      "matchMode": "first",
+      "skipDiscount": false,
+      "keywordMatchMode": "exact_token",
+      "acceptedTypes": [
+        "额外包（纸塑袋）"
+      ]
+    },
+    {
+      "ruleType": "FOLD",
+      "name": "妇幼人口针类组件5合1含包材",
+      "priority": 10,
+      "keywords": [
+        "针类组件@contains"
+      ],
+      "threshold": 5,
+      "foldRatio": 5,
+      "maxInstrumentCount": 10,
+      "skipPackaging": false,
+      "isActive": true,
+      "matchMode": "first",
+      "skipDiscount": false,
+      "keywordMatchMode": "exact_token",
+      "acceptedTypes": [
+        "额外包（纸塑袋）"
+      ]
+    },
+    {
+      "ruleType": "FOLD",
+      "name": "妇幼人口针类组件5合1免包材",
+      "priority": 11,
+      "keywords": [
+        "针类组件@contains"
+      ],
+      "threshold": 5,
+      "foldRatio": 5,
+      "minInstrumentCount": 11,
+      "skipPackaging": true,
+      "isActive": true,
+      "matchMode": "first",
+      "skipDiscount": false,
+      "keywordMatchMode": "exact_token",
+      "acceptedTypes": [
+        "额外包（纸塑袋）"
+      ]
+    },
+    {
+      "ruleType": "FOLD",
+      "name": "妇幼人口针包按1件含包材",
+      "priority": 10,
+      "keywords": [
+        "针包@contains"
+      ],
+      "threshold": 99999,
+      "foldRatio": 9999,
+      "skipPackaging": false,
+      "isActive": true,
+      "matchMode": "first",
+      "skipDiscount": false,
+      "keywordMatchMode": "exact_token",
+      "acceptedTypes": [
+        "额外包（纸塑袋）"
+      ]
+    },
+    {
+      "ruleType": "FOLD",
+      "name": "妇幼人口针盒针5合1含包材",
+      "priority": 10,
+      "keywords": [
+        "针"
+      ],
+      "threshold": 5,
+      "foldRatio": 5,
+      "extraCount": 1,
+      "maxInstrumentCount": 6,
+      "skipPackaging": false,
+      "isActive": true,
+      "matchMode": "first",
+      "skipDiscount": false,
+      "keywordMatchMode": "exact_token",
+      "acceptedTypes": [
+        "额外包（纸塑袋）"
+      ]
+    },
+    {
+      "ruleType": "FOLD",
+      "name": "妇幼人口针盒针5合1免包材",
+      "priority": 11,
+      "keywords": [
+        "针"
+      ],
+      "threshold": 5,
+      "foldRatio": 5,
+      "extraCount": 1,
+      "minInstrumentCount": 7,
+      "skipPackaging": true,
+      "isActive": true,
+      "matchMode": "first",
+      "skipDiscount": false,
+      "keywordMatchMode": "exact_token",
+      "acceptedTypes": [
+        "额外包（纸塑袋）"
+      ]
+    }
+  ]
+}

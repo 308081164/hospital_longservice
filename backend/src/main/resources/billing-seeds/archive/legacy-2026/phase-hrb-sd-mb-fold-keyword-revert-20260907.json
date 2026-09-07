@@ -1,0 +1,18 @@
+{
+  "version": "1",
+  "description": "松电慢病（HRB-SD-MB）FOLD 关键词回正：Excel 仅规定「包名称带机扩针」走 5 合 1。phase-special-charge-keyword-contains-align-20260902 误将 8 个通用小件词（车针/根管锉等）并入松电机扩针规则，导致根管锉-20件等被误判为小件折算。本种子将两条 FOLD 关键词恢复为仅「机扩针@contains」。",
+  "ruleUpdates": [
+    {
+      "code": "HRB-SD-MB",
+      "ruleName": "松电机扩针5合1含包材",
+      "setKeywords": ["机扩针@contains"],
+      "note": "Excel 院级口径：仅包名称带「机扩针」（包含）"
+    },
+    {
+      "code": "HRB-SD-MB",
+      "ruleName": "松电机扩针5合1免包材",
+      "setKeywords": ["机扩针@contains"],
+      "note": "同上"
+    }
+  ]
+}

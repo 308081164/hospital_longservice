@@ -640,6 +640,8 @@
         "status": "状态",
         "active": "启用",
         "inactive": "停用",
+        "notInManifest": "未录种子",
+        "baselineDrift": "偏离基线",
         "actions": "操作",
         "delete": "删除",
         "ruleCount": "共 {count} 条规则",

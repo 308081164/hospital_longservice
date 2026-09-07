@@ -2,7 +2,7 @@
 """Strict Excel audit for special-pricing v8 hospitals.
 
 【路径 A — 特殊计价医院逐家严格测试】
-本脚本是路径 A 的唯一入口。医院清单 = STRICT_KEEP_CODES 22 家 + 正式新引入院；
+本脚本是路径 A 的唯一入口。医院清单 = strict_hospital_codes.STRICT_KEEP_CODES（29 家）；
 材料与账期锁定 2026-08-27 基线（测试用例/特殊计价严格测试-材料锁定.json）。
 禁止用 billing-seed EXPECTED 26 清单（路径 B）跑本脚本。约定详见 docs/测试路径约定.md。
 
@@ -55,37 +55,20 @@ from ingest_bokang_814_batch import load_manifest, strict_july_hospitals  # noqa
 from lib.api_client import configure_client, get_client  # noqa: E402
 
 
+from strict_hospital_codes import STRICT_HOSPITALS  # noqa: E402
+
+
 @dataclass(frozen=True)
 class V8Hospital:
     customer_label: str
     folder: str | None
     testable: bool
     skip_reason: str = ""
+    code: str = ""
 
 
 V8_HOSPITALS: list[V8Hospital] = [
-    V8Hospital("冰城医美", "哈尔滨冰城医疗美容医院", True),
-    V8Hospital("电机厂", "国药总医院第二院区", True),
-    V8Hospital("方南南", "方南南医院", True),
-    V8Hospital("东北农大", "东北农业大学", True),
-    V8Hospital("市五院主院区", "哈尔滨市第五医院", False, "ground truth 陈旧待更新（标准包装/特色费未反映）"),
-    V8Hospital("松电慢病", "松电慢病", True),
-    V8Hospital("航天风华", "航天风华", True),
-    V8Hospital("市五院二门诊", "哈尔滨市第五医院（二门诊）", True),
-    V8Hospital("九州", "黑龙江九洲妇科医院", True),
-    V8Hospital("博尚", "博尚医院", True),
-    V8Hospital("海员松北", "黑龙江省海员总医院（松北）", True),
-    V8Hospital("省妇幼人口", "黑龙江省妇幼保健院（人口）", True),
-    V8Hospital("祖研南岗", "祖研-黑龙江省中医医院（南岗院区）", True),
-    V8Hospital("社会康复", "黑龙江省社会康复医院", True),
-    V8Hospital("道里妇幼", "道里区妇幼保健院", True),
-    V8Hospital("春语医美", "春语医美", True),
-    V8Hospital("总工会", "总工会", True),
-    V8Hospital("基准生物", "基准生物", False, "无原始表格"),
-    V8Hospital("索菲医美", "索菲医美", True),
-    V8Hospital("省监狱管理局", "省监狱管理局医院", True),
-    V8Hospital("呼兰中医", "呼兰中医院", False, "ground truth 陈旧待更新（低温纸塑袋费未反映）"),
-    V8Hospital("平房区人民", "哈尔滨市平房区人民医院", True),
+    V8Hospital(h.label, h.folder, h.testable, h.skip_reason, h.code) for h in STRICT_HOSPITALS
 ]
 
 V8_TESTABLE_FOLDERS: list[str] = [h.folder for h in V8_HOSPITALS if h.testable and h.folder]

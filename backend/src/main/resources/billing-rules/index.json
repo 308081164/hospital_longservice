@@ -1,0 +1,182 @@
+{
+  "baseline_hash": "ae472184672bd03678405fe8f36e4d9922f58f62e6aabf8a6a1d2bbb5522a41e",
+  "generated_at": "2026-09-07T14:48:41Z",
+  "source": "billing-rules-manifest@01836c66115726ff7229db58f16020cb6e65f7069beee13551669c1031fd7764",
+  "customer_count": 29,
+  "customers": [
+    {
+      "code": "BINGCHENG-YM",
+      "file": "baseline/BINGCHENG-YM.json",
+      "ruleCount": 6,
+      "fileHash": "04ef58ac9169e26eebd6473f79202d7f7d8849e9c74b9f6dbe1fdb7fe49fcabc"
+    },
+    {
+      "code": "GUOYAO-2",
+      "file": "baseline/GUOYAO-2.json",
+      "ruleCount": 30,
+      "fileHash": "8c0cb8b8876633c2d12b80707e74cb51c67c3039b2bb639282e8b1ebe314772a"
+    },
+    {
+      "code": "FNN-YY",
+      "file": "baseline/FNN-YY.json",
+      "ruleCount": 2,
+      "fileHash": "3c8bb8f1176507182d1a1ddba94fdd14d41c53eb6fa1c9562fa2f266e2681b70"
+    },
+    {
+      "code": "NEAU-YY",
+      "file": "baseline/NEAU-YY.json",
+      "ruleCount": 2,
+      "fileHash": "fd4c36500b22ef204f8de0c960a9b74ba42cac295ec4b361932388e075c6be1f"
+    },
+    {
+      "code": "HRB-WY",
+      "file": "baseline/HRB-WY.json",
+      "ruleCount": 8,
+      "fileHash": "5c4e0e6b6465833e42bfba0a155066e6f563e6c12b45a3e63288fda811183a69"
+    },
+    {
+      "code": "HRB-SD-MB",
+      "file": "baseline/HRB-SD-MB.json",
+      "ruleCount": 2,
+      "fileHash": "8e670b75408d4cf7d7cc22ebd38708e914a9c99cdb47430d5747f55cbf7a23f9"
+    },
+    {
+      "code": "HRB-HTFH",
+      "file": "baseline/HRB-HTFH.json",
+      "ruleCount": 2,
+      "fileHash": "3778b31d84efcb9a1256bd6f18a7be8555f8935cb8dc5383d03d4123f8bf3214"
+    },
+    {
+      "code": "HRB-WY-EM",
+      "file": "baseline/HRB-WY-EM.json",
+      "ruleCount": 3,
+      "fileHash": "68225e6d9649a96ffb86a03d7fa43ab8cd63472f74841afed83db5df389c79c3"
+    },
+    {
+      "code": "JIUZHOU-FK",
+      "file": "baseline/JIUZHOU-FK.json",
+      "ruleCount": 1,
+      "fileHash": "511610aa59959ec51276b5f204a3a9690f775ebb02833ff1b78d81a746f73916"
+    },
+    {
+      "code": "BOSHANG-YY",
+      "file": "baseline/BOSHANG-YY.json",
+      "ruleCount": 3,
+      "fileHash": "c3ca396cd56b126e048aa24b89f6fa79674866f2fc7c31729f742c63ba059386"
+    },
+    {
+      "code": "HAIYUAN-SB",
+      "file": "baseline/HAIYUAN-SB.json",
+      "ruleCount": 2,
+      "fileHash": "4479e590849c71a999abf628e468ebf75827d1b503f569b47da034a2aa42148d"
+    },
+    {
+      "code": "HLJ-FY-RK",
+      "file": "baseline/HLJ-FY-RK.json",
+      "ruleCount": 28,
+      "fileHash": "e84110f0c405bfea481ddd900a82cbde71bfbb72599e7b950e9e7a4e565561b2"
+    },
+    {
+      "code": "ZUYAN-NG",
+      "file": "baseline/ZUYAN-NG.json",
+      "ruleCount": 2,
+      "fileHash": "564da16406e9eaf9b3bd8403e01a1ed829dfb12e19942a58ebeebf23ec3c64ea"
+    },
+    {
+      "code": "SHKF-YY",
+      "file": "baseline/SHKF-YY.json",
+      "ruleCount": 14,
+      "fileHash": "3e845e30e91242c80067920a68aca4aaf99b461a7ba8ba0548fec2073d6e792c"
+    },
+    {
+      "code": "DL-FUCHAN",
+      "file": "baseline/DL-FUCHAN.json",
+      "ruleCount": 4,
+      "fileHash": "fbc7e0623bb0d773e47cbd6eaa42d5de2acf89cb1c1fe4eeb4ffc156163f207b"
+    },
+    {
+      "code": "CHUNYU-YL",
+      "file": "baseline/CHUNYU-YL.json",
+      "ruleCount": 2,
+      "fileHash": "cfa3c6df144710b64c9b6ee3085a45132d0b4a048a49e8f0f1001b10cc1c9914"
+    },
+    {
+      "code": "HL-ZGH",
+      "file": "baseline/HL-ZGH.json",
+      "ruleCount": 19,
+      "fileHash": "3146a82a6447de6ab4e46fa9ceb89590a9faa00bb559b3db8ba581a231456188"
+    },
+    {
+      "code": "JZSW-BIO",
+      "file": "baseline/JZSW-BIO.json",
+      "ruleCount": 1,
+      "fileHash": "1c9c0b579af2ba78376e28cd9b9fe372a231f0979e07f88c5e3cc8f0b35537b0"
+    },
+    {
+      "code": "SUOFEI-YL",
+      "file": "baseline/SUOFEI-YL.json",
+      "ruleCount": 1,
+      "fileHash": "cbdf315e847f018734f150f0717a414a2d802b464c560a40937a897156228c73"
+    },
+    {
+      "code": "HLJ-JYGLJ-YY",
+      "file": "baseline/HLJ-JYGLJ-YY.json",
+      "ruleCount": 2,
+      "fileHash": "0dfb8ec357b9f20bda219a16c6806b59cb3c0940f0d4e0ad87396b25647ab618"
+    },
+    {
+      "code": "HULAN-TCM",
+      "file": "baseline/HULAN-TCM.json",
+      "ruleCount": 6,
+      "fileHash": "ef1984332cac7cac9ad3311ea865b1daf3562d848bd229741363205e9a45a505"
+    },
+    {
+      "code": "PFQ-RM",
+      "file": "baseline/PFQ-RM.json",
+      "ruleCount": 2,
+      "fileHash": "d7dada1f615ae611e6ba6f36398d21c4ecccedb8961bebcc0fef011b2dbd6e7d"
+    },
+    {
+      "code": "HULAN-RM",
+      "file": "baseline/HULAN-RM.json",
+      "ruleCount": 11,
+      "fileHash": "0e24d1ec8336f08de3729134ebd7aab43c788c0b0830b1a1f853035e914e197c"
+    },
+    {
+      "code": "XINFA-HSZ",
+      "file": "baseline/XINFA-HSZ.json",
+      "ruleCount": 3,
+      "fileHash": "472b54dda1c9e55d7ba904af71de39a285d2dff21fe5b83317c52714a3f44c3b"
+    },
+    {
+      "code": "YUANDONG-XN",
+      "file": "baseline/YUANDONG-XN.json",
+      "ruleCount": 2,
+      "fileHash": "48e6d0e59a9ad56b6c04e2ab63cbd762cdb156826a2b23a0e913bec64ff0e19f"
+    },
+    {
+      "code": "ZUYAN-SF",
+      "file": "baseline/ZUYAN-SF.json",
+      "ruleCount": 9,
+      "fileHash": "7f38ba3a4b13db60efa0b0f5f8d50f47cfbab1319ad3fc85faed3f9407c513af"
+    },
+    {
+      "code": "AOLAN-YY",
+      "file": "baseline/AOLAN-YY.json",
+      "ruleCount": 2,
+      "fileHash": "64a978bbcb2bf0bdf22647d3838de76e79b5c5d23ab0fe4418f8699a098d5237"
+    },
+    {
+      "code": "HRB-XK-YY",
+      "file": "baseline/HRB-XK-YY.json",
+      "ruleCount": 2,
+      "fileHash": "fc7dce569e58688bbd2bbfaf23e65276fa8caee3131cf0cf86fcf5e62fada95f"
+    },
+    {
+      "code": "SENHAI-YY",
+      "file": "baseline/SENHAI-YY.json",
+      "ruleCount": 4,
+      "fileHash": "a1e065e37fdb79d1078d33251cceaaef20a78ecc86df01e69221d8e85b284ee3"
+    }
+  ]
+}

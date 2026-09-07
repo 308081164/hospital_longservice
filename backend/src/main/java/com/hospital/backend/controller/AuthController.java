@@ -11,6 +11,7 @@ import com.hospital.backend.entity.User;
 import com.hospital.backend.mapper.UserMapper;
 import com.hospital.backend.security.JwtTokenProvider;
 import com.hospital.backend.security.UserDetailsImpl;
+import com.hospital.backend.config.BillingRulesBaselineSyncHealth;
 import com.hospital.backend.service.SystemVersionInfoService;
 import io.jsonwebtoken.Claims;
 import jakarta.validation.Valid;
@@ -32,6 +33,7 @@ public class AuthController {
     private final JwtTokenProvider jwtTokenProvider;
     private final PasswordEncoder passwordEncoder;
     private final SystemVersionInfoService systemVersionInfoService;
+    private final BillingRulesBaselineSyncHealth billingRulesBaselineSyncHealth;
 
     @Value("${app.jwt.access-token-expire-minutes}")
     private long accessTokenExpireMinutes;
@@ -119,6 +121,10 @@ public class AuthController {
 
     @GetMapping("/health")
     public Result<?> health() {
+        if (!billingRulesBaselineSyncHealth.isHealthy()) {
+            return Result.fail(503, "billing rules baseline verify failed",
+                    billingRulesBaselineSyncHealth.lastFailureDetail());
+        }
         return Result.success(java.util.Map.of(
                 "status", "healthy",
                 "timestamp", java.time.LocalDateTime.now().toString(),

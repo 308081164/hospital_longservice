@@ -1,0 +1,26 @@
+{
+  "customerCode": "SUOFEI-YL",
+  "customerName": "索菲医疗美容门诊",
+  "billingEnabled": true,
+  "billingPricingMode": "hybrid",
+  "productRules": [
+    {
+      "ruleType": "PRICE_PER_INSTRUMENT",
+      "name": "索菲面吸针按件5.5",
+      "priority": 10,
+      "price": 5.5,
+      "keywords": [
+        "面吸针"
+      ],
+      "minInstrumentCount": 3,
+      "skipPackaging": true,
+      "skipDiscount": true,
+      "isActive": true,
+      "matchMode": "first",
+      "keywordMatchMode": "contains",
+      "acceptedTypes": [
+        "额外包（纸塑袋）"
+      ]
+    }
+  ]
+}

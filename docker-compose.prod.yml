@@ -72,6 +72,7 @@ services:
       APP_COMPANY_BANK_ACCOUNT: ${APP_COMPANY_BANK_ACCOUNT:-}
       APP_COMPANY_BANK_NAME: ${APP_COMPANY_BANK_NAME:-}
       JAVA_OPTS: ${JAVA_OPTS:--Xms512m -Xmx6144m}
+      BILLING_BASELINE_FAIL_ON_VERIFY_ERROR: ${BILLING_BASELINE_FAIL_ON_VERIFY_ERROR:-true}
       TZ: Asia/Shanghai
     volumes:
       - backend-uploads:/app/uploads

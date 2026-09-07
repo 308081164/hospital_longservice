@@ -8,9 +8,11 @@ import com.hospital.backend.entity.SysSetting;
 import com.hospital.backend.mapper.CustomerMapper;
 import com.hospital.backend.mapper.CustomerProductRuleMapper;
 import com.hospital.backend.mapper.SysSettingMapper;
+import com.hospital.backend.service.RuleQuarantineService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.core.annotation.Order;
 import org.springframework.core.io.ClassPathResource;
@@ -34,6 +36,7 @@ import java.util.Set;
 @Component
 @Order(116)
 @RequiredArgsConstructor
+@ConditionalOnProperty(name = "billing.seed.reconcile-enabled", havingValue = "true")
 public class BillingRulesManifestReconciler implements CommandLineRunner {
 
     private static final String MANIFEST_FILE = "billing-seeds/billing-rules-manifest.json";
@@ -41,13 +44,16 @@ public class BillingRulesManifestReconciler implements CommandLineRunner {
     private static final String MANIFEST_GENERATED_AT_KEY = "billing_rules_manifest_generated_at";
     private static final String MANIFEST_RECONCILED_AT_KEY = "billing_rules_manifest_reconciled_at";
     private static final String MANIFEST_RECONCILE_STATUS_KEY = "billing_rules_manifest_reconcile_status";
+    private static final String LAST_QUARANTINE_KEY = "billing_rules_last_quarantine";
+    private static final String QUARANTINE_COUNT_KEY = "billing_rules_quarantine_count";
 
     private final CustomerMapper customerMapper;
     private final CustomerProductRuleMapper customerProductRuleMapper;
     private final SysSettingMapper sysSettingMapper;
     private final JdbcTemplate jdbcTemplate;
+    private final RuleQuarantineService ruleQuarantineService;
 
-    @Value("${billing.seed.reconcile-enabled:true}")
+    @Value("${billing.seed.reconcile-enabled:false}")
     private boolean reconcileEnabled;
 
     @Override
@@ -116,10 +122,12 @@ public class BillingRulesManifestReconciler implements CommandLineRunner {
                     manifestRules.put(customer.getId(), names);
                 }
             }
-            int deleted = syncDeleteNonManifestRules(manifestRules);
-            if (deleted > 0) {
-                log.info("Reconcile cleaned up {} non-manifest rules", deleted);
+            int quarantined = syncQuarantineNonManifestRules(manifestRules, manifestHash);
+            if (quarantined > 0) {
+                log.warn("Reconcile quarantined {} non-manifest rules (is_active=0, tombstone saved)", quarantined);
             }
+            upsertSetting(QUARANTINE_COUNT_KEY, String.valueOf(ruleQuarantineService.countActiveQuarantines()),
+                    "Count of product rules currently in quarantine (not restored)");
             upsertManifestHash(manifestHash);
             upsertSetting(MANIFEST_GENERATED_AT_KEY, text(root, "generated_at"),
                     "ISO timestamp of billing-rules-manifest.json generation");
@@ -148,27 +156,58 @@ public class BillingRulesManifestReconciler implements CommandLineRunner {
 
     /**
      * 让 DB 的 customer_product_rule 与 manifest 完全一致：
-     * 1) 非 special-pricing 客户（billing_enabled=0 或 standard 模式）删除全部规则；
-     * 2) manifest 内的客户删除不在 manifest 里的规则名。
+     * 1) 非 special-pricing 客户隔离全部启用规则；
+     * 2) manifest 内的客户隔离不在 manifest 里的规则名。
+     * 隔离 = is_active=0 + tombstone 快照（可恢复），不再硬删。
      */
-    private int syncDeleteNonManifestRules(Map<Long, Set<String>> manifestRules) {
-        int deleted = 0;
-        // 1) 非特殊计价客户清空规则
-        deleted += jdbcTemplate.update(
-                "DELETE r FROM customer_product_rule r "
+    private int syncQuarantineNonManifestRules(Map<Long, Set<String>> manifestRules, String manifestHash) {
+        int quarantined = 0;
+        List<Long> standardCustomerRuleIds = jdbcTemplate.query(
+                "SELECT r.id FROM customer_product_rule r "
                         + "JOIN customer c ON c.id = r.customer_id "
-                        + "WHERE c.billing_enabled = 0 OR c.billing_pricing_mode = 'standard'");
-        // 2) manifest 客户按规则名清理多余规则
+                        + "WHERE r.is_active = 1 AND (c.billing_enabled = 0 OR c.billing_pricing_mode = 'standard')",
+                (rs, rowNum) -> rs.getLong("id"));
+        for (Long ruleId : standardCustomerRuleIds) {
+            CustomerProductRule rule = customerProductRuleMapper.selectById(ruleId);
+            if (rule == null) {
+                continue;
+            }
+            Customer customer = customerMapper.selectById(rule.getCustomerId());
+            if (ruleQuarantineService.quarantineRule(
+                    customer,
+                    rule,
+                    manifestHash,
+                    "客户为标准计价或未启用特色计价，规则不应保留",
+                    "manifest-reconciler")) {
+                quarantined++;
+            }
+        }
         for (Map.Entry<Long, Set<String>> entry : manifestRules.entrySet()) {
+            Customer customer = customerMapper.selectById(entry.getKey());
             List<CustomerProductRule> existing = customerProductRuleMapper.selectByCustomerId(entry.getKey());
             for (CustomerProductRule rule : existing) {
+                if (!Boolean.TRUE.equals(rule.getIsActive())) {
+                    continue;
+                }
                 if (!entry.getValue().contains(rule.getName())) {
-                    customerProductRuleMapper.deleteById(rule.getId());
-                    deleted++;
+                    if (ruleQuarantineService.quarantineRule(
+                            customer,
+                            rule,
+                            manifestHash,
+                            "规则名不在 billing-rules-manifest.json 中",
+                            "manifest-reconciler")) {
+                        quarantined++;
+                    }
                 }
             }
         }
-        return deleted;
+        if (quarantined > 0) {
+            upsertSetting(
+                    LAST_QUARANTINE_KEY,
+                    java.time.Instant.now() + " count=" + quarantined,
+                    "Last manifest reconcile quarantine summary");
+        }
+        return quarantined;
     }
 
     private boolean applyCustomerManifestFields(Customer customer, JsonNode node) {

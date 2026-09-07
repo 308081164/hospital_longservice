@@ -1,0 +1,585 @@
+{
+  "customerCode": "GUOYAO-2",
+  "customerName": "国药总医院第二院区",
+  "billingEnabled": true,
+  "billingPricingMode": "hybrid",
+  "productRules": [
+    {
+      "ruleType": "EXTRA_FEE",
+      "name": "电机厂双内层纸塑袋加价2.5",
+      "priority": 22,
+      "fee": 2.5,
+      "keywords": [
+        "/双"
+      ],
+      "minInstrumentCount": 3,
+      "skipPackaging": true,
+      "skipDiscount": true,
+      "isActive": true,
+      "matchMode": "first",
+      "keywordMatchMode": "contains",
+      "conditionsJson": "[{\"field\":\"manualReview\",\"value\":true}]",
+      "acceptedTypes": [
+        "额外包（纸塑袋）"
+      ]
+    },
+    {
+      "ruleType": "PRICE_PER_INSTRUMENT",
+      "name": "电机厂双按件5.5免包材",
+      "priority": 21,
+      "price": 5.5,
+      "keywords": [
+        "/双"
+      ],
+      "minInstrumentCount": 3,
+      "skipPackaging": true,
+      "skipDiscount": true,
+      "isActive": true,
+      "matchMode": "first",
+      "keywordMatchMode": "contains",
+      "conditionsJson": "[{\"field\":\"manualReview\",\"value\":true}]",
+      "acceptedTypes": [
+        "额外包（纸塑袋）"
+      ]
+    },
+    {
+      "ruleType": "PRICE_PER_INSTRUMENT",
+      "name": "电机厂双按件5.5内层袋",
+      "priority": 12,
+      "price": 5.5,
+      "keywords": [
+        "/双"
+      ],
+      "materials": [
+        "纸塑袋"
+      ],
+      "temperature": "HT",
+      "minInstrumentCount": 3,
+      "skipPackaging": false,
+      "skipDiscount": true,
+      "isActive": true,
+      "matchMode": "first",
+      "keywordMatchMode": "contains",
+      "conditionsJson": "[{\"field\":\"manualReview\",\"value\":true}]",
+      "acceptedTypes": [
+        "额外包（纸塑袋）"
+      ]
+    },
+    {
+      "ruleType": "PRICE_PER_INSTRUMENT",
+      "name": "电机厂双按件5.5含外层袋",
+      "priority": 20,
+      "price": 5.5,
+      "keywords": [
+        "/双"
+      ],
+      "maxInstrumentCount": 2,
+      "skipPackaging": false,
+      "skipDiscount": true,
+      "isActive": true,
+      "matchMode": "first",
+      "keywordMatchMode": "contains",
+      "conditionsJson": "[{\"field\":\"manualReview\",\"value\":true}]",
+      "acceptedTypes": [
+        "额外包（纸塑袋）"
+      ]
+    },
+    {
+      "ruleType": "PRICE_PER_INSTRUMENT",
+      "name": "电机厂双按件5.5外层袋",
+      "priority": 11,
+      "price": 5.5,
+      "keywords": [
+        "/双"
+      ],
+      "materials": [
+        "纸塑袋"
+      ],
+      "temperature": "HT",
+      "maxInstrumentCount": 2,
+      "skipPackaging": false,
+      "skipDiscount": true,
+      "isActive": true,
+      "matchMode": "first",
+      "keywordMatchMode": "contains",
+      "conditionsJson": "[{\"field\":\"manualReview\",\"value\":true}]",
+      "acceptedTypes": [
+        "额外包（纸塑袋）"
+      ]
+    },
+    {
+      "ruleType": "PRICE_PER_INSTRUMENT",
+      "name": "电机厂包名带双-人工核对",
+      "priority": 25,
+      "price": 5.5,
+      "keywords": [
+        "双@contains"
+      ],
+      "skipPackaging": false,
+      "skipDiscount": true,
+      "isActive": true,
+      "matchMode": "first",
+      "keywordMatchMode": "exact_token",
+      "conditionsJson": "[{\"field\":\"manualReview\",\"value\":true}]",
+      "acceptedTypes": [
+        "额外包（纸塑袋）"
+      ]
+    },
+    {
+      "ruleType": "FOLD",
+      "name": "电机厂指针5合1免包材",
+      "priority": 15,
+      "keywords": [
+        "指针@contains"
+      ],
+      "threshold": 5,
+      "foldRatio": 5,
+      "minInstrumentCount": 11,
+      "skipPackaging": true,
+      "isActive": true,
+      "matchMode": "first",
+      "skipDiscount": false,
+      "keywordMatchMode": "exact_token",
+      "price": 5.5,
+      "acceptedTypes": [
+        "额外包（纸塑袋）"
+      ]
+    },
+    {
+      "ruleType": "FOLD",
+      "name": "电机厂指针5合1含包材",
+      "priority": 14,
+      "keywords": [
+        "指针@contains"
+      ],
+      "threshold": 5,
+      "foldRatio": 5,
+      "maxInstrumentCount": 10,
+      "skipPackaging": false,
+      "isActive": true,
+      "matchMode": "first",
+      "skipDiscount": false,
+      "keywordMatchMode": "exact_token",
+      "price": 5.5,
+      "acceptedTypes": [
+        "额外包（纸塑袋）"
+      ]
+    },
+    {
+      "ruleType": "FIXED_PRICE",
+      "name": "电机厂敷料W120150固定35棉球_W12050",
+      "priority": 30,
+      "price": 35.0,
+      "keywords": [
+        "棉球/W12050",
+        "棉球-W12050"
+      ],
+      "skipPackaging": true,
+      "skipDiscount": true,
+      "isActive": true,
+      "matchMode": "first",
+      "keywordMatchMode": "contains",
+      "acceptedTypes": [
+        "敷料包（无纺布）"
+      ]
+    },
+    {
+      "ruleType": "FIXED_PRICE",
+      "name": "电机厂敷料W120150固定35棉球_W15050",
+      "priority": 30,
+      "price": 35.0,
+      "keywords": [
+        "棉球/W15050",
+        "棉球-W15050"
+      ],
+      "skipPackaging": true,
+      "skipDiscount": true,
+      "isActive": true,
+      "matchMode": "first",
+      "keywordMatchMode": "contains",
+      "acceptedTypes": [
+        "敷料包（无纺布）"
+      ]
+    },
+    {
+      "ruleType": "FIXED_PRICE",
+      "name": "电机厂敷料W120150固定35纱布_W12050",
+      "priority": 30,
+      "price": 35.0,
+      "keywords": [
+        "纱布/W12050",
+        "纱布-W12050"
+      ],
+      "skipPackaging": true,
+      "skipDiscount": true,
+      "isActive": true,
+      "matchMode": "first",
+      "keywordMatchMode": "contains",
+      "acceptedTypes": [
+        "敷料包（无纺布）"
+      ]
+    },
+    {
+      "ruleType": "FIXED_PRICE",
+      "name": "电机厂敷料W120150固定35纱布_W15050",
+      "priority": 30,
+      "price": 35.0,
+      "keywords": [
+        "纱布/W15050",
+        "纱布-W15050"
+      ],
+      "skipPackaging": true,
+      "skipDiscount": true,
+      "isActive": true,
+      "matchMode": "first",
+      "keywordMatchMode": "contains",
+      "acceptedTypes": [
+        "敷料包（无纺布）"
+      ]
+    },
+    {
+      "ruleType": "FIXED_PRICE",
+      "name": "电机厂敷料W605070固定25棉球_W6050",
+      "priority": 30,
+      "price": 25.0,
+      "keywords": [
+        "棉球/W6050",
+        "棉球-W6050"
+      ],
+      "skipPackaging": true,
+      "skipDiscount": true,
+      "isActive": true,
+      "matchMode": "first",
+      "keywordMatchMode": "contains",
+      "acceptedTypes": [
+        "敷料包（无纺布）"
+      ]
+    },
+    {
+      "ruleType": "FIXED_PRICE",
+      "name": "电机厂敷料W605070固定25棉球_W6070",
+      "priority": 30,
+      "price": 25.0,
+      "keywords": [
+        "棉球/W6070",
+        "棉球-W6070"
+      ],
+      "skipPackaging": true,
+      "skipDiscount": true,
+      "isActive": true,
+      "matchMode": "first",
+      "keywordMatchMode": "contains",
+      "acceptedTypes": [
+        "敷料包（无纺布）"
+      ]
+    },
+    {
+      "ruleType": "FIXED_PRICE",
+      "name": "电机厂敷料W605070固定25棉球_W7060",
+      "priority": 30,
+      "price": 25.0,
+      "keywords": [
+        "棉球/W7060",
+        "棉球-W7060"
+      ],
+      "skipPackaging": true,
+      "skipDiscount": true,
+      "isActive": true,
+      "matchMode": "first",
+      "keywordMatchMode": "contains",
+      "acceptedTypes": [
+        "敷料包（无纺布）"
+      ]
+    },
+    {
+      "ruleType": "FIXED_PRICE",
+      "name": "电机厂敷料W605070固定25棉球_W7070",
+      "priority": 30,
+      "price": 25.0,
+      "keywords": [
+        "棉球/W7070",
+        "棉球-W7070"
+      ],
+      "skipPackaging": true,
+      "skipDiscount": true,
+      "isActive": true,
+      "matchMode": "first",
+      "keywordMatchMode": "contains",
+      "acceptedTypes": [
+        "敷料包（无纺布）"
+      ]
+    },
+    {
+      "ruleType": "FIXED_PRICE",
+      "name": "电机厂敷料W605070固定25纱布_W6050",
+      "priority": 30,
+      "price": 25.0,
+      "keywords": [
+        "纱布/W6050",
+        "纱布-W6050"
+      ],
+      "skipPackaging": true,
+      "skipDiscount": true,
+      "isActive": true,
+      "matchMode": "first",
+      "keywordMatchMode": "contains",
+      "acceptedTypes": [
+        "敷料包（无纺布）"
+      ]
+    },
+    {
+      "ruleType": "FIXED_PRICE",
+      "name": "电机厂敷料W605070固定25纱布_W6070",
+      "priority": 30,
+      "price": 25.0,
+      "keywords": [
+        "纱布/W6070",
+        "纱布-W6070"
+      ],
+      "skipPackaging": true,
+      "skipDiscount": true,
+      "isActive": true,
+      "matchMode": "first",
+      "keywordMatchMode": "contains",
+      "acceptedTypes": [
+        "敷料包（无纺布）"
+      ]
+    },
+    {
+      "ruleType": "FIXED_PRICE",
+      "name": "电机厂敷料W605070固定25纱布_W7060",
+      "priority": 30,
+      "price": 25.0,
+      "keywords": [
+        "纱布/W7060",
+        "纱布-W7060"
+      ],
+      "skipPackaging": true,
+      "skipDiscount": true,
+      "isActive": true,
+      "matchMode": "first",
+      "keywordMatchMode": "contains",
+      "acceptedTypes": [
+        "敷料包（无纺布）"
+      ]
+    },
+    {
+      "ruleType": "FIXED_PRICE",
+      "name": "电机厂敷料W605070固定25纱布_W7070",
+      "priority": 30,
+      "price": 25.0,
+      "keywords": [
+        "纱布/W7070",
+        "纱布-W7070"
+      ],
+      "skipPackaging": true,
+      "skipDiscount": true,
+      "isActive": true,
+      "matchMode": "first",
+      "keywordMatchMode": "contains",
+      "acceptedTypes": [
+        "敷料包（无纺布）"
+      ]
+    },
+    {
+      "ruleType": "FIXED_PRICE",
+      "name": "电机厂敷料W9050固定30棉球_W9050",
+      "priority": 30,
+      "price": 30.0,
+      "keywords": [
+        "棉球/W9050",
+        "棉球-W9050"
+      ],
+      "skipPackaging": true,
+      "skipDiscount": true,
+      "isActive": true,
+      "matchMode": "first",
+      "keywordMatchMode": "contains",
+      "acceptedTypes": [
+        "敷料包（无纺布）"
+      ]
+    },
+    {
+      "ruleType": "FIXED_PRICE",
+      "name": "电机厂敷料W9050固定30棉球_W9060",
+      "priority": 30,
+      "price": 30.0,
+      "keywords": [
+        "棉球/W9060",
+        "棉球-W9060"
+      ],
+      "skipPackaging": true,
+      "skipDiscount": true,
+      "isActive": true,
+      "matchMode": "first",
+      "keywordMatchMode": "contains",
+      "acceptedTypes": [
+        "敷料包（无纺布）"
+      ]
+    },
+    {
+      "ruleType": "FIXED_PRICE",
+      "name": "电机厂敷料W9050固定30纱布_W9050",
+      "priority": 30,
+      "price": 30.0,
+      "keywords": [
+        "纱布/W9050",
+        "纱布-W9050"
+      ],
+      "skipPackaging": true,
+      "skipDiscount": true,
+      "isActive": true,
+      "matchMode": "first",
+      "keywordMatchMode": "contains",
+      "acceptedTypes": [
+        "敷料包（无纺布）"
+      ]
+    },
+    {
+      "ruleType": "FIXED_PRICE",
+      "name": "电机厂敷料W9050固定30纱布_W9060",
+      "priority": 30,
+      "price": 30.0,
+      "keywords": [
+        "纱布/W9060",
+        "纱布-W9060"
+      ],
+      "skipPackaging": true,
+      "skipDiscount": true,
+      "isActive": true,
+      "matchMode": "first",
+      "keywordMatchMode": "contains",
+      "acceptedTypes": [
+        "敷料包（无纺布）"
+      ]
+    },
+    {
+      "ruleType": "FIXED_PRICE",
+      "name": "电机厂棉球W120150固定35",
+      "priority": 30,
+      "price": 35.0,
+      "keywords": [
+        "棉球/W12050",
+        "棉球/W15050",
+        "棉球-W12050",
+        "棉球-W15050"
+      ],
+      "skipPackaging": true,
+      "skipDiscount": true,
+      "isActive": true,
+      "matchMode": "first",
+      "keywordMatchMode": "contains",
+      "acceptedTypes": [
+        "敷料包（无纺布）"
+      ]
+    },
+    {
+      "ruleType": "FIXED_PRICE",
+      "name": "电机厂棉球W605070固定25",
+      "priority": 30,
+      "price": 25.0,
+      "keywords": [
+        "棉球/W6050",
+        "棉球/W6070",
+        "棉球/W7060",
+        "棉球/W7070",
+        "棉球-W6050",
+        "棉球-W6070",
+        "棉球-W7060",
+        "棉球-W7070"
+      ],
+      "skipPackaging": true,
+      "skipDiscount": true,
+      "isActive": true,
+      "matchMode": "first",
+      "keywordMatchMode": "contains",
+      "acceptedTypes": [
+        "敷料包（无纺布）"
+      ]
+    },
+    {
+      "ruleType": "FIXED_PRICE",
+      "name": "电机厂棉球W9050固定30",
+      "priority": 30,
+      "price": 30.0,
+      "keywords": [
+        "棉球/W9050",
+        "棉球/W9060",
+        "棉球-W9050",
+        "棉球-W9060"
+      ],
+      "skipPackaging": true,
+      "skipDiscount": true,
+      "isActive": true,
+      "matchMode": "first",
+      "keywordMatchMode": "contains",
+      "acceptedTypes": [
+        "敷料包（无纺布）"
+      ]
+    },
+    {
+      "ruleType": "FIXED_PRICE",
+      "name": "电机厂纱布W120150固定35",
+      "priority": 30,
+      "price": 35.0,
+      "keywords": [
+        "纱布/W12050",
+        "纱布/W15050",
+        "纱布-W12050",
+        "纱布-W15050"
+      ],
+      "skipPackaging": true,
+      "skipDiscount": true,
+      "isActive": true,
+      "matchMode": "first",
+      "keywordMatchMode": "contains",
+      "acceptedTypes": [
+        "敷料包（无纺布）"
+      ]
+    },
+    {
+      "ruleType": "FIXED_PRICE",
+      "name": "电机厂纱布W605070固定25",
+      "priority": 30,
+      "price": 25.0,
+      "keywords": [
+        "纱布/W6050",
+        "纱布/W6070",
+        "纱布/W7060",
+        "纱布/W7070",
+        "纱布-W6050",
+        "纱布-W6070",
+        "纱布-W7060",
+        "纱布-W7070"
+      ],
+      "skipPackaging": true,
+      "skipDiscount": true,
+      "isActive": true,
+      "matchMode": "first",
+      "keywordMatchMode": "contains",
+      "acceptedTypes": [
+        "敷料包（无纺布）"
+      ]
+    },
+    {
+      "ruleType": "FIXED_PRICE",
+      "name": "电机厂纱布W9050固定30",
+      "priority": 30,
+      "price": 30.0,
+      "keywords": [
+        "纱布/W9050",
+        "纱布/W9060",
+        "纱布-W9050",
+        "纱布-W9060"
+      ],
+      "skipPackaging": true,
+      "skipDiscount": true,
+      "isActive": true,
+      "matchMode": "first",
+      "keywordMatchMode": "contains",
+      "acceptedTypes": [
+        "敷料包（无纺布）"
+      ]
+    }
+  ]
+}

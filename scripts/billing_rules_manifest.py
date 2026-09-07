@@ -1,5 +1,9 @@
 #!/usr/bin/env python3
-"""Merge billing-seeds/*.json into per-customer expected productRules manifest."""
+"""Merge billing-seeds/*.json into per-customer expected productRules manifest.
+
+DEPRECATED (2026-09): 活跃路径已迁移至 billing-rules/baseline/{CODE}.json。
+本脚本仅保留历史对账与一次性 manifest_to_baseline 转换，禁止在 CI 中 --write 落库。
+"""
 
 from __future__ import annotations
 

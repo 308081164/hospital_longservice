@@ -1,0 +1,70 @@
+{
+  "customerCode": "HRB-WY-EM",
+  "customerName": "哈尔滨市第五医院（二门诊）",
+  "billingEnabled": true,
+  "billingPricingMode": "hybrid",
+  "productRules": [
+    {
+      "ruleType": "FIXED_PRICE",
+      "name": "市五二门诊驱血带W120150固定35",
+      "priority": 20,
+      "price": 35.0,
+      "keywords": [
+        "驱血带/W12050",
+        "驱血带/W15050",
+        "驱血带/W120",
+        "驱血带/W150"
+      ],
+      "skipPackaging": true,
+      "skipDiscount": true,
+      "isActive": true,
+      "matchMode": "first",
+      "keywordMatchMode": "contains",
+      "acceptedTypes": [
+        "敷料包（无纺布）"
+      ]
+    },
+    {
+      "ruleType": "FIXED_PRICE",
+      "name": "市五二门诊驱血带W605070固定25",
+      "priority": 20,
+      "price": 25.0,
+      "keywords": [
+        "驱血带/W6050",
+        "驱血带/W6070",
+        "驱血带/W7060",
+        "驱血带/W7070",
+        "驱血带/W50",
+        "驱血带/W60",
+        "驱血带/W70"
+      ],
+      "skipPackaging": true,
+      "skipDiscount": true,
+      "isActive": true,
+      "matchMode": "first",
+      "keywordMatchMode": "contains",
+      "acceptedTypes": [
+        "敷料包（无纺布）"
+      ]
+    },
+    {
+      "ruleType": "FIXED_PRICE",
+      "name": "市五二门诊驱血带W9050固定30",
+      "priority": 20,
+      "price": 30.0,
+      "keywords": [
+        "驱血带/W9050",
+        "驱血带/W9060",
+        "驱血带/W90"
+      ],
+      "skipPackaging": true,
+      "skipDiscount": true,
+      "isActive": true,
+      "matchMode": "first",
+      "keywordMatchMode": "contains",
+      "acceptedTypes": [
+        "敷料包（无纺布）"
+      ]
+    }
+  ]
+}

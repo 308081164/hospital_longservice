@@ -94,4 +94,36 @@ class BillingConditionEvaluatorTest {
         assertThat(BillingConditionEvaluator.temperatureScopeMatches("HT", "HT")).isTrue();
         assertThat(BillingConditionEvaluator.temperatureScopeMatches("HT", "LT")).isFalse();
     }
+
+    @Test
+    void packTypeConstraintBlocksWrongBillType() throws Exception {
+        ObjectNode rule = MAPPER.createObjectNode();
+        rule.putArray("keywords").add("纱布");
+        rule.putArray("acceptedTypes").add("敷料包（无纺布）");
+
+        assertThat(BillingConditionEvaluator.packTypeMatches(rule, "敷料包(无纺布包)")).isTrue();
+        assertThat(BillingConditionEvaluator.packTypeMatches(rule, "额外包(纸塑袋)")).isFalse();
+    }
+
+    @Test
+    void packTypeConstraintLimitsKeywordToPackNameOnly() throws Exception {
+        ObjectNode rule = MAPPER.createObjectNode();
+        rule.putArray("keywords").add("纱布");
+        rule.putArray("acceptedTypes").add("敷料包（无纺布）");
+
+        assertThat(BillingConditionEvaluator.matchesRuleKeywords(
+                rule, "外科纱布包", "额外包(纸塑袋)外科纱布包高温纸塑袋"))
+                .isTrue();
+        assertThat(BillingConditionEvaluator.matchesRuleKeywords(
+                rule, "开口器4件", "额外包(纸塑袋)开口器4件高温纸塑袋"))
+                .isFalse();
+    }
+
+    @Test
+    void packTypeEquivalentNormalizesDressingLabels() {
+        assertThat(BillingConditionEvaluator.packTypeEquivalent("敷料包（无纺布）", "敷料包(无纺布包)"))
+                .isTrue();
+        assertThat(BillingConditionEvaluator.packTypeEquivalent("额外包（纸塑袋）", "额外包(纸塑袋)"))
+                .isTrue();
+    }
 }

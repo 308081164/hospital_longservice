@@ -18,6 +18,11 @@
       <span class="value mono">{{ display.rulesHash }}</span>
       <span v-if="display.rulesTime" class="value muted">· {{ display.rulesTime }}</span>
     </div>
+    <div v-if="menuOpen" class="line">
+      <span class="label">基线</span>
+      <span class="value mono">{{ display.baselineHash }}</span>
+      <span v-if="!display.verifyOk" class="value warn">· 漂移</span>
+    </div>
   </div>
 </template>
 
@@ -44,10 +49,12 @@
     const gitSha = i?.gitShaShort || short(frontendSha) || 'local'
     const fallback = backendUnavailable.value ? '后端未就绪' : '—'
     const buildTime = i?.buildTimeDisplay || fallback
-    const rulesHash = i?.rulesManifestHashShort || fallback
+    const rulesHash = i?.rulesBaselineHashShort || i?.rulesManifestHashShort || fallback
     const rulesTime =
       i?.rulesReconciledAtDisplay || i?.rulesGeneratedAtDisplay || ''
-    return { gitSha, buildTime, rulesHash, rulesTime }
+    const baselineHash = i?.rulesBaselineHashShort || '—'
+    const verifyOk = i?.rulesVerifyStatus !== false
+    return { gitSha, buildTime, rulesHash, rulesTime, baselineHash, verifyOk }
   })
 
   const tooltipText = computed(() => {
@@ -56,7 +63,8 @@
     const lines = [
       `系统 ${i?.gitSha || short(frontendSha) || 'local'}`,
       `更新 ${i?.buildTimeDisplay || i?.buildTime || fallback}`,
-      `规则 ${i?.rulesManifestHashShort || fallback} · ${i?.rulesReconciledAtDisplay || i?.rulesGeneratedAtDisplay || fallback}`,
+      `规则 ${i?.rulesBaselineHashShort || i?.rulesManifestHashShort || fallback}`,
+      i?.rulesVerifyStatus === false ? 'baseline 校验未通过' : '',
       backendUnavailable.value && frontendSha ? `前端构建 ${short(frontendSha)}` : '',
       !backendUnavailable.value && frontendSha && frontendSha !== i?.gitSha
         ? `前端构建 ${short(frontendSha)}`
@@ -132,6 +140,11 @@
 
     .muted {
       opacity: 0.85;
+    }
+
+    .line.quarantine .warn {
+      color: var(--el-color-warning);
+      font-weight: 600;
     }
   }
 </style>

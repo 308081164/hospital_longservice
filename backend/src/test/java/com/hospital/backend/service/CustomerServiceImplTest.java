@@ -14,6 +14,7 @@ import com.hospital.backend.mapper.CustomerProductRuleMapper;
 import com.hospital.backend.mapper.DepartmentEntryMapper;
 import com.hospital.backend.mapper.PhysicianEntryMapper;
 import com.hospital.backend.mapper.ProductMapper;
+import com.hospital.backend.config.BaselineRuleIndex;
 import com.hospital.backend.service.impl.CustomerServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -54,6 +55,14 @@ class CustomerServiceImplTest {
     private DepartmentEntryMapper departmentEntryMapper;
     @Mock
     private PhysicianEntryMapper physicianEntryMapper;
+    @Mock
+    private RuleChangeAuditService ruleChangeAuditService;
+    @Mock
+    private BaselineRuleIndex baselineRuleIndex;
+    @Mock
+    private RulesVerificationService rulesVerificationService;
+    @Mock
+    private PricingRuleCompileCache compileCache;
 
     private CustomerServiceImpl customerService;
 
@@ -68,7 +77,11 @@ class CustomerServiceImplTest {
                 productMapper,
                 billingRuleGroupSyncService,
                 departmentEntryMapper,
-                physicianEntryMapper);
+                physicianEntryMapper,
+                ruleChangeAuditService,
+                baselineRuleIndex,
+                rulesVerificationService,
+                compileCache);
         lenient().when(departmentEntryMapper.countActiveByCustomerId(anyLong())).thenReturn(0);
         lenient().when(physicianEntryMapper.countActiveByCustomerId(anyLong())).thenReturn(0);
     }

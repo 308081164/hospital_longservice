@@ -2,6 +2,8 @@ package com.hospital.backend.service;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.hospital.backend.common.JsonUtils;
+import com.hospital.backend.config.BaselineRuleIndex;
+import com.hospital.backend.service.impl.RulesVerificationServiceImpl;
 import com.hospital.backend.entity.SysSetting;
 import com.hospital.backend.mapper.SysSettingMapper;
 import lombok.RequiredArgsConstructor;
@@ -19,22 +21,25 @@ import java.util.Map;
  * 系统版本与计价规则版本信息（供 UI 左下角展示、生产环境快速对版）。
  *
  * <p>gitSha / buildTime 由 Docker 构建参数 APP_GIT_SHA / APP_BUILD_TIME 注入；
- * 规则 hash / generatedAt / reconciledAt 来自启动时 BillingRulesManifestReconciler 落库的 sys_setting。
+ * 规则 hash 来自 classpath billing-rules/index.json baseline_hash。
  */
 @Service
 @RequiredArgsConstructor
 public class SystemVersionInfoService {
 
     public static final String MANIFEST_HASH_KEY = "billing_rules_manifest_hash";
+    public static final String BASELINE_HASH_KEY = "billing_rules_baseline_hash";
     public static final String MANIFEST_GENERATED_AT_KEY = "billing_rules_manifest_generated_at";
     public static final String MANIFEST_RECONCILED_AT_KEY = "billing_rules_manifest_reconciled_at";
     public static final String MANIFEST_RECONCILE_STATUS_KEY = "billing_rules_manifest_reconcile_status";
+    public static final String QUARANTINE_COUNT_KEY = "billing_rules_quarantine_count";
 
     private static final ZoneId SHANGHAI = ZoneId.of("Asia/Shanghai");
     private static final DateTimeFormatter DISPLAY =
             DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm").withZone(SHANGHAI);
 
     private final SysSettingMapper sysSettingMapper;
+    private final BaselineRuleIndex baselineRuleIndex;
 
     @Value("${APP_GIT_SHA:local}")
     private String gitSha;
@@ -46,6 +51,11 @@ public class SystemVersionInfoService {
         String sha = normalizeSha(gitSha);
         String builtAt = normalizeBuildTime(buildTime);
         String rulesHash = setting(MANIFEST_HASH_KEY);
+        String baselineHash = baselineRuleIndex.baselineHash();
+        if (isBlank(baselineHash)) {
+            baselineHash = setting(BASELINE_HASH_KEY);
+        }
+        String lastVerify = setting(RulesVerificationServiceImpl.LAST_VERIFY_KEY);
         String rulesGeneratedAt = setting(MANIFEST_GENERATED_AT_KEY);
         String rulesReconciledAt = setting(MANIFEST_RECONCILED_AT_KEY);
         String rulesReconcileStatus = setting(MANIFEST_RECONCILE_STATUS_KEY);
@@ -68,12 +78,25 @@ public class SystemVersionInfoService {
         payload.put("buildTimeDisplay", displayTime(builtAt));
         payload.put("rulesManifestHash", rulesHash == null ? "" : rulesHash);
         payload.put("rulesManifestHashShort", shortSha(rulesHash == null ? "" : rulesHash));
+        payload.put("rulesBaselineHash", baselineHash == null ? "" : baselineHash);
+        payload.put("rulesBaselineHashShort", shortSha(baselineHash == null ? "" : baselineHash));
+        payload.put("rulesVerifyStatus", parseVerifyOk(lastVerify));
         payload.put("rulesGeneratedAt", rulesGeneratedAt == null ? "" : rulesGeneratedAt);
         payload.put("rulesGeneratedAtDisplay", displayTime(rulesGeneratedAt));
         payload.put("rulesReconciledAt", rulesReconciledAt == null ? "" : rulesReconciledAt);
         payload.put("rulesReconciledAtDisplay", displayTime(rulesReconciledAt));
         payload.put("rulesReconcileStatus", rulesReconcileStatus == null ? "" : rulesReconcileStatus);
         payload.put("rulesReconcileOk", rulesReconcileStatus != null && rulesReconcileStatus.startsWith("OK"));
+        String quarantineCount = setting(QUARANTINE_COUNT_KEY);
+        long quarantineCountValue = 0L;
+        if (quarantineCount != null && !quarantineCount.isBlank()) {
+            try {
+                quarantineCountValue = Long.parseLong(quarantineCount.trim());
+            } catch (NumberFormatException ignored) {
+                quarantineCountValue = 0L;
+            }
+        }
+        payload.put("rulesQuarantineCount", quarantineCountValue);
         payload.put("version", shortSha(sha));
         payload.put("app_title", "Hospital Backend");
         payload.put("project_name", "hospital-backend");
@@ -121,6 +144,18 @@ public class SystemVersionInfoService {
 
     private static boolean isBlank(String s) {
         return s == null || s.isBlank();
+    }
+
+    private static boolean parseVerifyOk(String json) {
+        if (isBlank(json)) {
+            return true;
+        }
+        try {
+            JsonNode node = JsonUtils.getObjectMapper().readTree(json);
+            return !node.has("ok") || node.get("ok").asBoolean(true);
+        } catch (Exception e) {
+            return true;
+        }
     }
 
     private static ManifestMeta readClasspathManifest() {

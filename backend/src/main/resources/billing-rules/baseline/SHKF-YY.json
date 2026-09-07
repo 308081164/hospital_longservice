@@ -1,0 +1,246 @@
+{
+  "customerCode": "SHKF-YY",
+  "customerName": "黑龙江省社会康复医院",
+  "billingEnabled": true,
+  "billingPricingMode": "hybrid",
+  "productRules": [
+    {
+      "ruleType": "FIXED_PRICE",
+      "name": "社会康复ITI种植盒32件指定44",
+      "priority": 5,
+      "price": 44.0,
+      "keywords": [
+        "ITI种植盒-32件盒1/W12050"
+      ],
+      "keywordMatchMode": "exact_token",
+      "skipPackaging": true,
+      "skipDiscount": true,
+      "isActive": true,
+      "matchMode": "first",
+      "acceptedTypes": [
+        "单包装"
+      ]
+    },
+    {
+      "ruleType": "FIXED_PRICE",
+      "name": "社会康复内提工具盒10件指定44",
+      "priority": 5,
+      "price": 44.0,
+      "keywords": [
+        "内提工具盒10件盒1/W6050"
+      ],
+      "keywordMatchMode": "exact_token",
+      "skipPackaging": true,
+      "skipDiscount": true,
+      "isActive": true,
+      "matchMode": "first",
+      "acceptedTypes": [
+        "单包装"
+      ]
+    },
+    {
+      "ruleType": "FIXED_PRICE",
+      "name": "社会康复大车针盒1件指定22",
+      "priority": 5,
+      "price": 22.0,
+      "keywords": [
+        "大车针盒-1/Z1526"
+      ],
+      "keywordMatchMode": "exact_token",
+      "skipPackaging": true,
+      "skipDiscount": true,
+      "isActive": true,
+      "matchMode": "first",
+      "acceptedTypes": [
+        "额外包（纸塑袋）"
+      ]
+    },
+    {
+      "ruleType": "FIXED_PRICE",
+      "name": "社会康复抛光车针盒6件盒1指定16.5",
+      "priority": 5,
+      "price": 16.5,
+      "keywords": [
+        "抛光车针盒6件盒1/Z1026"
+      ],
+      "keywordMatchMode": "exact_token",
+      "skipPackaging": true,
+      "skipDiscount": true,
+      "isActive": true,
+      "matchMode": "first",
+      "acceptedTypes": [
+        "额外包（纸塑袋）"
+      ]
+    },
+    {
+      "ruleType": "FIXED_PRICE",
+      "name": "社会康复梁光强器械盒21件指定22",
+      "priority": 5,
+      "price": 22.0,
+      "keywords": [
+        "梁光强器械盒-21件盒1/W6050"
+      ],
+      "keywordMatchMode": "exact_token",
+      "skipPackaging": true,
+      "skipDiscount": true,
+      "isActive": true,
+      "matchMode": "first",
+      "acceptedTypes": [
+        "单包装"
+      ]
+    },
+    {
+      "ruleType": "FIXED_PRICE",
+      "name": "社会康复梁光强器械盒粉10件指定16.5",
+      "priority": 5,
+      "price": 16.5,
+      "keywords": [
+        "梁光强器械盒（粉）10件盒1/Z2030"
+      ],
+      "keywordMatchMode": "exact_token",
+      "skipPackaging": true,
+      "skipDiscount": true,
+      "isActive": true,
+      "matchMode": "first",
+      "acceptedTypes": [
+        "单包装"
+      ]
+    },
+    {
+      "ruleType": "FIXED_PRICE",
+      "name": "社会康复环切器械盒14件指定16.5",
+      "priority": 5,
+      "price": 16.5,
+      "keywords": [
+        "环切器械盒-14件盒1/Z2032"
+      ],
+      "keywordMatchMode": "exact_token",
+      "skipPackaging": true,
+      "skipDiscount": true,
+      "isActive": true,
+      "matchMode": "first",
+      "acceptedTypes": [
+        "单包装"
+      ]
+    },
+    {
+      "ruleType": "FIXED_PRICE",
+      "name": "社会康复登腾种植盒34件指定44",
+      "priority": 5,
+      "price": 44.0,
+      "keywords": [
+        "登腾种植盒-34件盒1/W6050"
+      ],
+      "keywordMatchMode": "exact_token",
+      "skipPackaging": true,
+      "skipDiscount": true,
+      "isActive": true,
+      "matchMode": "first",
+      "acceptedTypes": [
+        "单包装"
+      ]
+    },
+    {
+      "ruleType": "FIXED_PRICE",
+      "name": "社会康复登腾种植盒36件指定44",
+      "priority": 5,
+      "price": 44.0,
+      "keywords": [
+        "登腾种植盒-36件盒1/W6050"
+      ],
+      "keywordMatchMode": "exact_token",
+      "skipPackaging": true,
+      "skipDiscount": true,
+      "isActive": true,
+      "matchMode": "first",
+      "acceptedTypes": [
+        "单包装"
+      ]
+    },
+    {
+      "ruleType": "FIXED_PRICE",
+      "name": "社会康复百诺工具盒19件指定44",
+      "priority": 5,
+      "price": 44.0,
+      "keywords": [
+        "百诺工具盒-19件盒1/W6050"
+      ],
+      "keywordMatchMode": "exact_token",
+      "skipPackaging": true,
+      "skipDiscount": true,
+      "isActive": true,
+      "matchMode": "first",
+      "acceptedTypes": [
+        "单包装"
+      ]
+    },
+    {
+      "ruleType": "FIXED_PRICE",
+      "name": "社会康复种植盒14件W6050指定16.5",
+      "priority": 5,
+      "price": 16.5,
+      "keywords": [
+        "种植盒-14件盒1/W6050"
+      ],
+      "keywordMatchMode": "exact_token",
+      "skipPackaging": true,
+      "skipDiscount": true,
+      "isActive": true,
+      "matchMode": "first",
+      "acceptedTypes": [
+        "单包装"
+      ]
+    },
+    {
+      "ruleType": "FIXED_PRICE",
+      "name": "社会康复种植盒蓝白12件指定16.5",
+      "priority": 5,
+      "price": 16.5,
+      "keywords": [
+        "种植盒（蓝白）12件 盒1/Z2032"
+      ],
+      "keywordMatchMode": "exact_token",
+      "skipPackaging": true,
+      "skipDiscount": true,
+      "isActive": true,
+      "matchMode": "first",
+      "acceptedTypes": [
+        "单包装"
+      ]
+    },
+    {
+      "ruleType": "FIXED_PRICE",
+      "name": "社会康复种植盒金属12件指定16.5",
+      "priority": 5,
+      "price": 16.5,
+      "keywords": [
+        "种植盒（金属）12件盒1/Z2032"
+      ],
+      "keywordMatchMode": "exact_token",
+      "skipPackaging": true,
+      "skipDiscount": true,
+      "isActive": true,
+      "matchMode": "first",
+      "acceptedTypes": [
+        "单包装"
+      ]
+    },
+    {
+      "ruleType": "FIXED_PRICE",
+      "name": "社会康复种植盒黄绿8件指定16.5",
+      "priority": 5,
+      "price": 16.5,
+      "keywords": [
+        "种植盒（黄绿）8件盒1/Z2032"
+      ],
+      "keywordMatchMode": "exact_token",
+      "skipPackaging": true,
+      "skipDiscount": true,
+      "isActive": true,
+      "matchMode": "first",
+      "acceptedTypes": [
+        "单包装"
+      ]
+    }
+  ]
+}

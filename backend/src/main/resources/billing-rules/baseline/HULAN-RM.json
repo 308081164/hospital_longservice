@@ -1,0 +1,170 @@
+{
+  "customerCode": "HULAN-RM",
+  "customerName": "呼兰区第一人民医院",
+  "billingEnabled": true,
+  "billingPricingMode": "hybrid",
+  "productRules": [
+    {
+      "ruleType": "FIXED_PRICE",
+      "name": "PDF低温器械柜保护套5.6",
+      "priority": 31,
+      "price": 5.6,
+      "keywords": [
+        "保护套",
+        "器械柜"
+      ],
+      "temperature": "LT",
+      "skipPackaging": true,
+      "skipDiscount": true,
+      "isActive": true,
+      "matchMode": "first"
+    },
+    {
+      "ruleType": "FIXED_PRICE",
+      "name": "PDF外来器械植入物3.85",
+      "priority": 26,
+      "price": 3.85,
+      "keywords": [
+        "外来器械（植入物）"
+      ],
+      "skipPackaging": true,
+      "skipDiscount": true,
+      "isActive": true,
+      "matchMode": "first"
+    },
+    {
+      "ruleType": "FIXED_PRICE",
+      "name": "PDF外来器械骨电钻11.55",
+      "priority": 25,
+      "price": 11.55,
+      "keywords": [
+        "外来器械（骨电钻）"
+      ],
+      "skipPackaging": true,
+      "skipDiscount": true,
+      "isActive": true,
+      "matchMode": "first"
+    },
+    {
+      "ruleType": "FIXED_PRICE",
+      "name": "PDF敷料中20x30x30",
+      "priority": 11,
+      "price": 14,
+      "keywords": [
+        "敷料",
+        "20cm*30cm*30cm"
+      ],
+      "skipPackaging": true,
+      "skipDiscount": true,
+      "isActive": true,
+      "matchMode": "first"
+    },
+    {
+      "ruleType": "FIXED_PRICE",
+      "name": "PDF敷料小20x20x15",
+      "priority": 10,
+      "price": 10.5,
+      "keywords": [
+        "敷料",
+        "20cm*20cm*15cm"
+      ],
+      "skipPackaging": true,
+      "skipDiscount": true,
+      "isActive": true,
+      "matchMode": "first"
+    },
+    {
+      "ruleType": "FIXED_PRICE",
+      "name": "PDF纱布棉球大20x20x15",
+      "priority": 15,
+      "price": 28,
+      "keywords": [
+        "纱布",
+        "棉球"
+      ],
+      "skipPackaging": true,
+      "skipDiscount": true,
+      "isActive": true,
+      "matchMode": "first"
+    },
+    {
+      "ruleType": "FIXED_PRICE",
+      "name": "PDF纸塑袋10cm",
+      "priority": 21,
+      "price": 3.56,
+      "keywords": [
+        "纸塑袋"
+      ],
+      "bagSizeEquals": 10,
+      "skipPackaging": true,
+      "skipDiscount": true,
+      "isActive": true,
+      "matchMode": "first"
+    },
+    {
+      "ruleType": "FIXED_PRICE",
+      "name": "PDF纸塑袋15cm",
+      "priority": 20,
+      "price": 3.85,
+      "keywords": [
+        "纸塑袋"
+      ],
+      "bagSizeEquals": 15,
+      "skipPackaging": true,
+      "skipDiscount": true,
+      "isActive": true,
+      "matchMode": "first"
+    },
+    {
+      "ruleType": "FIXED_PRICE",
+      "name": "PDF高温器械柜保护套3.5",
+      "priority": 30,
+      "price": 3.5,
+      "keywords": [
+        "保护套",
+        "器械柜"
+      ],
+      "temperature": "HT",
+      "skipPackaging": true,
+      "skipDiscount": true,
+      "isActive": true,
+      "matchMode": "first"
+    },
+    {
+      "ruleType": "FOLD",
+      "name": "呼兰一院棉花针5合1免包材",
+      "priority": 11,
+      "keywords": [
+        "棉花针@contains"
+      ],
+      "threshold": 5,
+      "foldRatio": 5,
+      "skipPackaging": true,
+      "skipDiscount": false,
+      "minInstrumentCount": 11,
+      "isActive": true,
+      "matchMode": "first",
+      "acceptedTypes": [
+        "额外包（纸塑袋）"
+      ]
+    },
+    {
+      "ruleType": "FOLD",
+      "name": "呼兰一院棉花针5合1含包材",
+      "priority": 10,
+      "keywords": [
+        "棉花针@contains"
+      ],
+      "threshold": 5,
+      "foldRatio": 5,
+      "skipPackaging": false,
+      "skipDiscount": false,
+      "maxInstrumentCount": 10,
+      "isActive": true,
+      "matchMode": "first",
+      "acceptedTypes": [
+        "额外包（纸塑袋）"
+      ]
+    }
+  ]
+}

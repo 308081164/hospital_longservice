@@ -1,0 +1,290 @@
+{
+  "customerCode": "HL-ZGH",
+  "customerName": "黑龙江总工会医院",
+  "billingEnabled": true,
+  "billingPricingMode": "hybrid",
+  "productRules": [
+    {
+      "ruleType": "FIXED_PRICE",
+      "name": "总工会一套器械固定5.5",
+      "priority": 26,
+      "price": 5.5,
+      "keywords": [
+        "一套器械"
+      ],
+      "skipPackaging": true,
+      "skipDiscount": true,
+      "isActive": true,
+      "matchMode": "first"
+    },
+    {
+      "ruleType": "FIXED_PRICE",
+      "name": "总工会上取环包固定价25",
+      "priority": 22,
+      "price": 25,
+      "keywords": [
+        "上取环包"
+      ],
+      "skipPackaging": true,
+      "skipDiscount": true,
+      "isActive": true,
+      "matchMode": "first"
+    },
+    {
+      "ruleType": "FIXED_PRICE",
+      "name": "总工会人流包固定价25",
+      "priority": 20,
+      "price": 25,
+      "keywords": [
+        "人流包",
+        "人包"
+      ],
+      "skipPackaging": true,
+      "skipDiscount": true,
+      "isActive": true,
+      "matchMode": "first"
+    },
+    {
+      "ruleType": "FIXED_PRICE",
+      "name": "总工会取环包固定价25",
+      "priority": 21,
+      "price": 25,
+      "keywords": [
+        "取环包"
+      ],
+      "skipPackaging": true,
+      "skipDiscount": true,
+      "isActive": true,
+      "matchMode": "first"
+    },
+    {
+      "ruleType": "FIXED_PRICE",
+      "name": "总工会宫腔镜检查包固定价35",
+      "priority": 23,
+      "price": 35,
+      "keywords": [
+        "宫腔镜检查包"
+      ],
+      "skipPackaging": true,
+      "skipDiscount": true,
+      "isActive": true,
+      "matchMode": "first"
+    },
+    {
+      "ruleType": "FIXED_PRICE",
+      "name": "总工会引产包固定价40",
+      "priority": 25,
+      "price": 40,
+      "keywords": [
+        "引产包"
+      ],
+      "skipPackaging": true,
+      "skipDiscount": true,
+      "isActive": true,
+      "matchMode": "first"
+    },
+    {
+      "ruleType": "FIXED_PRICE",
+      "name": "总工会棉球W120150固定35",
+      "priority": 32,
+      "price": 35,
+      "keywords": [
+        "棉球/W12050",
+        "棉球/W15050",
+        "棉球/W120",
+        "棉球/W150"
+      ],
+      "skipPackaging": true,
+      "skipDiscount": true,
+      "isActive": true,
+      "matchMode": "first",
+      "keywordMatchMode": "contains"
+    },
+    {
+      "ruleType": "FIXED_PRICE",
+      "name": "总工会棉球W605070固定25",
+      "priority": 30,
+      "price": 25,
+      "keywords": [
+        "棉球/W6050",
+        "棉球/W6070",
+        "棉球/W7060",
+        "棉球/W7070",
+        "棉球/W60",
+        "棉球/W70"
+      ],
+      "skipPackaging": true,
+      "skipDiscount": true,
+      "isActive": true,
+      "matchMode": "first",
+      "keywordMatchMode": "contains"
+    },
+    {
+      "ruleType": "FIXED_PRICE",
+      "name": "总工会棉球W9050固定30",
+      "priority": 31,
+      "price": 30,
+      "keywords": [
+        "棉球/W9050",
+        "棉球/W9060",
+        "棉球/W90"
+      ],
+      "skipPackaging": true,
+      "skipDiscount": true,
+      "isActive": true,
+      "matchMode": "first",
+      "keywordMatchMode": "contains"
+    },
+    {
+      "ruleType": "FIXED_PRICE",
+      "name": "总工会清宫包固定价35",
+      "priority": 24,
+      "price": 35,
+      "keywords": [
+        "清宫包"
+      ],
+      "skipPackaging": true,
+      "skipDiscount": true,
+      "isActive": true,
+      "matchMode": "first"
+    },
+    {
+      "ruleType": "FIXED_PRICE",
+      "name": "总工会窥器固定5.5",
+      "priority": 27,
+      "price": 5.5,
+      "keywords": [
+        "窥器"
+      ],
+      "skipPackaging": true,
+      "skipDiscount": true,
+      "isActive": true,
+      "matchMode": "first"
+    },
+    {
+      "ruleType": "FIXED_PRICE",
+      "name": "总工会纱布W120150固定35",
+      "priority": 35,
+      "price": 35,
+      "keywords": [
+        "纱布/W12050",
+        "纱布/W15050",
+        "纱布/W120",
+        "纱布/W150"
+      ],
+      "skipPackaging": true,
+      "skipDiscount": true,
+      "isActive": true,
+      "matchMode": "first",
+      "keywordMatchMode": "contains"
+    },
+    {
+      "ruleType": "FIXED_PRICE",
+      "name": "总工会纱布W605070固定25",
+      "priority": 33,
+      "price": 25,
+      "keywords": [
+        "纱布/W6050",
+        "纱布/W6070",
+        "纱布/W7060",
+        "纱布/W7070",
+        "纱布/W60",
+        "纱布/W70"
+      ],
+      "skipPackaging": true,
+      "skipDiscount": true,
+      "isActive": true,
+      "matchMode": "first",
+      "keywordMatchMode": "contains"
+    },
+    {
+      "ruleType": "FIXED_PRICE",
+      "name": "总工会纱布W9050固定30",
+      "priority": 34,
+      "price": 30,
+      "keywords": [
+        "纱布/W9050",
+        "纱布/W9060",
+        "纱布/W90"
+      ],
+      "skipPackaging": true,
+      "skipDiscount": true,
+      "isActive": true,
+      "matchMode": "first",
+      "keywordMatchMode": "contains"
+    },
+    {
+      "ruleType": "EXTRA_FEE",
+      "name": "总工会镜头指定名称加收8-1",
+      "priority": 11,
+      "fee": 8.0,
+      "keywords": [
+        "12°镜头-1/Z2060"
+      ],
+      "keywordMatchMode": "exact_token",
+      "skipPackaging": false,
+      "skipDiscount": true,
+      "isActive": true,
+      "matchMode": "first",
+      "acceptedTypes": [
+        "额外包低温等离子"
+      ]
+    },
+    {
+      "ruleType": "EXTRA_FEE",
+      "name": "总工会镜头指定名称加收8-2",
+      "priority": 12,
+      "fee": 8.0,
+      "keywords": [
+        "30°镜头，镜鞘-2（带转换帽）/Z2060"
+      ],
+      "keywordMatchMode": "exact_token",
+      "skipPackaging": false,
+      "skipDiscount": true,
+      "isActive": true,
+      "matchMode": "first"
+    },
+    {
+      "ruleType": "EXTRA_FEE",
+      "name": "总工会镜头指定名称加收8-3",
+      "priority": 13,
+      "fee": 8.0,
+      "keywords": [
+        "检查镜-2/Z2060"
+      ],
+      "keywordMatchMode": "exact_token",
+      "skipPackaging": false,
+      "skipDiscount": true,
+      "isActive": true,
+      "matchMode": "first"
+    },
+    {
+      "ruleType": "EXTRA_FEE",
+      "name": "总工会镜头指定名称加收8-4",
+      "priority": 14,
+      "fee": 8.0,
+      "keywords": [
+        "宫腔检查镜30度-2件/Z2060"
+      ],
+      "keywordMatchMode": "exact_token",
+      "skipPackaging": false,
+      "skipDiscount": true,
+      "isActive": true,
+      "matchMode": "first"
+    },
+    {
+      "ruleType": "EXTRA_FEE",
+      "name": "总工会镜头指定名称加收8-5",
+      "priority": 15,
+      "fee": 8.0,
+      "keywords": [
+        "沈大12度镜头-1（新）/Z2060"
+      ],
+      "keywordMatchMode": "exact_token",
+      "skipPackaging": false,
+      "skipDiscount": true,
+      "isActive": true,
+      "matchMode": "first"
+    }
+  ]
+}

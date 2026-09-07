@@ -46,7 +46,11 @@ public class ExportFixedPriceApplier {
                     && row.getCorrectedTotalPrice() != null) {
                 continue;
             }
-            if (!matchesKeywords(combined, rule.path("keywords"))) {
+            if (!BillingConditionEvaluator.packTypeMatches(rule, safe(row.getType()))) {
+                continue;
+            }
+            if (!BillingConditionEvaluator.matchesRuleKeywords(
+                    rule, safe(row.getPackName()), combined)) {
                 continue;
             }
             if (matchesAnyKeyword(combined, rule.path("excludeKeywords"))) {

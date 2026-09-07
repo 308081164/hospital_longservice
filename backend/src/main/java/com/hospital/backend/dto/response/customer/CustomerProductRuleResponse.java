@@ -1,5 +1,6 @@
 package com.hospital.backend.dto.response.customer;
 
+import com.hospital.backend.dto.response.billing.RuleVerificationResult;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Builder;
 import lombok.Getter;
@@ -92,6 +93,13 @@ public class CustomerProductRuleResponse {
 
     @JsonProperty("is_active")
     private Boolean isActive;
+
+    /** 是否与 Git baseline 一致（false = 存在漂移） */
+    @JsonProperty("baseline_aligned")
+    private Boolean baselineAligned;
+
+    /** CRUD 后即时 baseline diff（单院级） */
+    private RuleVerificationResult verification;
 
     @JsonProperty("created_at")
     private LocalDateTime createdAt;

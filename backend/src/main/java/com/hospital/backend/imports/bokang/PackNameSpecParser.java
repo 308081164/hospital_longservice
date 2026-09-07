@@ -36,23 +36,11 @@ public final class PackNameSpecParser {
     /** stem 末尾粘连订单码（无斜杠）。 */
     private static final Pattern GLUED_ORDER_AFTER_STEM =
             Pattern.compile("(?i)(?<=[\\p{Script=Han}\\d])([ZzWw]\\d+)$");
-    private static final Pattern SPACED_PIECE_THEN_BOX =
-            Pattern.compile("\\d+件\\s+(?:盒|筐|盘)\\d+");
-    private static final Pattern PACKAGING_BOX_PAREN =
-            Pattern.compile("^(?:带盒|[盒盘]\\d*)$");
     /** 容器计数：{@code 件 盒1}、{@code 件盒1}、{@code -6盒1} 中非 Han 字符后的 盒/筐/盘。 */
     private static final Pattern CONTAINER_AFTER_PIECE =
             Pattern.compile("件\\s*(?:盒|筐|盘)(\\d+)");
     private static final Pattern CONTAINER_AFTER_NON_HAN =
             Pattern.compile("(?<![\\p{Script=Han}])(?:盒|筐|盘)(\\d+)");
-    private static final Pattern HYPHEN_PIECE_BEFORE_BOX =
-            Pattern.compile("[-－](\\d+)件\\s*(?:盒|筐|盘)");
-    private static final Pattern HYPHEN_COUNT_BEFORE_BOX =
-            Pattern.compile("[-－](\\d+)(?:盒|筐|盘)");
-    /** {@code -N件筐M}：非种植/机扩类包名中，筐仍计为 1 件器械。 */
-    private static final Pattern BASKET_AFTER_HYPHEN_PIECE =
-            Pattern.compile("[-－]\\d+件筐\\d+");
-    private static final Pattern BASKET_COUNT = Pattern.compile("筐(\\d+)");
     private static final Pattern PAREN_BOX_PIECE_COUNT =
             Pattern.compile("带盒([\\d两二三四五六七八九十]+)件");
     private static final Pattern PAREN_GROUP = Pattern.compile("[（(]([^）)]*)[）)]");
@@ -134,16 +122,15 @@ public final class PackNameSpecParser {
 
     /**
      * 从包名（斜杠订单后缀之前）提取器械件数合计。
+     * <p>计数与计价彻底隔离：仅统计 {@code /} 前各数字 token 之和，{@code 盒/筐/盘} 与
+     * {@code -N/-N件} 同等参与累加，不在计数阶段区分「包装盒」语义（包装盒加价等留给计价规则）。
      * <p>优先级：
      * <ol>
-     *   <li>若存在 {@code -N} / {@code -N件}，累加全部（如 止血钳-2剪-1 → 3，排针-12 → 12）；
-     *       外套无连字符时括号内连字符参与计数（全冠套装（针-8盒-1）→ 9）</li>
-     *   <li>否则若 stem 含 {@code N件}（无连字符），取该 N（如 宫腔镜包26件 → 26）</li>
-     *   <li>否则若 stem 含多段「汉字/字母+数字」（无连字符），累加各段（如 盆1碗1 → 2）</li>
-     *   <li>否则若 stem 末尾为「汉字/字母 + 数字」，取该数字（如 排针20 → 20）</li>
-     *   <li>最后加上显式容器 盒/筐/盘 计数（如 机扩针-6盒1 → +1，外科器械包-9（筐1）→ +1）</li>
+     *   <li>外套 {@code -N}/{@code -N件} 连字符段累加（如 止血钳-2剪-1 → 3）</li>
+     *   <li>外套无连字符时括号内连字符累加（全冠套装（针-8盒-1）→ 9）</li>
+     *   <li>否则 {@code N件}、紧凑复合（盆1碗1）、末尾名+数（排针20）</li>
+     *   <li>再累加全文 {@code 盒N/筐N/盘N}（含括号内，{@code 带盒N件} 除外以免与括号件数重复）</li>
      * </ol>
-     * 针架复合、手机/型号编码类包名返回 null（跳过字段核对）；{@code -N袋} 按 N 件计。
      */
     public static Integer extractTotalPieceCountFromPackName(String packName) {
         if (packName == null) {
@@ -291,126 +278,24 @@ public final class PackNameSpecParser {
 
     private static int sumExplicitContainerCounts(String stem, int baseCount, boolean compactCompound) {
         if (compactCompound) {
-            // 紧凑复合在含括号的整串上逐段求和，盒/筐/盘已计入（针7（盒1）→ 8）；
-            // 再叠加括号容器会双重计数（→ 9）。
+            // 紧凑复合已将 盒/筐/盘 段计入 base（针7盒1 → 8）
             return 0;
         }
-        if (Pattern.compile("[-－]\\d+件").matcher(stem).find()) {
-            if (SPACED_PIECE_THEN_BOX.matcher(stem).find()) {
-                if (isPlantingOrNeedleBoxPack(stem) || isSurgicalPackWithPieceBoxCount(stem)) {
-                    return sumParenthesisContainerCounts(stem)
-                            + sumContainerTokensInText(PAREN_GROUP.matcher(stem).replaceAll(""));
-                }
-                return sumParenthesisContainerCounts(stem);
-            }
-            if (Pattern.compile("[-－]\\d+件(?:盒|筐|盘)").matcher(stem).find()
-                    && isPlantingOrNeedleBoxPack(stem)) {
-                return sumParenthesisContainerCounts(stem)
-                        + sumContainerTokensInText(PAREN_GROUP.matcher(stem).replaceAll(""));
-            }
-            if (Pattern.compile("[-－]\\d+件盒").matcher(stem).find()
-                    && isSurgicalPackWithPieceBoxCount(stem)) {
-                return sumParenthesisContainerCounts(stem)
-                        + sumContainerTokensInText(PAREN_GROUP.matcher(stem).replaceAll(""));
-            }
-            if (BASKET_AFTER_HYPHEN_PIECE.matcher(stem).find()) {
-                String withoutParens = PAREN_GROUP.matcher(stem).replaceAll("");
-                Matcher basketMatcher = BASKET_COUNT.matcher(withoutParens);
-                int basketSum = 0;
-                while (basketMatcher.find()) {
-                    basketSum += Integer.parseInt(basketMatcher.group(1));
-                }
-                return sumParenthesisContainerCounts(stem) + basketSum;
-            }
-            return sumParenthesisContainerCounts(stem);
-        }
-        if (HYPHEN_PIECE_BEFORE_BOX.matcher(stem).find()) {
-            return sumParenthesisContainerCounts(stem);
-        }
-        int sum = sumParenthesisContainerCounts(stem);
-        String withoutParens = PAREN_GROUP.matcher(stem).replaceAll("");
-        if (SPACED_PIECE_THEN_BOX.matcher(withoutParens).find() && !isPlantingOrNeedleBoxPack(stem)) {
-            return sum;
-        }
-        Matcher afterPiece = CONTAINER_AFTER_PIECE.matcher(withoutParens);
-        while (afterPiece.find()) {
-            sum += Integer.parseInt(afterPiece.group(1));
-        }
-        String withoutAfterPiece = CONTAINER_AFTER_PIECE.matcher(withoutParens).replaceAll("件");
-        if (HYPHEN_COUNT_BEFORE_BOX.matcher(withoutAfterPiece).find()) {
-            int hyphenCount = hyphenCountBeforeBox(withoutAfterPiece);
-            if (isPlantingOrNeedleBoxPack(stem) || (hyphenCount >= 2 && hyphenCount <= 12)) {
-                Matcher afterNonHan = CONTAINER_AFTER_NON_HAN.matcher(withoutAfterPiece);
-                while (afterNonHan.find()) {
-                    sum += Integer.parseInt(afterNonHan.group(1));
-                }
-            }
-            return sum;
-        }
-        Matcher afterNonHan = CONTAINER_AFTER_NON_HAN.matcher(withoutAfterPiece);
-        while (afterNonHan.find()) {
-            sum += Integer.parseInt(afterNonHan.group(1));
-        }
-        return sum;
-    }
-
-    private static int hyphenCountBeforeBox(String text) {
-        Matcher matcher = HYPHEN_COUNT_BEFORE_BOX.matcher(text);
-        if (matcher.find()) {
-            return Integer.parseInt(matcher.group(1));
-        }
-        return 0;
-    }
-
-    private static boolean isPlantingOrNeedleBoxPack(String stem) {
-        return stem.contains("种植")
-                || stem.contains("机扩")
-                || stem.contains("抛光")
-                || stem.contains("环切")
-                || stem.contains("洁牙")
-                || stem.contains("扩针")
-                || stem.contains("ITI")
-                || stem.contains("登腾");
-    }
-
-    /**
-     * 妇科/外科标准器械包（族名以「包」结尾）的 {@code -N件盒M}：盒内器械 N 件 + 盒本身计 1 件。
-     */
-    private static boolean isSurgicalPackWithPieceBoxCount(String stem) {
-        int dash = stem.indexOf('-');
-        if (dash <= 0) {
-            return false;
-        }
-        return stem.substring(0, dash).trim().endsWith("包");
-    }
-
-    private static int sumParenthesisContainerCounts(String stem) {
         int sum = 0;
-        boolean hyphenPieceStem = PIECE_COUNT.matcher(stem).find();
         Matcher parenMatcher = PAREN_GROUP.matcher(stem);
+        int lastEnd = 0;
+        StringBuilder outside = new StringBuilder();
         while (parenMatcher.find()) {
+            outside.append(stem, lastEnd, parenMatcher.start());
             String inner = parenMatcher.group(1);
-            if (PAREN_BOX_PIECE_COUNT.matcher(inner).find()) {
-                continue;
+            if (!PAREN_BOX_PIECE_COUNT.matcher(inner).find()) {
+                sum += sumContainerTokensInText(inner);
             }
-            if (hyphenPieceStem && isPackagingBoxParenOnly(inner)) {
-                continue;
-            }
-            sum += sumContainerTokensInText(inner);
+            lastEnd = parenMatcher.end();
         }
+        outside.append(stem.substring(lastEnd));
+        sum += sumContainerTokensInText(outside.toString());
         return sum;
-    }
-
-    /** （盒1）（带盒）等包装说明，在已有 -N/-N件 时不另计件数；筐仍另计。 */
-    private static boolean isPackagingBoxParenOnly(String inner) {
-        if (inner == null || inner.isBlank()) {
-            return false;
-        }
-        String trimmed = inner.trim();
-        if ("带盒".equals(trimmed) || trimmed.startsWith("带盒") && !PAREN_BOX_PIECE_COUNT.matcher(trimmed).find()) {
-            return true;
-        }
-        return PACKAGING_BOX_PAREN.matcher(trimmed).matches();
     }
 
     private static Integer extractParenBoxPieceTotal(String stem) {

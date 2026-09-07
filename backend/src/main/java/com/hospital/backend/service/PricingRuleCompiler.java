@@ -475,11 +475,16 @@ public class PricingRuleCompiler {
         if (!departments.isEmpty()) {
             node.set("departments", MAPPER.valueToTree(departments));
         }
+        List<String> acceptedTypes = BillingConditionEvaluator.parseAcceptedTypeList(rule.getConditionsJson());
+        if (!acceptedTypes.isEmpty()) {
+            node.set("acceptedTypes", MAPPER.valueToTree(acceptedTypes));
+        }
         if (rule.getConditionsJson() != null && !rule.getConditionsJson().isBlank()) {
             try {
                 JsonNode conditions = MAPPER.readTree(rule.getConditionsJson());
                 node.set("conditions", conditions);
                 appendExportApplyFromConditions(node, conditions);
+                appendManualReviewFromConditions(node, conditions);
             } catch (Exception ignored) {
                 // ignore malformed JSON
             }
@@ -494,6 +499,19 @@ public class PricingRuleCompiler {
             if ("exportApply".equalsIgnoreCase(cond.path("field").asText())
                     && cond.path("value").asBoolean(false)) {
                 node.put("exportApply", true);
+                return;
+            }
+        }
+    }
+
+    private void appendManualReviewFromConditions(ObjectNode node, JsonNode conditions) {
+        if (!conditions.isArray()) {
+            return;
+        }
+        for (JsonNode cond : conditions) {
+            if ("manualReview".equalsIgnoreCase(cond.path("field").asText())
+                    && cond.path("value").asBoolean(false)) {
+                node.put("manualReview", true);
                 return;
             }
         }

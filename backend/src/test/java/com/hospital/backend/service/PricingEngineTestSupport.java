@@ -255,6 +255,18 @@ public final class PricingEngineTestSupport {
             if (ruleNode.hasNonNull("maxBagSizeExclusive")) {
                 rule.setMaxBagSizeExclusive(ruleNode.path("maxBagSizeExclusive").asInt());
             }
+            if (ruleNode.has("materials")) {
+                rule.setMaterials(toJsonArrayString(ruleNode.path("materials")));
+            }
+            if (ruleNode.hasNonNull("bagSizeEquals")) {
+                rule.setBagSizeEquals(ruleNode.path("bagSizeEquals").asInt());
+            }
+            if (ruleNode.hasNonNull("productId")) {
+                rule.setProductId(ruleNode.path("productId").asLong());
+            }
+            if (ruleNode.hasNonNull("variantId")) {
+                rule.setVariantId(ruleNode.path("variantId").asLong());
+            }
             if (ruleNode.has("keywords")) {
                 rule.setKeywords(toJsonArrayString(ruleNode.path("keywords")));
             }
@@ -263,6 +275,10 @@ public final class PricingEngineTestSupport {
             }
             if (ruleNode.hasNonNull("conditionsJson")) {
                 rule.setConditionsJson(ruleNode.get("conditionsJson").asText());
+            }
+            if (ruleNode.has("acceptedTypes")) {
+                rule.setConditionsJson(BillingConditionEvaluator.mergeAcceptedTypesIntoConditions(
+                        rule.getConditionsJson(), ruleNode.get("acceptedTypes")));
             }
             if (ruleNode.has("acceptedPrices")) {
                 rule.setAcceptedPrices(ruleNode.path("acceptedPrices").toString());

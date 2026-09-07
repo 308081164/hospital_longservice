@@ -1,0 +1,45 @@
+{
+  "customerCode": "CHUNYU-YL",
+  "customerName": "春语医疗美容医院",
+  "billingEnabled": true,
+  "billingPricingMode": "hybrid",
+  "productRules": [
+    {
+      "ruleType": "FOLD",
+      "name": "春语塑料管>10折算22",
+      "priority": 11,
+      "keywords": [
+        "塑料管@contains",
+        "管子@contains"
+      ],
+      "threshold": 10,
+      "foldRatio": 10,
+      "price": 22.0,
+      "minInstrumentCount": 11,
+      "temperature": "LT",
+      "skipPackaging": true,
+      "isActive": true,
+      "matchMode": "first",
+      "skipDiscount": false,
+      "keywordMatchMode": "exact_token"
+    },
+    {
+      "ruleType": "FOLD",
+      "name": "春语塑料管≤10按1件",
+      "priority": 10,
+      "keywords": [
+        "塑料管@contains",
+        "管子@contains"
+      ],
+      "threshold": 10,
+      "foldRatio": 10,
+      "maxInstrumentCount": 10,
+      "temperature": "LT",
+      "skipPackaging": false,
+      "isActive": true,
+      "matchMode": "first",
+      "skipDiscount": false,
+      "keywordMatchMode": "exact_token"
+    }
+  ]
+}

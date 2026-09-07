@@ -1,0 +1,52 @@
+{
+  "customerCode": "PFQ-RM",
+  "customerName": "哈尔滨市平房区人民医院",
+  "billingEnabled": true,
+  "billingPricingMode": "hybrid",
+  "productRules": [
+    {
+      "code": "PFQ-RM",
+      "ruleType": "FOLD",
+      "name": "平房人民针盒针5合1免包材",
+      "priority": 11,
+      "keywords": [
+        "针",
+        "缝合针"
+      ],
+      "threshold": 5,
+      "foldRatio": 5,
+      "extraCount": 1,
+      "minInstrumentCount": 7,
+      "skipPackaging": true,
+      "isActive": true,
+      "matchMode": "first",
+      "skipDiscount": false,
+      "keywordMatchMode": "exact_token",
+      "acceptedTypes": [
+        "额外包（纸塑袋）"
+      ]
+    },
+    {
+      "code": "PFQ-RM",
+      "ruleType": "FOLD",
+      "name": "平房人民针盒针5合1含包材",
+      "priority": 10,
+      "keywords": [
+        "针",
+        "缝合针"
+      ],
+      "threshold": 5,
+      "foldRatio": 5,
+      "extraCount": 1,
+      "maxInstrumentCount": 6,
+      "skipPackaging": false,
+      "isActive": true,
+      "matchMode": "first",
+      "skipDiscount": false,
+      "keywordMatchMode": "exact_token",
+      "acceptedTypes": [
+        "额外包（纸塑袋）"
+      ]
+    }
+  ]
+}

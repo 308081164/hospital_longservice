@@ -1,15 +1,15 @@
 {
   "command": "rules compare",
-  "manifest_hash": "266736d10cef5f63da05920625010b3a66d441ab5d2aaebff11adeef9d7da3a3",
-  "api_base": "http://127.0.0.1:8000",
-  "ok": true,
+  "manifest_hash": "01836c66115726ff7229db58f16020cb6e65f7069beee13551669c1031fd7764",
+  "api_base": "http://39.102.213.51:8853",
+  "ok": false,
   "summary": {
     "customers": 29,
-    "ok_count": 29,
-    "drift_count": 0,
-    "total_missing": 0,
+    "ok_count": 28,
+    "drift_count": 1,
+    "total_missing": 2,
     "total_extra": 0,
-    "total_changed": 0,
+    "total_changed": 1,
     "mode_drift_count": 0,
     "override_drift_count": 0,
     "billing_enabled_drift_count": 0,
@@ -158,10 +158,10 @@
     },
     {
       "code": "GUOYAO-2",
-      "expected_count": 32,
-      "prod_count": 32,
-      "active_expected": 29,
-      "active_prod": 29,
+      "expected_count": 33,
+      "prod_count": 33,
+      "active_expected": 30,
+      "active_prod": 30,
       "mode_expected": "hybrid",
       "mode_prod": "hybrid",
       "mode_drift": false,
@@ -227,10 +227,10 @@
     },
     {
       "code": "HLJ-FY-RK",
-      "expected_count": 30,
-      "prod_count": 30,
-      "active_expected": 28,
-      "active_prod": 28,
+      "expected_count": 35,
+      "prod_count": 33,
+      "active_expected": 33,
+      "active_prod": 31,
       "mode_expected": "hybrid",
       "mode_prod": "hybrid",
       "mode_drift": false,
@@ -240,13 +240,23 @@
       "billing_enabled_expected": true,
       "billing_enabled_prod": true,
       "billing_enabled_drift": false,
-      "missing": [],
+      "missing": [
+        "妇幼人口宫腔镜镜头0元锁价35",
+        "妇幼人口腹腔镜镜头0元锁价35"
+      ],
       "extra": [],
-      "changed": [],
-      "missing_count": 0,
+      "changed": [
+        {
+          "name": "妇幼人口新腹腔镜镜头加收8",
+          "diffs": [
+            "keywords ['新腹腔镜镜头', '腹腔镜镜头']!=['新腹腔镜镜头']"
+          ]
+        }
+      ],
+      "missing_count": 2,
       "extra_count": 0,
-      "changed_count": 0,
-      "ok": true
+      "changed_count": 1,
+      "ok": false
     },
     {
       "code": "HLJ-JYGLJ-YY",

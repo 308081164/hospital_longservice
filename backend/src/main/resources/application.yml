@@ -20,8 +20,12 @@ spring:
       max-request-size: 60MB
 
 billing:
+  baseline:
+    sync-enabled: ${BILLING_BASELINE_SYNC_ENABLED:true}
+    fail-on-verify-error: ${BILLING_BASELINE_FAIL_ON_VERIFY_ERROR:false}
   seed:
-    reconcile-enabled: ${BILLING_SEED_RECONCILE_ENABLED:true}
+    reconcile-enabled: ${BILLING_SEED_RECONCILE_ENABLED:false}
+    incremental-enabled: ${BILLING_SEED_INCREMENTAL_ENABLED:false}
 
 app:
   jwt:

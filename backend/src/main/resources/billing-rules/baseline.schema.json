@@ -1,0 +1,50 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "CustomerBillingBaseline",
+  "type": "object",
+  "required": ["customerCode", "productRules"],
+  "properties": {
+    "customerCode": { "type": "string", "minLength": 1 },
+    "customerName": { "type": "string" },
+    "billingEnabled": { "type": "boolean" },
+    "billingPricingMode": { "type": "string" },
+    "productRules": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/productRule" }
+    }
+  },
+  "$defs": {
+    "productRule": {
+      "type": "object",
+      "required": ["name", "ruleType"],
+      "properties": {
+        "name": { "type": "string", "minLength": 1 },
+        "ruleType": {
+          "type": "string",
+          "enum": ["FIXED_PRICE", "PRICE_PER_INSTRUMENT", "MULTIPLIER", "FOLD", "EXTRA_FEE", "ADD_FEE"]
+        },
+        "priority": { "type": "integer" },
+        "price": { "type": "number" },
+        "fee": { "type": "number" },
+        "multiplier": { "type": "number" },
+        "foldRatio": { "type": "number" },
+        "threshold": { "type": "integer" },
+        "keywords": { "type": "array", "items": { "type": "string" } },
+        "excludeKeywords": { "type": "array", "items": { "type": "string" } },
+        "materials": { "type": "array", "items": { "type": "string" } },
+        "keywordMatchMode": { "type": "string", "enum": ["exact_token", "contains"] },
+        "matchMode": { "type": "string" },
+        "billingMode": { "type": "string" },
+        "skipPackaging": { "type": "boolean" },
+        "skipDiscount": { "type": "boolean" },
+        "isActive": { "type": "boolean" },
+        "conditionsJson": { "type": "string" },
+        "acceptedTypes": {
+          "type": "array",
+          "items": { "type": "string" },
+          "minItems": 1
+        }
+      }
+    }
+  }
+}

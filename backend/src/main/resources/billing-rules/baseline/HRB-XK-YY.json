@@ -1,0 +1,38 @@
+{
+  "customerCode": "HRB-XK-YY",
+  "customerName": "哈尔滨市胸科医院",
+  "billingEnabled": true,
+  "billingPricingMode": "hybrid",
+  "productRules": [
+    {
+      "ruleType": "FIXED_PRICE",
+      "name": "胸科小件ETO固定25",
+      "priority": 11,
+      "price": 25.0,
+      "keywords": [
+        "小件@contains"
+      ],
+      "temperature": "LT",
+      "skipPackaging": true,
+      "skipDiscount": true,
+      "isActive": true,
+      "matchMode": "first"
+    },
+    {
+      "ruleType": "FIXED_PRICE",
+      "name": "胸科手术衣W9050固定20",
+      "priority": 10,
+      "price": 20.0,
+      "keywords": [
+        "手术衣（打包好的）/W9050"
+      ],
+      "skipPackaging": true,
+      "skipDiscount": true,
+      "isActive": true,
+      "matchMode": "first",
+      "acceptedTypes": [
+        "敷料包（无纺布）"
+      ]
+    }
+  ]
+}

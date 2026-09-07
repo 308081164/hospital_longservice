@@ -7,6 +7,7 @@ import com.hospital.backend.entity.CustomerProductRule;
 import com.hospital.backend.mapper.CustomerMapper;
 import com.hospital.backend.mapper.CustomerProductRuleMapper;
 import com.hospital.backend.mapper.SysSettingMapper;
+import com.hospital.backend.service.RuleQuarantineService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -33,13 +34,19 @@ class BillingRulesManifestReconcilerTest {
     private SysSettingMapper sysSettingMapper;
     @Mock
     private JdbcTemplate jdbcTemplate;
+    @Mock
+    private RuleQuarantineService ruleQuarantineService;
 
     private BillingRulesManifestReconciler reconciler;
 
     @BeforeEach
     void setUp() {
         reconciler = new BillingRulesManifestReconciler(
-                customerMapper, customerProductRuleMapper, sysSettingMapper, jdbcTemplate);
+                customerMapper,
+                customerProductRuleMapper,
+                sysSettingMapper,
+                jdbcTemplate,
+                ruleQuarantineService);
     }
 
     @Test
