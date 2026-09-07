@@ -371,10 +371,6 @@ public class PricingEngine {
                         requiresReview = true;
                     }
                     skipPackaging = true;
-                } else if (type.contains("敷料包") && type.contains("纸塑袋") && !packName.contains("棉球缸")) {
-                    pricingRule = "敷料包(纸塑袋)——保留原单价";
-                    notes.add("敷料包(纸塑袋)按账单原单价计费，不套用无纺布敷料包尺寸价或高温纸塑袋阶梯。");
-                    skipPackaging = true;
                 }
             }
             case DRESSING_NONWOVEN -> {

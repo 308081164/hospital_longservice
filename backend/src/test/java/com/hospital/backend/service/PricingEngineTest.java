@@ -1840,7 +1840,7 @@ class PricingEngineTest {
     }
 
     @Test
-    void dressingPaperPlasticPackKeepsOriginalUnitPrice() {
+    void dressingPaperPlasticPackFallsThroughToStandardPipeline() {
         PricingEngine.ProcessedResult result = engine.processRow(row(
                 "南岗区先锋路社区卫生服务中心",
                 "敷料包(纸塑袋)",
@@ -1851,11 +1851,30 @@ class PricingEngineTest {
                 2.5,
                 5.0));
 
+        assertThat(result.expectedUnitPrice).isNotNull().isGreaterThan(0);
         assertThat(result.expectedUnitPrice).isEqualTo(2.5);
         assertThat(result.correctedTotalPrice).isEqualTo(5.0);
         assertThat(result.status).isEqualTo("unchanged");
-        assertThat(result.pricingRule).contains("敷料包(纸塑袋)");
-        assertThat(result.notes).anyMatch(n -> n.contains("原单价"));
+        assertThat(result.pricingRule).doesNotContain("保留原单价");
+        assertThat(result.notes).noneMatch(n -> n.contains("保留原单价") || n.contains("按账单原单价计费"));
+    }
+
+    @Test
+    void dressingPaperPlasticPackWithInstrumentsAlsoFallsThrough() {
+        PricingEngine.ProcessedResult result = engine.processRow(row(
+                "哈尔滨工程大学医院",
+                "敷料包(纸塑袋)",
+                "孔巾/Z2032",
+                "高温纸塑袋200*320",
+                1,
+                1,
+                4.0,
+                4.0));
+
+        assertThat(result.expectedUnitPrice).isNotNull().isGreaterThan(0);
+        assertThat(result.expectedUnitPrice).isEqualTo(4.0);
+        assertThat(result.status).isEqualTo("unchanged");
+        assertThat(result.pricingRule).doesNotContain("保留原单价");
     }
 
     @Test
