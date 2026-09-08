@@ -95,6 +95,8 @@ public class BillingRulesBaselineSyncRunner implements CommandLineRunner {
         upsertSetting(SystemVersionInfoService.MANIFEST_RECONCILE_STATUS_KEY,
                 "OK baseline-sync " + Instant.now(),
                 "Last billing rules baseline sync status");
+        upsertSetting(SystemVersionInfoService.MANIFEST_RECONCILED_AT_KEY, Instant.now().toString(),
+                "Last billing rules baseline sync / verify time");
         syncHealth.markHealthy();
         if (needsImport) {
             log.info("Baseline verify OK（hash={}）", shortHash(classpathHash));

@@ -16,6 +16,8 @@ import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * 系统版本与计价规则版本信息（供 UI 左下角展示、生产环境快速对版）。
@@ -33,6 +35,11 @@ public class SystemVersionInfoService {
     public static final String MANIFEST_RECONCILED_AT_KEY = "billing_rules_manifest_reconciled_at";
     public static final String MANIFEST_RECONCILE_STATUS_KEY = "billing_rules_manifest_reconcile_status";
     public static final String QUARANTINE_COUNT_KEY = "billing_rules_quarantine_count";
+    public static final String APP_RUNTIME_STARTED_AT_KEY = "app_runtime_started_at";
+    public static final String APP_RUNTIME_GIT_SHA_KEY = "app_runtime_git_sha";
+
+    private static final Pattern RECONCILE_STATUS_INSTANT =
+            Pattern.compile("\\d{4}-\\d{2}-\\d{2}T[\\d:.]+Z?");
 
     private static final ZoneId SHANGHAI = ZoneId.of("Asia/Shanghai");
     private static final DateTimeFormatter DISPLAY =
@@ -47,6 +54,12 @@ public class SystemVersionInfoService {
     @Value("${APP_BUILD_TIME:}")
     private String buildTime;
 
+    /** 每次 JVM 启动由 {@link com.hospital.backend.config.AppRuntimeVersionRecorder} 调用。 */
+    public void recordRuntimeStartup() {
+        upsertSetting(APP_RUNTIME_GIT_SHA_KEY, normalizeSha(gitSha), "Last JVM start git sha");
+        upsertSetting(APP_RUNTIME_STARTED_AT_KEY, Instant.now().toString(), "Last JVM start time (Asia/Shanghai display via /version)");
+    }
+
     public Map<String, Object> current() {
         String sha = normalizeSha(gitSha);
         String builtAt = normalizeBuildTime(buildTime);
@@ -59,6 +72,7 @@ public class SystemVersionInfoService {
         String rulesGeneratedAt = setting(MANIFEST_GENERATED_AT_KEY);
         String rulesReconciledAt = setting(MANIFEST_RECONCILED_AT_KEY);
         String rulesReconcileStatus = setting(MANIFEST_RECONCILE_STATUS_KEY);
+        String runtimeStartedAt = setting(APP_RUNTIME_STARTED_AT_KEY);
 
         // 启动后首次部署若 DB 尚未写入 generated_at，回退读 classpath manifest
         if (isBlank(rulesGeneratedAt) || isBlank(rulesHash)) {
@@ -71,11 +85,21 @@ public class SystemVersionInfoService {
             }
         }
 
+        if (isBlank(baselineHash)) {
+            baselineHash = readClasspathBaselineHash();
+        }
+
+        String updatedAtDisplay = latestUpdatedAtDisplay(
+                builtAt, runtimeStartedAt, rulesGeneratedAt, rulesReconciledAt, rulesReconcileStatus);
+
         Map<String, Object> payload = new LinkedHashMap<>();
         payload.put("gitSha", sha);
         payload.put("gitShaShort", shortSha(sha));
         payload.put("buildTime", builtAt);
         payload.put("buildTimeDisplay", displayTime(builtAt));
+        payload.put("updatedAtDisplay", updatedAtDisplay);
+        payload.put("runtimeStartedAt", runtimeStartedAt == null ? "" : runtimeStartedAt);
+        payload.put("runtimeStartedAtDisplay", displayTime(runtimeStartedAt));
         payload.put("rulesManifestHash", rulesHash == null ? "" : rulesHash);
         payload.put("rulesManifestHashShort", shortSha(rulesHash == null ? "" : rulesHash));
         payload.put("rulesBaselineHash", baselineHash == null ? "" : baselineHash);
@@ -106,6 +130,87 @@ public class SystemVersionInfoService {
     private String setting(String key) {
         SysSetting row = sysSettingMapper.selectByKey(key);
         return row == null ? null : row.getSettingValue();
+    }
+
+    private void upsertSetting(String key, String value, String description) {
+        SysSetting existing = sysSettingMapper.selectByKey(key);
+        if (existing == null) {
+            SysSetting row = new SysSetting();
+            row.setSettingKey(key);
+            row.setSettingValue(value);
+            row.setDescription(description);
+            sysSettingMapper.insert(row);
+        } else {
+            existing.setSettingValue(value);
+            if (description != null && !description.isBlank()) {
+                existing.setDescription(description);
+            }
+            sysSettingMapper.updateByKey(existing);
+        }
+    }
+
+    static String latestUpdatedAtDisplay(
+            String buildTime,
+            String runtimeStartedAt,
+            String rulesGeneratedAt,
+            String rulesReconciledAt,
+            String reconcileStatus) {
+        Instant best = null;
+        for (String candidate : new String[] {
+                runtimeStartedAt, rulesReconciledAt, rulesGeneratedAt, buildTime
+        }) {
+            best = maxInstant(best, parseInstant(candidate));
+        }
+        best = maxInstant(best, parseReconcileStatusInstant(reconcileStatus));
+        if (best != null) {
+            return DISPLAY.format(best);
+        }
+        return displayTime(buildTime);
+    }
+
+    private static Instant maxInstant(Instant current, Instant candidate) {
+        if (candidate == null) {
+            return current;
+        }
+        if (current == null || candidate.isAfter(current)) {
+            return candidate;
+        }
+        return current;
+    }
+
+    static Instant parseInstant(String raw) {
+        if (isBlank(raw)) {
+            return null;
+        }
+        try {
+            return Instant.parse(raw.trim());
+        } catch (Exception ignored) {
+            return null;
+        }
+    }
+
+    static Instant parseReconcileStatusInstant(String status) {
+        if (isBlank(status)) {
+            return null;
+        }
+        Matcher matcher = RECONCILE_STATUS_INSTANT.matcher(status);
+        if (!matcher.find()) {
+            return null;
+        }
+        return parseInstant(matcher.group());
+    }
+
+    private static String readClasspathBaselineHash() {
+        try {
+            ClassPathResource resource = new ClassPathResource("billing-rules/index.json");
+            if (!resource.exists()) {
+                return "";
+            }
+            JsonNode root = JsonUtils.getObjectMapper().readTree(resource.getInputStream());
+            return root.hasNonNull("baseline_hash") ? root.get("baseline_hash").asText() : "";
+        } catch (Exception ignored) {
+            return "";
+        }
     }
 
     private static String normalizeSha(String raw) {

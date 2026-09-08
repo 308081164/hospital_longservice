@@ -5,6 +5,8 @@ export interface SystemVersionInfo {
   gitShaShort: string
   buildTime: string
   buildTimeDisplay: string
+  updatedAtDisplay?: string
+  runtimeStartedAtDisplay?: string
   rulesManifestHash: string
   rulesManifestHashShort: string
   rulesGeneratedAt: string
