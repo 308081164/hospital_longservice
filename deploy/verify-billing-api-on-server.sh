@@ -3,7 +3,7 @@
 set -euo pipefail
 
 DEPLOY_PATH="${DEPLOY_PATH:-/mnt/newdisk/app/Hospital}"
-EXPECTED="${EXPECTED_BILLING_ENABLED:-24}"
+MANIFEST="${DEPLOY_PATH}/backend/src/main/resources/billing-seeds/billing-rules-manifest.json"
 ADMIN_USER="${ADMIN_USERNAME:-admin}"
 
 cd "$DEPLOY_PATH"
@@ -12,6 +12,21 @@ cd "$DEPLOY_PATH"
 ADMIN_PASS="${ADMIN_PASSWORD:-${APP_ADMIN_PASSWORD:-admin123}}"
 
 chmod +x deploy/mysql-hospital-cli.sh 2>/dev/null || true
+
+if [ -n "${EXPECTED_BILLING_ENABLED:-}" ]; then
+  EXPECTED="${EXPECTED_BILLING_ENABLED}"
+elif [ -f "$MANIFEST" ]; then
+  EXPECTED="$(python3 - <<PY
+import json
+from pathlib import Path
+m = json.loads(Path("$MANIFEST").read_text(encoding="utf-8"))
+print(m.get("billing_enabled_count", 0))
+PY
+)"
+else
+  echo "错误: manifest 不存在且未设置 EXPECTED_BILLING_ENABLED: $MANIFEST" >&2
+  exit 1
+fi
 
 for i in $(seq 1 30); do
   curl -sf --connect-timeout 3 http://127.0.0.1:8853/api/v1/base/health >/dev/null && break

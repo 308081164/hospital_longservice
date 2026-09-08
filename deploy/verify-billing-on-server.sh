@@ -100,4 +100,5 @@ fi
 
 echo ""
 echo "MySQL 校验通过。"
+export EXPECTED_BILLING_ENABLED="${EXPECTED_ENABLED}"
 bash deploy/verify-billing-api-on-server.sh
