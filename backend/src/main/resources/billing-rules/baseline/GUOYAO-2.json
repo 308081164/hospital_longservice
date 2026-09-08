@@ -167,6 +167,19 @@
     },
     {
       "ruleType": "FIXED_PRICE",
+      "name": "电机厂高温纸塑袋",
+      "priority": 8,
+      "price": 3.5,
+      "keywords": [
+        "双纸塑@contains"
+      ],
+      "skipPackaging": true,
+      "skipDiscount": true,
+      "isActive": true,
+      "matchMode": "first"
+    },
+    {
+      "ruleType": "FIXED_PRICE",
       "name": "电机厂敷料W120150固定35棉球_W12050",
       "priority": 30,
       "price": 35.0,

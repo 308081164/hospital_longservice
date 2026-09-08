@@ -134,12 +134,9 @@ public final class FixedPriceBillingCountResolver {
     }
 
     static boolean isZsdInstrumentPackType(String type) {
-        if (type == null || type.isBlank()) {
-            return false;
-        }
-        String normalized = type.replaceAll("\\s+", "");
-        return normalized.contains("器械包(ZSD)")
-                || (normalized.contains("器械包") && normalized.toUpperCase().contains("ZSD"));
+        return PackTypeRegistry.match(type)
+                .map(def -> def.canonical().toLowerCase().contains("zsd"))
+                .orElse(false);
     }
 
     static boolean hasKeyword(JsonNode rule, String keyword) {

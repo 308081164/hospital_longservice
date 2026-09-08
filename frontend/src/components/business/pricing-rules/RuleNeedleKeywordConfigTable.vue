@@ -28,7 +28,7 @@
           >
             <ElOption value="" :label="`默认（${defaultMatchModeLabel}）`" />
             <ElOption value="contains" label="含词即触发" />
-            <ElOption value="exact_token" label="严格对齐" />
+            <ElOption value="exact_token" label="完整词匹配" />
           </ElSelect>
         </template>
       </ElTableColumn>
@@ -96,7 +96,7 @@ const emit = defineEmits<{
 }>()
 
 const defaultMatchModeLabel = computed(() =>
-  props.defaultMatchMode === 'contains' ? '含词即触发' : '严格对齐',
+  props.defaultMatchMode === 'contains' ? '含词即触发' : '完整词匹配',
 )
 
 function updateRow(index: number, patch: Partial<Api.Hospital.NeedleKeywordConfig>) {

@@ -1,0 +1,346 @@
+{
+  "description": "彻底删除全部校正价规则（2026-09-08）：共 85 条，覆盖 baseline 外生产 DB 残留",
+  "strictRuleOps": false,
+  "deleteRules": [
+    {
+      "code": "DAOWAI-RM",
+      "ruleName": "校正价12.0"
+    },
+    {
+      "code": "DAOWAI-RM",
+      "ruleName": "校正价126.0"
+    },
+    {
+      "code": "DAOWAI-RM",
+      "ruleName": "校正价18.0"
+    },
+    {
+      "code": "DAOWAI-RM",
+      "ruleName": "校正价2.0"
+    },
+    {
+      "code": "DAOWAI-RM",
+      "ruleName": "校正价3.0"
+    },
+    {
+      "code": "DAOWAI-RM",
+      "ruleName": "校正价30.0"
+    },
+    {
+      "code": "DAOWAI-RM",
+      "ruleName": "校正价33.0"
+    },
+    {
+      "code": "DAOWAI-RM",
+      "ruleName": "校正价6.0"
+    },
+    {
+      "code": "DAOWAI-RM",
+      "ruleName": "校正价6.5"
+    },
+    {
+      "code": "DAOWAI-RM",
+      "ruleName": "校正价9.0"
+    },
+    {
+      "code": "GUOYAO-2",
+      "ruleName": "校正价8.0"
+    },
+    {
+      "code": "GUOYAO-3",
+      "ruleName": "校正价35.0"
+    },
+    {
+      "code": "GUOYAO-MAIN",
+      "ruleName": "校正价35.0"
+    },
+    {
+      "code": "HLFB-SF",
+      "ruleName": "校正价13.5"
+    },
+    {
+      "code": "HRB-2ND",
+      "ruleName": "校正价16.5"
+    },
+    {
+      "code": "HRB-2ND",
+      "ruleName": "校正价5.5"
+    },
+    {
+      "code": "HRB-2ND",
+      "ruleName": "校正价8.0"
+    },
+    {
+      "code": "HRB-WY",
+      "ruleName": "校正价132.0"
+    },
+    {
+      "code": "HRB-WY",
+      "ruleName": "校正价16.5"
+    },
+    {
+      "code": "HRB-WY",
+      "ruleName": "校正价22.0"
+    },
+    {
+      "code": "HRB-WY",
+      "ruleName": "校正价44.0"
+    },
+    {
+      "code": "HRB-WY",
+      "ruleName": "校正价88.0"
+    },
+    {
+      "code": "HRB-WY",
+      "ruleName": "校正价99.0"
+    },
+    {
+      "code": "HRB-WY-EM",
+      "ruleName": "校正价132.0"
+    },
+    {
+      "code": "HRB-WY-EM",
+      "ruleName": "校正价16.5"
+    },
+    {
+      "code": "HRB-WY-EM",
+      "ruleName": "校正价22.0"
+    },
+    {
+      "code": "HRB-WY-EM",
+      "ruleName": "校正价44.0"
+    },
+    {
+      "code": "HRB-WY-EM",
+      "ruleName": "校正价88.0"
+    },
+    {
+      "code": "HRB-WY-EM",
+      "ruleName": "校正价99.0"
+    },
+    {
+      "code": "HULAN-HSZ",
+      "ruleName": "校正价8.0"
+    },
+    {
+      "code": "HULAN-TCM",
+      "ruleName": "校正价275.0"
+    },
+    {
+      "code": "NG-FUCHAN",
+      "ruleName": "校正价16.0"
+    },
+    {
+      "code": "NG-FUCHAN",
+      "ruleName": "校正价170.5"
+    },
+    {
+      "code": "NG-FUCHAN",
+      "ruleName": "校正价2.3"
+    },
+    {
+      "code": "NG-FUCHAN",
+      "ruleName": "校正价24.0"
+    },
+    {
+      "code": "NG-FUCHAN",
+      "ruleName": "校正价32.0"
+    },
+    {
+      "code": "NG-FUCHAN",
+      "ruleName": "校正价8.0"
+    },
+    {
+      "code": "NG-FUCHAN",
+      "ruleName": "校正价弯盘8"
+    },
+    {
+      "code": "NG-FUCHAN",
+      "ruleName": "校正价扩棒6.5套8"
+    },
+    {
+      "code": "NG-FUCHAN",
+      "ruleName": "校正价扩棒8"
+    },
+    {
+      "code": "SANJING-SB",
+      "ruleName": "校正价102.0"
+    },
+    {
+      "code": "SANJING-SB",
+      "ruleName": "校正价102.0-内瘘68件"
+    },
+    {
+      "code": "SANJING-SB",
+      "ruleName": "校正价30.0"
+    },
+    {
+      "code": "SANJING-SB",
+      "ruleName": "校正价42.0"
+    },
+    {
+      "code": "SANJING-SB",
+      "ruleName": "校正价6.4"
+    },
+    {
+      "code": "SANJING-SB",
+      "ruleName": "校正价9.0"
+    },
+    {
+      "code": "SANJING-SB",
+      "ruleName": "校正价99.0"
+    },
+    {
+      "code": "SHENG-YY-NG",
+      "ruleName": "校正价22.01"
+    },
+    {
+      "code": "SHENG-YY-NG",
+      "ruleName": "校正价26.4"
+    },
+    {
+      "code": "SHENG-YY-NG",
+      "ruleName": "校正价8.1"
+    },
+    {
+      "code": "SHENG-YY-XF",
+      "ruleName": "校正价13.2"
+    },
+    {
+      "code": "SHENG-YY-XF",
+      "ruleName": "校正价180.0"
+    },
+    {
+      "code": "SHENG-YY-XF",
+      "ruleName": "校正价39.6"
+    },
+    {
+      "code": "SHENG-YY-XF",
+      "ruleName": "校正价8.1"
+    },
+    {
+      "code": "SHKF-YY",
+      "ruleName": "校正价2.5"
+    },
+    {
+      "code": "TAIPING-RM",
+      "ruleName": "校正价18.8"
+    },
+    {
+      "code": "TAIPING-RM",
+      "ruleName": "校正价26.3"
+    },
+    {
+      "code": "TAIPING-RM",
+      "ruleName": "校正价8.3"
+    },
+    {
+      "code": "TAIPING-RM",
+      "ruleName": "校正价8.91"
+    },
+    {
+      "code": "TAIPING-RM",
+      "ruleName": "校正价9.8"
+    },
+    {
+      "code": "VICTORIA",
+      "ruleName": "校正价16.0"
+    },
+    {
+      "code": "VICTORIA",
+      "ruleName": "校正价25.0"
+    },
+    {
+      "code": "WJ-HLJ-ZD",
+      "ruleName": "校正价16.5"
+    },
+    {
+      "code": "WJ-HLJ-ZD",
+      "ruleName": "校正价20.0"
+    },
+    {
+      "code": "WJ-HLJ-ZD",
+      "ruleName": "校正价35.0"
+    },
+    {
+      "code": "WJ-HLJ-ZD",
+      "ruleName": "校正价8.0"
+    },
+    {
+      "code": "XINFA-HSZ",
+      "ruleName": "校正价66.0"
+    },
+    {
+      "code": "ZUYAN-NG",
+      "ruleName": "校正价13.5"
+    },
+    {
+      "code": "ZUYAN-NG",
+      "ruleName": "校正价16.5"
+    },
+    {
+      "code": "ZUYAN-NG",
+      "ruleName": "校正价22.0"
+    },
+    {
+      "code": "ZUYAN-SF",
+      "ruleName": "校正价22.0"
+    },
+    {
+      "code": "ZUYAN-SF",
+      "ruleName": "校正价30.0"
+    },
+    {
+      "code": "ZUYAN-SF",
+      "ruleName": "校正价33.0"
+    },
+    {
+      "code": "ZUYAN-SF",
+      "ruleName": "校正价38.5"
+    },
+    {
+      "code": "ZUYAN-XA",
+      "ruleName": "校正价16.5"
+    },
+    {
+      "code": "ZUYAN-XA",
+      "ruleName": "校正价22.0"
+    },
+    {
+      "code": "ZY3-DIANLI",
+      "ruleName": "校正价13.5"
+    },
+    {
+      "code": "ZY3-DIANLI",
+      "ruleName": "校正价35.0"
+    },
+    {
+      "code": "ZY3-DIANLI",
+      "ruleName": "校正价8.0"
+    },
+    {
+      "code": "ZY3-DIANLI",
+      "ruleName": "校正价88.0"
+    },
+    {
+      "code": "ZYY-D2-HN",
+      "ruleName": "校正价16.5"
+    },
+    {
+      "code": "ZYY-D2-NG",
+      "ruleName": "校正价22.0"
+    },
+    {
+      "code": "ZYY-D2-NG",
+      "ruleName": "校正价30.0"
+    },
+    {
+      "code": "ZYY-D2-NG",
+      "ruleName": "校正价35.0"
+    },
+    {
+      "code": "ZYY-D2-NG",
+      "ruleName": "校正价38.5"
+    }
+  ]
+}

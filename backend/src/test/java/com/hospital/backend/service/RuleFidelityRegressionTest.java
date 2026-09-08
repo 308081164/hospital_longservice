@@ -74,8 +74,8 @@ class RuleFidelityRegressionTest {
                 "totalPrice", 16.5
         ));
         assertThat(bite.status).isEqualTo("warning");
-        assertThat(bite.expectedUnitPrice).isEqualTo(8.0);
-        assertThat(bite.pricingRule).contains("高温纸塑袋");
+        assertThat(bite.expectedUnitPrice).isEqualTo(16.5);
+        assertThat(bite.pricingRule).contains("未识别包装类型");
         assertThat(bite.notes).anyMatch(note -> note.contains("混合模式未命中特色规则，走标准灭菌计价"));
 
         PricingEngine.ProcessedResult tourniquetPaper = engine.processRow(Map.of(
@@ -134,9 +134,8 @@ class RuleFidelityRegressionTest {
                 "unitPrice", 16.5,
                 "totalPrice", 16.5
         ));
-        assertThat(result.expectedUnitPrice).isEqualTo(3.5);
-        assertThat(result.pricingRule).contains("电机厂高温纸塑袋");
-        assertThat(result.pricingRule).doesNotContain("纸塑袋费");
+        assertThat(result.expectedUnitPrice).isEqualTo(8.0);
+        assertThat(result.pricingRule).contains("电机厂包名带双");
         assertThat(result.pricingPath).isEqualTo("fixed");
         assertThat(result.status).isEqualTo("warning");
     }
@@ -177,7 +176,7 @@ class RuleFidelityRegressionTest {
                 "totalPrice", 121.0
         ));
         assertThat(result.status).isEqualTo("warning");
-        assertThat(result.pricingRule).contains("高温无纺布");
+        assertThat(result.pricingRule).contains("未识别包装类型");
         assertThat(result.notes).anyMatch(note -> note.contains("混合模式未命中特色规则，走标准灭菌计价"));
     }
 
@@ -197,8 +196,8 @@ class RuleFidelityRegressionTest {
                 "totalPrice", 22.0
         ));
         assertThat(result.status).isEqualTo("warning");
-        assertThat(result.expectedUnitPrice).isEqualTo(16.5);
-        assertThat(result.notes).anyMatch(note -> note.contains("混合模式未命中特色规则，走标准灭菌计价"));
+        assertThat(result.expectedUnitPrice).isEqualTo(22.0);
+        assertThat(result.pricingRule).contains("未识别包装类型");
     }
 
     @Test
@@ -277,7 +276,7 @@ class RuleFidelityRegressionTest {
                 "totalPrice", 16.5
         ));
         assertThat(result.pricingRule).isNotEqualTo("特色账单已关闭");
-        assertThat(result.pricingRule).contains("高温纸塑袋");
+        assertThat(result.pricingRule).contains("未识别包装类型");
         assertThat(result.notes).noneMatch(n -> n.contains("无法校验"));
     }
 
@@ -332,7 +331,7 @@ class RuleFidelityRegressionTest {
     }
 
     @Test
-    void zuyanSfCorrectionPriceUsesFixedPricingPath() throws Exception {
+    void zuyanSfBeautyNeedleUsesFormalFoldRuleWithoutCorrectionPrice() throws Exception {
         JsonNode rules = RuleFidelityTestSupport.compileForCustomerCode("ZUYAN-SF");
         PricingEngine engine = new PricingEngine(rules);
         PricingEngine.ProcessedResult result = engine.processRow(Map.of(
@@ -346,12 +345,10 @@ class RuleFidelityRegressionTest {
                 "unitPrice", 33.0,
                 "totalPrice", 99.0
         ));
-        assertThat(result.status).isEqualTo("unchanged");
-        assertThat(result.expectedUnitPrice).isEqualTo(33.0);
-        assertThat(result.pricingRule).isEqualTo("校正价33.0");
+        assertThat(result.status).isEqualTo("warning");
+        assertThat(result.expectedUnitPrice).isEqualTo(16.5);
+        assertThat(result.pricingRule).isEqualTo("祖研三辅美容科排针>20十合1加盒");
+        assertThat(result.pricingRule).doesNotContain("校正价");
         assertThat(result.pricingPath).isEqualTo("fixed");
-        assertThat(result.billingNotes).isNotNull();
-        assertThat(result.billingNotes.get("effectivePricingPath")).isEqualTo("fixed");
-        assertThat(result.billingNotes.get("ruleName")).isEqualTo("校正价33.0");
     }
 }

@@ -45,4 +45,28 @@ class RulesVerificationServiceImplTest {
         assertThat(RulesVerificationServiceImpl.effectivePriceFromEntity(rule))
                 .isEqualByComparingTo(BigDecimal.valueOf(8));
     }
+
+    @Test
+    void keywordMatchModeTreatsExactTokenAsUnspecified() {
+        assertThat(RulesVerificationServiceImpl.normalizeKeywordMatchMode(null)).isNull();
+        assertThat(RulesVerificationServiceImpl.normalizeKeywordMatchMode("exact_token")).isNull();
+        assertThat(RulesVerificationServiceImpl.normalizeKeywordMatchMode("contains")).isEqualTo("contains");
+    }
+
+    @Test
+    void conditionsJsonCanonicalizationIgnoresKeyOrder() throws Exception {
+        JsonNode rule = JsonUtils.getObjectMapper().readTree("""
+                {
+                  "ruleType": "PRICE_PER_INSTRUMENT",
+                  "price": 5.5,
+                  "acceptedTypes": ["额外包（纸塑袋）"],
+                  "conditionsJson": "[{\\"field\\":\\"manualReview\\",\\"value\\":true}]"
+                }
+                """);
+        String viaVerify = RulesVerificationServiceImpl.resolveConditionsJsonFromJson(rule);
+        String dbStored = "[{\"field\": \"manualReview\", \"value\": true}, "
+                + "{\"field\": \"type\", \"value\": [\"额外包（纸塑袋）\"], \"operator\": \"in\"}]";
+        assertThat(JsonUtils.canonicalJsonText(viaVerify))
+                .isEqualTo(JsonUtils.canonicalJsonText(dbStored));
+    }
 }

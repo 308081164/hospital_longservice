@@ -85,13 +85,14 @@ class PackPricingCategoryResolverTest {
     }
 
     @Test
-    void typeFallbackPaperWhenMaterialEmpty() {
+    void extraPaperPlasticWithBlankMaterialIsUnknown() {
         var resolution = PackPricingCategoryResolver.resolve(
                 "额外包(纸塑袋)",
                 "驱血带(高温)/Z2032",
                 "",
                 1,
                 1);
-        assertThat(resolution.category()).isEqualTo(PackPricingCategory.INSTRUMENT_PAPER);
+        assertThat(resolution.category()).isEqualTo(PackPricingCategory.UNKNOWN);
+        assertThat(resolution.note()).contains("包材");
     }
 }

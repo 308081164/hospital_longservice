@@ -63,7 +63,7 @@ class RulesVerificationRoundTripTest {
         if (ruleNode.has("keywords")) {
             rule.setKeywords(toJsonArray(ruleNode.get("keywords")));
         }
-        rule.setKeywordMatchMode(textOrNull(ruleNode, "keywordMatchMode"));
+        rule.setKeywordMatchMode(defaultKeywordMatchMode(textOrNull(ruleNode, "keywordMatchMode")));
         String conditionsJson = null;
         if (ruleNode.hasNonNull("conditionsJson")) {
             JsonNode node = ruleNode.get("conditionsJson");
@@ -73,7 +73,7 @@ class RulesVerificationRoundTripTest {
             conditionsJson = BillingConditionEvaluator.mergeAcceptedTypesIntoConditions(
                     conditionsJson, ruleNode.get("acceptedTypes"));
         }
-        rule.setConditionsJson(conditionsJson);
+        rule.setConditionsJson(JsonUtils.canonicalJsonText(conditionsJson));
         rule.setIsActive(true);
         return rule;
     }
@@ -88,8 +88,8 @@ class RulesVerificationRoundTripTest {
         map.put("threshold", rule.has("threshold") && !rule.get("threshold").isNull()
                 ? rule.get("threshold").asInt() : null);
         map.put("billingMode", textOrNull(rule, "billingMode"));
-        map.put("keywordMatchMode", textOrNull(rule, "keywordMatchMode"));
-        map.put("conditionsJson", normalizeJson(RulesVerificationServiceImpl.resolveConditionsJsonFromJson(rule)));
+        map.put("keywordMatchMode", RulesVerificationServiceImpl.normalizeKeywordMatchMode(textOrNull(rule, "keywordMatchMode")));
+        map.put("conditionsJson", JsonUtils.canonicalJsonText(RulesVerificationServiceImpl.resolveConditionsJsonFromJson(rule)));
         return map;
     }
 
@@ -102,8 +102,8 @@ class RulesVerificationRoundTripTest {
         map.put("foldRatio", rule.getFoldRatio());
         map.put("threshold", rule.getThreshold());
         map.put("billingMode", rule.getBillingMode());
-        map.put("keywordMatchMode", rule.getKeywordMatchMode());
-        map.put("conditionsJson", normalizeJson(rule.getConditionsJson()));
+        map.put("keywordMatchMode", RulesVerificationServiceImpl.normalizeKeywordMatchMode(rule.getKeywordMatchMode()));
+        map.put("conditionsJson", JsonUtils.canonicalJsonText(rule.getConditionsJson()));
         return map;
     }
 
@@ -174,6 +174,10 @@ class RulesVerificationRoundTripTest {
             return defaultValue;
         }
         return node.get(field).asText();
+    }
+
+    private static String defaultKeywordMatchMode(String mode) {
+        return mode == null || mode.isBlank() ? "exact_token" : mode;
     }
 
     private static String textOrNull(JsonNode node, String field) {

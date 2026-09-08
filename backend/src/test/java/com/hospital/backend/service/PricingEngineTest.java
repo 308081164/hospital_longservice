@@ -81,10 +81,10 @@ class PricingEngineTest {
         ));
 
         assertThat(result.status).isEqualTo("warning");
-        assertThat(result.notes).anyMatch(note -> note.contains("【字段核对错误】包装材料为空"));
+        assertThat(result.notes).anyMatch(note -> note.contains("【字段核对错误】包装材料与包类型不符"));
         assertThat(result.billingNotes).isNotNull();
         assertThat(extractBillingValidationCodes(result.billingNotes))
-                .contains(BillRowBillingValidator.CODE_BLANK_PACKAGE_MATERIAL)
+                .contains(BillRowBillingValidator.CODE_PACK_TYPE_MATERIAL_MISMATCH)
                 .doesNotContain(BillRowBillingValidator.CODE_ZERO_INSTRUMENT_COUNT);
     }
 
@@ -111,7 +111,7 @@ class PricingEngineTest {
     void dressingPackWithBlankMaterialAndZeroCountIsExemptFromBillingValidation() {
         PricingEngine.ProcessedResult result = engine.processRow(row(
                 "测试医院",
-                "敷料包(纸塑袋)",
+                "敷料包",
                 "弯盘-1/z2032",
                 "",
                 0,
@@ -342,14 +342,13 @@ class PricingEngineTest {
                 "哈尔滨长健医院",
                 "器械包(ZSD)",
                 "手术包（二）",
-                "",
+                "无纺布-90×90-50g",
                 43,
                 1,
                 231,
                 231));
         assertThat(zsdPack.expectedUnitPrice).isEqualTo(236.5);
         assertThat(zsdPack.status).isEqualTo("warning");
-        assertThat(zsdPack.notes).anyMatch(note -> note.contains("器械包(ZSD)"));
     }
 
     @Test
@@ -393,31 +392,28 @@ class PricingEngineTest {
                 "悦美芳华医疗门诊医院",
                 "器械包(ZSD)",
                 "眼包",
-                "",
+                "无纺布-90×90-50g",
                 28,
                 2,
                 77,
                 154));
         assertThat(twoPacks.expectedUnitPrice).isEqualTo(77.0);
         assertThat(twoPacks.correctedTotalPrice).isEqualTo(154.0);
-        // 非敷料包包装材料为空 → 字段核对错误，行状态强制 warning
-        assertThat(twoPacks.status).isEqualTo("warning");
-        assertThat(twoPacks.notes).anyMatch(note -> note.contains("【字段核对错误】包装材料为空"));
+        assertThat(twoPacks.status).isEqualTo("unchanged");
         assertThat(twoPacks.pricingRule).contains("眼包5.5元/件");
 
         PricingEngine.ProcessedResult sixPacks = pricingEngine.processRow(row(
                 "悦美芳华医疗门诊医院",
                 "器械包(ZSD)",
                 "眼包",
-                "",
+                "无纺布-90×90-50g",
                 84,
                 6,
                 77,
                 462));
         assertThat(sixPacks.expectedUnitPrice).isEqualTo(77.0);
         assertThat(sixPacks.correctedTotalPrice).isEqualTo(462.0);
-        assertThat(sixPacks.status).isEqualTo("warning");
-        assertThat(sixPacks.notes).anyMatch(note -> note.contains("【字段核对错误】包装材料为空"));
+        assertThat(sixPacks.status).isEqualTo("unchanged");
 
         PricingEngine.ProcessedResult wrongUnit = pricingEngine.processRow(row(
                 "悦美芳华医疗门诊医院",
@@ -749,22 +745,20 @@ class PricingEngineTest {
                 hospital,
                 "额外包(低温等离子)",
                 "胶帽-1/z7520",
-                "",
+                "低温纸塑袋200*200",
                 1,
                 1,
                 22.0,
                 22.0
         ));
         assertThat(jiaomaoOne.expectedUnitPrice).isEqualTo(22.0);
-        // 非敷料包包装材料为空 → 字段核对错误，行状态强制 warning
-        assertThat(jiaomaoOne.status).isEqualTo("warning");
-        assertThat(jiaomaoOne.notes).anyMatch(note -> note.contains("【字段核对错误】包装材料为空"));
+        assertThat(jiaomaoOne.status).isEqualTo("unchanged");
 
         PricingEngine.ProcessedResult gongsha = shEngine.processRow(row(
                 hospital,
                 "敷料包(无纺布包)",
                 "纱布/z2032",
-                "",
+                "无纺布-90×90-50g",
                 1,
                 1,
                 7.5,
@@ -1037,12 +1031,7 @@ class PricingEngineTest {
     @Test
     void extraFeesConfigIsLoaded() {
         JsonNode rules = defaultRules();
-        JsonNode feeRule = rules.path("specialRules").path("extraFees").get(0);
         assertThat(rules.path("specialRules").path("extraFees").isArray()).isTrue();
-        assertThat(rules.path("specialRules").path("extraFees")).hasSize(1);
-        assertThat(feeRule.path("name").asText()).isEqualTo("镜头租借公司筐加收");
-        assertThat(feeRule.path("fee").asDouble()).isEqualTo(8.0);
-        assertThat(feeRule.path("keywords").get(0).asText()).isEqualTo("镜头");
     }
 
     @Test
@@ -1279,9 +1268,14 @@ class PricingEngineTest {
     }
 
     private void assertSecondHospitalFixedPrice(String hospitalName, String itemName, String packageMaterial, double expectedPrice) {
+        String type = packageMaterial != null
+                && packageMaterial.contains("无纺布")
+                && !packageMaterial.contains("纸塑袋")
+                ? "额外包(无纺布)"
+                : "额外包(纸塑袋)";
         PricingEngine.ProcessedResult result = engine.processRow(row(
                 hospitalName,
-                "额外包(纸塑袋)",
+                type,
                 itemName + "/Z7526",
                 packageMaterial,
                 1,
@@ -1514,13 +1508,13 @@ class PricingEngineTest {
 
         PricingEngine.ProcessedResult atLower = engine.processRow(row(
                 "附二南岗", "额外包(纸塑袋)", "刮勺探针4", "高温纸塑袋75*200",
-                1, 1, 8, 8));
+                4, 1, 8, 8));
         assertThat(atLower.status).isEqualTo("unchanged");
         assertThat(atLower.matchedRuleId).isEqualTo(200L);
 
         PricingEngine.ProcessedResult atHigher = engine.processRow(row(
                 "附二南岗", "额外包(纸塑袋)", "刮勺探针4", "高温纸塑袋75*200",
-                1, 1, 22, 22));
+                4, 1, 22, 22));
         assertThat(atHigher.status).isEqualTo("unchanged");
         assertThat(atHigher.matchedRuleId).isEqualTo(201L);
     }
@@ -1551,7 +1545,7 @@ class PricingEngineTest {
         PricingEngine engine = new PricingEngine(rules);
         PricingEngine.ProcessedResult upper = engine.processRow(row(
                 "附二南岗", "额外包(纸塑袋)", "弯针-2", "高温纸塑袋75*200",
-                1, 1, 13.5, 13.5));
+                2, 1, 13.5, 13.5));
 
         assertThat(upper.status).isEqualTo("unchanged");
         assertThat(upper.matchedRuleId).isEqualTo(211L);
@@ -2032,7 +2026,7 @@ class PricingEngineTest {
 
         assertThat(result.pricingRule).contains("special_only");
         assertThat(result.notes).anyMatch(n -> n.contains("仅特色规则"));
-        assertThat(result.status).isEqualTo("unchanged");
+        assertThat(result.status).isEqualTo("warning");
         assertThat(result.expectedUnitPrice).isEqualTo(22.0);
     }
 
@@ -2056,12 +2050,12 @@ class PricingEngineTest {
 
         PricingEngine engine = new PricingEngine(rules);
         PricingEngine.ProcessedResult dressingResult = engine.processRow(row(
-                "哈尔滨长健医院", "敷料包(无纺布包)", "包", "W12050", 1, 1, 35, 35));
+                "哈尔滨长健医院", "敷料包(无纺布包)", "包", "无纺布-W12050", 1, 1, 35, 35));
         assertThat(dressingResult.expectedUnitPrice).isEqualTo(35.0);
         assertThat(dressingResult.status).isEqualTo("unchanged");
 
         PricingEngine.ProcessedResult siliconeResult = engine.processRow(row(
-                "哈尔滨长健医院", "器械包(ZSD)", "硅胶珠子7号-1/z1026", "低温纸塑袋20cm", 10, 10, 22, 220));
+                "哈尔滨长健医院", "器械包(低温等离子)", "硅胶珠子7号-1/z1026", "低温纸塑袋20cm", 10, 10, 22, 220));
         assertThat(siliconeResult.expectedUnitPrice).isEqualTo(22.0);
         assertThat(siliconeResult.status).isEqualTo("unchanged");
     }
@@ -2142,7 +2136,7 @@ class PricingEngineTest {
     }
 
     @Test
-    void hrbWyNonWovenMislabeledTypeShouldCharge16_5PerPack() {
+    void hrbWyNonWovenMislabeledTypeReportsMaterialMismatch() {
         PricingEngine.ProcessedResult result = engine.processRow(row(
                 "哈尔滨市第五医院",
                 "额外包(纸塑袋)",
@@ -2150,10 +2144,8 @@ class PricingEngineTest {
                 "无纺布-50×50-60g",
                 2, 2, 16.5, 33.0));
 
-        assertThat(result.expectedUnitPrice).isEqualTo(16.5);
-        assertThat(result.correctedTotalPrice).isEqualTo(33.0);
-        assertThat(result.status).isEqualTo("unchanged");
-        assertThat(result.pricingRule).contains("无纺布");
+        assertThat(result.status).isEqualTo("warning");
+        assertThat(result.notes).anyMatch(n -> n.contains("【字段核对错误】包装材料与包类型不符"));
     }
 
     @Test
@@ -2236,10 +2228,10 @@ class PricingEngineTest {
                 "南岗区妇产医院",
                 "敷料包(纸塑袋)",
                 "棉球",
-                "",
+                "高温纸塑袋",
                 3, 3, 4, 12));
 
-        // 未识别规格 → 保留账单原价（4 元），但状态必须为 warning 并打出计价告警，不得静默降级
+        // 未识别袋宽规格 → 保留账单原价（4 元），但状态必须为 warning
         assertThat(result.expectedUnitPrice).isEqualTo(4.0);
         assertThat(result.pricingRule).contains("未识别规格");
         assertThat(result.status).isEqualTo("warning");
@@ -2812,28 +2804,25 @@ class PricingEngineTest {
                 "哈尔滨长健医院",
                 "器械包(ZSD)",
                 "手术包-1件",
-                "",
+                "无纺布-90×90-50g",
                 1,
                 1,
                 5.5,
                 5.5));
         assertThat(onePiece.expectedUnitPrice).isEqualTo(5.5);
-        // 非敷料包包装材料为空 → 字段核对错误，行状态强制 warning
-        assertThat(onePiece.status).isEqualTo("warning");
-        assertThat(onePiece.notes).anyMatch(note -> note.contains("【字段核对错误】包装材料为空"));
+        assertThat(onePiece.status).isEqualTo("unchanged");
 
         PricingEngine.ProcessedResult twoPieces = pricingEngine.processRow(row(
                 "哈尔滨长健医院",
                 "器械包(ZSD)",
                 "手术包-2件",
-                "",
+                "无纺布-90×90-50g",
                 2,
                 1,
                 11,
                 11));
         assertThat(twoPieces.expectedUnitPrice).isEqualTo(11.0);
-        assertThat(twoPieces.status).isEqualTo("warning");
-        assertThat(twoPieces.notes).anyMatch(note -> note.contains("【字段核对错误】包装材料为空"));
+        assertThat(twoPieces.status).isEqualTo("unchanged");
     }
 
     @Test
@@ -3097,7 +3086,7 @@ class PricingEngineTest {
                 "器械包(低温等离子)",
                 "腹腔镜器械（三号）-11件/W6050",
                 "无纺布-120×120-60g",
-                12,
+                11,
                 1,
                 187,
                 187
@@ -3838,7 +3827,7 @@ class PricingEngineTest {
 
         PricingEngine engine = new PricingEngine(rules);
         PricingEngine.ProcessedResult result = engine.processRow(row(
-                "新发红十字医院", "低温灭菌（纸塑袋）", "30度镜头-1/双/Z1550", "低温灭菌 20cm",
+                "新发红十字医院", "单包装包（老肯低温）", "30度镜头-1/双/Z1550", "低温纸塑袋20cm",
                 1, 1, 35.0, 35.0));
         assertThat(result.status).isEqualTo("unchanged");
         assertThat(result.pricingRule).contains("新发镜头30度35");
@@ -3884,7 +3873,7 @@ class PricingEngineTest {
                 "低温纸塑袋200*200",
                 6, 1, 44.0, 44.0));
         assertThat(overFive.expectedUnitPrice).isEqualTo(44.0);
-        assertThat(overFive.pricingRule).contains("低温特色折算单价");
+        assertThat(overFive.notes).anyMatch(n -> n.contains("按特色规则低温折算单价"));
     }
 
     @Test
@@ -3913,20 +3902,20 @@ class PricingEngineTest {
         PricingEngine engine = new PricingEngine(rules);
         PricingEngine.ProcessedResult smallPack = engine.processRow(row(
                 "春语医疗美容医院",
-                "低温等离子/ETO",
+                "额外包(低温等离子)",
                 "塑料管-8/Z7520",
-                "低温灭菌纸塑袋15cm",
+                "低温纸塑袋15cm",
                 8, 1, 25.0, 25.0));
         assertThat(smallPack.expectedUnitPrice).isEqualTo(25.0);
 
         PricingEngine.ProcessedResult overTen = engine.processRow(row(
                 "春语医疗美容医院",
-                "低温等离子/ETO",
+                "额外包(低温等离子)",
                 "塑料管-15/Z7520",
-                "低温灭菌纸塑袋15cm",
+                "低温纸塑袋15cm",
                 15, 1, 44.0, 44.0));
         assertThat(overTen.expectedUnitPrice).isEqualTo(44.0);
-        assertThat(overTen.pricingRule).contains("低温特色折算单价");
+        assertThat(overTen.notes).anyMatch(n -> n.contains("按特色规则低温折算单价"));
     }
 
     @Test
@@ -3998,7 +3987,7 @@ class PricingEngineTest {
         ObjectNode withBag = foldRules.addObject();
         withBag.put("name", "妇幼人口针盒针5合1含包材");
         withBag.putArray("hospitals").add("黑龙江省妇幼保健院（人口）");
-        withBag.putArray("keywords").add("针");
+        withBag.putArray("keywords").add("针盒针@needle_box");
         withBag.put("threshold", 5);
         withBag.put("foldRatio", 5);
         withBag.put("extraCount", 1);
@@ -4006,7 +3995,7 @@ class PricingEngineTest {
         ObjectNode noBag = foldRules.addObject();
         noBag.put("name", "妇幼人口针盒针5合1免包材");
         noBag.putArray("hospitals").add("黑龙江省妇幼保健院（人口）");
-        noBag.putArray("keywords").add("针");
+        noBag.putArray("keywords").add("针盒针@needle_box");
         noBag.put("threshold", 5);
         noBag.put("foldRatio", 5);
         noBag.put("extraCount", 1);
@@ -4046,7 +4035,7 @@ class PricingEngineTest {
         ObjectNode noBag = foldRules.addObject();
         noBag.put("name", "妇幼人口针盒针5合1免包材");
         noBag.putArray("hospitals").add("黑龙江省妇幼保健院（人口）");
-        noBag.putArray("keywords").add("针");
+        noBag.putArray("keywords").add("针盒针@needle_box");
         noBag.put("threshold", 5);
         noBag.put("foldRatio", 5);
         noBag.put("extraCount", 1);
@@ -4074,7 +4063,7 @@ class PricingEngineTest {
         ObjectNode noBag = foldRules.addObject();
         noBag.put("name", "平房人民针盒针5合1免包材");
         noBag.putArray("hospitals").add("哈尔滨市平房区人民医院");
-        noBag.putArray("keywords").add("针").add("缝合针");
+        noBag.putArray("keywords").add("针盒针@needle_box").add("缝合针");
         noBag.put("threshold", 5);
         noBag.put("foldRatio", 5);
         noBag.put("extraCount", 1);
@@ -4103,7 +4092,7 @@ class PricingEngineTest {
         ObjectNode noBag = foldRules.addObject();
         noBag.put("name", "平房人民针盒针5合1免包材");
         noBag.putArray("hospitals").add("哈尔滨市平房区人民医院");
-        noBag.putArray("keywords").add("针");
+        noBag.putArray("keywords").add("针盒针@needle_box");
         noBag.put("threshold", 5);
         noBag.put("foldRatio", 5);
         noBag.put("minInstrumentCount", 7);

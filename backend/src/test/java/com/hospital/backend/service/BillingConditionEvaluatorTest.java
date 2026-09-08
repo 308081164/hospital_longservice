@@ -120,6 +120,38 @@ class BillingConditionEvaluatorTest {
     }
 
     @Test
+    void needleBoxMode_matchesParenFormula_notBareNeedleToken() throws Exception {
+        ObjectNode rule = MAPPER.createObjectNode();
+        rule.put("keywordMatchMode", "exact_token");
+        rule.putArray("keywords").add("针盒针@needle_box");
+
+        assertThat(BillingConditionEvaluator.matchesRuleKeywords(
+                rule, "全冠套装(针7盒1)", "额外包(纸塑袋) 全冠套装(针7盒1) 高温纸塑袋75*200"))
+                .isTrue();
+        assertThat(BillingConditionEvaluator.matchesRuleKeywords(
+                rule, "针盒1针58/z1026", "额外包(纸塑袋) 针盒1针58/z1026 高温纸塑袋15cm"))
+                .isTrue();
+        // 裸词「针」exact_token 会误伤，needle_box 不应命中
+        assertThat(BillingConditionEvaluator.matchesRuleKeywords(
+                rule, "针-5/z7534", "额外包(纸塑袋) 针-5/z7534 高温纸塑袋75*370"))
+                .isFalse();
+        assertThat(BillingConditionEvaluator.matchesRuleKeywords(
+                rule, "加长根管锉-6/Z7520", "额外包(纸塑袋) 加长根管锉-6/Z7520 高温纸塑袋75*370"))
+                .isFalse();
+        assertThat(BillingConditionEvaluator.matchesRuleKeywords(
+                rule, "缝合针-2件/Z7520", "额外包(纸塑袋) 缝合针-2件/Z7520 高温纸塑袋75*370"))
+                .isFalse();
+    }
+
+    @Test
+    void matchesNeedleBoxFormula_rejectsCarNeedleBoxAndMachineExpandNeedle() {
+        assertThat(BillingConditionEvaluator.matchesNeedleBoxFormula("全冠套装(针7盒1)")).isTrue();
+        assertThat(BillingConditionEvaluator.matchesNeedleBoxFormula("抛光车针盒6件盒1/Z1026")).isFalse();
+        assertThat(BillingConditionEvaluator.matchesNeedleBoxFormula("机扩针-6盒1/Z7520")).isFalse();
+        assertThat(BillingConditionEvaluator.matchesNeedleBoxFormula("针-5/z7534")).isFalse();
+    }
+
+    @Test
     void packTypeEquivalentNormalizesDressingLabels() {
         assertThat(BillingConditionEvaluator.packTypeEquivalent("敷料包（无纺布）", "敷料包(无纺布包)"))
                 .isTrue();

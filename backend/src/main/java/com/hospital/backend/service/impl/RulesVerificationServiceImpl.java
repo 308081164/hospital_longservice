@@ -205,7 +205,7 @@ public class RulesVerificationServiceImpl implements RulesVerificationService {
                 ? rule.get("threshold").asInt() : null);
         map.put("isActive", !rule.has("isActive") || rule.get("isActive").asBoolean(true));
         map.put("billingMode", textOrNull(rule, "billingMode"));
-        map.put("keywordMatchMode", textOrNull(rule, "keywordMatchMode"));
+        map.put("keywordMatchMode", normalizeKeywordMatchMode(textOrNull(rule, "keywordMatchMode")));
         map.put("conditionsJson", normalizeConditionsText(resolveConditionsJsonFromJson(rule)));
         return map;
     }
@@ -220,7 +220,7 @@ public class RulesVerificationServiceImpl implements RulesVerificationService {
         map.put("threshold", rule.getThreshold());
         map.put("isActive", Boolean.TRUE.equals(rule.getIsActive()));
         map.put("billingMode", rule.getBillingMode());
-        map.put("keywordMatchMode", rule.getKeywordMatchMode());
+        map.put("keywordMatchMode", normalizeKeywordMatchMode(rule.getKeywordMatchMode()));
         map.put("conditionsJson", normalizeConditionsText(rule.getConditionsJson()));
         return map;
     }
@@ -254,6 +254,14 @@ public class RulesVerificationServiceImpl implements RulesVerificationService {
             return rule.getPrice();
         }
         return rule.getFee();
+    }
+
+    /** baseline 未指定时与 DB 默认 exact_token 视为等价。 */
+    static String normalizeKeywordMatchMode(String mode) {
+        if (mode == null || mode.isBlank() || "exact_token".equals(mode)) {
+            return null;
+        }
+        return mode;
     }
 
     private boolean ruleSignatureEquals(Map<String, Object> a, Map<String, Object> b) {
@@ -343,14 +351,6 @@ public class RulesVerificationServiceImpl implements RulesVerificationService {
 
 
     private static String normalizeConditionsText(String raw) {
-        if (raw == null || raw.isBlank()) {
-            return null;
-        }
-        try {
-            JsonNode parsed = JsonUtils.getObjectMapper().readTree(raw);
-            return JsonUtils.getObjectMapper().writeValueAsString(parsed);
-        } catch (Exception e) {
-            return raw.trim();
-        }
+        return JsonUtils.canonicalJsonText(raw);
     }
 }

@@ -294,7 +294,7 @@
                 v-model="needleMatchMode"
                 label="默认匹配模式"
                 :options="keywordMatchModeOptions"
-                tooltip="未标注的关键词统一使用此模式；单个词可加后缀覆盖，如「车针@contains」含词即触发、「车针@exact」严格对齐"
+                tooltip="未标注的关键词统一使用此模式；单个词可加后缀覆盖，如「车针@contains」含词即触发、「车针@exact」完整词匹配"
               />
             </RuleFieldGrid>
             <RuleKeywordField
@@ -305,7 +305,7 @@
               :rows="5"
               :max-rows="14"
               show-count
-              hint="逗号分隔；词后加 @contains 含词即触发、@exact 严格对齐；客户特色关键词扩展请在特殊计价客户管理中配置"
+              hint="逗号分隔；词后加 @contains 含词即触发、@exact 完整词匹配；客户特色关键词扩展请在特殊计价客户管理中配置"
               @change="markDirty"
             />
             <RuleNeedleKeywordConfigTable
@@ -565,7 +565,7 @@ const categories: CategoryItem[] = [
 ]
 
 const keywordMatchModeOptions = [
-  { value: 'exact_token', label: '严格对齐（精确 token 边界）' },
+  { value: 'exact_token', label: '完整词匹配' },
   { value: 'contains', label: '含关键词即触发' },
 ]
 

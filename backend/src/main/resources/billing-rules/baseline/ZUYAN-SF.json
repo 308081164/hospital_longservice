@@ -19,59 +19,6 @@
     },
     {
       "ruleType": "FIXED_PRICE",
-      "name": "校正价22.0",
-      "priority": 10,
-      "price": 22.0,
-      "keywords": [
-        "器械包-4件"
-      ],
-      "skipPackaging": true,
-      "skipDiscount": true,
-      "isActive": true,
-      "matchMode": "first"
-    },
-    {
-      "ruleType": "FIXED_PRICE",
-      "name": "校正价30.0",
-      "priority": 11,
-      "price": 30.0,
-      "keywords": [
-        "纱布条"
-      ],
-      "skipPackaging": true,
-      "skipDiscount": true,
-      "isActive": true,
-      "matchMode": "first"
-    },
-    {
-      "ruleType": "FIXED_PRICE",
-      "name": "校正价33.0",
-      "priority": 12,
-      "price": 33.0,
-      "keywords": [
-        "排针包48件盘1",
-        "美容科排针包50件盘1"
-      ],
-      "skipPackaging": true,
-      "skipDiscount": true,
-      "isActive": true,
-      "matchMode": "first"
-    },
-    {
-      "ruleType": "FIXED_PRICE",
-      "name": "校正价38.5",
-      "priority": 13,
-      "price": 38.5,
-      "keywords": [
-        "排针包51件盘1"
-      ],
-      "skipPackaging": true,
-      "skipDiscount": true,
-      "isActive": true,
-      "matchMode": "first"
-    },
-    {
-      "ruleType": "FIXED_PRICE",
       "name": "祖研三辅export 探针刨刀16.5",
       "priority": 3,
       "price": 16.5,

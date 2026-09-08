@@ -47,8 +47,13 @@ public class BillingSeedMigrationRunner implements CommandLineRunner {
     private static final String P0_MOJIBAKE_DUP_MARKER = "billing_seed_fix_p0_mojibake_dup_20260723_v1";
     /** 五常并行 seed 产生的无科室条件重复规则清理 */
     private static final String WCSRMYY_OR_DEDUP_MARKER = "billing_seed_wcsrm_yy_or_dedup_20260724_v1";
+    /** 生产 DB 一次性清理：删除全部校正价规则（baseline 外残留） */
+    private static final String CORRECTION_PRICE_DELETE_ALL_MARKER = "billing_seed_correction_price_delete_all_20260908_v1";
+    private static final String CORRECTION_PRICE_DELETE_ALL_FILE =
+            "billing-seeds/archive/legacy-2026/phase-correction-price-delete-all-20260908.json";
     /** 删除非 22 家特殊计价客户及其孤儿数据（严格测试口径收敛） */
     private static final String STALE_CUSTOMER_CLEANUP_MARKER = "billing_seed_stale_customer_cleanup_20260827_v1";
+
     /** 最终保留的 29 家特殊计价客户 code（与 scripts/billing_rules_manifest.py STRICT_KEEP_CODES 一致）：历史 22 家 + 2026-08 新引入 4 家 + 2026-09 特殊收费(2) 新引入 3 家 */
     private static final java.util.List<String> STRICT_KEEP_CODES = java.util.List.of(
             "BINGCHENG-YM", "GUOYAO-2", "FNN-YY", "NEAU-YY", "HRB-WY", "HRB-SD-MB", "HRB-HTFH",
@@ -261,6 +266,12 @@ public class BillingSeedMigrationRunner implements CommandLineRunner {
             insertMarker(STALE_CUSTOMER_CLEANUP_MARKER,
                     "删除非22家特殊计价客户及其孤儿数据（严格测试口径收敛）");
             log.info("Stale customer cleanup: removed {} customers", removed);
+        }
+        if (sysSettingMapper.countByKey(CORRECTION_PRICE_DELETE_ALL_MARKER) == 0) {
+            applyBatchPatchSeedFile(CORRECTION_PRICE_DELETE_ALL_FILE);
+            insertMarker(CORRECTION_PRICE_DELETE_ALL_MARKER,
+                    "彻底删除全部校正价规则（85 条 deleteRules）");
+            log.info("Correction price delete-all seed applied: {}", CORRECTION_PRICE_DELETE_ALL_FILE);
         }
     }
 

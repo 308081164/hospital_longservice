@@ -88,7 +88,7 @@ public class PricingEngine {
         // 器械数列缺失(≤0)且包名可解析件数时按「包名件数合计 × 包数」补缺（只补缺，不覆盖账单
         // 非零原值——「计价始终使用 Excel 器械数」的既有约定不变）；敷料包类型豁免（器械数允许为 0）。
         // 补缺后 镜补包-1剪刀-1/Z2032 这类包名可解析的行不再误报「器械数为0」字段核验错误。
-        if (instrumentCount <= 0 && !type.contains("敷料包")) {
+        if (instrumentCount <= 0 && !PackTypeRegistry.isDressingPackType(type)) {
             Integer namePieceCount =
                     com.hospital.backend.imports.bokang.PackNameSpecParser.extractTotalPieceCountFromPackName(packName);
             if (namePieceCount != null && namePieceCount > 0) {
@@ -119,6 +119,7 @@ public class PricingEngine {
         packageMaterial = inferPricingPackageMaterial(type, packageMaterial, notes);
         packageMaterial = normalizeFuyiImportMaterial(type, packName, packageMaterial, notes);
         row.put("packageMaterial", packageMaterial);
+        Optional<PackTypeRegistry.PackTypeDefinition> packTypeDef = PackTypeRegistry.match(type);
         PackPricingCategoryResolver.Resolution packCategoryResolution =
                 PackPricingCategoryResolver.resolve(
                         type, packName, packageMaterial, instrumentCount, packCount);
@@ -173,19 +174,10 @@ public class PricingEngine {
 
         // 袋尺寸检测（带缓存）。部分特例规则需要先知道袋型，例如“20cm 以下 5 件算 1 件”。
         int bagSize = detectBagSize(packageMaterial + packName);
-        boolean isPaperPlastic = packageMaterial.contains("纸塑袋")
-                || type.contains("纸塑袋")
-                || packageMaterial.contains("低温灭菌")
-                || packageMaterial.contains("双层袋");
-        boolean isNonWoven = packageMaterial.contains("无纺布") || type.contains("无纺布");
-        // 包材优先于类型标签：账单 type 误标纸塑袋但包材为无纺布时仍走无纺布计价
-        if (packageMaterial.contains("无纺布") && !packageMaterial.contains("纸塑袋")) {
-            isNonWoven = true;
-            isPaperPlastic = false;
-        } else if (packageMaterial.contains("纸塑袋") || packageMaterial.contains("低温灭菌")
-                || packageMaterial.contains("双层袋")) {
-            isPaperPlastic = true;
-        }
+        PackTypeRegistry.MaterialFamily materialFamily = PackTypeRegistry.classifyMaterial(packageMaterial);
+        boolean isPaperPlastic = materialFamily == PackTypeRegistry.MaterialFamily.HIGH_TEMP_PAPER
+                || materialFamily == PackTypeRegistry.MaterialFamily.LOW_TEMP_PAPER;
+        boolean isNonWoven = materialFamily == PackTypeRegistry.MaterialFamily.NON_WOVEN;
         int perPackRawInstrumentCount = packCount > 1
                 ? (int) Math.round((double) instrumentCount / Math.max(1, packCount))
                 : instrumentCount;
@@ -193,9 +185,9 @@ public class PricingEngine {
             perPackRawInstrumentCount = Math.max(1, instrumentCount);
         }
         boolean highTempPaperPlasticRow = isPaperPlastic && !isNonWoven;
-        boolean isLowTemp = !disableLowTemp && ((type + packName + packageMaterial).contains("低温")
-                || type.contains("ETO") || type.contains("EO")
-                || packageMaterial.contains("低温灭菌"));
+        boolean isLowTemp = !disableLowTemp && packTypeDef
+                .map(def -> def.sterilization() == PackTypeRegistry.SterilizationMode.LOW_TEMP_EO)
+                .orElse(false);
         boolean doubleMarkInName = DOUBLE_BAG_MARK.matcher(packName).find();
         boolean isDouble = doubleMarkInName || packageMaterial.contains("双层袋");
         int zBagSize = doubleMarkInName ? extractSizeAfterDouble(packName) : 0;
@@ -2522,19 +2514,9 @@ public class PricingEngine {
     }
 
     /**
-     * 源账单「器械包(ZSD)」常无包装材料列；按铂康惯例视为高温无纺布阶梯计费。
+     * 包材列保持账单原值；不再按历史惯例为 ZSD 等类型自动补全包材（以对照表校验为准）。
      */
     private String inferPricingPackageMaterial(String type, String packageMaterial, List<String> notes) {
-        if (packageMaterial != null && !packageMaterial.isBlank()) {
-            return packageMaterial;
-        }
-        if (type == null || type.isBlank()) {
-            return packageMaterial == null ? "" : packageMaterial;
-        }
-        if (isZsdInstrumentPackType(type)) {
-            notes.add("器械包(ZSD)未填写包装材料，按高温无纺布标准阶梯计费。");
-            return "无纺布";
-        }
         return packageMaterial == null ? "" : packageMaterial;
     }
 
@@ -2611,11 +2593,8 @@ public class PricingEngine {
     }
 
     private boolean isZsdInstrumentPackType(String type) {
-        if (type == null || type.isBlank()) {
-            return false;
-        }
-        String normalized = type.replaceAll("\\s+", "");
-        return normalized.contains("器械包(ZSD)")
-                || (normalized.contains("器械包") && normalized.toUpperCase().contains("ZSD"));
+        return PackTypeRegistry.match(type)
+                .map(def -> def.canonical().contains("zsd"))
+                .orElse(false);
     }
 }

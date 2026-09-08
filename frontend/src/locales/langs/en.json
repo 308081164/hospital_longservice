@@ -589,7 +589,7 @@
         "foldRatioHint": "Above threshold, billable count = ceil(instrumentCount / divisor); e.g. 5 means 5 pcs count as 1",
         "keywordMatchMode": "Default Match Mode",
         "keywordMatchModeHint": "Applied to unannotated keywords below; a single keyword can override via suffix, e.g. \"needle@contains\" or \"needle@exact\"",
-        "keywordMatchExactToken": "Exact token boundary",
+        "keywordMatchExactToken": "Whole-word match",
         "keywordMatchContains": "Contains keyword",
         "extraFeeAmount": "Extra Fee (CNY)",
         "excludeKeywords": "Exclude Keywords",

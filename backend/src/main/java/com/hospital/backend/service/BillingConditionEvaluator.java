@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Pattern;
 
 /**
  * 从 PricingEngine 抽出的规则条件评估（TD-02 部分偿还）。
@@ -21,6 +22,20 @@ public final class BillingConditionEvaluator {
 
     /** 关键词匹配模式：含有关键词即可触发（宽松子串包含，缺省默认）。 */
     public static final String KEYWORD_MATCH_CONTAINS = "contains";
+
+    /**
+     * 针盒针公式：包名含 {@code (针N盒1)} / {@code (针-N盒-1)} 或 {@code 针盒N针M}，
+     * 不得用裸词「针」exact_token（会误伤 {@code 针-5/z7534} 等普通小件包）。
+     */
+    public static final String KEYWORD_MATCH_NEEDLE_BOX = "needle_box";
+
+    /** {@code (针5盒1)}、{@code (针-8盒-1)} 等括号内针盒针公式。 */
+    private static final Pattern NEEDLE_BOX_IN_PARENS =
+            Pattern.compile("\\(针[-－]?\\d+盒[-－]?\\d*\\)");
+
+    /** {@code 针盒1针58} 等紧凑写法（不含「车针盒6件盒1」类名称）。 */
+    private static final Pattern NEEDLE_BOX_COMPACT =
+            Pattern.compile("(?:^|[^\\p{Script=Han}])针盒\\d+针\\d+");
 
     /**
      * 读取规则上的 keywordMatchMode 字段，缺省或非法值回退为 contains。
@@ -69,9 +84,14 @@ public final class BillingConditionEvaluator {
                     continue;
                 }
                 String mode = pk.mode() != null ? pk.mode() : defaultMode;
-                boolean hit = KEYWORD_MATCH_CONTAINS.equalsIgnoreCase(mode)
-                        ? normalizedText.contains(normalizeMatchText(pk.keyword()).toLowerCase())
-                        : matchesKeywordExactToken(text, pk.keyword());
+                boolean hit;
+                if (KEYWORD_MATCH_NEEDLE_BOX.equalsIgnoreCase(mode)) {
+                    hit = matchesNeedleBoxFormula(text);
+                } else if (KEYWORD_MATCH_CONTAINS.equalsIgnoreCase(mode)) {
+                    hit = normalizedText.contains(normalizeMatchText(pk.keyword()).toLowerCase());
+                } else {
+                    hit = matchesKeywordExactToken(text, pk.keyword());
+                }
                 if (hit) {
                     return true;
                 }
@@ -99,7 +119,11 @@ public final class BillingConditionEvaluator {
         for (ParsedKeyword pk : parsed) {
             String mode = pk.mode() != null ? pk.mode() : defaultMode;
             String kwLower = normalizeMatchText(pk.keyword()).toLowerCase();
-            if (KEYWORD_MATCH_CONTAINS.equalsIgnoreCase(mode)) {
+            if (KEYWORD_MATCH_NEEDLE_BOX.equalsIgnoreCase(mode)) {
+                if (matchesNeedleBoxFormula(text)) {
+                    return new ExactTokenKeywordMatch("needle_box", 0, compact);
+                }
+            } else if (KEYWORD_MATCH_CONTAINS.equalsIgnoreCase(mode)) {
                 int idx = compactLower.indexOf(kwLower);
                 if (idx >= 0) {
                     return new ExactTokenKeywordMatch(
@@ -127,7 +151,7 @@ public final class BillingConditionEvaluator {
 
     /**
      * 将逗号分隔的关键词串解析为词级模式列表。
-     * 语法：{@code 词}、{@code 词@contains}、{@code 词@exact}、{@code 词@exact_token}。
+     * 语法：{@code 词}、{@code 词@contains}、{@code 词@exact}、{@code 词@exact_token}、{@code 针盒针@needle_box}。
      * 未识别的 @ 后缀原样保留，避免误伤含 @ 的普通关键词。
      */
     public static List<ParsedKeyword> parseKeywordList(String raw) {
@@ -151,10 +175,27 @@ public final class BillingConditionEvaluator {
                     result.add(new ParsedKeyword(trimmed.substring(0, at).trim(), KEYWORD_MATCH_EXACT_TOKEN));
                     continue;
                 }
+                if (KEYWORD_MATCH_NEEDLE_BOX.equals(suffix) || "needlebox".equals(suffix)) {
+                    result.add(new ParsedKeyword(trimmed.substring(0, at).trim(), KEYWORD_MATCH_NEEDLE_BOX));
+                    continue;
+                }
             }
             result.add(new ParsedKeyword(trimmed, null));
         }
         return result;
+    }
+
+    /**
+     * Excel「包名称带针多少盒1」：括号内 {@code (针N盒1)} 或紧凑 {@code 针盒N针M}。
+     * 不匹配裸 {@code 针-N}、{@code 缝合针}、{@code 机扩针-6盒1} 等。
+     */
+    public static boolean matchesNeedleBoxFormula(String text) {
+        if (text == null || text.isBlank()) {
+            return false;
+        }
+        String normalized = normalizeMatchText(text);
+        return NEEDLE_BOX_IN_PARENS.matcher(normalized).find()
+                || NEEDLE_BOX_COMPACT.matcher(normalized).find();
     }
 
     public static boolean hospitalMatches(JsonNode rule, String hospitalName) {
@@ -612,77 +653,11 @@ public final class BillingConditionEvaluator {
      * 对齐 Excel「敷料包（无纺布）」与账单「敷料包(无纺布包)」等写法。
      */
     public static boolean packTypeEquivalent(String expected, String actual) {
-        String e = canonicalPackTypeLabel(expected);
-        String a = canonicalPackTypeLabel(actual);
-        if (e.equals(a)) {
-            return true;
-        }
-        if (dressingNonWovenPackType(e) && dressingNonWovenPackType(a)) {
-            return true;
-        }
-        if (extraPaperPlasticPackType(e) && extraPaperPlasticPackType(a)) {
-            return true;
-        }
-        if (extraLowTempPlasmaPackType(e) && extraLowTempPlasmaPackType(a)) {
-            return true;
-        }
-        if (extraNonWovenPackType(e) && extraNonWovenPackType(a)) {
-            return true;
-        }
-        if (extraEtoPackType(e) && extraEtoPackType(a)) {
-            return true;
-        }
-        if (lowTempEtoComboPackType(e) && lowTempEtoComboPackType(a)) {
-            return true;
-        }
-        if (instrumentPackType(e) && instrumentPackType(a)) {
-            return true;
-        }
-        if (singlePackLowTempPackType(e) && singlePackLowTempPackType(a)) {
-            return true;
-        }
-        return false;
+        return PackTypeRegistry.packTypeEquivalent(expected, actual);
     }
 
     public static String canonicalPackTypeLabel(String type) {
-        if (type == null) {
-            return "";
-        }
-        return normalizeMatchText(type)
-                .replace("(无纺布包)", "(无纺布)")
-                .toLowerCase();
-    }
-
-    private static boolean dressingNonWovenPackType(String canonical) {
-        return canonical.contains("敷料包") && canonical.contains("无纺布");
-    }
-
-    private static boolean extraPaperPlasticPackType(String canonical) {
-        return canonical.contains("额外包") && canonical.contains("纸塑袋");
-    }
-
-    private static boolean extraLowTempPlasmaPackType(String canonical) {
-        return canonical.contains("额外包") && canonical.contains("低温等离子");
-    }
-
-    private static boolean extraNonWovenPackType(String canonical) {
-        return canonical.contains("额外包") && canonical.contains("无纺布") && !canonical.contains("纸塑袋");
-    }
-
-    private static boolean extraEtoPackType(String canonical) {
-        return canonical.contains("额外包") && canonical.contains("eto");
-    }
-
-    private static boolean lowTempEtoComboPackType(String canonical) {
-        return canonical.contains("低温等离子") && canonical.contains("eto");
-    }
-
-    private static boolean instrumentPackType(String canonical) {
-        return canonical.contains("器械包");
-    }
-
-    private static boolean singlePackLowTempPackType(String canonical) {
-        return canonical.contains("单包装") && canonical.contains("低温");
+        return PackTypeRegistry.normalizeTypeLabel(type);
     }
 
     public static boolean originalUnitPriceMatches(JsonNode rule, Double unitPrice) {

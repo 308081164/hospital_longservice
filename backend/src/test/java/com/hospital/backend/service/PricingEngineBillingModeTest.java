@@ -24,8 +24,8 @@ class PricingEngineBillingModeTest {
                 "totalPrice", 16.5
         ));
         assertThat(result.status).isEqualTo("warning");
-        assertThat(result.expectedUnitPrice).isEqualTo(8.0);
-        assertThat(result.pricingRule).contains("高温纸塑袋");
+        assertThat(result.expectedUnitPrice).isEqualTo(16.5);
+        assertThat(result.pricingRule).contains("未识别包装类型");
         assertThat(result.notes).anyMatch(note -> note.contains("混合模式未命中特色规则，走标准灭菌计价"));
     }
 
@@ -84,8 +84,8 @@ class PricingEngineBillingModeTest {
                 "totalPrice", 22.0
         ));
         assertThat(result.status).isEqualTo("warning");
-        assertThat(result.expectedUnitPrice).isEqualTo(16.5);
-        assertThat(result.pricingRule).contains("高温纸塑袋");
+        assertThat(result.expectedUnitPrice).isEqualTo(22.0);
+        assertThat(result.pricingRule).contains("未识别包装类型");
         assertThat(result.notes).anyMatch(note -> note.contains("混合模式未命中特色规则，走标准灭菌计价"));
     }
 }

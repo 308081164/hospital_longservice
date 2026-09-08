@@ -156,6 +156,8 @@ jobs:
           scp -i ~/.ssh/deploy_key -o StrictHostKeyChecking=no -P "${SSH_PORT}" \
             deploy/nginx-hospital.conf \
             deploy/nginx-frontend-shared-net.conf \
+            deploy/archive-prod-release-before-deploy.sh \
+            deploy/rollback-prod-to-archive.sh \
             deploy/verify-billing-on-server.sh \
             deploy/reapply-billing-baseline-on-server.sh \
             deploy/reapply-billing-manifest-on-server.sh \
@@ -169,6 +171,26 @@ jobs:
           scp -i ~/.ssh/deploy_key -o StrictHostKeyChecking=no -P "${SSH_PORT}" \
             deploy/sql/p0-6-billing-toggle.sql \
             "${SSH_USER}@${SSH_HOST}:${DEPLOY_PATH}/deploy/sql/"
+
+      - name: Archive current production release (before pull)
+        env:
+          SSH_HOST: ${{ secrets.SSH_HOST }}
+          SSH_USER: ${{ secrets.SSH_USER }}
+          SSH_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+          SSH_PORT: ${{ secrets.SSH_PORT || 22 }}
+          DEPLOY_PATH: ${{ secrets.DEPLOY_PATH || '/mnt/newdisk/app/Hospital' }}
+        run: |
+          set -e
+          PORT="${SSH_PORT:-22}"
+          DPATH="${DEPLOY_PATH:-/mnt/newdisk/app/Hospital}"
+          mkdir -p ~/.ssh
+          printf '%s\n' "$SSH_KEY" > ~/.ssh/deploy_archive_key
+          chmod 600 ~/.ssh/deploy_archive_key
+          ssh-keyscan -p "$PORT" -H "$SSH_HOST" >> ~/.ssh/known_hosts 2>/dev/null || true
+          ssh -i ~/.ssh/deploy_archive_key -o StrictHostKeyChecking=no -p "$PORT" \
+            "$SSH_USER@$SSH_HOST" \
+            "chmod +x '${DPATH}/deploy/archive-prod-release-before-deploy.sh' 2>/dev/null || true; \
+             DEPLOY_PATH='${DPATH}' bash '${DPATH}/deploy/archive-prod-release-before-deploy.sh'"
 
       - name: Pull service images on server (runner SSH)
         env:
@@ -406,6 +428,8 @@ jobs:
           ssh -i ~/.ssh/deploy_billing_key -o StrictHostKeyChecking=no -p "${SSH_PORT}" \
             "${SSH_USER}@${SSH_HOST}" "mkdir -p '${DEPLOY_PATH}/deploy/sql'"
           scp -i ~/.ssh/deploy_billing_key -o StrictHostKeyChecking=no -P "${SSH_PORT}" \
+            deploy/archive-prod-release-before-deploy.sh \
+            deploy/rollback-prod-to-archive.sh \
             deploy/verify-billing-on-server.sh \
             deploy/reapply-billing-baseline-on-server.sh \
             deploy/reapply-billing-manifest-on-server.sh \

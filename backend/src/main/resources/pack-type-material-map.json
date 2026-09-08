@@ -1,0 +1,102 @@
+{
+  "source": "docs/包类型与包材对照表.xlsx",
+  "version": "2026-09-08",
+  "packTypes": [
+    {
+      "canonical": "器械包",
+      "aliases": ["器械包"],
+      "allowedMaterials": ["NON_WOVEN"],
+      "sterilization": "HIGH_TEMP"
+    },
+    {
+      "canonical": "器械包（低温等离子）",
+      "aliases": ["器械包(低温等离子)", "器械包（低温等离子）"],
+      "allowedMaterials": ["NON_WOVEN", "LOW_TEMP_PAPER"],
+      "sterilization": "LOW_TEMP_EO"
+    },
+    {
+      "canonical": "器械包（ETO）",
+      "aliases": ["器械包(ETO)", "器械包（ETO）", "器械包(EO)", "器械包（EO）"],
+      "allowedMaterials": ["NON_WOVEN"],
+      "sterilization": "LOW_TEMP_EO"
+    },
+    {
+      "canonical": "器械包(zsd）",
+      "aliases": ["器械包(ZSD)", "器械包(zsd)", "器械包（ZSD）", "器械包（zsd）"],
+      "allowedMaterials": ["NON_WOVEN", "HIGH_TEMP_PAPER"],
+      "sterilization": "HIGH_TEMP"
+    },
+    {
+      "canonical": "单包装包",
+      "aliases": ["单包装包"],
+      "allowedMaterials": ["NON_WOVEN", "HIGH_TEMP_PAPER"],
+      "sterilization": "HIGH_TEMP"
+    },
+    {
+      "canonical": "单包装包（EO）",
+      "aliases": ["单包装包(EO)", "单包装包（EO）", "单包装包(ETO)", "单包装包（ETO）"],
+      "allowedMaterials": ["NON_WOVEN", "HIGH_TEMP_PAPER"],
+      "sterilization": "LOW_TEMP_EO"
+    },
+    {
+      "canonical": "单包装包（老肯低温）",
+      "aliases": ["单包装包(老肯低温)", "单包装包（老肯低温）"],
+      "allowedMaterials": ["NON_WOVEN", "LOW_TEMP_PAPER"],
+      "sterilization": "LOW_TEMP_EO"
+    },
+    {
+      "canonical": "额外包（纸塑袋）",
+      "aliases": ["额外包(纸塑袋)", "额外包（纸塑袋）"],
+      "allowedMaterials": ["HIGH_TEMP_PAPER"],
+      "sterilization": "HIGH_TEMP"
+    },
+    {
+      "canonical": "额外包（低温等离子）",
+      "aliases": ["额外包(低温等离子)", "额外包（低温等离子）"],
+      "allowedMaterials": ["NON_WOVEN", "LOW_TEMP_PAPER"],
+      "sterilization": "LOW_TEMP_EO"
+    },
+    {
+      "canonical": "额外包（ETO）",
+      "aliases": ["额外包(ETO)", "额外包（ETO）", "额外包(EO)", "额外包（EO）"],
+      "allowedMaterials": ["NON_WOVEN", "HIGH_TEMP_PAPER"],
+      "sterilization": "LOW_TEMP_EO"
+    },
+    {
+      "canonical": "额外包（无纺布）",
+      "aliases": ["额外包(无纺布)", "额外包（无纺布）", "额外包(无纺布包)", "额外包（无纺布包）"],
+      "allowedMaterials": ["NON_WOVEN"],
+      "sterilization": "HIGH_TEMP"
+    },
+    {
+      "canonical": "敷料包",
+      "aliases": ["敷料包"],
+      "allowedMaterials": ["NONE"],
+      "sterilization": "HIGH_TEMP"
+    },
+    {
+      "canonical": "敷料包（无纺布）",
+      "aliases": ["敷料包(无纺布)", "敷料包（无纺布）", "敷料包(无纺布包)", "敷料包（无纺布包）"],
+      "allowedMaterials": ["NON_WOVEN"],
+      "sterilization": "HIGH_TEMP"
+    },
+    {
+      "canonical": "敷料包（纸塑袋）",
+      "aliases": ["敷料包(纸塑袋)", "敷料包（纸塑袋）"],
+      "allowedMaterials": ["HIGH_TEMP_PAPER"],
+      "sterilization": "HIGH_TEMP"
+    },
+    {
+      "canonical": "骨科租赁器械包-带植入物",
+      "aliases": ["骨科租赁器械包-带植入物", "骨科租赁器械包—带植入物"],
+      "allowedMaterials": ["NON_WOVEN", "HIGH_TEMP_PAPER"],
+      "sterilization": "HIGH_TEMP"
+    },
+    {
+      "canonical": "骨科租赁器械包-不带植入物",
+      "aliases": ["骨科租赁器械包-不带植入物", "骨科租赁器械包—不带植入物"],
+      "allowedMaterials": ["NON_WOVEN", "HIGH_TEMP_PAPER"],
+      "sterilization": "HIGH_TEMP"
+    }
+  ]
+}

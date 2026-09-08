@@ -1,29 +1,32 @@
 package com.hospital.backend.service;
 
+import com.hospital.backend.service.PackTypeRegistry.MaterialFamily;
+import com.hospital.backend.service.PackTypeRegistry.PackTypeDefinition;
+
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 /**
- * 账单行字段校验（error 级）：单价为 0 时所有包类型均记异常（敷料包不豁免，
- * 驱血带/敷料包 0 元导入退化路径正是需要被发现的行）；敷料包类型豁免包装材料/器械数两项；
- * 其余包类型在包装材料为空或器械数为 0 时记异常。
- * 产出 billing_validation 结构（severity=error），前端按「字段核对错误」红色高亮，
- * 与 BillRowFieldConsistencyValidator 的 amber 一致性核对互补。
+ * 账单行字段校验（error 级）：单价为 0 时所有包类型均记异常；
+ * 包类型须在对照表 16 种之内；包材须与包类型允许列表一致（尺寸/克重后缀忽略）；
+ * 敷料包类型豁免器械数为 0；允许「无包材」的敷料包豁免包装材料为空。
  */
 public final class BillRowBillingValidator {
 
     public static final String CODE_BLANK_PACKAGE_MATERIAL = "BLANK_PACKAGE_MATERIAL";
     public static final String CODE_ZERO_INSTRUMENT_COUNT = "ZERO_INSTRUMENT_COUNT";
     public static final String CODE_ZERO_UNIT_PRICE = "ZERO_UNIT_PRICE";
+    public static final String CODE_UNKNOWN_PACK_TYPE = "UNKNOWN_PACK_TYPE";
+    public static final String CODE_PACK_TYPE_MATERIAL_MISMATCH = "PACK_TYPE_MATERIAL_MISMATCH";
     public static final String SEVERITY_ERROR = "error";
 
     private BillRowBillingValidator() {}
 
     public record Violation(String code, String message, String severity, Map<String, Object> fields) {}
 
-    /** 不校验单价的兼容入口（单价缺失时跳过 ZERO_UNIT_PRICE 检查）。 */
     public static List<Violation> validate(String type, String packageMaterial, int instrumentCount) {
         return validate(type, packageMaterial, instrumentCount, null);
     }
@@ -41,10 +44,36 @@ public final class BillRowBillingValidator {
                     SEVERITY_ERROR,
                     fields));
         }
-        if (isDressingPackType(type)) {
+
+        Optional<PackTypeDefinition> packType = PackTypeRegistry.match(type);
+        if (packType.isEmpty()) {
+            Map<String, Object> fields = new LinkedHashMap<>();
+            fields.put("type", type == null ? "" : type);
+            violations.add(new Violation(
+                    CODE_UNKNOWN_PACK_TYPE,
+                    "包类型不在对照表 16 种之内，请按《包类型与包材对照表》填写",
+                    SEVERITY_ERROR,
+                    fields));
             return violations;
         }
-        if (packageMaterial == null || packageMaterial.isBlank()) {
+
+        PackTypeDefinition def = packType.get();
+        MaterialFamily materialFamily = PackTypeRegistry.classifyMaterial(packageMaterial);
+        if (!PackTypeRegistry.materialAllowed(def, packageMaterial)) {
+            Map<String, Object> fields = new LinkedHashMap<>();
+            fields.put("type", type == null ? "" : type);
+            fields.put("packageMaterial", packageMaterial == null ? "" : packageMaterial);
+            fields.put("allowedMaterials", PackTypeRegistry.allowedMaterialsText(def));
+            String actual = PackTypeRegistry.describeMaterialFamily(materialFamily);
+            violations.add(new Violation(
+                    CODE_PACK_TYPE_MATERIAL_MISMATCH,
+                    "包装材料与包类型不符（类型「" + def.canonical()
+                            + "」仅允许：" + PackTypeRegistry.allowedMaterialsText(def)
+                            + "，当前识别为：" + actual + "）",
+                    SEVERITY_ERROR,
+                    fields));
+        } else if (materialFamily == MaterialFamily.NONE
+                && !PackTypeRegistry.allowsBlankMaterial(def)) {
             Map<String, Object> fields = new LinkedHashMap<>();
             fields.put("type", type == null ? "" : type);
             fields.put("packageMaterial", "");
@@ -53,6 +82,10 @@ public final class BillRowBillingValidator {
                     "包装材料为空",
                     SEVERITY_ERROR,
                     fields));
+        }
+
+        if (PackTypeRegistry.isDressingPackType(type)) {
+            return violations;
         }
         if (instrumentCount == 0) {
             Map<String, Object> fields = new LinkedHashMap<>();
@@ -65,11 +98,6 @@ public final class BillRowBillingValidator {
                     fields));
         }
         return violations;
-    }
-
-    /** 敷料包类型豁免：包装材料/器械数列允许留空或为 0。 */
-    private static boolean isDressingPackType(String type) {
-        return type != null && type.contains("敷料包");
     }
 
     public static Map<String, Object> toBillingNotes(List<Violation> violations) {

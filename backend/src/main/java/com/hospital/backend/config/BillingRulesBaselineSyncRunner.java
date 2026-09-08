@@ -61,11 +61,15 @@ public class BillingRulesBaselineSyncRunner implements CommandLineRunner {
                 updateManifestMarkersFromClasspath();
                 log.info("Baseline sync 完成：导入/更新 {} 条规则", imported);
             } catch (Exception e) {
-                upsertSetting(SystemVersionInfoService.MANIFEST_RECONCILE_STATUS_KEY,
-                        "FAILED baseline-sync " + Instant.now() + " " + e.getMessage(),
-                        "Last billing rules baseline sync status");
-                syncHealth.markUnhealthy(Map.of("error", e.getMessage()));
                 log.error("Baseline sync 失败: {}", e.getMessage(), e);
+                try {
+                    upsertSetting(SystemVersionInfoService.MANIFEST_RECONCILE_STATUS_KEY,
+                            truncateSettingValue("FAILED baseline-sync " + Instant.now() + " " + e.getMessage()),
+                            "Last billing rules baseline sync status");
+                } catch (Exception persistEx) {
+                    log.warn("无法写入 baseline sync 失败状态: {}", persistEx.getMessage());
+                }
+                syncHealth.markUnhealthy(Map.of("error", e.getMessage()));
                 if (failOnVerifyError) {
                     throw new IllegalStateException("Billing baseline sync failed", e);
                 }
@@ -148,5 +152,14 @@ public class BillingRulesBaselineSyncRunner implements CommandLineRunner {
             return "(none)";
         }
         return hash.length() <= 12 ? hash : hash.substring(0, 12) + "…";
+    }
+
+    /** sys_setting.setting_value 在部分环境为 VARCHAR，避免写入过长状态文本导致启动失败。 */
+    private static String truncateSettingValue(String value) {
+        if (value == null) {
+            return "";
+        }
+        int maxLen = 480;
+        return value.length() <= maxLen ? value : value.substring(0, maxLen) + "…";
     }
 }

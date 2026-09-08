@@ -3,11 +3,15 @@ package com.hospital.backend.common;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.databind.node.ArrayNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import lombok.extern.slf4j.Slf4j;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -219,5 +223,44 @@ public class JsonUtils {
      */
     public static ObjectMapper getObjectMapper() {
         return OBJECT_MAPPER;
+    }
+
+    /**
+     * 将 JSON 文本规范化为稳定字符串（对象键按字典序），用于规则签名校验。
+     */
+    public static String canonicalJsonText(String raw) {
+        if (raw == null || raw.isBlank()) {
+            return null;
+        }
+        try {
+            JsonNode node = OBJECT_MAPPER.readTree(raw);
+            return OBJECT_MAPPER.writeValueAsString(sortJsonNodeKeys(node));
+        } catch (JsonProcessingException e) {
+            return raw.trim();
+        }
+    }
+
+    private static JsonNode sortJsonNodeKeys(JsonNode node) {
+        if (node == null || node.isNull()) {
+            return node;
+        }
+        if (node.isObject()) {
+            ObjectNode sorted = OBJECT_MAPPER.createObjectNode();
+            List<String> fieldNames = new ArrayList<>();
+            node.fieldNames().forEachRemaining(fieldNames::add);
+            fieldNames.sort(String::compareTo);
+            for (String name : fieldNames) {
+                sorted.set(name, sortJsonNodeKeys(node.get(name)));
+            }
+            return sorted;
+        }
+        if (node.isArray()) {
+            ArrayNode sorted = OBJECT_MAPPER.createArrayNode();
+            for (JsonNode child : node) {
+                sorted.add(sortJsonNodeKeys(child));
+            }
+            return sorted;
+        }
+        return node;
     }
 }

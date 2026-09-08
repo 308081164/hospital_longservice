@@ -1,7 +1,7 @@
 {
   "version": 1,
-  "generated_at": "2026-09-07T15:09:13Z",
-  "manifest_hash": "35085e485bb910f8e2eec7836a736b1292919ad9630154be1a5789aa4ef0a1c9",
+  "generated_at": "2026-09-08T08:51:06Z",
+  "manifest_hash": "dae4f51a2c839899bf1fb8b9ac98cdfbb0eaa524abc2f41cd9cc59a05ab948f2",
   "billing_enabled_count": 29,
   "active_billing_enabled_count": 29,
   "customers": {
@@ -295,6 +295,19 @@
           "acceptedTypes": [
             "额外包（纸塑袋）"
           ]
+        },
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "电机厂高温纸塑袋",
+          "priority": 8,
+          "price": 3.5,
+          "keywords": [
+            "双纸塑@contains"
+          ],
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": true,
+          "matchMode": "first"
         },
         {
           "ruleType": "FIXED_PRICE",
@@ -713,8 +726,8 @@
           ]
         }
       ],
-      "rule_count": 30,
-      "active_rule_count": 30
+      "rule_count": 31,
+      "active_rule_count": 31
     },
     "FNN-YY": {
       "code": "FNN-YY",
@@ -1797,7 +1810,7 @@
           "name": "妇幼人口针盒针5合1含包材",
           "priority": 10,
           "keywords": [
-            "针"
+            "针盒针@needle_box"
           ],
           "threshold": 5,
           "foldRatio": 5,
@@ -1817,7 +1830,7 @@
           "name": "妇幼人口针盒针5合1免包材",
           "priority": 11,
           "keywords": [
-            "针"
+            "针盒针@needle_box"
           ],
           "threshold": 5,
           "foldRatio": 5,
@@ -2816,7 +2829,7 @@
           "name": "平房人民针盒针5合1免包材",
           "priority": 11,
           "keywords": [
-            "针",
+            "针盒针@needle_box",
             "缝合针"
           ],
           "threshold": 5,
@@ -2838,7 +2851,7 @@
           "name": "平房人民针盒针5合1含包材",
           "priority": 10,
           "keywords": [
-            "针",
+            "针盒针@needle_box",
             "缝合针"
           ],
           "threshold": 5,
@@ -3172,59 +3185,6 @@
         },
         {
           "ruleType": "FIXED_PRICE",
-          "name": "校正价22.0",
-          "priority": 10,
-          "price": 22.0,
-          "keywords": [
-            "器械包-4件"
-          ],
-          "skipPackaging": true,
-          "skipDiscount": true,
-          "isActive": true,
-          "matchMode": "first"
-        },
-        {
-          "ruleType": "FIXED_PRICE",
-          "name": "校正价30.0",
-          "priority": 11,
-          "price": 30.0,
-          "keywords": [
-            "纱布条"
-          ],
-          "skipPackaging": true,
-          "skipDiscount": true,
-          "isActive": true,
-          "matchMode": "first"
-        },
-        {
-          "ruleType": "FIXED_PRICE",
-          "name": "校正价33.0",
-          "priority": 12,
-          "price": 33.0,
-          "keywords": [
-            "排针包48件盘1",
-            "美容科排针包50件盘1"
-          ],
-          "skipPackaging": true,
-          "skipDiscount": true,
-          "isActive": true,
-          "matchMode": "first"
-        },
-        {
-          "ruleType": "FIXED_PRICE",
-          "name": "校正价38.5",
-          "priority": 13,
-          "price": 38.5,
-          "keywords": [
-            "排针包51件盘1"
-          ],
-          "skipPackaging": true,
-          "skipDiscount": true,
-          "isActive": true,
-          "matchMode": "first"
-        },
-        {
-          "ruleType": "FIXED_PRICE",
           "name": "祖研三辅export 探针刨刀16.5",
           "priority": 3,
           "price": 16.5,
@@ -3285,8 +3245,8 @@
           "isActive": true
         }
       ],
-      "rule_count": 9,
-      "active_rule_count": 9
+      "rule_count": 5,
+      "active_rule_count": 5
     },
     "AOLAN-YY": {
       "code": "AOLAN-YY",

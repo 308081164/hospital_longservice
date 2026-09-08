@@ -249,7 +249,7 @@ public class BaselineRuleSyncServiceImpl implements BaselineRuleSyncService {
         rule.setSkipPackaging(bool(ruleNode, "skipPackaging", false));
         rule.setSkipDiscount(bool(ruleNode, "skipDiscount", false));
         rule.setMatchMode(text(ruleNode, "matchMode", "first"));
-        rule.setKeywordMatchMode(textOrNull(ruleNode, "keywordMatchMode"));
+        rule.setKeywordMatchMode(defaultKeywordMatchMode(textOrNull(ruleNode, "keywordMatchMode")));
         if (ruleNode.has("acceptedPrices")) {
             rule.setAcceptedPrices(ruleNode.get("acceptedPrices").toString());
         }
@@ -262,7 +262,7 @@ public class BaselineRuleSyncServiceImpl implements BaselineRuleSyncService {
             conditionsJson = BillingConditionEvaluator.mergeAcceptedTypesIntoConditions(
                     conditionsJson, ruleNode.get("acceptedTypes"));
         }
-        rule.setConditionsJson(conditionsJson);
+        rule.setConditionsJson(JsonUtils.canonicalJsonText(conditionsJson));
         if (ruleNode.has("isActive")) {
             rule.setIsActive(bool(ruleNode, "isActive", true));
         } else if (insert) {
@@ -291,6 +291,10 @@ public class BaselineRuleSyncServiceImpl implements BaselineRuleSyncService {
             values.add(item.asText());
         }
         return JsonUtils.toJson(values);
+    }
+
+    private static String defaultKeywordMatchMode(String mode) {
+        return mode == null || mode.isBlank() ? "exact_token" : mode;
     }
 
     private static String text(JsonNode node, String field) {

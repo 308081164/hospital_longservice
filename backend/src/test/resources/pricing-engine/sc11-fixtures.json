@@ -549,8 +549,8 @@
       },
       "expect": {
         "status": "warning",
-        "expectedUnitPrice": 5.5,
-        "pricingRuleContains": "方盘"
+        "expectedUnitPrice": 8.0,
+        "pricingRuleContains": "高温纸塑袋10cm"
       },
       "billingRef": "manifest#JIUZHOU-FK#billingEnabled=true,hybrid",
       "valid": true,
@@ -601,8 +601,8 @@
       },
       "expect": {
         "status": "warning",
-        "expectedUnitPrice": 16.5,
-        "pricingRuleContains": "抛光车针盒"
+        "expectedUnitPrice": 33.0,
+        "pricingRuleContains": "高温纸塑袋10cm"
       },
       "billingRef": "特殊收费(12).xlsx#社会康复#抛光车针盒6件盒1",
       "valid": true,
@@ -1050,8 +1050,8 @@
       },
       "expect": {
         "status": "warning",
-        "expectedUnitPrice": 8.0,
-        "pricingRuleContains": "高温纸塑袋"
+        "expectedUnitPrice": 16.5,
+        "pricingRuleContains": "未识别包装类型"
       },
       "valid": true,
       "skipParameterized": false
@@ -1073,9 +1073,9 @@
         "totalPrice": 5.5
       },
       "expect": {
-        "status": "unchanged",
-        "expectedUnitPrice": 5.5,
-        "pricingRuleContains": "方盘"
+        "status": "warning",
+        "expectedUnitPrice": 8.0,
+        "pricingRuleContains": "高温纸塑袋10cm"
       },
       "valid": true,
       "skipParameterized": false,

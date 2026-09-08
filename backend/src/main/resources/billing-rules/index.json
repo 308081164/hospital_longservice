@@ -1,6 +1,6 @@
 {
-  "baseline_hash": "ae472184672bd03678405fe8f36e4d9922f58f62e6aabf8a6a1d2bbb5522a41e",
-  "generated_at": "2026-09-07T14:48:41Z",
+  "baseline_hash": "1234153c4f58632202d76f04db25f63d12cf4d4076552f78573ac25a78ae1795",
+  "generated_at": "2026-09-08T08:47:22Z",
   "source": "billing-rules-manifest@01836c66115726ff7229db58f16020cb6e65f7069beee13551669c1031fd7764",
   "customer_count": 29,
   "customers": [
@@ -13,8 +13,8 @@
     {
       "code": "GUOYAO-2",
       "file": "baseline/GUOYAO-2.json",
-      "ruleCount": 30,
-      "fileHash": "8c0cb8b8876633c2d12b80707e74cb51c67c3039b2bb639282e8b1ebe314772a"
+      "ruleCount": 31,
+      "fileHash": "b37ea7764bddf5057e2408c4ecf964b0cb1fec95c6810fe7129e18465cdd1692"
     },
     {
       "code": "FNN-YY",
@@ -74,7 +74,7 @@
       "code": "HLJ-FY-RK",
       "file": "baseline/HLJ-FY-RK.json",
       "ruleCount": 28,
-      "fileHash": "e84110f0c405bfea481ddd900a82cbde71bfbb72599e7b950e9e7a4e565561b2"
+      "fileHash": "6ee11eea7a1a885d304e44f9ddea520077e52f0a9428e5c4dd443b16fb2c9955"
     },
     {
       "code": "ZUYAN-NG",
@@ -134,7 +134,7 @@
       "code": "PFQ-RM",
       "file": "baseline/PFQ-RM.json",
       "ruleCount": 2,
-      "fileHash": "d7dada1f615ae611e6ba6f36398d21c4ecccedb8961bebcc0fef011b2dbd6e7d"
+      "fileHash": "d78cc580d6289417bcb2a4e87d30f3d375173a24a19037f12652ce678dc53d7f"
     },
     {
       "code": "HULAN-RM",
@@ -157,8 +157,8 @@
     {
       "code": "ZUYAN-SF",
       "file": "baseline/ZUYAN-SF.json",
-      "ruleCount": 9,
-      "fileHash": "7f38ba3a4b13db60efa0b0f5f8d50f47cfbab1319ad3fc85faed3f9407c513af"
+      "ruleCount": 5,
+      "fileHash": "84d09dbde7fbddb75b325b6f95979a90962d4ef1aed10f4ee4a7e92ec2fd7051"
     },
     {
       "code": "AOLAN-YY",

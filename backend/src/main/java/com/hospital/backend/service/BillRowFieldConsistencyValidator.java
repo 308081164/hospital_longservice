@@ -49,21 +49,23 @@ public final class BillRowFieldConsistencyValidator {
             }
         }
 
-        String typeMaterialClass = PackNameSpecParser.inferMaterialClassFromType(type);
-        String materialClass = PackNameSpecParser.inferMaterialClassFromMaterial(packageMaterial);
-        if (typeMaterialClass != null && materialClass != null
-                && !typeMaterialClass.equals(materialClass)) {
-            Map<String, Object> fields = new LinkedHashMap<>();
-            fields.put("typeMaterialClass", typeMaterialClass);
-            fields.put("materialClass", materialClass);
-            fields.put("type", type);
-            fields.put("packageMaterial", packageMaterial);
-            violations.add(new Violation(
-                    CODE_MATERIAL_CLASS_MISMATCH,
-                    "包类型与包装材料类别不一致（类型：" + describeMaterialClass(typeMaterialClass)
-                            + "，包装材料：" + describeMaterialClass(materialClass) + "）",
-                    fields));
-        }
+        PackTypeRegistry.match(type).ifPresent(def -> {
+            PackTypeRegistry.MaterialFamily actual = PackTypeRegistry.classifyMaterial(packageMaterial);
+            if (actual != PackTypeRegistry.MaterialFamily.UNKNOWN
+                    && actual != PackTypeRegistry.MaterialFamily.NONE
+                    && !def.allowedMaterials().contains(actual)) {
+                Map<String, Object> fields = new LinkedHashMap<>();
+                fields.put("type", type);
+                fields.put("packageMaterial", packageMaterial);
+                fields.put("allowedMaterials", PackTypeRegistry.allowedMaterialsText(def));
+                violations.add(new Violation(
+                        CODE_MATERIAL_CLASS_MISMATCH,
+                        "包类型与包装材料类别不一致（类型「" + def.canonical()
+                                + "」仅允许：" + PackTypeRegistry.allowedMaterialsText(def)
+                                + "，包装材料识别为：" + PackTypeRegistry.describeMaterialFamily(actual) + "）",
+                        fields));
+            }
+        });
 
         Integer namePieceCount = PackNameSpecParser.extractTotalPieceCountFromPackName(packName);
         if (namePieceCount == null
@@ -109,15 +111,6 @@ public final class BillRowFieldConsistencyValidator {
         billingNotes.put("type", "field_consistency");
         billingNotes.put("violations", items);
         return billingNotes;
-    }
-
-    private static String describeMaterialClass(String materialClass) {
-        return switch (materialClass) {
-            case "PAPER_PLASTIC" -> "纸塑袋";
-            case "NON_WOVEN" -> "无纺布";
-            case "COTTON_DRESSING" -> "敷料/棉";
-            default -> materialClass;
-        };
     }
 
     /**
