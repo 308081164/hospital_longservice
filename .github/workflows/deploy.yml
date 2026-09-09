@@ -349,9 +349,24 @@ jobs:
           }
 
           echo "==> 校验生产 backend 版本 == 本次提交 ${GITHUB_SHA}"
-          VER_BODY="$(run_ssh "curl -sS --connect-timeout 5 http://127.0.0.1:8853/api/v1/base/version")"
-          echo "$VER_BODY"
-          ACTUAL_SHA="$(printf '%s' "$VER_BODY" | python3 -c 'import sys,json; print((json.load(sys.stdin).get("data") or {}).get("gitSha") or "")')"
+          VER_BODY=""
+          ACTUAL_SHA=""
+          for round in $(seq 1 12); do
+            if VER_BODY="$(run_ssh "curl -sS --connect-timeout 5 http://127.0.0.1:8853/api/v1/base/version" 2>/dev/null)"; then
+              ACTUAL_SHA="$(printf '%s' "$VER_BODY" | python3 -c 'import sys,json; print((json.load(sys.stdin).get("data") or {}).get("gitSha") or "")' 2>/dev/null || true)"
+              if [ -n "$ACTUAL_SHA" ]; then
+                echo "$VER_BODY"
+                break
+              fi
+            fi
+            echo "[parity] 第 ${round} 轮 /version 暂不可用，等待 backend 稳定…"
+            sleep 5
+          done
+          if [ -z "$ACTUAL_SHA" ]; then
+            echo "错误: 无法在约 60s 内读取生产 /version" >&2
+            run_ssh "docker logs --tail 120 hospital-backend 2>&1" || true
+            exit 1
+          fi
           if [ "$ACTUAL_SHA" != "$GITHUB_SHA" ]; then
             echo "错误: 生产 backend gitSha=${ACTUAL_SHA:-未知} != 期望 ${GITHUB_SHA}（旧容器/旧镜像仍在服务）" >&2
             run_ssh "docker inspect hospital-backend --format 'container_image={{.Config.Image}} image_id={{.Image}}'" || true

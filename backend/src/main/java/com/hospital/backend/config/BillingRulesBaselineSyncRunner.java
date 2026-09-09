@@ -50,29 +50,14 @@ public class BillingRulesBaselineSyncRunner implements CommandLineRunner {
         }
 
         String dbHash = readSetting(SystemVersionInfoService.BASELINE_HASH_KEY);
-        boolean needsImport = !classpathHash.equals(dbHash);
+        boolean hashChanged = !classpathHash.equals(dbHash);
+        boolean imported = false;
 
-        if (needsImport) {
-            log.info("Baseline hash 变化（db={} classpath={}），开始全量 sync", shortHash(dbHash), shortHash(classpathHash));
-            try {
-                int imported = baselineRuleSyncService.importAllBaselines(false);
-                upsertSetting(SystemVersionInfoService.BASELINE_HASH_KEY, classpathHash,
-                        "Classpath billing-rules/index.json baseline_hash");
-                updateManifestMarkersFromClasspath();
-                log.info("Baseline sync 完成：导入/更新 {} 条规则", imported);
-            } catch (Exception e) {
-                log.error("Baseline sync 失败: {}", e.getMessage(), e);
-                try {
-                    upsertSetting(SystemVersionInfoService.MANIFEST_RECONCILE_STATUS_KEY,
-                            truncateSettingValue("FAILED baseline-sync " + Instant.now() + " " + e.getMessage()),
-                            "Last billing rules baseline sync status");
-                } catch (Exception persistEx) {
-                    log.warn("无法写入 baseline sync 失败状态: {}", persistEx.getMessage());
-                }
-                syncHealth.markUnhealthy(Map.of("error", e.getMessage()));
-                if (failOnVerifyError) {
-                    throw new IllegalStateException("Billing baseline sync failed", e);
-                }
+        if (hashChanged) {
+            log.info("Baseline hash 变化（db={} classpath={}），开始全量 sync",
+                    shortHash(dbHash), shortHash(classpathHash));
+            imported = importBaselines(classpathHash);
+            if (!imported) {
                 return;
             }
         } else {
@@ -80,6 +65,13 @@ public class BillingRulesBaselineSyncRunner implements CommandLineRunner {
         }
 
         Map<String, Object> verify = rulesVerificationService.verifyAll();
+        if (!Boolean.TRUE.equals(verify.get("ok")) && !imported) {
+            log.warn("Baseline hash 未变但 verify 失败（{}），强制全量 re-import 自愈", verify);
+            imported = importBaselines(classpathHash);
+            if (imported) {
+                verify = rulesVerificationService.verifyAll();
+            }
+        }
         if (!Boolean.TRUE.equals(verify.get("ok"))) {
             upsertSetting(SystemVersionInfoService.MANIFEST_RECONCILE_STATUS_KEY,
                     "FAILED verify " + Instant.now(),
@@ -98,10 +90,35 @@ public class BillingRulesBaselineSyncRunner implements CommandLineRunner {
         upsertSetting(SystemVersionInfoService.MANIFEST_RECONCILED_AT_KEY, Instant.now().toString(),
                 "Last billing rules baseline sync / verify time");
         syncHealth.markHealthy();
-        if (needsImport) {
+        if (imported) {
             log.info("Baseline verify OK（hash={}）", shortHash(classpathHash));
         } else {
             log.debug("Baseline verify OK（hash 未变）");
+        }
+    }
+
+    private boolean importBaselines(String classpathHash) {
+        try {
+            int imported = baselineRuleSyncService.importAllBaselines(false);
+            upsertSetting(SystemVersionInfoService.BASELINE_HASH_KEY, classpathHash,
+                    "Classpath billing-rules/index.json baseline_hash");
+            updateManifestMarkersFromClasspath();
+            log.info("Baseline sync 完成：导入/更新 {} 条规则", imported);
+            return true;
+        } catch (Exception e) {
+            log.error("Baseline sync 失败: {}", e.getMessage(), e);
+            try {
+                upsertSetting(SystemVersionInfoService.MANIFEST_RECONCILE_STATUS_KEY,
+                        truncateSettingValue("FAILED baseline-sync " + Instant.now() + " " + e.getMessage()),
+                        "Last billing rules baseline sync status");
+            } catch (Exception persistEx) {
+                log.warn("无法写入 baseline sync 失败状态: {}", persistEx.getMessage());
+            }
+            syncHealth.markUnhealthy(Map.of("error", e.getMessage()));
+            if (failOnVerifyError) {
+                throw new IllegalStateException("Billing baseline sync failed", e);
+            }
+            return false;
         }
     }
 

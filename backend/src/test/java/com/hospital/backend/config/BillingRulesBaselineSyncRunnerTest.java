@@ -76,11 +76,31 @@ class BillingRulesBaselineSyncRunnerTest {
         when(baselineRuleIndex.baselineHash()).thenReturn("same");
         when(sysSettingMapper.selectByKey(SystemVersionInfoService.BASELINE_HASH_KEY))
                 .thenReturn(setting(SystemVersionInfoService.BASELINE_HASH_KEY, "same"));
-        when(rulesVerificationService.verifyAll()).thenReturn(Map.of("ok", false, "failedCustomers", List.of("HRB-WY")));
+        when(baselineRuleSyncService.importAllBaselines(false)).thenReturn(10);
+        when(rulesVerificationService.verifyAll())
+                .thenReturn(Map.of("ok", false, "failedCustomers", List.of("HRB-WY")))
+                .thenReturn(Map.of("ok", false, "failedCustomers", List.of("HRB-WY")));
 
         runner.run();
 
+        verify(baselineRuleSyncService).importAllBaselines(false);
         verify(syncHealth).markUnhealthy(any());
+    }
+
+    @Test
+    void reimportsWhenHashUnchangedButVerifyFailsThenRecovers() throws Exception {
+        when(baselineRuleIndex.baselineHash()).thenReturn("same");
+        when(sysSettingMapper.selectByKey(SystemVersionInfoService.BASELINE_HASH_KEY))
+                .thenReturn(setting(SystemVersionInfoService.BASELINE_HASH_KEY, "same"));
+        when(baselineRuleSyncService.importAllBaselines(false)).thenReturn(12);
+        when(rulesVerificationService.verifyAll())
+                .thenReturn(Map.of("ok", false, "totalExtra", 3))
+                .thenReturn(Map.of("ok", true));
+
+        runner.run();
+
+        verify(baselineRuleSyncService).importAllBaselines(false);
+        verify(syncHealth).markHealthy();
     }
 
     @Test
