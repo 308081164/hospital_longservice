@@ -1,7 +1,7 @@
 {
   "version": 1,
-  "generated_at": "2026-09-08T08:51:06Z",
-  "manifest_hash": "dae4f51a2c839899bf1fb8b9ac98cdfbb0eaa524abc2f41cd9cc59a05ab948f2",
+  "generated_at": "2026-09-09T06:38:14Z",
+  "manifest_hash": "350dff7ad77add2c9b99bf282f7b75d4b282fd4cb58002513128f663d5731425",
   "billing_enabled_count": 29,
   "active_billing_enabled_count": 29,
   "customers": {
@@ -2829,8 +2829,7 @@
           "name": "平房人民针盒针5合1免包材",
           "priority": 11,
           "keywords": [
-            "针盒针@needle_box",
-            "缝合针"
+            "针盒针@needle_box"
           ],
           "threshold": 5,
           "foldRatio": 5,
@@ -2851,8 +2850,7 @@
           "name": "平房人民针盒针5合1含包材",
           "priority": 10,
           "keywords": [
-            "针盒针@needle_box",
-            "缝合针"
+            "针盒针@needle_box"
           ],
           "threshold": 5,
           "foldRatio": 5,

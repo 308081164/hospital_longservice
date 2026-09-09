@@ -4063,7 +4063,7 @@ class PricingEngineTest {
         ObjectNode noBag = foldRules.addObject();
         noBag.put("name", "平房人民针盒针5合1免包材");
         noBag.putArray("hospitals").add("哈尔滨市平房区人民医院");
-        noBag.putArray("keywords").add("针盒针@needle_box").add("缝合针");
+        noBag.putArray("keywords").add("针盒针@needle_box");
         noBag.put("threshold", 5);
         noBag.put("foldRatio", 5);
         noBag.put("extraCount", 1);
@@ -4082,6 +4082,52 @@ class PricingEngineTest {
         assertThat(result.pricingRule).contains("平房人民针盒针5合1免包材");
         assertThat(result.notes).anyMatch(n -> n.contains("折算为 13 件"));
         assertThat(result.notes).anyMatch(n -> n.contains("含额外 1 件"));
+    }
+
+    @Test
+    void pfqSutureNeedleTwoPieceUsesGlobalFoldNotNeedleBox() throws Exception {
+        ObjectNode rules = (ObjectNode) defaultRules();
+        rules.putObject("billingProfile").put("enabled", true).put("pricingMode", "hybrid");
+        ArrayNode foldRules = ((ObjectNode) rules.path("specialRules")).withArray("foldRules");
+        ObjectNode withBag = foldRules.addObject();
+        withBag.put("name", "平房人民针盒针5合1含包材");
+        withBag.put("priority", 10);
+        withBag.putArray("hospitals").add("哈尔滨市平房区人民医院");
+        withBag.putArray("keywords").add("针盒针@needle_box");
+        withBag.put("threshold", 5);
+        withBag.put("foldRatio", 5);
+        withBag.put("extraCount", 1);
+        withBag.put("maxInstrumentCount", 6);
+        ObjectNode noBag = foldRules.addObject();
+        noBag.put("name", "平房人民针盒针5合1免包材");
+        noBag.put("priority", 11);
+        noBag.putArray("hospitals").add("哈尔滨市平房区人民医院");
+        noBag.putArray("keywords").add("针盒针@needle_box");
+        noBag.put("threshold", 5);
+        noBag.put("foldRatio", 5);
+        noBag.put("extraCount", 1);
+        noBag.put("minInstrumentCount", 7);
+        noBag.put("skipPackaging", true);
+        ObjectNode globalSuture = foldRules.addObject();
+        globalSuture.put("name", "通用缝合针按1件含包材");
+        globalSuture.put("priority", 49);
+        globalSuture.putArray("keywords").add("缝合针");
+        globalSuture.put("threshold", 99999);
+        globalSuture.put("foldRatio", 99999);
+        globalSuture.put("skipPackaging", false);
+        globalSuture.put("unitPrice", 5.5);
+
+        PricingEngine engine = new PricingEngine(rules);
+        PricingEngine.ProcessedResult result = engine.processRow(row(
+                "哈尔滨市平房区人民医院",
+                "额外包（纸塑袋）",
+                "缝合针-2件/Z7520",
+                "高温纸塑袋75*200",
+                2, 1, 8.0, 8.0));
+
+        assertThat(result.expectedUnitPrice).isEqualTo(8.0);
+        assertThat(result.pricingRule).contains("通用缝合针按1件含包材");
+        assertThat(result.pricingRule).doesNotContain("平房人民针盒针");
     }
 
     @Test

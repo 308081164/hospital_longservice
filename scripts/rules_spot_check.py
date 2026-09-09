@@ -695,6 +695,19 @@ PFQ_RM_SPOT_CHECKS: list[dict[str, Any]] = [
         "expectedUnitPrice": 71.5,
         "priceTol": 0.02,
     },
+    {
+        "name": "平房人民缝合针2件8元",
+        "department": "妇病",
+        "packName": "缝合针-2件/Z7520",
+        "type": "额外包（纸塑袋）",
+        "packageMaterial": "高温纸塑袋75*200",
+        "instrumentCount": 2,
+        "packCount": 1,
+        "unitPrice": 8.0,
+        "totalPrice": 8.0,
+        "expectedUnitPrice": 8.0,
+        "priceTol": 0.02,
+    },
 ]
 
 CHUNYU_YL_SPOT_CHECKS: list[dict[str, Any]] = [
