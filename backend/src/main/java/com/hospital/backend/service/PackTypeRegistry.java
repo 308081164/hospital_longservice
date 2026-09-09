@@ -76,7 +76,12 @@ public final class PackTypeRegistry {
         if (e.isPresent() && a.isPresent()) {
             return e.get().canonical().equals(a.get().canonical());
         }
-        return normalizeTypeLabel(expected).equals(normalizeTypeLabel(actual));
+        String expectedNorm = normalizeTypeLabel(expected);
+        String actualNorm = normalizeTypeLabel(actual);
+        if ("额外包".equals(expectedNorm) && actualNorm.startsWith("额外包")) {
+            return a.isPresent() && a.get().canonical().startsWith("额外包");
+        }
+        return expectedNorm.equals(actualNorm);
     }
 
     public static MaterialFamily classifyMaterial(String packageMaterial) {

@@ -647,6 +647,19 @@ HAIYUAN_SB_SPOT_CHECKS: list[dict[str, Any]] = [
         "expectedUnitPrice": 44.0,
         "priceTol": 0.5,
     },
+    {
+        "name": "海员胶帽16件88",
+        "department": "手术室",
+        "packName": "胶帽-16/z1026",
+        "type": "额外包(低温等离子)",
+        "packageMaterial": "低温纸塑袋10cm",
+        "instrumentCount": 16,
+        "packCount": 1,
+        "unitPrice": 88.0,
+        "totalPrice": 88.0,
+        "expectedUnitPrice": 88.0,
+        "priceTol": 0.5,
+    },
 ]
 
 HLJ_FY_RK_HOSPITAL = "黑龙江省妇幼保健院（人口）"
@@ -667,6 +680,19 @@ HLJ_FY_RK_SPOT_CHECKS: list[dict[str, Any]] = [
         "priceTol": 1.0,
     },
     {
+        "name": "妇幼人口垫片3件28",
+        "department": "手术室",
+        "packName": "垫片-3/Z7520",
+        "type": "额外包(低温等离子)",
+        "packageMaterial": "低温纸塑袋200*200",
+        "instrumentCount": 3,
+        "packCount": 1,
+        "unitPrice": 28.0,
+        "totalPrice": 28.0,
+        "expectedUnitPrice": 28.0,
+        "priceTol": 1.0,
+    },
+    {
         "name": "妇幼人口针盒针8针1盒9件16.5",
         "department": "口腔科",
         "packName": "全冠套装(针-8盒-1)/Z1526",
@@ -677,6 +703,19 @@ HLJ_FY_RK_SPOT_CHECKS: list[dict[str, Any]] = [
         "unitPrice": 16.5,
         "totalPrice": 16.5,
         "expectedUnitPrice": 16.5,
+        "priceTol": 0.02,
+    },
+    {
+        "name": "妇幼人口针7盒1件44",
+        "department": "口腔科",
+        "packName": "全冠套装(针7盒1)/Z1526",
+        "type": "额外包(纸塑袋)",
+        "packageMaterial": "高温纸塑袋15cm",
+        "instrumentCount": 35,
+        "packCount": 1,
+        "unitPrice": 44.0,
+        "totalPrice": 44.0,
+        "expectedUnitPrice": 44.0,
         "priceTol": 0.02,
     },
 ]
@@ -892,7 +931,16 @@ def run_spot_check(
     else:
         rule_id = 1
 
-    hospital = hospital_name or customer.get("name") or customer.get("canonicalName") or code
+    canonical_name = customer.get("canonicalName") or customer.get("canonical_name")
+    if not canonical_name:
+        try:
+            detail = client.get(f"/api/v1/customers/{customer_id}")
+            detail_row = detail.get("data") or {}
+            canonical_name = detail_row.get("canonical_name") or detail_row.get("canonicalName")
+        except Exception:
+            canonical_name = None
+
+    hospital = hospital_name or canonical_name or customer.get("name") or code
     if code == "HRB-2ND":
         hospital = HRB_2ND_HOSPITAL
     if code == "ZYY-D1":

@@ -111,6 +111,18 @@ def main() -> int:
     if proc.returncode != 0:
         errors.append("医院清单对齐失败")
 
+    g6_proc = subprocess.run(
+        [sys.executable, str(ROOT / "scripts/check_accepted_types_runtime.py")],
+        cwd=ROOT,
+        capture_output=True,
+        text=True,
+    )
+    if g6_proc.returncode != 0:
+        errors.append("G6 acceptedTypes 运行时 type 门控检查失败")
+        for line in (g6_proc.stderr or "").splitlines():
+            if line.strip().startswith("- "):
+                errors.append(line.strip()[2:])
+
     gap_proc = subprocess.run(
         [sys.executable, str(ROOT / "scripts/keyword_gap_scan.py")],
         cwd=ROOT,

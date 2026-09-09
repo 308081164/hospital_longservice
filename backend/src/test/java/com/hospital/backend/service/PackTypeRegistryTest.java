@@ -51,4 +51,19 @@ class PackTypeRegistryTest {
     void unknownPackTypeDoesNotMatch() {
         assertThat(PackTypeRegistry.match("高温灭菌")).isEmpty();
     }
+
+    @Test
+    void matchesLegacyAcceptedTypeShorthands() {
+        assertThat(PackTypeRegistry.match("额外包低温等离子"))
+                .map(PackTypeRegistry.PackTypeDefinition::canonical)
+                .contains("额外包（低温等离子）");
+        assertThat(PackTypeRegistry.packTypeEquivalent("额外包低温等离子", "额外包(低温等离子)"))
+                .isTrue();
+        assertThat(PackTypeRegistry.packTypeEquivalent("单包装（低温老肯）", "单包装包(老肯低温)"))
+                .isTrue();
+        assertThat(PackTypeRegistry.packTypeEquivalent("单包装", "单包装包"))
+                .isTrue();
+        assertThat(PackTypeRegistry.packTypeEquivalent("额外包", "额外包(纸塑袋)"))
+                .isTrue();
+    }
 }

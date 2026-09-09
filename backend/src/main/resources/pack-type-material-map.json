@@ -28,7 +28,7 @@
     },
     {
       "canonical": "单包装包",
-      "aliases": ["单包装包"],
+      "aliases": ["单包装包", "单包装"],
       "allowedMaterials": ["NON_WOVEN", "HIGH_TEMP_PAPER"],
       "sterilization": "HIGH_TEMP"
     },
@@ -40,7 +40,12 @@
     },
     {
       "canonical": "单包装包（老肯低温）",
-      "aliases": ["单包装包(老肯低温)", "单包装包（老肯低温）"],
+      "aliases": [
+        "单包装包(老肯低温)",
+        "单包装包（老肯低温）",
+        "单包装（低温老肯）",
+        "单包装(低温老肯)"
+      ],
       "allowedMaterials": ["NON_WOVEN", "LOW_TEMP_PAPER"],
       "sterilization": "LOW_TEMP_EO"
     },
@@ -52,7 +57,11 @@
     },
     {
       "canonical": "额外包（低温等离子）",
-      "aliases": ["额外包(低温等离子)", "额外包（低温等离子）"],
+      "aliases": [
+        "额外包(低温等离子)",
+        "额外包（低温等离子）",
+        "额外包低温等离子"
+      ],
       "allowedMaterials": ["NON_WOVEN", "LOW_TEMP_PAPER"],
       "sterilization": "LOW_TEMP_EO"
     },

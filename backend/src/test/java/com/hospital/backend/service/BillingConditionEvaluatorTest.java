@@ -158,4 +158,12 @@ class BillingConditionEvaluatorTest {
         assertThat(BillingConditionEvaluator.packTypeEquivalent("额外包（纸塑袋）", "额外包(纸塑袋)"))
                 .isTrue();
     }
+
+    @Test
+    void packTypeEquivalentAcceptsBaselineAcceptedTypeShorthands() {
+        assertThat(BillingConditionEvaluator.packTypeEquivalent("额外包低温等离子", "额外包(低温等离子)"))
+                .isTrue();
+        assertThat(BillingConditionEvaluator.packTypeEquivalent("单包装（低温老肯）", "单包装包（老肯低温）"))
+                .isTrue();
+    }
 }
