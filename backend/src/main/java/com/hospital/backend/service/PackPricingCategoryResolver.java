@@ -27,14 +27,45 @@ public final class PackPricingCategoryResolver {
         }
         MaterialFamily materialFamily = PackTypeRegistry.classifyMaterial(packageMaterial);
         if (!PackTypeRegistry.materialAllowed(def.get(), packageMaterial)) {
-            return new Resolution(PackPricingCategory.UNKNOWN,
-                    "包材「" + (packageMaterial == null ? "" : packageMaterial)
-                            + "」与包类型「" + def.get().canonical()
-                            + "」允许包材（" + PackTypeRegistry.allowedMaterialsText(def.get()) + "）不符");
+            if (materialFamily == MaterialFamily.UNKNOWN || materialFamily == MaterialFamily.NONE) {
+                return new Resolution(PackPricingCategory.UNKNOWN,
+                        "包材「" + (packageMaterial == null ? "" : packageMaterial)
+                                + "」与包类型「" + def.get().canonical()
+                                + "」允许包材（" + PackTypeRegistry.allowedMaterialsText(def.get()) + "）不符");
+            }
+            PackPricingCategory category = pricingCategoryOnMaterialMismatch(
+                    def.get(), materialFamily, packName);
+            String note = "包材「" + (packageMaterial == null ? "" : packageMaterial)
+                    + "」与包类型「" + def.get().canonical()
+                    + "」允许包材（" + PackTypeRegistry.allowedMaterialsText(def.get()) + "）不符，"
+                    + "按包装材料列「" + PackTypeRegistry.describeMaterialFamily(materialFamily) + "」计价";
+            String extraNote = buildNote(def.get(), materialFamily, packName);
+            if (extraNote != null) {
+                note = note + "；" + extraNote;
+            }
+            return new Resolution(category, note);
         }
         PackPricingCategory category = PackTypeRegistry.pricingCategory(def.get(), materialFamily, packName);
         String note = buildNote(def.get(), materialFamily, packName);
         return new Resolution(category, note);
+    }
+
+    /**
+     * 类型与包装材料列不一致时，以包装材料列识别出的包材族推导计价通道（仍保留字段核对告警）。
+     */
+    private static PackPricingCategory pricingCategoryOnMaterialMismatch(
+            PackTypeDefinition def, MaterialFamily materialFamily, String packName) {
+        String canonical = def.canonical();
+        if (canonical.contains("敷料包")) {
+            if (materialFamily == MaterialFamily.HIGH_TEMP_PAPER
+                    || materialFamily == MaterialFamily.LOW_TEMP_PAPER) {
+                return PackPricingCategory.DRESSING_PAPER;
+            }
+            if (materialFamily == MaterialFamily.NON_WOVEN) {
+                return PackPricingCategory.DRESSING_NONWOVEN;
+            }
+        }
+        return PackTypeRegistry.pricingCategory(def, materialFamily, packName);
     }
 
     private static String buildNote(PackTypeDefinition def, MaterialFamily materialFamily, String packName) {

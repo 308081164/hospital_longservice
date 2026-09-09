@@ -68,6 +68,28 @@ class PricingEngineTest {
     }
 
     @Test
+    void materialClassMismatchUsesPackageMaterialForPaperPlasticPricing() {
+        PricingEngine.ProcessedResult result = engine.processRow(row(
+                "博尚医院",
+                "额外包(无纺布)",
+                "碗1盘1/Z2535",
+                "高温纸塑袋250*350",
+                2,
+                1,
+                21.5,
+                21.5
+        ));
+
+        assertThat(result.expectedUnitPrice).isEqualTo(16.5);
+        assertThat(result.pricingRule).contains("高温纸塑袋");
+        assertThat(result.pricingRule).doesNotContain("保留原价");
+        assertThat(result.notes).anyMatch(note -> note.contains("【字段核对】")
+                && note.contains("包类型与包装材料类别不一致"));
+        assertThat(result.notes).noneMatch(note -> note.contains("保留原价"));
+        assertThat(result.status).isEqualTo("warning");
+    }
+
+    @Test
     void blankPackageMaterialOnNonDressingPackForcesWarningWithBillingValidation() {
         PricingEngine.ProcessedResult result = engine.processRow(row(
                 "测试医院",

@@ -95,4 +95,40 @@ class PackPricingCategoryResolverTest {
         assertThat(resolution.category()).isEqualTo(PackPricingCategory.UNKNOWN);
         assertThat(resolution.note()).contains("包材");
     }
+
+    @Test
+    void extraNonWovenTypeWithPaperMaterialUsesPaperPlasticPricing() {
+        var resolution = PackPricingCategoryResolver.resolve(
+                "额外包(无纺布)",
+                "碗1盘1/Z2535",
+                "高温纸塑袋250*350",
+                2,
+                1);
+        assertThat(resolution.category()).isEqualTo(PackPricingCategory.INSTRUMENT_PAPER);
+        assertThat(resolution.note()).contains("按包装材料列").contains("高温纸塑袋");
+    }
+
+    @Test
+    void extraPaperPlasticTypeWithNonWovenMaterialUsesNonWovenPricing() {
+        var resolution = PackPricingCategoryResolver.resolve(
+                "额外包(纸塑袋)",
+                "剪刀-3/z1530",
+                "无纺布-90×90-50g",
+                3,
+                1);
+        assertThat(resolution.category()).isEqualTo(PackPricingCategory.INSTRUMENT_NONWOVEN);
+        assertThat(resolution.note()).contains("按包装材料列").contains("无纺布");
+    }
+
+    @Test
+    void dressingPaperTypeWithNonWovenMaterialUsesDressingNonWovenPricing() {
+        var resolution = PackPricingCategoryResolver.resolve(
+                "敷料包(纸塑袋)",
+                "孔巾/Z2032",
+                "无纺布-90×90-50g",
+                0,
+                1);
+        assertThat(resolution.category()).isEqualTo(PackPricingCategory.DRESSING_NONWOVEN);
+        assertThat(resolution.note()).contains("按包装材料列");
+    }
 }
