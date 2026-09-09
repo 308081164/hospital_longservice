@@ -48,6 +48,9 @@ jobs:
       - name: G5 strict hospital list alignment
         run: python3 scripts/check_strict_hospital_alignment.py
 
+      - name: G6 acceptedTypes runtime type gate
+        run: python3 scripts/check_accepted_types_runtime.py
+
       - name: Set up JDK 17
         uses: actions/setup-java@v4
         with:
