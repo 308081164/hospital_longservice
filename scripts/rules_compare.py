@@ -56,6 +56,62 @@ def _normalize_keywords(val: Any) -> list[str]:
     return []
 
 
+def _normalize_keyword_match_mode(val: Any) -> str | None:
+    if val is None or val == "":
+        return None
+    text = str(val).strip()
+    if not text or text == "exact_token":
+        return None
+    return text
+
+
+def merge_accepted_types_into_conditions(
+    conditions_json: Any,
+    accepted_types: Any,
+) -> str | None:
+    """与 BillingConditionEvaluator.mergeAcceptedTypesIntoConditions 对齐。"""
+    if not accepted_types:
+        return conditions_json if conditions_json not in (None, "") else None
+    if isinstance(accepted_types, str):
+        try:
+            accepted_types = json.loads(accepted_types)
+        except json.JSONDecodeError:
+            accepted_types = [accepted_types]
+    if not isinstance(accepted_types, list) or not accepted_types:
+        return conditions_json if conditions_json not in (None, "") else None
+
+    conditions: list[dict[str, Any]] = []
+    if conditions_json not in (None, ""):
+        raw = conditions_json
+        if isinstance(raw, str):
+            try:
+                raw = json.loads(raw)
+            except json.JSONDecodeError:
+                raw = None
+        if isinstance(raw, list):
+            for item in raw:
+                if not isinstance(item, dict):
+                    continue
+                field = item.get("field")
+                if field in ("type", "packType"):
+                    continue
+                conditions.append(dict(item))
+
+    type_values = [str(x) for x in accepted_types if x is not None and str(x).strip()]
+    if type_values:
+        conditions.append({"field": "type", "operator": "in", "value": type_values})
+    if not conditions:
+        return None
+    return json.dumps(conditions, ensure_ascii=False, separators=(",", ":"))
+
+
+def resolve_conditions_json(rule: dict[str, Any]) -> str | None:
+    conditions = rule.get("conditionsJson") or rule.get("conditions_json")
+    accepted = rule.get("acceptedTypes") or rule.get("accepted_types")
+    merged = merge_accepted_types_into_conditions(conditions, accepted)
+    return _normalize_conditions_json(merged)
+
+
 def _normalize_conditions_json(val: Any) -> str | None:
     if val is None or val == "":
         return None
@@ -87,8 +143,9 @@ def normalize_rule(rule: dict[str, Any]) -> dict[str, Any]:
     rule_type = rule.get("ruleType") or rule.get("rule_type") or "FIXED_PRICE"
     keywords = rule.get("keywords")
     billing_mode = rule.get("billingMode") or rule.get("billing_mode")
-    conditions = rule.get("conditionsJson") or rule.get("conditions_json")
-    keyword_match_mode = rule.get("keywordMatchMode") or rule.get("keyword_match_mode") or "exact_token"
+    keyword_match_mode = _normalize_keyword_match_mode(
+        rule.get("keywordMatchMode") or rule.get("keyword_match_mode")
+    )
     return {
         "name": str(rule.get("name") or "").strip(),
         "ruleType": str(rule_type),
@@ -98,9 +155,9 @@ def normalize_rule(rule: dict[str, Any]) -> dict[str, Any]:
         "foldRatio": _as_float(fold),
         "threshold": int(threshold) if threshold is not None else None,
         "isActive": bool(is_active),
-        "conditionsJson": _normalize_conditions_json(conditions),
+        "conditionsJson": resolve_conditions_json(rule),
         "billingMode": str(billing_mode) if billing_mode else None,
-        "keywordMatchMode": str(keyword_match_mode),
+        "keywordMatchMode": keyword_match_mode,
     }
 
 
