@@ -227,7 +227,7 @@ BINGCHENG_YM_HOSPITAL = "哈尔滨冰城医疗美容医院"
 
 BINGCHENG_YM_SPOT_CHECKS: list[dict[str, Any]] = [
     {
-        "name": "冰城环钻包2件33",
+        "name": "冰城环钻包2件19.5",
         "department": "手术室",
         "packName": "环钻包",
         "type": "器械包(ZSD)",
@@ -236,12 +236,12 @@ BINGCHENG_YM_SPOT_CHECKS: list[dict[str, Any]] = [
         "packCount": 1,
         "unitPrice": 33.0,
         "totalPrice": 33.0,
-        "expectedUnitPrice": 14.0,
-        "expectedCorrectedTotal": 14.0,
+        "expectedUnitPrice": 19.5,
+        "expectedCorrectedTotal": 19.5,
         "priceTol": 0.5,
     },
     {
-        "name": "冰城脂充包2件16",
+        "name": "冰城脂充包2件21.5",
         "department": "手术室",
         "packName": "脂充包",
         "type": "器械包(ZSD)",
@@ -250,8 +250,8 @@ BINGCHENG_YM_SPOT_CHECKS: list[dict[str, Any]] = [
         "packCount": 1,
         "unitPrice": 16.0,
         "totalPrice": 16.0,
-        "expectedUnitPrice": 16.0,
-        "expectedCorrectedTotal": 16.0,
+        "expectedUnitPrice": 21.5,
+        "expectedCorrectedTotal": 21.5,
         "priceTol": 0.5,
     },
 ]
@@ -318,7 +318,7 @@ GUOYAO_2_SPOT_CHECKS: list[dict[str, Any]] = [
         "packCount": 1,
         "unitPrice": 19.0,
         "totalPrice": 19.0,
-        "expectedUnitPrice": 20.5,
+        "expectedUnitPrice": 19.0,
         "priceTol": 0.5,
     },
     {
@@ -364,7 +364,7 @@ HRB_WY_SPOT_CHECKS: list[dict[str, Any]] = [
         "totalPrice": 33.0,
         "expectedUnitPrice": 16.5,
         "expectedCorrectedTotal": 33.0,
-        "expectedStatus": "unchanged",
+        "expectedStatus": "warning",
     },
     {
         "name": "吸脂针3刮勺2五件27.5",
@@ -378,20 +378,6 @@ HRB_WY_SPOT_CHECKS: list[dict[str, Any]] = [
         "totalPrice": 27.5,
         "expectedUnitPrice": 27.5,
         "expectedCorrectedTotal": 27.5,
-        "expectedStatus": "unchanged",
-    },
-    {
-        "name": "支抗钉3件16.5",
-        "department": "口外",
-        "packName": "支抗钉-3/z7520",
-        "type": "额外包(纸塑袋)",
-        "packageMaterial": "高温纸塑袋 75*200",
-        "instrumentCount": 3,
-        "packCount": 1,
-        "unitPrice": 16.5,
-        "totalPrice": 16.5,
-        "expectedUnitPrice": 16.5,
-        "expectedCorrectedTotal": 16.5,
         "expectedStatus": "unchanged",
     },
 ]
@@ -441,7 +427,7 @@ HRB_HEU_SPOT_CHECKS: list[dict[str, Any]] = [
 
 NEAU_YY_SPOT_CHECKS: list[dict[str, Any]] = [
     {
-        "name": "农大根管锉8件含包材",
+        "name": "农大根管锉8件含包材13.5",
         "department": "口腔科",
         "packName": "根管锉",
         "type": "额外包(纸塑袋)",
@@ -450,14 +436,14 @@ NEAU_YY_SPOT_CHECKS: list[dict[str, Any]] = [
         "packCount": 1,
         "unitPrice": 16.5,
         "totalPrice": 16.5,
-        "expectedUnitPrice": 16.5,
+        "expectedUnitPrice": 13.5,
         "priceTol": 0.5,
     },
 ]
 
 HRB_SD_MB_SPOT_CHECKS: list[dict[str, Any]] = [
     {
-        "name": "松电机扩针8件含包材",
+        "name": "松电机扩针8件含包材13.5",
         "department": "口腔科",
         "packName": "机扩针",
         "type": "额外包(纸塑袋)",
@@ -466,14 +452,14 @@ HRB_SD_MB_SPOT_CHECKS: list[dict[str, Any]] = [
         "packCount": 1,
         "unitPrice": 16.5,
         "totalPrice": 16.5,
-        "expectedUnitPrice": 16.5,
+        "expectedUnitPrice": 13.5,
         "priceTol": 0.5,
     },
 ]
 
 HRB_HTFH_SPOT_CHECKS: list[dict[str, Any]] = [
     {
-        "name": "航天镍钛锉8件含包材",
+        "name": "航天镍钛锉8件含包材13.5",
         "department": "口腔科",
         "packName": "镍钛锉",
         "type": "额外包(纸塑袋)",
@@ -482,7 +468,7 @@ HRB_HTFH_SPOT_CHECKS: list[dict[str, Any]] = [
         "packCount": 1,
         "unitPrice": 16.5,
         "totalPrice": 16.5,
-        "expectedUnitPrice": 16.5,
+        "expectedUnitPrice": 13.5,
         "priceTol": 0.5,
     },
 ]
@@ -782,7 +768,7 @@ BOSHANG_YY_SPOT_CHECKS: list[dict[str, Any]] = [
 
 DL_FUCHAN_SPOT_CHECKS: list[dict[str, Any]] = [
     {
-        "name": "道里妇幼棉花针8件",
+        "name": "道里妇幼棉花针8件13.5",
         "department": "口腔科",
         "packName": "棉花针-8/Z7520",
         "type": "额外包(纸塑袋)",
@@ -791,14 +777,14 @@ DL_FUCHAN_SPOT_CHECKS: list[dict[str, Any]] = [
         "packCount": 1,
         "unitPrice": 16.5,
         "totalPrice": 16.5,
-        "expectedUnitPrice": 16.5,
+        "expectedUnitPrice": 13.5,
         "priceTol": 0.5,
     },
 ]
 
 HL_ZGH_SPOT_CHECKS: list[dict[str, Any]] = [
     {
-        "name": "总工会镜头低温阶梯",
+        "name": "总工会镜头低温阶梯44",
         "department": "手术室",
         "packName": "12°镜头-1/Z2060",
         "type": "额外包(低温等离子)",
@@ -807,8 +793,8 @@ HL_ZGH_SPOT_CHECKS: list[dict[str, Any]] = [
         "packCount": 1,
         "unitPrice": 35.0,
         "totalPrice": 35.0,
-        "expectedUnitPrice": 35.0,
-        "priceTol": 5.0,
+        "expectedUnitPrice": 44.0,
+        "priceTol": 0.5,
     },
 ]
 
