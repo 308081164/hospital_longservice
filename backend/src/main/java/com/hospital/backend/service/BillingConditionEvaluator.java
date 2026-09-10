@@ -88,7 +88,7 @@ public final class BillingConditionEvaluator {
                 if (KEYWORD_MATCH_NEEDLE_BOX.equalsIgnoreCase(mode)) {
                     hit = matchesNeedleBoxFormula(text);
                 } else if (KEYWORD_MATCH_CONTAINS.equalsIgnoreCase(mode)) {
-                    hit = normalizedText.contains(normalizeMatchText(pk.keyword()).toLowerCase());
+                    hit = matchesKeywordContains(text, pk.keyword());
                 } else {
                     hit = matchesKeywordExactToken(text, pk.keyword());
                 }
@@ -124,10 +124,13 @@ public final class BillingConditionEvaluator {
                     return new ExactTokenKeywordMatch("needle_box", 0, compact);
                 }
             } else if (KEYWORD_MATCH_CONTAINS.equalsIgnoreCase(mode)) {
-                int idx = compactLower.indexOf(kwLower);
-                if (idx >= 0) {
-                    return new ExactTokenKeywordMatch(
-                            compact.substring(idx, idx + kwLower.length()), idx, compact);
+                int idx = 0;
+                while ((idx = compactLower.indexOf(kwLower, idx)) != -1) {
+                    if (!isAngleKeywordLeadingDigitBlocked(compact, idx, pk.keyword())) {
+                        return new ExactTokenKeywordMatch(
+                                compact.substring(idx, idx + kwLower.length()), idx, compact);
+                    }
+                    idx += kwLower.length();
                 }
             } else {
                 int idx = 0;
@@ -135,7 +138,8 @@ public final class BillingConditionEvaluator {
                     char prev = idx > 0 ? compactLower.charAt(idx - 1) : 0;
                     char next = idx + kwLower.length() < compactLower.length()
                             ? compactLower.charAt(idx + kwLower.length()) : 0;
-                    if (isKeywordTokenBoundary(prev) && isKeywordTokenBoundary(next)) {
+                    if (isKeywordTokenBoundary(prev) && isKeywordTokenBoundary(next)
+                            && !isAngleKeywordLeadingDigitBlocked(compact, idx, pk.keyword())) {
                         return new ExactTokenKeywordMatch(
                                 compact.substring(idx, idx + kwLower.length()), idx, compact);
                     }
@@ -272,11 +276,48 @@ public final class BillingConditionEvaluator {
                 char prev = idx > 0 ? normalized.charAt(idx - 1) : 0;
                 char next = idx + part.length() < normalized.length()
                         ? normalized.charAt(idx + part.length()) : 0;
-                if (isKeywordTokenBoundary(prev) && isKeywordTokenBoundary(next)) {
+                if (isKeywordTokenBoundary(prev) && isKeywordTokenBoundary(next)
+                        && !isAngleKeywordLeadingDigitBlocked(normalized, idx, part)) {
                     return true;
                 }
                 idx += part.length();
             }
+        }
+        return false;
+    }
+
+    /** 含角度数字的关键词（如 {@code 0°膀胱镜}）不得作为更长数字的子串命中（{@code 30°膀胱镜}）。 */
+    static boolean isAngleKeywordLeadingDigitBlocked(String text, int matchStart, String keyword) {
+        if (!isAngleDigitKeyword(keyword) || matchStart <= 0) {
+            return false;
+        }
+        char prev = text.charAt(matchStart - 1);
+        return Character.isDigit(prev) || (prev >= '０' && prev <= '９');
+    }
+
+    private static boolean isAngleDigitKeyword(String keyword) {
+        if (keyword == null || keyword.isEmpty()) {
+            return false;
+        }
+        char first = keyword.charAt(0);
+        if (!Character.isDigit(first) && (first < '０' || first > '９')) {
+            return false;
+        }
+        return keyword.indexOf('°') >= 0 || keyword.contains("度");
+    }
+
+    private static boolean matchesKeywordContains(String text, String keyword) {
+        String normalizedText = normalizeMatchText(text).toLowerCase();
+        String kwLower = normalizeMatchText(keyword).toLowerCase();
+        if (kwLower.isBlank()) {
+            return false;
+        }
+        int idx = 0;
+        while ((idx = normalizedText.indexOf(kwLower, idx)) != -1) {
+            if (!isAngleKeywordLeadingDigitBlocked(normalizedText, idx, keyword)) {
+                return true;
+            }
+            idx += kwLower.length();
         }
         return false;
     }

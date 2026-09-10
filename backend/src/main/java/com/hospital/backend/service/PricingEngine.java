@@ -337,7 +337,9 @@ public class PricingEngine {
         Long matchedRuleId = foldMatchedRuleId;
         SpecialPriceResult specialPrice = preMatchedSpecialPrice != null
                 ? preMatchedSpecialPrice
-                : findSpecialFixedPrice(row, bagSize, effectiveCount, matchedProductId, matchedVariantId);
+                : (appliedSpecialFoldRule
+                        ? null
+                        : findSpecialFixedPrice(row, bagSize, effectiveCount, matchedProductId, matchedVariantId));
 
         // ---- 特殊类型优先处理 ----
         if (specialPrice != null) {
@@ -1216,23 +1218,30 @@ public class PricingEngine {
         JsonNode extraFees = rules.path("specialRules").path("extraFees");
         List<SpecialFeeResult> matchedFees = new ArrayList<>();
         if (extraFees.isArray()) {
-            for (JsonNode rule : extraFees) {
-                SpecialFeeResult matched = matchExtraFeeRule(rule, str(row, "packName"), combined, hospitalName, bagSize, billingCount);
+            List<JsonNode> ordered = new ArrayList<>();
+            extraFees.forEach(ordered::add);
+            ordered.sort((a, b) -> Integer.compare(
+                    a.path("priority").asInt(Integer.MAX_VALUE),
+                    b.path("priority").asInt(Integer.MAX_VALUE)));
+            for (JsonNode rule : ordered) {
+                SpecialFeeResult matched = matchExtraFeeRule(rule, row, bagSize, billingCount);
                 if (matched != null) {
                     matchedFees.add(matched);
+                    if ("first".equalsIgnoreCase(rule.path("matchMode").asText("first"))) {
+                        break;
+                    }
                 }
             }
         }
         return matchedFees;
     }
 
-    private SpecialFeeResult matchExtraFeeRule(JsonNode rule, String packName, String combined, String hospitalName, int bagSize, int effectiveCount) {
-        if (!hospitalMatches(rule, hospitalName)) return null;
-        if (!BillingConditionEvaluator.matchesRuleKeywords(rule, packName, combined)) return null;
-        if (!bagSizeMatches(rule, bagSize)) return null;
-        int minCount = rule.path("minInstrumentCount").asInt(Integer.MIN_VALUE);
-        int maxCount = rule.path("maxInstrumentCount").asInt(Integer.MAX_VALUE);
-        if (effectiveCount < minCount || effectiveCount > maxCount) return null;
+    private SpecialFeeResult matchExtraFeeRule(JsonNode rule, Map<String, Object> row, int bagSize, int effectiveCount) {
+        BillingConditionEvaluator.RowContext ctx = BillingConditionEvaluator.RowContext.fromRow(
+                row, bagSize, effectiveCount, null, null);
+        if (!BillingConditionEvaluator.matchesRule(rule, ctx)) {
+            return null;
+        }
 
         SpecialFeeResult result = new SpecialFeeResult();
         result.fee = rule.path("fee").asDouble(Double.NaN);

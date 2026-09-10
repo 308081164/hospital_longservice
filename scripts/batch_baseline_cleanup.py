@@ -59,15 +59,6 @@ DELETE_RULE_NAMES: dict[str, set[str]] = {
     },
 }
 
-# 向密封件规则追加关键词（人口垫片归 Excel① 密封件低温组）
-APPEND_KEYWORDS: dict[str, dict[str, list[str]]] = {
-    "HLJ-FY-RK": {
-        "妇幼人口密封件>5折算22": ["垫片@contains"],
-        "妇幼人口密封件≤5按1件": ["垫片@contains"],
-    },
-}
-
-
 def canonical_hash(obj: object) -> str:
     text = json.dumps(obj, ensure_ascii=False, sort_keys=True, separators=(",", ":"))
     return hashlib.sha256(text.encode("utf-8")).hexdigest()
@@ -112,17 +103,6 @@ def apply_fixes(code: str, data: dict) -> dict[str, list[str]]:
                     changes["keywords_tightened"].append(
                         f"{rule.get('name')}: {old_kw} → {expected}"
                     )
-
-    for rule in new_rules:
-        name = rule.get("name", "")
-        extras = (APPEND_KEYWORDS.get(code) or {}).get(name)
-        if not extras:
-            continue
-        kws = list(rule.get("keywords") or [])
-        added = [k for k in extras if k not in kws]
-        if added:
-            rule["keywords"] = kws + added
-            changes["keywords_added"].append(f"{name}: +{added}")
 
     data["productRules"] = new_rules
     return changes

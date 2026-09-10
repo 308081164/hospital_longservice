@@ -1,7 +1,7 @@
 {
   "version": 1,
-  "generated_at": "2026-09-09T06:38:14Z",
-  "manifest_hash": "350dff7ad77add2c9b99bf282f7b75d4b282fd4cb58002513128f663d5731425",
+  "generated_at": "2026-09-10T09:21:04Z",
+  "manifest_hash": "62e4fe9fcc742f858e0cd5387e6adef458facaf0b584b1dacdbc0c9a99520b09",
   "billing_enabled_count": 29,
   "active_billing_enabled_count": 29,
   "customers": {
@@ -739,12 +739,123 @@
       "productRules": [
         {
           "ruleType": "FOLD",
-          "name": "方南南小件5合1免包材",
+          "name": "方南南P钻5合1含包材",
+          "priority": 10,
+          "keywords": [
+            "P钻@contains"
+          ],
+          "threshold": 5,
+          "foldRatio": 5,
+          "maxInstrumentCount": 10,
+          "skipPackaging": false,
+          "isActive": true,
+          "matchMode": "first",
+          "skipDiscount": false,
+          "keywordMatchMode": "exact_token",
+          "acceptedTypes": [
+            "额外包（纸塑袋）"
+          ]
+        },
+        {
+          "ruleType": "FOLD",
+          "name": "方南南光滑针5合1含包材",
+          "priority": 10,
+          "keywords": [
+            "光滑针@contains"
+          ],
+          "threshold": 5,
+          "foldRatio": 5,
+          "maxInstrumentCount": 10,
+          "skipPackaging": false,
+          "isActive": true,
+          "matchMode": "first",
+          "skipDiscount": false,
+          "keywordMatchMode": "exact_token",
+          "acceptedTypes": [
+            "额外包（纸塑袋）"
+          ]
+        },
+        {
+          "ruleType": "FOLD",
+          "name": "方南南机扩针5合1含包材",
+          "priority": 10,
+          "keywords": [
+            "机扩针@contains"
+          ],
+          "threshold": 5,
+          "foldRatio": 5,
+          "maxInstrumentCount": 10,
+          "skipPackaging": false,
+          "isActive": true,
+          "matchMode": "first",
+          "skipDiscount": false,
+          "keywordMatchMode": "exact_token",
+          "acceptedTypes": [
+            "额外包（纸塑袋）"
+          ]
+        },
+        {
+          "ruleType": "FOLD",
+          "name": "方南南根管锉5合1含包材",
+          "priority": 10,
+          "keywords": [
+            "根管锉@contains"
+          ],
+          "threshold": 5,
+          "foldRatio": 5,
+          "maxInstrumentCount": 10,
+          "skipPackaging": false,
+          "isActive": true,
+          "matchMode": "first",
+          "skipDiscount": false,
+          "keywordMatchMode": "exact_token",
+          "acceptedTypes": [
+            "额外包（纸塑袋）"
+          ]
+        },
+        {
+          "ruleType": "FOLD",
+          "name": "方南南P钻5合1免包材",
           "priority": 11,
           "keywords": [
-            "P钻@contains",
-            "根管锉@contains",
-            "光滑针@contains",
+            "P钻@contains"
+          ],
+          "threshold": 5,
+          "foldRatio": 5,
+          "minInstrumentCount": 11,
+          "skipPackaging": true,
+          "isActive": true,
+          "matchMode": "first",
+          "skipDiscount": false,
+          "keywordMatchMode": "exact_token",
+          "acceptedTypes": [
+            "额外包（纸塑袋）"
+          ]
+        },
+        {
+          "ruleType": "FOLD",
+          "name": "方南南光滑针5合1免包材",
+          "priority": 11,
+          "keywords": [
+            "光滑针@contains"
+          ],
+          "threshold": 5,
+          "foldRatio": 5,
+          "minInstrumentCount": 11,
+          "skipPackaging": true,
+          "isActive": true,
+          "matchMode": "first",
+          "skipDiscount": false,
+          "keywordMatchMode": "exact_token",
+          "acceptedTypes": [
+            "额外包（纸塑袋）"
+          ]
+        },
+        {
+          "ruleType": "FOLD",
+          "name": "方南南机扩针5合1免包材",
+          "priority": 11,
+          "keywords": [
             "机扩针@contains"
           ],
           "threshold": 5,
@@ -761,18 +872,15 @@
         },
         {
           "ruleType": "FOLD",
-          "name": "方南南小件5合1含包材",
-          "priority": 10,
+          "name": "方南南根管锉5合1免包材",
+          "priority": 11,
           "keywords": [
-            "P钻@contains",
-            "根管锉@contains",
-            "光滑针@contains",
-            "机扩针@contains"
+            "根管锉@contains"
           ],
           "threshold": 5,
           "foldRatio": 5,
-          "maxInstrumentCount": 10,
-          "skipPackaging": false,
+          "minInstrumentCount": 11,
+          "skipPackaging": true,
           "isActive": true,
           "matchMode": "first",
           "skipDiscount": false,
@@ -782,8 +890,8 @@
           ]
         }
       ],
-      "rule_count": 2,
-      "active_rule_count": 2
+      "rule_count": 8,
+      "active_rule_count": 8
     },
     "NEAU-YY": {
       "code": "NEAU-YY",
@@ -795,12 +903,123 @@
       "productRules": [
         {
           "ruleType": "FOLD",
-          "name": "东北农大小件5合1免包材",
+          "name": "东北农大机锉5合1含包材",
+          "priority": 10,
+          "keywords": [
+            "机锉@contains"
+          ],
+          "threshold": 5,
+          "foldRatio": 5,
+          "maxInstrumentCount": 10,
+          "skipPackaging": false,
+          "isActive": true,
+          "matchMode": "first",
+          "skipDiscount": false,
+          "keywordMatchMode": "exact_token",
+          "acceptedTypes": [
+            "额外包（纸塑袋）"
+          ]
+        },
+        {
+          "ruleType": "FOLD",
+          "name": "东北农大根管针5合1含包材",
+          "priority": 10,
+          "keywords": [
+            "根管针@contains"
+          ],
+          "threshold": 5,
+          "foldRatio": 5,
+          "maxInstrumentCount": 10,
+          "skipPackaging": false,
+          "isActive": true,
+          "matchMode": "first",
+          "skipDiscount": false,
+          "keywordMatchMode": "exact_token",
+          "acceptedTypes": [
+            "额外包（纸塑袋）"
+          ]
+        },
+        {
+          "ruleType": "FOLD",
+          "name": "东北农大根管锉5合1含包材",
+          "priority": 10,
+          "keywords": [
+            "根管锉@contains"
+          ],
+          "threshold": 5,
+          "foldRatio": 5,
+          "maxInstrumentCount": 10,
+          "skipPackaging": false,
+          "isActive": true,
+          "matchMode": "first",
+          "skipDiscount": false,
+          "keywordMatchMode": "exact_token",
+          "acceptedTypes": [
+            "额外包（纸塑袋）"
+          ]
+        },
+        {
+          "ruleType": "FOLD",
+          "name": "东北农大牙探针5合1含包材",
+          "priority": 10,
+          "keywords": [
+            "牙探针@contains"
+          ],
+          "threshold": 5,
+          "foldRatio": 5,
+          "maxInstrumentCount": 10,
+          "skipPackaging": false,
+          "isActive": true,
+          "matchMode": "first",
+          "skipDiscount": false,
+          "keywordMatchMode": "exact_token",
+          "acceptedTypes": [
+            "额外包（纸塑袋）"
+          ]
+        },
+        {
+          "ruleType": "FOLD",
+          "name": "东北农大机锉5合1免包材",
           "priority": 11,
           "keywords": [
-            "根管针@contains",
-            "机锉@contains",
-            "牙探针@contains",
+            "机锉@contains"
+          ],
+          "threshold": 5,
+          "foldRatio": 5,
+          "minInstrumentCount": 11,
+          "skipPackaging": true,
+          "isActive": true,
+          "matchMode": "first",
+          "skipDiscount": false,
+          "keywordMatchMode": "exact_token",
+          "acceptedTypes": [
+            "额外包（纸塑袋）"
+          ]
+        },
+        {
+          "ruleType": "FOLD",
+          "name": "东北农大根管针5合1免包材",
+          "priority": 11,
+          "keywords": [
+            "根管针@contains"
+          ],
+          "threshold": 5,
+          "foldRatio": 5,
+          "minInstrumentCount": 11,
+          "skipPackaging": true,
+          "isActive": true,
+          "matchMode": "first",
+          "skipDiscount": false,
+          "keywordMatchMode": "exact_token",
+          "acceptedTypes": [
+            "额外包（纸塑袋）"
+          ]
+        },
+        {
+          "ruleType": "FOLD",
+          "name": "东北农大根管锉5合1免包材",
+          "priority": 11,
+          "keywords": [
             "根管锉@contains"
           ],
           "threshold": 5,
@@ -817,18 +1036,15 @@
         },
         {
           "ruleType": "FOLD",
-          "name": "东北农大小件5合1含包材",
-          "priority": 10,
+          "name": "东北农大牙探针5合1免包材",
+          "priority": 11,
           "keywords": [
-            "根管针@contains",
-            "机锉@contains",
-            "牙探针@contains",
-            "根管锉@contains"
+            "牙探针@contains"
           ],
           "threshold": 5,
           "foldRatio": 5,
-          "maxInstrumentCount": 10,
-          "skipPackaging": false,
+          "minInstrumentCount": 11,
+          "skipPackaging": true,
           "isActive": true,
           "matchMode": "first",
           "skipDiscount": false,
@@ -838,8 +1054,8 @@
           ]
         }
       ],
-      "rule_count": 2,
-      "active_rule_count": 2
+      "rule_count": 8,
+      "active_rule_count": 8
     },
     "HRB-WY": {
       "code": "HRB-WY",
@@ -1400,13 +1616,92 @@
         },
         {
           "ruleType": "FOLD",
+          "name": "妇幼人口密封胶圈≤5按1件",
+          "priority": 10,
+          "keywords": [
+            "密封胶圈@contains"
+          ],
+          "threshold": 5,
+          "foldRatio": 5,
+          "maxInstrumentCount": 5,
+          "temperature": "LT",
+          "skipPackaging": false,
+          "isActive": true,
+          "matchMode": "first",
+          "skipDiscount": false,
+          "keywordMatchMode": "exact_token",
+          "acceptedTypes": [
+            "额外包低温等离子"
+          ]
+        },
+        {
+          "ruleType": "FOLD",
+          "name": "妇幼人口密封胶圈>5折算22",
+          "priority": 11,
+          "keywords": [
+            "密封胶圈@contains"
+          ],
+          "threshold": 5,
+          "foldRatio": 5,
+          "price": 22.0,
+          "minInstrumentCount": 6,
+          "temperature": "LT",
+          "skipPackaging": true,
+          "isActive": true,
+          "matchMode": "first",
+          "skipDiscount": false,
+          "keywordMatchMode": "exact_token",
+          "acceptedTypes": [
+            "额外包低温等离子"
+          ]
+        },
+        {
+          "ruleType": "FOLD",
+          "name": "妇幼人口水管膜片≤5按1件",
+          "priority": 10,
+          "keywords": [
+            "水管膜片@contains"
+          ],
+          "threshold": 5,
+          "foldRatio": 5,
+          "maxInstrumentCount": 5,
+          "temperature": "LT",
+          "skipPackaging": false,
+          "isActive": true,
+          "matchMode": "first",
+          "skipDiscount": false,
+          "keywordMatchMode": "exact_token",
+          "acceptedTypes": [
+            "额外包低温等离子"
+          ]
+        },
+        {
+          "ruleType": "FOLD",
+          "name": "妇幼人口水管膜片>5折算22",
+          "priority": 11,
+          "keywords": [
+            "水管膜片@contains"
+          ],
+          "threshold": 5,
+          "foldRatio": 5,
+          "price": 22.0,
+          "minInstrumentCount": 6,
+          "temperature": "LT",
+          "skipPackaging": true,
+          "isActive": true,
+          "matchMode": "first",
+          "skipDiscount": false,
+          "keywordMatchMode": "exact_token",
+          "acceptedTypes": [
+            "额外包低温等离子"
+          ]
+        },
+        {
+          "ruleType": "FOLD",
           "name": "妇幼人口密封件≤5按1件",
           "priority": 10,
           "keywords": [
-            "密封件@contains",
-            "密封胶圈@contains",
-            "水管膜片@contains",
-            "垫片@contains"
+            "密封件@contains"
           ],
           "threshold": 5,
           "foldRatio": 5,
@@ -1426,9 +1721,47 @@
           "name": "妇幼人口密封件>5折算22",
           "priority": 11,
           "keywords": [
-            "密封件@contains",
-            "密封胶圈@contains",
-            "水管膜片@contains",
+            "密封件@contains"
+          ],
+          "threshold": 5,
+          "foldRatio": 5,
+          "price": 22.0,
+          "minInstrumentCount": 6,
+          "temperature": "LT",
+          "skipPackaging": true,
+          "isActive": true,
+          "matchMode": "first",
+          "skipDiscount": false,
+          "keywordMatchMode": "exact_token",
+          "acceptedTypes": [
+            "额外包低温等离子"
+          ]
+        },
+        {
+          "ruleType": "FOLD",
+          "name": "妇幼人口垫片≤5按1件",
+          "priority": 10,
+          "keywords": [
+            "垫片@contains"
+          ],
+          "threshold": 5,
+          "foldRatio": 5,
+          "maxInstrumentCount": 5,
+          "temperature": "LT",
+          "skipPackaging": false,
+          "isActive": true,
+          "matchMode": "first",
+          "skipDiscount": false,
+          "keywordMatchMode": "exact_token",
+          "acceptedTypes": [
+            "额外包低温等离子"
+          ]
+        },
+        {
+          "ruleType": "FOLD",
+          "name": "妇幼人口垫片>5折算22",
+          "priority": 11,
+          "keywords": [
             "垫片@contains"
           ],
           "threshold": 5,
@@ -1846,8 +2179,8 @@
           ]
         }
       ],
-      "rule_count": 28,
-      "active_rule_count": 28
+      "rule_count": 34,
+      "active_rule_count": 34
     },
     "ZUYAN-NG": {
       "code": "ZUYAN-NG",
@@ -1923,7 +2256,8 @@
           "isActive": true,
           "matchMode": "first",
           "acceptedTypes": [
-            "单包装"
+            "单包装",
+            "单包装包"
           ]
         },
         {
@@ -1940,7 +2274,8 @@
           "isActive": true,
           "matchMode": "first",
           "acceptedTypes": [
-            "单包装"
+            "单包装",
+            "单包装包"
           ]
         },
         {
@@ -1991,7 +2326,8 @@
           "isActive": true,
           "matchMode": "first",
           "acceptedTypes": [
-            "单包装"
+            "单包装",
+            "单包装包"
           ]
         },
         {
@@ -2008,7 +2344,8 @@
           "isActive": true,
           "matchMode": "first",
           "acceptedTypes": [
-            "单包装"
+            "单包装",
+            "单包装包"
           ]
         },
         {
@@ -2025,7 +2362,8 @@
           "isActive": true,
           "matchMode": "first",
           "acceptedTypes": [
-            "单包装"
+            "单包装",
+            "单包装包"
           ]
         },
         {
@@ -2042,7 +2380,8 @@
           "isActive": true,
           "matchMode": "first",
           "acceptedTypes": [
-            "单包装"
+            "单包装",
+            "单包装包"
           ]
         },
         {
@@ -2059,7 +2398,8 @@
           "isActive": true,
           "matchMode": "first",
           "acceptedTypes": [
-            "单包装"
+            "单包装",
+            "单包装包"
           ]
         },
         {
@@ -2076,7 +2416,8 @@
           "isActive": true,
           "matchMode": "first",
           "acceptedTypes": [
-            "单包装"
+            "单包装",
+            "单包装包"
           ]
         },
         {
@@ -2093,7 +2434,8 @@
           "isActive": true,
           "matchMode": "first",
           "acceptedTypes": [
-            "单包装"
+            "单包装",
+            "单包装包"
           ]
         },
         {
@@ -2102,7 +2444,8 @@
           "priority": 5,
           "price": 16.5,
           "keywords": [
-            "种植盒（蓝白）12件 盒1/Z2032"
+            "种植盒（蓝白）12件 盒1/Z2032",
+            "种植盒（蓝白）12件盒1/Z2032"
           ],
           "keywordMatchMode": "exact_token",
           "skipPackaging": true,
@@ -2110,7 +2453,8 @@
           "isActive": true,
           "matchMode": "first",
           "acceptedTypes": [
-            "单包装"
+            "单包装",
+            "单包装包"
           ]
         },
         {
@@ -2119,7 +2463,8 @@
           "priority": 5,
           "price": 16.5,
           "keywords": [
-            "种植盒（金属）12件盒1/Z2032"
+            "种植盒（金属）12件盒1/Z2032",
+            "种植盒（金属）12件 盒1/Z2032"
           ],
           "keywordMatchMode": "exact_token",
           "skipPackaging": true,
@@ -2127,7 +2472,8 @@
           "isActive": true,
           "matchMode": "first",
           "acceptedTypes": [
-            "单包装"
+            "单包装",
+            "单包装包"
           ]
         },
         {
@@ -2136,7 +2482,8 @@
           "priority": 5,
           "price": 16.5,
           "keywords": [
-            "种植盒（黄绿）8件盒1/Z2032"
+            "种植盒（黄绿）8件盒1/Z2032",
+            "种植盒（黄绿）8件 盒1/Z2032"
           ],
           "keywordMatchMode": "exact_token",
           "skipPackaging": true,
@@ -2144,7 +2491,8 @@
           "isActive": true,
           "matchMode": "first",
           "acceptedTypes": [
-            "单包装"
+            "单包装",
+            "单包装包"
           ]
         }
       ],
@@ -2249,11 +2597,44 @@
       "productRules": [
         {
           "ruleType": "FOLD",
+          "name": "春语塑料管≤10按1件",
+          "priority": 10,
+          "keywords": [
+            "塑料管@contains"
+          ],
+          "threshold": 10,
+          "foldRatio": 10,
+          "maxInstrumentCount": 10,
+          "temperature": "LT",
+          "skipPackaging": false,
+          "isActive": true,
+          "matchMode": "first",
+          "skipDiscount": false,
+          "keywordMatchMode": "exact_token"
+        },
+        {
+          "ruleType": "FOLD",
+          "name": "春语管子≤10按1件",
+          "priority": 10,
+          "keywords": [
+            "管子@contains"
+          ],
+          "threshold": 10,
+          "foldRatio": 10,
+          "maxInstrumentCount": 10,
+          "temperature": "LT",
+          "skipPackaging": false,
+          "isActive": true,
+          "matchMode": "first",
+          "skipDiscount": false,
+          "keywordMatchMode": "exact_token"
+        },
+        {
+          "ruleType": "FOLD",
           "name": "春语塑料管>10折算22",
           "priority": 11,
           "keywords": [
-            "塑料管@contains",
-            "管子@contains"
+            "塑料管@contains"
           ],
           "threshold": 10,
           "foldRatio": 10,
@@ -2268,25 +2649,25 @@
         },
         {
           "ruleType": "FOLD",
-          "name": "春语塑料管≤10按1件",
-          "priority": 10,
+          "name": "春语管子>10折算22",
+          "priority": 11,
           "keywords": [
-            "塑料管@contains",
             "管子@contains"
           ],
           "threshold": 10,
           "foldRatio": 10,
-          "maxInstrumentCount": 10,
+          "price": 22.0,
+          "minInstrumentCount": 11,
           "temperature": "LT",
-          "skipPackaging": false,
+          "skipPackaging": true,
           "isActive": true,
           "matchMode": "first",
           "skipDiscount": false,
           "keywordMatchMode": "exact_token"
         }
       ],
-      "rule_count": 2,
-      "active_rule_count": 2
+      "rule_count": 4,
+      "active_rule_count": 4
     },
     "HL-ZGH": {
       "code": "HL-ZGH",
@@ -2653,11 +3034,50 @@
       "productRules": [
         {
           "ruleType": "FOLD",
+          "name": "监狱密封件≤5按1件",
+          "priority": 10,
+          "keywords": [
+            "密封件@contains"
+          ],
+          "threshold": 5,
+          "foldRatio": 5,
+          "maxInstrumentCount": 5,
+          "temperature": "LT",
+          "skipPackaging": false,
+          "isActive": true,
+          "matchMode": "first",
+          "skipDiscount": false,
+          "keywordMatchMode": "exact_token",
+          "acceptedTypes": [
+            "额外包低温等离子"
+          ]
+        },
+        {
+          "ruleType": "FOLD",
+          "name": "监狱密封胶圈≤5按1件",
+          "priority": 10,
+          "keywords": [
+            "密封胶圈@contains"
+          ],
+          "threshold": 5,
+          "foldRatio": 5,
+          "maxInstrumentCount": 5,
+          "temperature": "LT",
+          "skipPackaging": false,
+          "isActive": true,
+          "matchMode": "first",
+          "skipDiscount": false,
+          "keywordMatchMode": "exact_token",
+          "acceptedTypes": [
+            "额外包低温等离子"
+          ]
+        },
+        {
+          "ruleType": "FOLD",
           "name": "监狱密封件>5折算22",
           "priority": 11,
           "keywords": [
-            "密封件@contains",
-            "密封胶圈@contains"
+            "密封件@contains"
           ],
           "threshold": 5,
           "foldRatio": 5,
@@ -2675,17 +3095,17 @@
         },
         {
           "ruleType": "FOLD",
-          "name": "监狱密封件≤5按1件",
-          "priority": 10,
+          "name": "监狱密封胶圈>5折算22",
+          "priority": 11,
           "keywords": [
-            "密封件@contains",
             "密封胶圈@contains"
           ],
           "threshold": 5,
           "foldRatio": 5,
-          "maxInstrumentCount": 5,
+          "price": 22.0,
+          "minInstrumentCount": 6,
           "temperature": "LT",
-          "skipPackaging": false,
+          "skipPackaging": true,
           "isActive": true,
           "matchMode": "first",
           "skipDiscount": false,
@@ -2695,8 +3115,8 @@
           ]
         }
       ],
-      "rule_count": 2,
-      "active_rule_count": 2
+      "rule_count": 4,
+      "active_rule_count": 4
     },
     "HULAN-TCM": {
       "code": "HULAN-TCM",

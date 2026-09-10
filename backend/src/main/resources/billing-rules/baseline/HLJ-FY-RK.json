@@ -88,13 +88,92 @@
     },
     {
       "ruleType": "FOLD",
+      "name": "妇幼人口密封胶圈≤5按1件",
+      "priority": 10,
+      "keywords": [
+        "密封胶圈@contains"
+      ],
+      "threshold": 5,
+      "foldRatio": 5,
+      "maxInstrumentCount": 5,
+      "temperature": "LT",
+      "skipPackaging": false,
+      "isActive": true,
+      "matchMode": "first",
+      "skipDiscount": false,
+      "keywordMatchMode": "exact_token",
+      "acceptedTypes": [
+        "额外包低温等离子"
+      ]
+    },
+    {
+      "ruleType": "FOLD",
+      "name": "妇幼人口密封胶圈>5折算22",
+      "priority": 11,
+      "keywords": [
+        "密封胶圈@contains"
+      ],
+      "threshold": 5,
+      "foldRatio": 5,
+      "price": 22.0,
+      "minInstrumentCount": 6,
+      "temperature": "LT",
+      "skipPackaging": true,
+      "isActive": true,
+      "matchMode": "first",
+      "skipDiscount": false,
+      "keywordMatchMode": "exact_token",
+      "acceptedTypes": [
+        "额外包低温等离子"
+      ]
+    },
+    {
+      "ruleType": "FOLD",
+      "name": "妇幼人口水管膜片≤5按1件",
+      "priority": 10,
+      "keywords": [
+        "水管膜片@contains"
+      ],
+      "threshold": 5,
+      "foldRatio": 5,
+      "maxInstrumentCount": 5,
+      "temperature": "LT",
+      "skipPackaging": false,
+      "isActive": true,
+      "matchMode": "first",
+      "skipDiscount": false,
+      "keywordMatchMode": "exact_token",
+      "acceptedTypes": [
+        "额外包低温等离子"
+      ]
+    },
+    {
+      "ruleType": "FOLD",
+      "name": "妇幼人口水管膜片>5折算22",
+      "priority": 11,
+      "keywords": [
+        "水管膜片@contains"
+      ],
+      "threshold": 5,
+      "foldRatio": 5,
+      "price": 22.0,
+      "minInstrumentCount": 6,
+      "temperature": "LT",
+      "skipPackaging": true,
+      "isActive": true,
+      "matchMode": "first",
+      "skipDiscount": false,
+      "keywordMatchMode": "exact_token",
+      "acceptedTypes": [
+        "额外包低温等离子"
+      ]
+    },
+    {
+      "ruleType": "FOLD",
       "name": "妇幼人口密封件≤5按1件",
       "priority": 10,
       "keywords": [
-        "密封件@contains",
-        "密封胶圈@contains",
-        "水管膜片@contains",
-        "垫片@contains"
+        "密封件@contains"
       ],
       "threshold": 5,
       "foldRatio": 5,
@@ -114,9 +193,47 @@
       "name": "妇幼人口密封件>5折算22",
       "priority": 11,
       "keywords": [
-        "密封件@contains",
-        "密封胶圈@contains",
-        "水管膜片@contains",
+        "密封件@contains"
+      ],
+      "threshold": 5,
+      "foldRatio": 5,
+      "price": 22.0,
+      "minInstrumentCount": 6,
+      "temperature": "LT",
+      "skipPackaging": true,
+      "isActive": true,
+      "matchMode": "first",
+      "skipDiscount": false,
+      "keywordMatchMode": "exact_token",
+      "acceptedTypes": [
+        "额外包低温等离子"
+      ]
+    },
+    {
+      "ruleType": "FOLD",
+      "name": "妇幼人口垫片≤5按1件",
+      "priority": 10,
+      "keywords": [
+        "垫片@contains"
+      ],
+      "threshold": 5,
+      "foldRatio": 5,
+      "maxInstrumentCount": 5,
+      "temperature": "LT",
+      "skipPackaging": false,
+      "isActive": true,
+      "matchMode": "first",
+      "skipDiscount": false,
+      "keywordMatchMode": "exact_token",
+      "acceptedTypes": [
+        "额外包低温等离子"
+      ]
+    },
+    {
+      "ruleType": "FOLD",
+      "name": "妇幼人口垫片>5折算22",
+      "priority": 11,
+      "keywords": [
         "垫片@contains"
       ],
       "threshold": 5,

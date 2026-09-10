@@ -23,6 +23,9 @@ public final class PackNameSpecParser {
     /** stem 内无连字符时的 {@code N件}，如 宫腔镜包26件、抛光车针盒6件盒1 → 6。 */
     private static final Pattern STANDALONE_PIECE_COUNT =
             Pattern.compile("(\\d+)件");
+    /** {@code N件} 且非 {@code -N件} 连字符段，避免与 hyphen 双计。 */
+    private static final Pattern STANDALONE_PIECE_NOT_HYPHEN =
+            Pattern.compile("(?<![-－])(\\d+)件");
     /** 针架复合：器械数列通常按架计，不做字段件数核对。 */
     private static final Pattern NEEDLE_RACK_PATTERN = Pattern.compile("针架\\d+针\\d+");
     /** 紧凑复合至少两段「名+数」，如 盆1碗1；单段 排针20 不算。 */
@@ -42,7 +45,7 @@ public final class PackNameSpecParser {
     private static final Pattern CONTAINER_AFTER_NON_HAN =
             Pattern.compile("(?<![\\p{Script=Han}])(?:盒|筐|盘)(\\d+)");
     private static final Pattern PAREN_BOX_PIECE_COUNT =
-            Pattern.compile("带盒([\\d两二三四五六七八九十]+)件");
+            Pattern.compile("带盒([\\d两二三四五六七八九十]+)(?:件)?");
     private static final Pattern PAREN_GROUP = Pattern.compile("[（(]([^）)]*)[）)]");
     private static final Pattern PRODUCT_MODEL_TOKEN =
             Pattern.compile("\\d+[A-Za-z][A-Za-z0-9]*\\d{3,}|[A-Za-z][A-Za-z0-9]*\\d{4,}");
@@ -124,13 +127,8 @@ public final class PackNameSpecParser {
      * 从包名（斜杠订单后缀之前）提取器械件数合计。
      * <p>计数与计价彻底隔离：仅统计 {@code /} 前各数字 token 之和，{@code 盒/筐/盘} 与
      * {@code -N/-N件} 同等参与累加，不在计数阶段区分「包装盒」语义（包装盒加价等留给计价规则）。
-     * <p>优先级：
-     * <ol>
-     *   <li>外套 {@code -N}/{@code -N件} 连字符段累加（如 止血钳-2剪-1 → 3）</li>
-     *   <li>外套无连字符时括号内连字符累加（全冠套装（针-8盒-1）→ 9）</li>
-     *   <li>否则 {@code N件}、紧凑复合（盆1碗1）、末尾名+数（排针20）</li>
-     *   <li>再累加全文 {@code 盒N/筐N/盘N}（含括号内，{@code 带盒N件} 除外以免与括号件数重复）</li>
-     * </ol>
+     * <p>算法：斜杠前各计数 token 直接累加（连字符段、非连字符 {@code N件}、紧凑名+数、括号内连字符段），
+     * 再累加 {@code 盒N/筐N/盘N}；无互斥 early-return 分支。
      */
     public static Integer extractTotalPieceCountFromPackName(String packName) {
         if (packName == null) {
@@ -221,19 +219,33 @@ public final class PackNameSpecParser {
     }
 
     private static BasePieceCount extractBasePieceCount(String stem) {
+        if (isProductModelPackName(stem)) {
+            return null;
+        }
         String countStem = PAREN_GROUP.matcher(stem).replaceAll("");
+        java.util.List<int[]> hyphenSpans = new java.util.ArrayList<>();
         Matcher hyphenMatcher = PIECE_COUNT.matcher(countStem);
         int hyphenSum = 0;
         boolean foundHyphen = false;
         while (hyphenMatcher.find()) {
             hyphenSum += Integer.parseInt(hyphenMatcher.group(1));
+            hyphenSpans.add(new int[] {hyphenMatcher.start(), hyphenMatcher.end()});
             foundHyphen = true;
         }
         if (foundHyphen) {
-            return new BasePieceCount(hyphenSum, false);
+            int compactExtra = 0;
+            Matcher compactMatcher = COMPACT_NAME_DIGIT_SEGMENTS.matcher(countStem);
+            while (compactMatcher.find()) {
+                if (!isValidCompactCountSegment(compactMatcher, countStem)) {
+                    continue;
+                }
+                if (!overlapsAnySpan(compactMatcher.start(), compactMatcher.end(), hyphenSpans)) {
+                    compactExtra += Integer.parseInt(compactMatcher.group(2));
+                }
+            }
+            return new BasePieceCount(hyphenSum + compactExtra, false);
         }
-        // 外套无连字符时，括号内连字符参与计数：全冠套装（针-8盒-1）→ 9。
-        // 外套有连字符时括号内一律忽略（扩棒（3-5.5号）-6 → 6，括号内是规格区间）。
+
         int parenHyphenSum = 0;
         boolean foundParenHyphen = false;
         Matcher parenGroups = PAREN_GROUP.matcher(stem);
@@ -247,13 +259,12 @@ public final class PackNameSpecParser {
         if (foundParenHyphen) {
             return new BasePieceCount(parenHyphenSum, false);
         }
+
         Matcher standalonePieceMatcher = STANDALONE_PIECE_COUNT.matcher(stem);
         if (standalonePieceMatcher.find()) {
             return new BasePieceCount(Integer.parseInt(standalonePieceMatcher.group(1)), false);
         }
-        if (isProductModelPackName(stem)) {
-            return null;
-        }
+
         Matcher compactMatcher = COMPACT_NAME_DIGIT_SEGMENTS.matcher(stem);
         int compactSum = 0;
         int compactSegments = 0;
@@ -264,6 +275,7 @@ public final class PackNameSpecParser {
         if (compactSegments >= 2) {
             return new BasePieceCount(compactSum, true);
         }
+
         Matcher trailingMatcher = TRAILING_NAME_DIGITS.matcher(stem);
         if (trailingMatcher.find()) {
             String namePart = trailingMatcher.group(1);
@@ -274,6 +286,40 @@ public final class PackNameSpecParser {
             return new BasePieceCount(trailingCount, false);
         }
         return null;
+    }
+
+    /** 连字符 stem 上额外累加的「名+数」段：排除角度、型号、订单码与盒/筐/盘容器段。 */
+    private static boolean isValidCompactCountSegment(Matcher compactMatcher, String text) {
+        String namePart = compactMatcher.group(1);
+        if (namePart.endsWith("盒") || namePart.endsWith("筐") || namePart.endsWith("盘")) {
+            return false;
+        }
+        if (namePart.length() <= 1) {
+            return false;
+        }
+        int digitEnd = compactMatcher.end(2);
+        if (digitEnd < text.length()) {
+            char next = text.charAt(digitEnd);
+            if (next == '°' || next == '度' || next == '号') {
+                return false;
+            }
+        }
+        if (namePart.length() == 1 && namePart.chars().allMatch(ch -> ch >= 'a' && ch <= 'z' || ch >= 'A' && ch <= 'Z')) {
+            String digits = compactMatcher.group(2);
+            if (digits.length() >= 4) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    private static boolean overlapsAnySpan(int start, int end, java.util.List<int[]> spans) {
+        for (int[] span : spans) {
+            if (start < span[1] && end > span[0]) {
+                return true;
+            }
+        }
+        return false;
     }
 
     private static int sumExplicitContainerCounts(String stem, int baseCount, boolean compactCompound) {

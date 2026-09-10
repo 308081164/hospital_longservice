@@ -160,6 +160,27 @@ class BillingConditionEvaluatorTest {
     }
 
     @Test
+    void angleDigitKeywordDoesNotMatchInsideLongerDegreeNumber() throws Exception {
+        ObjectNode zeroRule = MAPPER.createObjectNode();
+        zeroRule.putArray("keywords").add("0°膀胱镜-1");
+        zeroRule.putArray("keywords").add("0°膀胱镜");
+        zeroRule.putArray("acceptedTypes").add("单包装（低温老肯）");
+
+        assertThat(BillingConditionEvaluator.matchesRuleKeywords(
+                zeroRule, "0°膀胱镜-1/Z7520", "单包装包(老肯低温) 0°膀胱镜-1/Z7520 低温纸塑袋"))
+                .isTrue();
+        assertThat(BillingConditionEvaluator.matchesRuleKeywords(
+                zeroRule, "30°膀胱镜-1/Z7520", "单包装包(老肯低温) 30°膀胱镜-1/Z7520 低温纸塑袋"))
+                .isFalse();
+
+        ObjectNode thirtyRule = MAPPER.createObjectNode();
+        thirtyRule.putArray("keywords").add("30°膀胱镜");
+        assertThat(BillingConditionEvaluator.matchesRuleKeywords(
+                thirtyRule, "30°膀胱镜-1", "单包装包(老肯低温) 30°膀胱镜-1 低温纸塑袋"))
+                .isTrue();
+    }
+
+    @Test
     void packTypeEquivalentAcceptsBaselineAcceptedTypeShorthands() {
         assertThat(BillingConditionEvaluator.packTypeEquivalent("额外包低温等离子", "额外包(低温等离子)"))
                 .isTrue();

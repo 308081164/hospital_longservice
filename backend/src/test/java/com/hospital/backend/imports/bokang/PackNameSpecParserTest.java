@@ -74,6 +74,8 @@ class PackNameSpecParserTest {
                 Arguments.of("25°镜头1件 盒1/z2060", 2),
                 Arguments.of("种植盒-11件 盒1/w6050", 12),
                 Arguments.of("显微有钩镊1，无钩镊1/W5050", 2),
+                Arguments.of("巾钳子-2，卵圆钳1/Z1535", 3),
+                Arguments.of("中钳子-2，卵圆钳-1/Z1535", 3),
                 Arguments.of("人流包（22件）", 22),
                 Arguments.of("取上环包-21件", 21),
                 Arguments.of("器械包-2袋/z1526", 2),

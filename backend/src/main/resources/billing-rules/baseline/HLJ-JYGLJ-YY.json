@@ -6,11 +6,50 @@
   "productRules": [
     {
       "ruleType": "FOLD",
+      "name": "监狱密封件≤5按1件",
+      "priority": 10,
+      "keywords": [
+        "密封件@contains"
+      ],
+      "threshold": 5,
+      "foldRatio": 5,
+      "maxInstrumentCount": 5,
+      "temperature": "LT",
+      "skipPackaging": false,
+      "isActive": true,
+      "matchMode": "first",
+      "skipDiscount": false,
+      "keywordMatchMode": "exact_token",
+      "acceptedTypes": [
+        "额外包低温等离子"
+      ]
+    },
+    {
+      "ruleType": "FOLD",
+      "name": "监狱密封胶圈≤5按1件",
+      "priority": 10,
+      "keywords": [
+        "密封胶圈@contains"
+      ],
+      "threshold": 5,
+      "foldRatio": 5,
+      "maxInstrumentCount": 5,
+      "temperature": "LT",
+      "skipPackaging": false,
+      "isActive": true,
+      "matchMode": "first",
+      "skipDiscount": false,
+      "keywordMatchMode": "exact_token",
+      "acceptedTypes": [
+        "额外包低温等离子"
+      ]
+    },
+    {
+      "ruleType": "FOLD",
       "name": "监狱密封件>5折算22",
       "priority": 11,
       "keywords": [
-        "密封件@contains",
-        "密封胶圈@contains"
+        "密封件@contains"
       ],
       "threshold": 5,
       "foldRatio": 5,
@@ -28,17 +67,17 @@
     },
     {
       "ruleType": "FOLD",
-      "name": "监狱密封件≤5按1件",
-      "priority": 10,
+      "name": "监狱密封胶圈>5折算22",
+      "priority": 11,
       "keywords": [
-        "密封件@contains",
         "密封胶圈@contains"
       ],
       "threshold": 5,
       "foldRatio": 5,
-      "maxInstrumentCount": 5,
+      "price": 22.0,
+      "minInstrumentCount": 6,
       "temperature": "LT",
-      "skipPackaging": false,
+      "skipPackaging": true,
       "isActive": true,
       "matchMode": "first",
       "skipDiscount": false,

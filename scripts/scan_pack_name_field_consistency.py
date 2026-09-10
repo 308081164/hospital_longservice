@@ -112,7 +112,7 @@ def sum_container_tokens(text: str) -> int:
     return total
 
 
-PAREN_BOX_PIECE = re.compile(r"带盒([\d两二三四五六七八九十]+)件")
+PAREN_BOX_PIECE = re.compile(r"带盒([\d两二三四五六七八九十]+)(?:件)?")
 
 
 def parse_chinese_or_arabic(token: str) -> int:
@@ -201,15 +201,47 @@ def sum_explicit_containers(stem: str, base_count: int, compact_base: bool) -> i
     return total
 
 
+def _hyphen_spans(count_stem: str) -> list[tuple[int, int]]:
+    return [(m.start(), m.end()) for m in PIECE_COUNT.finditer(count_stem)]
+
+
+def _overlaps(start: int, end: int, spans: list[tuple[int, int]]) -> bool:
+    return any(start < e and end > s for s, e in spans)
+
+
+def _valid_compact_segment(count_stem: str, m: re.Match) -> bool:
+    name_part = m.group(1)
+    if name_part.endswith(("盒", "筐", "盘")):
+        return False
+    if len(name_part) <= 1:
+        return False
+    digit_end = m.end(2)
+    if digit_end < len(count_stem):
+        nxt = count_stem[digit_end]
+        if nxt in "°度号":
+            return False
+    if len(name_part) == 1 and name_part.isascii() and name_part.isalpha() and len(m.group(2)) >= 4:
+        return False
+    return True
+
+
 def extract_base(stem: str) -> tuple[int | None, bool]:
     count_stem = PAREN_GROUP.sub("", stem)
     hs = 0
     found = False
+    spans: list[tuple[int, int]] = []
     for m in PIECE_COUNT.finditer(count_stem):
         hs += int(m.group(1))
+        spans.append((m.start(), m.end()))
         found = True
     if found:
-        return hs, False
+        compact_extra = 0
+        for m in COMPACT.finditer(count_stem):
+            if not _valid_compact_segment(count_stem, m):
+                continue
+            if not _overlaps(m.start(), m.end(), spans):
+                compact_extra += int(m.group(2))
+        return hs + compact_extra, False
     # 外套无连字符时，括号内连字符参与计数：全冠套装（针-8盒-1）→ 9。
     # 外套有连字符时括号内一律忽略（扩棒（3-5.5号）-6 → 6，括号内是规格区间）。
     paren_hs = 0

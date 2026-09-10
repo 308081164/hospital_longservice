@@ -1,6 +1,6 @@
 {
-  "baseline_hash": "1234153c4f58632202d76f04db25f63d12cf4d4076552f78573ac25a78ae1795",
-  "generated_at": "2026-09-08T08:47:22Z",
+  "baseline_hash": "ec196d114649aec6d725350e5987adfc05ef9d2b86fa68d43b362d7acc643156",
+  "generated_at": "2026-09-10T09:20:48Z",
   "source": "billing-rules-manifest@01836c66115726ff7229db58f16020cb6e65f7069beee13551669c1031fd7764",
   "customer_count": 29,
   "customers": [
@@ -14,19 +14,19 @@
       "code": "GUOYAO-2",
       "file": "baseline/GUOYAO-2.json",
       "ruleCount": 31,
-      "fileHash": "b37ea7764bddf5057e2408c4ecf964b0cb1fec95c6810fe7129e18465cdd1692"
+      "fileHash": "2855ac3573ff1368fcb46fd4c02814bb5463b436f6edcb56b929235939af1868"
     },
     {
       "code": "FNN-YY",
       "file": "baseline/FNN-YY.json",
-      "ruleCount": 2,
-      "fileHash": "3c8bb8f1176507182d1a1ddba94fdd14d41c53eb6fa1c9562fa2f266e2681b70"
+      "ruleCount": 8,
+      "fileHash": "d1c1a6c45cc80d6552673a069127021fdcf971741bf6b2e0b5c424c9525acb9b"
     },
     {
       "code": "NEAU-YY",
       "file": "baseline/NEAU-YY.json",
-      "ruleCount": 2,
-      "fileHash": "fd4c36500b22ef204f8de0c960a9b74ba42cac295ec4b361932388e075c6be1f"
+      "ruleCount": 8,
+      "fileHash": "e1dcf4110c61a0d3723df18a5a38c358d789dea98938c5087da0d5b57c3a2c73"
     },
     {
       "code": "HRB-WY",
@@ -73,8 +73,8 @@
     {
       "code": "HLJ-FY-RK",
       "file": "baseline/HLJ-FY-RK.json",
-      "ruleCount": 28,
-      "fileHash": "6ee11eea7a1a885d304e44f9ddea520077e52f0a9428e5c4dd443b16fb2c9955"
+      "ruleCount": 34,
+      "fileHash": "95e4f2d0c9d251250ae052a008f57248869eb7c4903d729d9bd6f2e10c714e64"
     },
     {
       "code": "ZUYAN-NG",
@@ -86,7 +86,7 @@
       "code": "SHKF-YY",
       "file": "baseline/SHKF-YY.json",
       "ruleCount": 14,
-      "fileHash": "3e845e30e91242c80067920a68aca4aaf99b461a7ba8ba0548fec2073d6e792c"
+      "fileHash": "084fb3a743e6c899a424e9beb1c0c70a69450efe31e4ec2f1a2fa46346798a28"
     },
     {
       "code": "DL-FUCHAN",
@@ -97,8 +97,8 @@
     {
       "code": "CHUNYU-YL",
       "file": "baseline/CHUNYU-YL.json",
-      "ruleCount": 2,
-      "fileHash": "cfa3c6df144710b64c9b6ee3085a45132d0b4a048a49e8f0f1001b10cc1c9914"
+      "ruleCount": 4,
+      "fileHash": "3e37e950699ae1059130e7ae1393a0a75b43941f36f444504542d4226a4e69b0"
     },
     {
       "code": "HL-ZGH",
@@ -121,8 +121,8 @@
     {
       "code": "HLJ-JYGLJ-YY",
       "file": "baseline/HLJ-JYGLJ-YY.json",
-      "ruleCount": 2,
-      "fileHash": "0dfb8ec357b9f20bda219a16c6806b59cb3c0940f0d4e0ad87396b25647ab618"
+      "ruleCount": 4,
+      "fileHash": "b53d059aa6aaac28b578ec49151e7879e837d99f0e44f4e34251229e8b5c99b7"
     },
     {
       "code": "HULAN-TCM",
@@ -134,7 +134,7 @@
       "code": "PFQ-RM",
       "file": "baseline/PFQ-RM.json",
       "ruleCount": 2,
-      "fileHash": "d78cc580d6289417bcb2a4e87d30f3d375173a24a19037f12652ce678dc53d7f"
+      "fileHash": "32e8ce508e76a839a5804a7ca311f4d1304db81b74685b0d15295d8311728131"
     },
     {
       "code": "HULAN-RM",

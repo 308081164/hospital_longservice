@@ -1,0 +1,243 @@
+{
+  "generated": "2026-09-10",
+  "api_base": "http://127.0.0.1:8000",
+  "summary": {
+    "pass": 1,
+    "fail": 0,
+    "skip": 0,
+    "error": 0
+  },
+  "sections": {
+    "month6": [
+      {
+        "hospital": "祖研-黑龙江省中医医院（南岗院区）",
+        "customer_label": "祖研南岗",
+        "status": "PASS",
+        "message": "完全对应：25 条，目标单价偏差 < 0.01 元；忽略非计价 warning 12 条",
+        "job_id": 1514,
+        "raw_file": "祖研南岗6月账单.xlsx",
+        "proc_file": "6月__祖研-黑龙江省中医医院（南岗院区）6月账单.xlsx",
+        "expected_count": 25,
+        "warning_count": 37,
+        "pricing_warning_count": 25,
+        "non_pricing_warning_ignored": 12,
+        "field_consistency_pricing_count": 0,
+        "matched_count": 25,
+        "missed": [],
+        "extra": [],
+        "price_mismatch": [],
+        "proc_mismatch": [],
+        "field_consistency_pricing": [],
+        "dedupe_note": "warning 行 37 条，计价相关 strict key 去重后 25 条",
+        "fully_aligned": true,
+        "month": 6,
+        "section": "month6"
+      }
+    ]
+  },
+  "v8_hospitals": [
+    {
+      "customer_label": "冰城医美",
+      "folder": "哈尔滨冰城医疗美容医院",
+      "testable": true,
+      "skip_reason": "",
+      "code": "BINGCHENG-YM"
+    },
+    {
+      "customer_label": "电机厂",
+      "folder": "国药总医院第二院区",
+      "testable": true,
+      "skip_reason": "",
+      "code": "GUOYAO-2"
+    },
+    {
+      "customer_label": "方南南",
+      "folder": "方南南医院",
+      "testable": true,
+      "skip_reason": "",
+      "code": "FNN-YY"
+    },
+    {
+      "customer_label": "东北农大",
+      "folder": "东北农业大学",
+      "testable": true,
+      "skip_reason": "",
+      "code": "NEAU-YY"
+    },
+    {
+      "customer_label": "市五院主院区",
+      "folder": "哈尔滨市第五医院",
+      "testable": false,
+      "skip_reason": "ground truth 陈旧待更新",
+      "code": "HRB-WY"
+    },
+    {
+      "customer_label": "松电慢病",
+      "folder": "松电慢病",
+      "testable": true,
+      "skip_reason": "",
+      "code": "HRB-SD-MB"
+    },
+    {
+      "customer_label": "航天风华",
+      "folder": "航天风华",
+      "testable": true,
+      "skip_reason": "",
+      "code": "HRB-HTFH"
+    },
+    {
+      "customer_label": "市五院二门诊",
+      "folder": "哈尔滨市第五医院（二门诊）",
+      "testable": true,
+      "skip_reason": "",
+      "code": "HRB-WY-EM"
+    },
+    {
+      "customer_label": "九州",
+      "folder": "黑龙江九洲妇科医院",
+      "testable": true,
+      "skip_reason": "",
+      "code": "JIUZHOU-FK"
+    },
+    {
+      "customer_label": "博尚",
+      "folder": "博尚医院",
+      "testable": true,
+      "skip_reason": "",
+      "code": "BOSHANG-YY"
+    },
+    {
+      "customer_label": "海员松北",
+      "folder": "黑龙江省海员总医院（松北）",
+      "testable": true,
+      "skip_reason": "",
+      "code": "HAIYUAN-SB"
+    },
+    {
+      "customer_label": "省妇幼人口",
+      "folder": "黑龙江省妇幼保健院（人口）",
+      "testable": true,
+      "skip_reason": "",
+      "code": "HLJ-FY-RK"
+    },
+    {
+      "customer_label": "祖研南岗",
+      "folder": "祖研-黑龙江省中医医院（南岗院区）",
+      "testable": true,
+      "skip_reason": "",
+      "code": "ZUYAN-NG"
+    },
+    {
+      "customer_label": "社会康复",
+      "folder": "黑龙江省社会康复医院",
+      "testable": true,
+      "skip_reason": "",
+      "code": "SHKF-YY"
+    },
+    {
+      "customer_label": "道里妇幼",
+      "folder": "道里区妇幼保健院",
+      "testable": true,
+      "skip_reason": "",
+      "code": "DL-FUCHAN"
+    },
+    {
+      "customer_label": "春语医美",
+      "folder": "春语医美",
+      "testable": true,
+      "skip_reason": "",
+      "code": "CHUNYU-YL"
+    },
+    {
+      "customer_label": "总工会",
+      "folder": "总工会",
+      "testable": true,
+      "skip_reason": "",
+      "code": "HL-ZGH"
+    },
+    {
+      "customer_label": "基准生物",
+      "folder": "基准生物",
+      "testable": false,
+      "skip_reason": "无原始表格",
+      "code": "JZSW-BIO"
+    },
+    {
+      "customer_label": "索菲医美",
+      "folder": "索菲医美",
+      "testable": true,
+      "skip_reason": "",
+      "code": "SUOFEI-YL"
+    },
+    {
+      "customer_label": "省监狱管理局",
+      "folder": "省监狱管理局医院",
+      "testable": true,
+      "skip_reason": "",
+      "code": "HLJ-JYGLJ-YY"
+    },
+    {
+      "customer_label": "呼兰中医",
+      "folder": "呼兰中医院",
+      "testable": false,
+      "skip_reason": "ground truth 陈旧待更新",
+      "code": "HULAN-TCM"
+    },
+    {
+      "customer_label": "平房区人民",
+      "folder": "哈尔滨市平房区人民医院",
+      "testable": true,
+      "skip_reason": "",
+      "code": "PFQ-RM"
+    },
+    {
+      "customer_label": "呼兰区人民",
+      "folder": "哈尔滨市呼兰区第一人民医院",
+      "testable": true,
+      "skip_reason": "",
+      "code": "HULAN-RM"
+    },
+    {
+      "customer_label": "新发红十字",
+      "folder": "新发红十字",
+      "testable": true,
+      "skip_reason": "",
+      "code": "XINFA-HSZ"
+    },
+    {
+      "customer_label": "远东心脑血管",
+      "folder": "远东心脑血管",
+      "testable": true,
+      "skip_reason": "",
+      "code": "YUANDONG-XN"
+    },
+    {
+      "customer_label": "祖研三辅",
+      "folder": "祖研-黑龙江省中医医院（三辅院区）",
+      "testable": true,
+      "skip_reason": "",
+      "code": "ZUYAN-SF"
+    },
+    {
+      "customer_label": "奥兰医院",
+      "folder": "奥兰医院",
+      "testable": true,
+      "skip_reason": "",
+      "code": "AOLAN-YY"
+    },
+    {
+      "customer_label": "胸科医院",
+      "folder": "哈尔滨胸科医院",
+      "testable": true,
+      "skip_reason": "",
+      "code": "HRB-XK-YY"
+    },
+    {
+      "customer_label": "森海医院",
+      "folder": "森海医院",
+      "testable": true,
+      "skip_reason": "",
+      "code": "SENHAI-YY"
+    }
+  ]
+}

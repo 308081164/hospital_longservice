@@ -27,8 +27,50 @@ class HljFyRkExcelRulesRegressionTest {
                 "低温纸塑袋20cm",
                 4, 1, 22.0, 22.0));
 
-        assertThat(result.notes).anyMatch(n -> n.contains("妇幼人口密封件"));
-        assertThat(result.notes).noneMatch(n -> n.contains("垫片5合1"));
+        assertThat(result.pricingRule).contains("垫片");
+        assertThat(result.pricingRule).doesNotContain("密封件");
+    }
+
+    @Test
+    void thirtyDegreeBladderRuleMatchesBillRow() throws Exception {
+        try (InputStream in = HljFyRkExcelRulesRegressionTest.class.getResourceAsStream(
+                "/billing-rules/baseline/HLJ-FY-RK.json")) {
+            JsonNode baseline = MAPPER.readTree(in);
+            JsonNode thirtyRule = null;
+            for (JsonNode rule : baseline.path("productRules")) {
+                if ("妇幼人口30度膀胱镜加收8".equals(rule.path("name").asText())) {
+                    thirtyRule = rule;
+                    break;
+                }
+            }
+            assertThat(thirtyRule).isNotNull();
+            ObjectNode compiled = compile(thirtyRule);
+            Map<String, Object> billRow = row(
+                    "单包装包(老肯低温)",
+                    "30°膀胱镜-1/Z7520",
+                    "低温纸塑袋200*600",
+                    1, 1, 36.0, 36.0);
+            BillingConditionEvaluator.RowContext ctx = BillingConditionEvaluator.RowContext.fromRow(
+                    billRow, 20, 1, null, null);
+            assertThat(BillingConditionEvaluator.matchesRule(compiled, ctx)).isTrue();
+        }
+    }
+
+    @Test
+    void bladderMirror30DegreeChargesSingleExtraFee() throws Exception {
+        PricingEngine engine = engineFromBaseline();
+        PricingEngine.ProcessedResult result = engine.processRow(row(
+                "单包装包(老肯低温)",
+                "30°膀胱镜-1/Z7520",
+                "低温纸塑袋200*600",
+                1, 1, 36.0, 36.0));
+
+        assertThat(result.pricingRule).contains("妇幼人口30度膀胱镜加收8");
+        assertThat(result.pricingRule).doesNotContain("妇幼人口0度膀胱镜加收8");
+        assertThat(result.notes.stream().filter(n -> n.contains("妇幼人口30度膀胱镜加收8")).count())
+                .isEqualTo(1);
+        assertThat(result.notes.stream().filter(n -> n.contains("妇幼人口0度膀胱镜加收8")).count())
+                .isZero();
     }
 
     @Test

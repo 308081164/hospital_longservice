@@ -128,38 +128,6 @@ function createDefaultPackagingRules(): Api.Hospital.PackagingRulesConfig {
     selfPackedKeywords: ['仅灭菌', '医院自行打包', '自行打包', '自带包装'],
     items: [
       {
-        name: '纱布棉球',
-        keywords: ['纱布', '棉球', '辅料包'],
-        chargePerPack: true,
-        options: [
-          {
-            label: '大（20cm*20cm*15cm）',
-            price: 2.5,
-            keywords: ['20cm*20cm*15cm', '20cm×20cm×15cm', '大（20cm*20cm*15cm）', '大(20cm*20cm*15cm)'],
-          },
-          {
-            label: '中（15cm*15cm*10cm）',
-            price: 2,
-            keywords: ['15cm*15cm*10cm', '15cm×15cm×10cm', '中（15cm*15cm*10cm）', '中(15cm*15cm*10cm)'],
-          },
-          {
-            label: '小（10cm*10cm*5cm）',
-            price: 1.5,
-            keywords: ['10cm*10cm*5cm', '10cm×10cm×5cm', '小（10cm*10cm*5cm）', '小(10cm*10cm*5cm)', '10 cm及以下'],
-          },
-          {
-            label: '20cm*20cm纸塑袋',
-            price: 4,
-            keywords: ['20cm*20cm', '20cm×20cm', '20*20'],
-          },
-          {
-            label: '15cm*10cm纸塑袋',
-            price: 2.5,
-            keywords: ['15cm*10cm', '15cm×10cm', '15*10'],
-          },
-        ],
-      },
-      {
         name: 'rigip',
         keywords: ['rigip'],
         chargePerPack: true,

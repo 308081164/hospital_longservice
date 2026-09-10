@@ -18,7 +18,8 @@
       "isActive": true,
       "matchMode": "first",
       "acceptedTypes": [
-        "单包装"
+        "单包装",
+        "单包装包"
       ]
     },
     {
@@ -35,7 +36,8 @@
       "isActive": true,
       "matchMode": "first",
       "acceptedTypes": [
-        "单包装"
+        "单包装",
+        "单包装包"
       ]
     },
     {
@@ -86,7 +88,8 @@
       "isActive": true,
       "matchMode": "first",
       "acceptedTypes": [
-        "单包装"
+        "单包装",
+        "单包装包"
       ]
     },
     {
@@ -103,7 +106,8 @@
       "isActive": true,
       "matchMode": "first",
       "acceptedTypes": [
-        "单包装"
+        "单包装",
+        "单包装包"
       ]
     },
     {
@@ -120,7 +124,8 @@
       "isActive": true,
       "matchMode": "first",
       "acceptedTypes": [
-        "单包装"
+        "单包装",
+        "单包装包"
       ]
     },
     {
@@ -137,7 +142,8 @@
       "isActive": true,
       "matchMode": "first",
       "acceptedTypes": [
-        "单包装"
+        "单包装",
+        "单包装包"
       ]
     },
     {
@@ -154,7 +160,8 @@
       "isActive": true,
       "matchMode": "first",
       "acceptedTypes": [
-        "单包装"
+        "单包装",
+        "单包装包"
       ]
     },
     {
@@ -171,7 +178,8 @@
       "isActive": true,
       "matchMode": "first",
       "acceptedTypes": [
-        "单包装"
+        "单包装",
+        "单包装包"
       ]
     },
     {
@@ -188,7 +196,8 @@
       "isActive": true,
       "matchMode": "first",
       "acceptedTypes": [
-        "单包装"
+        "单包装",
+        "单包装包"
       ]
     },
     {
@@ -197,7 +206,8 @@
       "priority": 5,
       "price": 16.5,
       "keywords": [
-        "种植盒（蓝白）12件 盒1/Z2032"
+        "种植盒（蓝白）12件 盒1/Z2032",
+        "种植盒（蓝白）12件盒1/Z2032"
       ],
       "keywordMatchMode": "exact_token",
       "skipPackaging": true,
@@ -205,7 +215,8 @@
       "isActive": true,
       "matchMode": "first",
       "acceptedTypes": [
-        "单包装"
+        "单包装",
+        "单包装包"
       ]
     },
     {
@@ -214,7 +225,8 @@
       "priority": 5,
       "price": 16.5,
       "keywords": [
-        "种植盒（金属）12件盒1/Z2032"
+        "种植盒（金属）12件盒1/Z2032",
+        "种植盒（金属）12件 盒1/Z2032"
       ],
       "keywordMatchMode": "exact_token",
       "skipPackaging": true,
@@ -222,7 +234,8 @@
       "isActive": true,
       "matchMode": "first",
       "acceptedTypes": [
-        "单包装"
+        "单包装",
+        "单包装包"
       ]
     },
     {
@@ -231,7 +244,8 @@
       "priority": 5,
       "price": 16.5,
       "keywords": [
-        "种植盒（黄绿）8件盒1/Z2032"
+        "种植盒（黄绿）8件盒1/Z2032",
+        "种植盒（黄绿）8件 盒1/Z2032"
       ],
       "keywordMatchMode": "exact_token",
       "skipPackaging": true,
@@ -239,7 +253,8 @@
       "isActive": true,
       "matchMode": "first",
       "acceptedTypes": [
-        "单包装"
+        "单包装",
+        "单包装包"
       ]
     }
   ]
