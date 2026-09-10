@@ -1,7 +1,7 @@
 {
   "version": 1,
-  "generated_at": "2026-09-10T09:21:04Z",
-  "manifest_hash": "62e4fe9fcc742f858e0cd5387e6adef458facaf0b584b1dacdbc0c9a99520b09",
+  "generated_at": "2026-09-10T10:00:51Z",
+  "manifest_hash": "ffc38b2f9f710ed671f9c4332805797e8b6c3e40a3dfd3a6b077c3a46b1c075f",
   "billing_enabled_count": 29,
   "active_billing_enabled_count": 29,
   "customers": {
@@ -3626,6 +3626,7 @@
           "foldRatio": 10,
           "extraCount": 1,
           "minInstrumentCount": 21,
+          "price": 16.5,
           "skipPackaging": true,
           "skipDiscount": true,
           "isActive": true,

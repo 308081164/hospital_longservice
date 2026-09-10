@@ -1,6 +1,6 @@
 {
-  "baseline_hash": "ec196d114649aec6d725350e5987adfc05ef9d2b86fa68d43b362d7acc643156",
-  "generated_at": "2026-09-10T09:20:48Z",
+  "baseline_hash": "0a4796f899d59669d18f368354c40d209a1809afdd4f970ebef271feb806192e",
+  "generated_at": "2026-09-10T10:00:51Z",
   "source": "billing-rules-manifest@01836c66115726ff7229db58f16020cb6e65f7069beee13551669c1031fd7764",
   "customer_count": 29,
   "customers": [
@@ -158,7 +158,7 @@
       "code": "ZUYAN-SF",
       "file": "baseline/ZUYAN-SF.json",
       "ruleCount": 5,
-      "fileHash": "84d09dbde7fbddb75b325b6f95979a90962d4ef1aed10f4ee4a7e92ec2fd7051"
+      "fileHash": "ee054924f77d7ae2d46a8651f6e769def24cf3d2ec7abc615275b21d71785777"
     },
     {
       "code": "AOLAN-YY",

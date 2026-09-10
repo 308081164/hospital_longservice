@@ -669,7 +669,11 @@ public class PricingRuleCompiler {
             node.put("extraCount", rule.getExtraCount());
         }
         if (rule.getPrice() != null) {
-            node.put("unitPrice", rule.getPrice().doubleValue());
+            if (isFoldFlatPackPrice(rule)) {
+                node.put("price", rule.getPrice().doubleValue());
+            } else {
+                node.put("unitPrice", rule.getPrice().doubleValue());
+            }
         }
         if (rule.getTemperature() != null && !rule.getTemperature().isBlank()) {
             node.put("temperature", rule.getTemperature().trim().toUpperCase());
@@ -681,6 +685,24 @@ public class PricingRuleCompiler {
         }
         appendRuleConditions(node, rule);
         return node;
+    }
+
+    /**
+     * 高温无纺布等「十合1加盒」类 FOLD：price 表示每包固定价（非折算件×单价）。
+     * 低温胶帽/垫片等仍按 unitPrice 折算件数乘单价。
+     */
+    private static boolean isFoldFlatPackPrice(CustomerProductRule rule) {
+        if (rule.getPrice() == null || !Boolean.TRUE.equals(rule.getSkipPackaging())) {
+            return false;
+        }
+        if (rule.getExtraCount() == null || rule.getExtraCount() <= 0) {
+            return false;
+        }
+        if (rule.getMinInstrumentCount() == null || rule.getMinInstrumentCount() < 21) {
+            return false;
+        }
+        String temperature = rule.getTemperature();
+        return temperature == null || temperature.isBlank() || "HT".equalsIgnoreCase(temperature.trim());
     }
 
     private ObjectNode toExtraFeeNode(CustomerProductRule rule, List<String> hospitalNames) {

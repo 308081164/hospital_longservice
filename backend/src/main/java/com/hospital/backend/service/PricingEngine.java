@@ -197,7 +197,8 @@ public class PricingEngine {
         }
         SpecialPriceResult preMatchedSpecialPrice = zeroPriceOverride != null
                 ? zeroPriceOverride
-                : findSpecialFixedPrice(row, bagSize, effectiveCount, matchedProductId, matchedVariantId);
+                : findSpecialFixedPrice(
+                        row, bagSize, effectiveCount, matchedProductId, matchedVariantId, false, 0, 0);
         if (preMatchedSpecialPrice == null) {
             preMatchedSpecialPrice = resolveProductPublicPrice(structuredMatch, unitPrice);
         }
@@ -208,6 +209,8 @@ public class PricingEngine {
         boolean foldSkipPackaging = false;
         boolean foldHasExtraCount = false;
         Double foldUnitPriceOverride = null;
+        Double foldFlatPackPrice = null;
+        int foldMinInstrumentCount = 0;
         Long foldMatchedRuleId = null;
         String foldMatchedRuleName = null;
         if (preMatchedSpecialPrice == null && !isZsdInstrumentPack) {
@@ -218,6 +221,8 @@ public class PricingEngine {
             foldSkipPackaging = foldResult.skipPackaging();
             foldHasExtraCount = foldResult.hasExtraCount();
             foldUnitPriceOverride = foldResult.unitPriceOverride();
+            foldFlatPackPrice = foldResult.flatPackPrice();
+            foldMinInstrumentCount = foldResult.minInstrumentCount();
             foldMatchedRuleId = foldResult.ruleId();
             foldMatchedRuleName = foldResult.ruleName();
         }
@@ -337,9 +342,9 @@ public class PricingEngine {
         Long matchedRuleId = foldMatchedRuleId;
         SpecialPriceResult specialPrice = preMatchedSpecialPrice != null
                 ? preMatchedSpecialPrice
-                : (appliedSpecialFoldRule
-                        ? null
-                        : findSpecialFixedPrice(row, bagSize, effectiveCount, matchedProductId, matchedVariantId));
+                : findSpecialFixedPrice(
+                        row, bagSize, effectiveCount, matchedProductId, matchedVariantId,
+                        appliedSpecialFoldRule, perPackRawInstrumentCount, foldMinInstrumentCount);
 
         // ---- 特殊类型优先处理 ----
         if (specialPrice != null) {
@@ -569,6 +574,9 @@ public class PricingEngine {
         if (appliedSpecialFoldRule && foldMatchedRuleName != null && !foldMatchedRuleName.isBlank()) {
             pricingRule = foldMatchedRuleName;
         }
+        if (appliedSpecialFoldRule && foldFlatPackPrice != null) {
+            expectedUnitPrice = foldFlatPackPrice;
+        }
 
         if (specialPrice == null && expectedUnitPrice != null) {
             MultiplierResult multiplierResult = findCustomerMultiplier(
@@ -737,7 +745,8 @@ public class PricingEngine {
         result.pricingRule = pricingRule;
         result.notes = notes;
         result.matchedRuleId = matchedRuleId;
-        result.pricingPath = resolveEffectivePricingPath(specialPrice, pricingRule);
+        result.pricingPath = resolveEffectivePricingPath(
+                specialPrice, pricingRule, appliedSpecialFoldRule && foldFlatPackPrice != null);
         if (specialPrice != null) {
             result.matchedPriceOption = specialPrice.matchedPriceOption;
             if (specialPrice.anyPriceMode) {
@@ -815,8 +824,9 @@ public class PricingEngine {
         return merged.isEmpty() ? null : merged;
     }
 
-    private String resolveEffectivePricingPath(SpecialPriceResult specialPrice, String pricingRule) {
-        if (specialPrice != null) {
+    private String resolveEffectivePricingPath(
+            SpecialPriceResult specialPrice, String pricingRule, boolean foldFlatPackApplied) {
+        if (specialPrice != null || foldFlatPackApplied) {
             return "fixed";
         }
         if ("special_only 未命中特色规则".equals(pricingRule)) {
@@ -975,7 +985,7 @@ public class PricingEngine {
     private FoldApplyResult applyFoldRuleList(Map<String, Object> row, JsonNode foldRules, String combined, int bagSize,
                                               int effectiveCount, List<String> notes) {
         if (!foldRules.isArray()) {
-            return new FoldApplyResult(effectiveCount, false, false, null, null, null, false);
+            return new FoldApplyResult(effectiveCount, false, false, null, null, null, false, 0, null);
         }
         BillingConditionEvaluator.RowContext ctx = new BillingConditionEvaluator.RowContext(
                 str(row, "type"),
@@ -1025,18 +1035,29 @@ public class PricingEngine {
                 unitPriceOverride = null;
             }
             Long ruleId = rule.has("ruleId") ? rule.path("ruleId").asLong() : null;
-            return new FoldApplyResult(result, skipPackaging, true, unitPriceOverride, ruleId, name, extraCount > 0);
+            int minInstrumentCount = rule.path("minInstrumentCount").asInt(0);
+            Double flatPackPrice = null;
+            if (rule.has("price") && !rule.has("unitPrice")) {
+                double packPrice = rule.path("price").asDouble(Double.NaN);
+                if (!Double.isNaN(packPrice)) {
+                    flatPackPrice = packPrice;
+                }
+            }
+            return new FoldApplyResult(
+                    result, skipPackaging, true, unitPriceOverride, ruleId, name, extraCount > 0,
+                    minInstrumentCount, flatPackPrice);
         }
-        return new FoldApplyResult(effectiveCount, false, false, null, null, null, false);
+        return new FoldApplyResult(effectiveCount, false, false, null, null, null, false, 0, null);
     }
 
     private record FoldApplyResult(int effectiveCount, boolean skipPackaging, boolean matched,
                                    Double unitPriceOverride, Long ruleId, String ruleName,
-                                   boolean hasExtraCount) {}
+                                   boolean hasExtraCount, int minInstrumentCount, Double flatPackPrice) {}
 
     private SpecialPriceResult findSpecialFixedPrice(
             Map<String, Object> row, int bagSize, int effectiveCount,
-            Long matchedProductId, Long matchedVariantId) {
+            Long matchedProductId, Long matchedVariantId,
+            boolean appliedSpecialFoldRule, int rawPerPackInstrumentCount, int foldMinInstrumentCount) {
         String combined = combinedText(row);
         String hospitalName = str(row, "hospitalName");
         Double unitPrice = doubleOrNull(row, "unitPrice");
@@ -1048,6 +1069,13 @@ public class PricingEngine {
         SpecialPriceResult unitPriceMatch = null;
         SpecialPriceResult anyPriceAcceptedMatch = null;
         for (JsonNode rule : fixedPrices) {
+            if (appliedSpecialFoldRule && foldMinInstrumentCount > 0
+                    && rawPerPackInstrumentCount >= foldMinInstrumentCount) {
+                int maxCount = rule.path("maxInstrumentCount").asInt(Integer.MAX_VALUE);
+                if (maxCount < foldMinInstrumentCount) {
+                    continue;
+                }
+            }
             SpecialPriceResult matched = matchFixedPriceRule(
                     rule, row, combined, hospitalName, bagSize, effectiveCount,
                     matchedProductId, matchedVariantId);
