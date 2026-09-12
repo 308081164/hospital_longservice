@@ -110,16 +110,42 @@ public class BaselineRuleSyncServiceImpl implements BaselineRuleSyncService {
     public int importAllBaselines(boolean dryRun) {
         int total = 0;
         for (String code : baselineRuleIndex.customerCodes()) {
+            JsonNode baseline = baselineRuleIndex.baselineForCustomer(code);
+            if (baseline == null) {
+                continue;
+            }
             Customer customer = customerMapper.selectByCode(code);
+            if (customer == null) {
+                customer = ensureCustomerFromBaseline(baseline, dryRun);
+            }
             if (customer == null) {
                 continue;
             }
-            JsonNode baseline = baselineRuleIndex.baselineForCustomer(code);
-            if (baseline != null) {
-                total += importCustomerBaseline(customer.getId(), baseline, dryRun);
-            }
+            total += importCustomerBaseline(customer.getId(), baseline, dryRun);
         }
         return total;
+    }
+
+    /** baseline 新引入客户时，按 JSON 元数据自动建档，避免 import 因客户缺失而跳过。 */
+    private Customer ensureCustomerFromBaseline(JsonNode baselineNode, boolean dryRun) {
+        String code = text(baselineNode, "customerCode");
+        if (code == null || code.isBlank()) {
+            return null;
+        }
+        if (dryRun) {
+            Customer stub = new Customer();
+            stub.setCode(code);
+            stub.setId(-1L);
+            return stub;
+        }
+        Customer customer = new Customer();
+        customer.setCode(code);
+        customer.setCanonicalName(text(baselineNode, "customerName", code));
+        customer.setStatus("active");
+        customer.setBillingEnabled(bool(baselineNode, "billingEnabled", true));
+        customer.setBillingPricingMode(text(baselineNode, "billingPricingMode", "standard"));
+        customerMapper.insert(customer);
+        return customer;
     }
 
     @Override

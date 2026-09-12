@@ -24,7 +24,7 @@ class RulesVerificationRoundTripTest {
     @Test
     void baselineImportRoundTripMatchesVerifySignature() throws Exception {
         List<String> mismatches = new ArrayList<>();
-        for (String code : List.of("HLJ-FY-RK", "HRB-WY", "FNN-YY", "GUOYAO-2")) {
+        for (String code : List.of("HLJ-FY-RK", "HRB-WY", "FNN-YY", "GUOYAO-2", "JIAYI-YL")) {
             JsonNode root = JsonUtils.getObjectMapper().readTree(
                     new ClassPathResource("billing-rules/baseline/" + code + ".json").getInputStream());
             for (JsonNode ruleNode : root.path("productRules")) {
