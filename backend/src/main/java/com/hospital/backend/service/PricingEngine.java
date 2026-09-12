@@ -736,6 +736,17 @@ public class PricingEngine {
         if (!pricingAlerts.isEmpty() && "unchanged".equals(status)) {
             status = "warning";
         }
+        if (ReconciliationAnomalyDetector.hasUnitPriceMismatch(unitPrice, expectedUnitPrice)) {
+            notes.add("【字段核对】规则单价 " + fmt(expectedUnitPrice) + " 元与原账单价 "
+                    + fmt(unitPrice) + " 元不一致，请人工复核。");
+            if ("unchanged".equals(status)) {
+                status = "warning";
+            }
+        }
+        if (ReconciliationAnomalyDetector.needsManualRuleReview(pricingRule, expectedUnitPrice)
+                && "unchanged".equals(status)) {
+            status = "warning";
+        }
 
         ProcessedResult result = new ProcessedResult();
         result.expectedUnitPrice = expectedUnitPrice;

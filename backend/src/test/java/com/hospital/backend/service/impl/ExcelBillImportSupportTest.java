@@ -53,6 +53,15 @@ class ExcelBillImportSupportTest {
   }
 
   @Test
+  void extractsHospitalNameFromBingcheng111StyleBill() throws Exception {
+    Path file = Path.of("../测试用例/哈尔滨冰城医疗美容医院/原始表格/111.xlsx");
+    org.junit.jupiter.api.Assumptions.assumeTrue(Files.exists(file), "fixture missing");
+    byte[] bytes = Files.readAllBytes(file);
+    List<String> names = ExcelBillImportSupport.extractHospitalDisplayNames(bytes);
+    assertThat(names.stream().anyMatch(n -> n.contains("冰城医疗美容"))).isTrue();
+  }
+
+  @Test
   void detectsInlineDepartmentMarker() {
     assertThat(ExcelBillImportSupport.isInlineDepartmentMarkerRow("ICU病房", "", "", "")).isTrue();
     assertThat(ExcelBillImportSupport.isInlineDepartmentMarkerRow("哈尔滨红十字妇产医院", "", "", "")).isFalse();

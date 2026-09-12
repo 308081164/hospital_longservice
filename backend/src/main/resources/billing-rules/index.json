@@ -1,8 +1,8 @@
 {
-  "baseline_hash": "0a4796f899d59669d18f368354c40d209a1809afdd4f970ebef271feb806192e",
-  "generated_at": "2026-09-10T10:00:51Z",
+  "baseline_hash": "f1a6974456b7f79577c765e9c74cf90c872b3011114fee7e19f8b91f9a8b76dd",
+  "generated_at": "2026-09-11T02:21:50Z",
   "source": "billing-rules-manifest@01836c66115726ff7229db58f16020cb6e65f7069beee13551669c1031fd7764",
-  "customer_count": 29,
+  "customer_count": 30,
   "customers": [
     {
       "code": "BINGCHENG-YM",
@@ -21,6 +21,12 @@
       "file": "baseline/FNN-YY.json",
       "ruleCount": 8,
       "fileHash": "d1c1a6c45cc80d6552673a069127021fdcf971741bf6b2e0b5c424c9525acb9b"
+    },
+    {
+      "code": "JIAYI-YL",
+      "file": "baseline/JIAYI-YL.json",
+      "ruleCount": 1,
+      "fileHash": "2db7b73783c515f08ef687126dcfaadfbc1651772eb6073c0819409b64a31172"
     },
     {
       "code": "NEAU-YY",

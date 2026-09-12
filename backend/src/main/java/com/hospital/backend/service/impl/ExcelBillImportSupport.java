@@ -29,7 +29,10 @@ final class ExcelBillImportSupport {
     private ExcelBillImportSupport() {
     }
 
-    record WorkbookParseResult(List<Map<String, Object>> rows, List<String> hospitalDisplayNames) {
+    record WorkbookParseResult(
+            List<Map<String, Object>> rows,
+            List<String> hospitalDisplayNames,
+            List<String> headerAreaTexts) {
     }
 
     static List<Map<String, Object>> parseWorkbook(InputStream inputStream) throws IOException {
@@ -42,9 +45,17 @@ final class ExcelBillImportSupport {
         }
     }
 
+    /** 表头区域（首个表头行及其后 8 行）内所有非空单元格文本，供客户别名解析医院全称。 */
+    static List<String> extractHeaderAreaTexts(byte[] fileBytes) throws IOException {
+        try (InputStream in = new ByteArrayInputStream(fileBytes)) {
+            return parseWorkbookData(in).headerAreaTexts();
+        }
+    }
+
     static WorkbookParseResult parseWorkbookData(InputStream inputStream) throws IOException {
         List<Map<String, Object>> allRows = new ArrayList<>();
         LinkedHashSet<String> hospitalDisplayNames = new LinkedHashSet<>();
+        LinkedHashSet<String> headerAreaTexts = new LinkedHashSet<>();
         try (Workbook workbook = WorkbookFactory.create(inputStream)) {
             for (int s = 0; s < workbook.getNumberOfSheets(); s++) {
                 Sheet sheet = workbook.getSheetAt(s);
@@ -58,6 +69,7 @@ final class ExcelBillImportSupport {
                     continue;
                 }
                 collectHospitalDisplayNames(matrix, headerIdx, hospitalDisplayNames);
+                collectHeaderAreaTexts(matrix, headerIdx, headerAreaTexts);
                 Map<String, Integer> headerMap = buildHeaderMap(matrix.get(headerIdx));
                 boolean combinedSheet = isCombinedImportSheet(sheetName, headerMap);
                 String currentDept = sheetName;
@@ -108,7 +120,20 @@ final class ExcelBillImportSupport {
                 }
             }
         }
-        return new WorkbookParseResult(allRows, List.copyOf(hospitalDisplayNames));
+        return new WorkbookParseResult(allRows, List.copyOf(hospitalDisplayNames), List.copyOf(headerAreaTexts));
+    }
+
+    private static void collectHeaderAreaTexts(
+            List<List<Object>> matrix, int headerRowIndex, Set<String> out) {
+        int scanEnd = Math.min(matrix.size(), headerRowIndex + 8);
+        for (int r = 0; r < scanEnd; r++) {
+            for (Object cell : matrix.get(r)) {
+                String text = sanitizeStr(cell);
+                if (!text.isBlank()) {
+                    out.add(text.trim());
+                }
+            }
+        }
     }
 
     private static void collectHospitalDisplayNames(

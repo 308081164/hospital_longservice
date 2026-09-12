@@ -23,6 +23,7 @@ import com.hospital.backend.service.SettlementJobFieldsApplier;
 import com.hospital.backend.service.ExternalInstrumentService;
 import com.hospital.backend.service.HospitalReconciliationService;
 import com.hospital.backend.service.HospitalExportCapabilityService;
+import com.hospital.backend.service.ReconciliationAnomalyDetector;
 import com.hospital.backend.service.ReconciliationHospitalNameResolver;
 import com.hospital.backend.service.ReconciliationVersionGroup;
 import com.hospital.backend.export.BillColumnLayout;
@@ -567,11 +568,14 @@ public class HospitalReconciliationServiceImpl implements HospitalReconciliation
             // ---- 提取元数据 ----
             // 医院名称：用于分类索引和文件目录命名
             String sourceFileName = ReconciliationVersionGroup.normalizeSourceFileName(sourceFile.getOriginalFilename());
-            List<String> sheetHospitalNames = ExcelBillImportSupport.extractHospitalDisplayNames(sourceFile.getBytes());
+            byte[] sourceBytes = sourceFile.getBytes();
+            List<String> sheetHospitalNames = ExcelBillImportSupport.extractHospitalDisplayNames(sourceBytes);
+            List<String> headerAreaTexts = ExcelBillImportSupport.extractHeaderAreaTexts(sourceBytes);
             String hospitalName = reconciliationHospitalNameResolver.resolve(
                     valueToString(payload.get("hospitalName"), ""),
                     sourceFileName,
-                    sheetHospitalNames);
+                    sheetHospitalNames,
+                    headerAreaTexts);
             // 操作人：记录是谁执行了本次核对操作
             String operatorName = valueToString(payload.get("operatorName"), "");
             // 规则信息：本次核对使用的是哪条计费规则
@@ -701,7 +705,10 @@ public class HospitalReconciliationServiceImpl implements HospitalReconciliation
             // 3. 确定医院名称。定价引擎中的医院特例规则需要先拿到医院名。
             String sourceFileName = ReconciliationVersionGroup.normalizeSourceFileName(sourceFile.getOriginalFilename());
             String hospitalName = reconciliationHospitalNameResolver.resolve(
-                    hospitalNameParam, sourceFileName, parsed.hospitalDisplayNames());
+                    hospitalNameParam,
+                    sourceFileName,
+                    parsed.hospitalDisplayNames(),
+                    parsed.headerAreaTexts());
 
             // 4. 逐行处理（含 FOLD 拆行）
             Optional<Customer> resolvedCustomer = customerResolver.resolveByName(hospitalName);
@@ -1773,13 +1780,7 @@ public class HospitalReconciliationServiceImpl implements HospitalReconciliation
     }
 
     private boolean isAnomalyExportRow(HospitalReconciliationRow row, boolean includeFieldConsistency) {
-        Double difference = row.getDifference();
-        boolean priceAnomaly = difference != null && Math.abs(difference) > 0.001;
-        if (priceAnomaly) {
-            return true;
-        }
-        return includeFieldConsistency
-                && BillRowBillingNotesSupport.hasAnyFieldCheckViolations(row.getBillingNotes());
+        return ReconciliationAnomalyDetector.isAnomalyRow(row, includeFieldConsistency);
     }
 
     /**

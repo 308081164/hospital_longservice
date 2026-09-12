@@ -1,0 +1,27 @@
+{
+  "customerCode": "JIAYI-YL",
+  "customerName": "佳医医疗",
+  "billingEnabled": true,
+  "billingPricingMode": "hybrid",
+  "productRules": [
+    {
+      "ruleType": "FIXED_PRICE",
+      "name": "佳医敷料纸塑4元",
+      "priority": 10,
+      "keywords": [
+        "孔巾",
+        "眼包敷料"
+      ],
+      "price": 4.0,
+      "skipPackaging": true,
+      "skipDiscount": true,
+      "isActive": true,
+      "matchMode": "first",
+      "keywordMatchMode": "exact_token",
+      "acceptedTypes": [
+        "敷料包（纸塑袋）",
+        "敷料包(纸塑袋)"
+      ]
+    }
+  ]
+}

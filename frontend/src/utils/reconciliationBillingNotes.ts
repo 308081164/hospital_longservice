@@ -305,10 +305,17 @@ export function blocksPricingFromBillingNotes(
 
 /** 字段核对/校验异常时在数值后展示红叹号（不阻断计价结果展示）。 */
 export function shouldShowValidationIndicator(row: Record<string, unknown>): boolean {
-  // 人工标记「无需修改」的行视为已确认，不再提示红叹号
-  if (row['status'] === 'unchanged') return false
   const ctx = parseReconciliationBillingContext(row)
-  return ctx.hasFieldConsistencyIssues || ctx.hasBlockingValidationIssues
+  if (ctx.hasFieldConsistencyIssues || ctx.hasBlockingValidationIssues) return true
+  // 规则单价与原单价不一致、或未命中规则需人工核验时展示告警
+  const unitPrice = toNumber(row.unitPrice)
+  const expectedUnitPrice = toNumber(row.expectedUnitPrice)
+  if (unitPrice != null && expectedUnitPrice != null && Math.abs(unitPrice - expectedUnitPrice) > 0.001) {
+    return true
+  }
+  const pricingRule = String(row.pricingRule ?? row.pricing_rule ?? '').trim()
+  if (pricingRule === '未命中规则' || pricingRule.includes('未识别包装类型')) return true
+  return false
 }
 
 export function validationIndicatorMessages(row: Record<string, unknown>): string[] {

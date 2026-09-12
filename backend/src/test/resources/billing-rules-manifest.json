@@ -1,9 +1,9 @@
 {
   "version": 1,
-  "generated_at": "2026-09-10T10:00:51Z",
-  "manifest_hash": "ffc38b2f9f710ed671f9c4332805797e8b6c3e40a3dfd3a6b077c3a46b1c075f",
-  "billing_enabled_count": 29,
-  "active_billing_enabled_count": 29,
+  "generated_at": "2026-09-12T11:57:50Z",
+  "manifest_hash": "152bc7cdda0c75866c60af09c44b14b092cc34c29cfac8e6e14f486adc2d4d02",
+  "billing_enabled_count": 30,
+  "active_billing_enabled_count": 30,
   "customers": {
     "BINGCHENG-YM": {
       "code": "BINGCHENG-YM",
@@ -892,6 +892,37 @@
       ],
       "rule_count": 8,
       "active_rule_count": 8
+    },
+    "JIAYI-YL": {
+      "code": "JIAYI-YL",
+      "name": "佳医医疗",
+      "status": null,
+      "billingPricingMode": "hybrid",
+      "standardPricingOverride": null,
+      "billingEnabled": true,
+      "productRules": [
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "佳医敷料纸塑4元",
+          "priority": 10,
+          "keywords": [
+            "孔巾",
+            "眼包敷料"
+          ],
+          "price": 4.0,
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": true,
+          "matchMode": "first",
+          "keywordMatchMode": "exact_token",
+          "acceptedTypes": [
+            "敷料包（纸塑袋）",
+            "敷料包(纸塑袋)"
+          ]
+        }
+      ],
+      "rule_count": 1,
+      "active_rule_count": 1
     },
     "NEAU-YY": {
       "code": "NEAU-YY",

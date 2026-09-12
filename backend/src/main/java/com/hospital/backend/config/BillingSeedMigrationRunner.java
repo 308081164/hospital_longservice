@@ -54,9 +54,9 @@ public class BillingSeedMigrationRunner implements CommandLineRunner {
     /** 删除非 22 家特殊计价客户及其孤儿数据（严格测试口径收敛） */
     private static final String STALE_CUSTOMER_CLEANUP_MARKER = "billing_seed_stale_customer_cleanup_20260827_v1";
 
-    /** 最终保留的 29 家特殊计价客户 code（与 scripts/billing_rules_manifest.py STRICT_KEEP_CODES 一致）：历史 22 家 + 2026-08 新引入 4 家 + 2026-09 特殊收费(2) 新引入 3 家 */
+    /** 最终保留的特殊计价客户 code（与 scripts/strict_hospital_codes.py STRICT_KEEP_CODES 一致） */
     private static final java.util.List<String> STRICT_KEEP_CODES = java.util.List.of(
-            "BINGCHENG-YM", "GUOYAO-2", "FNN-YY", "NEAU-YY", "HRB-WY", "HRB-SD-MB", "HRB-HTFH",
+            "BINGCHENG-YM", "GUOYAO-2", "FNN-YY", "JIAYI-YL", "NEAU-YY", "HRB-WY", "HRB-SD-MB", "HRB-HTFH",
             "HRB-WY-EM", "JIUZHOU-FK", "BOSHANG-YY", "HAIYUAN-SB", "HLJ-FY-RK", "ZUYAN-NG",
             "SHKF-YY", "DL-FUCHAN", "CHUNYU-YL", "HL-ZGH", "JZSW-BIO", "SUOFEI-YL", "HLJ-JYGLJ-YY",
             "HULAN-TCM", "PFQ-RM",

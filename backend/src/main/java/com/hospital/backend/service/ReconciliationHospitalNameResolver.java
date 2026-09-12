@@ -34,11 +34,19 @@ public class ReconciliationHospitalNameResolver {
     private final CustomerResolver customerResolver;
 
     public String resolve(String hospitalNameParam, String sourceFileName) {
-        return resolve(hospitalNameParam, sourceFileName, List.of());
+        return resolve(hospitalNameParam, sourceFileName, List.of(), List.of());
     }
 
     public String resolve(String hospitalNameParam, String sourceFileName, List<String> sheetHospitalNames) {
-        for (String candidate : buildCandidates(hospitalNameParam, sourceFileName, sheetHospitalNames)) {
+        return resolve(hospitalNameParam, sourceFileName, sheetHospitalNames, List.of());
+    }
+
+    public String resolve(
+            String hospitalNameParam,
+            String sourceFileName,
+            List<String> sheetHospitalNames,
+            List<String> headerAreaTexts) {
+        for (String candidate : buildCandidates(hospitalNameParam, sourceFileName, sheetHospitalNames, headerAreaTexts)) {
             if (isLikelyDepartmentName(candidate)) {
                 continue;
             }
@@ -48,13 +56,29 @@ public class ReconciliationHospitalNameResolver {
             }
         }
 
-        for (String candidate : buildCandidates(hospitalNameParam, sourceFileName, sheetHospitalNames)) {
+        for (String candidate : buildCandidates(hospitalNameParam, sourceFileName, sheetHospitalNames, headerAreaTexts)) {
             if (!isLikelyDepartmentName(candidate)) {
                 return candidate;
             }
         }
 
         return "未命名医院";
+    }
+
+    /** 从 Excel 表头区域文本中，按客户别名/规范名补全医院全称（不依赖文件名）。 */
+    public List<String> enrichHospitalNamesFromHeaderTexts(List<String> headerAreaTexts) {
+        if (headerAreaTexts == null || headerAreaTexts.isEmpty()) {
+            return List.of();
+        }
+        Set<String> names = new LinkedHashSet<>();
+        for (String text : headerAreaTexts) {
+            if (text == null || text.isBlank() || isLikelyDepartmentName(text)) {
+                continue;
+            }
+            customerResolver.resolveByName(text.trim())
+                    .ifPresent(customer -> names.add(customer.getCanonicalName()));
+        }
+        return new ArrayList<>(names);
     }
 
     public boolean isLikelyHospitalName(String name) {
@@ -101,7 +125,10 @@ public class ReconciliationHospitalNameResolver {
     }
 
     private List<String> buildCandidates(
-            String hospitalNameParam, String sourceFileName, List<String> sheetHospitalNames) {
+            String hospitalNameParam,
+            String sourceFileName,
+            List<String> sheetHospitalNames,
+            List<String> headerAreaTexts) {
         Set<String> ordered = new LinkedHashSet<>();
         if (sheetHospitalNames != null) {
             for (String name : sheetHospitalNames) {
@@ -110,9 +137,13 @@ public class ReconciliationHospitalNameResolver {
                 }
             }
         }
+        for (String aliasResolved : enrichHospitalNamesFromHeaderTexts(headerAreaTexts)) {
+            addCandidate(ordered, aliasResolved);
+        }
         if (!isLikelyDepartmentName(hospitalNameParam)) {
             addCandidate(ordered, hospitalNameParam);
         }
+        // 文件名仅作最后兜底（优先使用 Excel 表头/别名解析结果）
         addCandidate(ordered, inferFromFileName(sourceFileName));
         if (sourceFileName != null && !sourceFileName.isBlank()) {
             String base = sourceFileName.trim();

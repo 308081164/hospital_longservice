@@ -943,6 +943,7 @@
     inferHospitalNameFromFileName,
     resolveReconciliationHospitalName
   } from '@/utils/reconciliationHospitalName'
+  import { isReconciliationAnomalyRow } from '@/utils/reconciliationAnomaly'
   import ReconciliationEntryPanel from '@/components/business/reconciliation/ReconciliationEntryPanel.vue'
   import ReconciliationJobDialogs from '@/components/business/reconciliation/ReconciliationJobDialogs.vue'
   import { reconciliationJobActionsKey } from '@/composables/reconciliationJobActionsKey'
@@ -1113,7 +1114,7 @@
       try {
         const allRows = await fetchAllRowsForExport(entry.savedJobId!)
         let processed = allRows.map((row) => mapApiRowToProcessedRow(row))
-        processed = processed.filter((row) => row.status !== 'unchanged')
+        processed = processed.filter((row) => isReconciliationAnomalyRow(rowAsRecord(row)))
         if (entry.selectedSheetFilter) {
           processed = processed.filter((row) => row.sheetName === entry.selectedSheetFilter)
         }
@@ -1356,13 +1357,15 @@
     if (entry.hospitalName && !keywords.includes(entry.hospitalName)) {
       keywords.push(entry.hospitalName)
     }
-    const fileNameHospital = inferHospitalNameFromFileName(entry.file.name)
-    if (fileNameHospital && !keywords.includes(fileNameHospital)) {
-      keywords.push(fileNameHospital)
-    }
-    const fileNameBase = entry.file.name.replace(/\.[^.]+$/, '').replace(/^\d{4}[\s_-]?/, '')
-    if (fileNameBase && !keywords.includes(fileNameBase)) {
-      keywords.push(fileNameBase)
+    if (!entry.hospitalName) {
+      const fileNameHospital = inferHospitalNameFromFileName(entry.file.name)
+      if (fileNameHospital && !keywords.includes(fileNameHospital)) {
+        keywords.push(fileNameHospital)
+      }
+      const fileNameBase = entry.file.name.replace(/\.[^.]+$/, '').replace(/^\d{4}[\s_-]?/, '')
+      if (fileNameBase && !keywords.includes(fileNameBase)) {
+        keywords.push(fileNameBase)
+      }
     }
     if (keywords.length === 0) return
 
@@ -1588,7 +1591,7 @@
         const allRows = await fetchAllRowsForExport(entry.savedJobId)
         let processed = allRows
           .map((row) => mapApiRowToProcessedRow(row))
-          .filter((row) => row.status !== 'unchanged')
+          .filter((row) => isReconciliationAnomalyRow(rowAsRecord(row)))
         if (sheetName) {
           processed = processed.filter((row) => row.sheetName === sheetName)
         }
@@ -1683,7 +1686,7 @@
       await new Promise<void>((resolve) => {
         requestAnimationFrame(() => {
           let processed = allRows.map((row) => mapApiRowToProcessedRow(row))
-          processed = processed.filter((row) => row.status !== 'unchanged')
+          processed = processed.filter((row) => isReconciliationAnomalyRow(rowAsRecord(row)))
           if (entry.selectedSheetFilter) {
             processed = processed.filter((row) => row.sheetName === entry.selectedSheetFilter)
           }
