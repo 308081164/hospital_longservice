@@ -247,9 +247,6 @@
         {{ t('reconciliation.history.stats.warningRows') }} {{ versionItem.warningRows }}
       </span>
       <div class="version-actions">
-        <ElButton size="small" @click="actions?.openDetail(versionItem)">
-          {{ t('reconciliation.history.actions.detail') }}
-        </ElButton>
         <ElButton
           size="small"
           :disabled="!canReview(versionItem)"

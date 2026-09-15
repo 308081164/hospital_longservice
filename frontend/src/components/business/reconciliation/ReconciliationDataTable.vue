@@ -19,6 +19,25 @@
         :selectable="rowSelectable"
       />
       <ElTableColumn
+        v-if="showRowDetailTrigger"
+        label=""
+        width="40"
+        fixed="left"
+        align="center"
+      >
+        <template #default="{ row }">
+          <button
+            type="button"
+            class="row-detail-trigger"
+            title="查看行详情"
+            aria-label="查看行详情"
+            @click="emitOpenRowDetail(row)"
+          >
+            <ElIcon><View /></ElIcon>
+          </button>
+        </template>
+      </ElTableColumn>
+      <ElTableColumn
         prop="rowNumber"
         :label="columnLabel('rowNumber')"
         width="65"
@@ -281,7 +300,7 @@
               <option value="skipped">已跳过</option>
             </select>
           </template>
-          <template v-else-if="mode === 'detail' && editable">
+          <template v-else-if="editable">
             <button
               v-if="hasRowDifference(row) && row['status'] !== 'corrected'"
               class="detail-cell-btn-warning"
@@ -296,9 +315,12 @@
             >
             <select
               v-else
-              v-model="row['status']"
+              :value="row['status']"
               class="detail-cell-select"
-              @change="emitRowChange(row)"
+              @change="
+                (e: Event) =>
+                  emitFieldChange(row, 'status', (e.target as HTMLSelectElement).value)
+              "
             >
               <option value="corrected">已修正</option>
               <option value="unchanged">无需修改</option>
@@ -320,7 +342,7 @@
         </template>
       </ElTableColumn>
       <ElTableColumn
-        v-if="mode === 'detail' && rowRepriceEnabled"
+        v-if="rowRepriceEnabled"
         label="操作"
         width="104"
         fixed="right"
@@ -343,6 +365,7 @@
 
 <script setup lang="ts">
   import { computed } from 'vue'
+  import { View } from '@element-plus/icons-vue'
   import { useI18n } from 'vue-i18n'
   import type { RosterMatchHint } from '@/api/billing-config/allocationApi'
   import FieldConsistencyHighlight from '@/components/business/reconciliation/FieldConsistencyHighlight.vue'
@@ -370,6 +393,8 @@
       rosterHintMap?: Map<number, RosterMatchHint>
       rowClassName?: (ctx: { row: Record<string, unknown> }) => string
       rowSelectable?: (row: Record<string, unknown>) => boolean
+      /** 行首「查看详情」图标（主表 preview 模式） */
+      showRowDetailTrigger?: boolean
     }>(),
     {
       mode: 'preview',
@@ -377,6 +402,7 @@
       maxHeight: '500px',
       editable: false,
       editableSourceFields: false,
+      showRowDetailTrigger: false,
       rowRepriceEnabled: false,
       repricingRowId: null,
       rosterHintMap: undefined,
@@ -393,6 +419,7 @@
     'row-change': [row: Record<string, unknown>]
     'fix-single-row': [row: Record<string, unknown>]
     'reprice-row': [row: Record<string, unknown>]
+    'open-row-detail': [row: Record<string, unknown>]
   }>()
 
   const { t } = useI18n()
@@ -440,7 +467,12 @@
     if (props.mode === 'preview') {
       if (field === 'correctedTotalPrice' || field === 'status') return true
       if (props.editableSourceFields && field) {
-        return field === 'packageMaterial' || field === 'instrumentCount' || field === 'type'
+        return (
+          field === 'packageMaterial' ||
+          field === 'instrumentCount' ||
+          field === 'type' ||
+          field === 'packCount'
+        )
       }
     }
     return false
@@ -466,9 +498,32 @@
   function emitRepriceRow(row: Record<string, unknown>) {
     emit('reprice-row', row)
   }
+
+  function emitOpenRowDetail(row: Record<string, unknown>) {
+    emit('open-row-detail', row)
+  }
 </script>
 
 <style scoped>
+  .row-detail-trigger {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+    padding: 0;
+    color: var(--el-color-primary);
+    cursor: pointer;
+    background: transparent;
+    border: none;
+    border-radius: 4px;
+    transition: background 0.15s;
+  }
+
+  .row-detail-trigger:hover {
+    background: var(--el-color-primary-light-9);
+  }
+
   .reconciliation-data-table :deep(.detail-row-diff td.el-table__cell) {
     background-color: #fef0f0 !important;
   }

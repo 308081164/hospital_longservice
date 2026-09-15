@@ -1021,7 +1021,7 @@
     },
     "inlineEdit": {
       "saveChanges": "保存修改",
-      "reprice": "重新计价",
+      "reprice": "一键修正",
       "dirtyHint": "有未保存的修改",
       "saveSuccess": "修改已保存",
       "repriceStaged": "已重新计价，请点击「保存修改」写入版本"

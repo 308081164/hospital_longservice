@@ -96,6 +96,7 @@
             :has-dirty="entryHasDirty(entry.id)"
             :is-saving="entryIsSaving(entry.id)"
             :is-repricing="entryIsRepricing(entry.id)"
+            :repricing-row-id="entryRepricingRowId(entry.id)"
             @remove="removeUploadEntry(entry.id)"
             @select-sheet="(sheet) => selectEntrySheet(entry, sheet)"
             @process="handleProcessEntry(entry)"
@@ -107,6 +108,8 @@
             @page-change="(p) => onEntryPageChange(entry, p)"
             @open-pricing-flow="openPricingFlowDetail"
             @row-field-change="(row, field, value) => handleEntryRowFieldChange(entry, row, field, value)"
+            @fix-single-row="(row) => handleEntryFixSingleRow(entry, row)"
+            @reprice-row="(row) => handleEntryRepriceRow(entry, row)"
             @version-change="setGroupSelectedVersion"
           >
             <template #status-badge>
@@ -256,6 +259,7 @@
   }
 
   type ProcessedRow = HospitalRow & {
+    id?: number
     expectedUnitPrice: number | null
     correctedTotalPrice: number | null
     difference: number | null
@@ -950,6 +954,7 @@
     listHospitalReconciliations,
     getReconciliationRows,
     getUnmatchedProducts,
+    repriceReconciliationRow,
     type UnmatchedProductItem
   } from '@/api/hospital/reconciliationsApi'
   import { quickOnboardProduct } from '@/api/master-data/productsApi'
@@ -982,6 +987,7 @@
     fieldConsistencyRowClass,
     parseReconciliationBillingContext
   } from '@/utils/reconciliationBillingNotes'
+  import { applySingleRowCorrection } from '@/utils/reconciliationRowCorrection'
 
   defineOptions({ name: 'HospitalReconciliation' })
 
@@ -1001,7 +1007,9 @@
 
   function mapApiRowToProcessedRow(row: Record<string, unknown>): ProcessedRow {
     const billingFields = extractRowBillingFields(row)
+    const rowId = row['id'] ?? row['row_id']
     return {
+      id: typeof rowId === 'number' ? rowId : rowId != null ? Number(rowId) : undefined,
       sheetName: row['sheetName'] as string,
       rowNumber: row['rowNumber'] as number,
       deliveryDateRaw: null,
@@ -1168,6 +1176,56 @@
     await editor.repriceAndStage(entry.savedJobId, {
       onRepriced: (rows) => applyRepricedRowsToEntry(entry, rows)
     })
+  }
+
+  const entryRepricingRowIds = reactive<Record<string, number | null>>({})
+
+  function entryRepricingRowId(entryId: string): number | null {
+    return entryRepricingRowIds[entryId] ?? null
+  }
+
+  function handleEntryFixSingleRow(entry: UploadEntry, row: Record<string, unknown>) {
+    applySingleRowCorrection(row)
+    const editor = ensureEntryEditor(entry.id)
+    editor.markDirty(row, 'status', 'corrected')
+    if (row['difference'] != null) {
+      editor.markDirty(row, 'difference', row['difference'])
+    }
+  }
+
+  async function handleEntryRepriceRow(entry: UploadEntry, row: Record<string, unknown>) {
+    if (!entry.savedJobId) return
+    const rowId = row['id'] as number | undefined
+    if (rowId == null) {
+      ElMessage.error('该行缺少 ID，请先保存版本后再单行重算')
+      return
+    }
+    entryRepricingRowIds[entry.id] = rowId
+    try {
+      const result = await repriceReconciliationRow(entry.savedJobId, rowId, {
+        type: row['type'] != null ? String(row['type']) : undefined,
+        packageMaterial:
+          row['packageMaterial'] != null ? String(row['packageMaterial']) : undefined,
+        instrumentCount: (row['instrumentCount'] as number | null) ?? undefined,
+        packCount: (row['packCount'] as number | null) ?? undefined
+      })
+      const updated = mapApiRowToProcessedRow(result.row)
+      const key = buildReconciliationRowKey(row)
+      const mapRow = (r: ProcessedRow) =>
+        buildReconciliationRowKey(rowAsRecord(r)) === key ? updated : r
+      if (entry.onlyShowAbnormal && entry.allAnomalyRows) {
+        entry.allAnomalyRows = entry.allAnomalyRows.map(mapRow)
+      } else {
+        entry.processedRows = entry.processedRows.map(mapRow)
+      }
+      ensureEntryEditor(entry.id).applySummaryToEntry(entry, result.job)
+      await refreshEntryHistory()
+      ElMessage.success('已保存并重算该行')
+    } catch (error) {
+      ElMessage.error(error instanceof Error ? error.message : '单行重算失败')
+    } finally {
+      entryRepricingRowIds[entry.id] = null
+    }
   }
 
   function entryHasDirty(entryId: string): boolean {

@@ -52,12 +52,18 @@
             :rows="tableRows"
             mode="preview"
             :show-sheet-column="!entry.selectedSheetFilter"
+            :show-row-detail-trigger="true"
             :max-height="tableMaxHeight"
             :row-class-name="rowClassName"
             :editable="canEdit"
             :editable-source-fields="canEdit"
+            :row-reprice-enabled="canEdit"
+            :repricing-row-id="repricingRowId"
             @open-pricing-flow="(row) => emit('open-pricing-flow', row)"
             @row-field-change="(row, field, value) => emit('row-field-change', row, field, value)"
+            @fix-single-row="(row) => emit('fix-single-row', row)"
+            @reprice-row="(row) => emit('reprice-row', row)"
+            @open-row-detail="openRowDetail"
           />
           <div class="entry-panel-footer">
             <span class="text-xs text-gray-400">
@@ -89,14 +95,33 @@
         </template>
       </div>
     </template>
+
+    <ReconciliationRowDetailDialog
+      :visible="rowDetailVisible"
+      :row="rowDetailCurrent"
+      :current-index="rowDetailIndex"
+      :total="tableRows.length"
+      :editable="canEdit"
+      :editable-source-fields="canEdit"
+      :row-reprice-enabled="canEdit"
+      :repricing-row-id="repricingRowId"
+      @close="rowDetailVisible = false"
+      @navigate="navigateRowDetail"
+      @field-change="(row, field, value) => emit('row-field-change', row, field, value)"
+      @fix-row="(row) => emit('fix-single-row', row)"
+      @reprice-row="(row) => emit('reprice-row', row)"
+      @open-pricing-flow="(row) => emit('open-pricing-flow', row)"
+    />
   </div>
 </template>
 
 <script setup lang="ts">
-  import { computed } from 'vue'
+  import { computed, ref } from 'vue'
   import { useI18n } from 'vue-i18n'
   import ReconciliationDataTable from '@/components/business/reconciliation/ReconciliationDataTable.vue'
   import ReconciliationEntryStickyHeader from '@/components/business/reconciliation/ReconciliationEntryStickyHeader.vue'
+  import ReconciliationRowDetailDialog from '@/components/business/reconciliation/ReconciliationRowDetailDialog.vue'
+  import { buildReconciliationRowKey } from '@/composables/useReconciliationEntryEditing'
   import type { ReconciliationHistoryGroup } from '@/composables/useReconciliationHistory'
 
   export interface ReconciliationEntryPanelEntry {
@@ -151,6 +176,7 @@
     hasDirty?: boolean
     isSaving?: boolean
     isRepricing?: boolean
+    repricingRowId?: number | null
   }>()
 
   const emit = defineEmits<{
@@ -165,6 +191,8 @@
     'page-change': [page: number]
     'open-pricing-flow': [row: Record<string, unknown>]
     'row-field-change': [row: Record<string, unknown>, field: string, value: unknown]
+    'fix-single-row': [row: Record<string, unknown>]
+    'reprice-row': [row: Record<string, unknown>]
     'version-change': [groupKey: string, jobId: number]
   }>()
 
@@ -179,6 +207,23 @@
 
   function defaultFormatVersion(version: Api.Hospital.ReconciliationJob) {
     return `V${version.versionNo}`
+  }
+
+  const rowDetailVisible = ref(false)
+  const rowDetailIndex = ref(0)
+
+  const rowDetailCurrent = computed(() => tableRows.value[rowDetailIndex.value] ?? null)
+
+  function openRowDetail(row: Record<string, unknown>) {
+    const key = buildReconciliationRowKey(row)
+    const idx = tableRows.value.findIndex((r) => buildReconciliationRowKey(r) === key)
+    rowDetailIndex.value = idx >= 0 ? idx : 0
+    rowDetailVisible.value = true
+  }
+
+  function navigateRowDetail(index: number) {
+    if (index < 0 || index >= tableRows.value.length) return
+    rowDetailIndex.value = index
   }
 </script>
 
