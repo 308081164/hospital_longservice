@@ -69,12 +69,16 @@ public class ReconciliationHospitalNameResolver {
         }
 
         for (String candidate : candidates) {
-            if (!isLikelyDepartmentName(candidate)) {
-                return candidate;
+            if (isLikelyDepartmentName(candidate) || isDateRangeText(candidate)) {
+                continue;
+            }
+            if (candidate != null && !candidate.isBlank() && !candidate.contains("发货单汇总表")) {
+                return candidate.trim();
             }
         }
 
-        return "未命名医院";
+        String inferred = inferFromFileName(sourceFileName);
+        return inferred.isBlank() ? "" : inferred;
     }
 
     /** 从 Excel 表头区域文本中，按客户别名/规范名补全医院全称（不依赖文件名）。 */

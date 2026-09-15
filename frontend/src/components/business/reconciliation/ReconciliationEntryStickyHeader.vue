@@ -20,7 +20,15 @@
           :content="ruleTooltip"
           placement="top"
         >
-          <span class="file-strip__chip">{{ ruleLabel }}</span>
+          <span
+            class="file-strip__chip"
+            :class="{
+              'file-strip__chip--special': ruleScope === 'special',
+              'file-strip__chip--standard': ruleScope === 'standard'
+            }"
+          >
+            {{ ruleLabel }}
+          </span>
         </ElTooltip>
         <span class="file-strip__meta">
           <slot name="file-meta" />
@@ -294,12 +302,14 @@
   import { useReconciliationTableColumns } from '@/composables/useReconciliationTableColumns'
   import { useBillingPermission } from '@/composables/useBillingPermission'
   import { exportTypeI18nKey, resolveJobExportTypes } from '@/utils/hospitalExportCapabilities'
-  import { inferHospitalNameFromFileName } from '@/utils/reconciliationHospitalName'
+  import { resolveHospitalBadgeName } from '@/utils/reconciliationHospitalName'
 
   const props = defineProps<{
     fileName: string
     ruleLabel?: string
     ruleTooltip?: string
+    /** standard=通用标准规则；special=特色计价客户规则 */
+    ruleScope?: 'standard' | 'special'
     removeDisabled?: boolean
     entry: ReconciliationEntryPanelEntry
     summary: ReconciliationEntrySummary
@@ -335,10 +345,13 @@
   const { canReviewReconciliation, canExport } = useBillingPermission()
   const actions = inject(reconciliationJobActionsKey, null)
 
-  // entry.hospitalName 正常在解析后必然非空；文件名兜底防御异常路径（如未来新增
-  // 条目来源忘设 hospitalName），确保徽章始终可见，杜绝「识别成功却不显示」
-  const hospitalDisplayName = computed(
-    () => props.entry.hospitalName?.trim() || inferHospitalNameFromFileName(props.fileName)
+  const hospitalDisplayName = computed(() =>
+    resolveHospitalBadgeName({
+      hospitalName: props.entry.hospitalName,
+      fileName: props.fileName,
+      sheetHospitalDisplayNames:
+        props.entry.workbook?.sheetMetas?.map((meta) => meta.hospitalDisplayName) ?? []
+    })
   )
 
   const canExportPerm = computed(() => canExport.value)
@@ -417,10 +430,20 @@
   .file-strip__chip {
     padding: 1px 8px;
     font-size: 11px;
-    color: var(--el-text-color-secondary, #909399);
-    background: #fff;
-    border: 1px solid var(--el-border-color-lighter, #ebeef5);
+    font-weight: 600;
     border-radius: 4px;
+  }
+
+  .file-strip__chip--standard {
+    color: var(--el-text-color-regular, #606266);
+    background: var(--el-fill-color-light, #f5f7fa);
+    border: 1px solid var(--el-border-color, #dcdfe6);
+  }
+
+  .file-strip__chip--special {
+    color: var(--el-color-warning-dark-2, #b88230);
+    background: var(--el-color-warning-light-9, #fdf6ec);
+    border: 1px solid var(--el-color-warning-light-5, #f3d19e);
   }
 
   .file-strip__hospital {

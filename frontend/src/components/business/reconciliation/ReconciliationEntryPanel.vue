@@ -4,6 +4,7 @@
       :file-name="fileName"
       :rule-label="ruleLabel"
       :rule-tooltip="ruleTooltip"
+      :rule-scope="ruleScope"
       :remove-disabled="removeDisabled"
       :entry="entry"
       :summary="summary"
@@ -115,6 +116,7 @@
     savedSheetWarningCounts?: Record<string, number> | null
     workbook: {
       previews: Array<{ name: string; dataRows: number; headerRowIndex: number }>
+      sheetMetas?: Array<{ hospitalDisplayName: string }>
     } | null
   }
 
@@ -131,6 +133,7 @@
     fileName: string
     ruleLabel?: string
     ruleTooltip?: string
+    ruleScope?: 'standard' | 'special'
     removeDisabled?: boolean
     entry: ReconciliationEntryPanelEntry
     summary: ReconciliationEntrySummary

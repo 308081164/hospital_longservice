@@ -4,7 +4,9 @@ import {
   inferHospitalNameFromFileName,
   isDateRangeText,
   isLikelyDepartmentName,
+  isPlaceholderHospitalName,
   pickBestHospitalDisplayName,
+  resolveHospitalBadgeName,
   resolveReconciliationHospitalName
 } from './reconciliationHospitalName.ts'
 
@@ -100,6 +102,22 @@ assertEqual(
   extractStandardHospitalNameFromMatrix(d9Matrix, 8),
   '黑龙江谋大医院',
   'read hospital from D column above header'
+)
+
+assertTrue(isPlaceholderHospitalName('未命名医院'), 'placeholder hospital')
+assertEqual(
+  resolveHospitalBadgeName({
+    hospitalName: '未命名医院',
+    fileName: '哈尔滨美涵医疗美容.xlsx',
+    sheetHospitalDisplayNames: ['哈尔滨美涵医疗美容']
+  }),
+  '哈尔滨美涵医疗美容',
+  'badge prefers excel name over placeholder'
+)
+assertEqual(
+  displayHospitalNameForJob('未命名医院', '谋大6月账单-未改.xlsx'),
+  '谋大',
+  'history card uses filename when db has placeholder'
 )
 
 console.log('reconciliationHospitalName tests passed')

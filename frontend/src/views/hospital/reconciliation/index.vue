@@ -68,12 +68,9 @@
           <ReconciliationEntryPanel
             v-if="entry.workbook"
             :file-name="entry.file.name"
-            :rule-label="entry.rule ? entry.rule.name : '默认规则'"
-            :rule-tooltip="
-              entry.rule
-                ? `使用规则：${entry.rule.name}（${entry.rule.version}）`
-                : '使用全局默认规则'
-            "
+            :rule-label="entryRuleDisplay(entry).label"
+            :rule-tooltip="entryRuleDisplay(entry).tooltip"
+            :rule-scope="entryRuleDisplay(entry).scope"
             :remove-disabled="
               entry.status === 'saving' ||
               entry.status === 'processing' ||
@@ -957,9 +954,13 @@
   } from '@/api/hospital/reconciliationsApi'
   import { quickOnboardProduct } from '@/api/master-data/productsApi'
   import {
-    inferHospitalNameFromFileName,
-    resolveReconciliationHospitalName
+    isPlaceholderHospitalName,
+    resolveHospitalBadgeName
   } from '@/utils/reconciliationHospitalName'
+  import {
+    isCustomerSpecificPricingRule,
+    isGeneralPricingRule
+  } from '@/utils/pricingRuleScope'
   import { isReconciliationAnomalyRow } from '@/utils/reconciliationAnomaly'
   import ReconciliationEntryPanel from '@/components/business/reconciliation/ReconciliationEntryPanel.vue'
   import ReconciliationJobDialogs from '@/components/business/reconciliation/ReconciliationJobDialogs.vue'
@@ -1367,31 +1368,45 @@
     await resolveEntryRule(entry)
   }
 
+  function entryRuleDisplay(entry: UploadEntry) {
+    const rule = entry.rule ?? activeRule.value
+    const name = rule?.name ?? '标准灭菌计费规则'
+    const special = rule ? isCustomerSpecificPricingRule(rule) : false
+    const version = rule?.version ? `（${rule.version}）` : ''
+    return {
+      label: name,
+      scope: special ? ('special' as const) : ('standard' as const),
+      tooltip: special
+        ? `特色计价规则：${name}${version}`
+        : `标准计价规则：${name}${version}`
+    }
+  }
+
   /** 根据条目的医院名称解析匹配的计费规则 */
   async function resolveEntryRule(entry: UploadEntry) {
+    const badgeName = resolveHospitalBadgeName({
+      hospitalName: entry.hospitalName,
+      fileName: entry.file.name,
+      sheetHospitalDisplayNames:
+        entry.workbook?.sheetMetas?.map((meta) => meta.hospitalDisplayName) ?? []
+    })
     const keywords: string[] = []
-    const excelHospital = entry.hospitalName?.trim()
-    if (excelHospital && isLikelyHospitalName(excelHospital)) {
-      keywords.push(excelHospital)
-    } else if (!excelHospital) {
-      const fileNameHospital = inferHospitalNameFromFileName(entry.file.name)
-      if (fileNameHospital) keywords.push(fileNameHospital)
-      const fileNameBase = entry.file.name.replace(/\.[^.]+$/, '').replace(/^\d{4}[\s_-]?/, '')
-      if (fileNameBase && !keywords.includes(fileNameBase)) keywords.push(fileNameBase)
-    } else if (excelHospital) {
-      keywords.push(excelHospital)
-    }
+    if (badgeName) keywords.push(badgeName)
     if (keywords.length === 0) return
 
-    // 统一从全量规则列表中按名称模糊匹配（无需调用 /active 接口，已无激活规则概念）
     try {
       const rules = await listHospitalPricingRules()
 
       for (const keyword of keywords) {
         const matched = rules.find((r) => {
-          if (r.name.includes(keyword)) return true
+          if (!isCustomerSpecificPricingRule(r)) return false
           const baseName = r.name.replace(/灭菌计费规则|计费规则|灭菌规则|计费标准/g, '').trim()
-          return keyword.includes(baseName) || baseName.includes(keyword)
+          if (!baseName || baseName.length < 3) return false
+          if (keyword === baseName || r.name === keyword) return true
+          if (keyword.length >= 4 && (keyword.includes(baseName) || baseName.includes(keyword))) {
+            return true
+          }
+          return false
         })
         if (matched) {
           entry.rule = matched
@@ -1399,9 +1414,10 @@
         }
       }
 
-      // 最终降级：查找名为"标准灭菌计费规则"的默认规则
-      const fallback = rules.find((r) => r.name === '标准灭菌计费规则')
-      entry.rule = fallback ?? null
+      entry.rule =
+        rules.find((r) => r.name === '标准灭菌计费规则' && isGeneralPricingRule(r)) ??
+        rules.find((r) => isGeneralPricingRule(r)) ??
+        null
     } catch {
       entry.rule = null
     }
@@ -1415,12 +1431,11 @@
     try {
       const workbook = await readHospitalWorkbook(entry.file, effectiveRules.value)
       entry.workbook = workbook
-      entry.hospitalName =
-        resolveReconciliationHospitalName({
-          fileName: entry.file.name,
-          currentName: entry.hospitalName,
-          sheetHospitalDisplayNames: workbook.sheetMetas.map((meta) => meta.hospitalDisplayName)
-        }) || entry.hospitalName
+      entry.hospitalName = resolveHospitalBadgeName({
+        fileName: entry.file.name,
+        hospitalName: entry.hospitalName,
+        sheetHospitalDisplayNames: workbook.sheetMetas.map((meta) => meta.hospitalDisplayName)
+      })
       entry.status = 'parsed'
     } catch (error) {
       entry.status = 'error'
@@ -1522,7 +1537,14 @@
     saved: Api.Hospital.ReconciliationJob
   ) {
     entry.savedJobId = saved.id
-    entry.hospitalName = saved.hospitalName || entry.hospitalName
+    entry.hospitalName = resolveHospitalBadgeName({
+      hospitalName: isPlaceholderHospitalName(saved.hospitalName)
+        ? entry.hospitalName
+        : saved.hospitalName || entry.hospitalName,
+      fileName: entry.file.name,
+      sheetHospitalDisplayNames:
+        entry.workbook?.sheetMetas?.map((meta) => meta.hospitalDisplayName) ?? []
+    })
     entry.savedSheetRowCounts = saved.sheetRowCounts ?? null
     entry.savedSheetWarningCounts = saved.sheetWarningCounts ?? null
     entry.selectedSheetFilter = null

@@ -12,6 +12,8 @@ const FILE_BILL_SUFFIX_PATTERN = /(账单|结款函|汇总|发货单|明细|对�
 const FILE_MONTH_SUFFIX_PATTERN = /\d{1,2}月.*$/
 const FILE_YEAR_PREFIX_PATTERN = /^\d{4}[\s_-]?/
 
+const PLACEHOLDER_HOSPITAL_NAMES = new Set(['未命名医院', '(未命名)', '未命名'])
+
 export function isLikelyDepartmentName(name?: string | null): boolean {
   const trimmed = (name ?? '').trim()
   if (!trimmed) return false
@@ -21,6 +23,11 @@ export function isLikelyDepartmentName(name?: string | null): boolean {
     return true
   }
   return false
+}
+
+export function isPlaceholderHospitalName(name?: string | null): boolean {
+  const trimmed = (name ?? '').trim()
+  return !trimmed || PLACEHOLDER_HOSPITAL_NAMES.has(trimmed)
 }
 
 export function isDateRangeText(name?: string | null): boolean {
@@ -125,13 +132,37 @@ export function resolveReconciliationHospitalName(options: {
   return nonDepartment ?? candidates[0] ?? ''
 }
 
+/** 文件条/历史卡片医院徽章：优先 Excel 识别名，禁止用占位符掩盖真实识别结果。 */
+export function resolveHospitalBadgeName(options: {
+  hospitalName?: string | null
+  fileName?: string | null
+  sheetHospitalDisplayNames?: Array<string | null | undefined>
+}): string {
+  const resolved = resolveReconciliationHospitalName({
+    fileName: options.fileName,
+    currentName: isPlaceholderHospitalName(options.hospitalName) ? '' : options.hospitalName,
+    sheetHospitalDisplayNames: options.sheetHospitalDisplayNames
+  })
+  if (resolved && !isPlaceholderHospitalName(resolved)) return resolved
+
+  const stored = (options.hospitalName ?? '').trim()
+  if (stored && !isPlaceholderHospitalName(stored) && !isLikelyDepartmentName(stored)) {
+    return stored
+  }
+
+  const fromFile = inferHospitalNameFromFileName(options.fileName)
+  if (fromFile) return fromFile
+
+  return resolved || stored || ''
+}
+
 export function displayHospitalNameForJob(
   hospitalName?: string | null,
   sourceFileName?: string | null
 ): string {
-  const trimmed = (hospitalName ?? '').trim()
-  if (trimmed && !isLikelyDepartmentName(trimmed)) return trimmed
-  const fromFile = inferHospitalNameFromFileName(sourceFileName)
-  if (fromFile) return fromFile
-  return trimmed || '(未命名)'
+  const badge = resolveHospitalBadgeName({
+    hospitalName,
+    fileName: sourceFileName
+  })
+  return badge || '(未能识别医院名)'
 }
