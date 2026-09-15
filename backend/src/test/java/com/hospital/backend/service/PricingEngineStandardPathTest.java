@@ -77,7 +77,7 @@ class PricingEngineStandardPathTest {
                 "totalPrice", 4.0
         ));
         assertThat(result.expectedUnitPrice).isCloseTo(2.5, within(0.05));
-        assertThat(result.pricingRule).contains("棉球");
+        assertThat(result.pricingRule).contains("敷料包(纸塑袋)");
         assertThat(result.pricingPath).isEqualTo("standard");
     }
 }

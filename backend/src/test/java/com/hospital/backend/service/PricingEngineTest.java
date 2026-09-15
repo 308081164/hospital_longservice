@@ -1992,6 +1992,28 @@ class PricingEngineTest {
     }
 
     @Test
+    void dressingPaperPlasticGauzeAndHoleTowelUseStd07NotMiss() {
+        ObjectNode rules = (ObjectNode) defaultRules();
+        rules.putObject("billingProfile").put("pricingMode", "hybrid");
+        PricingEngine hybridEngine = new PricingEngine(rules);
+
+        for (String packName : List.of("纱布/Z2032", "孔巾/Z2032")) {
+            PricingEngine.ProcessedResult result = hybridEngine.processRow(row(
+                    "哈尔滨森海医院",
+                    "敷料包(纸塑袋)",
+                    packName,
+                    "高温纸塑袋 200*320",
+                    0,
+                    1,
+                    7.5,
+                    7.5));
+            assertThat(result.pricingRule).isEqualTo("敷料包(纸塑袋)——20cm");
+            assertThat(result.expectedUnitPrice).isEqualTo(4.0);
+            assertThat(result.pricingRule).isNotEqualTo("未命中规则");
+        }
+    }
+
+    @Test
     void pathOverrideKeepsDressingPackPricing() {
         ObjectNode rules = (ObjectNode) defaultRules();
         ObjectNode billingProfile = rules.putObject("billingProfile");
@@ -2258,7 +2280,7 @@ class PricingEngineTest {
         assertThat(result.pricingRule).contains("未识别规格");
         assertThat(result.status).isEqualTo("warning");
         assertThat(extractPricingAlertMessages(result.billingNotes))
-                .anyMatch(msg -> msg.contains("棉球") && msg.contains("人工核对"));
+                .anyMatch(msg -> msg.contains("敷料包(纸塑袋)") && msg.contains("人工核对"));
     }
 
     @Test

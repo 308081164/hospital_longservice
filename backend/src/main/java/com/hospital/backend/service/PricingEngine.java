@@ -381,28 +381,81 @@ public class PricingEngine {
             if (packCategoryResolution.note() != null) {
                 notes.add(packCategoryResolution.note());
             }
+            // 敷料专用通道未命中时须穿透到包材标准阶梯（禁止按包名门禁导致「未命中规则」）。
             switch (packCategory) {
-            case DRESSING_PAPER -> {
-                if (type.contains("纸塑袋") && isCottonDressingPackName(packName)
-                        && shouldUseDressingCottonPaperPlasticPrice(
-                                packName, type, instrumentCount, packCount)) {
+            case DRESSING_PAPER:
+                if (type.contains("纸塑袋")
+                        && shouldUseDressingPaperPlasticPerPackPrice(packName, type)) {
                     int bagSize2 = detectBagSize(str(row, "packageMaterial") + str(row, "packName"));
-                    Double cottonPrice = resolveCottonPaperPlasticUnitPrice(bagSize2);
-                    if (cottonPrice != null) {
-                        expectedUnitPrice = cottonPrice;
-                        pricingRule = "敷料包(纸塑袋)+棉球——" + bagSize2 + "cm";
-                        notes.add("敷料包(纸塑袋)+棉球，纸塑袋规格 " + bagSize2 + "cm，按包计价 "
+                    Double dressingPrice = resolveCottonPaperPlasticUnitPrice(bagSize2);
+                    if (dressingPrice != null) {
+                        expectedUnitPrice = dressingPrice;
+                        pricingRule = "敷料包(纸塑袋)——" + bagSize2 + "cm";
+                        notes.add("敷料包(纸塑袋)，纸塑袋规格 " + bagSize2 + "cm，按包计价 "
                                 + fmt(expectedUnitPrice) + " 元/包，总价=单价×包数(" + packCount + ")。");
                     } else {
-                        pricingRule = "敷料包(纸塑袋)+棉球——未识别规格";
+                        pricingRule = "敷料包(纸塑袋)——未识别规格";
                         notes.add(PRICING_ALERT_PREFIX
-                                + "敷料包(纸塑袋)+棉球未能识别纸塑袋规格，已按账单原价暂计，请人工核对。");
+                                + "敷料包(纸塑袋)未能识别纸塑袋规格，已按账单原价暂计，请人工核对。");
                         requiresReview = true;
                     }
                     skipPackaging = true;
+                    break;
+                }
+                // fall through → INSTRUMENT_PAPER（如棉球缸容器）
+            case INSTRUMENT_PAPER:
+            if (isLowTemp) {
+                Double forcedLt = computeForceHighTempUnitPrice(forceHighTempPerItem, materialBillingCount);
+                if (forcedLt != null && appliedSpecialFoldRule) {
+                    expectedUnitPrice = forcedLt;
+                    pricingRule = "低温特色折算单价";
+                    notes.add("按特色规则低温折算单价 " + fmt(forceHighTempPerItem) + " 元/件 × "
+                            + materialBillingCount + " 件 = " + fmt(expectedUnitPrice) + " 元。");
+                    if (!skipPackaging) {
+                        double bagFee = (bagSize > 0 && bagSize < 20) ? 2.5 : 4.0;
+                        expectedUnitPrice = round(expectedUnitPrice + bagFee);
+                        pricingRule = pricingRule + " + 标准包材费";
+                        notes.add("含包材规则，叠加标准包材费 " + fmt(bagFee) + " 元。");
+                    }
+                } else {
+                    String ltPrefix = isDouble ? "低温纸塑袋(双)" : "低温纸塑袋";
+                    pricingRule = ltPrefix + (bagSize > 0 ? bagSize + "cm" : "") + "阶梯计费";
+                    expectedUnitPrice = computeLowTempPaperPlastic(
+                            materialBillingCount, bagSize, zBagSize, notes, isDouble, hospitalName);
+                }
+            } else {
+                Double forcedPrice = computeForceHighTempUnitPrice(forceHighTempPerItem, materialBillingCount);
+                if (forcedPrice != null) {
+                    expectedUnitPrice = forcedPrice;
+                    pricingRule = "路径覆盖：高温固定单价";
+                    notes.add("按路径覆盖高温单价 " + fmt(forceHighTempPerItem) + " 元/件 × "
+                            + materialBillingCount + " 件 = " + fmt(expectedUnitPrice) + " 元。");
+                    if (appliedSpecialFoldRule && !skipPackaging) {
+                        double bagFee = (bagSize > 0 && bagSize < 20) ? 2.5 : 4.0;
+                        expectedUnitPrice = round(expectedUnitPrice + bagFee);
+                        pricingRule = pricingRule + " + 标准包材费";
+                        notes.add("含包材规则，叠加标准包材费 " + fmt(bagFee) + " 元。");
+                    }
+                } else if (appliedSpecialFoldRule && (foldSkipPackaging || foldHasExtraCount)) {
+                    double perItem = rules.path("highTemperature").path("paperPlastic").path("perPackagePrice").asDouble(5.5);
+                    expectedUnitPrice = computeForceHighTempUnitPrice(perItem, materialBillingCount);
+                    notes.add("按特色折算单价 " + fmt(perItem) + " 元/件 × "
+                            + materialBillingCount + " 件 = " + fmt(expectedUnitPrice) + " 元。");
+                    if (!skipPackaging) {
+                        double bagFee = (bagSize > 0 && bagSize < 20) ? 2.5 : 4.0;
+                        expectedUnitPrice = round(expectedUnitPrice + bagFee);
+                        notes.add("含包材规则，叠加标准包材费 " + fmt(bagFee) + " 元。");
+                        skipPackaging = true;
+                    }
+                } else {
+                    int displaySize = bagSize > 25 ? 25 : bagSize;
+                    String prefix = isDouble ? "高温纸塑袋(双)" : "高温纸塑袋";
+                    pricingRule = prefix + (displaySize > 0 ? displaySize + "cm" : "") + "计费";
+                    expectedUnitPrice = computeHighTempPaperPlastic(materialBillingCount, bagSize, zBagSize, notes, isDouble, hospitalName);
                 }
             }
-            case DRESSING_NONWOVEN -> {
+                break;
+            case DRESSING_NONWOVEN:
                 if (packName.contains("驱血带")) {
                     Double measure = extractDressingPackMeasure(packageMaterial, packName);
                     double dressPrice = measure != null ? computeDressingPackPrice(measure) : 0;
@@ -438,6 +491,7 @@ public class PricingEngine {
                         requiresReview = true;
                     }
                     skipPackaging = true;
+                    break;
                 } else if (type.contains("敷料包")) {
                     Double measure = extractDressingPackMeasure(packageMaterial, packName);
                     if (measure != null) {
@@ -467,63 +521,10 @@ public class PricingEngine {
                         requiresReview = true;
                     }
                     skipPackaging = true;
+                    break;
                 }
-            }
-            case INSTRUMENT_PAPER -> {
-            if (isLowTemp) {
-                Double forcedLt = computeForceHighTempUnitPrice(forceHighTempPerItem, materialBillingCount);
-                if (forcedLt != null && appliedSpecialFoldRule) {
-                    expectedUnitPrice = forcedLt;
-                    pricingRule = "低温特色折算单价";
-                    notes.add("按特色规则低温折算单价 " + fmt(forceHighTempPerItem) + " 元/件 × "
-                            + materialBillingCount + " 件 = " + fmt(expectedUnitPrice) + " 元。");
-                    if (!skipPackaging) {
-                        double bagFee = (bagSize > 0 && bagSize < 20) ? 2.5 : 4.0;
-                        expectedUnitPrice = round(expectedUnitPrice + bagFee);
-                        pricingRule = pricingRule + " + 标准包材费";
-                        notes.add("含包材规则，叠加标准包材费 " + fmt(bagFee) + " 元。");
-                    }
-                } else {
-                    String ltPrefix = isDouble ? "低温纸塑袋(双)" : "低温纸塑袋";
-                    pricingRule = ltPrefix + (bagSize > 0 ? bagSize + "cm" : "") + "阶梯计费";
-                    expectedUnitPrice = computeLowTempPaperPlastic(
-                            materialBillingCount, bagSize, zBagSize, notes, isDouble, hospitalName);
-                }
-            } else {
-                Double forcedPrice = computeForceHighTempUnitPrice(forceHighTempPerItem, materialBillingCount);
-                if (forcedPrice != null) {
-                    expectedUnitPrice = forcedPrice;
-                    pricingRule = "路径覆盖：高温固定单价";
-                    notes.add("按路径覆盖高温单价 " + fmt(forceHighTempPerItem) + " 元/件 × "
-                            + materialBillingCount + " 件 = " + fmt(expectedUnitPrice) + " 元。");
-                    if (appliedSpecialFoldRule && !skipPackaging) {
-                        double bagFee = (bagSize > 0 && bagSize < 20) ? 2.5 : 4.0;
-                        expectedUnitPrice = round(expectedUnitPrice + bagFee);
-                        pricingRule = pricingRule + " + 标准包材费";
-                        notes.add("含包材规则，叠加标准包材费 " + fmt(bagFee) + " 元。");
-                    }
-                } else if (appliedSpecialFoldRule && (foldSkipPackaging || foldHasExtraCount)) {
-                    // 针盒针（extraCount）或免包材 FOLD：按折算件数×把价计件费；含包材叠加标准袋费。
-                    // 不可走 computeHighTempPaperPlastic（免包材会重复计袋费，针盒含包材袋规价≠标准2.5）。
-                    double perItem = rules.path("highTemperature").path("paperPlastic").path("perPackagePrice").asDouble(5.5);
-                    expectedUnitPrice = computeForceHighTempUnitPrice(perItem, materialBillingCount);
-                    notes.add("按特色折算单价 " + fmt(perItem) + " 元/件 × "
-                            + materialBillingCount + " 件 = " + fmt(expectedUnitPrice) + " 元。");
-                    if (!skipPackaging) {
-                        double bagFee = (bagSize > 0 && bagSize < 20) ? 2.5 : 4.0;
-                        expectedUnitPrice = round(expectedUnitPrice + bagFee);
-                        notes.add("含包材规则，叠加标准包材费 " + fmt(bagFee) + " 元。");
-                        skipPackaging = true;
-                    }
-                } else {
-                    int displaySize = bagSize > 25 ? 25 : bagSize;
-                    String prefix = isDouble ? "高温纸塑袋(双)" : "高温纸塑袋";
-                    pricingRule = prefix + (displaySize > 0 ? displaySize + "cm" : "") + "计费";
-                    expectedUnitPrice = computeHighTempPaperPlastic(materialBillingCount, bagSize, zBagSize, notes, isDouble, hospitalName);
-                }
-            }
-            }
-            case INSTRUMENT_NONWOVEN -> {
+                // fall through → INSTRUMENT_NONWOVEN
+            case INSTRUMENT_NONWOVEN:
             if (isLowTemp) {
                 Double forcedLt = computeForceHighTempUnitPrice(forceHighTempPerItem, materialBillingCount);
                 if (forcedLt != null && appliedSpecialFoldRule) {
@@ -562,13 +563,13 @@ public class PricingEngine {
                     }
                 }
             }
-            }
-            case UNKNOWN -> {
-            pricingRule = "未识别包装类型，保留原价";
-            notes.add(PRICING_ALERT_PREFIX + "包装材料\"" + packageMaterial
-                    + "\"未能识别为纸塑袋或无纺布，已按账单原价暂计，请检查包装材料列填写是否正确，并人工核对单价。");
-            requiresReview = true;
-            }
+                break;
+            case UNKNOWN:
+                pricingRule = "未识别包装类型，保留原价";
+                notes.add(PRICING_ALERT_PREFIX + "包装材料\"" + packageMaterial
+                        + "\"未能识别为纸塑袋或无纺布，已按账单原价暂计，请检查包装材料列填写是否正确，并人工核对单价。");
+                requiresReview = true;
+                break;
             }
         }
         if (appliedSpecialFoldRule && foldMatchedRuleName != null && !foldMatchedRuleName.isBlank()) {
@@ -1539,11 +1540,6 @@ public class PricingEngine {
     //  袋尺寸检测（带缓存）
     // ================================================================
 
-    /** 棉球/棉球包敷料名；棉球缸是容器，走高温纸塑件费+袋费。 */
-    private boolean isCottonDressingPackName(String packName) {
-        return packName.contains("棉球") && !packName.contains("棉球缸");
-    }
-
     /** 器械数为 0 的敷料按包行：不要把 0 件强制当成 1 件。 */
     private boolean isDressingPerPackRow(
             String packName, String type, int instrumentCount, PackPricingCategory category) {
@@ -1554,9 +1550,6 @@ public class PricingEngine {
             return false;
         }
         if (category == PackPricingCategory.DRESSING_PAPER) {
-            if (isCottonDressingPackName(packName) && type.contains("纸塑袋")) {
-                return true;
-            }
             return type.contains("敷料包") && type.contains("纸塑袋");
         }
         if (category == PackPricingCategory.DRESSING_NONWOVEN && packName.contains("驱血带")) {
@@ -1565,19 +1558,15 @@ public class PricingEngine {
         return false;
     }
 
-    /** 棉球/纱布纸塑袋敷料价：纯敷料棉球；棉球缸等容器走高温纸塑「件费+袋费」。 */
-    private boolean shouldUseDressingCottonPaperPlasticPrice(
-            String packName, String type, int instrumentCount, int packCount) {
-        if (!isCottonDressingPackName(packName)) {
+    /**
+     * STD-07 敷料包(纸塑袋)按袋宽固定价：凡该包类型均适用，不按包名门禁。
+     * 棉球缸为容器，穿透到高温纸塑阶梯（件费+袋费）。
+     */
+    private boolean shouldUseDressingPaperPlasticPerPackPrice(String packName, String type) {
+        if (packName.contains("棉球缸")) {
             return false;
         }
-        if (type.contains("敷料包") && type.contains("纸塑袋")) {
-            return true;
-        }
-        int perPack = packCount > 1
-                ? (int) Math.round((double) instrumentCount / Math.max(1, packCount))
-                : instrumentCount;
-        return perPack <= 0;
+        return type.contains("敷料包") && type.contains("纸塑袋");
     }
 
     /**
