@@ -4,6 +4,10 @@ const DEPARTMENT_NAME_PATTERN =
 
 const HOSPITAL_NAME_PATTERN = /(医院|诊所|集团|中心|卫生院|卫生服务中心|医疗美容|妇产医院|肛肠医院)$/
 
+/** 铂康账单表头元数据区的账期行，不可当作医院名。 */
+const DATE_RANGE_TEXT_PATTERN =
+  /^(从|时间|日期)[：:]?\s*\d{4}.*(?:至|到).*\d{4}|^\d{4}[/-]\d{1,2}[/-]\d{1,2}.*(?:至|到).*\d{4}/
+
 const FILE_BILL_SUFFIX_PATTERN = /(账单|结款函|汇总|发货单|明细|对账).*$/
 const FILE_MONTH_SUFFIX_PATTERN = /\d{1,2}月.*$/
 const FILE_YEAR_PREFIX_PATTERN = /^\d{4}[\s_-]?/
@@ -19,10 +23,38 @@ export function isLikelyDepartmentName(name?: string | null): boolean {
   return false
 }
 
+export function isDateRangeText(name?: string | null): boolean {
+  const trimmed = (name ?? '').trim()
+  if (!trimmed) return false
+  return DATE_RANGE_TEXT_PATTERN.test(trimmed)
+}
+
 export function isLikelyHospitalName(name?: string | null): boolean {
   const trimmed = (name ?? '').trim()
-  if (!trimmed || isLikelyDepartmentName(trimmed)) return false
+  if (!trimmed || isLikelyDepartmentName(trimmed) || isDateRangeText(trimmed)) return false
+  if (trimmed.includes('发货单汇总表')) return false
   return HOSPITAL_NAME_PATTERN.test(trimmed) || trimmed.length >= 6
+}
+
+/** 铂康标准账单：医院全称通常在 D 列，位于表头上一行或 Excel 第 9 行（D9）。 */
+export function extractStandardHospitalNameFromMatrix(
+  matrix: unknown[][],
+  headerRowIndex: number
+): string {
+  const dCol = 3
+  const candidates: string[] = []
+  const pushAt = (rowIndex: number) => {
+    if (rowIndex < 0 || rowIndex >= matrix.length) return
+    const row = matrix[rowIndex]
+    const text = String(row?.[dCol] ?? '').trim()
+    if (text) candidates.push(text)
+  }
+  if (headerRowIndex >= 0) {
+    pushAt(headerRowIndex - 1)
+    pushAt(headerRowIndex + 1)
+  }
+  pushAt(8)
+  return pickBestHospitalDisplayName(candidates)
 }
 
 export function inferHospitalNameFromFileName(fileName?: string | null): string {
@@ -38,13 +70,18 @@ export function inferHospitalNameFromFileName(fileName?: string | null): string 
 export function pickBestHospitalDisplayName(
   names?: Array<string | null | undefined>
 ): string {
-  let best = ''
+  let bestWithSuffix = ''
+  let bestFallback = ''
   for (const name of names ?? []) {
     const trimmed = (name ?? '').trim()
     if (!isLikelyHospitalName(trimmed)) continue
-    if (trimmed.length > best.length) best = trimmed
+    if (HOSPITAL_NAME_PATTERN.test(trimmed)) {
+      if (trimmed.length > bestWithSuffix.length) bestWithSuffix = trimmed
+    } else if (trimmed.length > bestFallback.length) {
+      bestFallback = trimmed
+    }
   }
-  return best
+  return bestWithSuffix || bestFallback
 }
 
 export function buildHospitalNameCandidates(options: {

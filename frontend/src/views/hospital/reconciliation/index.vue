@@ -214,7 +214,10 @@
 
 <script lang="ts">
   import * as XLSX from 'xlsx'
-  import { isLikelyHospitalName } from '@/utils/reconciliationHospitalName'
+  import {
+    extractStandardHospitalNameFromMatrix,
+    isLikelyHospitalName
+  } from '@/utils/reconciliationHospitalName'
 
   type SheetTemplateMeta = {
     sheetName: string
@@ -467,6 +470,7 @@
     const headerArea = matrix.slice(0, headerRowIndex + 1)
     const summaryRow = matrix[headerRowIndex + 1] ?? []
     const hospitalDisplayName =
+      extractStandardHospitalNameFromMatrix(matrix, headerRowIndex) ||
       pickBestHospitalNameFromHeaderArea(headerArea) ||
       pickBestHospitalNameFromHeaderArea([summaryRow])
     return { sheetName, titleText, dateRangeText, hospitalDisplayName }

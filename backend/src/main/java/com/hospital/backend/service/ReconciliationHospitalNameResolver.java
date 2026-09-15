@@ -26,6 +26,9 @@ public class ReconciliationHospitalNameResolver {
 
     private static final Pattern HOSPITAL_SUFFIX = Pattern.compile(
             "(医院|诊所|集团|中心|卫生院|卫生服务中心|医疗美容|妇产医院|肛肠医院)$");
+    private static final Pattern DATE_RANGE_TEXT = Pattern.compile(
+            "^(从|时间|日期)[：:]?\\s*\\d{4}.*(?:至|到).*\\d{4}.*"
+                    + "|^\\d{4}[/-]\\d{1,2}[/-]\\d{1,2}.*(?:至|到).*\\d{4}.*");
 
     private static final Pattern FILE_BILL_SUFFIX = Pattern.compile("(账单|结款函|汇总|发货单|明细|对账).*$");
     private static final Pattern FILE_MONTH_SUFFIX = Pattern.compile("\\d{1,2}月.*$");
@@ -95,10 +98,17 @@ public class ReconciliationHospitalNameResolver {
             return false;
         }
         String trimmed = name.trim();
-        if (trimmed.contains("发货单汇总表")) {
+        if (trimmed.contains("发货单汇总表") || isDateRangeText(trimmed)) {
             return false;
         }
         return HOSPITAL_SUFFIX.matcher(trimmed).find() || trimmed.length() >= 6;
+    }
+
+    public boolean isDateRangeText(String name) {
+        if (name == null || name.isBlank()) {
+            return false;
+        }
+        return DATE_RANGE_TEXT.matcher(name.trim()).find();
     }
 
     public boolean isLikelyDepartmentName(String name) {

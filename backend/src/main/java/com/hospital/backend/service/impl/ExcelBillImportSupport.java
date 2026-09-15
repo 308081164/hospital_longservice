@@ -25,6 +25,11 @@ final class ExcelBillImportSupport {
 
     private static final java.util.regex.Pattern HOSPITAL_SUFFIX = java.util.regex.Pattern.compile(
             "(医院|诊所|集团|中心|卫生院|卫生服务中心|医疗美容|妇产医院|肛肠医院)$");
+    private static final java.util.regex.Pattern DATE_RANGE_TEXT = java.util.regex.Pattern.compile(
+            "^(从|时间|日期)[：:]?\\s*\\d{4}.*(?:至|到).*\\d{4}.*"
+                    + "|^\\d{4}[/-]\\d{1,2}[/-]\\d{1,2}.*(?:至|到).*\\d{4}.*");
+    /** 铂康标准账单医院名固定列：D 列（0-based index 3）。 */
+    private static final int STANDARD_HOSPITAL_NAME_COLUMN = 3;
 
     private ExcelBillImportSupport() {
     }
@@ -138,6 +143,11 @@ final class ExcelBillImportSupport {
 
     private static void collectHospitalDisplayNames(
             List<List<Object>> matrix, int headerRowIndex, Set<String> out) {
+        String fromStandardD = readHospitalNameAtStandardColumn(matrix, headerRowIndex);
+        if (!fromStandardD.isBlank()) {
+            out.add(fromStandardD);
+            return;
+        }
         String best = "";
         int scanEnd = Math.min(matrix.size(), headerRowIndex + 2);
         for (int r = 0; r < scanEnd; r++) {
@@ -181,7 +191,7 @@ final class ExcelBillImportSupport {
             return false;
         }
         String trimmed = name.trim();
-        if (trimmed.contains("发货单汇总表")) {
+        if (trimmed.contains("发货单汇总表") || isDateRangeText(trimmed)) {
             return false;
         }
         if (isInlineDepartmentMarkerRow(trimmed, "", "", "")) {
@@ -191,6 +201,36 @@ final class ExcelBillImportSupport {
             return false;
         }
         return HOSPITAL_SUFFIX.matcher(trimmed).find() || trimmed.length() >= 6;
+    }
+
+    static boolean isDateRangeText(String text) {
+        if (text == null || text.isBlank()) {
+            return false;
+        }
+        return DATE_RANGE_TEXT.matcher(text.trim()).find();
+    }
+
+    private static String readHospitalNameAtStandardColumn(
+            List<List<Object>> matrix, int headerRowIndex) {
+        String best = "";
+        int[] rowCandidates = {headerRowIndex - 1, 8, headerRowIndex + 1};
+        for (int rowIndex : rowCandidates) {
+            if (rowIndex < 0 || rowIndex >= matrix.size()) {
+                continue;
+            }
+            List<Object> row = matrix.get(rowIndex);
+            if (row.size() <= STANDARD_HOSPITAL_NAME_COLUMN) {
+                continue;
+            }
+            String text = sanitizeStr(row.get(STANDARD_HOSPITAL_NAME_COLUMN));
+            if (text.isBlank() || !isLikelyHospitalDisplayName(text)) {
+                continue;
+            }
+            if (text.length() > best.length()) {
+                best = text.trim();
+            }
+        }
+        return best;
     }
 
     private static List<List<Object>> readSheetMatrix(Sheet sheet) {

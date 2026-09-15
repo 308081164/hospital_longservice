@@ -107,6 +107,13 @@ class ReconciliationHospitalNameResolverTest {
     }
 
     @Test
+    void rejectsDateRangeAsHospitalName() {
+        assertThat(resolver.isDateRangeText("从:2026/6/1 00:00:00 至: 2026/6/30 23:59:59.999")).isTrue();
+        assertThat(resolver.isLikelyHospitalName("从:2026/6/1 00:00:00 至: 2026/6/30 23:59:59.999")).isFalse();
+        assertThat(resolver.isLikelyHospitalName("哈尔滨美涵医疗美容")).isTrue();
+    }
+
+    @Test
     void preservesExcelHospitalNameWhenCustomerNotInRoster() {
         when(customerMapper.selectAll()).thenReturn(List.of());
         when(customerAliasMapper.selectAllActive()).thenReturn(List.of());

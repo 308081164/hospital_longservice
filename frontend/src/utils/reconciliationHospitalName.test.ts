@@ -1,6 +1,8 @@
 import {
   displayHospitalNameForJob,
+  extractStandardHospitalNameFromMatrix,
   inferHospitalNameFromFileName,
+  isDateRangeText,
   isLikelyDepartmentName,
   pickBestHospitalDisplayName,
   resolveReconciliationHospitalName
@@ -65,6 +67,39 @@ assertEqual(
   }),
   '三精肾病医院',
   'san jing sheet name preserved'
+)
+assertTrue(
+  isDateRangeText('从:2026/6/1 00:00:00 至: 2026/6/30 23:59:59.999'),
+  'detect date range row'
+)
+assertEqual(
+  pickBestHospitalDisplayName([
+    '从:2026/6/1 00:00:00 至: 2026/6/30 23:59:59.999',
+    '哈尔滨美涵医疗美容'
+  ]),
+  '哈尔滨美涵医疗美容',
+  'prefer hospital name over date range'
+)
+assertEqual(
+  resolveReconciliationHospitalName({
+    fileName: '谋大6月账单-未改.xlsx',
+    currentName: '',
+    sheetHospitalDisplayNames: [
+      '从:2026/6/1 00:00:00 至: 2026/6/30 23:59:59.999',
+      '黑龙江谋大医院'
+    ]
+  }),
+  '黑龙江谋大医院',
+  'ignore date range in sheet meta'
+)
+const d9Matrix: unknown[][] = Array.from({ length: 10 }, () => [])
+d9Matrix[3] = ['', '', '', '从:2026/6/1 00:00:00 至: 2026/6/30 23:59:59.999']
+d9Matrix[7] = ['', '', '', '黑龙江谋大医院']
+d9Matrix[8] = ['发货日期', '发货单号', '类型', '包名', '包装材料', '包数', '器械数', '单价', '总价']
+assertEqual(
+  extractStandardHospitalNameFromMatrix(d9Matrix, 8),
+  '黑龙江谋大医院',
+  'read hospital from D column above header'
 )
 
 console.log('reconciliationHospitalName tests passed')
