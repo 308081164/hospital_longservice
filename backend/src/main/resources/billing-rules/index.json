@@ -1,6 +1,6 @@
 {
-  "baseline_hash": "eec92192fa8ee8bde7d63ed62bbcca931771240567d534227b5f13b1e28b9bac",
-  "generated_at": "2026-09-15T09:59:22Z",
+  "baseline_hash": "9d33016db4177e850f2c0c1d51d4e32f6bd0162634f8c6b09c340b83ac876b7f",
+  "generated_at": "2026-09-15T15:23:45Z",
   "source": "billing-rules-manifest@01836c66115726ff7229db58f16020cb6e65f7069beee13551669c1031fd7764",
   "customer_count": 32,
   "customers": [
@@ -145,8 +145,8 @@
     {
       "code": "HULAN-RM",
       "file": "baseline/HULAN-RM.json",
-      "ruleCount": 11,
-      "fileHash": "0e24d1ec8336f08de3729134ebd7aab43c788c0b0830b1a1f853035e914e197c"
+      "ruleCount": 2,
+      "fileHash": "54589e7af6e93020965ee487629fd2cf36753de54f79feb3969c7b60ba3c7ae3"
     },
     {
       "code": "XINFA-HSZ",

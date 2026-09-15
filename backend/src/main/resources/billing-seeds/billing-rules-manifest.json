@@ -1,7 +1,7 @@
 {
   "version": 1,
-  "generated_at": "2026-09-15T09:59:22Z",
-  "manifest_hash": "fddbee995daf06330f3cdbcf9cb2b2e53cc3601d03bce5da0fbdcd9687b5b6d6",
+  "generated_at": "2026-09-15T15:23:45Z",
+  "manifest_hash": "3370b6a88dfded49f13a9c63be4374e9eca01cbcf00b5b2585d8b0a5692c524b",
   "billing_enabled_count": 32,
   "active_billing_enabled_count": 32,
   "customers": {
@@ -3329,132 +3329,6 @@
       "billingEnabled": true,
       "productRules": [
         {
-          "ruleType": "FIXED_PRICE",
-          "name": "PDF低温器械柜保护套5.6",
-          "priority": 31,
-          "price": 5.6,
-          "keywords": [
-            "保护套",
-            "器械柜"
-          ],
-          "temperature": "LT",
-          "skipPackaging": true,
-          "skipDiscount": true,
-          "isActive": true,
-          "matchMode": "first"
-        },
-        {
-          "ruleType": "FIXED_PRICE",
-          "name": "PDF外来器械植入物3.85",
-          "priority": 26,
-          "price": 3.85,
-          "keywords": [
-            "外来器械（植入物）"
-          ],
-          "skipPackaging": true,
-          "skipDiscount": true,
-          "isActive": true,
-          "matchMode": "first"
-        },
-        {
-          "ruleType": "FIXED_PRICE",
-          "name": "PDF外来器械骨电钻11.55",
-          "priority": 25,
-          "price": 11.55,
-          "keywords": [
-            "外来器械（骨电钻）"
-          ],
-          "skipPackaging": true,
-          "skipDiscount": true,
-          "isActive": true,
-          "matchMode": "first"
-        },
-        {
-          "ruleType": "FIXED_PRICE",
-          "name": "PDF敷料中20x30x30",
-          "priority": 11,
-          "price": 14,
-          "keywords": [
-            "敷料",
-            "20cm*30cm*30cm"
-          ],
-          "skipPackaging": true,
-          "skipDiscount": true,
-          "isActive": true,
-          "matchMode": "first"
-        },
-        {
-          "ruleType": "FIXED_PRICE",
-          "name": "PDF敷料小20x20x15",
-          "priority": 10,
-          "price": 10.5,
-          "keywords": [
-            "敷料",
-            "20cm*20cm*15cm"
-          ],
-          "skipPackaging": true,
-          "skipDiscount": true,
-          "isActive": true,
-          "matchMode": "first"
-        },
-        {
-          "ruleType": "FIXED_PRICE",
-          "name": "PDF纱布棉球大20x20x15",
-          "priority": 15,
-          "price": 28,
-          "keywords": [
-            "纱布",
-            "棉球"
-          ],
-          "skipPackaging": true,
-          "skipDiscount": true,
-          "isActive": true,
-          "matchMode": "first"
-        },
-        {
-          "ruleType": "FIXED_PRICE",
-          "name": "PDF纸塑袋10cm",
-          "priority": 21,
-          "price": 3.56,
-          "keywords": [
-            "纸塑袋"
-          ],
-          "bagSizeEquals": 10,
-          "skipPackaging": true,
-          "skipDiscount": true,
-          "isActive": true,
-          "matchMode": "first"
-        },
-        {
-          "ruleType": "FIXED_PRICE",
-          "name": "PDF纸塑袋15cm",
-          "priority": 20,
-          "price": 3.85,
-          "keywords": [
-            "纸塑袋"
-          ],
-          "bagSizeEquals": 15,
-          "skipPackaging": true,
-          "skipDiscount": true,
-          "isActive": true,
-          "matchMode": "first"
-        },
-        {
-          "ruleType": "FIXED_PRICE",
-          "name": "PDF高温器械柜保护套3.5",
-          "priority": 30,
-          "price": 3.5,
-          "keywords": [
-            "保护套",
-            "器械柜"
-          ],
-          "temperature": "HT",
-          "skipPackaging": true,
-          "skipDiscount": true,
-          "isActive": true,
-          "matchMode": "first"
-        },
-        {
           "ruleType": "FOLD",
           "name": "呼兰一院棉花针5合1免包材",
           "priority": 11,
@@ -3491,8 +3365,8 @@
           ]
         }
       ],
-      "rule_count": 11,
-      "active_rule_count": 11
+      "rule_count": 2,
+      "active_rule_count": 2
     },
     "XINFA-HSZ": {
       "code": "XINFA-HSZ",
