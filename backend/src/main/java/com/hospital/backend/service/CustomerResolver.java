@@ -60,10 +60,16 @@ public class CustomerResolver {
         if (!Boolean.TRUE.equals(alias.getIsActive())) {
             return false;
         }
+        String aliasText = alias.getAlias();
+        if (aliasText == null || aliasText.isBlank()) {
+            return false;
+        }
         String matchType = alias.getMatchType() != null ? alias.getMatchType() : "contains";
         return switch (matchType) {
-            case "exact" -> hospitalName.equals(alias.getAlias());
-            default -> hospitalName.contains(alias.getAlias()) || alias.getAlias().contains(hospitalName);
+            case "exact" -> hospitalName.equals(aliasText);
+            // 仅允许「医院名包含别名」，禁止 alias.contains(hospitalName)：
+            // 否则「哈尔滨」会误命中别名「哈尔滨市第五医院」。
+            default -> hospitalName.contains(aliasText);
         };
     }
 

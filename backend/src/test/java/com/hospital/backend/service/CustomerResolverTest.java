@@ -100,6 +100,29 @@ class CustomerResolverTest {
     }
 
     @Test
+    void doesNotMatchHrbWyWhenHospitalNameIsOnlyCityPrefix() {
+        Customer hrbWy = new Customer();
+        hrbWy.setId(1L);
+        hrbWy.setCode("HRB-WY");
+        hrbWy.setCanonicalName("哈尔滨市第五医院");
+
+        CustomerAlias alias = new CustomerAlias();
+        alias.setCustomerId(1L);
+        alias.setAlias("哈尔滨市第五医院");
+        alias.setMatchType("contains");
+        alias.setPriority(100);
+        alias.setIsActive(true);
+
+        when(customerMapper.selectAll()).thenReturn(List.of());
+        when(customerAliasMapper.selectAllActive()).thenReturn(List.of(alias));
+        when(customerMapper.selectById(1L)).thenReturn(hrbWy);
+
+        assertThat(customerResolver.resolveByName("哈尔滨")).isEmpty();
+        assertThat(customerResolver.resolveByName("黑龙江维多利亚妇产医院")).isEmpty();
+        assertThat(customerResolver.resolveByName("哈尔滨市第五医院")).isPresent();
+    }
+
+    @Test
     void resolvesGuoyao2ByMotorFactoryAlias() {
         when(customerMapper.selectAll()).thenReturn(List.of());
 

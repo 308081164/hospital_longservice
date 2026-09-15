@@ -105,4 +105,32 @@ class ReconciliationHospitalNameResolverTest {
         assertThat(resolver.isLikelyDepartmentName("手术室")).isTrue();
         assertThat(resolver.isLikelyDepartmentName("黑龙江东大肛肠")).isFalse();
     }
+
+    @Test
+    void preservesExcelHospitalNameWhenCustomerNotInRoster() {
+        when(customerMapper.selectAll()).thenReturn(List.of());
+        when(customerAliasMapper.selectAllActive()).thenReturn(List.of());
+
+        String resolved = resolver.resolve(
+                "",
+                "三精肾病.xlsx",
+                List.of("三精肾病医院"),
+                List.of("发货单汇总表", "哈尔滨"));
+
+        assertThat(resolved).isEqualTo("三精肾病医院");
+    }
+
+    @Test
+    void doesNotMapVictoriaBillToHrbWyViaWeakHeaderAlias() {
+        when(customerMapper.selectAll()).thenReturn(List.of());
+        when(customerAliasMapper.selectAllActive()).thenReturn(List.of());
+
+        String resolved = resolver.resolve(
+                "",
+                "维多利亚.xlsx",
+                List.of("黑龙江维多利亚妇产医院"),
+                List.of("发货单汇总表", "哈尔滨"));
+
+        assertThat(resolved).isEqualTo("黑龙江维多利亚妇产医院");
+    }
 }

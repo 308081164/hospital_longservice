@@ -45,7 +45,7 @@ final class ExcelBillImportSupport {
         }
     }
 
-    /** 表头区域（首个表头行及其后 8 行）内所有非空单元格文本，供客户别名解析医院全称。 */
+    /** 表头区域（首个表头行及其上方元数据）内所有非空单元格文本，供客户别名解析医院全称。 */
     static List<String> extractHeaderAreaTexts(byte[] fileBytes) throws IOException {
         try (InputStream in = new ByteArrayInputStream(fileBytes)) {
             return parseWorkbookData(in).headerAreaTexts();
@@ -125,8 +125,8 @@ final class ExcelBillImportSupport {
 
     private static void collectHeaderAreaTexts(
             List<List<Object>> matrix, int headerRowIndex, Set<String> out) {
-        int scanEnd = Math.min(matrix.size(), headerRowIndex + 8);
-        for (int r = 0; r < scanEnd; r++) {
+        // 仅扫描表头行及其上方元数据，避免明细行包名污染别名解析。
+        for (int r = 0; r <= headerRowIndex && r < matrix.size(); r++) {
             for (Object cell : matrix.get(r)) {
                 String text = sanitizeStr(cell);
                 if (!text.isBlank()) {
@@ -138,18 +138,41 @@ final class ExcelBillImportSupport {
 
     private static void collectHospitalDisplayNames(
             List<List<Object>> matrix, int headerRowIndex, Set<String> out) {
-        int scanEnd = Math.min(matrix.size(), headerRowIndex + 8);
+        String best = "";
+        int scanEnd = Math.min(matrix.size(), headerRowIndex + 2);
         for (int r = 0; r < scanEnd; r++) {
             List<Object> row = matrix.get(r);
+            if (r == headerRowIndex + 1) {
+                // 部分账单在表头下一行放医院全称汇总行（列位置不固定，如冰城 111.xlsx）
+                for (Object cell : row) {
+                    String text = sanitizeStr(cell);
+                    if (text.isBlank()) {
+                        continue;
+                    }
+                    if ((text.contains("医院") || text.contains("诊所")) && isLikelyHospitalDisplayName(text)) {
+                        String trimmed = text.trim();
+                        if (trimmed.length() > best.length()) {
+                            best = trimmed;
+                        }
+                    }
+                }
+                continue;
+            }
             for (Object cell : row) {
                 String text = sanitizeStr(cell);
                 if (text.isBlank()) {
                     continue;
                 }
                 if ((text.contains("医院") || text.contains("诊所")) && isLikelyHospitalDisplayName(text)) {
-                    out.add(text.trim());
+                    String trimmed = text.trim();
+                    if (trimmed.length() > best.length()) {
+                        best = trimmed;
+                    }
                 }
             }
+        }
+        if (!best.isBlank()) {
+            out.add(best);
         }
     }
 

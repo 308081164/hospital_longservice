@@ -280,6 +280,20 @@
     return ''
   }
 
+  /** 从表头元数据区取最长、最可信的机构全称（避免命中明细行里的短词）。 */
+  function pickBestHospitalNameFromHeaderArea(headerArea: unknown[][]): string {
+    let best = ''
+    for (const row of headerArea) {
+      for (const cell of row) {
+        const text = String(cell ?? '').trim()
+        if (isLikelyHospitalName(text) && text.length > best.length) {
+          best = text
+        }
+      }
+    }
+    return best
+  }
+
   /** 在表头区域查找日期范围文本（兼容不同格式的日期前缀） */
   function findDateRangeText(rows: unknown[][]): string {
     // 尝试常见前缀
@@ -450,12 +464,11 @@
     const titleText =
       findRowText(matrix.slice(0, headerRowIndex), '发货单汇总表') || '发货单汇总表-显示包装材料'
     const dateRangeText = findDateRangeText(matrix.slice(0, headerRowIndex))
-    const headerScanEnd = Math.min(matrix.length, headerRowIndex + 8)
-    const headerArea = matrix.slice(0, headerScanEnd)
+    const headerArea = matrix.slice(0, headerRowIndex + 1)
+    const summaryRow = matrix[headerRowIndex + 1] ?? []
     const hospitalDisplayName =
-      ['医院', '诊所']
-        .map((keyword) => findRowText(headerArea, keyword))
-        .find((text) => text && isLikelyHospitalName(text)) || ''
+      pickBestHospitalNameFromHeaderArea(headerArea) ||
+      pickBestHospitalNameFromHeaderArea([summaryRow])
     return { sheetName, titleText, dateRangeText, hospitalDisplayName }
   }
 
@@ -1352,20 +1365,17 @@
 
   /** 根据条目的医院名称解析匹配的计费规则 */
   async function resolveEntryRule(entry: UploadEntry) {
-    // 收集所有可能用于匹配的关键词
     const keywords: string[] = []
-    if (entry.hospitalName && !keywords.includes(entry.hospitalName)) {
-      keywords.push(entry.hospitalName)
-    }
-    if (!entry.hospitalName) {
+    const excelHospital = entry.hospitalName?.trim()
+    if (excelHospital && isLikelyHospitalName(excelHospital)) {
+      keywords.push(excelHospital)
+    } else if (!excelHospital) {
       const fileNameHospital = inferHospitalNameFromFileName(entry.file.name)
-      if (fileNameHospital && !keywords.includes(fileNameHospital)) {
-        keywords.push(fileNameHospital)
-      }
+      if (fileNameHospital) keywords.push(fileNameHospital)
       const fileNameBase = entry.file.name.replace(/\.[^.]+$/, '').replace(/^\d{4}[\s_-]?/, '')
-      if (fileNameBase && !keywords.includes(fileNameBase)) {
-        keywords.push(fileNameBase)
-      }
+      if (fileNameBase && !keywords.includes(fileNameBase)) keywords.push(fileNameBase)
+    } else if (excelHospital) {
+      keywords.push(excelHospital)
     }
     if (keywords.length === 0) return
 
@@ -1405,9 +1415,7 @@
         resolveReconciliationHospitalName({
           fileName: entry.file.name,
           currentName: entry.hospitalName,
-          sheetHospitalDisplayNames: workbook.sheetMetas.map((meta) => meta.hospitalDisplayName),
-          ruleHospitalName: entry.rule?.hospitalName,
-          ruleName: entry.rule?.name
+          sheetHospitalDisplayNames: workbook.sheetMetas.map((meta) => meta.hospitalDisplayName)
         }) || entry.hospitalName
       entry.status = 'parsed'
     } catch (error) {

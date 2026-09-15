@@ -2,6 +2,7 @@ import {
   displayHospitalNameForJob,
   inferHospitalNameFromFileName,
   isLikelyDepartmentName,
+  pickBestHospitalDisplayName,
   resolveReconciliationHospitalName
 } from './reconciliationHospitalName.ts'
 
@@ -41,6 +42,29 @@ assertEqual(
   displayHospitalNameForJob('门诊部', '东大肛肠3月账单.xlsx'),
   '东大肛肠',
   'card display fallback'
+)
+assertEqual(
+  pickBestHospitalDisplayName(['哈尔滨市第五医院', '黑龙江维多利亚妇产医院']),
+  '黑龙江维多利亚妇产医院',
+  'prefer longest hospital name'
+)
+assertEqual(
+  resolveReconciliationHospitalName({
+    fileName: '维多利亚.xlsx',
+    currentName: '',
+    sheetHospitalDisplayNames: ['黑龙江维多利亚妇产医院']
+  }),
+  '黑龙江维多利亚妇产医院',
+  'excel hospital beats filename'
+)
+assertEqual(
+  resolveReconciliationHospitalName({
+    fileName: '三精肾病.xlsx',
+    currentName: '',
+    sheetHospitalDisplayNames: ['三精肾病医院']
+  }),
+  '三精肾病医院',
+  'san jing sheet name preserved'
 )
 
 console.log('reconciliationHospitalName tests passed')

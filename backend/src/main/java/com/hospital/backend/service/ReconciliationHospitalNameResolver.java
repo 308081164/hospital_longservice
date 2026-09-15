@@ -46,9 +46,18 @@ public class ReconciliationHospitalNameResolver {
             String sourceFileName,
             List<String> sheetHospitalNames,
             List<String> headerAreaTexts) {
-        for (String candidate : buildCandidates(hospitalNameParam, sourceFileName, sheetHospitalNames, headerAreaTexts)) {
+        List<String> candidates = buildCandidates(hospitalNameParam, sourceFileName, sheetHospitalNames, headerAreaTexts);
+        for (String candidate : candidates) {
             if (isLikelyDepartmentName(candidate)) {
                 continue;
+            }
+            if (isLikelyHospitalName(candidate)) {
+                Optional<Customer> customer = customerResolver.resolveByName(candidate);
+                if (customer.isPresent()) {
+                    return customer.get().getCanonicalName();
+                }
+                // Excel 已识别出机构全称时，优先保留原文，避免后续弱别名误绑市五院等客户。
+                return candidate;
             }
             Optional<Customer> customer = customerResolver.resolveByName(candidate);
             if (customer.isPresent()) {
@@ -56,7 +65,7 @@ public class ReconciliationHospitalNameResolver {
             }
         }
 
-        for (String candidate : buildCandidates(hospitalNameParam, sourceFileName, sheetHospitalNames, headerAreaTexts)) {
+        for (String candidate : candidates) {
             if (!isLikelyDepartmentName(candidate)) {
                 return candidate;
             }
@@ -72,7 +81,7 @@ public class ReconciliationHospitalNameResolver {
         }
         Set<String> names = new LinkedHashSet<>();
         for (String text : headerAreaTexts) {
-            if (text == null || text.isBlank() || isLikelyDepartmentName(text)) {
+            if (text == null || text.isBlank() || isLikelyDepartmentName(text) || !isLikelyHospitalName(text)) {
                 continue;
             }
             customerResolver.resolveByName(text.trim())
@@ -145,18 +154,6 @@ public class ReconciliationHospitalNameResolver {
         }
         // 文件名仅作最后兜底（优先使用 Excel 表头/别名解析结果）
         addCandidate(ordered, inferFromFileName(sourceFileName));
-        if (sourceFileName != null && !sourceFileName.isBlank()) {
-            String base = sourceFileName.trim();
-            int dot = base.lastIndexOf('.');
-            if (dot > 0) {
-                base = base.substring(0, dot);
-            }
-            int slash = Math.max(base.lastIndexOf('/'), base.lastIndexOf('\\'));
-            if (slash >= 0) {
-                base = base.substring(slash + 1);
-            }
-            addCandidate(ordered, FILE_YEAR_PREFIX.matcher(base).replaceFirst("").trim());
-        }
         addCandidate(ordered, hospitalNameParam);
         return new ArrayList<>(ordered);
     }

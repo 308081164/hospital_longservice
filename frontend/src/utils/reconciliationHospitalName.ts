@@ -35,12 +35,22 @@ export function inferHospitalNameFromFileName(fileName?: string | null): string 
   return base.trim()
 }
 
+export function pickBestHospitalDisplayName(
+  names?: Array<string | null | undefined>
+): string {
+  let best = ''
+  for (const name of names ?? []) {
+    const trimmed = (name ?? '').trim()
+    if (!isLikelyHospitalName(trimmed)) continue
+    if (trimmed.length > best.length) best = trimmed
+  }
+  return best
+}
+
 export function buildHospitalNameCandidates(options: {
   fileName?: string | null
   currentName?: string | null
   sheetHospitalDisplayNames?: Array<string | null | undefined>
-  ruleHospitalName?: string | null
-  ruleName?: string | null
 }): string[] {
   const seen = new Set<string>()
   const candidates: string[] = []
@@ -52,20 +62,15 @@ export function buildHospitalNameCandidates(options: {
     candidates.push(trimmed)
   }
 
-  // 1) Excel 表头区域解析出的医院全称（最可信）
-  for (const name of options.sheetHospitalDisplayNames ?? []) {
-    if (isLikelyHospitalName(name)) push(name)
-  }
-  // 2) 当前条目已解析名称（通常来自 sheet meta）
+  const sheetBest = pickBestHospitalDisplayName(options.sheetHospitalDisplayNames)
+  if (sheetBest) push(sheetBest)
+  // 当前条目已解析名称（通常来自 sheet meta）
   if (options.currentName && !isLikelyDepartmentName(options.currentName)) {
     push(options.currentName)
   }
-  push(options.ruleHospitalName)
-  push(options.ruleName)
-  // 3) 文件名仅作兜底
+  // 文件名仅作最后兜底（禁止用规则 hospitalName 覆盖 Excel 识别结果）
   if (options.fileName) {
     push(inferHospitalNameFromFileName(options.fileName))
-    push(options.fileName.replace(/\.[^.]+$/, '').replace(FILE_YEAR_PREFIX_PATTERN, ''))
   }
 
   return candidates
@@ -75,10 +80,10 @@ export function resolveReconciliationHospitalName(options: {
   fileName?: string | null
   currentName?: string | null
   sheetHospitalDisplayNames?: Array<string | null | undefined>
-  ruleHospitalName?: string | null
-  ruleName?: string | null
 }): string {
   const candidates = buildHospitalNameCandidates(options)
+  const hospital = candidates.find((name) => isLikelyHospitalName(name))
+  if (hospital) return hospital
   const nonDepartment = candidates.find((name) => !isLikelyDepartmentName(name))
   return nonDepartment ?? candidates[0] ?? ''
 }
