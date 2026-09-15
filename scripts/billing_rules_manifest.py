@@ -44,7 +44,7 @@ INACTIVE_EXTRA_CODES = [
     "ZXYSJT",
 ]
 
-# 最终仅保留的 30 家特殊计价客户（严格测试口径）：历史 22 家 + 2026-08 新引入 4 家 + 2026-09 特殊收费(2) 新引入 3 家 + 佳医。
+# 最终仅保留的 32 家特殊计价客户（严格测试口径）：历史 22 家 + 2026-08 新引入 4 家 + 2026-09 特殊收费(2) 新引入 3 家 + 佳医 + 2026-09 特殊收费(3) 电力/汽轮机。
 # 须与 BillingSeedMigrationRunner.STRICT_KEEP_CODES 保持一致。
 # 生成 manifest 时删除非 30 家客户，确保清单与部署后的 DB 一致。
 STRICT_KEEP_CODES = [
@@ -78,6 +78,8 @@ STRICT_KEEP_CODES = [
     "AOLAN-YY",
     "HRB-XK-YY",
     "SENHAI-YY",
+    "ZY3-DIANLI",
+    "GUOYAO-MAIN",
 ]
 
 # 种子文件仅以 code 引用客户、未携带规范名时，回退到此映射。

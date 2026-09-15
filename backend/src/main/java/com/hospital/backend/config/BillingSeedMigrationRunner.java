@@ -61,7 +61,8 @@ public class BillingSeedMigrationRunner implements CommandLineRunner {
             "SHKF-YY", "DL-FUCHAN", "CHUNYU-YL", "HL-ZGH", "JZSW-BIO", "SUOFEI-YL", "HLJ-JYGLJ-YY",
             "HULAN-TCM", "PFQ-RM",
             "HULAN-RM", "XINFA-HSZ", "YUANDONG-XN", "ZUYAN-SF",
-            "AOLAN-YY", "HRB-XK-YY", "SENHAI-YY");
+            "AOLAN-YY", "HRB-XK-YY", "SENHAI-YY",
+            "ZY3-DIANLI", "GUOYAO-MAIN");
 
     private record IncrementalSeed(String markerKey, String classpathFile) {}
 

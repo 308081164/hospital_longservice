@@ -1,8 +1,8 @@
 {
-  "baseline_hash": "f1a6974456b7f79577c765e9c74cf90c872b3011114fee7e19f8b91f9a8b76dd",
-  "generated_at": "2026-09-11T02:21:50Z",
+  "baseline_hash": "a319a4a23baadf0e819659c822e86cf3ddd041d94e416c956ed8855c699fc8ae",
+  "generated_at": "2026-09-15T09:56:13Z",
   "source": "billing-rules-manifest@01836c66115726ff7229db58f16020cb6e65f7069beee13551669c1031fd7764",
-  "customer_count": 30,
+  "customer_count": 32,
   "customers": [
     {
       "code": "BINGCHENG-YM",
@@ -183,6 +183,18 @@
       "file": "baseline/SENHAI-YY.json",
       "ruleCount": 4,
       "fileHash": "a1e065e37fdb79d1078d33251cceaaef20a78ecc86df01e69221d8e85b284ee3"
+    },
+    {
+      "code": "ZY3-DIANLI",
+      "file": "baseline/ZY3-DIANLI.json",
+      "ruleCount": 12,
+      "fileHash": "6b628798e1d4e88b47e2b0512cd14911f01f0bc249bd2545a6b3770dc4d9a029"
+    },
+    {
+      "code": "GUOYAO-MAIN",
+      "file": "baseline/GUOYAO-MAIN.json",
+      "ruleCount": 2,
+      "fileHash": "a0079c267bea1c4d56370cb91e755c0e748aa16ed7e271c78a59d1b9e3c66a78"
     }
   ]
 }

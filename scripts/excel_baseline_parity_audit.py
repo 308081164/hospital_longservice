@@ -36,6 +36,8 @@ EXTRA_HOSPITAL_TO_CODE: dict[str, str] = {
     "哈尔滨市胸科医院": "HRB-XK-YY",
     "森海医院": "SENHAI-YY",
     "哈尔滨森海医院": "SENHAI-YY",
+    "黑龙江省中医药大学附属第三医院（电力）": "ZY3-DIANLI",
+    "哈尔滨汽轮机医院": "GUOYAO-MAIN",
 }
 
 

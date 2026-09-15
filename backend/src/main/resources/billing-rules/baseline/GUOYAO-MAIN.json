@@ -1,0 +1,41 @@
+{
+  "customerCode": "GUOYAO-MAIN",
+  "customerName": "国药总医院主院区",
+  "billingEnabled": true,
+  "billingPricingMode": "hybrid",
+  "productRules": [
+    {
+      "ruleType": "FIXED_PRICE",
+      "name": "国药主院10mm30度镜固定价",
+      "priority": 10,
+      "price": 28,
+      "keywords": [
+        "30度镜",
+        "10mm",
+        "10毫米30度镜"
+      ],
+      "temperature": "HT",
+      "skipPackaging": true,
+      "skipDiscount": true,
+      "isActive": true,
+      "matchMode": "first",
+      "acceptedTypes": [
+        "单包装",
+        "单包装包"
+      ]
+    },
+    {
+      "ruleType": "FIXED_PRICE",
+      "name": "国药主院驱血带固定价",
+      "priority": 20,
+      "price": 13,
+      "keywords": [
+        "驱血带"
+      ],
+      "skipPackaging": true,
+      "skipDiscount": true,
+      "isActive": true,
+      "matchMode": "first"
+    }
+  ]
+}
