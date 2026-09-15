@@ -1,6 +1,6 @@
 {
-  "baseline_hash": "a319a4a23baadf0e819659c822e86cf3ddd041d94e416c956ed8855c699fc8ae",
-  "generated_at": "2026-09-15T09:56:13Z",
+  "baseline_hash": "eec92192fa8ee8bde7d63ed62bbcca931771240567d534227b5f13b1e28b9bac",
+  "generated_at": "2026-09-15T09:59:22Z",
   "source": "billing-rules-manifest@01836c66115726ff7229db58f16020cb6e65f7069beee13551669c1031fd7764",
   "customer_count": 32,
   "customers": [
@@ -188,7 +188,7 @@
       "code": "ZY3-DIANLI",
       "file": "baseline/ZY3-DIANLI.json",
       "ruleCount": 12,
-      "fileHash": "6b628798e1d4e88b47e2b0512cd14911f01f0bc249bd2545a6b3770dc4d9a029"
+      "fileHash": "f837b5625a3ddb736d721e60f6bfac928e2ce620e9c2b3ebb2a96d001d30e65d"
     },
     {
       "code": "GUOYAO-MAIN",

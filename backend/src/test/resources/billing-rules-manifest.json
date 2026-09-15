@@ -1,7 +1,7 @@
 {
   "version": 1,
-  "generated_at": "2026-09-15T09:56:13Z",
-  "manifest_hash": "48fd9d54c1c448538c38a7d82941d2ec62ce1761522d3047b0482d4f620beba7",
+  "generated_at": "2026-09-15T09:59:22Z",
+  "manifest_hash": "fddbee995daf06330f3cdbcf9cb2b2e53cc3601d03bce5da0fbdcd9687b5b6d6",
   "billing_enabled_count": 32,
   "active_billing_enabled_count": 32,
   "customers": {
@@ -4071,6 +4071,7 @@
           "ruleType": "PRICE_PER_INSTRUMENT",
           "name": "电力骨牵引包人工核对",
           "priority": 90,
+          "price": 0,
           "keywords": [
             "骨牵引包"
           ],

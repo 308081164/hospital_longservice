@@ -196,6 +196,7 @@
       "ruleType": "PRICE_PER_INSTRUMENT",
       "name": "电力骨牵引包人工核对",
       "priority": 90,
+      "price": 0,
       "keywords": [
         "骨牵引包"
       ],
