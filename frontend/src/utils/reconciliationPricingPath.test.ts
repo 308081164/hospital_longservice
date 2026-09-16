@@ -59,6 +59,55 @@ assertEqual(legacyClassification.label, 'pricingPath.customerFixed', 'legacy row
 const standardClassification = classifyPricingPath(standardRow)
 assertEqual(standardClassification.label, 'pricingPath.standard', 'standard path stays standard')
 
+const manualReviewRow = {
+  status: 'warning',
+  pricingRule: '电力骨牵引包人工核对',
+  pricingPath: 'preserve',
+  matchedRuleId: 9901,
+  billingNotes: {
+    matchedRuleId: 9901,
+    ruleName: '电力骨牵引包人工核对',
+    effectivePricingPath: 'preserve',
+    manualReview: true
+  },
+  notes: [
+    '电力骨牵引包人工核对，按每件 0 元，单包计费件数 1 件，单价按 0 元。',
+    '【计价告警】命中规则「电力骨牵引包人工核对」，需人工核对，已按账单原价 192.5 元暂计。'
+  ]
+}
+
+const manualReviewClassification = classifyPricingPath(manualReviewRow)
+assertEqual(
+  manualReviewClassification.label,
+  'pricingPath.manualReview',
+  'manual review uses manualReview badge instead of customerFixed'
+)
+
+const dianliXishoufuRow = {
+  status: 'warning',
+  pricingRule: '未识别包装类型，保留原价',
+  pricingPath: 'preserve',
+  unitPrice: 35,
+  expectedUnitPrice: 35,
+  notes: [
+    '【计价告警】包装材料""未能识别为纸塑袋或无纺布，已按账单原价暂计，请检查包装材料列填写是否正确，并人工核对单价。'
+  ],
+  billingNotes: {
+    effectivePricingPath: 'preserve'
+  }
+}
+
+const xishoufuClassification = classifyPricingPath(dianliXishoufuRow)
+assertEqual(
+  xishoufuClassification.label,
+  'pricingPath.manualReview',
+  'preserve-original fallback shows manual review badge'
+)
+assertTrue(
+  !xishoufuClassification.summary.includes('校正价'),
+  '洗手服 without correction rule does not show correction summary'
+)
+
 assertEqual(readEffectivePricingPath(zuyanSfCorrectionRow), 'fixed', 'reads effective path from billingNotes')
 assertEqual(readEffectivePricingPath(legacyZuyanSfRow), 'standard', 'falls back to row pricingPath')
 

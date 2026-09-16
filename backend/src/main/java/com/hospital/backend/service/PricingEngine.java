@@ -304,10 +304,14 @@ public class PricingEngine {
             if (specialPrice.ruleId != null) {
                 matchedRuleId = specialPrice.ruleId;
             }
-            if (specialPrice.manualReview) {
+            if (isManualReviewSpecialPrice(specialPrice)) {
                 requiresReview = true;
+                Double billUnitPrice = resolveBillUnitPrice(unitPrice, totalPrice, packCount);
+                if (billUnitPrice != null && billUnitPrice > 0.001) {
+                    expectedUnitPrice = billUnitPrice;
+                }
                 notes.add(PRICING_ALERT_PREFIX
-                        + "命中电机厂「包名称带双」相关规则，当前规则细节待客户确认，请人工核对。");
+                        + buildManualReviewAlert(specialPrice.ruleName, expectedUnitPrice));
             }
         } else if (preserveOriginalOnMiss) {
             Double forcedPrice = computeForceHighTempUnitPrice(forceHighTempPerItem, materialBillingCount);
@@ -556,7 +560,7 @@ public class PricingEngine {
                 if (specialFee.manualReview) {
                     requiresReview = true;
                     notes.add(PRICING_ALERT_PREFIX
-                            + "命中电机厂「包名称带双」相关规则，当前规则细节待客户确认，请人工核对。");
+                            + buildManualReviewAlert(specialFee.ruleName, expectedUnitPrice));
                 }
             }
         }
@@ -717,6 +721,12 @@ public class PricingEngine {
                         notes, type, packName, packageMaterial, hospitalName, skipHospitalDiscount,
                         matchedRuleId, specialPrice.ruleName, result.pricingPath);
             }
+            if (isManualReviewSpecialPrice(specialPrice)) {
+                if (result.billingNotes == null) {
+                    result.billingNotes = new LinkedHashMap<>();
+                }
+                result.billingNotes.put("manualReview", true);
+            }
         } else {
             result.billingNotes = buildRowBillingNotes(
                     notes, type, packName, packageMaterial, hospitalName, skipHospitalDiscount,
@@ -786,16 +796,52 @@ public class PricingEngine {
 
     private String resolveEffectivePricingPath(
             SpecialPriceResult specialPrice, String pricingRule, boolean foldFlatPackApplied) {
+        if (isManualReviewSpecialPrice(specialPrice)) {
+            return "preserve";
+        }
         if (specialPrice != null || foldFlatPackApplied) {
             return "fixed";
         }
         if ("special_only 未命中特色规则".equals(pricingRule)) {
             return "preserve";
         }
+        if (pricingRule != null && pricingRule.contains("保留原价")) {
+            return "preserve";
+        }
         if (pricingRule != null && isStandardSterilizationPricingRule(pricingRule)) {
             return "standard";
         }
         return null;
+    }
+
+    private static boolean isManualReviewSpecialPrice(SpecialPriceResult specialPrice) {
+        if (specialPrice == null) {
+            return false;
+        }
+        if (specialPrice.manualReview) {
+            return true;
+        }
+        String ruleName = specialPrice.ruleName != null ? specialPrice.ruleName.trim() : "";
+        return ruleName.contains("人工核对");
+    }
+
+    private static Double resolveBillUnitPrice(Double unitPrice, Double totalPrice, int packCount) {
+        if (unitPrice != null && unitPrice > 0.001) {
+            return unitPrice;
+        }
+        if (totalPrice != null && totalPrice > 0.001 && packCount > 0) {
+            return round(totalPrice / Math.max(1, packCount));
+        }
+        return unitPrice;
+    }
+
+    private static String buildManualReviewAlert(String ruleName, Double preservedPrice) {
+        String name = ruleName != null && !ruleName.isBlank() ? ruleName.trim() : "当前规则";
+        if (preservedPrice != null && preservedPrice > 0.001) {
+            return "命中规则「" + name + "」，需人工核对，已按账单原价 "
+                    + fmt(preservedPrice) + " 元暂计。";
+        }
+        return "命中规则「" + name + "」，需人工核对，暂无有效账单单价。";
     }
 
     private boolean isStandardSterilizationPricingRule(String pricingRule) {

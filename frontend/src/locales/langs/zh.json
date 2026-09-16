@@ -837,7 +837,7 @@
       "validationZeroUnitPrice": "原始单价数据异常",
       "validationZeroUnitPriceTag": "单价异常",
       "validationZeroUnitPriceHint": "原始单价为 0，系统仍会继续尝试计价，请核对导入数据。",
-      "pricingAlertTag": "保留原价待核对",
+      "pricingAlertTag": "需要人工核对",
       "pricingAlertSection": "计价告警",
       "pricingAlertHint": "未能识别规格/类型，已按账单原价或兜底价暂计，请人工核对。",
       "pricingBlockedHint": "字段核对未通过，请核对原始账单（仍展示系统计价结果）",
@@ -1209,6 +1209,7 @@
     "customerFixed": "客户校正价",
     "standard": "标准灭菌",
     "preserve": "保留原价",
+    "manualReview": "需要人工核对",
     "disabled": "特色已关闭",
     "skipped": "无法计价",
     "unknown": "未识别"

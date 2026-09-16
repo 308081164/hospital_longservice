@@ -70,7 +70,26 @@ function isStandardPricingRule(pricingRule: string): boolean {
 }
 
 function isCustomerCorrectionPriceRule(pricingRule: string): boolean {
-  return pricingRule.startsWith('校正价')
+  return pricingRule.startsWith('校正价') || pricingRule.startsWith('电力校正价')
+}
+
+function readBillingNotesManualReview(row: Record<string, unknown>): boolean {
+  const billingNotes = row.billingNotes ?? row.billing_notes
+  if (!billingNotes || typeof billingNotes !== 'object') return false
+  const notes = billingNotes as Record<string, unknown>
+  return notes.manualReview === true || notes.manual_review === true
+}
+
+function hasManualReviewSignal(row: Record<string, unknown>, pricingRule: string): boolean {
+  if (pricingRule.includes('人工核对')) return true
+  if (readBillingNotesManualReview(row)) return true
+  const effectivePath = readEffectivePricingPath(row)
+  if (effectivePath === 'preserve' && pricingRule.includes('保留原价')) return true
+  const notes = readNotes(row)
+  if (notes.some((note) => note.includes('需人工核对') || note.includes('请人工核对'))) {
+    return true
+  }
+  return false
 }
 
 function isStructuredProductMatchNote(note: string): boolean {
@@ -133,6 +152,15 @@ export function classifyPricingPath(row: Record<string, unknown>): PricingPathCl
       label: 'pricingPath.preserve',
       tagType: 'info',
       summary: pricingRule
+    }
+  }
+
+  if (hasManualReviewSignal(row, pricingRule)) {
+    return {
+      category: 'PRESERVE',
+      label: 'pricingPath.manualReview',
+      tagType: 'warning',
+      summary: truncateSummary(pricingRule || '需人工核对')
     }
   }
 
