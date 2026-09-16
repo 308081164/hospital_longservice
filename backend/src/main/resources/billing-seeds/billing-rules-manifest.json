@@ -1,7 +1,7 @@
 {
   "version": 1,
-  "generated_at": "2026-09-15T15:23:45Z",
-  "manifest_hash": "3370b6a88dfded49f13a9c63be4374e9eca01cbcf00b5b2585d8b0a5692c524b",
+  "generated_at": "2026-09-16T15:20:36Z",
+  "manifest_hash": "b3ec0ce280f05b1b8e799f9bbbde26dd3cb33086cfd5ec373df3a380c263fc3b",
   "billing_enabled_count": 32,
   "active_billing_enabled_count": 32,
   "customers": {
@@ -3784,59 +3784,6 @@
           "matchMode": "first"
         },
         {
-          "ruleType": "FIXED_PRICE",
-          "name": "电力校正价8.0",
-          "priority": 10,
-          "price": 8.0,
-          "keywords": [
-            "洁牙尖-5件"
-          ],
-          "skipPackaging": true,
-          "skipDiscount": true,
-          "isActive": true,
-          "matchMode": "first"
-        },
-        {
-          "ruleType": "FIXED_PRICE",
-          "name": "电力校正价13.5",
-          "priority": 11,
-          "price": 13.5,
-          "keywords": [
-            "成型片-7",
-            "洁牙尖-7"
-          ],
-          "skipPackaging": true,
-          "skipDiscount": true,
-          "isActive": true,
-          "matchMode": "first"
-        },
-        {
-          "ruleType": "FIXED_PRICE",
-          "name": "电力校正价35.0",
-          "priority": 12,
-          "price": 35.0,
-          "keywords": [
-            "洗手服"
-          ],
-          "skipPackaging": true,
-          "skipDiscount": true,
-          "isActive": true,
-          "matchMode": "first"
-        },
-        {
-          "ruleType": "FIXED_PRICE",
-          "name": "电力校正价88.0",
-          "priority": 13,
-          "price": 88.0,
-          "keywords": [
-            "激光镜-4件 盒1"
-          ],
-          "skipPackaging": true,
-          "skipDiscount": true,
-          "isActive": true,
-          "matchMode": "first"
-        },
-        {
           "ruleType": "FOLD",
           "name": "电力抛光杯5合1含包材",
           "priority": 20,
@@ -3959,8 +3906,8 @@
           ]
         }
       ],
-      "rule_count": 12,
-      "active_rule_count": 12
+      "rule_count": 8,
+      "active_rule_count": 8
     },
     "GUOYAO-MAIN": {
       "code": "GUOYAO-MAIN",

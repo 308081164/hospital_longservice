@@ -1,9 +1,9 @@
 {
   "version": 1,
-  "generated_at": "2026-09-12T11:57:41.691175+00:00",
-  "manifest_hash": "83c55bde88e2c8b9813a74f15421ad615dc612780d71be73ba3bf8ee55392404",
-  "billing_enabled_count": 11,
-  "active_billing_enabled_count": 11,
+  "generated_at": "2026-09-16T15:20:27.752950+00:00",
+  "manifest_hash": "f6b3fffa89cd8e5ffebc5fb58b43e5f0e3fd419ed52748267230f2c12f255ebb",
+  "billing_enabled_count": 13,
+  "active_billing_enabled_count": 13,
   "customers": {
     "BINGCHENG-YM": {
       "code": "BINGCHENG-YM",
@@ -60,6 +60,46 @@
       "productRules": [],
       "rule_count": 0,
       "active_rule_count": 0
+    },
+    "GUOYAO-MAIN": {
+      "code": "GUOYAO-MAIN",
+      "name": "国药总医院主院区",
+      "status": null,
+      "billingPricingMode": "hybrid",
+      "standardPricingOverride": null,
+      "billingEnabled": true,
+      "productRules": [
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "10mm30度镜固定价",
+          "priority": 10,
+          "price": 28,
+          "keywords": [
+            "30度镜",
+            "10mm"
+          ],
+          "temperature": "HT",
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": true,
+          "matchMode": "first"
+        },
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "驱血带固定价",
+          "priority": 20,
+          "price": 13,
+          "keywords": [
+            "驱血带"
+          ],
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": true,
+          "matchMode": "first"
+        }
+      ],
+      "rule_count": 2,
+      "active_rule_count": 2
     },
     "HRB-WY": {
       "code": "HRB-WY",
@@ -229,6 +269,45 @@
       "productRules": [],
       "rule_count": 0,
       "active_rule_count": 0
+    },
+    "ZY3-DIANLI": {
+      "code": "ZY3-DIANLI",
+      "name": "黑龙江省中医药大学附属第三医院（电力）",
+      "status": null,
+      "billingPricingMode": "hybrid",
+      "standardPricingOverride": null,
+      "billingEnabled": true,
+      "productRules": [
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "小件盒25",
+          "priority": 10,
+          "price": 25,
+          "keywords": [
+            "小件盒"
+          ],
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": true,
+          "matchMode": "first"
+        },
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "等离子镜36",
+          "priority": 20,
+          "price": 36,
+          "keywords": [
+            "等离子镜"
+          ],
+          "temperature": "LT",
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": true,
+          "matchMode": "first"
+        }
+      ],
+      "rule_count": 2,
+      "active_rule_count": 2
     }
   }
 }

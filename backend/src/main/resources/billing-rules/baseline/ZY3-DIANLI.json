@@ -35,59 +35,6 @@
       "matchMode": "first"
     },
     {
-      "ruleType": "FIXED_PRICE",
-      "name": "电力校正价8.0",
-      "priority": 10,
-      "price": 8.0,
-      "keywords": [
-        "洁牙尖-5件"
-      ],
-      "skipPackaging": true,
-      "skipDiscount": true,
-      "isActive": true,
-      "matchMode": "first"
-    },
-    {
-      "ruleType": "FIXED_PRICE",
-      "name": "电力校正价13.5",
-      "priority": 11,
-      "price": 13.5,
-      "keywords": [
-        "成型片-7",
-        "洁牙尖-7"
-      ],
-      "skipPackaging": true,
-      "skipDiscount": true,
-      "isActive": true,
-      "matchMode": "first"
-    },
-    {
-      "ruleType": "FIXED_PRICE",
-      "name": "电力校正价35.0",
-      "priority": 12,
-      "price": 35.0,
-      "keywords": [
-        "洗手服"
-      ],
-      "skipPackaging": true,
-      "skipDiscount": true,
-      "isActive": true,
-      "matchMode": "first"
-    },
-    {
-      "ruleType": "FIXED_PRICE",
-      "name": "电力校正价88.0",
-      "priority": 13,
-      "price": 88.0,
-      "keywords": [
-        "激光镜-4件 盒1"
-      ],
-      "skipPackaging": true,
-      "skipDiscount": true,
-      "isActive": true,
-      "matchMode": "first"
-    },
-    {
       "ruleType": "FOLD",
       "name": "电力抛光杯5合1含包材",
       "priority": 20,
