@@ -141,7 +141,7 @@ public final class DefaultPricingTemplate {
     }
 
     /** 特殊收费 Excel「通用特殊收费」8 项 5合1 FOLD（SC11-T04/T05）。 */
-    private static List<String> genericSmallItemFoldKeywords() {
+    public static List<String> genericSmallItemFoldKeywords() {
         return List.of("克氏针", "银质针", "内热针", "车针", "拔髓针", "扩大针", "根扩针", "卷棉子");
     }
 

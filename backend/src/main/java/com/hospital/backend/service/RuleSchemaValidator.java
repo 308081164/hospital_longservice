@@ -8,6 +8,8 @@ import org.springframework.stereotype.Component;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * 后端规则 JSON 校验，镜像前端 validatePricingRules 逻辑，防止 API 绕过。
@@ -71,6 +73,12 @@ public class RuleSchemaValidator {
             if ((!needle.has("keywords") || !needle.path("keywords").isArray()
                     || needle.path("keywords").isEmpty()) && !hasKeywordConfigs) {
                 errors.add("小件识别关键词不能为空");
+            }
+            JsonNode keywords = needle.path("keywords");
+            if (keywords.isArray()) {
+                for (int i = 0; i < keywords.size(); i++) {
+                    validateGenericNeedleKeyword(keywords.get(i).asText(""), "小件关键词第 " + (i + 1) + " 条", errors);
+                }
             }
             if (keywordConfigs.isArray()) {
                 validateNeedleKeywordConfigs(keywordConfigs, errors);
@@ -165,6 +173,34 @@ public class RuleSchemaValidator {
         validateBagSizes(pp.path("bagSizes"), "低温纸塑袋", errors);
     }
 
+    private static final Set<String> ALLOWED_GENERIC_NEEDLE_KEYWORDS = DefaultPricingTemplate
+            .genericSmallItemFoldKeywords()
+            .stream()
+            .map(k -> BillingConditionEvaluator.normalizeMatchText(k).toLowerCase())
+            .collect(Collectors.toUnmodifiableSet());
+
+    private static final String GENERIC_NEEDLE_HINT =
+            "通用小件仅允许 8 个关键词（克氏针、银质针、内热针、车针、拔髓针、扩大针、根扩针、卷棉子）；"
+                    + "院级扩展请使用 productRules FOLD";
+
+    private void validateGenericNeedleKeyword(String rawKeyword, String label, List<String> errors) {
+        for (BillingConditionEvaluator.ParsedKeyword pk : BillingConditionEvaluator.parseKeywordList(rawKeyword)) {
+            String keyword = pk.keyword().trim();
+            if (keyword.isEmpty()) {
+                errors.add(label + "关键词不能为空");
+                continue;
+            }
+            if ("针".equals(keyword)) {
+                errors.add(label + "禁止裸词「针」作为通用小件关键词（" + GENERIC_NEEDLE_HINT + "）");
+                continue;
+            }
+            String normalized = BillingConditionEvaluator.normalizeMatchText(keyword).toLowerCase();
+            if (!ALLOWED_GENERIC_NEEDLE_KEYWORDS.contains(normalized)) {
+                errors.add(label + "「" + keyword + "」不在通用小件白名单内（" + GENERIC_NEEDLE_HINT + "）");
+            }
+        }
+    }
+
     /** 小件关键词独立配置校验：关键词非空且不重复，匹配模式/触发件数/折算比例合法。 */
     private void validateNeedleKeywordConfigs(JsonNode keywordConfigs, List<String> errors) {
         java.util.Set<String> seen = new java.util.HashSet<>();
@@ -176,6 +212,7 @@ public class RuleSchemaValidator {
                 errors.add(label + "关键词不能为空");
                 continue;
             }
+            validateGenericNeedleKeyword(keyword, label, errors);
             String normalized = BillingConditionEvaluator.normalizeMatchText(keyword).toLowerCase();
             if (!seen.add(normalized)) {
                 errors.add("小件独立配置关键词「" + keyword + "」重复");

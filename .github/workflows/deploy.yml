@@ -36,6 +36,9 @@ jobs:
       - name: Assert no new phase seeds
         run: bash scripts/assert_no_new_phase_seeds.sh
 
+      - name: Assert no deprecated billing handbook
+        run: bash scripts/assert_no_deprecated_docs.sh
+
       - name: Baseline manifest parity check
         run: python3 scripts/baseline_to_manifest.py --check
 

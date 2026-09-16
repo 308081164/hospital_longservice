@@ -93,6 +93,32 @@ class RuleSchemaValidatorTest {
     }
 
     @Test
+    void rejectsBareNeedleKeyword() {
+        Map<String, Object> rules = new LinkedHashMap<>(DefaultPricingTemplate.buildRulesMap());
+        @SuppressWarnings("unchecked")
+        Map<String, Object> needle = new LinkedHashMap<>((Map<String, Object>) rules.get("needle"));
+        needle.put("keywords", List.of("针"));
+        rules.put("needle", needle);
+
+        RuleSchemaValidator.ValidationResult result = validator.validate(rules);
+        assertThat(result.valid()).isFalse();
+        assertThat(result.errors()).anyMatch(e -> e.contains("禁止裸词「针」"));
+    }
+
+    @Test
+    void rejectsNonGenericNeedleKeyword() {
+        Map<String, Object> rules = new LinkedHashMap<>(DefaultPricingTemplate.buildRulesMap());
+        @SuppressWarnings("unchecked")
+        Map<String, Object> needle = new LinkedHashMap<>((Map<String, Object>) rules.get("needle"));
+        needle.put("keywords", List.of("排针"));
+        rules.put("needle", needle);
+
+        RuleSchemaValidator.ValidationResult result = validator.validate(rules);
+        assertThat(result.valid()).isFalse();
+        assertThat(result.errors()).anyMatch(e -> e.contains("不在通用小件白名单"));
+    }
+
+    @Test
     void rejectsEmptyBagSizes() {
         Map<String, Object> rules = new LinkedHashMap<>(DefaultPricingTemplate.buildRulesMap());
         @SuppressWarnings("unchecked")

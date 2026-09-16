@@ -2598,24 +2598,6 @@ class PricingEngineTest {
     }
 
     @Test
-    void nonVeressNeedleCountStillSplitsByGlobalNeedleRule() {
-        // 非气腹针的「针N」仍走全局针数量拆分（如 针10 → 10÷5=2 件）
-        PricingEngine engine = new PricingEngine(defaultRules());
-        PricingEngine.ProcessedResult result = engine.processRow(row(
-                "哈尔滨市平房区人民医院",
-                "额外包(低温等离子)",
-                "针10",
-                "低温纸塑袋",
-                10,
-                1,
-                44,
-                44
-        ));
-
-        assertThat(result.notes).anyMatch(n -> n.contains("针折算"));
-    }
-
-    @Test
     void veressNeedleTailMultiSegmentPackCountsAllPieces() {
         // 气腹针在结尾的多数字包名：不拆分，按 Excel 器械数 6 件计价（低温 6 件=88+22=110）
         PricingEngine engine = new PricingEngine(defaultRules());
@@ -2708,44 +2690,6 @@ class PricingEngineTest {
 
         assertThat(result.notes).noneMatch(n -> n.contains("针折算"));
         assertThat(result.correctedTotalPrice).isEqualTo(28.0);
-    }
-
-    @Test
-    void needleSplitSumsAllSegmentsBeforeNeedle() {
-        // 多数字段包名触发针拆分时，非针器械数覆盖针前全部数字段：
-        // 剪刀2止血钳1探针1 → 非针 2+1=3 件 + 针折算 1 件 = 4 件（低温 4 件 tier=88）
-        PricingEngine engine = new PricingEngine(defaultRules());
-        PricingEngine.ProcessedResult result = engine.processRow(row(
-                "哈尔滨市平房区人民医院",
-                "额外包(低温等离子)",
-                "剪刀2止血钳1探针1/z1526",
-                "低温纸塑袋200*600",
-                4,
-                1,
-                88,
-                88
-        ));
-
-        assertThat(result.notes).anyMatch(n -> n.contains("非针器械 3 件"));
-        assertThat(result.correctedTotalPrice).isEqualTo(88.0);
-    }
-
-    @Test
-    void needleSplitSumsSegmentsAfterNeedle() {
-        // 针后多段同样求全和：弯针4盘1 → 针前 36+28+4=68 + 针后 盘1=1，非针 69 件 + 针折算 1 件 = 70 件
-        PricingEngine engine = new PricingEngine(defaultRules());
-        PricingEngine.ProcessedResult result = engine.processRow(row(
-                "黑龙江中医药大学附属第一医院",
-                "额外包(无纺布)",
-                "镊子36吸管28喉镜4弯针4盘1/W6050",
-                "无纺布-60×60-50g",
-                73,
-                1,
-                321.2,
-                321.2
-        ));
-
-        assertThat(result.notes).anyMatch(n -> n.contains("非针器械 69 件"));
     }
 
     @Test
@@ -4311,8 +4255,8 @@ class PricingEngineTest {
     }
 
     @Test
-    void needleQuantitySplitUsesMatchedKeywordConfigFoldRatio() {
-        // 「针N」拆分遇到带独立配置的小件关键词时，针折算比例按关键词配置（5÷3=2）
+    void mixedPackUsesSmallItemKeywordFoldNotGlobalNeedleSplit() {
+        // 克氏针5钢丝4：走小件关键词混合包折算，不再走已废止的全局「针N」拆分
         ObjectNode rules = (ObjectNode) defaultRules();
         ArrayNode configs = ((ObjectNode) rules.path("needle")).putArray("keywordConfigs");
         ObjectNode cfg = configs.addObject();
@@ -4327,7 +4271,59 @@ class PricingEngineTest {
                 "克氏针5钢丝4/Z7520",
                 "高温纸塑袋75*200",
                 9, 1, 49.5, 49.5));
-        assertThat(result.expectedUnitPrice).isEqualTo(33.0);
-        assertThat(result.notes).anyMatch(n -> n.contains("5÷3=2"));
+        assertThat(result.notes).noneMatch(n -> n.contains("针折算"));
+        assertThat(result.notes).anyMatch(n -> n.contains("小件关键词"));
+        assertThat(result.expectedUnitPrice).isEqualTo(16.5);
+    }
+
+    @Test
+    void zuyanPaizhen17NonWovenNoIllegalNeedleSplit() throws Exception {
+        ObjectNode rules = (ObjectNode) defaultRules();
+        ArrayNode foldRules = ((ObjectNode) rules.path("specialRules")).withArray("foldRules");
+        ObjectNode withBag = foldRules.addObject();
+        withBag.put("name", "祖研排针10合1含包材");
+        withBag.putArray("hospitals").add("祖研-黑龙江省中医医院（南岗院区）");
+        withBag.putArray("keywords").add("排针@contains");
+        withBag.put("threshold", 10);
+        withBag.put("foldRatio", 10);
+        withBag.put("maxInstrumentCount", 20);
+        withBag.putArray("acceptedTypes").add("额外包（纸塑袋）");
+
+        PricingEngine engine = new PricingEngine(rules);
+        PricingEngine.ProcessedResult result = engine.processRow(row(
+                "祖研-黑龙江省中医医院（南岗院区）",
+                "器械包",
+                "排针17/W6050",
+                "无纺布-60×60-50g",
+                17, 1, 93.5, 93.5));
+
+        assertThat(result.notes).noneMatch(n -> n.contains("针折算"));
+        assertThat(result.expectedUnitPrice).isNotEqualTo(27.5);
+        assertThat(result.expectedUnitPrice).isEqualTo(93.5);
+    }
+
+    @Test
+    void zuyanPaizhenPaperPlasticFold135() throws Exception {
+        ObjectNode rules = (ObjectNode) defaultRules();
+        ArrayNode foldRules = ((ObjectNode) rules.path("specialRules")).withArray("foldRules");
+        ObjectNode withBag = foldRules.addObject();
+        withBag.put("name", "祖研排针10合1含包材");
+        withBag.putArray("hospitals").add("祖研-黑龙江省中医医院（南岗院区）");
+        withBag.putArray("keywords").add("排针@contains");
+        withBag.put("threshold", 10);
+        withBag.put("foldRatio", 10);
+        withBag.put("maxInstrumentCount", 20);
+        withBag.putArray("acceptedTypes").add("额外包（纸塑袋）");
+
+        PricingEngine engine = new PricingEngine(rules);
+        PricingEngine.ProcessedResult result = engine.processRow(row(
+                "祖研-黑龙江省中医医院（南岗院区）",
+                "额外包(纸塑袋)",
+                "排针17/W6050",
+                "高温纸塑袋75*370",
+                17, 1, 13.5, 13.5));
+
+        assertThat(result.notes).noneMatch(n -> n.contains("针折算"));
+        assertThat(result.expectedUnitPrice).isEqualTo(13.5);
     }
 }

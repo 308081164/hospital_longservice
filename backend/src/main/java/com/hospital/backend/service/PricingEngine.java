@@ -230,13 +230,13 @@ public class PricingEngine {
             forceHighTempPerItem = foldUnitPriceOverride;
         }
 
-        // 针数量规则 + 小件器械折算（针数量规则优先：包名含"针+数字"时按公式拆分）
+        // 小件器械折算：仅通过 findSmallItemSplit（8 个合法关键词 + keywordConfigs）及院级 FOLD。
         JsonNode needle = rules.path("needle");
         String needleMatchMode = BillingConditionEvaluator.resolveKeywordMatchMode(needle);
         // 有效关键词 = keywordConfigs 独立配置词（含逐词匹配模式） ∪ 普通 keywords
         JsonNode needleKeywords = effectiveNeedleKeywords(needle);
 
-        // 高温纸塑 ≥3 件：按账单器械数×5.5，不应用全局针数拆分/小件折算（院级 FOLD 特色规则仍保留）。
+        // 高温纸塑 ≥3 件：按账单器械数×5.5，不应用小件折算（院级 FOLD 特色规则仍保留）。
         // 包名命中小件关键词（车针/克氏针等）时仍须走折算，不可因单包≥3件而按实件×5.5。
         boolean matchesSmallItemKeyword = matchesKeywordsBoundary(
                 packName, needleKeywords, needleMatchMode);
@@ -246,60 +246,8 @@ public class PricingEngine {
         if (skipGlobalNeedleAndSmallFold && !appliedSpecialFoldRule) {
             effectiveCount = Math.max(1, perPackRawInstrumentCount);
         }
-        java.util.regex.Pattern needleQtyPattern = java.util.regex.Pattern.compile("针(\\d+)");
-        java.util.regex.Matcher needleQtyMatcher = needleQtyPattern.matcher(packName);
-        boolean appliedNeedleRule = false;
-        boolean skipNeedleRuleForFuyiW9050 = packName.toLowerCase().contains("w9050");
-        // 气腹针是腹腔镜全价器械（非 5 合 1 小件，全局小件关键词亦未收录），
-        // 「气腹针N」的 N 为实件数，不参与针数量拆分（同 吸脂针长型号/W9050 的既有排除先例）
-        boolean foundNeedleQty = false;
-        while (needleQtyMatcher.find()) {
-            if (isVeressNeedleAt(packName, needleQtyMatcher.start())) {
-                continue;
-            }
-            foundNeedleQty = true;
-            break;
-        }
         if (!skipGlobalNeedleAndSmallFold && preMatchedSpecialPrice == null && !appliedSpecialFoldRule
-                && !isZsdInstrumentPack && !skipNeedleRuleForFuyiW9050 && foundNeedleQty) {
-            String beforeNeedle = packName.substring(0, needleQtyMatcher.start());
-            String afterNeedle = packName.substring(needleQtyMatcher.end());
-            // "针N"后是否还有器械名（如"钢丝4"），用于区分纯小件与混合器械
-            boolean hasOtherItems = java.util.regex.Pattern.compile("[\\u4e00-\\u9fff]+\\d+").matcher(afterNeedle).find();
-            boolean isSmallItemKeyword = matchesKeywordsBoundary(packName, needleKeywords, needleMatchMode);
-            // 若"针"是小件关键词的一部分（如"克氏针"）且针后无其他器械，跳过拆分
-            if (isSmallItemKeyword && !hasOtherItems) {
-                // 不应用针数量拆分，交给下方小件关键词规则处理
-            } else {
-                int needleQty = Integer.parseInt(needleQtyMatcher.group(1));
-                // 命中带独立配置的小件关键词时，针折算沿用该关键词的折算比例
-                BillingConditionEvaluator.ExactTokenKeywordMatch needleKwMatch =
-                        BillingConditionEvaluator.findKeywordByMode(packName, needleKeywords, needleMatchMode);
-                double foldRatio = resolveNeedleFoldParams(needle,
-                        needleKwMatch != null ? needleKwMatch.keyword() : null).foldRatio();
-                // 非针器械数按包名全部「器械名+数字」段求和（如 剪刀2止血钳1探针1 → 2+1=3），
-                // 避免只取末位数字丢失前段件数；无「汉字+数字」段时退回末位数字语义（兼容 （5号） 等写法）
-                int nonNeedleCount = sumAllNumbers(beforeNeedle);
-                if (nonNeedleCount == 0) {
-                    nonNeedleCount = extractLastNumber(beforeNeedle);
-                }
-                if (hasOtherItems) {
-                    nonNeedleCount += sumAllNumbers(afterNeedle);
-                }
-                if (nonNeedleCount == 0) {
-                    nonNeedleCount = Math.max(1, effectiveCount - needleQty);
-                }
-                int needleEquivalent = (int) Math.ceil(needleQty / foldRatio);
-                int newEffectiveCount = Math.max(1, nonNeedleCount + needleEquivalent);
-                notes.add("包名含\"针" + needleQty + "\"，非针器械 " + nonNeedleCount + " 件 + 针折算 " + needleEquivalent
-                        + " 件（" + needleQty + "÷" + (int) foldRatio + "=" + needleEquivalent + "） = "
-                        + newEffectiveCount + " 件。");
-                effectiveCount = newEffectiveCount;
-                appliedNeedleRule = true;
-            }
-        }
-        if (!skipGlobalNeedleAndSmallFold && preMatchedSpecialPrice == null && !appliedSpecialFoldRule
-                && !appliedNeedleRule && !isLiposuctionNeedleLongVariant(packName) && !isZsdInstrumentPack) {
+                && !isZsdInstrumentPack) {
             SmallItemSplit smallSplit = findSmallItemSplit(packName, needleKeywords, needleMatchMode);
             if (smallSplit != null) {
                 // 命中关键词带独立配置（keywordConfigs）时，触发件数/折算比例按该关键词覆盖全局默认
@@ -1517,17 +1465,6 @@ public class PricingEngine {
         return Math.max(1, (int) Math.ceil(count / Math.max(1.0, foldRatio)));
     }
 
-    /**
-     * 吸脂针按包名区分型号长度：20cm 及以上按实件计费，不参与全局「针」小件 5 合 1 折算。
-     */
-    private boolean isLiposuctionNeedleLongVariant(String packName) {
-        if (packName == null || !packName.contains("吸脂针")) {
-            return false;
-        }
-        String normalized = packName.replaceAll("\\s+", "").toLowerCase();
-        return normalized.contains("型号20cm以上") || normalized.contains("20cm以上");
-    }
-
     private String combinedText(Map<String, Object> row) {
         return str(row, "type") + " " + str(row, "packName") + " " + str(row, "packageMaterial");
     }
@@ -2422,15 +2359,6 @@ public class PricingEngine {
             return Integer.parseInt(m.group(1));
         }
         return 0;
-    }
-
-    /** 「针N」匹配是否气腹针：「气腹」与「针」之间允许空白分隔（如 气腹 针1，含全角空格）。 */
-    private static boolean isVeressNeedleAt(String packName, int needleStart) {
-        int i = needleStart - 1;
-        while (i >= 0 && Character.isSpaceChar(packName.charAt(i))) {
-            i--;
-        }
-        return i >= 1 && "气腹".equals(packName.substring(i - 1, i + 1));
     }
 
     /** 从字符串中提取所有"器械名+数字"模式的数字求和（只计中文紧接的数字，排除 Z7537 等编码） */
