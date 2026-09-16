@@ -1,7 +1,7 @@
 {
   "version": 1,
-  "generated_at": "2026-09-16T15:20:36Z",
-  "manifest_hash": "b3ec0ce280f05b1b8e799f9bbbde26dd3cb33086cfd5ec373df3a380c263fc3b",
+  "generated_at": "2026-09-16T15:26:12Z",
+  "manifest_hash": "5480ea7b8b4c5d54c47bc136ceae4829db671c280c62db0b56500f24141c52c4",
   "billing_enabled_count": 32,
   "active_billing_enabled_count": 32,
   "customers": {
@@ -3754,36 +3754,6 @@
       "billingEnabled": true,
       "productRules": [
         {
-          "ruleType": "FIXED_PRICE",
-          "name": "电力小件盒25",
-          "priority": 5,
-          "price": 25,
-          "keywords": [
-            "小件盒"
-          ],
-          "excludeKeywords": [
-            "小件盒-几件"
-          ],
-          "skipPackaging": true,
-          "skipDiscount": true,
-          "isActive": true,
-          "matchMode": "first"
-        },
-        {
-          "ruleType": "FIXED_PRICE",
-          "name": "电力等离子镜36",
-          "priority": 6,
-          "price": 36,
-          "keywords": [
-            "等离子镜"
-          ],
-          "temperature": "LT",
-          "skipPackaging": true,
-          "skipDiscount": true,
-          "isActive": true,
-          "matchMode": "first"
-        },
-        {
           "ruleType": "FOLD",
           "name": "电力抛光杯5合1含包材",
           "priority": 20,
@@ -3802,112 +3772,10 @@
           "acceptedTypes": [
             "额外包（纸塑袋）"
           ]
-        },
-        {
-          "ruleType": "FOLD",
-          "name": "电力抛光杯5合1免包材",
-          "priority": 21,
-          "keywords": [
-            "抛光杯@contains"
-          ],
-          "threshold": 5,
-          "foldRatio": 5,
-          "minInstrumentCount": 11,
-          "price": 5.5,
-          "skipPackaging": true,
-          "skipDiscount": false,
-          "isActive": true,
-          "matchMode": "first",
-          "keywordMatchMode": "exact_token",
-          "acceptedTypes": [
-            "额外包（纸塑袋）"
-          ]
-        },
-        {
-          "ruleType": "FOLD",
-          "name": "电力成型片5合1含包材",
-          "priority": 20,
-          "keywords": [
-            "成型片@contains"
-          ],
-          "excludeKeywords": [
-            "成型片-7"
-          ],
-          "threshold": 5,
-          "foldRatio": 5,
-          "maxInstrumentCount": 10,
-          "price": 5.5,
-          "skipPackaging": false,
-          "skipDiscount": false,
-          "isActive": true,
-          "matchMode": "first",
-          "keywordMatchMode": "exact_token",
-          "acceptedTypes": [
-            "额外包（纸塑袋）"
-          ]
-        },
-        {
-          "ruleType": "FOLD",
-          "name": "电力成型片5合1免包材",
-          "priority": 21,
-          "keywords": [
-            "成型片@contains"
-          ],
-          "excludeKeywords": [
-            "成型片-7"
-          ],
-          "threshold": 5,
-          "foldRatio": 5,
-          "minInstrumentCount": 11,
-          "price": 5.5,
-          "skipPackaging": true,
-          "skipDiscount": false,
-          "isActive": true,
-          "matchMode": "first",
-          "keywordMatchMode": "exact_token",
-          "acceptedTypes": [
-            "额外包（纸塑袋）"
-          ]
-        },
-        {
-          "ruleType": "FOLD",
-          "name": "电力小件盒几件ETO按1件含包材",
-          "priority": 22,
-          "keywords": [
-            "小件盒-几件@contains"
-          ],
-          "threshold": 99999,
-          "foldRatio": 9999,
-          "temperature": "LT",
-          "skipPackaging": false,
-          "skipDiscount": false,
-          "isActive": true,
-          "matchMode": "first",
-          "keywordMatchMode": "exact_token",
-          "acceptedTypes": [
-            "额外包（ETO）"
-          ]
-        },
-        {
-          "ruleType": "PRICE_PER_INSTRUMENT",
-          "name": "电力骨牵引包人工核对",
-          "priority": 90,
-          "price": 0,
-          "keywords": [
-            "骨牵引包"
-          ],
-          "skipPackaging": false,
-          "skipDiscount": true,
-          "isActive": true,
-          "matchMode": "first",
-          "conditionsJson": "[{\"field\":\"manualReview\",\"value\":true}]",
-          "acceptedTypes": [
-            "器械包"
-          ]
         }
       ],
-      "rule_count": 8,
-      "active_rule_count": 8
+      "rule_count": 1,
+      "active_rule_count": 1
     },
     "GUOYAO-MAIN": {
       "code": "GUOYAO-MAIN",
