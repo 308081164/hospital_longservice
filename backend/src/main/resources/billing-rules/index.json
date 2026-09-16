@@ -1,6 +1,6 @@
 {
-  "baseline_hash": "2aee9e117792a7f34f78d7fae30467e29f850c63df34f201dab66bec70e4cc62",
-  "generated_at": "2026-09-16T15:26:11Z",
+  "baseline_hash": "650c6fc803957afd3edf260834ac987fec0063807e7f34d4b3f9e18089c082d3",
+  "generated_at": "2026-09-16T16:26:32Z",
   "source": "billing-rules-manifest@01836c66115726ff7229db58f16020cb6e65f7069beee13551669c1031fd7764",
   "customer_count": 32,
   "customers": [
@@ -13,8 +13,8 @@
     {
       "code": "GUOYAO-2",
       "file": "baseline/GUOYAO-2.json",
-      "ruleCount": 31,
-      "fileHash": "2855ac3573ff1368fcb46fd4c02814bb5463b436f6edcb56b929235939af1868"
+      "ruleCount": 30,
+      "fileHash": "8c0cb8b8876633c2d12b80707e74cb51c67c3039b2bb639282e8b1ebe314772a"
     },
     {
       "code": "FNN-YY",
@@ -25,8 +25,8 @@
     {
       "code": "JIAYI-YL",
       "file": "baseline/JIAYI-YL.json",
-      "ruleCount": 1,
-      "fileHash": "2db7b73783c515f08ef687126dcfaadfbc1651772eb6073c0819409b64a31172"
+      "ruleCount": 0,
+      "fileHash": "92923c603d367a8dcfd3dc132a2e78f3790300d312a3bc577092dc515c2b43b2"
     },
     {
       "code": "NEAU-YY",
@@ -109,8 +109,8 @@
     {
       "code": "HL-ZGH",
       "file": "baseline/HL-ZGH.json",
-      "ruleCount": 19,
-      "fileHash": "3146a82a6447de6ab4e46fa9ceb89590a9faa00bb559b3db8ba581a231456188"
+      "ruleCount": 5,
+      "fileHash": "fc09cd3d5e6d290ad40c427f400aa0c27176c79c8dfdc2edcc5f4fb39cb3f5b8"
     },
     {
       "code": "JZSW-BIO",
@@ -163,8 +163,8 @@
     {
       "code": "ZUYAN-SF",
       "file": "baseline/ZUYAN-SF.json",
-      "ruleCount": 5,
-      "fileHash": "ee054924f77d7ae2d46a8651f6e769def24cf3d2ec7abc615275b21d71785777"
+      "ruleCount": 2,
+      "fileHash": "4d94b6ca5f09870c84a99c211ed27c0dace3ca8f4fe27264473cb0026a537d3e"
     },
     {
       "code": "AOLAN-YY",
@@ -193,8 +193,8 @@
     {
       "code": "GUOYAO-MAIN",
       "file": "baseline/GUOYAO-MAIN.json",
-      "ruleCount": 2,
-      "fileHash": "a0079c267bea1c4d56370cb91e755c0e748aa16ed7e271c78a59d1b9e3c66a78"
+      "ruleCount": 1,
+      "fileHash": "dd6d5cf7b977c12509b39819a57356370d947a7f3d6e89b265ace1dedc669286"
     }
   ]
 }

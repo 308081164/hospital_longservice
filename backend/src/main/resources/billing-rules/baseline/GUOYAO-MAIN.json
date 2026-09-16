@@ -23,19 +23,6 @@
         "单包装",
         "单包装包"
       ]
-    },
-    {
-      "ruleType": "FIXED_PRICE",
-      "name": "国药主院驱血带固定价",
-      "priority": 20,
-      "price": 13,
-      "keywords": [
-        "驱血带"
-      ],
-      "skipPackaging": true,
-      "skipDiscount": true,
-      "isActive": true,
-      "matchMode": "first"
     }
   ]
 }
