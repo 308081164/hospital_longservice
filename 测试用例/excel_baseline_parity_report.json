@@ -1,0 +1,282 @@
+{
+  "source_excel": "docs/source/特殊收费(1).xlsx",
+  "ok": false,
+  "unmapped_hospitals": [],
+  "errors": [
+    "JIAYI-YL: Excel 无对应段落",
+    "HLJ-FY-RK: 缺失覆盖 — row59 [⑫] 包名称带“针多少盒1” | [针/5（结果不是整数的都进一位）＋1（盒）]*5.5＋标准包材价格（费用不超过16.5）",
+    "HLJ-FY-RK: 缺失覆盖 — row60 [⑫] 包名称带“针多少盒1” | [针/5（结果不是整数的都进一位）＋1（盒）]*5.5",
+    "PFQ-RM: 缺失覆盖 — row103 [①] 包名称带“针盒1针多少” | [针/5（结果不是整数的都进一位）＋1（盒）]*5.5＋标准包材价格（费用不超过16.5）",
+    "PFQ-RM: 缺失覆盖 — row104 [①] 包名称带“针盒1针多少” | [针/5（结果不是整数的都进一位）＋1（盒）]*5.5"
+  ],
+  "hospitals": [
+    {
+      "code": "BINGCHENG-YM",
+      "name": "冰城医美",
+      "excel_rows": 3,
+      "baseline_rules": 6,
+      "ok": true,
+      "missing": []
+    },
+    {
+      "code": "GUOYAO-2",
+      "name": "电机厂",
+      "excel_rows": 6,
+      "baseline_rules": 31,
+      "ok": true,
+      "missing": []
+    },
+    {
+      "code": "FNN-YY",
+      "name": "方南南",
+      "excel_rows": 8,
+      "baseline_rules": 8,
+      "ok": true,
+      "missing": []
+    },
+    {
+      "code": "JIAYI-YL",
+      "name": "佳医医疗",
+      "excel_rows": 0,
+      "baseline_rules": 1,
+      "ok": false,
+      "missing": []
+    },
+    {
+      "code": "NEAU-YY",
+      "name": "东北农大",
+      "excel_rows": 8,
+      "baseline_rules": 8,
+      "ok": true,
+      "missing": []
+    },
+    {
+      "code": "HRB-WY",
+      "name": "市五院主院区",
+      "excel_rows": 8,
+      "baseline_rules": 8,
+      "ok": true,
+      "missing": []
+    },
+    {
+      "code": "HRB-SD-MB",
+      "name": "松电慢病",
+      "excel_rows": 2,
+      "baseline_rules": 2,
+      "ok": true,
+      "missing": []
+    },
+    {
+      "code": "HRB-HTFH",
+      "name": "航天风华",
+      "excel_rows": 2,
+      "baseline_rules": 2,
+      "ok": true,
+      "missing": []
+    },
+    {
+      "code": "HRB-WY-EM",
+      "name": "市五院二门诊",
+      "excel_rows": 1,
+      "baseline_rules": 3,
+      "ok": true,
+      "missing": []
+    },
+    {
+      "code": "JIUZHOU-FK",
+      "name": "九州",
+      "excel_rows": 1,
+      "baseline_rules": 1,
+      "ok": true,
+      "missing": []
+    },
+    {
+      "code": "BOSHANG-YY",
+      "name": "博尚",
+      "excel_rows": 3,
+      "baseline_rules": 3,
+      "ok": true,
+      "missing": []
+    },
+    {
+      "code": "HAIYUAN-SB",
+      "name": "海员松北",
+      "excel_rows": 2,
+      "baseline_rules": 2,
+      "ok": true,
+      "missing": []
+    },
+    {
+      "code": "HLJ-FY-RK",
+      "name": "省妇幼人口",
+      "excel_rows": 34,
+      "baseline_rules": 34,
+      "ok": false,
+      "missing": [
+        "row59 [⑫] 包名称带“针多少盒1” | [针/5（结果不是整数的都进一位）＋1（盒）]*5.5＋标准包材价格（费用不超过16.5）",
+        "row60 [⑫] 包名称带“针多少盒1” | [针/5（结果不是整数的都进一位）＋1（盒）]*5.5"
+      ]
+    },
+    {
+      "code": "ZUYAN-NG",
+      "name": "祖研南岗",
+      "excel_rows": 2,
+      "baseline_rules": 2,
+      "ok": true,
+      "missing": []
+    },
+    {
+      "code": "SHKF-YY",
+      "name": "社会康复",
+      "excel_rows": 14,
+      "baseline_rules": 14,
+      "ok": true,
+      "missing": []
+    },
+    {
+      "code": "DL-FUCHAN",
+      "name": "道里妇幼",
+      "excel_rows": 4,
+      "baseline_rules": 4,
+      "ok": true,
+      "missing": []
+    },
+    {
+      "code": "CHUNYU-YL",
+      "name": "春语医美",
+      "excel_rows": 2,
+      "baseline_rules": 4,
+      "ok": true,
+      "missing": []
+    },
+    {
+      "code": "HL-ZGH",
+      "name": "总工会",
+      "excel_rows": 5,
+      "baseline_rules": 19,
+      "ok": true,
+      "missing": []
+    },
+    {
+      "code": "JZSW-BIO",
+      "name": "基准生物",
+      "excel_rows": 2,
+      "baseline_rules": 1,
+      "ok": true,
+      "missing": []
+    },
+    {
+      "code": "SUOFEI-YL",
+      "name": "索菲医美",
+      "excel_rows": 1,
+      "baseline_rules": 1,
+      "ok": true,
+      "missing": []
+    },
+    {
+      "code": "HLJ-JYGLJ-YY",
+      "name": "省监狱管理局",
+      "excel_rows": 2,
+      "baseline_rules": 4,
+      "ok": true,
+      "missing": []
+    },
+    {
+      "code": "HULAN-TCM",
+      "name": "呼兰中医",
+      "excel_rows": 5,
+      "baseline_rules": 6,
+      "ok": true,
+      "missing": []
+    },
+    {
+      "code": "PFQ-RM",
+      "name": "平房区人民",
+      "excel_rows": 2,
+      "baseline_rules": 2,
+      "ok": false,
+      "missing": [
+        "row103 [①] 包名称带“针盒1针多少” | [针/5（结果不是整数的都进一位）＋1（盒）]*5.5＋标准包材价格（费用不超过16.5）",
+        "row104 [①] 包名称带“针盒1针多少” | [针/5（结果不是整数的都进一位）＋1（盒）]*5.5"
+      ]
+    },
+    {
+      "code": "HULAN-RM",
+      "name": "呼兰区人民",
+      "excel_rows": 2,
+      "baseline_rules": 11,
+      "ok": true,
+      "missing": []
+    },
+    {
+      "code": "XINFA-HSZ",
+      "name": "新发红十字",
+      "excel_rows": 3,
+      "baseline_rules": 3,
+      "ok": true,
+      "missing": []
+    },
+    {
+      "code": "YUANDONG-XN",
+      "name": "远东心脑血管",
+      "excel_rows": 2,
+      "baseline_rules": 2,
+      "ok": true,
+      "missing": []
+    },
+    {
+      "code": "ZUYAN-SF",
+      "name": "祖研三辅",
+      "excel_rows": 2,
+      "baseline_rules": 5,
+      "ok": true,
+      "missing": []
+    },
+    {
+      "code": "AOLAN-YY",
+      "name": "奥兰医院",
+      "excel_rows": 2,
+      "baseline_rules": 2,
+      "ok": true,
+      "missing": []
+    },
+    {
+      "code": "HRB-XK-YY",
+      "name": "胸科医院",
+      "excel_rows": 2,
+      "baseline_rules": 2,
+      "ok": true,
+      "missing": []
+    },
+    {
+      "code": "SENHAI-YY",
+      "name": "森海医院",
+      "excel_rows": 4,
+      "baseline_rules": 4,
+      "ok": true,
+      "missing": []
+    },
+    {
+      "code": "ZY3-DIANLI",
+      "name": "中医三院电力",
+      "excel_rows": 6,
+      "baseline_rules": 12,
+      "ok": true,
+      "missing": []
+    },
+    {
+      "code": "GUOYAO-MAIN",
+      "name": "国药主院区",
+      "excel_rows": 1,
+      "baseline_rules": 2,
+      "ok": true,
+      "missing": []
+    }
+  ],
+  "summary": {
+    "total": 32,
+    "pass": 29,
+    "fail": 3,
+    "excel_rows": 141
+  }
+}
