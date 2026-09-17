@@ -1,7 +1,7 @@
 {
   "version": 1,
-  "generated_at": "2026-09-16T16:26:32Z",
-  "manifest_hash": "c0f3bd6fa0a1a516992c19531fcd2a80e91987125754ca844d7fa285f470516f",
+  "generated_at": "2026-09-17T01:56:34Z",
+  "manifest_hash": "03cbf99015b7195904426ead130055341c31b885325c1075816818b9b65859ce",
   "billing_enabled_count": 32,
   "active_billing_enabled_count": 32,
   "customers": {
@@ -3505,17 +3505,17 @@
           "priority": 10,
           "price": 28,
           "keywords": [
-            "30度镜",
-            "10mm",
-            "10毫米30度镜"
+            "30度镜@contains",
+            "10mm@contains",
+            "10毫米30度镜@contains"
           ],
           "temperature": "HT",
           "skipPackaging": true,
           "skipDiscount": true,
           "isActive": true,
           "matchMode": "first",
+          "keywordMatchMode": "exact_token",
           "acceptedTypes": [
-            "单包装",
             "单包装包"
           ]
         }

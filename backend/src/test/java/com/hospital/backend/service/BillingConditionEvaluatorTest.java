@@ -186,5 +186,21 @@ class BillingConditionEvaluatorTest {
                 .isTrue();
         assertThat(BillingConditionEvaluator.packTypeEquivalent("单包装（低温老肯）", "单包装包（老肯低温）"))
                 .isTrue();
+        assertThat(BillingConditionEvaluator.packTypeEquivalent("单包装包", "单包装"))
+                .isTrue();
+    }
+
+    @Test
+    void containsKeywordMatchesEmbeddedDegreeLensInTenMmPackName() throws Exception {
+        ObjectNode rule = MAPPER.createObjectNode();
+        rule.put("keywordMatchMode", "exact_token");
+        rule.putArray("keywords").add("30度镜@contains");
+        rule.putArray("acceptedTypes").add("单包装包");
+
+        assertThat(BillingConditionEvaluator.matchesRuleKeywords(
+                rule,
+                "10毫米30度镜-1件/（高温！）Z2060",
+                "单包装包 10毫米30度镜-1件/（高温！）Z2060 高温纸塑袋200*600"))
+                .isTrue();
     }
 }

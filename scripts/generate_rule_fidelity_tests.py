@@ -144,18 +144,41 @@ class GoldenCase:
     note: str = ""
 
 
-def _synthetic_row(hospital: str, pack_name: str, keywords: list[str]) -> dict:
-    kw = keywords[0] if keywords else pack_name
+def _keyword_base(keyword: str) -> str:
+    return keyword.split("@", 1)[0].strip()
+
+
+def _sample_pack_name(keywords: list[str], fallback: str) -> str:
+    bases = [_keyword_base(k) for k in keywords if k]
+    if any("10毫米30度镜" in base or base == "30度镜" for base in bases):
+        return "10毫米30度镜-1件/（高温！）Z2060"
+    if bases:
+        return fallback or bases[0]
+    return fallback or "示例包"
+
+
+def _synthetic_row(hospital: str, pack_name: str, keywords: list[str], rule: dict | None = None) -> dict:
+    kw = _keyword_base(keywords[0]) if keywords else pack_name
+    pack_type = "高温纸塑袋75*200"
+    package_material = "高温纸塑袋75*200"
+    if rule:
+        accepted = rule.get("acceptedTypes") or []
+        if accepted:
+            pack_type = accepted[0]
+            if "单包装" in pack_type:
+                package_material = "高温纸塑袋200*600"
+    sample_pack = _sample_pack_name(keywords, pack_name or kw)
+    unit_price = 28.0 if "30度镜" in sample_pack else 22.0
     return {
         "hospitalName": hospital,
         "department": "手术室",
-        "type": "高温纸塑袋75*200",
-        "packName": pack_name or kw,
-        "packageMaterial": "高温纸塑袋75*200",
-        "instrumentCount": 5,
+        "type": pack_type,
+        "packName": sample_pack,
+        "packageMaterial": package_material,
+        "instrumentCount": 1,
         "packCount": 1,
-        "unitPrice": 22.0,
-        "totalPrice": 22.0,
+        "unitPrice": unit_price,
+        "totalPrice": unit_price,
     }
 
 
@@ -169,8 +192,8 @@ def build_catalog(manifest: dict) -> list[CatalogCase]:
             rule_name = rule.get("name") or ""
             rule_type = rule.get("ruleType") or ""
             keywords = list(rule.get("keywords") or [])
-            pack = keywords[0] if keywords else rule_name
-            pos_row = _synthetic_row(name, pack, keywords)
+            pack = _keyword_base(keywords[0]) if keywords else rule_name
+            pos_row = _synthetic_row(name, pack, keywords, rule)
             cases.append(
                 CatalogCase(
                     id=f"{code}__{rule_name}__hit",
@@ -188,7 +211,7 @@ def build_catalog(manifest: dict) -> list[CatalogCase]:
                 for ex in rule.get("excludeKeywords") or []:
                     neg_pack = f"{ex}测试包"
                     break
-            neg_row = _synthetic_row(name, neg_pack, [])
+            neg_row = _synthetic_row(name, neg_pack, [], rule)
             cases.append(
                 CatalogCase(
                     id=f"{code}__{rule_name}__miss",

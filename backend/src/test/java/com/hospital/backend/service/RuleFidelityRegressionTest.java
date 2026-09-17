@@ -15,6 +15,27 @@ class RuleFidelityRegressionTest {
     private static final ObjectMapper MAPPER = new ObjectMapper();
 
     @Test
+    void guoyaoMainTenMmLensFixedPriceMatchesWithDanbaozhuangbaoType() throws Exception {
+        JsonNode rules = RuleFidelityTestSupport.compileForCustomerCode("GUOYAO-MAIN");
+        PricingEngine engine = new PricingEngine(rules);
+        PricingEngine.ProcessedResult result = engine.processRow(Map.of(
+                "hospitalName", "国药总医院主院区",
+                "department", "手术室",
+                "type", "单包装包",
+                "packName", "10毫米30度镜-1件/（高温！）Z2060",
+                "packageMaterial", "高温纸塑袋200*600",
+                "instrumentCount", 1,
+                "packCount", 1,
+                "unitPrice", 28.0,
+                "totalPrice", 28.0
+        ));
+        assertThat(result.status).isEqualTo("unchanged");
+        assertThat(result.expectedUnitPrice).isEqualTo(28.0);
+        assertThat(result.pricingRule).contains("国药主院10mm30度镜固定价");
+        assertThat(result.notes).noneMatch(note -> note.contains("混合模式未命中特色规则，走标准灭菌计价"));
+    }
+
+    @Test
     void guoyao2PointerTenFoldWithBagMatchesCustomerRule() throws Exception {
         JsonNode rules = RuleFidelityTestSupport.compileForCustomerCode("GUOYAO-2");
         PricingEngine engine = new PricingEngine(rules);

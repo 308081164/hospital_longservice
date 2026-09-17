@@ -45,10 +45,10 @@
       "row": {
         "hospitalName": "奥兰医院",
         "department": "手术室",
-        "type": "高温纸塑袋75*200",
-        "packName": "双@contains",
+        "type": "额外包（纸塑袋）",
+        "packName": "双",
         "packageMaterial": "高温纸塑袋75*200",
-        "instrumentCount": 5,
+        "instrumentCount": 1,
         "packCount": 1,
         "unitPrice": 22.0,
         "totalPrice": 22.0
@@ -65,10 +65,10 @@
       "row": {
         "hospitalName": "奥兰医院",
         "department": "手术室",
-        "type": "高温纸塑袋75*200",
+        "type": "额外包（纸塑袋）",
         "packName": "不匹配规则专用包名XYZ",
         "packageMaterial": "高温纸塑袋75*200",
-        "instrumentCount": 5,
+        "instrumentCount": 1,
         "packCount": 1,
         "unitPrice": 22.0,
         "totalPrice": 22.0
@@ -85,10 +85,10 @@
       "row": {
         "hospitalName": "奥兰医院",
         "department": "手术室",
-        "type": "高温纸塑袋75*200",
-        "packName": "双@contains",
+        "type": "额外包（纸塑袋）",
+        "packName": "双",
         "packageMaterial": "高温纸塑袋75*200",
-        "instrumentCount": 5,
+        "instrumentCount": 1,
         "packCount": 1,
         "unitPrice": 22.0,
         "totalPrice": 22.0
@@ -105,10 +105,10 @@
       "row": {
         "hospitalName": "奥兰医院",
         "department": "手术室",
-        "type": "高温纸塑袋75*200",
+        "type": "额外包（纸塑袋）",
         "packName": "不匹配规则专用包名XYZ",
         "packageMaterial": "高温纸塑袋75*200",
-        "instrumentCount": 5,
+        "instrumentCount": 1,
         "packCount": 1,
         "unitPrice": 22.0,
         "totalPrice": 22.0
@@ -125,10 +125,10 @@
       "row": {
         "hospitalName": "哈尔滨冰城医疗美容医院",
         "department": "手术室",
-        "type": "高温纸塑袋75*200",
+        "type": "器械包",
         "packName": "整形手术包",
         "packageMaterial": "高温纸塑袋75*200",
-        "instrumentCount": 5,
+        "instrumentCount": 1,
         "packCount": 1,
         "unitPrice": 22.0,
         "totalPrice": 22.0
@@ -145,10 +145,10 @@
       "row": {
         "hospitalName": "哈尔滨冰城医疗美容医院",
         "department": "手术室",
-        "type": "高温纸塑袋75*200",
+        "type": "器械包",
         "packName": "脂充包测试包",
         "packageMaterial": "高温纸塑袋75*200",
-        "instrumentCount": 5,
+        "instrumentCount": 1,
         "packCount": 1,
         "unitPrice": 22.0,
         "totalPrice": 22.0
@@ -165,10 +165,10 @@
       "row": {
         "hospitalName": "哈尔滨冰城医疗美容医院",
         "department": "手术室",
-        "type": "高温纸塑袋75*200",
+        "type": "器械包",
         "packName": "整形手术包",
         "packageMaterial": "高温纸塑袋75*200",
-        "instrumentCount": 5,
+        "instrumentCount": 1,
         "packCount": 1,
         "unitPrice": 22.0,
         "totalPrice": 22.0
@@ -185,10 +185,10 @@
       "row": {
         "hospitalName": "哈尔滨冰城医疗美容医院",
         "department": "手术室",
-        "type": "高温纸塑袋75*200",
+        "type": "器械包",
         "packName": "脂充包测试包",
         "packageMaterial": "高温纸塑袋75*200",
-        "instrumentCount": 5,
+        "instrumentCount": 1,
         "packCount": 1,
         "unitPrice": 22.0,
         "totalPrice": 22.0
@@ -205,10 +205,10 @@
       "row": {
         "hospitalName": "哈尔滨冰城医疗美容医院",
         "department": "手术室",
-        "type": "高温纸塑袋75*200",
+        "type": "器械包",
         "packName": "环钻包",
         "packageMaterial": "高温纸塑袋75*200",
-        "instrumentCount": 5,
+        "instrumentCount": 1,
         "packCount": 1,
         "unitPrice": 22.0,
         "totalPrice": 22.0
@@ -225,10 +225,10 @@
       "row": {
         "hospitalName": "哈尔滨冰城医疗美容医院",
         "department": "手术室",
-        "type": "高温纸塑袋75*200",
+        "type": "器械包",
         "packName": "环钻头测试包",
         "packageMaterial": "高温纸塑袋75*200",
-        "instrumentCount": 5,
+        "instrumentCount": 1,
         "packCount": 1,
         "unitPrice": 22.0,
         "totalPrice": 22.0
@@ -245,10 +245,10 @@
       "row": {
         "hospitalName": "哈尔滨冰城医疗美容医院",
         "department": "手术室",
-        "type": "高温纸塑袋75*200",
+        "type": "器械包",
         "packName": "环钻包",
         "packageMaterial": "高温纸塑袋75*200",
-        "instrumentCount": 5,
+        "instrumentCount": 1,
         "packCount": 1,
         "unitPrice": 22.0,
         "totalPrice": 22.0
@@ -265,10 +265,10 @@
       "row": {
         "hospitalName": "哈尔滨冰城医疗美容医院",
         "department": "手术室",
-        "type": "高温纸塑袋75*200",
+        "type": "器械包",
         "packName": "环钻头测试包",
         "packageMaterial": "高温纸塑袋75*200",
-        "instrumentCount": 5,
+        "instrumentCount": 1,
         "packCount": 1,
         "unitPrice": 22.0,
         "totalPrice": 22.0
@@ -285,10 +285,10 @@
       "row": {
         "hospitalName": "哈尔滨冰城医疗美容医院",
         "department": "手术室",
-        "type": "高温纸塑袋75*200",
+        "type": "器械包",
         "packName": "脂充包",
         "packageMaterial": "高温纸塑袋75*200",
-        "instrumentCount": 5,
+        "instrumentCount": 1,
         "packCount": 1,
         "unitPrice": 22.0,
         "totalPrice": 22.0
@@ -305,10 +305,10 @@
       "row": {
         "hospitalName": "哈尔滨冰城医疗美容医院",
         "department": "手术室",
-        "type": "高温纸塑袋75*200",
+        "type": "器械包",
         "packName": "不匹配规则专用包名XYZ",
         "packageMaterial": "高温纸塑袋75*200",
-        "instrumentCount": 5,
+        "instrumentCount": 1,
         "packCount": 1,
         "unitPrice": 22.0,
         "totalPrice": 22.0
@@ -325,10 +325,10 @@
       "row": {
         "hospitalName": "哈尔滨冰城医疗美容医院",
         "department": "手术室",
-        "type": "高温纸塑袋75*200",
+        "type": "器械包",
         "packName": "脂充包",
         "packageMaterial": "高温纸塑袋75*200",
-        "instrumentCount": 5,
+        "instrumentCount": 1,
         "packCount": 1,
         "unitPrice": 22.0,
         "totalPrice": 22.0
@@ -345,10 +345,10 @@
       "row": {
         "hospitalName": "哈尔滨冰城医疗美容医院",
         "department": "手术室",
-        "type": "高温纸塑袋75*200",
+        "type": "器械包",
         "packName": "不匹配规则专用包名XYZ",
         "packageMaterial": "高温纸塑袋75*200",
-        "instrumentCount": 5,
+        "instrumentCount": 1,
         "packCount": 1,
         "unitPrice": 22.0,
         "totalPrice": 22.0
@@ -365,10 +365,10 @@
       "row": {
         "hospitalName": "博尚医院",
         "department": "手术室",
-        "type": "高温纸塑袋75*200",
+        "type": "额外包低温等离子",
         "packName": "旋切器1胶帽4/Z2045",
         "packageMaterial": "高温纸塑袋75*200",
-        "instrumentCount": 5,
+        "instrumentCount": 1,
         "packCount": 1,
         "unitPrice": 22.0,
         "totalPrice": 22.0
@@ -385,10 +385,10 @@
       "row": {
         "hospitalName": "博尚医院",
         "department": "手术室",
-        "type": "高温纸塑袋75*200",
+        "type": "额外包低温等离子",
         "packName": "不匹配规则专用包名XYZ",
         "packageMaterial": "高温纸塑袋75*200",
-        "instrumentCount": 5,
+        "instrumentCount": 1,
         "packCount": 1,
         "unitPrice": 22.0,
         "totalPrice": 22.0
@@ -405,10 +405,10 @@
       "row": {
         "hospitalName": "博尚医院",
         "department": "手术室",
-        "type": "高温纸塑袋75*200",
+        "type": "额外包低温等离子",
         "packName": "旋切器1戳卡1胶帽4/Z2045",
         "packageMaterial": "高温纸塑袋75*200",
-        "instrumentCount": 5,
+        "instrumentCount": 1,
         "packCount": 1,
         "unitPrice": 22.0,
         "totalPrice": 22.0
@@ -425,10 +425,10 @@
       "row": {
         "hospitalName": "博尚医院",
         "department": "手术室",
-        "type": "高温纸塑袋75*200",
+        "type": "额外包低温等离子",
         "packName": "不匹配规则专用包名XYZ",
         "packageMaterial": "高温纸塑袋75*200",
-        "instrumentCount": 5,
+        "instrumentCount": 1,
         "packCount": 1,
         "unitPrice": 22.0,
         "totalPrice": 22.0
@@ -445,10 +445,10 @@
       "row": {
         "hospitalName": "博尚医院",
         "department": "手术室",
-        "type": "高温纸塑袋75*200",
+        "type": "额外包低温等离子",
         "packName": "旋切器1线1胶帽4/Z2045",
         "packageMaterial": "高温纸塑袋75*200",
-        "instrumentCount": 5,
+        "instrumentCount": 1,
         "packCount": 1,
         "unitPrice": 22.0,
         "totalPrice": 22.0
@@ -465,10 +465,10 @@
       "row": {
         "hospitalName": "博尚医院",
         "department": "手术室",
-        "type": "高温纸塑袋75*200",
+        "type": "额外包低温等离子",
         "packName": "不匹配规则专用包名XYZ",
         "packageMaterial": "高温纸塑袋75*200",
-        "instrumentCount": 5,
+        "instrumentCount": 1,
         "packCount": 1,
         "unitPrice": 22.0,
         "totalPrice": 22.0
@@ -486,9 +486,9 @@
         "hospitalName": "春语医疗美容医院",
         "department": "手术室",
         "type": "高温纸塑袋75*200",
-        "packName": "塑料管@contains",
+        "packName": "塑料管",
         "packageMaterial": "高温纸塑袋75*200",
-        "instrumentCount": 5,
+        "instrumentCount": 1,
         "packCount": 1,
         "unitPrice": 22.0,
         "totalPrice": 22.0
@@ -508,7 +508,7 @@
         "type": "高温纸塑袋75*200",
         "packName": "不匹配规则专用包名XYZ",
         "packageMaterial": "高温纸塑袋75*200",
-        "instrumentCount": 5,
+        "instrumentCount": 1,
         "packCount": 1,
         "unitPrice": 22.0,
         "totalPrice": 22.0
@@ -526,9 +526,9 @@
         "hospitalName": "春语医疗美容医院",
         "department": "手术室",
         "type": "高温纸塑袋75*200",
-        "packName": "管子@contains",
+        "packName": "管子",
         "packageMaterial": "高温纸塑袋75*200",
-        "instrumentCount": 5,
+        "instrumentCount": 1,
         "packCount": 1,
         "unitPrice": 22.0,
         "totalPrice": 22.0
@@ -548,7 +548,7 @@
         "type": "高温纸塑袋75*200",
         "packName": "不匹配规则专用包名XYZ",
         "packageMaterial": "高温纸塑袋75*200",
-        "instrumentCount": 5,
+        "instrumentCount": 1,
         "packCount": 1,
         "unitPrice": 22.0,
         "totalPrice": 22.0
@@ -566,9 +566,9 @@
         "hospitalName": "春语医疗美容医院",
         "department": "手术室",
         "type": "高温纸塑袋75*200",
-        "packName": "塑料管@contains",
+        "packName": "塑料管",
         "packageMaterial": "高温纸塑袋75*200",
-        "instrumentCount": 5,
+        "instrumentCount": 1,
         "packCount": 1,
         "unitPrice": 22.0,
         "totalPrice": 22.0
@@ -588,7 +588,7 @@
         "type": "高温纸塑袋75*200",
         "packName": "不匹配规则专用包名XYZ",
         "packageMaterial": "高温纸塑袋75*200",
-        "instrumentCount": 5,
+        "instrumentCount": 1,
         "packCount": 1,
         "unitPrice": 22.0,
         "totalPrice": 22.0
@@ -606,9 +606,9 @@
         "hospitalName": "春语医疗美容医院",
         "department": "手术室",
         "type": "高温纸塑袋75*200",
-        "packName": "管子@contains",
+        "packName": "管子",
         "packageMaterial": "高温纸塑袋75*200",
-        "instrumentCount": 5,
+        "instrumentCount": 1,
         "packCount": 1,
         "unitPrice": 22.0,
         "totalPrice": 22.0
@@ -628,7 +628,7 @@
         "type": "高温纸塑袋75*200",
         "packName": "不匹配规则专用包名XYZ",
         "packageMaterial": "高温纸塑袋75*200",
-        "instrumentCount": 5,
+        "instrumentCount": 1,
         "packCount": 1,
         "unitPrice": 22.0,
         "totalPrice": 22.0
@@ -645,10 +645,10 @@
       "row": {
         "hospitalName": "哈尔滨市道里区妇幼保健院",
         "department": "手术室",
-        "type": "高温纸塑袋75*200",
-        "packName": "棉花针@contains",
+        "type": "额外包（纸塑袋）",
+        "packName": "棉花针",
         "packageMaterial": "高温纸塑袋75*200",
-        "instrumentCount": 5,
+        "instrumentCount": 1,
         "packCount": 1,
         "unitPrice": 22.0,
         "totalPrice": 22.0
@@ -665,10 +665,10 @@
       "row": {
         "hospitalName": "哈尔滨市道里区妇幼保健院",
         "department": "手术室",
-        "type": "高温纸塑袋75*200",
+        "type": "额外包（纸塑袋）",
         "packName": "不匹配规则专用包名XYZ",
         "packageMaterial": "高温纸塑袋75*200",
-        "instrumentCount": 5,
+        "instrumentCount": 1,
         "packCount": 1,
         "unitPrice": 22.0,
         "totalPrice": 22.0
@@ -685,10 +685,10 @@
       "row": {
         "hospitalName": "哈尔滨市道里区妇幼保健院",
         "department": "手术室",
-        "type": "高温纸塑袋75*200",
-        "packName": "棉花针@contains",
+        "type": "额外包（纸塑袋）",
+        "packName": "棉花针",
         "packageMaterial": "高温纸塑袋75*200",
-        "instrumentCount": 5,
+        "instrumentCount": 1,
         "packCount": 1,
         "unitPrice": 22.0,
         "totalPrice": 22.0
@@ -705,10 +705,10 @@
       "row": {
         "hospitalName": "哈尔滨市道里区妇幼保健院",
         "department": "手术室",
-        "type": "高温纸塑袋75*200",
+        "type": "额外包（纸塑袋）",
         "packName": "不匹配规则专用包名XYZ",
         "packageMaterial": "高温纸塑袋75*200",
-        "instrumentCount": 5,
+        "instrumentCount": 1,
         "packCount": 1,
         "unitPrice": 22.0,
         "totalPrice": 22.0
@@ -725,10 +725,10 @@
       "row": {
         "hospitalName": "哈尔滨市道里区妇幼保健院",
         "department": "手术室",
-        "type": "高温纸塑袋75*200",
-        "packName": "洗髓针@contains",
+        "type": "额外包（纸塑袋）",
+        "packName": "洗髓针",
         "packageMaterial": "高温纸塑袋75*200",
-        "instrumentCount": 5,
+        "instrumentCount": 1,
         "packCount": 1,
         "unitPrice": 22.0,
         "totalPrice": 22.0
@@ -745,10 +745,10 @@
       "row": {
         "hospitalName": "哈尔滨市道里区妇幼保健院",
         "department": "手术室",
-        "type": "高温纸塑袋75*200",
+        "type": "额外包（纸塑袋）",
         "packName": "不匹配规则专用包名XYZ",
         "packageMaterial": "高温纸塑袋75*200",
-        "instrumentCount": 5,
+        "instrumentCount": 1,
         "packCount": 1,
         "unitPrice": 22.0,
         "totalPrice": 22.0
@@ -765,10 +765,10 @@
       "row": {
         "hospitalName": "哈尔滨市道里区妇幼保健院",
         "department": "手术室",
-        "type": "高温纸塑袋75*200",
-        "packName": "洗髓针@contains",
+        "type": "额外包（纸塑袋）",
+        "packName": "洗髓针",
         "packageMaterial": "高温纸塑袋75*200",
-        "instrumentCount": 5,
+        "instrumentCount": 1,
         "packCount": 1,
         "unitPrice": 22.0,
         "totalPrice": 22.0
@@ -785,10 +785,10 @@
       "row": {
         "hospitalName": "哈尔滨市道里区妇幼保健院",
         "department": "手术室",
-        "type": "高温纸塑袋75*200",
+        "type": "额外包（纸塑袋）",
         "packName": "不匹配规则专用包名XYZ",
         "packageMaterial": "高温纸塑袋75*200",
-        "instrumentCount": 5,
+        "instrumentCount": 1,
         "packCount": 1,
         "unitPrice": 22.0,
         "totalPrice": 22.0
@@ -805,10 +805,10 @@
       "row": {
         "hospitalName": "方南南医院",
         "department": "手术室",
-        "type": "高温纸塑袋75*200",
-        "packName": "P钻@contains",
+        "type": "额外包（纸塑袋）",
+        "packName": "P钻",
         "packageMaterial": "高温纸塑袋75*200",
-        "instrumentCount": 5,
+        "instrumentCount": 1,
         "packCount": 1,
         "unitPrice": 22.0,
         "totalPrice": 22.0
@@ -825,10 +825,10 @@
       "row": {
         "hospitalName": "方南南医院",
         "department": "手术室",
-        "type": "高温纸塑袋75*200",
+        "type": "额外包（纸塑袋）",
         "packName": "不匹配规则专用包名XYZ",
         "packageMaterial": "高温纸塑袋75*200",
-        "instrumentCount": 5,
+        "instrumentCount": 1,
         "packCount": 1,
         "unitPrice": 22.0,
         "totalPrice": 22.0
@@ -845,10 +845,10 @@
       "row": {
         "hospitalName": "方南南医院",
         "department": "手术室",
-        "type": "高温纸塑袋75*200",
-        "packName": "光滑针@contains",
+        "type": "额外包（纸塑袋）",
+        "packName": "光滑针",
         "packageMaterial": "高温纸塑袋75*200",
-        "instrumentCount": 5,
+        "instrumentCount": 1,
         "packCount": 1,
         "unitPrice": 22.0,
         "totalPrice": 22.0
@@ -865,10 +865,10 @@
       "row": {
         "hospitalName": "方南南医院",
         "department": "手术室",
-        "type": "高温纸塑袋75*200",
+        "type": "额外包（纸塑袋）",
         "packName": "不匹配规则专用包名XYZ",
         "packageMaterial": "高温纸塑袋75*200",
-        "instrumentCount": 5,
+        "instrumentCount": 1,
         "packCount": 1,
         "unitPrice": 22.0,
         "totalPrice": 22.0
@@ -885,10 +885,10 @@
       "row": {
         "hospitalName": "方南南医院",
         "department": "手术室",
-        "type": "高温纸塑袋75*200",
-        "packName": "机扩针@contains",
+        "type": "额外包（纸塑袋）",
+        "packName": "机扩针",
         "packageMaterial": "高温纸塑袋75*200",
-        "instrumentCount": 5,
+        "instrumentCount": 1,
         "packCount": 1,
         "unitPrice": 22.0,
         "totalPrice": 22.0
@@ -905,10 +905,10 @@
       "row": {
         "hospitalName": "方南南医院",
         "department": "手术室",
-        "type": "高温纸塑袋75*200",
+        "type": "额外包（纸塑袋）",
         "packName": "不匹配规则专用包名XYZ",
         "packageMaterial": "高温纸塑袋75*200",
-        "instrumentCount": 5,
+        "instrumentCount": 1,
         "packCount": 1,
         "unitPrice": 22.0,
         "totalPrice": 22.0
@@ -925,10 +925,10 @@
       "row": {
         "hospitalName": "方南南医院",
         "department": "手术室",
-        "type": "高温纸塑袋75*200",
-        "packName": "根管锉@contains",
+        "type": "额外包（纸塑袋）",
+        "packName": "根管锉",
         "packageMaterial": "高温纸塑袋75*200",
-        "instrumentCount": 5,
+        "instrumentCount": 1,
         "packCount": 1,
         "unitPrice": 22.0,
         "totalPrice": 22.0
@@ -945,10 +945,10 @@
       "row": {
         "hospitalName": "方南南医院",
         "department": "手术室",
-        "type": "高温纸塑袋75*200",
+        "type": "额外包（纸塑袋）",
         "packName": "不匹配规则专用包名XYZ",
         "packageMaterial": "高温纸塑袋75*200",
-        "instrumentCount": 5,
+        "instrumentCount": 1,
         "packCount": 1,
         "unitPrice": 22.0,
         "totalPrice": 22.0
@@ -965,10 +965,10 @@
       "row": {
         "hospitalName": "方南南医院",
         "department": "手术室",
-        "type": "高温纸塑袋75*200",
-        "packName": "P钻@contains",
+        "type": "额外包（纸塑袋）",
+        "packName": "P钻",
         "packageMaterial": "高温纸塑袋75*200",
-        "instrumentCount": 5,
+        "instrumentCount": 1,
         "packCount": 1,
         "unitPrice": 22.0,
         "totalPrice": 22.0
@@ -985,10 +985,10 @@
       "row": {
         "hospitalName": "方南南医院",
         "department": "手术室",
-        "type": "高温纸塑袋75*200",
+        "type": "额外包（纸塑袋）",
         "packName": "不匹配规则专用包名XYZ",
         "packageMaterial": "高温纸塑袋75*200",
-        "instrumentCount": 5,
+        "instrumentCount": 1,
         "packCount": 1,
         "unitPrice": 22.0,
         "totalPrice": 22.0
@@ -1005,10 +1005,10 @@
       "row": {
         "hospitalName": "方南南医院",
         "department": "手术室",
-        "type": "高温纸塑袋75*200",
-        "packName": "光滑针@contains",
+        "type": "额外包（纸塑袋）",
+        "packName": "光滑针",
         "packageMaterial": "高温纸塑袋75*200",
-        "instrumentCount": 5,
+        "instrumentCount": 1,
         "packCount": 1,
         "unitPrice": 22.0,
         "totalPrice": 22.0
@@ -1025,10 +1025,10 @@
       "row": {
         "hospitalName": "方南南医院",
         "department": "手术室",
-        "type": "高温纸塑袋75*200",
+        "type": "额外包（纸塑袋）",
         "packName": "不匹配规则专用包名XYZ",
         "packageMaterial": "高温纸塑袋75*200",
-        "instrumentCount": 5,
+        "instrumentCount": 1,
         "packCount": 1,
         "unitPrice": 22.0,
         "totalPrice": 22.0
@@ -1045,10 +1045,10 @@
       "row": {
         "hospitalName": "方南南医院",
         "department": "手术室",
-        "type": "高温纸塑袋75*200",
-        "packName": "机扩针@contains",
+        "type": "额外包（纸塑袋）",
+        "packName": "机扩针",
         "packageMaterial": "高温纸塑袋75*200",
-        "instrumentCount": 5,
+        "instrumentCount": 1,
         "packCount": 1,
         "unitPrice": 22.0,
         "totalPrice": 22.0
@@ -1065,10 +1065,10 @@
       "row": {
         "hospitalName": "方南南医院",
         "department": "手术室",
-        "type": "高温纸塑袋75*200",
+        "type": "额外包（纸塑袋）",
         "packName": "不匹配规则专用包名XYZ",
         "packageMaterial": "高温纸塑袋75*200",
-        "instrumentCount": 5,
+        "instrumentCount": 1,
         "packCount": 1,
         "unitPrice": 22.0,
         "totalPrice": 22.0
@@ -1085,10 +1085,10 @@
       "row": {
         "hospitalName": "方南南医院",
         "department": "手术室",
-        "type": "高温纸塑袋75*200",
-        "packName": "根管锉@contains",
+        "type": "额外包（纸塑袋）",
+        "packName": "根管锉",
         "packageMaterial": "高温纸塑袋75*200",
-        "instrumentCount": 5,
+        "instrumentCount": 1,
         "packCount": 1,
         "unitPrice": 22.0,
         "totalPrice": 22.0
@@ -1105,10 +1105,10 @@
       "row": {
         "hospitalName": "方南南医院",
         "department": "手术室",
-        "type": "高温纸塑袋75*200",
+        "type": "额外包（纸塑袋）",
         "packName": "不匹配规则专用包名XYZ",
         "packageMaterial": "高温纸塑袋75*200",
-        "instrumentCount": 5,
+        "instrumentCount": 1,
         "packCount": 1,
         "unitPrice": 22.0,
         "totalPrice": 22.0
@@ -1125,10 +1125,10 @@
       "row": {
         "hospitalName": "国药总医院第二院区",
         "department": "手术室",
-        "type": "高温纸塑袋75*200",
+        "type": "额外包（纸塑袋）",
         "packName": "/双",
         "packageMaterial": "高温纸塑袋75*200",
-        "instrumentCount": 5,
+        "instrumentCount": 1,
         "packCount": 1,
         "unitPrice": 22.0,
         "totalPrice": 22.0
@@ -1145,10 +1145,10 @@
       "row": {
         "hospitalName": "国药总医院第二院区",
         "department": "手术室",
-        "type": "高温纸塑袋75*200",
+        "type": "额外包（纸塑袋）",
         "packName": "不匹配规则专用包名XYZ",
         "packageMaterial": "高温纸塑袋75*200",
-        "instrumentCount": 5,
+        "instrumentCount": 1,
         "packCount": 1,
         "unitPrice": 22.0,
         "totalPrice": 22.0
@@ -1165,10 +1165,10 @@
       "row": {
         "hospitalName": "国药总医院第二院区",
         "department": "手术室",
-        "type": "高温纸塑袋75*200",
+        "type": "额外包（纸塑袋）",
         "packName": "/双",
         "packageMaterial": "高温纸塑袋75*200",
-        "instrumentCount": 5,
+        "instrumentCount": 1,
         "packCount": 1,
         "unitPrice": 22.0,
         "totalPrice": 22.0
@@ -1185,10 +1185,10 @@
       "row": {
         "hospitalName": "国药总医院第二院区",
         "department": "手术室",
-        "type": "高温纸塑袋75*200",
+        "type": "额外包（纸塑袋）",
         "packName": "不匹配规则专用包名XYZ",
         "packageMaterial": "高温纸塑袋75*200",
-        "instrumentCount": 5,
+        "instrumentCount": 1,
         "packCount": 1,
         "unitPrice": 22.0,
         "totalPrice": 22.0
@@ -1205,10 +1205,10 @@
       "row": {
         "hospitalName": "国药总医院第二院区",
         "department": "手术室",
-        "type": "高温纸塑袋75*200",
+        "type": "额外包（纸塑袋）",
         "packName": "/双",
         "packageMaterial": "高温纸塑袋75*200",
-        "instrumentCount": 5,
+        "instrumentCount": 1,
         "packCount": 1,
         "unitPrice": 22.0,
         "totalPrice": 22.0
@@ -1225,10 +1225,10 @@
       "row": {
         "hospitalName": "国药总医院第二院区",
         "department": "手术室",
-        "type": "高温纸塑袋75*200",
+        "type": "额外包（纸塑袋）",
         "packName": "不匹配规则专用包名XYZ",
         "packageMaterial": "高温纸塑袋75*200",
-        "instrumentCount": 5,
+        "instrumentCount": 1,
         "packCount": 1,
         "unitPrice": 22.0,
         "totalPrice": 22.0
@@ -1245,10 +1245,10 @@
       "row": {
         "hospitalName": "国药总医院第二院区",
         "department": "手术室",
-        "type": "高温纸塑袋75*200",
+        "type": "额外包（纸塑袋）",
         "packName": "/双",
         "packageMaterial": "高温纸塑袋75*200",
-        "instrumentCount": 5,
+        "instrumentCount": 1,
         "packCount": 1,
         "unitPrice": 22.0,
         "totalPrice": 22.0
@@ -1265,10 +1265,10 @@
       "row": {
         "hospitalName": "国药总医院第二院区",
         "department": "手术室",
-        "type": "高温纸塑袋75*200",
+        "type": "额外包（纸塑袋）",
         "packName": "不匹配规则专用包名XYZ",
         "packageMaterial": "高温纸塑袋75*200",
-        "instrumentCount": 5,
+        "instrumentCount": 1,
         "packCount": 1,
         "unitPrice": 22.0,
         "totalPrice": 22.0
@@ -1285,10 +1285,10 @@
       "row": {
         "hospitalName": "国药总医院第二院区",
         "department": "手术室",
-        "type": "高温纸塑袋75*200",
+        "type": "额外包（纸塑袋）",
         "packName": "/双",
         "packageMaterial": "高温纸塑袋75*200",
-        "instrumentCount": 5,
+        "instrumentCount": 1,
         "packCount": 1,
         "unitPrice": 22.0,
         "totalPrice": 22.0
@@ -1305,10 +1305,10 @@
       "row": {
         "hospitalName": "国药总医院第二院区",
         "department": "手术室",
-        "type": "高温纸塑袋75*200",
+        "type": "额外包（纸塑袋）",
         "packName": "不匹配规则专用包名XYZ",
         "packageMaterial": "高温纸塑袋75*200",
-        "instrumentCount": 5,
+        "instrumentCount": 1,
         "packCount": 1,
         "unitPrice": 22.0,
         "totalPrice": 22.0
@@ -1325,10 +1325,10 @@
       "row": {
         "hospitalName": "国药总医院第二院区",
         "department": "手术室",
-        "type": "高温纸塑袋75*200",
-        "packName": "双@contains",
+        "type": "额外包（纸塑袋）",
+        "packName": "双",
         "packageMaterial": "高温纸塑袋75*200",
-        "instrumentCount": 5,
+        "instrumentCount": 1,
         "packCount": 1,
         "unitPrice": 22.0,
         "totalPrice": 22.0
@@ -1345,10 +1345,10 @@
       "row": {
         "hospitalName": "国药总医院第二院区",
         "department": "手术室",
-        "type": "高温纸塑袋75*200",
+        "type": "额外包（纸塑袋）",
         "packName": "不匹配规则专用包名XYZ",
         "packageMaterial": "高温纸塑袋75*200",
-        "instrumentCount": 5,
+        "instrumentCount": 1,
         "packCount": 1,
         "unitPrice": 22.0,
         "totalPrice": 22.0
@@ -1365,10 +1365,10 @@
       "row": {
         "hospitalName": "国药总医院第二院区",
         "department": "手术室",
-        "type": "高温纸塑袋75*200",
-        "packName": "指针@contains",
+        "type": "额外包（纸塑袋）",
+        "packName": "指针",
         "packageMaterial": "高温纸塑袋75*200",
-        "instrumentCount": 5,
+        "instrumentCount": 1,
         "packCount": 1,
         "unitPrice": 22.0,
         "totalPrice": 22.0
@@ -1385,10 +1385,10 @@
       "row": {
         "hospitalName": "国药总医院第二院区",
         "department": "手术室",
-        "type": "高温纸塑袋75*200",
+        "type": "额外包（纸塑袋）",
         "packName": "不匹配规则专用包名XYZ",
         "packageMaterial": "高温纸塑袋75*200",
-        "instrumentCount": 5,
+        "instrumentCount": 1,
         "packCount": 1,
         "unitPrice": 22.0,
         "totalPrice": 22.0
@@ -1405,10 +1405,10 @@
       "row": {
         "hospitalName": "国药总医院第二院区",
         "department": "手术室",
-        "type": "高温纸塑袋75*200",
-        "packName": "指针@contains",
+        "type": "额外包（纸塑袋）",
+        "packName": "指针",
         "packageMaterial": "高温纸塑袋75*200",
-        "instrumentCount": 5,
+        "instrumentCount": 1,
         "packCount": 1,
         "unitPrice": 22.0,
         "totalPrice": 22.0
@@ -1425,10 +1425,10 @@
       "row": {
         "hospitalName": "国药总医院第二院区",
         "department": "手术室",
-        "type": "高温纸塑袋75*200",
+        "type": "额外包（纸塑袋）",
         "packName": "不匹配规则专用包名XYZ",
         "packageMaterial": "高温纸塑袋75*200",
-        "instrumentCount": 5,
+        "instrumentCount": 1,
         "packCount": 1,
         "unitPrice": 22.0,
         "totalPrice": 22.0
@@ -1445,10 +1445,10 @@
       "row": {
         "hospitalName": "国药总医院第二院区",
         "department": "手术室",
-        "type": "高温纸塑袋75*200",
+        "type": "敷料包（无纺布）",
         "packName": "棉球/W12050",
         "packageMaterial": "高温纸塑袋75*200",
-        "instrumentCount": 5,
+        "instrumentCount": 1,
         "packCount": 1,
         "unitPrice": 22.0,
         "totalPrice": 22.0
@@ -1465,10 +1465,10 @@
       "row": {
         "hospitalName": "国药总医院第二院区",
         "department": "手术室",
-        "type": "高温纸塑袋75*200",
+        "type": "敷料包（无纺布）",
         "packName": "不匹配规则专用包名XYZ",
         "packageMaterial": "高温纸塑袋75*200",
-        "instrumentCount": 5,
+        "instrumentCount": 1,
         "packCount": 1,
         "unitPrice": 22.0,
         "totalPrice": 22.0
@@ -1485,10 +1485,10 @@
       "row": {
         "hospitalName": "国药总医院第二院区",
         "department": "手术室",
-        "type": "高温纸塑袋75*200",
+        "type": "敷料包（无纺布）",
         "packName": "棉球/W15050",
         "packageMaterial": "高温纸塑袋75*200",
-        "instrumentCount": 5,
+        "instrumentCount": 1,
         "packCount": 1,
         "unitPrice": 22.0,
         "totalPrice": 22.0
@@ -1505,10 +1505,10 @@
       "row": {
         "hospitalName": "国药总医院第二院区",
         "department": "手术室",
-        "type": "高温纸塑袋75*200",
+        "type": "敷料包（无纺布）",
         "packName": "不匹配规则专用包名XYZ",
         "packageMaterial": "高温纸塑袋75*200",
-        "instrumentCount": 5,
+        "instrumentCount": 1,
         "packCount": 1,
         "unitPrice": 22.0,
         "totalPrice": 22.0
@@ -1525,10 +1525,10 @@
       "row": {
         "hospitalName": "国药总医院第二院区",
         "department": "手术室",
-        "type": "高温纸塑袋75*200",
+        "type": "敷料包（无纺布）",
         "packName": "纱布/W12050",
         "packageMaterial": "高温纸塑袋75*200",
-        "instrumentCount": 5,
+        "instrumentCount": 1,
         "packCount": 1,
         "unitPrice": 22.0,
         "totalPrice": 22.0
@@ -1545,10 +1545,10 @@
       "row": {
         "hospitalName": "国药总医院第二院区",
         "department": "手术室",
-        "type": "高温纸塑袋75*200",
+        "type": "敷料包（无纺布）",
         "packName": "不匹配规则专用包名XYZ",
         "packageMaterial": "高温纸塑袋75*200",
-        "instrumentCount": 5,
+        "instrumentCount": 1,
         "packCount": 1,
         "unitPrice": 22.0,
         "totalPrice": 22.0
@@ -1565,10 +1565,10 @@
       "row": {
         "hospitalName": "国药总医院第二院区",
         "department": "手术室",
-        "type": "高温纸塑袋75*200",
+        "type": "敷料包（无纺布）",
         "packName": "纱布/W15050",
         "packageMaterial": "高温纸塑袋75*200",
-        "instrumentCount": 5,
+        "instrumentCount": 1,
         "packCount": 1,
         "unitPrice": 22.0,
         "totalPrice": 22.0
@@ -1585,10 +1585,10 @@
       "row": {
         "hospitalName": "国药总医院第二院区",
         "department": "手术室",
-        "type": "高温纸塑袋75*200",
+        "type": "敷料包（无纺布）",
         "packName": "不匹配规则专用包名XYZ",
         "packageMaterial": "高温纸塑袋75*200",
-        "instrumentCount": 5,
+        "instrumentCount": 1,
         "packCount": 1,
         "unitPrice": 22.0,
         "totalPrice": 22.0
@@ -1605,10 +1605,10 @@
       "row": {
         "hospitalName": "国药总医院第二院区",
         "department": "手术室",
-        "type": "高温纸塑袋75*200",
+        "type": "敷料包（无纺布）",
         "packName": "棉球/W6050",
         "packageMaterial": "高温纸塑袋75*200",
-        "instrumentCount": 5,
+        "instrumentCount": 1,
         "packCount": 1,
         "unitPrice": 22.0,
         "totalPrice": 22.0
@@ -1625,10 +1625,10 @@
       "row": {
         "hospitalName": "国药总医院第二院区",
         "department": "手术室",
-        "type": "高温纸塑袋75*200",
+        "type": "敷料包（无纺布）",
         "packName": "不匹配规则专用包名XYZ",
         "packageMaterial": "高温纸塑袋75*200",
-        "instrumentCount": 5,
+        "instrumentCount": 1,
         "packCount": 1,
         "unitPrice": 22.0,
         "totalPrice": 22.0
@@ -1645,10 +1645,10 @@
       "row": {
         "hospitalName": "国药总医院第二院区",
         "department": "手术室",
-        "type": "高温纸塑袋75*200",
+        "type": "敷料包（无纺布）",
         "packName": "棉球/W6070",
         "packageMaterial": "高温纸塑袋75*200",
-        "instrumentCount": 5,
+        "instrumentCount": 1,
         "packCount": 1,
         "unitPrice": 22.0,
         "totalPrice": 22.0
@@ -1665,10 +1665,10 @@
       "row": {
         "hospitalName": "国药总医院第二院区",
         "department": "手术室",
-        "type": "高温纸塑袋75*200",
+        "type": "敷料包（无纺布）",
         "packName": "不匹配规则专用包名XYZ",
         "packageMaterial": "高温纸塑袋75*200",
-        "instrumentCount": 5,
+        "instrumentCount": 1,
         "packCount": 1,
         "unitPrice": 22.0,
         "totalPrice": 22.0
@@ -1685,10 +1685,10 @@
       "row": {
         "hospitalName": "国药总医院第二院区",
         "department": "手术室",
-        "type": "高温纸塑袋75*200",
+        "type": "敷料包（无纺布）",
         "packName": "棉球/W7060",
         "packageMaterial": "高温纸塑袋75*200",
-        "instrumentCount": 5,
+        "instrumentCount": 1,
         "packCount": 1,
         "unitPrice": 22.0,
         "totalPrice": 22.0
@@ -1705,10 +1705,10 @@
       "row": {
         "hospitalName": "国药总医院第二院区",
         "department": "手术室",
-        "type": "高温纸塑袋75*200",
+        "type": "敷料包（无纺布）",
         "packName": "不匹配规则专用包名XYZ",
         "packageMaterial": "高温纸塑袋75*200",
-        "instrumentCount": 5,
+        "instrumentCount": 1,
         "packCount": 1,
         "unitPrice": 22.0,
         "totalPrice": 22.0
@@ -1725,10 +1725,10 @@
       "row": {
         "hospitalName": "国药总医院第二院区",
         "department": "手术室",
-        "type": "高温纸塑袋75*200",
+        "type": "敷料包（无纺布）",
         "packName": "棉球/W7070",
         "packageMaterial": "高温纸塑袋75*200",
-        "instrumentCount": 5,
+        "instrumentCount": 1,
         "packCount": 1,
         "unitPrice": 22.0,
         "totalPrice": 22.0
@@ -1745,10 +1745,10 @@
       "row": {
         "hospitalName": "国药总医院第二院区",
         "department": "手术室",
-        "type": "高温纸塑袋75*200",
+        "type": "敷料包（无纺布）",
         "packName": "不匹配规则专用包名XYZ",
         "packageMaterial": "高温纸塑袋75*200",
-        "instrumentCount": 5,
+        "instrumentCount": 1,
         "packCount": 1,
         "unitPrice": 22.0,
         "totalPrice": 22.0
@@ -1765,10 +1765,10 @@
       "row": {
         "hospitalName": "国药总医院第二院区",
         "department": "手术室",
-        "type": "高温纸塑袋75*200",
+        "type": "敷料包（无纺布）",
         "packName": "纱布/W6050",
         "packageMaterial": "高温纸塑袋75*200",
-        "instrumentCount": 5,
+        "instrumentCount": 1,
         "packCount": 1,
         "unitPrice": 22.0,
         "totalPrice": 22.0
@@ -1785,10 +1785,10 @@
       "row": {
         "hospitalName": "国药总医院第二院区",
         "department": "手术室",
-        "type": "高温纸塑袋75*200",
+        "type": "敷料包（无纺布）",
         "packName": "不匹配规则专用包名XYZ",
         "packageMaterial": "高温纸塑袋75*200",
-        "instrumentCount": 5,
+        "instrumentCount": 1,
         "packCount": 1,
         "unitPrice": 22.0,
         "totalPrice": 22.0
@@ -1805,10 +1805,10 @@
       "row": {
         "hospitalName": "国药总医院第二院区",
         "department": "手术室",
-        "type": "高温纸塑袋75*200",
+        "type": "敷料包（无纺布）",
         "packName": "纱布/W6070",
         "packageMaterial": "高温纸塑袋75*200",
-        "instrumentCount": 5,
+        "instrumentCount": 1,
         "packCount": 1,
         "unitPrice": 22.0,
         "totalPrice": 22.0
@@ -1825,10 +1825,10 @@
       "row": {
         "hospitalName": "国药总医院第二院区",
         "department": "手术室",
-        "type": "高温纸塑袋75*200",
+        "type": "敷料包（无纺布）",
         "packName": "不匹配规则专用包名XYZ",
         "packageMaterial": "高温纸塑袋75*200",
-        "instrumentCount": 5,
+        "instrumentCount": 1,
         "packCount": 1,
         "unitPrice": 22.0,
         "totalPrice": 22.0
@@ -1845,10 +1845,10 @@
       "row": {
         "hospitalName": "国药总医院第二院区",
         "department": "手术室",
-        "type": "高温纸塑袋75*200",
+        "type": "敷料包（无纺布）",
         "packName": "纱布/W7060",
         "packageMaterial": "高温纸塑袋75*200",
-        "instrumentCount": 5,
+        "instrumentCount": 1,
         "packCount": 1,
         "unitPrice": 22.0,
         "totalPrice": 22.0
@@ -1865,10 +1865,10 @@
       "row": {
         "hospitalName": "国药总医院第二院区",
         "department": "手术室",
-        "type": "高温纸塑袋75*200",
+        "type": "敷料包（无纺布）",
         "packName": "不匹配规则专用包名XYZ",
         "packageMaterial": "高温纸塑袋75*200",
-        "instrumentCount": 5,
+        "instrumentCount": 1,
         "packCount": 1,
         "unitPrice": 22.0,
         "totalPrice": 22.0
@@ -1885,10 +1885,10 @@
       "row": {
         "hospitalName": "国药总医院第二院区",
         "department": "手术室",
-        "type": "高温纸塑袋75*200",
+        "type": "敷料包（无纺布）",
         "packName": "纱布/W7070",
         "packageMaterial": "高温纸塑袋75*200",
-        "instrumentCount": 5,
+        "instrumentCount": 1,
         "packCount": 1,
         "unitPrice": 22.0,
         "totalPrice": 22.0
@@ -1905,10 +1905,10 @@
       "row": {
         "hospitalName": "国药总医院第二院区",
         "department": "手术室",
-        "type": "高温纸塑袋75*200",
+        "type": "敷料包（无纺布）",
         "packName": "不匹配规则专用包名XYZ",
         "packageMaterial": "高温纸塑袋75*200",
-        "instrumentCount": 5,
+        "instrumentCount": 1,
         "packCount": 1,
         "unitPrice": 22.0,
         "totalPrice": 22.0
@@ -1925,10 +1925,10 @@
       "row": {
         "hospitalName": "国药总医院第二院区",
         "department": "手术室",
-        "type": "高温纸塑袋75*200",
+        "type": "敷料包（无纺布）",
         "packName": "棉球/W9050",
         "packageMaterial": "高温纸塑袋75*200",
-        "instrumentCount": 5,
+        "instrumentCount": 1,
         "packCount": 1,
         "unitPrice": 22.0,
         "totalPrice": 22.0
@@ -1945,10 +1945,10 @@
       "row": {
         "hospitalName": "国药总医院第二院区",
         "department": "手术室",
-        "type": "高温纸塑袋75*200",
+        "type": "敷料包（无纺布）",
         "packName": "不匹配规则专用包名XYZ",
         "packageMaterial": "高温纸塑袋75*200",
-        "instrumentCount": 5,
+        "instrumentCount": 1,
         "packCount": 1,
         "unitPrice": 22.0,
         "totalPrice": 22.0
@@ -1965,10 +1965,10 @@
       "row": {
         "hospitalName": "国药总医院第二院区",
         "department": "手术室",
-        "type": "高温纸塑袋75*200",
+        "type": "敷料包（无纺布）",
         "packName": "棉球/W9060",
         "packageMaterial": "高温纸塑袋75*200",
-        "instrumentCount": 5,
+        "instrumentCount": 1,
         "packCount": 1,
         "unitPrice": 22.0,
         "totalPrice": 22.0
@@ -1985,10 +1985,10 @@
       "row": {
         "hospitalName": "国药总医院第二院区",
         "department": "手术室",
-        "type": "高温纸塑袋75*200",
+        "type": "敷料包（无纺布）",
         "packName": "不匹配规则专用包名XYZ",
         "packageMaterial": "高温纸塑袋75*200",
-        "instrumentCount": 5,
+        "instrumentCount": 1,
         "packCount": 1,
         "unitPrice": 22.0,
         "totalPrice": 22.0
@@ -2005,10 +2005,10 @@
       "row": {
         "hospitalName": "国药总医院第二院区",
         "department": "手术室",
-        "type": "高温纸塑袋75*200",
+        "type": "敷料包（无纺布）",
         "packName": "纱布/W9050",
         "packageMaterial": "高温纸塑袋75*200",
-        "instrumentCount": 5,
+        "instrumentCount": 1,
         "packCount": 1,
         "unitPrice": 22.0,
         "totalPrice": 22.0
@@ -2025,10 +2025,10 @@
       "row": {
         "hospitalName": "国药总医院第二院区",
         "department": "手术室",
-        "type": "高温纸塑袋75*200",
+        "type": "敷料包（无纺布）",
         "packName": "不匹配规则专用包名XYZ",
         "packageMaterial": "高温纸塑袋75*200",
-        "instrumentCount": 5,
+        "instrumentCount": 1,
         "packCount": 1,
         "unitPrice": 22.0,
         "totalPrice": 22.0
@@ -2045,10 +2045,10 @@
       "row": {
         "hospitalName": "国药总医院第二院区",
         "department": "手术室",
-        "type": "高温纸塑袋75*200",
+        "type": "敷料包（无纺布）",
         "packName": "纱布/W9060",
         "packageMaterial": "高温纸塑袋75*200",
-        "instrumentCount": 5,
+        "instrumentCount": 1,
         "packCount": 1,
         "unitPrice": 22.0,
         "totalPrice": 22.0
@@ -2065,10 +2065,10 @@
       "row": {
         "hospitalName": "国药总医院第二院区",
         "department": "手术室",
-        "type": "高温纸塑袋75*200",
+        "type": "敷料包（无纺布）",
         "packName": "不匹配规则专用包名XYZ",
         "packageMaterial": "高温纸塑袋75*200",
-        "instrumentCount": 5,
+        "instrumentCount": 1,
         "packCount": 1,
         "unitPrice": 22.0,
         "totalPrice": 22.0
@@ -2085,10 +2085,10 @@
       "row": {
         "hospitalName": "国药总医院第二院区",
         "department": "手术室",
-        "type": "高温纸塑袋75*200",
+        "type": "敷料包（无纺布）",
         "packName": "棉球/W12050",
         "packageMaterial": "高温纸塑袋75*200",
-        "instrumentCount": 5,
+        "instrumentCount": 1,
         "packCount": 1,
         "unitPrice": 22.0,
         "totalPrice": 22.0
@@ -2105,10 +2105,10 @@
       "row": {
         "hospitalName": "国药总医院第二院区",
         "department": "手术室",
-        "type": "高温纸塑袋75*200",
+        "type": "敷料包（无纺布）",
         "packName": "不匹配规则专用包名XYZ",
         "packageMaterial": "高温纸塑袋75*200",
-        "instrumentCount": 5,
+        "instrumentCount": 1,
         "packCount": 1,
         "unitPrice": 22.0,
         "totalPrice": 22.0
@@ -2125,10 +2125,10 @@
       "row": {
         "hospitalName": "国药总医院第二院区",
         "department": "手术室",
-        "type": "高温纸塑袋75*200",
+        "type": "敷料包（无纺布）",
         "packName": "棉球/W6050",
         "packageMaterial": "高温纸塑袋75*200",
-        "instrumentCount": 5,
+        "instrumentCount": 1,
         "packCount": 1,
         "unitPrice": 22.0,
         "totalPrice": 22.0
@@ -2145,10 +2145,10 @@
       "row": {
         "hospitalName": "国药总医院第二院区",
         "department": "手术室",
-        "type": "高温纸塑袋75*200",
+        "type": "敷料包（无纺布）",
         "packName": "不匹配规则专用包名XYZ",
         "packageMaterial": "高温纸塑袋75*200",
-        "instrumentCount": 5,
+        "instrumentCount": 1,
         "packCount": 1,
         "unitPrice": 22.0,
         "totalPrice": 22.0
@@ -2165,10 +2165,10 @@
       "row": {
         "hospitalName": "国药总医院第二院区",
         "department": "手术室",
-        "type": "高温纸塑袋75*200",
+        "type": "敷料包（无纺布）",
         "packName": "棉球/W9050",
         "packageMaterial": "高温纸塑袋75*200",
-        "instrumentCount": 5,
+        "instrumentCount": 1,
         "packCount": 1,
         "unitPrice": 22.0,
         "totalPrice": 22.0
@@ -2185,10 +2185,10 @@
       "row": {
         "hospitalName": "国药总医院第二院区",
         "department": "手术室",
-        "type": "高温纸塑袋75*200",
+        "type": "敷料包（无纺布）",
         "packName": "不匹配规则专用包名XYZ",
         "packageMaterial": "高温纸塑袋75*200",
-        "instrumentCount": 5,
+        "instrumentCount": 1,
         "packCount": 1,
         "unitPrice": 22.0,
         "totalPrice": 22.0
@@ -2205,10 +2205,10 @@
       "row": {
         "hospitalName": "国药总医院第二院区",
         "department": "手术室",
-        "type": "高温纸塑袋75*200",
+        "type": "敷料包（无纺布）",
         "packName": "纱布/W12050",
         "packageMaterial": "高温纸塑袋75*200",
-        "instrumentCount": 5,
+        "instrumentCount": 1,
         "packCount": 1,
         "unitPrice": 22.0,
         "totalPrice": 22.0
@@ -2225,10 +2225,10 @@
       "row": {
         "hospitalName": "国药总医院第二院区",
         "department": "手术室",
-        "type": "高温纸塑袋75*200",
+        "type": "敷料包（无纺布）",
         "packName": "不匹配规则专用包名XYZ",
         "packageMaterial": "高温纸塑袋75*200",
-        "instrumentCount": 5,
+        "instrumentCount": 1,
         "packCount": 1,
         "unitPrice": 22.0,
         "totalPrice": 22.0
@@ -2245,10 +2245,10 @@
       "row": {
         "hospitalName": "国药总医院第二院区",
         "department": "手术室",
-        "type": "高温纸塑袋75*200",
+        "type": "敷料包（无纺布）",
         "packName": "纱布/W6050",
         "packageMaterial": "高温纸塑袋75*200",
-        "instrumentCount": 5,
+        "instrumentCount": 1,
         "packCount": 1,
         "unitPrice": 22.0,
         "totalPrice": 22.0
@@ -2265,10 +2265,10 @@
       "row": {
         "hospitalName": "国药总医院第二院区",
         "department": "手术室",
-        "type": "高温纸塑袋75*200",
+        "type": "敷料包（无纺布）",
         "packName": "不匹配规则专用包名XYZ",
         "packageMaterial": "高温纸塑袋75*200",
-        "instrumentCount": 5,
+        "instrumentCount": 1,
         "packCount": 1,
         "unitPrice": 22.0,
         "totalPrice": 22.0
@@ -2285,10 +2285,10 @@
       "row": {
         "hospitalName": "国药总医院第二院区",
         "department": "手术室",
-        "type": "高温纸塑袋75*200",
+        "type": "敷料包（无纺布）",
         "packName": "纱布/W9050",
         "packageMaterial": "高温纸塑袋75*200",
-        "instrumentCount": 5,
+        "instrumentCount": 1,
         "packCount": 1,
         "unitPrice": 22.0,
         "totalPrice": 22.0
@@ -2305,10 +2305,10 @@
       "row": {
         "hospitalName": "国药总医院第二院区",
         "department": "手术室",
-        "type": "高温纸塑袋75*200",
+        "type": "敷料包（无纺布）",
         "packName": "不匹配规则专用包名XYZ",
         "packageMaterial": "高温纸塑袋75*200",
-        "instrumentCount": 5,
+        "instrumentCount": 1,
         "packCount": 1,
         "unitPrice": 22.0,
         "totalPrice": 22.0
@@ -2325,13 +2325,13 @@
       "row": {
         "hospitalName": "国药总医院主院区",
         "department": "手术室",
-        "type": "高温纸塑袋75*200",
-        "packName": "30度镜",
-        "packageMaterial": "高温纸塑袋75*200",
-        "instrumentCount": 5,
+        "type": "单包装包",
+        "packName": "10毫米30度镜-1件/（高温！）Z2060",
+        "packageMaterial": "高温纸塑袋200*600",
+        "instrumentCount": 1,
         "packCount": 1,
-        "unitPrice": 22.0,
-        "totalPrice": 22.0
+        "unitPrice": 28.0,
+        "totalPrice": 28.0
       },
       "note": "active rule should match"
     },
@@ -2345,10 +2345,10 @@
       "row": {
         "hospitalName": "国药总医院主院区",
         "department": "手术室",
-        "type": "高温纸塑袋75*200",
+        "type": "单包装包",
         "packName": "不匹配规则专用包名XYZ",
-        "packageMaterial": "高温纸塑袋75*200",
-        "instrumentCount": 5,
+        "packageMaterial": "高温纸塑袋200*600",
+        "instrumentCount": 1,
         "packCount": 1,
         "unitPrice": 22.0,
         "totalPrice": 22.0
@@ -2365,10 +2365,10 @@
       "row": {
         "hospitalName": "黑龙江省海员总医院（松北）",
         "department": "手术室",
-        "type": "高温纸塑袋75*200",
-        "packName": "胶帽@contains",
+        "type": "额外包低温等离子",
+        "packName": "胶帽",
         "packageMaterial": "高温纸塑袋75*200",
-        "instrumentCount": 5,
+        "instrumentCount": 1,
         "packCount": 1,
         "unitPrice": 22.0,
         "totalPrice": 22.0
@@ -2385,10 +2385,10 @@
       "row": {
         "hospitalName": "黑龙江省海员总医院（松北）",
         "department": "手术室",
-        "type": "高温纸塑袋75*200",
+        "type": "额外包低温等离子",
         "packName": "不匹配规则专用包名XYZ",
         "packageMaterial": "高温纸塑袋75*200",
-        "instrumentCount": 5,
+        "instrumentCount": 1,
         "packCount": 1,
         "unitPrice": 22.0,
         "totalPrice": 22.0
@@ -2405,10 +2405,10 @@
       "row": {
         "hospitalName": "黑龙江省海员总医院（松北）",
         "department": "手术室",
-        "type": "高温纸塑袋75*200",
-        "packName": "胶帽@contains",
+        "type": "额外包低温等离子",
+        "packName": "胶帽",
         "packageMaterial": "高温纸塑袋75*200",
-        "instrumentCount": 5,
+        "instrumentCount": 1,
         "packCount": 1,
         "unitPrice": 22.0,
         "totalPrice": 22.0
@@ -2425,10 +2425,10 @@
       "row": {
         "hospitalName": "黑龙江省海员总医院（松北）",
         "department": "手术室",
-        "type": "高温纸塑袋75*200",
+        "type": "额外包低温等离子",
         "packName": "不匹配规则专用包名XYZ",
         "packageMaterial": "高温纸塑袋75*200",
-        "instrumentCount": 5,
+        "instrumentCount": 1,
         "packCount": 1,
         "unitPrice": 22.0,
         "totalPrice": 22.0
@@ -2445,10 +2445,10 @@
       "row": {
         "hospitalName": "黑龙江总工会医院",
         "department": "手术室",
-        "type": "高温纸塑袋75*200",
+        "type": "额外包低温等离子",
         "packName": "12°镜头-1/Z2060",
         "packageMaterial": "高温纸塑袋75*200",
-        "instrumentCount": 5,
+        "instrumentCount": 1,
         "packCount": 1,
         "unitPrice": 22.0,
         "totalPrice": 22.0
@@ -2465,10 +2465,10 @@
       "row": {
         "hospitalName": "黑龙江总工会医院",
         "department": "手术室",
-        "type": "高温纸塑袋75*200",
+        "type": "额外包低温等离子",
         "packName": "不匹配规则专用包名XYZ",
         "packageMaterial": "高温纸塑袋75*200",
-        "instrumentCount": 5,
+        "instrumentCount": 1,
         "packCount": 1,
         "unitPrice": 22.0,
         "totalPrice": 22.0
@@ -2488,7 +2488,7 @@
         "type": "高温纸塑袋75*200",
         "packName": "30°镜头，镜鞘-2（带转换帽）/Z2060",
         "packageMaterial": "高温纸塑袋75*200",
-        "instrumentCount": 5,
+        "instrumentCount": 1,
         "packCount": 1,
         "unitPrice": 22.0,
         "totalPrice": 22.0
@@ -2508,7 +2508,7 @@
         "type": "高温纸塑袋75*200",
         "packName": "不匹配规则专用包名XYZ",
         "packageMaterial": "高温纸塑袋75*200",
-        "instrumentCount": 5,
+        "instrumentCount": 1,
         "packCount": 1,
         "unitPrice": 22.0,
         "totalPrice": 22.0
@@ -2528,7 +2528,7 @@
         "type": "高温纸塑袋75*200",
         "packName": "检查镜-2/Z2060",
         "packageMaterial": "高温纸塑袋75*200",
-        "instrumentCount": 5,
+        "instrumentCount": 1,
         "packCount": 1,
         "unitPrice": 22.0,
         "totalPrice": 22.0
@@ -2548,7 +2548,7 @@
         "type": "高温纸塑袋75*200",
         "packName": "不匹配规则专用包名XYZ",
         "packageMaterial": "高温纸塑袋75*200",
-        "instrumentCount": 5,
+        "instrumentCount": 1,
         "packCount": 1,
         "unitPrice": 22.0,
         "totalPrice": 22.0
@@ -2568,7 +2568,7 @@
         "type": "高温纸塑袋75*200",
         "packName": "宫腔检查镜30度-2件/Z2060",
         "packageMaterial": "高温纸塑袋75*200",
-        "instrumentCount": 5,
+        "instrumentCount": 1,
         "packCount": 1,
         "unitPrice": 22.0,
         "totalPrice": 22.0
@@ -2588,7 +2588,7 @@
         "type": "高温纸塑袋75*200",
         "packName": "不匹配规则专用包名XYZ",
         "packageMaterial": "高温纸塑袋75*200",
-        "instrumentCount": 5,
+        "instrumentCount": 1,
         "packCount": 1,
         "unitPrice": 22.0,
         "totalPrice": 22.0
@@ -2608,7 +2608,7 @@
         "type": "高温纸塑袋75*200",
         "packName": "沈大12度镜头-1（新）/Z2060",
         "packageMaterial": "高温纸塑袋75*200",
-        "instrumentCount": 5,
+        "instrumentCount": 1,
         "packCount": 1,
         "unitPrice": 22.0,
         "totalPrice": 22.0
@@ -2628,7 +2628,7 @@
         "type": "高温纸塑袋75*200",
         "packName": "不匹配规则专用包名XYZ",
         "packageMaterial": "高温纸塑袋75*200",
-        "instrumentCount": 5,
+        "instrumentCount": 1,
         "packCount": 1,
         "unitPrice": 22.0,
         "totalPrice": 22.0
@@ -2645,10 +2645,10 @@
       "row": {
         "hospitalName": "黑龙江省妇幼保健院（人口）",
         "department": "手术室",
-        "type": "高温纸塑袋75*200",
+        "type": "单包装（低温老肯）",
         "packName": "0°膀胱镜-1",
-        "packageMaterial": "高温纸塑袋75*200",
-        "instrumentCount": 5,
+        "packageMaterial": "高温纸塑袋200*600",
+        "instrumentCount": 1,
         "packCount": 1,
         "unitPrice": 22.0,
         "totalPrice": 22.0
@@ -2665,10 +2665,10 @@
       "row": {
         "hospitalName": "黑龙江省妇幼保健院（人口）",
         "department": "手术室",
-        "type": "高温纸塑袋75*200",
+        "type": "单包装（低温老肯）",
         "packName": "不匹配规则专用包名XYZ",
-        "packageMaterial": "高温纸塑袋75*200",
-        "instrumentCount": 5,
+        "packageMaterial": "高温纸塑袋200*600",
+        "instrumentCount": 1,
         "packCount": 1,
         "unitPrice": 22.0,
         "totalPrice": 22.0
@@ -2685,10 +2685,10 @@
       "row": {
         "hospitalName": "黑龙江省妇幼保健院（人口）",
         "department": "手术室",
-        "type": "高温纸塑袋75*200",
+        "type": "单包装（低温老肯）",
         "packName": "30°膀胱镜-1",
-        "packageMaterial": "高温纸塑袋75*200",
-        "instrumentCount": 5,
+        "packageMaterial": "高温纸塑袋200*600",
+        "instrumentCount": 1,
         "packCount": 1,
         "unitPrice": 22.0,
         "totalPrice": 22.0
@@ -2705,10 +2705,10 @@
       "row": {
         "hospitalName": "黑龙江省妇幼保健院（人口）",
         "department": "手术室",
-        "type": "高温纸塑袋75*200",
+        "type": "单包装（低温老肯）",
         "packName": "不匹配规则专用包名XYZ",
-        "packageMaterial": "高温纸塑袋75*200",
-        "instrumentCount": 5,
+        "packageMaterial": "高温纸塑袋200*600",
+        "instrumentCount": 1,
         "packCount": 1,
         "unitPrice": 22.0,
         "totalPrice": 22.0
@@ -2725,10 +2725,10 @@
       "row": {
         "hospitalName": "黑龙江省妇幼保健院（人口）",
         "department": "手术室",
-        "type": "高温纸塑袋75*200",
+        "type": "器械包（低温等离子）",
         "packName": "单极电切镜",
         "packageMaterial": "高温纸塑袋75*200",
-        "instrumentCount": 5,
+        "instrumentCount": 1,
         "packCount": 1,
         "unitPrice": 22.0,
         "totalPrice": 22.0
@@ -2745,10 +2745,10 @@
       "row": {
         "hospitalName": "黑龙江省妇幼保健院（人口）",
         "department": "手术室",
-        "type": "高温纸塑袋75*200",
+        "type": "器械包（低温等离子）",
         "packName": "不匹配规则专用包名XYZ",
         "packageMaterial": "高温纸塑袋75*200",
-        "instrumentCount": 5,
+        "instrumentCount": 1,
         "packCount": 1,
         "unitPrice": 22.0,
         "totalPrice": 22.0
@@ -2765,10 +2765,10 @@
       "row": {
         "hospitalName": "黑龙江省妇幼保健院（人口）",
         "department": "手术室",
-        "type": "高温纸塑袋75*200",
+        "type": "单包装（低温老肯）",
         "packName": "宫腔镜检查新",
-        "packageMaterial": "高温纸塑袋75*200",
-        "instrumentCount": 5,
+        "packageMaterial": "高温纸塑袋200*600",
+        "instrumentCount": 1,
         "packCount": 1,
         "unitPrice": 22.0,
         "totalPrice": 22.0
@@ -2785,10 +2785,10 @@
       "row": {
         "hospitalName": "黑龙江省妇幼保健院（人口）",
         "department": "手术室",
-        "type": "高温纸塑袋75*200",
+        "type": "单包装（低温老肯）",
         "packName": "不匹配规则专用包名XYZ",
-        "packageMaterial": "高温纸塑袋75*200",
-        "instrumentCount": 5,
+        "packageMaterial": "高温纸塑袋200*600",
+        "instrumentCount": 1,
         "packCount": 1,
         "unitPrice": 22.0,
         "totalPrice": 22.0
@@ -2805,10 +2805,10 @@
       "row": {
         "hospitalName": "黑龙江省妇幼保健院（人口）",
         "department": "手术室",
-        "type": "高温纸塑袋75*200",
+        "type": "单包装（低温老肯）",
         "packName": "新腹腔镜镜头",
-        "packageMaterial": "高温纸塑袋75*200",
-        "instrumentCount": 5,
+        "packageMaterial": "高温纸塑袋200*600",
+        "instrumentCount": 1,
         "packCount": 1,
         "unitPrice": 22.0,
         "totalPrice": 22.0
@@ -2825,10 +2825,10 @@
       "row": {
         "hospitalName": "黑龙江省妇幼保健院（人口）",
         "department": "手术室",
-        "type": "高温纸塑袋75*200",
+        "type": "单包装（低温老肯）",
         "packName": "不匹配规则专用包名XYZ",
-        "packageMaterial": "高温纸塑袋75*200",
-        "instrumentCount": 5,
+        "packageMaterial": "高温纸塑袋200*600",
+        "instrumentCount": 1,
         "packCount": 1,
         "unitPrice": 22.0,
         "totalPrice": 22.0
@@ -2845,10 +2845,10 @@
       "row": {
         "hospitalName": "黑龙江省妇幼保健院（人口）",
         "department": "手术室",
-        "type": "高温纸塑袋75*200",
-        "packName": "密封胶圈@contains",
+        "type": "额外包低温等离子",
+        "packName": "密封胶圈",
         "packageMaterial": "高温纸塑袋75*200",
-        "instrumentCount": 5,
+        "instrumentCount": 1,
         "packCount": 1,
         "unitPrice": 22.0,
         "totalPrice": 22.0
@@ -2865,10 +2865,10 @@
       "row": {
         "hospitalName": "黑龙江省妇幼保健院（人口）",
         "department": "手术室",
-        "type": "高温纸塑袋75*200",
+        "type": "额外包低温等离子",
         "packName": "不匹配规则专用包名XYZ",
         "packageMaterial": "高温纸塑袋75*200",
-        "instrumentCount": 5,
+        "instrumentCount": 1,
         "packCount": 1,
         "unitPrice": 22.0,
         "totalPrice": 22.0
@@ -2885,10 +2885,10 @@
       "row": {
         "hospitalName": "黑龙江省妇幼保健院（人口）",
         "department": "手术室",
-        "type": "高温纸塑袋75*200",
-        "packName": "密封胶圈@contains",
+        "type": "额外包低温等离子",
+        "packName": "密封胶圈",
         "packageMaterial": "高温纸塑袋75*200",
-        "instrumentCount": 5,
+        "instrumentCount": 1,
         "packCount": 1,
         "unitPrice": 22.0,
         "totalPrice": 22.0
@@ -2905,10 +2905,10 @@
       "row": {
         "hospitalName": "黑龙江省妇幼保健院（人口）",
         "department": "手术室",
-        "type": "高温纸塑袋75*200",
+        "type": "额外包低温等离子",
         "packName": "不匹配规则专用包名XYZ",
         "packageMaterial": "高温纸塑袋75*200",
-        "instrumentCount": 5,
+        "instrumentCount": 1,
         "packCount": 1,
         "unitPrice": 22.0,
         "totalPrice": 22.0
@@ -2925,10 +2925,10 @@
       "row": {
         "hospitalName": "黑龙江省妇幼保健院（人口）",
         "department": "手术室",
-        "type": "高温纸塑袋75*200",
-        "packName": "水管膜片@contains",
+        "type": "额外包低温等离子",
+        "packName": "水管膜片",
         "packageMaterial": "高温纸塑袋75*200",
-        "instrumentCount": 5,
+        "instrumentCount": 1,
         "packCount": 1,
         "unitPrice": 22.0,
         "totalPrice": 22.0
@@ -2945,10 +2945,10 @@
       "row": {
         "hospitalName": "黑龙江省妇幼保健院（人口）",
         "department": "手术室",
-        "type": "高温纸塑袋75*200",
+        "type": "额外包低温等离子",
         "packName": "不匹配规则专用包名XYZ",
         "packageMaterial": "高温纸塑袋75*200",
-        "instrumentCount": 5,
+        "instrumentCount": 1,
         "packCount": 1,
         "unitPrice": 22.0,
         "totalPrice": 22.0
@@ -2965,10 +2965,10 @@
       "row": {
         "hospitalName": "黑龙江省妇幼保健院（人口）",
         "department": "手术室",
-        "type": "高温纸塑袋75*200",
-        "packName": "水管膜片@contains",
+        "type": "额外包低温等离子",
+        "packName": "水管膜片",
         "packageMaterial": "高温纸塑袋75*200",
-        "instrumentCount": 5,
+        "instrumentCount": 1,
         "packCount": 1,
         "unitPrice": 22.0,
         "totalPrice": 22.0
@@ -2985,10 +2985,10 @@
       "row": {
         "hospitalName": "黑龙江省妇幼保健院（人口）",
         "department": "手术室",
-        "type": "高温纸塑袋75*200",
+        "type": "额外包低温等离子",
         "packName": "不匹配规则专用包名XYZ",
         "packageMaterial": "高温纸塑袋75*200",
-        "instrumentCount": 5,
+        "instrumentCount": 1,
         "packCount": 1,
         "unitPrice": 22.0,
         "totalPrice": 22.0
@@ -3005,10 +3005,10 @@
       "row": {
         "hospitalName": "黑龙江省妇幼保健院（人口）",
         "department": "手术室",
-        "type": "高温纸塑袋75*200",
-        "packName": "密封件@contains",
+        "type": "额外包低温等离子",
+        "packName": "密封件",
         "packageMaterial": "高温纸塑袋75*200",
-        "instrumentCount": 5,
+        "instrumentCount": 1,
         "packCount": 1,
         "unitPrice": 22.0,
         "totalPrice": 22.0
@@ -3025,10 +3025,10 @@
       "row": {
         "hospitalName": "黑龙江省妇幼保健院（人口）",
         "department": "手术室",
-        "type": "高温纸塑袋75*200",
+        "type": "额外包低温等离子",
         "packName": "不匹配规则专用包名XYZ",
         "packageMaterial": "高温纸塑袋75*200",
-        "instrumentCount": 5,
+        "instrumentCount": 1,
         "packCount": 1,
         "unitPrice": 22.0,
         "totalPrice": 22.0
@@ -3045,10 +3045,10 @@
       "row": {
         "hospitalName": "黑龙江省妇幼保健院（人口）",
         "department": "手术室",
-        "type": "高温纸塑袋75*200",
-        "packName": "密封件@contains",
+        "type": "额外包低温等离子",
+        "packName": "密封件",
         "packageMaterial": "高温纸塑袋75*200",
-        "instrumentCount": 5,
+        "instrumentCount": 1,
         "packCount": 1,
         "unitPrice": 22.0,
         "totalPrice": 22.0
@@ -3065,10 +3065,10 @@
       "row": {
         "hospitalName": "黑龙江省妇幼保健院（人口）",
         "department": "手术室",
-        "type": "高温纸塑袋75*200",
+        "type": "额外包低温等离子",
         "packName": "不匹配规则专用包名XYZ",
         "packageMaterial": "高温纸塑袋75*200",
-        "instrumentCount": 5,
+        "instrumentCount": 1,
         "packCount": 1,
         "unitPrice": 22.0,
         "totalPrice": 22.0
@@ -3085,10 +3085,10 @@
       "row": {
         "hospitalName": "黑龙江省妇幼保健院（人口）",
         "department": "手术室",
-        "type": "高温纸塑袋75*200",
-        "packName": "垫片@contains",
+        "type": "额外包低温等离子",
+        "packName": "垫片",
         "packageMaterial": "高温纸塑袋75*200",
-        "instrumentCount": 5,
+        "instrumentCount": 1,
         "packCount": 1,
         "unitPrice": 22.0,
         "totalPrice": 22.0
@@ -3105,10 +3105,10 @@
       "row": {
         "hospitalName": "黑龙江省妇幼保健院（人口）",
         "department": "手术室",
-        "type": "高温纸塑袋75*200",
+        "type": "额外包低温等离子",
         "packName": "不匹配规则专用包名XYZ",
         "packageMaterial": "高温纸塑袋75*200",
-        "instrumentCount": 5,
+        "instrumentCount": 1,
         "packCount": 1,
         "unitPrice": 22.0,
         "totalPrice": 22.0
@@ -3125,10 +3125,10 @@
       "row": {
         "hospitalName": "黑龙江省妇幼保健院（人口）",
         "department": "手术室",
-        "type": "高温纸塑袋75*200",
-        "packName": "垫片@contains",
+        "type": "额外包低温等离子",
+        "packName": "垫片",
         "packageMaterial": "高温纸塑袋75*200",
-        "instrumentCount": 5,
+        "instrumentCount": 1,
         "packCount": 1,
         "unitPrice": 22.0,
         "totalPrice": 22.0
@@ -3145,10 +3145,10 @@
       "row": {
         "hospitalName": "黑龙江省妇幼保健院（人口）",
         "department": "手术室",
-        "type": "高温纸塑袋75*200",
+        "type": "额外包低温等离子",
         "packName": "不匹配规则专用包名XYZ",
         "packageMaterial": "高温纸塑袋75*200",
-        "instrumentCount": 5,
+        "instrumentCount": 1,
         "packCount": 1,
         "unitPrice": 22.0,
         "totalPrice": 22.0
@@ -3165,10 +3165,10 @@
       "row": {
         "hospitalName": "黑龙江省妇幼保健院（人口）",
         "department": "手术室",
-        "type": "高温纸塑袋75*200",
-        "packName": "加长锉@contains",
+        "type": "额外包（纸塑袋）",
+        "packName": "加长锉",
         "packageMaterial": "高温纸塑袋75*200",
-        "instrumentCount": 5,
+        "instrumentCount": 1,
         "packCount": 1,
         "unitPrice": 22.0,
         "totalPrice": 22.0
@@ -3185,10 +3185,10 @@
       "row": {
         "hospitalName": "黑龙江省妇幼保健院（人口）",
         "department": "手术室",
-        "type": "高温纸塑袋75*200",
+        "type": "额外包（纸塑袋）",
         "packName": "不匹配规则专用包名XYZ",
         "packageMaterial": "高温纸塑袋75*200",
-        "instrumentCount": 5,
+        "instrumentCount": 1,
         "packCount": 1,
         "unitPrice": 22.0,
         "totalPrice": 22.0
@@ -3205,10 +3205,10 @@
       "row": {
         "hospitalName": "黑龙江省妇幼保健院（人口）",
         "department": "手术室",
-        "type": "高温纸塑袋75*200",
-        "packName": "加长锉@contains",
+        "type": "额外包（纸塑袋）",
+        "packName": "加长锉",
         "packageMaterial": "高温纸塑袋75*200",
-        "instrumentCount": 5,
+        "instrumentCount": 1,
         "packCount": 1,
         "unitPrice": 22.0,
         "totalPrice": 22.0
@@ -3225,10 +3225,10 @@
       "row": {
         "hospitalName": "黑龙江省妇幼保健院（人口）",
         "department": "手术室",
-        "type": "高温纸塑袋75*200",
+        "type": "额外包（纸塑袋）",
         "packName": "不匹配规则专用包名XYZ",
         "packageMaterial": "高温纸塑袋75*200",
-        "instrumentCount": 5,
+        "instrumentCount": 1,
         "packCount": 1,
         "unitPrice": 22.0,
         "totalPrice": 22.0
@@ -3245,10 +3245,10 @@
       "row": {
         "hospitalName": "黑龙江省妇幼保健院（人口）",
         "department": "手术室",
-        "type": "高温纸塑袋75*200",
-        "packName": "彩色锉@contains",
+        "type": "额外包（纸塑袋）",
+        "packName": "彩色锉",
         "packageMaterial": "高温纸塑袋75*200",
-        "instrumentCount": 5,
+        "instrumentCount": 1,
         "packCount": 1,
         "unitPrice": 22.0,
         "totalPrice": 22.0
@@ -3265,10 +3265,10 @@
       "row": {
         "hospitalName": "黑龙江省妇幼保健院（人口）",
         "department": "手术室",
-        "type": "高温纸塑袋75*200",
+        "type": "额外包（纸塑袋）",
         "packName": "不匹配规则专用包名XYZ",
         "packageMaterial": "高温纸塑袋75*200",
-        "instrumentCount": 5,
+        "instrumentCount": 1,
         "packCount": 1,
         "unitPrice": 22.0,
         "totalPrice": 22.0
@@ -3285,10 +3285,10 @@
       "row": {
         "hospitalName": "黑龙江省妇幼保健院（人口）",
         "department": "手术室",
-        "type": "高温纸塑袋75*200",
-        "packName": "彩色锉@contains",
+        "type": "额外包（纸塑袋）",
+        "packName": "彩色锉",
         "packageMaterial": "高温纸塑袋75*200",
-        "instrumentCount": 5,
+        "instrumentCount": 1,
         "packCount": 1,
         "unitPrice": 22.0,
         "totalPrice": 22.0
@@ -3305,10 +3305,10 @@
       "row": {
         "hospitalName": "黑龙江省妇幼保健院（人口）",
         "department": "手术室",
-        "type": "高温纸塑袋75*200",
+        "type": "额外包（纸塑袋）",
         "packName": "不匹配规则专用包名XYZ",
         "packageMaterial": "高温纸塑袋75*200",
-        "instrumentCount": 5,
+        "instrumentCount": 1,
         "packCount": 1,
         "unitPrice": 22.0,
         "totalPrice": 22.0
@@ -3325,10 +3325,10 @@
       "row": {
         "hospitalName": "黑龙江省妇幼保健院（人口）",
         "department": "手术室",
-        "type": "高温纸塑袋75*200",
-        "packName": "手扩锉@contains",
+        "type": "额外包（纸塑袋）",
+        "packName": "手扩锉",
         "packageMaterial": "高温纸塑袋75*200",
-        "instrumentCount": 5,
+        "instrumentCount": 1,
         "packCount": 1,
         "unitPrice": 22.0,
         "totalPrice": 22.0
@@ -3345,10 +3345,10 @@
       "row": {
         "hospitalName": "黑龙江省妇幼保健院（人口）",
         "department": "手术室",
-        "type": "高温纸塑袋75*200",
+        "type": "额外包（纸塑袋）",
         "packName": "不匹配规则专用包名XYZ",
         "packageMaterial": "高温纸塑袋75*200",
-        "instrumentCount": 5,
+        "instrumentCount": 1,
         "packCount": 1,
         "unitPrice": 22.0,
         "totalPrice": 22.0
@@ -3365,10 +3365,10 @@
       "row": {
         "hospitalName": "黑龙江省妇幼保健院（人口）",
         "department": "手术室",
-        "type": "高温纸塑袋75*200",
-        "packName": "手扩锉@contains",
+        "type": "额外包（纸塑袋）",
+        "packName": "手扩锉",
         "packageMaterial": "高温纸塑袋75*200",
-        "instrumentCount": 5,
+        "instrumentCount": 1,
         "packCount": 1,
         "unitPrice": 22.0,
         "totalPrice": 22.0
@@ -3385,10 +3385,10 @@
       "row": {
         "hospitalName": "黑龙江省妇幼保健院（人口）",
         "department": "手术室",
-        "type": "高温纸塑袋75*200",
+        "type": "额外包（纸塑袋）",
         "packName": "不匹配规则专用包名XYZ",
         "packageMaterial": "高温纸塑袋75*200",
-        "instrumentCount": 5,
+        "instrumentCount": 1,
         "packCount": 1,
         "unitPrice": 22.0,
         "totalPrice": 22.0
@@ -3405,10 +3405,10 @@
       "row": {
         "hospitalName": "黑龙江省妇幼保健院（人口）",
         "department": "手术室",
-        "type": "高温纸塑袋75*200",
-        "packName": "机扩针@contains",
+        "type": "额外包（纸塑袋）",
+        "packName": "机扩针",
         "packageMaterial": "高温纸塑袋75*200",
-        "instrumentCount": 5,
+        "instrumentCount": 1,
         "packCount": 1,
         "unitPrice": 22.0,
         "totalPrice": 22.0
@@ -3425,10 +3425,10 @@
       "row": {
         "hospitalName": "黑龙江省妇幼保健院（人口）",
         "department": "手术室",
-        "type": "高温纸塑袋75*200",
+        "type": "额外包（纸塑袋）",
         "packName": "不匹配规则专用包名XYZ",
         "packageMaterial": "高温纸塑袋75*200",
-        "instrumentCount": 5,
+        "instrumentCount": 1,
         "packCount": 1,
         "unitPrice": 22.0,
         "totalPrice": 22.0
@@ -3445,10 +3445,10 @@
       "row": {
         "hospitalName": "黑龙江省妇幼保健院（人口）",
         "department": "手术室",
-        "type": "高温纸塑袋75*200",
-        "packName": "机扩针@contains",
+        "type": "额外包（纸塑袋）",
+        "packName": "机扩针",
         "packageMaterial": "高温纸塑袋75*200",
-        "instrumentCount": 5,
+        "instrumentCount": 1,
         "packCount": 1,
         "unitPrice": 22.0,
         "totalPrice": 22.0
@@ -3465,10 +3465,10 @@
       "row": {
         "hospitalName": "黑龙江省妇幼保健院（人口）",
         "department": "手术室",
-        "type": "高温纸塑袋75*200",
+        "type": "额外包（纸塑袋）",
         "packName": "不匹配规则专用包名XYZ",
         "packageMaterial": "高温纸塑袋75*200",
-        "instrumentCount": 5,
+        "instrumentCount": 1,
         "packCount": 1,
         "unitPrice": 22.0,
         "totalPrice": 22.0
@@ -3485,10 +3485,10 @@
       "row": {
         "hospitalName": "黑龙江省妇幼保健院（人口）",
         "department": "手术室",
-        "type": "高温纸塑袋75*200",
-        "packName": "机扩锉@contains",
+        "type": "额外包（纸塑袋）",
+        "packName": "机扩锉",
         "packageMaterial": "高温纸塑袋75*200",
-        "instrumentCount": 5,
+        "instrumentCount": 1,
         "packCount": 1,
         "unitPrice": 22.0,
         "totalPrice": 22.0
@@ -3505,10 +3505,10 @@
       "row": {
         "hospitalName": "黑龙江省妇幼保健院（人口）",
         "department": "手术室",
-        "type": "高温纸塑袋75*200",
+        "type": "额外包（纸塑袋）",
         "packName": "不匹配规则专用包名XYZ",
         "packageMaterial": "高温纸塑袋75*200",
-        "instrumentCount": 5,
+        "instrumentCount": 1,
         "packCount": 1,
         "unitPrice": 22.0,
         "totalPrice": 22.0
@@ -3525,10 +3525,10 @@
       "row": {
         "hospitalName": "黑龙江省妇幼保健院（人口）",
         "department": "手术室",
-        "type": "高温纸塑袋75*200",
-        "packName": "机扩锉@contains",
+        "type": "额外包（纸塑袋）",
+        "packName": "机扩锉",
         "packageMaterial": "高温纸塑袋75*200",
-        "instrumentCount": 5,
+        "instrumentCount": 1,
         "packCount": 1,
         "unitPrice": 22.0,
         "totalPrice": 22.0
@@ -3545,10 +3545,10 @@
       "row": {
         "hospitalName": "黑龙江省妇幼保健院（人口）",
         "department": "手术室",
-        "type": "高温纸塑袋75*200",
+        "type": "额外包（纸塑袋）",
         "packName": "不匹配规则专用包名XYZ",
         "packageMaterial": "高温纸塑袋75*200",
-        "instrumentCount": 5,
+        "instrumentCount": 1,
         "packCount": 1,
         "unitPrice": 22.0,
         "totalPrice": 22.0
@@ -3565,10 +3565,10 @@
       "row": {
         "hospitalName": "黑龙江省妇幼保健院（人口）",
         "department": "手术室",
-        "type": "高温纸塑袋75*200",
-        "packName": "根管锉@contains",
+        "type": "额外包（纸塑袋）",
+        "packName": "根管锉",
         "packageMaterial": "高温纸塑袋75*200",
-        "instrumentCount": 5,
+        "instrumentCount": 1,
         "packCount": 1,
         "unitPrice": 22.0,
         "totalPrice": 22.0
@@ -3585,10 +3585,10 @@
       "row": {
         "hospitalName": "黑龙江省妇幼保健院（人口）",
         "department": "手术室",
-        "type": "高温纸塑袋75*200",
+        "type": "额外包（纸塑袋）",
         "packName": "不匹配规则专用包名XYZ",
         "packageMaterial": "高温纸塑袋75*200",
-        "instrumentCount": 5,
+        "instrumentCount": 1,
         "packCount": 1,
         "unitPrice": 22.0,
         "totalPrice": 22.0
@@ -3605,10 +3605,10 @@
       "row": {
         "hospitalName": "黑龙江省妇幼保健院（人口）",
         "department": "手术室",
-        "type": "高温纸塑袋75*200",
-        "packName": "根管锉@contains",
+        "type": "额外包（纸塑袋）",
+        "packName": "根管锉",
         "packageMaterial": "高温纸塑袋75*200",
-        "instrumentCount": 5,
+        "instrumentCount": 1,
         "packCount": 1,
         "unitPrice": 22.0,
         "totalPrice": 22.0
@@ -3625,10 +3625,10 @@
       "row": {
         "hospitalName": "黑龙江省妇幼保健院（人口）",
         "department": "手术室",
-        "type": "高温纸塑袋75*200",
+        "type": "额外包（纸塑袋）",
         "packName": "不匹配规则专用包名XYZ",
         "packageMaterial": "高温纸塑袋75*200",
-        "instrumentCount": 5,
+        "instrumentCount": 1,
         "packCount": 1,
         "unitPrice": 22.0,
         "totalPrice": 22.0
@@ -3645,10 +3645,10 @@
       "row": {
         "hospitalName": "黑龙江省妇幼保健院（人口）",
         "department": "手术室",
-        "type": "高温纸塑袋75*200",
-        "packName": "洗髓针@contains",
+        "type": "额外包（纸塑袋）",
+        "packName": "洗髓针",
         "packageMaterial": "高温纸塑袋75*200",
-        "instrumentCount": 5,
+        "instrumentCount": 1,
         "packCount": 1,
         "unitPrice": 22.0,
         "totalPrice": 22.0
@@ -3665,10 +3665,10 @@
       "row": {
         "hospitalName": "黑龙江省妇幼保健院（人口）",
         "department": "手术室",
-        "type": "高温纸塑袋75*200",
+        "type": "额外包（纸塑袋）",
         "packName": "不匹配规则专用包名XYZ",
         "packageMaterial": "高温纸塑袋75*200",
-        "instrumentCount": 5,
+        "instrumentCount": 1,
         "packCount": 1,
         "unitPrice": 22.0,
         "totalPrice": 22.0
@@ -3685,10 +3685,10 @@
       "row": {
         "hospitalName": "黑龙江省妇幼保健院（人口）",
         "department": "手术室",
-        "type": "高温纸塑袋75*200",
-        "packName": "洗髓针@contains",
+        "type": "额外包（纸塑袋）",
+        "packName": "洗髓针",
         "packageMaterial": "高温纸塑袋75*200",
-        "instrumentCount": 5,
+        "instrumentCount": 1,
         "packCount": 1,
         "unitPrice": 22.0,
         "totalPrice": 22.0
@@ -3705,10 +3705,10 @@
       "row": {
         "hospitalName": "黑龙江省妇幼保健院（人口）",
         "department": "手术室",
-        "type": "高温纸塑袋75*200",
+        "type": "额外包（纸塑袋）",
         "packName": "不匹配规则专用包名XYZ",
         "packageMaterial": "高温纸塑袋75*200",
-        "instrumentCount": 5,
+        "instrumentCount": 1,
         "packCount": 1,
         "unitPrice": 22.0,
         "totalPrice": 22.0
@@ -3725,10 +3725,10 @@
       "row": {
         "hospitalName": "黑龙江省妇幼保健院（人口）",
         "department": "手术室",
-        "type": "高温纸塑袋75*200",
-        "packName": "荡洗针@contains",
+        "type": "额外包（纸塑袋）",
+        "packName": "荡洗针",
         "packageMaterial": "高温纸塑袋75*200",
-        "instrumentCount": 5,
+        "instrumentCount": 1,
         "packCount": 1,
         "unitPrice": 22.0,
         "totalPrice": 22.0
@@ -3745,10 +3745,10 @@
       "row": {
         "hospitalName": "黑龙江省妇幼保健院（人口）",
         "department": "手术室",
-        "type": "高温纸塑袋75*200",
+        "type": "额外包（纸塑袋）",
         "packName": "不匹配规则专用包名XYZ",
         "packageMaterial": "高温纸塑袋75*200",
-        "instrumentCount": 5,
+        "instrumentCount": 1,
         "packCount": 1,
         "unitPrice": 22.0,
         "totalPrice": 22.0
@@ -3765,10 +3765,10 @@
       "row": {
         "hospitalName": "黑龙江省妇幼保健院（人口）",
         "department": "手术室",
-        "type": "高温纸塑袋75*200",
-        "packName": "荡洗针@contains",
+        "type": "额外包（纸塑袋）",
+        "packName": "荡洗针",
         "packageMaterial": "高温纸塑袋75*200",
-        "instrumentCount": 5,
+        "instrumentCount": 1,
         "packCount": 1,
         "unitPrice": 22.0,
         "totalPrice": 22.0
@@ -3785,10 +3785,10 @@
       "row": {
         "hospitalName": "黑龙江省妇幼保健院（人口）",
         "department": "手术室",
-        "type": "高温纸塑袋75*200",
+        "type": "额外包（纸塑袋）",
         "packName": "不匹配规则专用包名XYZ",
         "packageMaterial": "高温纸塑袋75*200",
-        "instrumentCount": 5,
+        "instrumentCount": 1,
         "packCount": 1,
         "unitPrice": 22.0,
         "totalPrice": 22.0
@@ -3805,10 +3805,10 @@
       "row": {
         "hospitalName": "黑龙江省妇幼保健院（人口）",
         "department": "手术室",
-        "type": "高温纸塑袋75*200",
-        "packName": "针类组件@contains",
+        "type": "额外包（纸塑袋）",
+        "packName": "针类组件",
         "packageMaterial": "高温纸塑袋75*200",
-        "instrumentCount": 5,
+        "instrumentCount": 1,
         "packCount": 1,
         "unitPrice": 22.0,
         "totalPrice": 22.0
@@ -3825,10 +3825,10 @@
       "row": {
         "hospitalName": "黑龙江省妇幼保健院（人口）",
         "department": "手术室",
-        "type": "高温纸塑袋75*200",
+        "type": "额外包（纸塑袋）",
         "packName": "不匹配规则专用包名XYZ",
         "packageMaterial": "高温纸塑袋75*200",
-        "instrumentCount": 5,
+        "instrumentCount": 1,
         "packCount": 1,
         "unitPrice": 22.0,
         "totalPrice": 22.0
@@ -3845,10 +3845,10 @@
       "row": {
         "hospitalName": "黑龙江省妇幼保健院（人口）",
         "department": "手术室",
-        "type": "高温纸塑袋75*200",
-        "packName": "针类组件@contains",
+        "type": "额外包（纸塑袋）",
+        "packName": "针类组件",
         "packageMaterial": "高温纸塑袋75*200",
-        "instrumentCount": 5,
+        "instrumentCount": 1,
         "packCount": 1,
         "unitPrice": 22.0,
         "totalPrice": 22.0
@@ -3865,10 +3865,10 @@
       "row": {
         "hospitalName": "黑龙江省妇幼保健院（人口）",
         "department": "手术室",
-        "type": "高温纸塑袋75*200",
+        "type": "额外包（纸塑袋）",
         "packName": "不匹配规则专用包名XYZ",
         "packageMaterial": "高温纸塑袋75*200",
-        "instrumentCount": 5,
+        "instrumentCount": 1,
         "packCount": 1,
         "unitPrice": 22.0,
         "totalPrice": 22.0
@@ -3885,10 +3885,10 @@
       "row": {
         "hospitalName": "黑龙江省妇幼保健院（人口）",
         "department": "手术室",
-        "type": "高温纸塑袋75*200",
-        "packName": "针包@contains",
+        "type": "额外包（纸塑袋）",
+        "packName": "针包",
         "packageMaterial": "高温纸塑袋75*200",
-        "instrumentCount": 5,
+        "instrumentCount": 1,
         "packCount": 1,
         "unitPrice": 22.0,
         "totalPrice": 22.0
@@ -3905,10 +3905,10 @@
       "row": {
         "hospitalName": "黑龙江省妇幼保健院（人口）",
         "department": "手术室",
-        "type": "高温纸塑袋75*200",
+        "type": "额外包（纸塑袋）",
         "packName": "不匹配规则专用包名XYZ",
         "packageMaterial": "高温纸塑袋75*200",
-        "instrumentCount": 5,
+        "instrumentCount": 1,
         "packCount": 1,
         "unitPrice": 22.0,
         "totalPrice": 22.0
@@ -3925,10 +3925,10 @@
       "row": {
         "hospitalName": "黑龙江省妇幼保健院（人口）",
         "department": "手术室",
-        "type": "高温纸塑袋75*200",
-        "packName": "针盒针@needle_box",
+        "type": "额外包（纸塑袋）",
+        "packName": "针盒针",
         "packageMaterial": "高温纸塑袋75*200",
-        "instrumentCount": 5,
+        "instrumentCount": 1,
         "packCount": 1,
         "unitPrice": 22.0,
         "totalPrice": 22.0
@@ -3945,10 +3945,10 @@
       "row": {
         "hospitalName": "黑龙江省妇幼保健院（人口）",
         "department": "手术室",
-        "type": "高温纸塑袋75*200",
+        "type": "额外包（纸塑袋）",
         "packName": "不匹配规则专用包名XYZ",
         "packageMaterial": "高温纸塑袋75*200",
-        "instrumentCount": 5,
+        "instrumentCount": 1,
         "packCount": 1,
         "unitPrice": 22.0,
         "totalPrice": 22.0
@@ -3965,10 +3965,10 @@
       "row": {
         "hospitalName": "黑龙江省妇幼保健院（人口）",
         "department": "手术室",
-        "type": "高温纸塑袋75*200",
-        "packName": "针盒针@needle_box",
+        "type": "额外包（纸塑袋）",
+        "packName": "针盒针",
         "packageMaterial": "高温纸塑袋75*200",
-        "instrumentCount": 5,
+        "instrumentCount": 1,
         "packCount": 1,
         "unitPrice": 22.0,
         "totalPrice": 22.0
@@ -3985,10 +3985,10 @@
       "row": {
         "hospitalName": "黑龙江省妇幼保健院（人口）",
         "department": "手术室",
-        "type": "高温纸塑袋75*200",
+        "type": "额外包（纸塑袋）",
         "packName": "不匹配规则专用包名XYZ",
         "packageMaterial": "高温纸塑袋75*200",
-        "instrumentCount": 5,
+        "instrumentCount": 1,
         "packCount": 1,
         "unitPrice": 22.0,
         "totalPrice": 22.0
@@ -4005,10 +4005,10 @@
       "row": {
         "hospitalName": "省监狱管理局医院",
         "department": "手术室",
-        "type": "高温纸塑袋75*200",
-        "packName": "密封件@contains",
+        "type": "额外包低温等离子",
+        "packName": "密封件",
         "packageMaterial": "高温纸塑袋75*200",
-        "instrumentCount": 5,
+        "instrumentCount": 1,
         "packCount": 1,
         "unitPrice": 22.0,
         "totalPrice": 22.0
@@ -4025,10 +4025,10 @@
       "row": {
         "hospitalName": "省监狱管理局医院",
         "department": "手术室",
-        "type": "高温纸塑袋75*200",
+        "type": "额外包低温等离子",
         "packName": "不匹配规则专用包名XYZ",
         "packageMaterial": "高温纸塑袋75*200",
-        "instrumentCount": 5,
+        "instrumentCount": 1,
         "packCount": 1,
         "unitPrice": 22.0,
         "totalPrice": 22.0
@@ -4045,10 +4045,10 @@
       "row": {
         "hospitalName": "省监狱管理局医院",
         "department": "手术室",
-        "type": "高温纸塑袋75*200",
-        "packName": "密封胶圈@contains",
+        "type": "额外包低温等离子",
+        "packName": "密封胶圈",
         "packageMaterial": "高温纸塑袋75*200",
-        "instrumentCount": 5,
+        "instrumentCount": 1,
         "packCount": 1,
         "unitPrice": 22.0,
         "totalPrice": 22.0
@@ -4065,10 +4065,10 @@
       "row": {
         "hospitalName": "省监狱管理局医院",
         "department": "手术室",
-        "type": "高温纸塑袋75*200",
+        "type": "额外包低温等离子",
         "packName": "不匹配规则专用包名XYZ",
         "packageMaterial": "高温纸塑袋75*200",
-        "instrumentCount": 5,
+        "instrumentCount": 1,
         "packCount": 1,
         "unitPrice": 22.0,
         "totalPrice": 22.0
@@ -4085,10 +4085,10 @@
       "row": {
         "hospitalName": "省监狱管理局医院",
         "department": "手术室",
-        "type": "高温纸塑袋75*200",
-        "packName": "密封件@contains",
+        "type": "额外包低温等离子",
+        "packName": "密封件",
         "packageMaterial": "高温纸塑袋75*200",
-        "instrumentCount": 5,
+        "instrumentCount": 1,
         "packCount": 1,
         "unitPrice": 22.0,
         "totalPrice": 22.0
@@ -4105,10 +4105,10 @@
       "row": {
         "hospitalName": "省监狱管理局医院",
         "department": "手术室",
-        "type": "高温纸塑袋75*200",
+        "type": "额外包低温等离子",
         "packName": "不匹配规则专用包名XYZ",
         "packageMaterial": "高温纸塑袋75*200",
-        "instrumentCount": 5,
+        "instrumentCount": 1,
         "packCount": 1,
         "unitPrice": 22.0,
         "totalPrice": 22.0
@@ -4125,10 +4125,10 @@
       "row": {
         "hospitalName": "省监狱管理局医院",
         "department": "手术室",
-        "type": "高温纸塑袋75*200",
-        "packName": "密封胶圈@contains",
+        "type": "额外包低温等离子",
+        "packName": "密封胶圈",
         "packageMaterial": "高温纸塑袋75*200",
-        "instrumentCount": 5,
+        "instrumentCount": 1,
         "packCount": 1,
         "unitPrice": 22.0,
         "totalPrice": 22.0
@@ -4145,10 +4145,10 @@
       "row": {
         "hospitalName": "省监狱管理局医院",
         "department": "手术室",
-        "type": "高温纸塑袋75*200",
+        "type": "额外包低温等离子",
         "packName": "不匹配规则专用包名XYZ",
         "packageMaterial": "高温纸塑袋75*200",
-        "instrumentCount": 5,
+        "instrumentCount": 1,
         "packCount": 1,
         "unitPrice": 22.0,
         "totalPrice": 22.0
@@ -4165,10 +4165,10 @@
       "row": {
         "hospitalName": "哈尔滨航天风华医院",
         "department": "手术室",
-        "type": "高温纸塑袋75*200",
-        "packName": "镍钛锉@contains",
+        "type": "额外包（纸塑袋）",
+        "packName": "镍钛锉",
         "packageMaterial": "高温纸塑袋75*200",
-        "instrumentCount": 5,
+        "instrumentCount": 1,
         "packCount": 1,
         "unitPrice": 22.0,
         "totalPrice": 22.0
@@ -4185,10 +4185,10 @@
       "row": {
         "hospitalName": "哈尔滨航天风华医院",
         "department": "手术室",
-        "type": "高温纸塑袋75*200",
+        "type": "额外包（纸塑袋）",
         "packName": "不匹配规则专用包名XYZ",
         "packageMaterial": "高温纸塑袋75*200",
-        "instrumentCount": 5,
+        "instrumentCount": 1,
         "packCount": 1,
         "unitPrice": 22.0,
         "totalPrice": 22.0
@@ -4205,10 +4205,10 @@
       "row": {
         "hospitalName": "哈尔滨航天风华医院",
         "department": "手术室",
-        "type": "高温纸塑袋75*200",
-        "packName": "镍钛锉@contains",
+        "type": "额外包（纸塑袋）",
+        "packName": "镍钛锉",
         "packageMaterial": "高温纸塑袋75*200",
-        "instrumentCount": 5,
+        "instrumentCount": 1,
         "packCount": 1,
         "unitPrice": 22.0,
         "totalPrice": 22.0
@@ -4225,10 +4225,10 @@
       "row": {
         "hospitalName": "哈尔滨航天风华医院",
         "department": "手术室",
-        "type": "高温纸塑袋75*200",
+        "type": "额外包（纸塑袋）",
         "packName": "不匹配规则专用包名XYZ",
         "packageMaterial": "高温纸塑袋75*200",
-        "instrumentCount": 5,
+        "instrumentCount": 1,
         "packCount": 1,
         "unitPrice": 22.0,
         "totalPrice": 22.0
@@ -4245,10 +4245,10 @@
       "row": {
         "hospitalName": "哈尔滨道外区松电慢性病专科门诊部",
         "department": "手术室",
-        "type": "高温纸塑袋75*200",
-        "packName": "机扩针@contains",
+        "type": "额外包（纸塑袋）",
+        "packName": "机扩针",
         "packageMaterial": "高温纸塑袋75*200",
-        "instrumentCount": 5,
+        "instrumentCount": 1,
         "packCount": 1,
         "unitPrice": 22.0,
         "totalPrice": 22.0
@@ -4265,10 +4265,10 @@
       "row": {
         "hospitalName": "哈尔滨道外区松电慢性病专科门诊部",
         "department": "手术室",
-        "type": "高温纸塑袋75*200",
+        "type": "额外包（纸塑袋）",
         "packName": "不匹配规则专用包名XYZ",
         "packageMaterial": "高温纸塑袋75*200",
-        "instrumentCount": 5,
+        "instrumentCount": 1,
         "packCount": 1,
         "unitPrice": 22.0,
         "totalPrice": 22.0
@@ -4285,10 +4285,10 @@
       "row": {
         "hospitalName": "哈尔滨道外区松电慢性病专科门诊部",
         "department": "手术室",
-        "type": "高温纸塑袋75*200",
-        "packName": "机扩针@contains",
+        "type": "额外包（纸塑袋）",
+        "packName": "机扩针",
         "packageMaterial": "高温纸塑袋75*200",
-        "instrumentCount": 5,
+        "instrumentCount": 1,
         "packCount": 1,
         "unitPrice": 22.0,
         "totalPrice": 22.0
@@ -4305,10 +4305,10 @@
       "row": {
         "hospitalName": "哈尔滨道外区松电慢性病专科门诊部",
         "department": "手术室",
-        "type": "高温纸塑袋75*200",
+        "type": "额外包（纸塑袋）",
         "packName": "不匹配规则专用包名XYZ",
         "packageMaterial": "高温纸塑袋75*200",
-        "instrumentCount": 5,
+        "instrumentCount": 1,
         "packCount": 1,
         "unitPrice": 22.0,
         "totalPrice": 22.0
@@ -4325,10 +4325,10 @@
       "row": {
         "hospitalName": "哈尔滨市第五医院",
         "department": "手术室",
-        "type": "高温纸塑袋75*200",
+        "type": "敷料包（无纺布）",
         "packName": "上肢止血带",
         "packageMaterial": "高温纸塑袋75*200",
-        "instrumentCount": 5,
+        "instrumentCount": 1,
         "packCount": 1,
         "unitPrice": 22.0,
         "totalPrice": 22.0
@@ -4345,10 +4345,10 @@
       "row": {
         "hospitalName": "哈尔滨市第五医院",
         "department": "手术室",
-        "type": "高温纸塑袋75*200",
+        "type": "敷料包（无纺布）",
         "packName": "不匹配规则专用包名XYZ",
         "packageMaterial": "高温纸塑袋75*200",
-        "instrumentCount": 5,
+        "instrumentCount": 1,
         "packCount": 1,
         "unitPrice": 22.0,
         "totalPrice": 22.0
@@ -4365,10 +4365,10 @@
       "row": {
         "hospitalName": "哈尔滨市第五医院",
         "department": "手术室",
-        "type": "高温纸塑袋75*200",
+        "type": "敷料包（无纺布）",
         "packName": "下肢止血带",
         "packageMaterial": "高温纸塑袋75*200",
-        "instrumentCount": 5,
+        "instrumentCount": 1,
         "packCount": 1,
         "unitPrice": 22.0,
         "totalPrice": 22.0
@@ -4385,10 +4385,10 @@
       "row": {
         "hospitalName": "哈尔滨市第五医院",
         "department": "手术室",
-        "type": "高温纸塑袋75*200",
+        "type": "敷料包（无纺布）",
         "packName": "不匹配规则专用包名XYZ",
         "packageMaterial": "高温纸塑袋75*200",
-        "instrumentCount": 5,
+        "instrumentCount": 1,
         "packCount": 1,
         "unitPrice": 22.0,
         "totalPrice": 22.0
@@ -4405,10 +4405,10 @@
       "row": {
         "hospitalName": "哈尔滨市第五医院",
         "department": "手术室",
-        "type": "高温纸塑袋75*200",
+        "type": "敷料包（无纺布）",
         "packName": "妇产科布袋",
         "packageMaterial": "高温纸塑袋75*200",
-        "instrumentCount": 5,
+        "instrumentCount": 1,
         "packCount": 1,
         "unitPrice": 22.0,
         "totalPrice": 22.0
@@ -4425,10 +4425,10 @@
       "row": {
         "hospitalName": "哈尔滨市第五医院",
         "department": "手术室",
-        "type": "高温纸塑袋75*200",
+        "type": "敷料包（无纺布）",
         "packName": "不匹配规则专用包名XYZ",
         "packageMaterial": "高温纸塑袋75*200",
-        "instrumentCount": 5,
+        "instrumentCount": 1,
         "packCount": 1,
         "unitPrice": 22.0,
         "totalPrice": 22.0
@@ -4445,10 +4445,10 @@
       "row": {
         "hospitalName": "哈尔滨市第五医院",
         "department": "手术室",
-        "type": "高温纸塑袋75*200",
+        "type": "敷料包（无纺布）",
         "packName": "妇产科纱条",
         "packageMaterial": "高温纸塑袋75*200",
-        "instrumentCount": 5,
+        "instrumentCount": 1,
         "packCount": 1,
         "unitPrice": 22.0,
         "totalPrice": 22.0
@@ -4465,10 +4465,10 @@
       "row": {
         "hospitalName": "哈尔滨市第五医院",
         "department": "手术室",
-        "type": "高温纸塑袋75*200",
+        "type": "敷料包（无纺布）",
         "packName": "不匹配规则专用包名XYZ",
         "packageMaterial": "高温纸塑袋75*200",
-        "instrumentCount": 5,
+        "instrumentCount": 1,
         "packCount": 1,
         "unitPrice": 22.0,
         "totalPrice": 22.0
@@ -4485,10 +4485,10 @@
       "row": {
         "hospitalName": "哈尔滨市第五医院",
         "department": "手术室",
-        "type": "高温纸塑袋75*200",
+        "type": "敷料包（无纺布）",
         "packName": "小布袋",
         "packageMaterial": "高温纸塑袋75*200",
-        "instrumentCount": 5,
+        "instrumentCount": 1,
         "packCount": 1,
         "unitPrice": 22.0,
         "totalPrice": 22.0
@@ -4505,10 +4505,10 @@
       "row": {
         "hospitalName": "哈尔滨市第五医院",
         "department": "手术室",
-        "type": "高温纸塑袋75*200",
+        "type": "敷料包（无纺布）",
         "packName": "不匹配规则专用包名XYZ",
         "packageMaterial": "高温纸塑袋75*200",
-        "instrumentCount": 5,
+        "instrumentCount": 1,
         "packCount": 1,
         "unitPrice": 22.0,
         "totalPrice": 22.0
@@ -4525,10 +4525,10 @@
       "row": {
         "hospitalName": "哈尔滨市第五医院",
         "department": "手术室",
-        "type": "高温纸塑袋75*200",
+        "type": "敷料包（无纺布）",
         "packName": "手套",
         "packageMaterial": "高温纸塑袋75*200",
-        "instrumentCount": 5,
+        "instrumentCount": 1,
         "packCount": 1,
         "unitPrice": 22.0,
         "totalPrice": 22.0
@@ -4545,10 +4545,10 @@
       "row": {
         "hospitalName": "哈尔滨市第五医院",
         "department": "手术室",
-        "type": "高温纸塑袋75*200",
+        "type": "敷料包（无纺布）",
         "packName": "不匹配规则专用包名XYZ",
         "packageMaterial": "高温纸塑袋75*200",
-        "instrumentCount": 5,
+        "instrumentCount": 1,
         "packCount": 1,
         "unitPrice": 22.0,
         "totalPrice": 22.0
@@ -4565,10 +4565,10 @@
       "row": {
         "hospitalName": "哈尔滨市第五医院",
         "department": "手术室",
-        "type": "高温纸塑袋75*200",
+        "type": "敷料包（无纺布）",
         "packName": "纱布",
         "packageMaterial": "高温纸塑袋75*200",
-        "instrumentCount": 5,
+        "instrumentCount": 1,
         "packCount": 1,
         "unitPrice": 22.0,
         "totalPrice": 22.0
@@ -4585,10 +4585,10 @@
       "row": {
         "hospitalName": "哈尔滨市第五医院",
         "department": "手术室",
-        "type": "高温纸塑袋75*200",
+        "type": "敷料包（无纺布）",
         "packName": "不匹配规则专用包名XYZ",
         "packageMaterial": "高温纸塑袋75*200",
-        "instrumentCount": 5,
+        "instrumentCount": 1,
         "packCount": 1,
         "unitPrice": 22.0,
         "totalPrice": 22.0
@@ -4605,10 +4605,10 @@
       "row": {
         "hospitalName": "哈尔滨市第五医院",
         "department": "手术室",
-        "type": "高温纸塑袋75*200",
+        "type": "敷料包（无纺布）",
         "packName": "驱血带",
         "packageMaterial": "高温纸塑袋75*200",
-        "instrumentCount": 5,
+        "instrumentCount": 1,
         "packCount": 1,
         "unitPrice": 22.0,
         "totalPrice": 22.0
@@ -4625,10 +4625,10 @@
       "row": {
         "hospitalName": "哈尔滨市第五医院",
         "department": "手术室",
-        "type": "高温纸塑袋75*200",
+        "type": "敷料包（无纺布）",
         "packName": "不匹配规则专用包名XYZ",
         "packageMaterial": "高温纸塑袋75*200",
-        "instrumentCount": 5,
+        "instrumentCount": 1,
         "packCount": 1,
         "unitPrice": 22.0,
         "totalPrice": 22.0
@@ -4645,10 +4645,10 @@
       "row": {
         "hospitalName": "哈尔滨市第五医院（二门诊）",
         "department": "手术室",
-        "type": "高温纸塑袋75*200",
+        "type": "敷料包（无纺布）",
         "packName": "驱血带/W12050",
         "packageMaterial": "高温纸塑袋75*200",
-        "instrumentCount": 5,
+        "instrumentCount": 1,
         "packCount": 1,
         "unitPrice": 22.0,
         "totalPrice": 22.0
@@ -4665,10 +4665,10 @@
       "row": {
         "hospitalName": "哈尔滨市第五医院（二门诊）",
         "department": "手术室",
-        "type": "高温纸塑袋75*200",
+        "type": "敷料包（无纺布）",
         "packName": "不匹配规则专用包名XYZ",
         "packageMaterial": "高温纸塑袋75*200",
-        "instrumentCount": 5,
+        "instrumentCount": 1,
         "packCount": 1,
         "unitPrice": 22.0,
         "totalPrice": 22.0
@@ -4685,10 +4685,10 @@
       "row": {
         "hospitalName": "哈尔滨市第五医院（二门诊）",
         "department": "手术室",
-        "type": "高温纸塑袋75*200",
+        "type": "敷料包（无纺布）",
         "packName": "驱血带/W6050",
         "packageMaterial": "高温纸塑袋75*200",
-        "instrumentCount": 5,
+        "instrumentCount": 1,
         "packCount": 1,
         "unitPrice": 22.0,
         "totalPrice": 22.0
@@ -4705,10 +4705,10 @@
       "row": {
         "hospitalName": "哈尔滨市第五医院（二门诊）",
         "department": "手术室",
-        "type": "高温纸塑袋75*200",
+        "type": "敷料包（无纺布）",
         "packName": "不匹配规则专用包名XYZ",
         "packageMaterial": "高温纸塑袋75*200",
-        "instrumentCount": 5,
+        "instrumentCount": 1,
         "packCount": 1,
         "unitPrice": 22.0,
         "totalPrice": 22.0
@@ -4725,10 +4725,10 @@
       "row": {
         "hospitalName": "哈尔滨市第五医院（二门诊）",
         "department": "手术室",
-        "type": "高温纸塑袋75*200",
+        "type": "敷料包（无纺布）",
         "packName": "驱血带/W9050",
         "packageMaterial": "高温纸塑袋75*200",
-        "instrumentCount": 5,
+        "instrumentCount": 1,
         "packCount": 1,
         "unitPrice": 22.0,
         "totalPrice": 22.0
@@ -4745,10 +4745,10 @@
       "row": {
         "hospitalName": "哈尔滨市第五医院（二门诊）",
         "department": "手术室",
-        "type": "高温纸塑袋75*200",
+        "type": "敷料包（无纺布）",
         "packName": "不匹配规则专用包名XYZ",
         "packageMaterial": "高温纸塑袋75*200",
-        "instrumentCount": 5,
+        "instrumentCount": 1,
         "packCount": 1,
         "unitPrice": 22.0,
         "totalPrice": 22.0
@@ -4766,9 +4766,9 @@
         "hospitalName": "哈尔滨市胸科医院",
         "department": "手术室",
         "type": "高温纸塑袋75*200",
-        "packName": "小件@contains",
+        "packName": "小件",
         "packageMaterial": "高温纸塑袋75*200",
-        "instrumentCount": 5,
+        "instrumentCount": 1,
         "packCount": 1,
         "unitPrice": 22.0,
         "totalPrice": 22.0
@@ -4788,7 +4788,7 @@
         "type": "高温纸塑袋75*200",
         "packName": "不匹配规则专用包名XYZ",
         "packageMaterial": "高温纸塑袋75*200",
-        "instrumentCount": 5,
+        "instrumentCount": 1,
         "packCount": 1,
         "unitPrice": 22.0,
         "totalPrice": 22.0
@@ -4805,10 +4805,10 @@
       "row": {
         "hospitalName": "哈尔滨市胸科医院",
         "department": "手术室",
-        "type": "高温纸塑袋75*200",
+        "type": "敷料包（无纺布）",
         "packName": "手术衣（打包好的）/W9050",
         "packageMaterial": "高温纸塑袋75*200",
-        "instrumentCount": 5,
+        "instrumentCount": 1,
         "packCount": 1,
         "unitPrice": 22.0,
         "totalPrice": 22.0
@@ -4825,10 +4825,10 @@
       "row": {
         "hospitalName": "哈尔滨市胸科医院",
         "department": "手术室",
-        "type": "高温纸塑袋75*200",
+        "type": "敷料包（无纺布）",
         "packName": "不匹配规则专用包名XYZ",
         "packageMaterial": "高温纸塑袋75*200",
-        "instrumentCount": 5,
+        "instrumentCount": 1,
         "packCount": 1,
         "unitPrice": 22.0,
         "totalPrice": 22.0
@@ -4845,10 +4845,10 @@
       "row": {
         "hospitalName": "呼兰区第一人民医院",
         "department": "手术室",
-        "type": "高温纸塑袋75*200",
-        "packName": "棉花针@contains",
+        "type": "额外包（纸塑袋）",
+        "packName": "棉花针",
         "packageMaterial": "高温纸塑袋75*200",
-        "instrumentCount": 5,
+        "instrumentCount": 1,
         "packCount": 1,
         "unitPrice": 22.0,
         "totalPrice": 22.0
@@ -4865,10 +4865,10 @@
       "row": {
         "hospitalName": "呼兰区第一人民医院",
         "department": "手术室",
-        "type": "高温纸塑袋75*200",
+        "type": "额外包（纸塑袋）",
         "packName": "不匹配规则专用包名XYZ",
         "packageMaterial": "高温纸塑袋75*200",
-        "instrumentCount": 5,
+        "instrumentCount": 1,
         "packCount": 1,
         "unitPrice": 22.0,
         "totalPrice": 22.0
@@ -4885,10 +4885,10 @@
       "row": {
         "hospitalName": "呼兰区第一人民医院",
         "department": "手术室",
-        "type": "高温纸塑袋75*200",
-        "packName": "棉花针@contains",
+        "type": "额外包（纸塑袋）",
+        "packName": "棉花针",
         "packageMaterial": "高温纸塑袋75*200",
-        "instrumentCount": 5,
+        "instrumentCount": 1,
         "packCount": 1,
         "unitPrice": 22.0,
         "totalPrice": 22.0
@@ -4905,10 +4905,10 @@
       "row": {
         "hospitalName": "呼兰区第一人民医院",
         "department": "手术室",
-        "type": "高温纸塑袋75*200",
+        "type": "额外包（纸塑袋）",
         "packName": "不匹配规则专用包名XYZ",
         "packageMaterial": "高温纸塑袋75*200",
-        "instrumentCount": 5,
+        "instrumentCount": 1,
         "packCount": 1,
         "unitPrice": 22.0,
         "totalPrice": 22.0
@@ -4925,10 +4925,10 @@
       "row": {
         "hospitalName": "呼兰中医院",
         "department": "手术室",
-        "type": "高温纸塑袋75*200",
+        "type": "器械包",
         "packName": "外科包",
         "packageMaterial": "高温纸塑袋75*200",
-        "instrumentCount": 5,
+        "instrumentCount": 1,
         "packCount": 1,
         "unitPrice": 22.0,
         "totalPrice": 22.0
@@ -4945,10 +4945,10 @@
       "row": {
         "hospitalName": "呼兰中医院",
         "department": "手术室",
-        "type": "高温纸塑袋75*200",
+        "type": "器械包",
         "packName": "不匹配规则专用包名XYZ",
         "packageMaterial": "高温纸塑袋75*200",
-        "instrumentCount": 5,
+        "instrumentCount": 1,
         "packCount": 1,
         "unitPrice": 22.0,
         "totalPrice": 22.0
@@ -4965,10 +4965,10 @@
       "row": {
         "hospitalName": "呼兰中医院",
         "department": "手术室",
-        "type": "高温纸塑袋75*200",
+        "type": "器械包",
         "packName": "外科包",
         "packageMaterial": "高温纸塑袋75*200",
-        "instrumentCount": 5,
+        "instrumentCount": 1,
         "packCount": 1,
         "unitPrice": 22.0,
         "totalPrice": 22.0
@@ -4985,10 +4985,10 @@
       "row": {
         "hospitalName": "呼兰中医院",
         "department": "手术室",
-        "type": "高温纸塑袋75*200",
+        "type": "器械包",
         "packName": "不匹配规则专用包名XYZ",
         "packageMaterial": "高温纸塑袋75*200",
-        "instrumentCount": 5,
+        "instrumentCount": 1,
         "packCount": 1,
         "unitPrice": 22.0,
         "totalPrice": 22.0
@@ -5005,10 +5005,10 @@
       "row": {
         "hospitalName": "呼兰中医院",
         "department": "手术室",
-        "type": "高温纸塑袋75*200",
-        "packName": "胶帽@contains",
+        "type": "额外包低温等离子",
+        "packName": "胶帽",
         "packageMaterial": "高温纸塑袋75*200",
-        "instrumentCount": 5,
+        "instrumentCount": 1,
         "packCount": 1,
         "unitPrice": 22.0,
         "totalPrice": 22.0
@@ -5025,10 +5025,10 @@
       "row": {
         "hospitalName": "呼兰中医院",
         "department": "手术室",
-        "type": "高温纸塑袋75*200",
+        "type": "额外包低温等离子",
         "packName": "不匹配规则专用包名XYZ",
         "packageMaterial": "高温纸塑袋75*200",
-        "instrumentCount": 5,
+        "instrumentCount": 1,
         "packCount": 1,
         "unitPrice": 22.0,
         "totalPrice": 22.0
@@ -5045,10 +5045,10 @@
       "row": {
         "hospitalName": "呼兰中医院",
         "department": "手术室",
-        "type": "高温纸塑袋75*200",
-        "packName": "胶帽@contains",
+        "type": "额外包低温等离子",
+        "packName": "胶帽",
         "packageMaterial": "高温纸塑袋75*200",
-        "instrumentCount": 5,
+        "instrumentCount": 1,
         "packCount": 1,
         "unitPrice": 22.0,
         "totalPrice": 22.0
@@ -5065,10 +5065,10 @@
       "row": {
         "hospitalName": "呼兰中医院",
         "department": "手术室",
-        "type": "高温纸塑袋75*200",
+        "type": "额外包低温等离子",
         "packName": "不匹配规则专用包名XYZ",
         "packageMaterial": "高温纸塑袋75*200",
-        "instrumentCount": 5,
+        "instrumentCount": 1,
         "packCount": 1,
         "unitPrice": 22.0,
         "totalPrice": 22.0
@@ -5085,10 +5085,10 @@
       "row": {
         "hospitalName": "呼兰中医院",
         "department": "手术室",
-        "type": "高温纸塑袋75*200",
+        "type": "器械包",
         "packName": "铂康-阑尾包",
         "packageMaterial": "高温纸塑袋75*200",
-        "instrumentCount": 5,
+        "instrumentCount": 1,
         "packCount": 1,
         "unitPrice": 22.0,
         "totalPrice": 22.0
@@ -5105,10 +5105,10 @@
       "row": {
         "hospitalName": "呼兰中医院",
         "department": "手术室",
-        "type": "高温纸塑袋75*200",
+        "type": "器械包",
         "packName": "不匹配规则专用包名XYZ",
         "packageMaterial": "高温纸塑袋75*200",
-        "instrumentCount": 5,
+        "instrumentCount": 1,
         "packCount": 1,
         "unitPrice": 22.0,
         "totalPrice": 22.0
@@ -5125,10 +5125,10 @@
       "row": {
         "hospitalName": "呼兰中医院",
         "department": "手术室",
-        "type": "高温纸塑袋75*200",
+        "type": "器械包",
         "packName": "铂康-阑尾包",
         "packageMaterial": "高温纸塑袋75*200",
-        "instrumentCount": 5,
+        "instrumentCount": 1,
         "packCount": 1,
         "unitPrice": 22.0,
         "totalPrice": 22.0
@@ -5145,10 +5145,10 @@
       "row": {
         "hospitalName": "呼兰中医院",
         "department": "手术室",
-        "type": "高温纸塑袋75*200",
+        "type": "器械包",
         "packName": "不匹配规则专用包名XYZ",
         "packageMaterial": "高温纸塑袋75*200",
-        "instrumentCount": 5,
+        "instrumentCount": 1,
         "packCount": 1,
         "unitPrice": 22.0,
         "totalPrice": 22.0
@@ -5165,10 +5165,10 @@
       "row": {
         "hospitalName": "黑龙江九洲妇科医院",
         "department": "手术室",
-        "type": "高温纸塑袋75*200",
+        "type": "额外包",
         "packName": "方盘",
         "packageMaterial": "高温纸塑袋75*200",
-        "instrumentCount": 5,
+        "instrumentCount": 1,
         "packCount": 1,
         "unitPrice": 22.0,
         "totalPrice": 22.0
@@ -5185,10 +5185,10 @@
       "row": {
         "hospitalName": "黑龙江九洲妇科医院",
         "department": "手术室",
-        "type": "高温纸塑袋75*200",
+        "type": "额外包",
         "packName": "不匹配规则专用包名XYZ",
         "packageMaterial": "高温纸塑袋75*200",
-        "instrumentCount": 5,
+        "instrumentCount": 1,
         "packCount": 1,
         "unitPrice": 22.0,
         "totalPrice": 22.0
@@ -5205,10 +5205,10 @@
       "row": {
         "hospitalName": "哈尔滨基准生物科技有限公司",
         "department": "手术室",
-        "type": "高温纸塑袋75*200",
+        "type": "额外包低温等离子",
         "packName": "氩氦刀",
         "packageMaterial": "高温纸塑袋75*200",
-        "instrumentCount": 5,
+        "instrumentCount": 1,
         "packCount": 1,
         "unitPrice": 22.0,
         "totalPrice": 22.0
@@ -5225,10 +5225,10 @@
       "row": {
         "hospitalName": "哈尔滨基准生物科技有限公司",
         "department": "手术室",
-        "type": "高温纸塑袋75*200",
+        "type": "额外包低温等离子",
         "packName": "不匹配规则专用包名XYZ",
         "packageMaterial": "高温纸塑袋75*200",
-        "instrumentCount": 5,
+        "instrumentCount": 1,
         "packCount": 1,
         "unitPrice": 22.0,
         "totalPrice": 22.0
@@ -5245,10 +5245,10 @@
       "row": {
         "hospitalName": "东北农业大学医院",
         "department": "手术室",
-        "type": "高温纸塑袋75*200",
-        "packName": "机锉@contains",
+        "type": "额外包（纸塑袋）",
+        "packName": "机锉",
         "packageMaterial": "高温纸塑袋75*200",
-        "instrumentCount": 5,
+        "instrumentCount": 1,
         "packCount": 1,
         "unitPrice": 22.0,
         "totalPrice": 22.0
@@ -5265,10 +5265,10 @@
       "row": {
         "hospitalName": "东北农业大学医院",
         "department": "手术室",
-        "type": "高温纸塑袋75*200",
+        "type": "额外包（纸塑袋）",
         "packName": "不匹配规则专用包名XYZ",
         "packageMaterial": "高温纸塑袋75*200",
-        "instrumentCount": 5,
+        "instrumentCount": 1,
         "packCount": 1,
         "unitPrice": 22.0,
         "totalPrice": 22.0
@@ -5285,10 +5285,10 @@
       "row": {
         "hospitalName": "东北农业大学医院",
         "department": "手术室",
-        "type": "高温纸塑袋75*200",
-        "packName": "根管针@contains",
+        "type": "额外包（纸塑袋）",
+        "packName": "根管针",
         "packageMaterial": "高温纸塑袋75*200",
-        "instrumentCount": 5,
+        "instrumentCount": 1,
         "packCount": 1,
         "unitPrice": 22.0,
         "totalPrice": 22.0
@@ -5305,10 +5305,10 @@
       "row": {
         "hospitalName": "东北农业大学医院",
         "department": "手术室",
-        "type": "高温纸塑袋75*200",
+        "type": "额外包（纸塑袋）",
         "packName": "不匹配规则专用包名XYZ",
         "packageMaterial": "高温纸塑袋75*200",
-        "instrumentCount": 5,
+        "instrumentCount": 1,
         "packCount": 1,
         "unitPrice": 22.0,
         "totalPrice": 22.0
@@ -5325,10 +5325,10 @@
       "row": {
         "hospitalName": "东北农业大学医院",
         "department": "手术室",
-        "type": "高温纸塑袋75*200",
-        "packName": "根管锉@contains",
+        "type": "额外包（纸塑袋）",
+        "packName": "根管锉",
         "packageMaterial": "高温纸塑袋75*200",
-        "instrumentCount": 5,
+        "instrumentCount": 1,
         "packCount": 1,
         "unitPrice": 22.0,
         "totalPrice": 22.0
@@ -5345,10 +5345,10 @@
       "row": {
         "hospitalName": "东北农业大学医院",
         "department": "手术室",
-        "type": "高温纸塑袋75*200",
+        "type": "额外包（纸塑袋）",
         "packName": "不匹配规则专用包名XYZ",
         "packageMaterial": "高温纸塑袋75*200",
-        "instrumentCount": 5,
+        "instrumentCount": 1,
         "packCount": 1,
         "unitPrice": 22.0,
         "totalPrice": 22.0
@@ -5365,10 +5365,10 @@
       "row": {
         "hospitalName": "东北农业大学医院",
         "department": "手术室",
-        "type": "高温纸塑袋75*200",
-        "packName": "牙探针@contains",
+        "type": "额外包（纸塑袋）",
+        "packName": "牙探针",
         "packageMaterial": "高温纸塑袋75*200",
-        "instrumentCount": 5,
+        "instrumentCount": 1,
         "packCount": 1,
         "unitPrice": 22.0,
         "totalPrice": 22.0
@@ -5385,10 +5385,10 @@
       "row": {
         "hospitalName": "东北农业大学医院",
         "department": "手术室",
-        "type": "高温纸塑袋75*200",
+        "type": "额外包（纸塑袋）",
         "packName": "不匹配规则专用包名XYZ",
         "packageMaterial": "高温纸塑袋75*200",
-        "instrumentCount": 5,
+        "instrumentCount": 1,
         "packCount": 1,
         "unitPrice": 22.0,
         "totalPrice": 22.0
@@ -5405,10 +5405,10 @@
       "row": {
         "hospitalName": "东北农业大学医院",
         "department": "手术室",
-        "type": "高温纸塑袋75*200",
-        "packName": "机锉@contains",
+        "type": "额外包（纸塑袋）",
+        "packName": "机锉",
         "packageMaterial": "高温纸塑袋75*200",
-        "instrumentCount": 5,
+        "instrumentCount": 1,
         "packCount": 1,
         "unitPrice": 22.0,
         "totalPrice": 22.0
@@ -5425,10 +5425,10 @@
       "row": {
         "hospitalName": "东北农业大学医院",
         "department": "手术室",
-        "type": "高温纸塑袋75*200",
+        "type": "额外包（纸塑袋）",
         "packName": "不匹配规则专用包名XYZ",
         "packageMaterial": "高温纸塑袋75*200",
-        "instrumentCount": 5,
+        "instrumentCount": 1,
         "packCount": 1,
         "unitPrice": 22.0,
         "totalPrice": 22.0
@@ -5445,10 +5445,10 @@
       "row": {
         "hospitalName": "东北农业大学医院",
         "department": "手术室",
-        "type": "高温纸塑袋75*200",
-        "packName": "根管针@contains",
+        "type": "额外包（纸塑袋）",
+        "packName": "根管针",
         "packageMaterial": "高温纸塑袋75*200",
-        "instrumentCount": 5,
+        "instrumentCount": 1,
         "packCount": 1,
         "unitPrice": 22.0,
         "totalPrice": 22.0
@@ -5465,10 +5465,10 @@
       "row": {
         "hospitalName": "东北农业大学医院",
         "department": "手术室",
-        "type": "高温纸塑袋75*200",
+        "type": "额外包（纸塑袋）",
         "packName": "不匹配规则专用包名XYZ",
         "packageMaterial": "高温纸塑袋75*200",
-        "instrumentCount": 5,
+        "instrumentCount": 1,
         "packCount": 1,
         "unitPrice": 22.0,
         "totalPrice": 22.0
@@ -5485,10 +5485,10 @@
       "row": {
         "hospitalName": "东北农业大学医院",
         "department": "手术室",
-        "type": "高温纸塑袋75*200",
-        "packName": "根管锉@contains",
+        "type": "额外包（纸塑袋）",
+        "packName": "根管锉",
         "packageMaterial": "高温纸塑袋75*200",
-        "instrumentCount": 5,
+        "instrumentCount": 1,
         "packCount": 1,
         "unitPrice": 22.0,
         "totalPrice": 22.0
@@ -5505,10 +5505,10 @@
       "row": {
         "hospitalName": "东北农业大学医院",
         "department": "手术室",
-        "type": "高温纸塑袋75*200",
+        "type": "额外包（纸塑袋）",
         "packName": "不匹配规则专用包名XYZ",
         "packageMaterial": "高温纸塑袋75*200",
-        "instrumentCount": 5,
+        "instrumentCount": 1,
         "packCount": 1,
         "unitPrice": 22.0,
         "totalPrice": 22.0
@@ -5525,10 +5525,10 @@
       "row": {
         "hospitalName": "东北农业大学医院",
         "department": "手术室",
-        "type": "高温纸塑袋75*200",
-        "packName": "牙探针@contains",
+        "type": "额外包（纸塑袋）",
+        "packName": "牙探针",
         "packageMaterial": "高温纸塑袋75*200",
-        "instrumentCount": 5,
+        "instrumentCount": 1,
         "packCount": 1,
         "unitPrice": 22.0,
         "totalPrice": 22.0
@@ -5545,10 +5545,10 @@
       "row": {
         "hospitalName": "东北农业大学医院",
         "department": "手术室",
-        "type": "高温纸塑袋75*200",
+        "type": "额外包（纸塑袋）",
         "packName": "不匹配规则专用包名XYZ",
         "packageMaterial": "高温纸塑袋75*200",
-        "instrumentCount": 5,
+        "instrumentCount": 1,
         "packCount": 1,
         "unitPrice": 22.0,
         "totalPrice": 22.0
@@ -5565,10 +5565,10 @@
       "row": {
         "hospitalName": "哈尔滨市平房区人民医院",
         "department": "手术室",
-        "type": "高温纸塑袋75*200",
-        "packName": "针盒针@needle_box",
+        "type": "额外包（纸塑袋）",
+        "packName": "针盒针",
         "packageMaterial": "高温纸塑袋75*200",
-        "instrumentCount": 5,
+        "instrumentCount": 1,
         "packCount": 1,
         "unitPrice": 22.0,
         "totalPrice": 22.0
@@ -5585,10 +5585,10 @@
       "row": {
         "hospitalName": "哈尔滨市平房区人民医院",
         "department": "手术室",
-        "type": "高温纸塑袋75*200",
+        "type": "额外包（纸塑袋）",
         "packName": "不匹配规则专用包名XYZ",
         "packageMaterial": "高温纸塑袋75*200",
-        "instrumentCount": 5,
+        "instrumentCount": 1,
         "packCount": 1,
         "unitPrice": 22.0,
         "totalPrice": 22.0
@@ -5605,10 +5605,10 @@
       "row": {
         "hospitalName": "哈尔滨市平房区人民医院",
         "department": "手术室",
-        "type": "高温纸塑袋75*200",
-        "packName": "针盒针@needle_box",
+        "type": "额外包（纸塑袋）",
+        "packName": "针盒针",
         "packageMaterial": "高温纸塑袋75*200",
-        "instrumentCount": 5,
+        "instrumentCount": 1,
         "packCount": 1,
         "unitPrice": 22.0,
         "totalPrice": 22.0
@@ -5625,10 +5625,10 @@
       "row": {
         "hospitalName": "哈尔滨市平房区人民医院",
         "department": "手术室",
-        "type": "高温纸塑袋75*200",
+        "type": "额外包（纸塑袋）",
         "packName": "不匹配规则专用包名XYZ",
         "packageMaterial": "高温纸塑袋75*200",
-        "instrumentCount": 5,
+        "instrumentCount": 1,
         "packCount": 1,
         "unitPrice": 22.0,
         "totalPrice": 22.0
@@ -5645,10 +5645,10 @@
       "row": {
         "hospitalName": "哈尔滨森海医院",
         "department": "手术室",
-        "type": "高温纸塑袋75*200",
-        "packName": "双@contains",
+        "type": "额外包（纸塑袋）",
+        "packName": "双",
         "packageMaterial": "高温纸塑袋75*200",
-        "instrumentCount": 5,
+        "instrumentCount": 1,
         "packCount": 1,
         "unitPrice": 22.0,
         "totalPrice": 22.0
@@ -5665,10 +5665,10 @@
       "row": {
         "hospitalName": "哈尔滨森海医院",
         "department": "手术室",
-        "type": "高温纸塑袋75*200",
+        "type": "额外包（纸塑袋）",
         "packName": "不匹配规则专用包名XYZ",
         "packageMaterial": "高温纸塑袋75*200",
-        "instrumentCount": 5,
+        "instrumentCount": 1,
         "packCount": 1,
         "unitPrice": 22.0,
         "totalPrice": 22.0
@@ -5685,10 +5685,10 @@
       "row": {
         "hospitalName": "哈尔滨森海医院",
         "department": "手术室",
-        "type": "高温纸塑袋75*200",
-        "packName": "双@contains",
+        "type": "额外包（纸塑袋）",
+        "packName": "双",
         "packageMaterial": "高温纸塑袋75*200",
-        "instrumentCount": 5,
+        "instrumentCount": 1,
         "packCount": 1,
         "unitPrice": 22.0,
         "totalPrice": 22.0
@@ -5705,10 +5705,10 @@
       "row": {
         "hospitalName": "哈尔滨森海医院",
         "department": "手术室",
-        "type": "高温纸塑袋75*200",
+        "type": "额外包（纸塑袋）",
         "packName": "不匹配规则专用包名XYZ",
         "packageMaterial": "高温纸塑袋75*200",
-        "instrumentCount": 5,
+        "instrumentCount": 1,
         "packCount": 1,
         "unitPrice": 22.0,
         "totalPrice": 22.0
@@ -5725,10 +5725,10 @@
       "row": {
         "hospitalName": "哈尔滨森海医院",
         "department": "手术室",
-        "type": "高温纸塑袋75*200",
-        "packName": "胶帽@contains",
+        "type": "额外包低温等离子",
+        "packName": "胶帽",
         "packageMaterial": "高温纸塑袋75*200",
-        "instrumentCount": 5,
+        "instrumentCount": 1,
         "packCount": 1,
         "unitPrice": 22.0,
         "totalPrice": 22.0
@@ -5745,10 +5745,10 @@
       "row": {
         "hospitalName": "哈尔滨森海医院",
         "department": "手术室",
-        "type": "高温纸塑袋75*200",
+        "type": "额外包低温等离子",
         "packName": "不匹配规则专用包名XYZ",
         "packageMaterial": "高温纸塑袋75*200",
-        "instrumentCount": 5,
+        "instrumentCount": 1,
         "packCount": 1,
         "unitPrice": 22.0,
         "totalPrice": 22.0
@@ -5765,10 +5765,10 @@
       "row": {
         "hospitalName": "哈尔滨森海医院",
         "department": "手术室",
-        "type": "高温纸塑袋75*200",
-        "packName": "胶帽@contains",
+        "type": "额外包低温等离子",
+        "packName": "胶帽",
         "packageMaterial": "高温纸塑袋75*200",
-        "instrumentCount": 5,
+        "instrumentCount": 1,
         "packCount": 1,
         "unitPrice": 22.0,
         "totalPrice": 22.0
@@ -5785,10 +5785,10 @@
       "row": {
         "hospitalName": "哈尔滨森海医院",
         "department": "手术室",
-        "type": "高温纸塑袋75*200",
+        "type": "额外包低温等离子",
         "packName": "不匹配规则专用包名XYZ",
         "packageMaterial": "高温纸塑袋75*200",
-        "instrumentCount": 5,
+        "instrumentCount": 1,
         "packCount": 1,
         "unitPrice": 22.0,
         "totalPrice": 22.0
@@ -5805,10 +5805,10 @@
       "row": {
         "hospitalName": "黑龙江省社会康复医院",
         "department": "手术室",
-        "type": "高温纸塑袋75*200",
+        "type": "单包装",
         "packName": "ITI种植盒-32件盒1/W12050",
-        "packageMaterial": "高温纸塑袋75*200",
-        "instrumentCount": 5,
+        "packageMaterial": "高温纸塑袋200*600",
+        "instrumentCount": 1,
         "packCount": 1,
         "unitPrice": 22.0,
         "totalPrice": 22.0
@@ -5825,10 +5825,10 @@
       "row": {
         "hospitalName": "黑龙江省社会康复医院",
         "department": "手术室",
-        "type": "高温纸塑袋75*200",
+        "type": "单包装",
         "packName": "不匹配规则专用包名XYZ",
-        "packageMaterial": "高温纸塑袋75*200",
-        "instrumentCount": 5,
+        "packageMaterial": "高温纸塑袋200*600",
+        "instrumentCount": 1,
         "packCount": 1,
         "unitPrice": 22.0,
         "totalPrice": 22.0
@@ -5845,10 +5845,10 @@
       "row": {
         "hospitalName": "黑龙江省社会康复医院",
         "department": "手术室",
-        "type": "高温纸塑袋75*200",
+        "type": "单包装",
         "packName": "内提工具盒10件盒1/W6050",
-        "packageMaterial": "高温纸塑袋75*200",
-        "instrumentCount": 5,
+        "packageMaterial": "高温纸塑袋200*600",
+        "instrumentCount": 1,
         "packCount": 1,
         "unitPrice": 22.0,
         "totalPrice": 22.0
@@ -5865,10 +5865,10 @@
       "row": {
         "hospitalName": "黑龙江省社会康复医院",
         "department": "手术室",
-        "type": "高温纸塑袋75*200",
+        "type": "单包装",
         "packName": "不匹配规则专用包名XYZ",
-        "packageMaterial": "高温纸塑袋75*200",
-        "instrumentCount": 5,
+        "packageMaterial": "高温纸塑袋200*600",
+        "instrumentCount": 1,
         "packCount": 1,
         "unitPrice": 22.0,
         "totalPrice": 22.0
@@ -5885,10 +5885,10 @@
       "row": {
         "hospitalName": "黑龙江省社会康复医院",
         "department": "手术室",
-        "type": "高温纸塑袋75*200",
+        "type": "额外包（纸塑袋）",
         "packName": "大车针盒-1/Z1526",
         "packageMaterial": "高温纸塑袋75*200",
-        "instrumentCount": 5,
+        "instrumentCount": 1,
         "packCount": 1,
         "unitPrice": 22.0,
         "totalPrice": 22.0
@@ -5905,10 +5905,10 @@
       "row": {
         "hospitalName": "黑龙江省社会康复医院",
         "department": "手术室",
-        "type": "高温纸塑袋75*200",
+        "type": "额外包（纸塑袋）",
         "packName": "不匹配规则专用包名XYZ",
         "packageMaterial": "高温纸塑袋75*200",
-        "instrumentCount": 5,
+        "instrumentCount": 1,
         "packCount": 1,
         "unitPrice": 22.0,
         "totalPrice": 22.0
@@ -5925,10 +5925,10 @@
       "row": {
         "hospitalName": "黑龙江省社会康复医院",
         "department": "手术室",
-        "type": "高温纸塑袋75*200",
+        "type": "额外包（纸塑袋）",
         "packName": "抛光车针盒6件盒1/Z1026",
         "packageMaterial": "高温纸塑袋75*200",
-        "instrumentCount": 5,
+        "instrumentCount": 1,
         "packCount": 1,
         "unitPrice": 22.0,
         "totalPrice": 22.0
@@ -5945,10 +5945,10 @@
       "row": {
         "hospitalName": "黑龙江省社会康复医院",
         "department": "手术室",
-        "type": "高温纸塑袋75*200",
+        "type": "额外包（纸塑袋）",
         "packName": "不匹配规则专用包名XYZ",
         "packageMaterial": "高温纸塑袋75*200",
-        "instrumentCount": 5,
+        "instrumentCount": 1,
         "packCount": 1,
         "unitPrice": 22.0,
         "totalPrice": 22.0
@@ -5965,10 +5965,10 @@
       "row": {
         "hospitalName": "黑龙江省社会康复医院",
         "department": "手术室",
-        "type": "高温纸塑袋75*200",
+        "type": "单包装",
         "packName": "梁光强器械盒-21件盒1/W6050",
-        "packageMaterial": "高温纸塑袋75*200",
-        "instrumentCount": 5,
+        "packageMaterial": "高温纸塑袋200*600",
+        "instrumentCount": 1,
         "packCount": 1,
         "unitPrice": 22.0,
         "totalPrice": 22.0
@@ -5985,10 +5985,10 @@
       "row": {
         "hospitalName": "黑龙江省社会康复医院",
         "department": "手术室",
-        "type": "高温纸塑袋75*200",
+        "type": "单包装",
         "packName": "不匹配规则专用包名XYZ",
-        "packageMaterial": "高温纸塑袋75*200",
-        "instrumentCount": 5,
+        "packageMaterial": "高温纸塑袋200*600",
+        "instrumentCount": 1,
         "packCount": 1,
         "unitPrice": 22.0,
         "totalPrice": 22.0
@@ -6005,10 +6005,10 @@
       "row": {
         "hospitalName": "黑龙江省社会康复医院",
         "department": "手术室",
-        "type": "高温纸塑袋75*200",
+        "type": "单包装",
         "packName": "梁光强器械盒（粉）10件盒1/Z2030",
-        "packageMaterial": "高温纸塑袋75*200",
-        "instrumentCount": 5,
+        "packageMaterial": "高温纸塑袋200*600",
+        "instrumentCount": 1,
         "packCount": 1,
         "unitPrice": 22.0,
         "totalPrice": 22.0
@@ -6025,10 +6025,10 @@
       "row": {
         "hospitalName": "黑龙江省社会康复医院",
         "department": "手术室",
-        "type": "高温纸塑袋75*200",
+        "type": "单包装",
         "packName": "不匹配规则专用包名XYZ",
-        "packageMaterial": "高温纸塑袋75*200",
-        "instrumentCount": 5,
+        "packageMaterial": "高温纸塑袋200*600",
+        "instrumentCount": 1,
         "packCount": 1,
         "unitPrice": 22.0,
         "totalPrice": 22.0
@@ -6045,10 +6045,10 @@
       "row": {
         "hospitalName": "黑龙江省社会康复医院",
         "department": "手术室",
-        "type": "高温纸塑袋75*200",
+        "type": "单包装",
         "packName": "环切器械盒-14件盒1/Z2032",
-        "packageMaterial": "高温纸塑袋75*200",
-        "instrumentCount": 5,
+        "packageMaterial": "高温纸塑袋200*600",
+        "instrumentCount": 1,
         "packCount": 1,
         "unitPrice": 22.0,
         "totalPrice": 22.0
@@ -6065,10 +6065,10 @@
       "row": {
         "hospitalName": "黑龙江省社会康复医院",
         "department": "手术室",
-        "type": "高温纸塑袋75*200",
+        "type": "单包装",
         "packName": "不匹配规则专用包名XYZ",
-        "packageMaterial": "高温纸塑袋75*200",
-        "instrumentCount": 5,
+        "packageMaterial": "高温纸塑袋200*600",
+        "instrumentCount": 1,
         "packCount": 1,
         "unitPrice": 22.0,
         "totalPrice": 22.0
@@ -6085,10 +6085,10 @@
       "row": {
         "hospitalName": "黑龙江省社会康复医院",
         "department": "手术室",
-        "type": "高温纸塑袋75*200",
+        "type": "单包装",
         "packName": "登腾种植盒-34件盒1/W6050",
-        "packageMaterial": "高温纸塑袋75*200",
-        "instrumentCount": 5,
+        "packageMaterial": "高温纸塑袋200*600",
+        "instrumentCount": 1,
         "packCount": 1,
         "unitPrice": 22.0,
         "totalPrice": 22.0
@@ -6105,10 +6105,10 @@
       "row": {
         "hospitalName": "黑龙江省社会康复医院",
         "department": "手术室",
-        "type": "高温纸塑袋75*200",
+        "type": "单包装",
         "packName": "不匹配规则专用包名XYZ",
-        "packageMaterial": "高温纸塑袋75*200",
-        "instrumentCount": 5,
+        "packageMaterial": "高温纸塑袋200*600",
+        "instrumentCount": 1,
         "packCount": 1,
         "unitPrice": 22.0,
         "totalPrice": 22.0
@@ -6125,10 +6125,10 @@
       "row": {
         "hospitalName": "黑龙江省社会康复医院",
         "department": "手术室",
-        "type": "高温纸塑袋75*200",
+        "type": "单包装",
         "packName": "登腾种植盒-36件盒1/W6050",
-        "packageMaterial": "高温纸塑袋75*200",
-        "instrumentCount": 5,
+        "packageMaterial": "高温纸塑袋200*600",
+        "instrumentCount": 1,
         "packCount": 1,
         "unitPrice": 22.0,
         "totalPrice": 22.0
@@ -6145,10 +6145,10 @@
       "row": {
         "hospitalName": "黑龙江省社会康复医院",
         "department": "手术室",
-        "type": "高温纸塑袋75*200",
+        "type": "单包装",
         "packName": "不匹配规则专用包名XYZ",
-        "packageMaterial": "高温纸塑袋75*200",
-        "instrumentCount": 5,
+        "packageMaterial": "高温纸塑袋200*600",
+        "instrumentCount": 1,
         "packCount": 1,
         "unitPrice": 22.0,
         "totalPrice": 22.0
@@ -6165,10 +6165,10 @@
       "row": {
         "hospitalName": "黑龙江省社会康复医院",
         "department": "手术室",
-        "type": "高温纸塑袋75*200",
+        "type": "单包装",
         "packName": "百诺工具盒-19件盒1/W6050",
-        "packageMaterial": "高温纸塑袋75*200",
-        "instrumentCount": 5,
+        "packageMaterial": "高温纸塑袋200*600",
+        "instrumentCount": 1,
         "packCount": 1,
         "unitPrice": 22.0,
         "totalPrice": 22.0
@@ -6185,10 +6185,10 @@
       "row": {
         "hospitalName": "黑龙江省社会康复医院",
         "department": "手术室",
-        "type": "高温纸塑袋75*200",
+        "type": "单包装",
         "packName": "不匹配规则专用包名XYZ",
-        "packageMaterial": "高温纸塑袋75*200",
-        "instrumentCount": 5,
+        "packageMaterial": "高温纸塑袋200*600",
+        "instrumentCount": 1,
         "packCount": 1,
         "unitPrice": 22.0,
         "totalPrice": 22.0
@@ -6205,10 +6205,10 @@
       "row": {
         "hospitalName": "黑龙江省社会康复医院",
         "department": "手术室",
-        "type": "高温纸塑袋75*200",
+        "type": "单包装",
         "packName": "种植盒-14件盒1/W6050",
-        "packageMaterial": "高温纸塑袋75*200",
-        "instrumentCount": 5,
+        "packageMaterial": "高温纸塑袋200*600",
+        "instrumentCount": 1,
         "packCount": 1,
         "unitPrice": 22.0,
         "totalPrice": 22.0
@@ -6225,10 +6225,10 @@
       "row": {
         "hospitalName": "黑龙江省社会康复医院",
         "department": "手术室",
-        "type": "高温纸塑袋75*200",
+        "type": "单包装",
         "packName": "不匹配规则专用包名XYZ",
-        "packageMaterial": "高温纸塑袋75*200",
-        "instrumentCount": 5,
+        "packageMaterial": "高温纸塑袋200*600",
+        "instrumentCount": 1,
         "packCount": 1,
         "unitPrice": 22.0,
         "totalPrice": 22.0
@@ -6245,10 +6245,10 @@
       "row": {
         "hospitalName": "黑龙江省社会康复医院",
         "department": "手术室",
-        "type": "高温纸塑袋75*200",
+        "type": "单包装",
         "packName": "种植盒（蓝白）12件 盒1/Z2032",
-        "packageMaterial": "高温纸塑袋75*200",
-        "instrumentCount": 5,
+        "packageMaterial": "高温纸塑袋200*600",
+        "instrumentCount": 1,
         "packCount": 1,
         "unitPrice": 22.0,
         "totalPrice": 22.0
@@ -6265,10 +6265,10 @@
       "row": {
         "hospitalName": "黑龙江省社会康复医院",
         "department": "手术室",
-        "type": "高温纸塑袋75*200",
+        "type": "单包装",
         "packName": "不匹配规则专用包名XYZ",
-        "packageMaterial": "高温纸塑袋75*200",
-        "instrumentCount": 5,
+        "packageMaterial": "高温纸塑袋200*600",
+        "instrumentCount": 1,
         "packCount": 1,
         "unitPrice": 22.0,
         "totalPrice": 22.0
@@ -6285,10 +6285,10 @@
       "row": {
         "hospitalName": "黑龙江省社会康复医院",
         "department": "手术室",
-        "type": "高温纸塑袋75*200",
+        "type": "单包装",
         "packName": "种植盒（金属）12件盒1/Z2032",
-        "packageMaterial": "高温纸塑袋75*200",
-        "instrumentCount": 5,
+        "packageMaterial": "高温纸塑袋200*600",
+        "instrumentCount": 1,
         "packCount": 1,
         "unitPrice": 22.0,
         "totalPrice": 22.0
@@ -6305,10 +6305,10 @@
       "row": {
         "hospitalName": "黑龙江省社会康复医院",
         "department": "手术室",
-        "type": "高温纸塑袋75*200",
+        "type": "单包装",
         "packName": "不匹配规则专用包名XYZ",
-        "packageMaterial": "高温纸塑袋75*200",
-        "instrumentCount": 5,
+        "packageMaterial": "高温纸塑袋200*600",
+        "instrumentCount": 1,
         "packCount": 1,
         "unitPrice": 22.0,
         "totalPrice": 22.0
@@ -6325,10 +6325,10 @@
       "row": {
         "hospitalName": "黑龙江省社会康复医院",
         "department": "手术室",
-        "type": "高温纸塑袋75*200",
+        "type": "单包装",
         "packName": "种植盒（黄绿）8件盒1/Z2032",
-        "packageMaterial": "高温纸塑袋75*200",
-        "instrumentCount": 5,
+        "packageMaterial": "高温纸塑袋200*600",
+        "instrumentCount": 1,
         "packCount": 1,
         "unitPrice": 22.0,
         "totalPrice": 22.0
@@ -6345,10 +6345,10 @@
       "row": {
         "hospitalName": "黑龙江省社会康复医院",
         "department": "手术室",
-        "type": "高温纸塑袋75*200",
+        "type": "单包装",
         "packName": "不匹配规则专用包名XYZ",
-        "packageMaterial": "高温纸塑袋75*200",
-        "instrumentCount": 5,
+        "packageMaterial": "高温纸塑袋200*600",
+        "instrumentCount": 1,
         "packCount": 1,
         "unitPrice": 22.0,
         "totalPrice": 22.0
@@ -6365,10 +6365,10 @@
       "row": {
         "hospitalName": "索菲医疗美容门诊",
         "department": "手术室",
-        "type": "高温纸塑袋75*200",
+        "type": "额外包（纸塑袋）",
         "packName": "面吸针",
         "packageMaterial": "高温纸塑袋75*200",
-        "instrumentCount": 5,
+        "instrumentCount": 1,
         "packCount": 1,
         "unitPrice": 22.0,
         "totalPrice": 22.0
@@ -6385,10 +6385,10 @@
       "row": {
         "hospitalName": "索菲医疗美容门诊",
         "department": "手术室",
-        "type": "高温纸塑袋75*200",
+        "type": "额外包（纸塑袋）",
         "packName": "不匹配规则专用包名XYZ",
         "packageMaterial": "高温纸塑袋75*200",
-        "instrumentCount": 5,
+        "instrumentCount": 1,
         "packCount": 1,
         "unitPrice": 22.0,
         "totalPrice": 22.0
@@ -6405,10 +6405,10 @@
       "row": {
         "hospitalName": "新发红十字医院",
         "department": "手术室",
-        "type": "高温纸塑袋75*200",
-        "packName": "胶帽@contains",
+        "type": "额外包低温等离子",
+        "packName": "胶帽",
         "packageMaterial": "高温纸塑袋75*200",
-        "instrumentCount": 5,
+        "instrumentCount": 1,
         "packCount": 1,
         "unitPrice": 22.0,
         "totalPrice": 22.0
@@ -6425,10 +6425,10 @@
       "row": {
         "hospitalName": "新发红十字医院",
         "department": "手术室",
-        "type": "高温纸塑袋75*200",
+        "type": "额外包低温等离子",
         "packName": "不匹配规则专用包名XYZ",
         "packageMaterial": "高温纸塑袋75*200",
-        "instrumentCount": 5,
+        "instrumentCount": 1,
         "packCount": 1,
         "unitPrice": 22.0,
         "totalPrice": 22.0
@@ -6445,10 +6445,10 @@
       "row": {
         "hospitalName": "新发红十字医院",
         "department": "手术室",
-        "type": "高温纸塑袋75*200",
-        "packName": "胶帽@contains",
+        "type": "额外包低温等离子",
+        "packName": "胶帽",
         "packageMaterial": "高温纸塑袋75*200",
-        "instrumentCount": 5,
+        "instrumentCount": 1,
         "packCount": 1,
         "unitPrice": 22.0,
         "totalPrice": 22.0
@@ -6465,10 +6465,10 @@
       "row": {
         "hospitalName": "新发红十字医院",
         "department": "手术室",
-        "type": "高温纸塑袋75*200",
+        "type": "额外包低温等离子",
         "packName": "不匹配规则专用包名XYZ",
         "packageMaterial": "高温纸塑袋75*200",
-        "instrumentCount": 5,
+        "instrumentCount": 1,
         "packCount": 1,
         "unitPrice": 22.0,
         "totalPrice": 22.0
@@ -6485,10 +6485,10 @@
       "row": {
         "hospitalName": "新发红十字医院",
         "department": "手术室",
-        "type": "高温纸塑袋75*200",
-        "packName": "转换器1胶帽@contains",
+        "type": "额外包低温等离子",
+        "packName": "转换器1胶帽",
         "packageMaterial": "高温纸塑袋75*200",
-        "instrumentCount": 5,
+        "instrumentCount": 1,
         "packCount": 1,
         "unitPrice": 22.0,
         "totalPrice": 22.0
@@ -6505,10 +6505,10 @@
       "row": {
         "hospitalName": "新发红十字医院",
         "department": "手术室",
-        "type": "高温纸塑袋75*200",
+        "type": "额外包低温等离子",
         "packName": "不匹配规则专用包名XYZ",
         "packageMaterial": "高温纸塑袋75*200",
-        "instrumentCount": 5,
+        "instrumentCount": 1,
         "packCount": 1,
         "unitPrice": 22.0,
         "totalPrice": 22.0
@@ -6525,10 +6525,10 @@
       "row": {
         "hospitalName": "黑龙江省远东心脑血管医院",
         "department": "手术室",
-        "type": "高温纸塑袋75*200",
-        "packName": "双@contains",
+        "type": "额外包（纸塑袋）",
+        "packName": "双",
         "packageMaterial": "高温纸塑袋75*200",
-        "instrumentCount": 5,
+        "instrumentCount": 1,
         "packCount": 1,
         "unitPrice": 22.0,
         "totalPrice": 22.0
@@ -6545,10 +6545,10 @@
       "row": {
         "hospitalName": "黑龙江省远东心脑血管医院",
         "department": "手术室",
-        "type": "高温纸塑袋75*200",
+        "type": "额外包（纸塑袋）",
         "packName": "不匹配规则专用包名XYZ",
         "packageMaterial": "高温纸塑袋75*200",
-        "instrumentCount": 5,
+        "instrumentCount": 1,
         "packCount": 1,
         "unitPrice": 22.0,
         "totalPrice": 22.0
@@ -6565,10 +6565,10 @@
       "row": {
         "hospitalName": "黑龙江省远东心脑血管医院",
         "department": "手术室",
-        "type": "高温纸塑袋75*200",
-        "packName": "双@contains",
+        "type": "额外包（纸塑袋）",
+        "packName": "双",
         "packageMaterial": "高温纸塑袋75*200",
-        "instrumentCount": 5,
+        "instrumentCount": 1,
         "packCount": 1,
         "unitPrice": 22.0,
         "totalPrice": 22.0
@@ -6585,10 +6585,10 @@
       "row": {
         "hospitalName": "黑龙江省远东心脑血管医院",
         "department": "手术室",
-        "type": "高温纸塑袋75*200",
+        "type": "额外包（纸塑袋）",
         "packName": "不匹配规则专用包名XYZ",
         "packageMaterial": "高温纸塑袋75*200",
-        "instrumentCount": 5,
+        "instrumentCount": 1,
         "packCount": 1,
         "unitPrice": 22.0,
         "totalPrice": 22.0
@@ -6605,10 +6605,10 @@
       "row": {
         "hospitalName": "祖研-黑龙江省中医医院（南岗院区）",
         "department": "手术室",
-        "type": "高温纸塑袋75*200",
-        "packName": "排针@contains",
+        "type": "额外包（纸塑袋）",
+        "packName": "排针",
         "packageMaterial": "高温纸塑袋75*200",
-        "instrumentCount": 5,
+        "instrumentCount": 1,
         "packCount": 1,
         "unitPrice": 22.0,
         "totalPrice": 22.0
@@ -6625,10 +6625,10 @@
       "row": {
         "hospitalName": "祖研-黑龙江省中医医院（南岗院区）",
         "department": "手术室",
-        "type": "高温纸塑袋75*200",
+        "type": "额外包（纸塑袋）",
         "packName": "不匹配规则专用包名XYZ",
         "packageMaterial": "高温纸塑袋75*200",
-        "instrumentCount": 5,
+        "instrumentCount": 1,
         "packCount": 1,
         "unitPrice": 22.0,
         "totalPrice": 22.0
@@ -6645,10 +6645,10 @@
       "row": {
         "hospitalName": "祖研-黑龙江省中医医院（南岗院区）",
         "department": "手术室",
-        "type": "高温纸塑袋75*200",
-        "packName": "排针@contains",
+        "type": "额外包（纸塑袋）",
+        "packName": "排针",
         "packageMaterial": "高温纸塑袋75*200",
-        "instrumentCount": 5,
+        "instrumentCount": 1,
         "packCount": 1,
         "unitPrice": 22.0,
         "totalPrice": 22.0
@@ -6665,10 +6665,10 @@
       "row": {
         "hospitalName": "祖研-黑龙江省中医医院（南岗院区）",
         "department": "手术室",
-        "type": "高温纸塑袋75*200",
+        "type": "额外包（纸塑袋）",
         "packName": "不匹配规则专用包名XYZ",
         "packageMaterial": "高温纸塑袋75*200",
-        "instrumentCount": 5,
+        "instrumentCount": 1,
         "packCount": 1,
         "unitPrice": 22.0,
         "totalPrice": 22.0
@@ -6686,9 +6686,9 @@
         "hospitalName": "祖研-黑龙江省中医医院（三辅院区）",
         "department": "手术室",
         "type": "高温纸塑袋75*200",
-        "packName": "美容科排针@contains",
+        "packName": "美容科排针",
         "packageMaterial": "高温纸塑袋75*200",
-        "instrumentCount": 5,
+        "instrumentCount": 1,
         "packCount": 1,
         "unitPrice": 22.0,
         "totalPrice": 22.0
@@ -6708,7 +6708,7 @@
         "type": "高温纸塑袋75*200",
         "packName": "不匹配规则专用包名XYZ",
         "packageMaterial": "高温纸塑袋75*200",
-        "instrumentCount": 5,
+        "instrumentCount": 1,
         "packCount": 1,
         "unitPrice": 22.0,
         "totalPrice": 22.0
@@ -6726,9 +6726,9 @@
         "hospitalName": "祖研-黑龙江省中医医院（三辅院区）",
         "department": "手术室",
         "type": "高温纸塑袋75*200",
-        "packName": "美容科排针@contains",
+        "packName": "美容科排针",
         "packageMaterial": "高温纸塑袋75*200",
-        "instrumentCount": 5,
+        "instrumentCount": 1,
         "packCount": 1,
         "unitPrice": 22.0,
         "totalPrice": 22.0
@@ -6748,7 +6748,7 @@
         "type": "高温纸塑袋75*200",
         "packName": "不匹配规则专用包名XYZ",
         "packageMaterial": "高温纸塑袋75*200",
-        "instrumentCount": 5,
+        "instrumentCount": 1,
         "packCount": 1,
         "unitPrice": 22.0,
         "totalPrice": 22.0
@@ -6765,10 +6765,10 @@
       "row": {
         "hospitalName": "黑龙江省中医药大学附属第三医院（电力）",
         "department": "手术室",
-        "type": "高温纸塑袋75*200",
-        "packName": "抛光杯@contains",
+        "type": "额外包（纸塑袋）",
+        "packName": "抛光杯",
         "packageMaterial": "高温纸塑袋75*200",
-        "instrumentCount": 5,
+        "instrumentCount": 1,
         "packCount": 1,
         "unitPrice": 22.0,
         "totalPrice": 22.0
@@ -6785,10 +6785,10 @@
       "row": {
         "hospitalName": "黑龙江省中医药大学附属第三医院（电力）",
         "department": "手术室",
-        "type": "高温纸塑袋75*200",
+        "type": "额外包（纸塑袋）",
         "packName": "不匹配规则专用包名XYZ",
         "packageMaterial": "高温纸塑袋75*200",
-        "instrumentCount": 5,
+        "instrumentCount": 1,
         "packCount": 1,
         "unitPrice": 22.0,
         "totalPrice": 22.0

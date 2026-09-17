@@ -10,17 +10,17 @@
       "priority": 10,
       "price": 28,
       "keywords": [
-        "30度镜",
-        "10mm",
-        "10毫米30度镜"
+        "30度镜@contains",
+        "10mm@contains",
+        "10毫米30度镜@contains"
       ],
       "temperature": "HT",
       "skipPackaging": true,
       "skipDiscount": true,
       "isActive": true,
       "matchMode": "first",
+      "keywordMatchMode": "exact_token",
       "acceptedTypes": [
-        "单包装",
         "单包装包"
       ]
     }
