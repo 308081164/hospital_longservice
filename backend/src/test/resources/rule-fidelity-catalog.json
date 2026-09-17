@@ -1,7 +1,7 @@
 {
   "generatedAt": "2026-09-17",
   "sourceManifest": "backend/src/main/resources/billing-seeds/billing-rules-manifest.json",
-  "caseCount": 338,
+  "caseCount": 346,
   "bingchengV8Cases": [
     {
       "id": "bingcheng_huanzuan_1pc",
@@ -3876,17 +3876,17 @@
       "note": "should not match this rule"
     },
     {
-      "id": "HLJ-FY-RK__妇幼人口针盒针5合1含包材__hit",
+      "id": "HLJ-FY-RK__妇幼人口针多少盒1≤6含包材__hit",
       "customerCode": "HLJ-FY-RK",
       "customerName": "黑龙江省妇幼保健院（人口）",
-      "ruleName": "妇幼人口针盒针5合1含包材",
+      "ruleName": "妇幼人口针多少盒1≤6含包材",
       "ruleType": "FOLD",
       "positive": true,
       "row": {
         "hospitalName": "黑龙江省妇幼保健院（人口）",
         "department": "手术室",
         "type": "额外包（纸塑袋）",
-        "packName": "针盒针",
+        "packName": "针多少盒1",
         "packageMaterial": "高温纸塑袋75*200",
         "instrumentCount": 1,
         "packCount": 1,
@@ -3896,10 +3896,10 @@
       "note": "active rule should match"
     },
     {
-      "id": "HLJ-FY-RK__妇幼人口针盒针5合1含包材__miss",
+      "id": "HLJ-FY-RK__妇幼人口针多少盒1≤6含包材__miss",
       "customerCode": "HLJ-FY-RK",
       "customerName": "黑龙江省妇幼保健院（人口）",
-      "ruleName": "妇幼人口针盒针5合1含包材",
+      "ruleName": "妇幼人口针多少盒1≤6含包材",
       "ruleType": "FOLD",
       "positive": false,
       "row": {
@@ -3916,17 +3916,17 @@
       "note": "should not match this rule"
     },
     {
-      "id": "HLJ-FY-RK__妇幼人口针盒针5合1免包材__hit",
+      "id": "HLJ-FY-RK__妇幼人口针多少盒1>6免包材__hit",
       "customerCode": "HLJ-FY-RK",
       "customerName": "黑龙江省妇幼保健院（人口）",
-      "ruleName": "妇幼人口针盒针5合1免包材",
+      "ruleName": "妇幼人口针多少盒1>6免包材",
       "ruleType": "FOLD",
       "positive": true,
       "row": {
         "hospitalName": "黑龙江省妇幼保健院（人口）",
         "department": "手术室",
         "type": "额外包（纸塑袋）",
-        "packName": "针盒针",
+        "packName": "针多少盒1",
         "packageMaterial": "高温纸塑袋75*200",
         "instrumentCount": 1,
         "packCount": 1,
@@ -3936,10 +3936,10 @@
       "note": "active rule should match"
     },
     {
-      "id": "HLJ-FY-RK__妇幼人口针盒针5合1免包材__miss",
+      "id": "HLJ-FY-RK__妇幼人口针多少盒1>6免包材__miss",
       "customerCode": "HLJ-FY-RK",
       "customerName": "黑龙江省妇幼保健院（人口）",
-      "ruleName": "妇幼人口针盒针5合1免包材",
+      "ruleName": "妇幼人口针多少盒1>6免包材",
       "ruleType": "FOLD",
       "positive": false,
       "row": {
@@ -5516,17 +5516,17 @@
       "note": "should not match this rule"
     },
     {
-      "id": "PFQ-RM__平房人民针盒针5合1免包材__hit",
+      "id": "PFQ-RM__平房人民针盒1针多少>6免包材__hit",
       "customerCode": "PFQ-RM",
       "customerName": "哈尔滨市平房区人民医院",
-      "ruleName": "平房人民针盒针5合1免包材",
+      "ruleName": "平房人民针盒1针多少>6免包材",
       "ruleType": "FOLD",
       "positive": true,
       "row": {
         "hospitalName": "哈尔滨市平房区人民医院",
         "department": "手术室",
         "type": "额外包（纸塑袋）",
-        "packName": "针盒针",
+        "packName": "针盒1针多少",
         "packageMaterial": "高温纸塑袋75*200",
         "instrumentCount": 1,
         "packCount": 1,
@@ -5536,10 +5536,10 @@
       "note": "active rule should match"
     },
     {
-      "id": "PFQ-RM__平房人民针盒针5合1免包材__miss",
+      "id": "PFQ-RM__平房人民针盒1针多少>6免包材__miss",
       "customerCode": "PFQ-RM",
       "customerName": "哈尔滨市平房区人民医院",
-      "ruleName": "平房人民针盒针5合1免包材",
+      "ruleName": "平房人民针盒1针多少>6免包材",
       "ruleType": "FOLD",
       "positive": false,
       "row": {
@@ -5556,17 +5556,17 @@
       "note": "should not match this rule"
     },
     {
-      "id": "PFQ-RM__平房人民针盒针5合1含包材__hit",
+      "id": "PFQ-RM__平房人民针盒1针多少≤6含包材__hit",
       "customerCode": "PFQ-RM",
       "customerName": "哈尔滨市平房区人民医院",
-      "ruleName": "平房人民针盒针5合1含包材",
+      "ruleName": "平房人民针盒1针多少≤6含包材",
       "ruleType": "FOLD",
       "positive": true,
       "row": {
         "hospitalName": "哈尔滨市平房区人民医院",
         "department": "手术室",
         "type": "额外包（纸塑袋）",
-        "packName": "针盒针",
+        "packName": "针盒1针多少",
         "packageMaterial": "高温纸塑袋75*200",
         "instrumentCount": 1,
         "packCount": 1,
@@ -5576,10 +5576,10 @@
       "note": "active rule should match"
     },
     {
-      "id": "PFQ-RM__平房人民针盒针5合1含包材__miss",
+      "id": "PFQ-RM__平房人民针盒1针多少≤6含包材__miss",
       "customerCode": "PFQ-RM",
       "customerName": "哈尔滨市平房区人民医院",
-      "ruleName": "平房人民针盒针5合1含包材",
+      "ruleName": "平房人民针盒1针多少≤6含包材",
       "ruleType": "FOLD",
       "positive": false,
       "row": {
@@ -6786,6 +6786,166 @@
         "hospitalName": "黑龙江省中医药大学附属第三医院（电力）",
         "department": "手术室",
         "type": "额外包（纸塑袋）",
+        "packName": "不匹配规则专用包名XYZ",
+        "packageMaterial": "高温纸塑袋75*200",
+        "instrumentCount": 1,
+        "packCount": 1,
+        "unitPrice": 22.0,
+        "totalPrice": 22.0
+      },
+      "note": "should not match this rule"
+    },
+    {
+      "id": "ZY3-DIANLI__电力成型片5合1含包材__hit",
+      "customerCode": "ZY3-DIANLI",
+      "customerName": "黑龙江省中医药大学附属第三医院（电力）",
+      "ruleName": "电力成型片5合1含包材",
+      "ruleType": "FOLD",
+      "positive": true,
+      "row": {
+        "hospitalName": "黑龙江省中医药大学附属第三医院（电力）",
+        "department": "手术室",
+        "type": "额外包（纸塑袋）",
+        "packName": "成型片",
+        "packageMaterial": "高温纸塑袋75*200",
+        "instrumentCount": 1,
+        "packCount": 1,
+        "unitPrice": 22.0,
+        "totalPrice": 22.0
+      },
+      "note": "active rule should match"
+    },
+    {
+      "id": "ZY3-DIANLI__电力成型片5合1含包材__miss",
+      "customerCode": "ZY3-DIANLI",
+      "customerName": "黑龙江省中医药大学附属第三医院（电力）",
+      "ruleName": "电力成型片5合1含包材",
+      "ruleType": "FOLD",
+      "positive": false,
+      "row": {
+        "hospitalName": "黑龙江省中医药大学附属第三医院（电力）",
+        "department": "手术室",
+        "type": "额外包（纸塑袋）",
+        "packName": "不匹配规则专用包名XYZ",
+        "packageMaterial": "高温纸塑袋75*200",
+        "instrumentCount": 1,
+        "packCount": 1,
+        "unitPrice": 22.0,
+        "totalPrice": 22.0
+      },
+      "note": "should not match this rule"
+    },
+    {
+      "id": "ZY3-DIANLI__电力成型片5合1免包材__hit",
+      "customerCode": "ZY3-DIANLI",
+      "customerName": "黑龙江省中医药大学附属第三医院（电力）",
+      "ruleName": "电力成型片5合1免包材",
+      "ruleType": "FOLD",
+      "positive": true,
+      "row": {
+        "hospitalName": "黑龙江省中医药大学附属第三医院（电力）",
+        "department": "手术室",
+        "type": "额外包（纸塑袋）",
+        "packName": "成型片",
+        "packageMaterial": "高温纸塑袋75*200",
+        "instrumentCount": 1,
+        "packCount": 1,
+        "unitPrice": 22.0,
+        "totalPrice": 22.0
+      },
+      "note": "active rule should match"
+    },
+    {
+      "id": "ZY3-DIANLI__电力成型片5合1免包材__miss",
+      "customerCode": "ZY3-DIANLI",
+      "customerName": "黑龙江省中医药大学附属第三医院（电力）",
+      "ruleName": "电力成型片5合1免包材",
+      "ruleType": "FOLD",
+      "positive": false,
+      "row": {
+        "hospitalName": "黑龙江省中医药大学附属第三医院（电力）",
+        "department": "手术室",
+        "type": "额外包（纸塑袋）",
+        "packName": "不匹配规则专用包名XYZ",
+        "packageMaterial": "高温纸塑袋75*200",
+        "instrumentCount": 1,
+        "packCount": 1,
+        "unitPrice": 22.0,
+        "totalPrice": 22.0
+      },
+      "note": "should not match this rule"
+    },
+    {
+      "id": "ZY3-DIANLI__电力小件盒几件ETO按1件含包材__hit",
+      "customerCode": "ZY3-DIANLI",
+      "customerName": "黑龙江省中医药大学附属第三医院（电力）",
+      "ruleName": "电力小件盒几件ETO按1件含包材",
+      "ruleType": "FOLD",
+      "positive": true,
+      "row": {
+        "hospitalName": "黑龙江省中医药大学附属第三医院（电力）",
+        "department": "手术室",
+        "type": "额外包（ETO）",
+        "packName": "小件盒-几件",
+        "packageMaterial": "高温纸塑袋75*200",
+        "instrumentCount": 1,
+        "packCount": 1,
+        "unitPrice": 22.0,
+        "totalPrice": 22.0
+      },
+      "note": "active rule should match"
+    },
+    {
+      "id": "ZY3-DIANLI__电力小件盒几件ETO按1件含包材__miss",
+      "customerCode": "ZY3-DIANLI",
+      "customerName": "黑龙江省中医药大学附属第三医院（电力）",
+      "ruleName": "电力小件盒几件ETO按1件含包材",
+      "ruleType": "FOLD",
+      "positive": false,
+      "row": {
+        "hospitalName": "黑龙江省中医药大学附属第三医院（电力）",
+        "department": "手术室",
+        "type": "额外包（ETO）",
+        "packName": "不匹配规则专用包名XYZ",
+        "packageMaterial": "高温纸塑袋75*200",
+        "instrumentCount": 1,
+        "packCount": 1,
+        "unitPrice": 22.0,
+        "totalPrice": 22.0
+      },
+      "note": "should not match this rule"
+    },
+    {
+      "id": "ZY3-DIANLI__电力骨牵引包人工核对__hit",
+      "customerCode": "ZY3-DIANLI",
+      "customerName": "黑龙江省中医药大学附属第三医院（电力）",
+      "ruleName": "电力骨牵引包人工核对",
+      "ruleType": "PRICE_PER_INSTRUMENT",
+      "positive": true,
+      "row": {
+        "hospitalName": "黑龙江省中医药大学附属第三医院（电力）",
+        "department": "手术室",
+        "type": "器械包",
+        "packName": "骨牵引包",
+        "packageMaterial": "高温纸塑袋75*200",
+        "instrumentCount": 1,
+        "packCount": 1,
+        "unitPrice": 22.0,
+        "totalPrice": 22.0
+      },
+      "note": "active rule should match"
+    },
+    {
+      "id": "ZY3-DIANLI__电力骨牵引包人工核对__miss",
+      "customerCode": "ZY3-DIANLI",
+      "customerName": "黑龙江省中医药大学附属第三医院（电力）",
+      "ruleName": "电力骨牵引包人工核对",
+      "ruleType": "PRICE_PER_INSTRUMENT",
+      "positive": false,
+      "row": {
+        "hospitalName": "黑龙江省中医药大学附属第三医院（电力）",
+        "department": "手术室",
+        "type": "器械包",
         "packName": "不匹配规则专用包名XYZ",
         "packageMaterial": "高温纸塑袋75*200",
         "instrumentCount": 1,

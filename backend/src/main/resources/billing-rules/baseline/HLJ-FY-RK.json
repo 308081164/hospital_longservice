@@ -612,10 +612,10 @@
     },
     {
       "ruleType": "FOLD",
-      "name": "妇幼人口针盒针5合1含包材",
+      "name": "妇幼人口针多少盒1≤6含包材",
       "priority": 10,
       "keywords": [
-        "针盒针@needle_box"
+        "针多少盒1@needle_box"
       ],
       "threshold": 5,
       "foldRatio": 5,
@@ -632,10 +632,10 @@
     },
     {
       "ruleType": "FOLD",
-      "name": "妇幼人口针盒针5合1免包材",
+      "name": "妇幼人口针多少盒1>6免包材",
       "priority": 11,
       "keywords": [
-        "针盒针@needle_box"
+        "针多少盒1@needle_box"
       ],
       "threshold": 5,
       "foldRatio": 5,

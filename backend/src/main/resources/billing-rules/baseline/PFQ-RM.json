@@ -7,10 +7,10 @@
     {
       "code": "PFQ-RM",
       "ruleType": "FOLD",
-      "name": "平房人民针盒针5合1免包材",
+      "name": "平房人民针盒1针多少>6免包材",
       "priority": 11,
       "keywords": [
-        "针盒针@needle_box"
+        "针盒1针多少@needle_box"
       ],
       "threshold": 5,
       "foldRatio": 5,
@@ -28,10 +28,10 @@
     {
       "code": "PFQ-RM",
       "ruleType": "FOLD",
-      "name": "平房人民针盒针5合1含包材",
+      "name": "平房人民针盒1针多少≤6含包材",
       "priority": 10,
       "keywords": [
-        "针盒针@needle_box"
+        "针盒1针多少@needle_box"
       ],
       "threshold": 5,
       "foldRatio": 5,

@@ -1,14 +1,8 @@
 {
   "source_excel": "docs/source/特殊收费(1).xlsx",
-  "ok": false,
+  "ok": true,
   "unmapped_hospitals": [],
-  "errors": [
-    "JIAYI-YL: Excel 无对应段落",
-    "HLJ-FY-RK: 缺失覆盖 — row59 [⑫] 包名称带“针多少盒1” | [针/5（结果不是整数的都进一位）＋1（盒）]*5.5＋标准包材价格（费用不超过16.5）",
-    "HLJ-FY-RK: 缺失覆盖 — row60 [⑫] 包名称带“针多少盒1” | [针/5（结果不是整数的都进一位）＋1（盒）]*5.5",
-    "PFQ-RM: 缺失覆盖 — row103 [①] 包名称带“针盒1针多少” | [针/5（结果不是整数的都进一位）＋1（盒）]*5.5＋标准包材价格（费用不超过16.5）",
-    "PFQ-RM: 缺失覆盖 — row104 [①] 包名称带“针盒1针多少” | [针/5（结果不是整数的都进一位）＋1（盒）]*5.5"
-  ],
+  "errors": [],
   "hospitals": [
     {
       "code": "BINGCHENG-YM",
@@ -22,7 +16,7 @@
       "code": "GUOYAO-2",
       "name": "电机厂",
       "excel_rows": 6,
-      "baseline_rules": 31,
+      "baseline_rules": 30,
       "ok": true,
       "missing": []
     },
@@ -32,14 +26,6 @@
       "excel_rows": 8,
       "baseline_rules": 8,
       "ok": true,
-      "missing": []
-    },
-    {
-      "code": "JIAYI-YL",
-      "name": "佳医医疗",
-      "excel_rows": 0,
-      "baseline_rules": 1,
-      "ok": false,
       "missing": []
     },
     {
@@ -111,11 +97,8 @@
       "name": "省妇幼人口",
       "excel_rows": 34,
       "baseline_rules": 34,
-      "ok": false,
-      "missing": [
-        "row59 [⑫] 包名称带“针多少盒1” | [针/5（结果不是整数的都进一位）＋1（盒）]*5.5＋标准包材价格（费用不超过16.5）",
-        "row60 [⑫] 包名称带“针多少盒1” | [针/5（结果不是整数的都进一位）＋1（盒）]*5.5"
-      ]
+      "ok": true,
+      "missing": []
     },
     {
       "code": "ZUYAN-NG",
@@ -153,7 +136,7 @@
       "code": "HL-ZGH",
       "name": "总工会",
       "excel_rows": 5,
-      "baseline_rules": 19,
+      "baseline_rules": 5,
       "ok": true,
       "missing": []
     },
@@ -194,17 +177,14 @@
       "name": "平房区人民",
       "excel_rows": 2,
       "baseline_rules": 2,
-      "ok": false,
-      "missing": [
-        "row103 [①] 包名称带“针盒1针多少” | [针/5（结果不是整数的都进一位）＋1（盒）]*5.5＋标准包材价格（费用不超过16.5）",
-        "row104 [①] 包名称带“针盒1针多少” | [针/5（结果不是整数的都进一位）＋1（盒）]*5.5"
-      ]
+      "ok": true,
+      "missing": []
     },
     {
       "code": "HULAN-RM",
       "name": "呼兰区人民",
       "excel_rows": 2,
-      "baseline_rules": 11,
+      "baseline_rules": 2,
       "ok": true,
       "missing": []
     },
@@ -228,7 +208,7 @@
       "code": "ZUYAN-SF",
       "name": "祖研三辅",
       "excel_rows": 2,
-      "baseline_rules": 5,
+      "baseline_rules": 2,
       "ok": true,
       "missing": []
     },
@@ -260,23 +240,23 @@
       "code": "ZY3-DIANLI",
       "name": "中医三院电力",
       "excel_rows": 6,
-      "baseline_rules": 12,
+      "baseline_rules": 5,
       "ok": true,
       "missing": []
     },
     {
-      "code": "GUOYAO-MAIN",
-      "name": "国药主院区",
+      "code": "QILUNJI-YY",
+      "name": "汽轮机医院",
       "excel_rows": 1,
-      "baseline_rules": 2,
+      "baseline_rules": 1,
       "ok": true,
       "missing": []
     }
   ],
   "summary": {
-    "total": 32,
-    "pass": 29,
-    "fail": 3,
+    "total": 31,
+    "pass": 31,
+    "fail": 0,
     "excel_rows": 141
   }
 }
