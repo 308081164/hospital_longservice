@@ -89,7 +89,6 @@ TODO_HOSPITALS: list[str] = [
     "方南南医院",
     "美意医疗",
     "易丽医疗",
-    "佳医医疗",
 ]
 
 # Hardcoded engine rules not in billing-seeds (customer_code -> rules)
@@ -143,7 +142,6 @@ FOLDER_CODE_OVERRIDE: dict[str, str] = {
     "方南南医院": "FNN-YY",
     "美意医疗": "MEIYI-YL",
     "易丽医疗": "YILI-YL",
-    "佳医医疗": "JIAYI-YL",
     "哈尔滨汽轮机医院": "QILUNJI-YY",
     "汽轮机": "QILUNJI-YY",
 }

@@ -635,57 +635,6 @@
       "invalidReason": "SHKF billingEnabled=false，无 warning 账单实践"
     },
     {
-      "id": "t09_jiayi_kongjin",
-      "sc11Type": "SC11-T09",
-      "source": "特殊收费(11).xlsx#工程大学#孔巾≥20",
-      "customerCode": "JIAYI-YL",
-      "hospitalName": "佳医医疗",
-      "row": {
-        "department": "手术室",
-        "type": "敷料包(纸塑袋)",
-        "packName": "孔巾",
-        "packageMaterial": "高温纸塑袋250*200",
-        "instrumentCount": 1,
-        "packCount": 1,
-        "unitPrice": 2.5,
-        "totalPrice": 2.5
-      },
-      "expect": {
-        "status": "warning",
-        "expectedUnitPrice": 4.0,
-        "pricingRuleContains": "孔巾"
-      },
-      "valid": false,
-      "skipParameterized": true,
-      "billingEvidence": "none",
-      "invalidReason": "无账单实践或 fixture 设置与 manifest/账单不一致"
-    },
-    {
-      "id": "t09_jiayi_kongjin_alt",
-      "sc11Type": "SC11-T09",
-      "source": "特殊收费(11).xlsx#工程大学#孔巾≥20",
-      "customerCode": "JIAYI-YL",
-      "hospitalName": "佳医医疗",
-      "row": {
-        "department": "手术室",
-        "type": "敷料包(纸塑袋)",
-        "packName": "孔巾测试包",
-        "packageMaterial": "高温纸塑袋200*200",
-        "instrumentCount": 1,
-        "packCount": 1,
-        "unitPrice": 3.0,
-        "totalPrice": 3.0
-      },
-      "expect": {
-        "status": "warning",
-        "expectedUnitPrice": 4.0
-      },
-      "valid": false,
-      "skipParameterized": true,
-      "billingEvidence": "none",
-      "invalidReason": "无账单实践或 fixture 设置与 manifest/账单不一致"
-    },
-    {
       "id": "t10_hrb2nd_dressing_lt20",
       "sc11Type": "SC11-T10",
       "source": "特殊收费(11).xlsx#通用#纸塑＜20",

@@ -1,7 +1,7 @@
 {
   "version": 1,
-  "generated_at": "2026-09-17T01:56:21.846105+00:00",
-  "manifest_hash": "f6b3fffa89cd8e5ffebc5fb58b43e5f0e3fd419ed52748267230f2c12f255ebb",
+  "generated_at": "2026-09-17T02:34:07.411114+00:00",
+  "manifest_hash": "852cc04b0ded725ce3386dcba05cbacac31ee8704044be3f9cf685bf25e421b0",
   "billing_enabled_count": 13,
   "active_billing_enabled_count": 13,
   "customers": {
@@ -60,46 +60,6 @@
       "productRules": [],
       "rule_count": 0,
       "active_rule_count": 0
-    },
-    "GUOYAO-MAIN": {
-      "code": "GUOYAO-MAIN",
-      "name": "国药总医院主院区",
-      "status": null,
-      "billingPricingMode": "hybrid",
-      "standardPricingOverride": null,
-      "billingEnabled": true,
-      "productRules": [
-        {
-          "ruleType": "FIXED_PRICE",
-          "name": "10mm30度镜固定价",
-          "priority": 10,
-          "price": 28,
-          "keywords": [
-            "30度镜",
-            "10mm"
-          ],
-          "temperature": "HT",
-          "skipPackaging": true,
-          "skipDiscount": true,
-          "isActive": true,
-          "matchMode": "first"
-        },
-        {
-          "ruleType": "FIXED_PRICE",
-          "name": "驱血带固定价",
-          "priority": 20,
-          "price": 13,
-          "keywords": [
-            "驱血带"
-          ],
-          "skipPackaging": true,
-          "skipDiscount": true,
-          "isActive": true,
-          "matchMode": "first"
-        }
-      ],
-      "rule_count": 2,
-      "active_rule_count": 2
     },
     "HRB-WY": {
       "code": "HRB-WY",
@@ -190,6 +150,38 @@
           ],
           "skipPackaging": true,
           "skipDiscount": true,
+          "isActive": true,
+          "matchMode": "first"
+        }
+      ],
+      "rule_count": 1,
+      "active_rule_count": 1
+    },
+    "QILUNJI-YY": {
+      "code": "QILUNJI-YY",
+      "name": "哈尔滨汽轮机医院",
+      "status": null,
+      "billingPricingMode": "hybrid",
+      "standardPricingOverride": null,
+      "billingEnabled": true,
+      "productRules": [
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "汽轮机10mm30度镜固定价",
+          "priority": 10,
+          "price": 28,
+          "keywords": [
+            "30度镜@contains",
+            "10mm@contains",
+            "10毫米30度镜@contains"
+          ],
+          "temperature": "HT",
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "keywordMatchMode": "exact_token",
+          "acceptedTypes": [
+            "单包装包"
+          ],
           "isActive": true,
           "matchMode": "first"
         }

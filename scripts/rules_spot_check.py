@@ -143,7 +143,6 @@ ZYY_D1_SPOT_CHECKS: list[dict[str, Any]] = [
 FNN_YY_HOSPITAL = "方南南医院"
 MEIYI_YL_HOSPITAL = "美意医疗"
 YILI_YL_HOSPITAL = "易丽医疗"
-JIAYI_YL_HOSPITAL = "佳医医疗"
 
 FNN_YY_SPOT_CHECKS: list[dict[str, Any]] = [
     {
@@ -206,21 +205,6 @@ YILI_YL_SPOT_CHECKS: list[dict[str, Any]] = [
     },
 ]
 
-JIAYI_YL_SPOT_CHECKS: list[dict[str, Any]] = [
-    {
-        "name": "佳医眼包敷料纸塑25cm4元",
-        "department": "手术室",
-        "packName": "眼包敷料",
-        "type": "敷料包(纸塑袋)",
-        "packageMaterial": "高温纸塑袋250*200",
-        "instrumentCount": 1,
-        "packCount": 1,
-        "unitPrice": 4,
-        "totalPrice": 4,
-        "expectedUnitPrice": 4.0,
-        "priceTol": 0.02,
-    },
-]
 
 GUOYAO_2_HOSPITAL = "国药总医院第二院区"
 BINGCHENG_YM_HOSPITAL = "哈尔滨冰城医疗美容医院"
@@ -835,7 +819,6 @@ SPOT_CHECK_PRESETS: dict[str, list[dict[str, Any]]] = {
     "FNN-YY": FNN_YY_SPOT_CHECKS,
     "MEIYI-YL": MEIYI_YL_SPOT_CHECKS,
     "YILI-YL": YILI_YL_SPOT_CHECKS,
-    "JIAYI-YL": JIAYI_YL_SPOT_CHECKS,
     "GUOYAO-2": GUOYAO_2_SPOT_CHECKS,
     "BINGCHENG-YM": BINGCHENG_YM_SPOT_CHECKS,
     "HRB-WY": HRB_WY_SPOT_CHECKS,
@@ -937,8 +920,6 @@ def run_spot_check(
         hospital = MEIYI_YL_HOSPITAL
     if code == "YILI-YL":
         hospital = YILI_YL_HOSPITAL
-    if code == "JIAYI-YL":
-        hospital = JIAYI_YL_HOSPITAL
     if code == "GUOYAO-2":
         hospital = GUOYAO_2_HOSPITAL
     if code == "HRB-WY":

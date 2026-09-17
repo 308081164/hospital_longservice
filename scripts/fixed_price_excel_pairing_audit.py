@@ -28,7 +28,6 @@ from import_special_pricing_v17 import HOSPITAL_TO_CODE, build_merged_map, cell,
 # G4 20260902 报告对 baseline FIXED_PRICE 的分级（75 条，已删 PDF/期待价30）
 G4_B_RULES = {
     ("QILUNJI-YY", "汽轮机10mm30度镜固定价"),
-    ("JIAYI-YL", "佳医敷料纸塑4元"),
     ("ZUYAN-SF", "针线包现价"),
     ("ZUYAN-SF", "祖研三辅export 探针刨刀16.5"),
 }
@@ -278,7 +277,6 @@ def match_rule(rule: dict, excel_rows: list[dict]) -> dict:
     # 明确无 Excel 行的 B 类 / 可疑规则
     hard_none = {
         ("GUOYAO-MAIN", "国药主院驱血带固定价"): "phase5-batch-c 种子；仓库 Excel 汽轮机段仅 10mm30度镜 row136，无驱血带行",
-        ("JIAYI-YL", "佳医敷料纸塑4元"): "佳医不在特殊收费 29 院段落；四诊所接入种子",
         ("ZUYAN-SF", "针线包现价"): "运营文档/医院特色计价规则清单；仓库 Excel 三辅段无针线包行",
         ("ZUYAN-SF", "祖研三辅export 探针刨刀16.5"): "export 种子 phase-bill-wave4c；非 Excel 常规定价",
         ("GUOYAO-2", "电机厂高温纸塑袋"): "仓库 Excel 无 3.5 元固定价行；电机厂「双」为 5.5×件数+FOLD，3.5 疑似包材口径误建模为 FIXED_PRICE",
