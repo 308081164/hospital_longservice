@@ -15,7 +15,7 @@
 2. **权威来源口径（2026-09-17 更新）**：**仅用户指定 `特殊收费(4).xlsx` 为权威**；baseline 中每条规则须在 `(4)` 有对应行，否则删除（见 [`特殊收费(4)权威对齐删除清单-20260917.md`](特殊收费(4)权威对齐删除清单-20260917.md)）。
 3. **分级统计（2026-09-17 权威对齐后）**：
    - **与 `(4)` EXACT 配对**：**56 条**（100%）
-   - **无 Excel 行（已删除）**：**19 条**（总工会 14 + GUOYAO-MAIN 驱血带 + GUOYAO-2 高温纸塑袋 + 佳医 + 祖研 2）
+   - **无 Excel 行（已删除）**：**18 条**（总工会 14 + GUOYAO-MAIN 驱血带 + GUOYAO-2 高温纸塑袋 + 祖研 2）
    - **D 类 P0/PDF 期待价同族**：**0 条**
 4. **G0 副本**：`docs/source/特殊收费(1).xlsx` 与用户 `(4)` MD5 一致，已同步。
 
@@ -68,7 +68,6 @@
 | 5 | 哈尔滨市第五医院 | HRB-WY | 8 | 特殊收费 Excel 市五院段 | `phase-special-v8-rules-20260814` + excel17-align | ✅ PASS | **已证实**（止血带/布袋/手套等 8 条；**注意**：P0 曾另有 6 条 `校正价*` 已删，与现行 8 条 **关键词不同**） |
 | 6 | 哈尔滨市第五医院（二门诊） | HRB-WY-EM | 3 | 特殊收费 Excel | excel17-align 驱血带 W 三档 | ✅ PASS | **已证实** |
 | 7 | 哈尔滨市胸科医院 | HRB-XK-YY | 2 | 特殊收费 Excel | `phase-special-charge-2-sync-20260902.json` | ✅ PASS | **已证实** |
-| 8 | 佳医医疗 | JIAYI-YL | 0 | — | — | — | **2026-09-17 删**（不在 `(4)` 段落） |
 | 9 | 黑龙江九洲妇科医院 | JIUZHOU-FK | 1 | 特殊收费 Excel | excel17-align | ✅ PASS | **已证实**（方盘 5.5） |
 | 10 | 哈尔滨基准生物科技有限公司 | JZSW-BIO | 1 | 特殊收费 Excel | excel17-align | ✅ PASS | **已证实**（氩氦刀 150） |
 | 11 | 黑龙江省社会康复医院 | SHKF-YY | 14 | 特殊收费 Excel 指定盒名 | `phase-special-charge-17-sync-20260830` + `phase-shkf-oral-box-pricing-20260730` | ✅ PASS | **已证实**（14 条 exact_token 盒名 16.5/22/44） |
@@ -147,7 +146,6 @@ HL-ZGH 人流包/清宫包/棉球纱布 W 码等；仓库 `(1)`/`(4)` 总工会�
 |------|--------|------|------|
 | GUOYAO-2 | 电机厂高温纸塑袋（3.5） | 院级 G4 PASS，但 Excel 无固定价行 | 核对是否误建模，或删 |
 | GUOYAO-MAIN | 国药主院驱血带固定价 | phase5-batch-c | 补 Excel 或删 |
-| JIAYI-YL | 佳医敷料纸塑4元 | phase-4clinics | 补 G4/书面确认 |
 | ZUYAN-SF | 针线包现价 | 运营文档 | 补 Excel 或删 |
 | ZUYAN-SF | 祖研三辅export 探针刨刀16.5 | export 种子 | 确认是否保留 |
 
@@ -185,7 +183,7 @@ HL-ZGH 人流包/清宫包/棉球纱布 W 码等；仓库 `(1)`/`(4)` 总工会�
 | P0 | ~~删除~~ **已删除** `ZUYAN-SF`·`PDF/期待价30` | D 类 |
 | P0.5 | **同步总工会固定价段**进 `docs/source/特殊收费(1).xlsx`（G0） | A2 类 14 条 |
 | P1 | 审阅 **5 条 B 类**（含 `GUOYAO-2` 高温纸塑袋 3.5）补 Excel 或删除 | 见第五节 B 表 |
-| P2 | `GUOYAO-MAIN` 驱血带、`JIAYI-YL` 补 G4 或书面确认 | 仍在 B 类 |
+| P2 | `GUOYAO-MAIN` 驱血带补 G4 或书面确认 | 仍在 B 类 |
 | P3 | 更新 `校正价规则审阅清单.docx` | 文档 |
 
 ---
@@ -217,7 +215,6 @@ print(f'{n} rules, {len(h)} hospitals')
 | SHKF-YY | `archive/legacy-2026/phase-special-charge-17-sync-20260830.json` |
 | GUOYAO-2 | `archive/legacy-2026/phase-special-v8-rules-20260814.json` |
 | GUOYAO-MAIN | `phase5-batch-c.json` |
-| JIAYI-YL | `archive/legacy-2026/phase-4clinics-special-rules-20260809.json` |
 | ZUYAN-SF PDF | `archive/legacy-2026/phase-s3-pdf-align-20260722.json` |
 | P0（废止） | `archive/legacy-2026-obsolete-correction-price/phase-batch-p0.json` |
 

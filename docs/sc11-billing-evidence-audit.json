@@ -721,8 +721,6 @@
       "verdict": "csv_evidence_no_valid_fixture",
       "confirmedFixtures": [],
       "invalidFixtures": [
-        "t09_jiayi_kongjin",
-        "t09_jiayi_kongjin_alt"
       ]
     },
     {
@@ -1484,49 +1482,6 @@
       "expect": {
         "status": "warning",
         "expectedUnitPrice": 44.0
-      }
-    },
-    {
-      "id": "t09_jiayi_kongjin",
-      "sc11Type": "SC11-T09",
-      "customerCode": "JIAYI-YL",
-      "valid": false,
-      "skipParameterized": true,
-      "billingEvidence": "none",
-      "invalidReason": "无账单实践或 fixture 设置与 manifest/账单不一致",
-      "manifest": {
-        "code": "JIAYI-YL",
-        "name": "佳医医疗",
-        "billingPricingMode": "standard",
-        "billingEnabled": null,
-        "activeRuleCount": 1
-      },
-      "source": "特殊收费(11).xlsx#工程大学#孔巾≥20",
-      "expect": {
-        "status": "warning",
-        "expectedUnitPrice": 4.0,
-        "pricingRuleContains": "孔巾"
-      }
-    },
-    {
-      "id": "t09_jiayi_kongjin_alt",
-      "sc11Type": "SC11-T09",
-      "customerCode": "JIAYI-YL",
-      "valid": false,
-      "skipParameterized": true,
-      "billingEvidence": "none",
-      "invalidReason": "无账单实践或 fixture 设置与 manifest/账单不一致",
-      "manifest": {
-        "code": "JIAYI-YL",
-        "name": "佳医医疗",
-        "billingPricingMode": "standard",
-        "billingEnabled": null,
-        "activeRuleCount": 1
-      },
-      "source": "特殊收费(11).xlsx#工程大学#孔巾≥20",
-      "expect": {
-        "status": "warning",
-        "expectedUnitPrice": 4.0
       }
     },
     {

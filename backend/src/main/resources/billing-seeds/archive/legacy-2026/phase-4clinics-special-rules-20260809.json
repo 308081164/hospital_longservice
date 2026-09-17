@@ -1,6 +1,6 @@
 {
   "version": "1",
-  "description": "方南南/美意/易丽/佳医 特色收费规则",
+  "description": "方南南/美意/易丽 特色收费规则",
   "newRules": [
     {
       "code": "FNN-YY",
@@ -41,17 +41,6 @@
       "name": "易丽敷料纸塑4元",
       "priority": 10,
       "keywords": ["孔巾", "包布", "大单", "治疗巾"],
-      "price": 4.0,
-      "minBagSizeInclusive": 20,
-      "skipPackaging": true,
-      "skipDiscount": true
-    },
-    {
-      "code": "JIAYI-YL",
-      "ruleType": "FIXED_PRICE",
-      "name": "佳医敷料纸塑4元",
-      "priority": 10,
-      "keywords": ["孔巾", "眼包敷料"],
       "price": 4.0,
       "minBagSizeInclusive": 20,
       "skipPackaging": true,

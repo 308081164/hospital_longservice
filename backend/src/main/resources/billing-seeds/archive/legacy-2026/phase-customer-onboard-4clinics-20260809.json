@@ -1,6 +1,6 @@
 {
   "version": "1",
-  "description": "方南南/美意/易丽/佳医 4 家门诊客户建档（仅档案，特色规则待后续录入）",
+  "description": "方南南/美意/易丽 3 家门诊客户建档（仅档案，特色规则待后续录入）",
   "profiles": [
     {
       "code": "FNN-YY",
@@ -22,13 +22,6 @@
       "billingEnabled": true,
       "billingPricingMode": "standard",
       "aliases": ["易丽", "易丽医疗"]
-    },
-    {
-      "code": "JIAYI-YL",
-      "name": "佳医医疗",
-      "billingEnabled": true,
-      "billingPricingMode": "standard",
-      "aliases": ["佳医", "佳医医疗"]
     }
   ]
 }

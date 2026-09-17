@@ -153,7 +153,7 @@ public class BaselineRuleSyncServiceImpl implements BaselineRuleSyncService {
         return updated;
     }
 
-    /** baseline index 外的客户若仍 billing_enabled=1，关闭特色计价（如已移除的 JIAYI-YL、GUOYAO-MAIN）。 */
+    /** baseline index 外的客户若仍 billing_enabled=1，关闭特色计价（如已移除的 GUOYAO-MAIN）。 */
     private int disableBillingForNonBaselineCustomers(Set<String> baselineCodes) {
         int updated = 0;
         for (Customer customer : customerMapper.selectAll()) {

@@ -71,8 +71,6 @@
 | t08_jzsw_bio_150 | SC11-T08 | False | none | JZSW-BIO | standard | None |
 | t08_shkf_billing_off | SC11-T08 | True | confirmed | SHKF-YY | special_only | False |
 | t08_shkf_44 | SC11-T08 | False | none | SHKF-YY | special_only | False |
-| t09_jiayi_kongjin | SC11-T09 | False | none | JIAYI-YL | standard | None |
-| t09_jiayi_kongjin_alt | SC11-T09 | False | none | JIAYI-YL | standard | None |
 | t10_hrb2nd_dressing_lt20 | SC11-T10 | False | none | HRB-2ND | special_only | None |
 | t10_hrb2nd_dressing_lt20_alt | SC11-T10 | False | none | HRB-2ND | special_only | None |
 | t11_haiyuan_cap_3 | SC11-T11 | False | none | HAIYUAN-SB | hybrid | None |

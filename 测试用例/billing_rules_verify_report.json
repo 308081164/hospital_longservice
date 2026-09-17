@@ -39,7 +39,6 @@
     "HULAN-RM extra: PDF纸塑袋10cm",
     "HULAN-RM extra: PDF纸塑袋15cm",
     "HULAN-RM extra: PDF高温器械柜保护套3.5",
-    "JIAYI-YL: customer not found in API",
     "NEAU-YY missing: 东北农大机锉5合1免包材",
     "NEAU-YY missing: 东北农大机锉5合1含包材",
     "NEAU-YY missing: 东北农大根管针5合1免包材",
@@ -78,7 +77,7 @@
     "api_base": "http://127.0.0.1:8088",
     "ok": false,
     "summary": {
-      "customers": 32,
+      "customers": 31,
       "ok_count": 19,
       "drift_count": 13,
       "total_missing": 27,
@@ -591,14 +590,6 @@
         "ok": true
       },
       {
-        "code": "JIAYI-YL",
-        "ok": false,
-        "error": "customer not found in API",
-        "missing_count": 0,
-        "extra_count": 0,
-        "changed_count": 0
-      },
-      {
         "code": "JIUZHOU-FK",
         "expected_count": 1,
         "prod_count": 1,
@@ -973,5 +964,6 @@
         "changed_count": 0
       }
     ]
-  }
+  },
+  "results": []
 }
