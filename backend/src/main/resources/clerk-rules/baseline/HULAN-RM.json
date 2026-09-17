@@ -1,0 +1,32 @@
+{
+  "customerCode": "HULAN-RM",
+  "customerName": "哈尔滨市呼兰区第一人民医院",
+  "notes": "敷料包账单七折为内勤规则；当前仍从 customer_billing_policy bill_detail 生效，迁出后启用本 baseline",
+  "rules": [
+    {
+      "ruleType": "DISCOUNT_OVERLAY",
+      "name": "敷料包账单七折",
+      "stage": "bill_export",
+      "isActive": false,
+      "priority": 10,
+      "scope": { "temperature": "ANY" },
+      "params": {
+        "rate": 0.7,
+        "skipWhenFixedPrice": true
+      },
+      "migrateFrom": "customer_billing_policy:呼兰7折 (applyStage=bill_detail)",
+      "migrationStatus": "pending"
+    },
+    {
+      "ruleType": "EXPORT_LAYOUT",
+      "name": "账单无器械数列",
+      "stage": "bill_export",
+      "isActive": true,
+      "params": {
+        "removeColumns": ["器械数"]
+      },
+      "migrateFrom": "export_template:phase-export-rules-20260723",
+      "migrationStatus": "active"
+    }
+  ]
+}

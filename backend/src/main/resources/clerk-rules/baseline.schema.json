@@ -1,0 +1,55 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "CustomerClerkRuleBaseline",
+  "type": "object",
+  "required": ["customerCode", "rules"],
+  "properties": {
+    "customerCode": { "type": "string", "minLength": 1 },
+    "customerName": { "type": "string" },
+    "notes": { "type": "string" },
+    "rules": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/clerkRule" }
+    }
+  },
+  "$defs": {
+    "clerkRule": {
+      "type": "object",
+      "required": ["ruleType", "name", "stage"],
+      "properties": {
+        "ruleType": {
+          "type": "string",
+          "enum": [
+            "DISCOUNT_OVERLAY",
+            "PIECE_TIER_DISCOUNT",
+            "FIXED_PRICE_EXPORT",
+            "EXPORT_LAYOUT",
+            "SETTLEMENT_DISCOUNT",
+            "SEPARATE_PRICING_SYSTEM"
+          ]
+        },
+        "name": { "type": "string", "minLength": 1 },
+        "stage": {
+          "type": "string",
+          "enum": ["bill_export", "settlement", "both"]
+        },
+        "isActive": { "type": "boolean", "default": true },
+        "priority": { "type": "integer" },
+        "scope": {
+          "type": "object",
+          "properties": {
+            "temperature": { "type": "string", "enum": ["ANY", "HT", "LT"] },
+            "keywords": { "type": "array", "items": { "type": "string" } },
+            "acceptedTypes": { "type": "array", "items": { "type": "string" } }
+          }
+        },
+        "params": { "type": "object" },
+        "migrateFrom": { "type": "string" },
+        "migrationStatus": {
+          "type": "string",
+          "enum": ["active", "pending", "legacy_only"]
+        }
+      }
+    }
+  }
+}

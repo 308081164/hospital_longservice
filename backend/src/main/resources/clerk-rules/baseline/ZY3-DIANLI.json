@@ -1,0 +1,20 @@
+{
+  "customerCode": "ZY3-DIANLI",
+  "customerName": "黑龙江省中医药大学附属第三医院（电力）",
+  "rules": [
+    {
+      "ruleType": "SETTLEMENT_DISCOUNT",
+      "name": "结款函七折",
+      "stage": "settlement",
+      "isActive": true,
+      "priority": 10,
+      "scope": { "temperature": "ANY" },
+      "params": {
+        "rate": 0.7,
+        "skipWhenFixedPrice": true
+      },
+      "migrateFrom": "customer_billing_policy:settlement_only",
+      "migrationStatus": "active"
+    }
+  ]
+}

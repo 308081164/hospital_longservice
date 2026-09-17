@@ -1,0 +1,33 @@
+{
+  "customerCode": "ZYY-D1",
+  "customerName": "黑龙江中医药大学附属第一医院",
+  "notes": "附一为独立标准灭菌价表 + 11列分科室导出；价表属客服规则，导出布局属内勤规则",
+  "rules": [
+    {
+      "ruleType": "SEPARATE_PRICING_SYSTEM",
+      "name": "附一独立标准灭菌价表",
+      "stage": "both",
+      "isActive": true,
+      "priority": 0,
+      "params": {
+        "standardPricingOverride": true,
+        "billingPricingMode": "hybrid"
+      },
+      "migrateFrom": "customer.standardPricingOverride + phase-zyy-d1-fuyi.json",
+      "migrationStatus": "legacy_only"
+    },
+    {
+      "ruleType": "EXPORT_LAYOUT",
+      "name": "11列分科室账单",
+      "stage": "bill_export",
+      "isActive": true,
+      "priority": 10,
+      "params": {
+        "billColumns": 11,
+        "layout": "dept_split"
+      },
+      "migrateFrom": "export_template:phase-export-fuyi-11col",
+      "migrationStatus": "active"
+    }
+  ]
+}

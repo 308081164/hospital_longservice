@@ -1,0 +1,21 @@
+{
+  "customerCode": "ERYY-NG",
+  "customerName": "黑龙江省第二医院（南岗院区）",
+  "notes": "省二南岗整单七折为敏感内勤规则；挖勺 5.5 元参与七折属客服计价规则",
+  "rules": [
+    {
+      "ruleType": "DISCOUNT_OVERLAY",
+      "name": "账单七折",
+      "stage": "bill_export",
+      "isActive": false,
+      "priority": 10,
+      "scope": { "temperature": "ANY" },
+      "params": {
+        "rate": 0.7,
+        "skipWhenFixedPrice": false
+      },
+      "migrateFrom": "customer_billing_policy:省二院 0.7 折扣 (bill_detail)",
+      "migrationStatus": "pending"
+    }
+  ]
+}

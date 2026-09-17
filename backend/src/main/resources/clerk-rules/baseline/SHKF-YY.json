@@ -1,0 +1,20 @@
+{
+  "customerCode": "SHKF-YY",
+  "customerName": "黑龙江省社会康复医院",
+  "rules": [
+    {
+      "ruleType": "SETTLEMENT_DISCOUNT",
+      "name": "结款函七五折",
+      "stage": "settlement",
+      "isActive": true,
+      "priority": 10,
+      "scope": { "temperature": "ANY" },
+      "params": {
+        "rate": 0.75,
+        "skipWhenFixedPrice": true
+      },
+      "migrateFrom": "customer_billing_policy:结款函75折",
+      "migrationStatus": "active"
+    }
+  ]
+}

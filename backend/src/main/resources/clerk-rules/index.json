@@ -1,0 +1,16 @@
+{
+  "baseline_hash": "clerk-rules-v1-foundation-20260917",
+  "generated_at": "2026-09-17T14:00:00Z",
+  "customer_count": 9,
+  "customers": [
+    { "code": "HULAN-RM", "file": "baseline/HULAN-RM.json", "ruleCount": 2 },
+    { "code": "TAIPING-RM", "file": "baseline/TAIPING-RM.json", "ruleCount": 1 },
+    { "code": "ZY3-DIANLI", "file": "baseline/ZY3-DIANLI.json", "ruleCount": 1 },
+    { "code": "HRB-HEU", "file": "baseline/HRB-HEU.json", "ruleCount": 1 },
+    { "code": "HRB-NGJY", "file": "baseline/HRB-NGJY.json", "ruleCount": 1 },
+    { "code": "ZYY-D1", "file": "baseline/ZYY-D1.json", "ruleCount": 2 },
+    { "code": "JIUZHOU-FK", "file": "baseline/JIUZHOU-FK.json", "ruleCount": 2 },
+    { "code": "SHKF-YY", "file": "baseline/SHKF-YY.json", "ruleCount": 1 },
+    { "code": "ERYY-NG", "file": "baseline/ERYY-NG.json", "ruleCount": 1 }
+  ]
+}

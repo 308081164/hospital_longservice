@@ -17,8 +17,6 @@ import com.hospital.backend.export.ColumnTransformPipeline;
 import com.hospital.backend.export.ExportContext;
 import com.hospital.backend.export.ExportEngineService;
 import com.hospital.backend.export.ExportResult;
-import com.hospital.backend.export.ExportFixedPriceApplier;
-import com.hospital.backend.export.ExportStageDiscountApplier;
 import com.hospital.backend.export.ExportType;
 import com.hospital.backend.export.ReconciliationExportDataLoader;
 import com.hospital.backend.export.ReconciliationLegacyExportBridge;
@@ -29,6 +27,7 @@ import com.hospital.backend.export.strategy.ExportStrategyRegistry;
 import com.hospital.backend.export.SettlementTemplateFiller;
 import com.hospital.backend.mapper.HospitalReconciliationExportLogMapper;
 import com.hospital.backend.mapper.HospitalPricingRuleMapper;
+import com.hospital.backend.service.ClerkRuleExportService;
 import com.hospital.backend.service.CustomerResolver;
 import com.hospital.backend.service.PricingRuleCompiler;
 import lombok.RequiredArgsConstructor;
@@ -51,8 +50,7 @@ public class ExportEngineServiceImpl implements ExportEngineService {
     private final CustomerResolver customerResolver;
     private final ExportTemplateResolverHelper templateResolverHelper;
     private final HospitalReconciliationExportLogMapper exportLogMapper;
-    private final ExportFixedPriceApplier exportFixedPriceApplier;
-    private final ExportStageDiscountApplier exportStageDiscountApplier;
+    private final ClerkRuleExportService clerkRuleExportService;
     private final PricingRuleCompiler pricingRuleCompiler;
     private final HospitalPricingRuleMapper pricingRuleMapper;
     private final SettlementTemplateFiller settlementTemplateFiller;
@@ -294,11 +292,7 @@ public class ExportEngineServiceImpl implements ExportEngineService {
         }
         try {
             JsonNode compiled = resolveCompiledRules(request, hospitalName);
-            if (compiled == null) {
-                return;
-            }
-            request.setRows(exportFixedPriceApplier.apply(compiled, request.getRows()));
-            request.setRows(exportStageDiscountApplier.apply(compiled, request.getRows()));
+            request.setRows(clerkRuleExportService.applyBillExportRules(hospitalName, compiled, request.getRows()));
         } catch (Exception e) {
             log.warn("export stage discount skipped for {}: {}", hospitalName, e.getMessage());
         }

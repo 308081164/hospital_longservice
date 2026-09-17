@@ -1,0 +1,33 @@
+{
+  "customerCode": "JIUZHOU-FK",
+  "customerName": "黑龙江九洲妇科医院",
+  "notes": "高温五折/低温七折仅在结款函展示，不计入账单计价（2026-08 已从 bill_detail 迁出）",
+  "rules": [
+    {
+      "ruleType": "SETTLEMENT_DISCOUNT",
+      "name": "结款函高温五折",
+      "stage": "settlement",
+      "isActive": true,
+      "priority": 10,
+      "scope": { "temperature": "HT" },
+      "params": {
+        "rate": 0.5,
+        "skipWhenFixedPrice": true
+      },
+      "migrationStatus": "active"
+    },
+    {
+      "ruleType": "SETTLEMENT_DISCOUNT",
+      "name": "结款函低温七折",
+      "stage": "settlement",
+      "isActive": true,
+      "priority": 20,
+      "scope": { "temperature": "LT" },
+      "params": {
+        "rate": 0.7,
+        "skipWhenFixedPrice": true
+      },
+      "migrationStatus": "active"
+    }
+  ]
+}

@@ -8,8 +8,7 @@ import com.hospital.backend.export.BillExportLayoutResolver;
 import com.hospital.backend.export.BillExportRequestMapper;
 import com.hospital.backend.export.ColumnTransformPipeline;
 import com.hospital.backend.export.ExportContext;
-import com.hospital.backend.export.ExportFixedPriceApplier;
-import com.hospital.backend.export.ExportStageDiscountApplier;
+import com.hospital.backend.service.ClerkRuleExportService;
 import com.hospital.backend.export.ExportType;
 import com.hospital.backend.export.ReconciliationExportDataLoader;
 import com.hospital.backend.export.ReconciliationLegacyExportBridge;
@@ -55,9 +54,7 @@ class ExportEngineServiceImplLegacyRoutingTest {
     @Mock
     private HospitalReconciliationExportLogMapper exportLogMapper;
     @Mock
-    private ExportFixedPriceApplier exportFixedPriceApplier;
-    @Mock
-    private ExportStageDiscountApplier exportStageDiscountApplier;
+    private ClerkRuleExportService clerkRuleExportService;
     @Mock
     private PricingRuleCompiler pricingRuleCompiler;
     @Mock
@@ -84,8 +81,7 @@ class ExportEngineServiceImplLegacyRoutingTest {
                 customerResolver,
                 templateResolverHelper,
                 exportLogMapper,
-                exportFixedPriceApplier,
-                exportStageDiscountApplier,
+                clerkRuleExportService,
                 pricingRuleCompiler,
                 pricingRuleMapper,
                 settlementTemplateFiller,

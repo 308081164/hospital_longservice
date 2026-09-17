@@ -73,6 +73,17 @@ export const billingConfigRoutes: AppRouteRecord[] = [
           keepAlive: true,
           roles: ['billing_configurator', 'R_SUPER', 'R_ADMIN']
         }
+      },
+      {
+        path: 'clerk-rules',
+        name: 'BillingConfigClerkRules',
+        component: '/billing-config/clerk-rules',
+        meta: {
+          title: 'menus.billingConfig.clerkRules',
+          icon: 'ri:file-shield-2-line',
+          keepAlive: true,
+          roles: ['billing_configurator', 'R_SUPER', 'R_ADMIN']
+        }
       }
     ]
   }

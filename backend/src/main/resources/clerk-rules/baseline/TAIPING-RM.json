@@ -1,0 +1,25 @@
+{
+  "customerCode": "TAIPING-RM",
+  "customerName": "太平人民医院",
+  "rules": [
+    {
+      "ruleType": "PIECE_TIER_DISCOUNT",
+      "name": "2把及以上七五折",
+      "stage": "bill_export",
+      "isActive": true,
+      "priority": 10,
+      "scope": { "temperature": "ANY" },
+      "params": {
+        "skipWhenAlreadyDiscounted": true,
+        "pieceTierDiscounts": [
+          { "minPieces": 1, "maxPieces": 1, "rate": 1.0 },
+          { "minPieces": 2, "maxPieces": 2, "rate": 0.75 },
+          { "minPieces": 3, "maxPieces": 3, "rate": 0.891, "originalUnitPriceEquals": 16.5 },
+          { "minPieces": 4, "maxPieces": 999, "rate": 0.75 }
+        ]
+      },
+      "migrateFrom": "customer_billing_policy:太平导出阶段折扣 (export_only)",
+      "migrationStatus": "active"
+    }
+  ]
+}
