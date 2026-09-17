@@ -47,7 +47,7 @@ HOSPITAL_TO_CODE: dict[str, str] = {
     "新发红十字医院": "XINFA-HSZ",
     "黑龙江省远东心脑血管医院": "YUANDONG-XN",
     "黑龙江省中医药大学附属第三医院（电力）": "ZY3-DIANLI",
-    "哈尔滨汽轮机医院": "GUOYAO-MAIN",
+    "哈尔滨汽轮机医院": "QILUNJI-YY",
 }
 
 

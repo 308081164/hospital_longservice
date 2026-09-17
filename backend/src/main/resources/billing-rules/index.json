@@ -1,8 +1,8 @@
 {
-  "baseline_hash": "218a62a92cf9aec996e16711b1e55285d48efdfe44efe23dd8bc6a826a286e45",
-  "generated_at": "2026-09-17T01:57:43Z",
+  "baseline_hash": "2d1795ac815b02181b6627ecbbeef672962450844eeba2cc73e36185103022fa",
+  "generated_at": "2026-09-17T02:09:04Z",
   "source": "billing-rules-manifest@01836c66115726ff7229db58f16020cb6e65f7069beee13551669c1031fd7764",
-  "customer_count": 32,
+  "customer_count": 31,
   "customers": [
     {
       "code": "BINGCHENG-YM",
@@ -21,12 +21,6 @@
       "file": "baseline/FNN-YY.json",
       "ruleCount": 8,
       "fileHash": "d1c1a6c45cc80d6552673a069127021fdcf971741bf6b2e0b5c424c9525acb9b"
-    },
-    {
-      "code": "JIAYI-YL",
-      "file": "baseline/JIAYI-YL.json",
-      "ruleCount": 0,
-      "fileHash": "92923c603d367a8dcfd3dc132a2e78f3790300d312a3bc577092dc515c2b43b2"
     },
     {
       "code": "NEAU-YY",
@@ -191,10 +185,10 @@
       "fileHash": "09252bc23a9fd8c762921aa6f48690247125dd8f71181f43b7bfd3f04870d7a7"
     },
     {
-      "code": "GUOYAO-MAIN",
-      "file": "baseline/GUOYAO-MAIN.json",
+      "code": "QILUNJI-YY",
+      "file": "baseline/QILUNJI-YY.json",
       "ruleCount": 1,
-      "fileHash": "1ce0727277e80fda7998b7f27c8a3d594eb4d2adab8d31e314d3d86e210c3dc2"
+      "fileHash": "cb099aab171df68db66eadd52f536054d51f2cfbd213a34c8b8ad3d2ce672ea6"
     }
   ]
 }

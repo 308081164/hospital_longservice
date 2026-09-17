@@ -1,11 +1,11 @@
 {
   "generatedAt": "2026-09-17",
-  "caseCount": 175,
+  "caseCount": 172,
   "stats": {
-    "hospitals_scanned": 31,
-    "pairs_found": 28,
+    "hospitals_scanned": 30,
+    "pairs_found": 27,
     "expected_rows": 102,
-    "negative_rows": 69
+    "negative_rows": 66
   },
   "cases": [
     {
@@ -1658,63 +1658,6 @@
         "type": "敷料包(无纺布包)",
         "packageMaterial": "高温灭菌无纺布60*60",
         "instrumentCount": 1
-      },
-      "note": "raw=proc unchanged guard"
-    },
-    {
-      "id": "国药总医院主院区__6__U__1608159__1",
-      "hospital": "国药总医院主院区",
-      "customerCode": "GUOYAO-MAIN",
-      "month": 6,
-      "kind": "negative",
-      "row": {
-        "sheet": "外科",
-        "shipNo": "1608159",
-        "packName": "外科缝合包",
-        "packCount": 4.0,
-        "unitPrice": 33.0,
-        "totalPrice": 132.0,
-        "type": "器械包",
-        "packageMaterial": "无纺布-60×60-50g",
-        "instrumentCount": 24
-      },
-      "note": "raw=proc unchanged guard"
-    },
-    {
-      "id": "国药总医院主院区__6__U__1608159__2",
-      "hospital": "国药总医院主院区",
-      "customerCode": "GUOYAO-MAIN",
-      "month": 6,
-      "kind": "negative",
-      "row": {
-        "sheet": "外科",
-        "shipNo": "1608159",
-        "packName": "持针器-1/z1029",
-        "packCount": 1.0,
-        "unitPrice": 8.0,
-        "totalPrice": 8.0,
-        "type": "额外包(纸塑袋)",
-        "packageMaterial": "高温纸塑袋100*290",
-        "instrumentCount": 1
-      },
-      "note": "raw=proc unchanged guard"
-    },
-    {
-      "id": "国药总医院主院区__6__U__1608159__3",
-      "hospital": "国药总医院主院区",
-      "customerCode": "GUOYAO-MAIN",
-      "month": 6,
-      "kind": "negative",
-      "row": {
-        "sheet": "外科",
-        "shipNo": "1608159",
-        "packName": "大镊子-1/z7534",
-        "packCount": 3.0,
-        "unitPrice": 8.0,
-        "totalPrice": 24.0,
-        "type": "额外包(纸塑袋)",
-        "packageMaterial": "高温纸塑袋75*340",
-        "instrumentCount": 3
       },
       "note": "raw=proc unchanged guard"
     },

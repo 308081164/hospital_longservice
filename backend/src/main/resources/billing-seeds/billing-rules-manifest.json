@@ -1,9 +1,9 @@
 {
   "version": 1,
-  "generated_at": "2026-09-17T01:56:34Z",
-  "manifest_hash": "03cbf99015b7195904426ead130055341c31b885325c1075816818b9b65859ce",
-  "billing_enabled_count": 32,
-  "active_billing_enabled_count": 32,
+  "generated_at": "2026-09-17T02:09:04Z",
+  "manifest_hash": "9d033d00b331af082ca4a9386e175e6ee2708ec4129ef2866964d8c4b1e4aa9a",
+  "billing_enabled_count": 31,
+  "active_billing_enabled_count": 31,
   "customers": {
     "BINGCHENG-YM": {
       "code": "BINGCHENG-YM",
@@ -879,17 +879,6 @@
       ],
       "rule_count": 8,
       "active_rule_count": 8
-    },
-    "JIAYI-YL": {
-      "code": "JIAYI-YL",
-      "name": "佳医医疗",
-      "status": null,
-      "billingPricingMode": "hybrid",
-      "standardPricingOverride": null,
-      "billingEnabled": true,
-      "productRules": [],
-      "rule_count": 0,
-      "active_rule_count": 0
     },
     "NEAU-YY": {
       "code": "NEAU-YY",
@@ -3491,9 +3480,9 @@
       "rule_count": 1,
       "active_rule_count": 1
     },
-    "GUOYAO-MAIN": {
-      "code": "GUOYAO-MAIN",
-      "name": "国药总医院主院区",
+    "QILUNJI-YY": {
+      "code": "QILUNJI-YY",
+      "name": "哈尔滨汽轮机医院",
       "status": null,
       "billingPricingMode": "hybrid",
       "standardPricingOverride": null,
@@ -3501,7 +3490,7 @@
       "productRules": [
         {
           "ruleType": "FIXED_PRICE",
-          "name": "国药主院10mm30度镜固定价",
+          "name": "汽轮机10mm30度镜固定价",
           "priority": 10,
           "price": 28,
           "keywords": [

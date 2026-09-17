@@ -144,6 +144,8 @@ FOLDER_CODE_OVERRIDE: dict[str, str] = {
     "美意医疗": "MEIYI-YL",
     "易丽医疗": "YILI-YL",
     "佳医医疗": "JIAYI-YL",
+    "哈尔滨汽轮机医院": "QILUNJI-YY",
+    "汽轮机": "QILUNJI-YY",
 }
 
 # S4 验收固定原始/处理后成对（跨自然月账期）

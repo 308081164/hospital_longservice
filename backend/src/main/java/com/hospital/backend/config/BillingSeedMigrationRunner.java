@@ -56,13 +56,13 @@ public class BillingSeedMigrationRunner implements CommandLineRunner {
 
     /** 最终保留的特殊计价客户 code（与 scripts/strict_hospital_codes.py STRICT_KEEP_CODES 一致） */
     private static final java.util.List<String> STRICT_KEEP_CODES = java.util.List.of(
-            "BINGCHENG-YM", "GUOYAO-2", "FNN-YY", "JIAYI-YL", "NEAU-YY", "HRB-WY", "HRB-SD-MB", "HRB-HTFH",
+            "BINGCHENG-YM", "GUOYAO-2", "FNN-YY", "NEAU-YY", "HRB-WY", "HRB-SD-MB", "HRB-HTFH",
             "HRB-WY-EM", "JIUZHOU-FK", "BOSHANG-YY", "HAIYUAN-SB", "HLJ-FY-RK", "ZUYAN-NG",
             "SHKF-YY", "DL-FUCHAN", "CHUNYU-YL", "HL-ZGH", "JZSW-BIO", "SUOFEI-YL", "HLJ-JYGLJ-YY",
             "HULAN-TCM", "PFQ-RM",
             "HULAN-RM", "XINFA-HSZ", "YUANDONG-XN", "ZUYAN-SF",
             "AOLAN-YY", "HRB-XK-YY", "SENHAI-YY",
-            "ZY3-DIANLI", "GUOYAO-MAIN");
+            "ZY3-DIANLI", "QILUNJI-YY");
 
     private record IncrementalSeed(String markerKey, String classpathFile) {}
 

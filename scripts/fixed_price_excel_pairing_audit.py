@@ -27,8 +27,7 @@ from import_special_pricing_v17 import HOSPITAL_TO_CODE, build_merged_map, cell,
 
 # G4 20260902 报告对 baseline FIXED_PRICE 的分级（75 条，已删 PDF/期待价30）
 G4_B_RULES = {
-    ("GUOYAO-MAIN", "国药主院10mm30度镜固定价"),
-    ("GUOYAO-MAIN", "国药主院驱血带固定价"),
+    ("QILUNJI-YY", "汽轮机10mm30度镜固定价"),
     ("JIAYI-YL", "佳医敷料纸塑4元"),
     ("ZUYAN-SF", "针线包现价"),
     ("ZUYAN-SF", "祖研三辅export 探针刨刀16.5"),
@@ -54,7 +53,7 @@ HL_ZGH_USER_EXCEL: dict[str, dict] = {
 
 # 人工校对：仓库 Excel 明确行号（openpyxl 解析 特殊收费(1).xlsx）
 MANUAL_REPO_EXACT: dict[tuple[str, str], dict] = {
-    ("GUOYAO-MAIN", "国药主院10mm30度镜固定价"): {
+    ("QILUNJI-YY", "汽轮机10mm30度镜固定价"): {
         "sheet": "各医院特殊收费",
         "row": 136,
         "section": "哈尔滨汽轮机医院",

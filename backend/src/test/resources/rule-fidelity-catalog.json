@@ -2316,46 +2316,6 @@
       "note": "should not match this rule"
     },
     {
-      "id": "GUOYAO-MAIN__国药主院10mm30度镜固定价__hit",
-      "customerCode": "GUOYAO-MAIN",
-      "customerName": "国药总医院主院区",
-      "ruleName": "国药主院10mm30度镜固定价",
-      "ruleType": "FIXED_PRICE",
-      "positive": true,
-      "row": {
-        "hospitalName": "国药总医院主院区",
-        "department": "手术室",
-        "type": "单包装包",
-        "packName": "10毫米30度镜-1件/（高温！）Z2060",
-        "packageMaterial": "高温纸塑袋200*600",
-        "instrumentCount": 1,
-        "packCount": 1,
-        "unitPrice": 28.0,
-        "totalPrice": 28.0
-      },
-      "note": "active rule should match"
-    },
-    {
-      "id": "GUOYAO-MAIN__国药主院10mm30度镜固定价__miss",
-      "customerCode": "GUOYAO-MAIN",
-      "customerName": "国药总医院主院区",
-      "ruleName": "国药主院10mm30度镜固定价",
-      "ruleType": "FIXED_PRICE",
-      "positive": false,
-      "row": {
-        "hospitalName": "国药总医院主院区",
-        "department": "手术室",
-        "type": "单包装包",
-        "packName": "不匹配规则专用包名XYZ",
-        "packageMaterial": "高温纸塑袋200*600",
-        "instrumentCount": 1,
-        "packCount": 1,
-        "unitPrice": 22.0,
-        "totalPrice": 22.0
-      },
-      "note": "should not match this rule"
-    },
-    {
       "id": "HAIYUAN-SB__海员胶帽>5折算22__hit",
       "customerCode": "HAIYUAN-SB",
       "customerName": "黑龙江省海员总医院（松北）",
@@ -5628,6 +5588,46 @@
         "type": "额外包（纸塑袋）",
         "packName": "不匹配规则专用包名XYZ",
         "packageMaterial": "高温纸塑袋75*200",
+        "instrumentCount": 1,
+        "packCount": 1,
+        "unitPrice": 22.0,
+        "totalPrice": 22.0
+      },
+      "note": "should not match this rule"
+    },
+    {
+      "id": "QILUNJI-YY__汽轮机10mm30度镜固定价__hit",
+      "customerCode": "QILUNJI-YY",
+      "customerName": "哈尔滨汽轮机医院",
+      "ruleName": "汽轮机10mm30度镜固定价",
+      "ruleType": "FIXED_PRICE",
+      "positive": true,
+      "row": {
+        "hospitalName": "哈尔滨汽轮机医院",
+        "department": "手术室",
+        "type": "单包装包",
+        "packName": "10毫米30度镜-1件/（高温！）Z2060",
+        "packageMaterial": "高温纸塑袋200*600",
+        "instrumentCount": 1,
+        "packCount": 1,
+        "unitPrice": 28.0,
+        "totalPrice": 28.0
+      },
+      "note": "active rule should match"
+    },
+    {
+      "id": "QILUNJI-YY__汽轮机10mm30度镜固定价__miss",
+      "customerCode": "QILUNJI-YY",
+      "customerName": "哈尔滨汽轮机医院",
+      "ruleName": "汽轮机10mm30度镜固定价",
+      "ruleType": "FIXED_PRICE",
+      "positive": false,
+      "row": {
+        "hospitalName": "哈尔滨汽轮机医院",
+        "department": "手术室",
+        "type": "单包装包",
+        "packName": "不匹配规则专用包名XYZ",
+        "packageMaterial": "高温纸塑袋200*600",
         "instrumentCount": 1,
         "packCount": 1,
         "unitPrice": 22.0,

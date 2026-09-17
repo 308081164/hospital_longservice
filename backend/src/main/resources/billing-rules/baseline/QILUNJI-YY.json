@@ -1,12 +1,12 @@
 {
-  "customerCode": "GUOYAO-MAIN",
-  "customerName": "国药总医院主院区",
+  "customerCode": "QILUNJI-YY",
+  "customerName": "哈尔滨汽轮机医院",
   "billingEnabled": true,
   "billingPricingMode": "hybrid",
   "productRules": [
     {
       "ruleType": "FIXED_PRICE",
-      "name": "国药主院10mm30度镜固定价",
+      "name": "汽轮机10mm30度镜固定价",
       "priority": 10,
       "price": 28,
       "keywords": [

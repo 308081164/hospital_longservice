@@ -157,6 +157,7 @@ REF_EXPECTED=(
   "哈尔滨市红十字妇产医院|HRB-HSZ"
   "哈尔滨市骨伤科医院|HRB-GUSHANG"
   "国药总医院主院区|GUOYAO-MAIN"
+  "哈尔滨汽轮机医院|QILUNJI-YY"
   "国药总医院第三院区|GUOYAO-3"
   "国药总医院第二院区|GUOYAO-2"
   "太平人民医院|TAIPING-RM"

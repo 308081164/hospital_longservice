@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""32 家特殊计价医院权威清单（路径 A / manifest / Java STRICT_KEEP_CODES 须一致）。"""
+"""31 家特殊计价医院权威清单（路径 A / manifest / Java STRICT_KEEP_CODES 须一致，与特殊收费(4) Excel 各院段落一一对应）。"""
 
 from __future__ import annotations
 
@@ -20,7 +20,6 @@ STRICT_KEEP_CODES: list[str] = [
     "BINGCHENG-YM",
     "GUOYAO-2",
     "FNN-YY",
-    "JIAYI-YL",
     "NEAU-YY",
     "HRB-WY",
     "HRB-SD-MB",
@@ -48,14 +47,13 @@ STRICT_KEEP_CODES: list[str] = [
     "HRB-XK-YY",
     "SENHAI-YY",
     "ZY3-DIANLI",
-    "GUOYAO-MAIN",
+    "QILUNJI-YY",
 ]
 
 STRICT_HOSPITALS: list[StrictHospital] = [
     StrictHospital("BINGCHENG-YM", "冰城医美", "哈尔滨冰城医疗美容医院", True),
     StrictHospital("GUOYAO-2", "电机厂", "国药总医院第二院区", True),
     StrictHospital("FNN-YY", "方南南", "方南南医院", True),
-    StrictHospital("JIAYI-YL", "佳医医疗", "佳医医疗", True),
     StrictHospital("NEAU-YY", "东北农大", "东北农业大学", True),
     StrictHospital("HRB-WY", "市五院主院区", "哈尔滨市第五医院", False, "ground truth 陈旧待更新"),
     StrictHospital("HRB-SD-MB", "松电慢病", "松电慢病", True),
@@ -83,7 +81,7 @@ STRICT_HOSPITALS: list[StrictHospital] = [
     StrictHospital("HRB-XK-YY", "胸科医院", "哈尔滨胸科医院", True),
     StrictHospital("SENHAI-YY", "森海医院", "森海医院", True),
     StrictHospital("ZY3-DIANLI", "中医三院电力", "黑龙江省中医药大学附属第三医院（电力）", True),
-    StrictHospital("GUOYAO-MAIN", "国药主院区", "国药总医院主院区", True),
+    StrictHospital("QILUNJI-YY", "汽轮机医院", "哈尔滨汽轮机医院", True),
 ]
 
 STRICT_BY_CODE = {h.code: h for h in STRICT_HOSPITALS}

@@ -1,11 +1,11 @@
 {
   "generatedAt": "2026-09-17",
   "catalogCases": 338,
-  "excelGoldenCases": 175,
+  "excelGoldenCases": 172,
   "stats": {
-    "hospitals_scanned": 31,
-    "pairs_found": 28,
+    "hospitals_scanned": 30,
+    "pairs_found": 27,
     "expected_rows": 102,
-    "negative_rows": 69
+    "negative_rows": 66
   }
 }
