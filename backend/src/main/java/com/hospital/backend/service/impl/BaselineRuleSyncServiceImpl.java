@@ -129,13 +129,33 @@ public class BaselineRuleSyncServiceImpl implements BaselineRuleSyncService {
             total += importCustomerBaseline(customer.getId(), baseline, dryRun);
         }
         if (!dryRun) {
-            disableBillingForNonBaselineCustomers(baselineCodes);
+            syncBillingEnabledFromBaselineIndex();
         }
         return total;
     }
 
+    @Override
+    @Transactional
+    public int syncBillingEnabledFromBaselineIndex() {
+        Set<String> baselineCodes = new HashSet<>(baselineRuleIndex.customerCodes());
+        int updated = 0;
+        for (String code : baselineCodes) {
+            JsonNode baseline = baselineRuleIndex.baselineForCustomer(code);
+            Customer customer = customerMapper.selectByCode(code);
+            if (baseline == null || customer == null) {
+                continue;
+            }
+            if (applyBaselineCustomerFields(customer, baseline)) {
+                updated++;
+            }
+        }
+        updated += disableBillingForNonBaselineCustomers(baselineCodes);
+        return updated;
+    }
+
     /** baseline index 外的客户若仍 billing_enabled=1，关闭特色计价（如已移除的 JIAYI-YL、GUOYAO-MAIN）。 */
-    private void disableBillingForNonBaselineCustomers(Set<String> baselineCodes) {
+    private int disableBillingForNonBaselineCustomers(Set<String> baselineCodes) {
+        int updated = 0;
         for (Customer customer : customerMapper.selectAll()) {
             if (customer == null || customer.getCode() == null) {
                 continue;
@@ -158,10 +178,12 @@ public class BaselineRuleSyncServiceImpl implements BaselineRuleSyncService {
                     Map.of("billingEnabled", false, "reason", "not-in-baseline-index"),
                     "baseline-import",
                     "baseline index 已移除，关闭特色计价");
+            updated++;
         }
+        return updated;
     }
 
-    private void applyBaselineCustomerFields(Customer customer, JsonNode baselineNode) {
+    private boolean applyBaselineCustomerFields(Customer customer, JsonNode baselineNode) {
         boolean changed = false;
         if (baselineNode.hasNonNull("billingPricingMode")) {
             String mode = text(baselineNode, "billingPricingMode");
@@ -180,6 +202,7 @@ public class BaselineRuleSyncServiceImpl implements BaselineRuleSyncService {
         if (changed) {
             customerMapper.updateById(customer);
         }
+        return changed;
     }
 
     /** baseline 新引入客户时，按 JSON 元数据自动建档，避免 import 因客户缺失而跳过。 */

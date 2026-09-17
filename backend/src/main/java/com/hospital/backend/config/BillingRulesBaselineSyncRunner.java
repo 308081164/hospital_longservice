@@ -49,6 +49,18 @@ public class BillingRulesBaselineSyncRunner implements CommandLineRunner {
             return;
         }
 
+        try {
+            int billingFlagsSynced = baselineRuleSyncService.syncBillingEnabledFromBaselineIndex();
+            if (billingFlagsSynced > 0) {
+                log.info("Baseline billing_enabled 同步：更新 {} 个客户", billingFlagsSynced);
+            }
+        } catch (Exception e) {
+            log.error("Baseline billing_enabled 同步失败: {}", e.getMessage(), e);
+            if (failOnVerifyError) {
+                throw new IllegalStateException("Baseline billing_enabled sync failed", e);
+            }
+        }
+
         String dbHash = readSetting(SystemVersionInfoService.BASELINE_HASH_KEY);
         boolean hashChanged = !classpathHash.equals(dbHash);
         boolean imported = false;

@@ -48,10 +48,12 @@ class BillingRulesBaselineSyncRunnerTest {
         when(baselineRuleIndex.baselineHash()).thenReturn("abc123");
         when(sysSettingMapper.selectByKey(SystemVersionInfoService.BASELINE_HASH_KEY))
                 .thenReturn(setting(SystemVersionInfoService.BASELINE_HASH_KEY, "abc123"));
+        when(baselineRuleSyncService.syncBillingEnabledFromBaselineIndex()).thenReturn(0);
         when(rulesVerificationService.verifyAll()).thenReturn(Map.of("ok", true));
 
         runner.run();
 
+        verify(baselineRuleSyncService).syncBillingEnabledFromBaselineIndex();
         verify(baselineRuleSyncService, never()).importAllBaselines(false);
         verify(syncHealth).markHealthy();
     }
@@ -61,6 +63,7 @@ class BillingRulesBaselineSyncRunnerTest {
         when(baselineRuleIndex.baselineHash()).thenReturn("new-hash");
         when(sysSettingMapper.selectByKey(SystemVersionInfoService.BASELINE_HASH_KEY))
                 .thenReturn(setting(SystemVersionInfoService.BASELINE_HASH_KEY, "old-hash"));
+        when(baselineRuleSyncService.syncBillingEnabledFromBaselineIndex()).thenReturn(0);
         when(baselineRuleSyncService.importAllBaselines(false)).thenReturn(42);
         when(rulesVerificationService.verifyAll()).thenReturn(Map.of("ok", true));
 
@@ -76,6 +79,7 @@ class BillingRulesBaselineSyncRunnerTest {
         when(baselineRuleIndex.baselineHash()).thenReturn("same");
         when(sysSettingMapper.selectByKey(SystemVersionInfoService.BASELINE_HASH_KEY))
                 .thenReturn(setting(SystemVersionInfoService.BASELINE_HASH_KEY, "same"));
+        when(baselineRuleSyncService.syncBillingEnabledFromBaselineIndex()).thenReturn(0);
         when(baselineRuleSyncService.importAllBaselines(false)).thenReturn(10);
         when(rulesVerificationService.verifyAll())
                 .thenReturn(Map.of("ok", false, "failedCustomers", List.of("HRB-WY")))
@@ -92,6 +96,7 @@ class BillingRulesBaselineSyncRunnerTest {
         when(baselineRuleIndex.baselineHash()).thenReturn("same");
         when(sysSettingMapper.selectByKey(SystemVersionInfoService.BASELINE_HASH_KEY))
                 .thenReturn(setting(SystemVersionInfoService.BASELINE_HASH_KEY, "same"));
+        when(baselineRuleSyncService.syncBillingEnabledFromBaselineIndex()).thenReturn(0);
         when(baselineRuleSyncService.importAllBaselines(false)).thenReturn(12);
         when(rulesVerificationService.verifyAll())
                 .thenReturn(Map.of("ok", false, "totalExtra", 3))
@@ -109,6 +114,7 @@ class BillingRulesBaselineSyncRunnerTest {
         when(baselineRuleIndex.baselineHash()).thenReturn("same");
         when(sysSettingMapper.selectByKey(SystemVersionInfoService.BASELINE_HASH_KEY))
                 .thenReturn(setting(SystemVersionInfoService.BASELINE_HASH_KEY, "same"));
+        when(baselineRuleSyncService.syncBillingEnabledFromBaselineIndex()).thenReturn(0);
         when(rulesVerificationService.verifyAll()).thenReturn(Map.of("ok", false));
 
         assertThatThrownBy(() -> runner.run())

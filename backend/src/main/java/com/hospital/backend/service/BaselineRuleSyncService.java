@@ -11,6 +11,9 @@ public interface BaselineRuleSyncService {
 
     int importAllBaselines(boolean dryRun);
 
+    /** 按 baseline index 同步 billing_enabled（hash 未变时也须执行，避免历史客户残留启用）。 */
+    int syncBillingEnabledFromBaselineIndex();
+
     Map<String, Object> exportCustomer(Long customerId);
 
     Map<String, Object> exportAll();
