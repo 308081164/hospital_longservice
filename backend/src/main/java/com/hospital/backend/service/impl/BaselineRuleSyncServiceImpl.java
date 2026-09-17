@@ -21,6 +21,7 @@ import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 
 @Service
@@ -109,7 +110,8 @@ public class BaselineRuleSyncServiceImpl implements BaselineRuleSyncService {
     @Transactional
     public int importAllBaselines(boolean dryRun) {
         int total = 0;
-        for (String code : baselineRuleIndex.customerCodes()) {
+        Set<String> baselineCodes = new HashSet<>(baselineRuleIndex.customerCodes());
+        for (String code : baselineCodes) {
             JsonNode baseline = baselineRuleIndex.baselineForCustomer(code);
             if (baseline == null) {
                 continue;
@@ -121,9 +123,63 @@ public class BaselineRuleSyncServiceImpl implements BaselineRuleSyncService {
             if (customer == null) {
                 continue;
             }
+            if (!dryRun) {
+                applyBaselineCustomerFields(customer, baseline);
+            }
             total += importCustomerBaseline(customer.getId(), baseline, dryRun);
         }
+        if (!dryRun) {
+            disableBillingForNonBaselineCustomers(baselineCodes);
+        }
         return total;
+    }
+
+    /** baseline index 外的客户若仍 billing_enabled=1，关闭特色计价（如已移除的 JIAYI-YL、GUOYAO-MAIN）。 */
+    private void disableBillingForNonBaselineCustomers(Set<String> baselineCodes) {
+        for (Customer customer : customerMapper.selectAll()) {
+            if (customer == null || customer.getCode() == null) {
+                continue;
+            }
+            if (baselineCodes.contains(customer.getCode())) {
+                continue;
+            }
+            if (!Boolean.TRUE.equals(customer.getBillingEnabled())) {
+                continue;
+            }
+            customer.setBillingEnabled(false);
+            customerMapper.updateById(customer);
+            ruleChangeAuditService.logChange(
+                    customer.getId(),
+                    null,
+                    null,
+                    "UPDATE",
+                    "CUSTOMER",
+                    null,
+                    Map.of("billingEnabled", false, "reason", "not-in-baseline-index"),
+                    "baseline-import",
+                    "baseline index 已移除，关闭特色计价");
+        }
+    }
+
+    private void applyBaselineCustomerFields(Customer customer, JsonNode baselineNode) {
+        boolean changed = false;
+        if (baselineNode.hasNonNull("billingPricingMode")) {
+            String mode = text(baselineNode, "billingPricingMode");
+            if (mode != null && !mode.equals(customer.getBillingPricingMode())) {
+                customer.setBillingPricingMode(mode);
+                changed = true;
+            }
+        }
+        if (baselineNode.has("billingEnabled") && !baselineNode.get("billingEnabled").isNull()) {
+            boolean enabled = baselineNode.get("billingEnabled").asBoolean();
+            if (!Objects.equals(enabled, Boolean.TRUE.equals(customer.getBillingEnabled()))) {
+                customer.setBillingEnabled(enabled);
+                changed = true;
+            }
+        }
+        if (changed) {
+            customerMapper.updateById(customer);
+        }
     }
 
     /** baseline 新引入客户时，按 JSON 元数据自动建档，避免 import 因客户缺失而跳过。 */
