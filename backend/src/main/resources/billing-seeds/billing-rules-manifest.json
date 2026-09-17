@@ -1,7 +1,7 @@
 {
   "version": 1,
-  "generated_at": "2026-09-17T02:34:11Z",
-  "manifest_hash": "b985c2c35d3962227b8f941565f35c3883213af9f5d3a8841ebb751587e3a6d2",
+  "generated_at": "2026-09-17T02:41:13Z",
+  "manifest_hash": "c3b19f9d2aa266ed4408a9e29cc876e509c1e2450efd39344aacac19edf865da",
   "billing_enabled_count": 31,
   "active_billing_enabled_count": 31,
   "customers": {
@@ -136,34 +136,36 @@
       "billingEnabled": true,
       "productRules": [
         {
-          "ruleType": "EXTRA_FEE",
-          "name": "电机厂双内层纸塑袋加价2.5",
-          "priority": 22,
-          "fee": 2.5,
+          "ruleType": "FIXED_PRICE",
+          "name": "电机厂包名带双",
+          "priority": 10,
+          "price": 8.0,
           "keywords": [
-            "/双"
+            "双@contains"
           ],
-          "minInstrumentCount": 3,
           "skipPackaging": true,
           "skipDiscount": true,
           "isActive": true,
           "matchMode": "first",
           "keywordMatchMode": "contains",
-          "conditionsJson": "[{\"field\":\"manualReview\",\"value\":true}]",
           "acceptedTypes": [
             "额外包（纸塑袋）"
           ]
         },
         {
           "ruleType": "PRICE_PER_INSTRUMENT",
-          "name": "电机厂双按件5.5免包材",
-          "priority": 21,
+          "name": "电机厂双按件5.5外层袋",
+          "priority": 11,
           "price": 5.5,
           "keywords": [
             "/双"
           ],
-          "minInstrumentCount": 3,
-          "skipPackaging": true,
+          "materials": [
+            "纸塑袋"
+          ],
+          "temperature": "HT",
+          "maxInstrumentCount": 2,
+          "skipPackaging": false,
           "skipDiscount": true,
           "isActive": true,
           "matchMode": "first",
@@ -197,61 +199,21 @@
           ]
         },
         {
-          "ruleType": "PRICE_PER_INSTRUMENT",
-          "name": "电机厂双按件5.5含外层袋",
-          "priority": 20,
-          "price": 5.5,
+          "ruleType": "FOLD",
+          "name": "电机厂指针5合1含包材",
+          "priority": 14,
           "keywords": [
-            "/双"
+            "指针@contains"
           ],
-          "maxInstrumentCount": 2,
+          "threshold": 5,
+          "foldRatio": 5,
+          "maxInstrumentCount": 10,
           "skipPackaging": false,
-          "skipDiscount": true,
           "isActive": true,
           "matchMode": "first",
-          "keywordMatchMode": "contains",
-          "conditionsJson": "[{\"field\":\"manualReview\",\"value\":true}]",
-          "acceptedTypes": [
-            "额外包（纸塑袋）"
-          ]
-        },
-        {
-          "ruleType": "PRICE_PER_INSTRUMENT",
-          "name": "电机厂双按件5.5外层袋",
-          "priority": 11,
-          "price": 5.5,
-          "keywords": [
-            "/双"
-          ],
-          "materials": [
-            "纸塑袋"
-          ],
-          "temperature": "HT",
-          "maxInstrumentCount": 2,
-          "skipPackaging": false,
-          "skipDiscount": true,
-          "isActive": true,
-          "matchMode": "first",
-          "keywordMatchMode": "contains",
-          "conditionsJson": "[{\"field\":\"manualReview\",\"value\":true}]",
-          "acceptedTypes": [
-            "额外包（纸塑袋）"
-          ]
-        },
-        {
-          "ruleType": "PRICE_PER_INSTRUMENT",
-          "name": "电机厂包名带双-人工核对",
-          "priority": 25,
-          "price": 5.5,
-          "keywords": [
-            "双@contains"
-          ],
-          "skipPackaging": false,
-          "skipDiscount": true,
-          "isActive": true,
-          "matchMode": "first",
+          "skipDiscount": false,
           "keywordMatchMode": "exact_token",
-          "conditionsJson": "[{\"field\":\"manualReview\",\"value\":true}]",
+          "price": 5.5,
           "acceptedTypes": [
             "额外包（纸塑袋）"
           ]
@@ -277,21 +239,76 @@
           ]
         },
         {
-          "ruleType": "FOLD",
-          "name": "电机厂指针5合1含包材",
-          "priority": 14,
+          "ruleType": "PRICE_PER_INSTRUMENT",
+          "name": "电机厂双按件5.5含外层袋",
+          "priority": 20,
+          "price": 5.5,
           "keywords": [
-            "指针@contains"
+            "/双"
           ],
-          "threshold": 5,
-          "foldRatio": 5,
-          "maxInstrumentCount": 10,
+          "maxInstrumentCount": 2,
           "skipPackaging": false,
+          "skipDiscount": true,
           "isActive": true,
           "matchMode": "first",
-          "skipDiscount": false,
-          "keywordMatchMode": "exact_token",
+          "keywordMatchMode": "contains",
+          "conditionsJson": "[{\"field\":\"manualReview\",\"value\":true}]",
+          "acceptedTypes": [
+            "额外包（纸塑袋）"
+          ]
+        },
+        {
+          "ruleType": "PRICE_PER_INSTRUMENT",
+          "name": "电机厂双按件5.5免包材",
+          "priority": 21,
           "price": 5.5,
+          "keywords": [
+            "/双"
+          ],
+          "minInstrumentCount": 3,
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": true,
+          "matchMode": "first",
+          "keywordMatchMode": "contains",
+          "conditionsJson": "[{\"field\":\"manualReview\",\"value\":true}]",
+          "acceptedTypes": [
+            "额外包（纸塑袋）"
+          ]
+        },
+        {
+          "ruleType": "EXTRA_FEE",
+          "name": "电机厂双内层纸塑袋加价2.5",
+          "priority": 22,
+          "fee": 2.5,
+          "keywords": [
+            "/双"
+          ],
+          "minInstrumentCount": 3,
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": true,
+          "matchMode": "first",
+          "keywordMatchMode": "contains",
+          "conditionsJson": "[{\"field\":\"manualReview\",\"value\":true}]",
+          "acceptedTypes": [
+            "额外包（纸塑袋）"
+          ]
+        },
+        {
+          "ruleType": "PRICE_PER_INSTRUMENT",
+          "name": "电机厂包名带双-人工核对",
+          "priority": 25,
+          "price": 5.5,
+          "keywords": [
+            "双@contains"
+          ],
+          "skipPackaging": false,
+          "skipDiscount": true,
+          "isActive": true,
+          "matchMode": "first",
+          "keywordMatchMode": "exact_token",
+          "conditionsJson": "[{\"field\":\"manualReview\",\"value\":true}]",
           "acceptedTypes": [
             "额外包（纸塑袋）"
           ]
@@ -713,8 +730,8 @@
           ]
         }
       ],
-      "rule_count": 30,
-      "active_rule_count": 30
+      "rule_count": 31,
+      "active_rule_count": 31
     },
     "FNN-YY": {
       "code": "FNN-YY",
