@@ -60,7 +60,24 @@ public class MasterDataInitializer implements CommandLineRunner {
         ensureHiddenMenu("menus.billingConfig.deptPhysician", "customers/:customerId/dept-physician", 4,
                 masterDataCatalog.getId(), "ri:hospital-line", "/billing-config/dept-physician");
 
-        Menu settingsCatalog = ensureMenu("catalog", "menus.settings.title", "/settings", 3, 0L,
+        Menu billingConfigCatalog = ensureMenu("catalog", "menus.billingConfig.title", "/billing-config", 3, 0L,
+                "ri:truck-line", "Layout", true, "/billing-config/export-templates");
+        ensureMenu("menu", "menus.billingConfig.exportTemplates", "export-templates", 1, billingConfigCatalog.getId(),
+                "ri:file-excel-2-line", "/billing-config/export-templates", true, null);
+        ensureMenu("menu", "menus.billingConfig.logisticsImport", "logistics-import", 2, billingConfigCatalog.getId(),
+                "ri:route-line", "/billing-config/logistics-import", true, null);
+        ensureMenu("menu", "menus.billingConfig.logisticsCard", "logistics-card", 3, billingConfigCatalog.getId(),
+                "ri:bank-card-line", "/billing-config/logistics-card", true, null);
+        ensureMenu("menu", "menus.billingConfig.roster", "roster", 4, billingConfigCatalog.getId(),
+                "ri:user-search-line", "/billing-config/roster", true, null);
+        ensureMenu("menu", "menus.billingConfig.deptPhysician", "dept-physician", 5, billingConfigCatalog.getId(),
+                "ri:hospital-line", "/billing-config/dept-physician", true, null);
+        ensureMenu("menu", "menus.billingConfig.externalInstruments", "external-instruments", 6,
+                billingConfigCatalog.getId(), "ri:surgical-mask-line", "/billing-config/external-instruments", true, null);
+        ensureMenu("menu", "menus.billingConfig.clerkRules", "clerk-rules", 7, billingConfigCatalog.getId(),
+                "ri:file-shield-2-line", "/billing-config/clerk-rules", true, null);
+
+        Menu settingsCatalog = ensureMenu("catalog", "menus.settings.title", "/settings", 4, 0L,
                 "ri:settings-3-line", "Layout", true, "/settings/pricing-rules");
         relocateMenu("version-management", settingsCatalog.getId(), "menus.settings.versionManagement",
                 "version-management", "/hospital/version-management", 1);
@@ -71,9 +88,12 @@ public class MasterDataInitializer implements CommandLineRunner {
         if (userRole != null) {
             assignMenuToRole(userRole.getId(), trackingCatalog.getId());
             assignMenuToRole(userRole.getId(), masterDataCatalog.getId());
+            assignMenuToRole(userRole.getId(), billingConfigCatalog.getId());
             assignMenuToRole(userRole.getId(), settingsCatalog.getId());
             for (String path : List.of(
                     "reconciliation", "customers", "product-categories", "products",
+                    "export-templates", "logistics-import", "logistics-card", "roster",
+                    "dept-physician", "external-instruments", "clerk-rules",
                     "version-management", "pricing-rules")) {
                 Menu menu = menuMapper.selectByPath(path);
                 if (menu != null) {

@@ -194,27 +194,30 @@
         <ElFormItem label="规范名称" prop="canonicalName">
           <ElInput v-model="form.canonicalName" placeholder="如 哈尔滨市第五医院" />
         </ElFormItem>
-        <ElFormItem label="状态">
-          <ElSelect v-model="form.status" class="w-full">
-            <ElOption label="启用" value="active" />
-            <ElOption label="停用" value="inactive" />
-          </ElSelect>
-        </ElFormItem>
         <ElFormItem label="封顶模式">
           <ElSelect v-model="form.capMode" class="w-full" clearable placeholder="默认">
             <ElOption label="标准封顶 (standard)" value="standard" />
             <ElOption label="不封顶 (none)" value="none" />
           </ElSelect>
         </ElFormItem>
-        <ElFormItem label="封顶双袋计费">
-          <ElSwitch v-model="form.chargeDoubleBagWhenCapped" />
-        </ElFormItem>
-        <ElFormItem :label="$t('menus.masterData.customerForm.billingEnabled')">
-          <ElSwitch v-model="form.billingEnabled" />
-          <span class="ml-2 text-xs text-gray-500">{{
-            $t('menus.masterData.customerForm.billingEnabledHint')
-          }}</span>
-        </ElFormItem>
+        <ElRow :gutter="12">
+          <ElCol :span="11">
+            <ElFormItem label="封顶双袋计费" label-width="100px">
+              <ElSwitch v-model="form.chargeDoubleBagWhenCapped" />
+            </ElFormItem>
+          </ElCol>
+          <ElCol :span="13">
+            <ElFormItem
+              :label="$t('menus.masterData.customerForm.billingEnabled')"
+              label-width="100px"
+            >
+              <ElSwitch v-model="form.billingEnabled" />
+              <span class="ml-2 text-xs text-gray-500">{{
+                $t('menus.masterData.customerForm.billingEnabledHint')
+              }}</span>
+            </ElFormItem>
+          </ElCol>
+        </ElRow>
         <BillingRegressionHint :billing-enabled="form.billingEnabled" />
         <ElAlert
           v-if="!form.billingEnabled"
@@ -241,10 +244,11 @@
         <ElButton class="mb-4" @click="addAlias">添加别名</ElButton>
 
         <template v-if="form.billingEnabled">
+        <CustomerClerkRulesSummaryPanel :customer-code="form.code" />
+
         <CustomerBillingPolicyPanel
           :state="billingPolicyState"
           :read-only="isReadOnlyConfig"
-          :customer-id="editingId"
         />
 
         <ElFormItem v-if="editingId" :label="$t('menus.billingConfig.deptPhysician')">
@@ -585,6 +589,7 @@
   } from '@/api/master-data/customersApi'
   import { listProducts } from '@/api/master-data/productsApi'
   import CustomerBillingPolicyPanel from '@/components/business/customers/CustomerBillingPolicyPanel.vue'
+  import CustomerClerkRulesSummaryPanel from '@/components/business/customers/CustomerClerkRulesSummaryPanel.vue'
   import CustomerExportTemplatePanel from '@/components/business/customers/CustomerExportTemplatePanel.vue'
   import CustomerProductRuleDialog from '@/components/business/customers/CustomerProductRuleDialog.vue'
   import RuleSimulatorDialog from '@/components/business/customers/RuleSimulatorDialog.vue'
@@ -598,7 +603,7 @@
     BILLING_POLICY_DEFAULT_PRIORITY,
     createEmptyBillingPolicyState,
     enrichDiscountForPanel,
-    formatPolicySummary,
+    formatPricingPolicySummary,
     normalizeDiscountForSave,
     type BillingPolicyPanelState
   } from '@/utils/customerBillingPolicy'
@@ -779,12 +784,12 @@
   }
 
   function policySummaryForCustomer(row: Api.MasterData.CustomerRecord) {
-    return formatPolicySummary(
+    return formatPricingPolicySummary(
       {
         discounts: row.discounts ?? [],
-        logisticsFeePerTrip: undefined,
-        monthlyMinCharge: undefined,
-        monthlyMaxCap: undefined
+        urgentActive: true,
+        urgentBaseMultiplier: undefined,
+        urgentAdjustedMultiplier: undefined
       },
       t
     )
@@ -1408,7 +1413,6 @@
     editingId.value = row.id
     form.code = row.code
     form.canonicalName = row.canonical_name
-    form.status = row.status ?? 'active'
     form.capMode = row.cap_mode ?? undefined
     form.chargeDoubleBagWhenCapped = row.charge_double_bag_when_capped ?? false
     form.billingEnabled = row.billing_enabled ?? row.billingEnabled ?? false
@@ -1471,6 +1475,7 @@
       }
       const payload: Api.MasterData.SaveCustomerPayload = {
         ...form,
+        status: form.billingEnabled ? 'active' : 'inactive',
         standardPricingOverride,
         exportNameMapping:
           exportTemplatePanelRef.value?.getExportNameMapping?.() ?? form.exportNameMapping,

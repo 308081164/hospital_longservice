@@ -22,8 +22,7 @@ export const BILLING_DISCOUNT_APPLY_STAGES = [
 
 export type BillingDiscountApplyStage = (typeof BILLING_DISCOUNT_APPLY_STAGES)[number]
 
-export type BillingPolicyTab =
-  'discount' | 'logistics' | 'monthly' | 'urgent' | 'deduction' | 'settlement'
+export type BillingPolicyTab = 'discount' | 'urgent'
 
 /** Panel-only field; stripped before API save */
 export type PanelCustomerDiscount = Api.MasterData.CustomerDiscount & {
@@ -284,8 +283,8 @@ export function formatLogisticsSummary(feePerTrip?: number | null): string | nul
 }
 
 export function formatMonthlySummary(
-  minCharge?: number | null,
-  maxCap?: number | null,
+  minCharge: number | null | undefined,
+  maxCap: number | null | undefined,
   t: ComposerTranslation
 ): string | null {
   const parts: string[] = []
@@ -298,33 +297,47 @@ export function formatMonthlySummary(
   return parts.length > 0 ? parts.join(' · ') : null
 }
 
-export function formatPolicySummary(
+/** 列表/抽屉摘要：仅客服计价策略（折扣 + 加急） */
+export function formatPricingPolicySummary(
   state: Pick<
     BillingPolicyPanelState,
-    'discounts' | 'logisticsFeePerTrip' | 'monthlyMinCharge' | 'monthlyMaxCap'
+    'discounts' | 'urgentActive' | 'urgentBaseMultiplier' | 'urgentAdjustedMultiplier'
   >,
   t: ComposerTranslation
 ): string | null {
   const parts: string[] = []
   const discount = formatDiscountSummary(state.discounts, t)
   if (discount) parts.push(discount)
-  const logistics = formatLogisticsSummary(state.logisticsFeePerTrip)
-  if (logistics) parts.push(logistics)
-  const monthly = formatMonthlySummary(state.monthlyMinCharge, state.monthlyMaxCap, t)
-  if (monthly) parts.push(monthly)
   if (state.urgentActive !== false && state.urgentBaseMultiplier != null) {
     parts.push(
-      `加急 ${(state.urgentBaseMultiplier * 100).toFixed(0)}%→${((state.urgentAdjustedMultiplier ?? 1.025) * 100).toFixed(1)}%`
+      `${t('menus.masterData.customerBillingPolicy.tabUrgent')} ${(state.urgentBaseMultiplier * 100).toFixed(0)}%→${((state.urgentAdjustedMultiplier ?? 1.025) * 100).toFixed(1)}%`
     )
   }
-  if (
-    state.deductionActive !== false &&
-    state.deductionMonthlyAmount != null &&
-    state.deductionMonthlyAmount > 0
-  ) {
-    parts.push(`抵扣 ¥${state.deductionMonthlyAmount}`)
-  }
   return parts.length > 0 ? parts.join(' · ') : null
+}
+
+/** @deprecated 使用 formatPricingPolicySummary；保留供旧数据兼容 */
+export function formatPolicySummary(
+  state: Pick<
+    BillingPolicyPanelState,
+    | 'discounts'
+    | 'logisticsFeePerTrip'
+    | 'monthlyMinCharge'
+    | 'monthlyMaxCap'
+    | 'urgentActive'
+    | 'urgentBaseMultiplier'
+    | 'urgentAdjustedMultiplier'
+    | 'deductionActive'
+    | 'deductionMonthlyAmount'
+  >,
+  t: ComposerTranslation
+): string | null {
+  const pricing = formatPricingPolicySummary(state, t)
+  if (pricing) return pricing
+  const logistics = formatLogisticsSummary(state.logisticsFeePerTrip)
+  if (logistics) return logistics
+  const monthly = formatMonthlySummary(state.monthlyMinCharge, state.monthlyMaxCap, t)
+  return monthly
 }
 
 export function buildSettlementPreviewLines(
