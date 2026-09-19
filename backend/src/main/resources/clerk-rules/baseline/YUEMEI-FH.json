@@ -1,0 +1,41 @@
+{
+  "customerCode": "YUEMEI-FH",
+  "customerName": "悦美芳华医疗门诊医院",
+  "sourceVersion": "医院内勤规则-20260918",
+  "notes": "医院内勤规则 v2 · Excel行 悦美芳华医疗门诊医院",
+  "attachmentRefs": [],
+  "rules": [
+    {
+      "ruleType": "SETTLEMENT_MIN_CHARGE",
+      "name": "低消",
+      "stage": "settlement",
+      "isActive": true,
+      "params": {
+        "minCharge": 1000.0,
+        "baseComponents": [
+          "sterilize",
+          "logistics"
+        ]
+      },
+      "sourceText": "低于1000元",
+      "sourceRef": "excel:结款函#YUEMEI-FH",
+      "priority": 100
+    },
+    {
+      "ruleType": "SETTLEMENT_MIN_CHARGE",
+      "name": "低消",
+      "stage": "settlement",
+      "isActive": true,
+      "params": {
+        "minCharge": 1000.0,
+        "baseComponents": [
+          "sterilize",
+          "logistics"
+        ]
+      },
+      "sourceText": "灭菌费+物流费 ≥ 1000元",
+      "sourceRef": "excel:低消#悦美芳华医疗门诊医院",
+      "priority": 10
+    }
+  ]
+}

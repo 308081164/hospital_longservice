@@ -14,6 +14,15 @@
         {{ $t('menus.masterData.customerBillingPolicy.summaryEmpty') }}
       </div>
 
+      <ElAlert
+        type="warning"
+        :closable="false"
+        class="billing-policy-panel__clerk-hint"
+        :title="$t('menus.masterData.customerBillingPolicy.clerkRulesMovedTitle')"
+        :description="$t('menus.masterData.customerBillingPolicy.clerkRulesMovedDesc')"
+        show-icon
+      />
+
       <ElTabs v-model="activeTab" class="billing-policy-panel__tabs">
         <ElTabPane
           :label="$t('menus.masterData.customerBillingPolicy.tabDiscount')"

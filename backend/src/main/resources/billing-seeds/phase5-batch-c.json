@@ -8,23 +8,7 @@
       "billingEnabled": true,
       "billingPricingMode": "hybrid",
       "aliases": ["呼兰中医", "呼兰中医院", "哈尔滨市呼兰区中医医院"],
-      "policies": [
-        {
-          "policyType": "LOGISTICS",
-          "name": "物流185元/次",
-          "params": {"feePerTrip": 185},
-          "priority": 10
-        },
-        {
-          "policyType": "MONTHLY_SETTLEMENT",
-          "name": "低消10000",
-          "params": {
-            "minCharge": 10000,
-            "excludeCategories": ["备包", "手术室备包"]
-          },
-          "priority": 20
-        }
-      ],
+      "policies": [],
       "productRules": [
         {
           "ruleType": "FIXED_PRICE",
@@ -52,14 +36,7 @@
       "billingEnabled": true,
       "billingPricingMode": "hybrid",
       "aliases": ["祖研南岗", "黑龙江省中医医院南岗"],
-      "policies": [
-        {
-          "policyType": "LOGISTICS",
-          "name": "南岗135物流50",
-          "params": {"feePerTrip": 50, "billingWeekdays": [1, 3, 5]},
-          "priority": 10
-        }
-      ],
+      "policies": [],
       "productRules": [
         {
           "ruleType": "FOLD",
@@ -77,14 +54,7 @@
       "billingEnabled": true,
       "billingPricingMode": "hybrid",
       "aliases": ["祖研三辅", "三辅院区"],
-      "policies": [
-        {
-          "policyType": "LOGISTICS",
-          "name": "三辅物流50跨院合并",
-          "params": {"feePerTrip": 50, "mergeSameDayCrossCustomer": true},
-          "priority": 10
-        }
-      ]
+      "policies": []
     },
     {
       "code": "ZUYAN-XA",
@@ -92,14 +62,7 @@
       "billingEnabled": true,
       "billingPricingMode": "hybrid",
       "aliases": ["祖研香安", "香安院区"],
-      "policies": [
-        {
-          "policyType": "LOGISTICS",
-          "name": "香安物流50跨院合并",
-          "params": {"feePerTrip": 50, "mergeSameDayCrossCustomer": true},
-          "priority": 10
-        }
-      ],
+      "policies": [],
       "productRules": [
         {
           "ruleType": "FOLD",
@@ -117,28 +80,7 @@
       "billingEnabled": true,
       "billingPricingMode": "hybrid",
       "aliases": ["太平人民", "太平人民医院"],
-      "policies": [
-        {
-          "policyType": "DISCOUNT",
-          "name": "太平导出阶段折扣",
-          "params": {
-            "applyStage": "export_only",
-            "pieceTierDiscounts": [
-              {"minPieces": 1, "maxPieces": 1, "rate": 1.0},
-              {"minPieces": 2, "maxPieces": 2, "rate": 0.75},
-              {"minPieces": 3, "maxPieces": 3, "rate": 0.891, "originalUnitPriceEquals": 16.5},
-              {"minPieces": 4, "maxPieces": 999, "rate": 0.75}
-            ]
-          },
-          "priority": 10
-        },
-        {
-          "policyType": "LOGISTICS",
-          "name": "不收物流费",
-          "params": {"feePerTrip": 0},
-          "priority": 20
-        }
-      ]
+      "policies": []
     },
     {
       "code": "RENSHENG",
@@ -146,14 +88,7 @@
       "billingEnabled": true,
       "billingPricingMode": "standard",
       "aliases": ["仁胜", "哈尔滨仁胜医院"],
-      "policies": [
-        {
-          "policyType": "LOGISTICS",
-          "name": "物流卡抵扣",
-          "params": {"useLogisticsCard": true},
-          "priority": 10
-        }
-      ]
+      "policies": []
     },
     {
       "code": "GUOYAO-MAIN",

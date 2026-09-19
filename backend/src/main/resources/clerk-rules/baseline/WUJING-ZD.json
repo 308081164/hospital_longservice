@@ -1,0 +1,51 @@
+{
+  "customerCode": "WUJING-ZD",
+  "customerName": "武警黑龙江省总队医院",
+  "sourceVersion": "医院内勤规则-20260918",
+  "notes": "医院内勤规则 v2 · Excel行 武警黑龙江省总队医院",
+  "attachmentRefs": [],
+  "rules": [
+    {
+      "ruleType": "ZERO_ROW_PACKAGING_FEE",
+      "name": "零元行纸塑袋",
+      "stage": "bill_export",
+      "isActive": true,
+      "params": {
+        "packagingMaterial": "纸塑袋",
+        "unitPrice": 8.0,
+        "unitPriceMode": "PER_PACK"
+      },
+      "sourceText": "纸塑袋 8/包",
+      "sourceRef": "excel:账单规则#武警黑龙江省总队医院#1",
+      "priority": 11
+    },
+    {
+      "ruleType": "ZERO_ROW_PACKAGING_FEE",
+      "name": "零元行无纺布",
+      "stage": "bill_export",
+      "isActive": true,
+      "params": {
+        "packagingMaterial": "无纺布",
+        "unitPrice": 20.0,
+        "unitPriceMode": "PER_PACK"
+      },
+      "sourceText": "无纺布 20/包",
+      "sourceRef": "excel:账单规则#武警黑龙江省总队医院#2",
+      "priority": 12
+    },
+    {
+      "ruleType": "ZERO_ROW_PACKAGING_FEE",
+      "name": "环氧乙烷自行打包",
+      "stage": "bill_export",
+      "isActive": true,
+      "params": {
+        "packNameKeyword": "环氧乙烷",
+        "unitPrice": 35.0,
+        "unitPriceMode": "PER_PACK"
+      },
+      "sourceText": "环氧乙烷（自行打包）",
+      "sourceRef": "excel:账单规则#武警黑龙江省总队医院#3",
+      "priority": 13
+    }
+  ]
+}

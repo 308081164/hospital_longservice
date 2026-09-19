@@ -1,0 +1,558 @@
+{
+  "customerCode": "SANJING-SB",
+  "customerName": "哈尔滨市三精肾脏病专科医院",
+  "sourceVersion": "医院内勤规则-20260918",
+  "notes": "医院内勤规则 v2 · Excel行 三精肾病医院",
+  "attachmentRefs": [
+    "attachments/3哈尔滨市三精肾脏病专科医院价格单.pdf"
+  ],
+  "rules": [
+    {
+      "ruleType": "BILL_EXPORT_PRICE_RULE",
+      "name": "额外包(纸塑袋)",
+      "stage": "bill_export",
+      "isActive": true,
+      "params": {
+        "acceptedTypes": [
+          "额外包(纸塑袋)",
+          "额外包（无纺布）",
+          "器械包（ZSD）",
+          "器械包",
+          "单包装包"
+        ],
+        "packNameKeywords": null,
+        "packagingMaterial": null,
+        "instrumentCountRange": "N≥3",
+        "unitPrice": 3.0,
+        "unitPriceMode": "PER_PIECE",
+        "systemPrice": null,
+        "systemPriceMode": "IGNORE"
+      },
+      "sourceText": "额外包(纸塑袋)、额外包（无纺布）、器械包（ZSD）、器械包、单包装包 | N≥3 | 3/把 | 不区分包材",
+      "sourceRef": "excel:账单规则#三精肾病医院#1",
+      "priority": 11
+    },
+    {
+      "ruleType": "BILL_EXPORT_PRICE_RULE",
+      "name": "额外包(纸塑袋)",
+      "stage": "bill_export",
+      "isActive": true,
+      "params": {
+        "acceptedTypes": [
+          "额外包(纸塑袋)"
+        ],
+        "packNameKeywords": null,
+        "packagingMaterial": "25cm",
+        "instrumentCountRange": null,
+        "unitPrice": 12.8,
+        "unitPriceMode": "FIXED",
+        "systemPrice": null,
+        "systemPriceMode": "IGNORE"
+      },
+      "sourceText": "额外包(纸塑袋) | 25cm | 12.8 | 需要先验证系统价格是否符合客服标准价格，再做下一步验证。",
+      "sourceRef": "excel:账单规则#三精肾病医院#2",
+      "priority": 12
+    },
+    {
+      "ruleType": "BILL_EXPORT_PRICE_RULE",
+      "name": "额外包(纸塑袋)",
+      "stage": "bill_export",
+      "isActive": true,
+      "params": {
+        "acceptedTypes": [
+          "额外包(纸塑袋)"
+        ],
+        "packNameKeywords": null,
+        "packagingMaterial": "20cm",
+        "instrumentCountRange": null,
+        "unitPrice": 10.4,
+        "unitPriceMode": "FIXED",
+        "systemPrice": null,
+        "systemPriceMode": "IGNORE"
+      },
+      "sourceText": "额外包(纸塑袋) | 20cm | 10.4",
+      "sourceRef": "excel:账单规则#三精肾病医院#3",
+      "priority": 13
+    },
+    {
+      "ruleType": "BILL_EXPORT_PRICE_RULE",
+      "name": "额外包(纸塑袋)",
+      "stage": "bill_export",
+      "isActive": true,
+      "params": {
+        "acceptedTypes": [
+          "额外包(纸塑袋)"
+        ],
+        "packNameKeywords": null,
+        "packagingMaterial": "15cm",
+        "instrumentCountRange": null,
+        "unitPrice": 8.8,
+        "unitPriceMode": "FIXED",
+        "systemPrice": null,
+        "systemPriceMode": "IGNORE"
+      },
+      "sourceText": "额外包(纸塑袋) | 15cm | 8.8",
+      "sourceRef": "excel:账单规则#三精肾病医院#4",
+      "priority": 14
+    },
+    {
+      "ruleType": "BILL_EXPORT_PRICE_RULE",
+      "name": "额外包(纸塑袋)",
+      "stage": "bill_export",
+      "isActive": true,
+      "params": {
+        "acceptedTypes": [
+          "额外包(纸塑袋)"
+        ],
+        "packNameKeywords": null,
+        "packagingMaterial": "10cm",
+        "instrumentCountRange": null,
+        "unitPrice": 6.4,
+        "unitPriceMode": "FIXED",
+        "systemPrice": null,
+        "systemPriceMode": "IGNORE"
+      },
+      "sourceText": "额外包(纸塑袋) | 10cm | 6.4",
+      "sourceRef": "excel:账单规则#三精肾病医院#5",
+      "priority": 15
+    },
+    {
+      "ruleType": "BILL_EXPORT_PRICE_RULE",
+      "name": "敷料包",
+      "stage": "bill_export",
+      "isActive": true,
+      "params": {
+        "acceptedTypes": [
+          "敷料包"
+        ],
+        "packNameKeywords": null,
+        "packagingMaterial": null,
+        "instrumentCountRange": null,
+        "unitPrice": 20.0,
+        "unitPriceMode": "FIXED",
+        "systemPrice": 25.0,
+        "systemPriceMode": "VALIDATE_ONLY"
+      },
+      "sourceText": "敷料包 | 25 | 20",
+      "sourceRef": "excel:账单规则#三精肾病医院#6",
+      "priority": 16
+    },
+    {
+      "ruleType": "BILL_EXPORT_PRICE_RULE",
+      "name": "敷料包",
+      "stage": "bill_export",
+      "isActive": true,
+      "params": {
+        "acceptedTypes": [
+          "敷料包"
+        ],
+        "packNameKeywords": null,
+        "packagingMaterial": null,
+        "instrumentCountRange": null,
+        "unitPrice": 16.0,
+        "unitPriceMode": "FIXED",
+        "systemPrice": 20.0,
+        "systemPriceMode": "VALIDATE_ONLY"
+      },
+      "sourceText": "敷料包 | 20 | 16",
+      "sourceRef": "excel:账单规则#三精肾病医院#7",
+      "priority": 17
+    },
+    {
+      "ruleType": "BILL_EXPORT_PRICE_RULE",
+      "name": "敷料包",
+      "stage": "bill_export",
+      "isActive": true,
+      "params": {
+        "acceptedTypes": [
+          "敷料包"
+        ],
+        "packNameKeywords": null,
+        "packagingMaterial": null,
+        "instrumentCountRange": null,
+        "unitPrice": 12.0,
+        "unitPriceMode": "FIXED",
+        "systemPrice": 15.0,
+        "systemPriceMode": "VALIDATE_ONLY"
+      },
+      "sourceText": "敷料包 | 15 | 12",
+      "sourceRef": "excel:账单规则#三精肾病医院#8",
+      "priority": 18
+    },
+    {
+      "ruleType": "BILL_EXPORT_PRICE_RULE",
+      "name": "敷料包（无纺布）",
+      "stage": "bill_export",
+      "isActive": true,
+      "params": {
+        "acceptedTypes": [
+          "敷料包（无纺布）"
+        ],
+        "packNameKeywords": null,
+        "packagingMaterial": null,
+        "instrumentCountRange": null,
+        "unitPrice": 28.0,
+        "unitPriceMode": "FIXED",
+        "systemPrice": 35.0,
+        "systemPriceMode": "VALIDATE_ONLY"
+      },
+      "sourceText": "敷料包（无纺布） | 35 | 28",
+      "sourceRef": "excel:账单规则#三精肾病医院#9",
+      "priority": 19
+    },
+    {
+      "ruleType": "BILL_EXPORT_PRICE_RULE",
+      "name": "敷料包（无纺布）",
+      "stage": "bill_export",
+      "isActive": true,
+      "params": {
+        "acceptedTypes": [
+          "敷料包（无纺布）"
+        ],
+        "packNameKeywords": null,
+        "packagingMaterial": null,
+        "instrumentCountRange": null,
+        "unitPrice": 24.0,
+        "unitPriceMode": "FIXED",
+        "systemPrice": 30.0,
+        "systemPriceMode": "VALIDATE_ONLY"
+      },
+      "sourceText": "敷料包（无纺布） | 30 | 24",
+      "sourceRef": "excel:账单规则#三精肾病医院#10",
+      "priority": 20
+    },
+    {
+      "ruleType": "BILL_EXPORT_PRICE_RULE",
+      "name": "敷料包（无纺布）",
+      "stage": "bill_export",
+      "isActive": true,
+      "params": {
+        "acceptedTypes": [
+          "敷料包（无纺布）"
+        ],
+        "packNameKeywords": null,
+        "packagingMaterial": null,
+        "instrumentCountRange": null,
+        "unitPrice": 20.0,
+        "unitPriceMode": "FIXED",
+        "systemPrice": 25.0,
+        "systemPriceMode": "VALIDATE_ONLY"
+      },
+      "sourceText": "敷料包（无纺布） | 25 | 20",
+      "sourceRef": "excel:账单规则#三精肾病医院#11",
+      "priority": 21
+    },
+    {
+      "ruleType": "BILL_EXPORT_PRICE_RULE",
+      "name": "敷料包（包名称带棉球或者纱布）",
+      "stage": "bill_export",
+      "isActive": true,
+      "params": {
+        "acceptedTypes": [
+          "敷料包"
+        ],
+        "packNameKeywords": [
+          "棉球",
+          "纱布"
+        ],
+        "packagingMaterial": null,
+        "instrumentCountRange": null,
+        "unitPrice": 2.0,
+        "unitPriceMode": "FIXED",
+        "systemPrice": 2.5,
+        "systemPriceMode": "VALIDATE_ONLY"
+      },
+      "sourceText": "敷料包（包名称带棉球或者纱布） | 2.5 | 2",
+      "sourceRef": "excel:账单规则#三精肾病医院#12",
+      "priority": 22
+    },
+    {
+      "ruleType": "BILL_EXPORT_PRICE_RULE",
+      "name": "敷料包（包名称带棉球或者纱布）",
+      "stage": "bill_export",
+      "isActive": true,
+      "params": {
+        "acceptedTypes": [
+          "敷料包"
+        ],
+        "packNameKeywords": [
+          "棉球",
+          "纱布"
+        ],
+        "packagingMaterial": null,
+        "instrumentCountRange": null,
+        "unitPrice": 1.6,
+        "unitPriceMode": "FIXED",
+        "systemPrice": 2.0,
+        "systemPriceMode": "VALIDATE_ONLY"
+      },
+      "sourceText": "敷料包（包名称带棉球或者纱布） | 2 | 1.6",
+      "sourceRef": "excel:账单规则#三精肾病医院#13",
+      "priority": 23
+    },
+    {
+      "ruleType": "BILL_EXPORT_PRICE_RULE",
+      "name": "敷料包（包名称带棉球或者纱布）",
+      "stage": "bill_export",
+      "isActive": true,
+      "params": {
+        "acceptedTypes": [
+          "敷料包"
+        ],
+        "packNameKeywords": [
+          "棉球",
+          "纱布"
+        ],
+        "packagingMaterial": null,
+        "instrumentCountRange": null,
+        "unitPrice": 1.2,
+        "unitPriceMode": "FIXED",
+        "systemPrice": 1.5,
+        "systemPriceMode": "VALIDATE_ONLY"
+      },
+      "sourceText": "敷料包（包名称带棉球或者纱布） | 1.5 | 1.2",
+      "sourceRef": "excel:账单规则#三精肾病医院#14",
+      "priority": 24
+    },
+    {
+      "ruleType": "BILL_EXPORT_PRICE_RULE",
+      "name": "敷料包（纸塑袋）",
+      "stage": "bill_export",
+      "isActive": true,
+      "params": {
+        "acceptedTypes": [
+          "敷料包（纸塑袋）"
+        ],
+        "packNameKeywords": null,
+        "packagingMaterial": null,
+        "instrumentCountRange": null,
+        "unitPrice": 3.2,
+        "unitPriceMode": "FIXED",
+        "systemPrice": 4.0,
+        "systemPriceMode": "VALIDATE_ONLY"
+      },
+      "sourceText": "敷料包（纸塑袋） | 4 | 3.2",
+      "sourceRef": "excel:账单规则#三精肾病医院#15",
+      "priority": 25
+    },
+    {
+      "ruleType": "BILL_EXPORT_PRICE_RULE",
+      "name": "敷料包（纸塑袋）",
+      "stage": "bill_export",
+      "isActive": true,
+      "params": {
+        "acceptedTypes": [
+          "敷料包（纸塑袋）"
+        ],
+        "packNameKeywords": null,
+        "packagingMaterial": null,
+        "instrumentCountRange": null,
+        "unitPrice": 2.0,
+        "unitPriceMode": "FIXED",
+        "systemPrice": 2.5,
+        "systemPriceMode": "VALIDATE_ONLY"
+      },
+      "sourceText": "敷料包（纸塑袋） | 2.5 | 2",
+      "sourceRef": "excel:账单规则#三精肾病医院#16",
+      "priority": 26
+    },
+    {
+      "ruleType": "BILL_EXPORT_PRICE_RULE",
+      "name": "器械包（低温等离子）",
+      "stage": "bill_export",
+      "isActive": true,
+      "params": {
+        "acceptedTypes": [
+          "器械包（低温等离子）",
+          "器械包（ETO)",
+          "单包装包(老肯等温）",
+          "单包装包（EO）",
+          "额外包（低温等离子）",
+          "额外包（ETO)"
+        ],
+        "packNameKeywords": null,
+        "packagingMaterial": null,
+        "instrumentCountRange": "10≤N<20",
+        "unitPrice": 240.0,
+        "unitPriceMode": "FIXED",
+        "systemPrice": null,
+        "systemPriceMode": "IGNORE"
+      },
+      "sourceText": "器械包（低温等离子）、器械包（ETO)、单包装包(老肯等温）、单包装包（EO）、额外包（低温等离子）、额外包（ETO) | 10≤N<20 | 不读取。根据器械把数选择价格区间。 | 240",
+      "sourceRef": "excel:账单规则#三精肾病医院#17",
+      "priority": 27
+    },
+    {
+      "ruleType": "BILL_EXPORT_PRICE_RULE",
+      "name": "器械包（低温等离子）",
+      "stage": "bill_export",
+      "isActive": true,
+      "params": {
+        "acceptedTypes": [
+          "器械包（低温等离子）",
+          "器械包（ETO)",
+          "单包装包(老肯等温）",
+          "单包装包（EO）",
+          "额外包（低温等离子）",
+          "额外包（ETO)"
+        ],
+        "packNameKeywords": null,
+        "packagingMaterial": null,
+        "instrumentCountRange": "5≤N<10",
+        "unitPrice": 132.0,
+        "unitPriceMode": "FIXED",
+        "systemPrice": null,
+        "systemPriceMode": "IGNORE"
+      },
+      "sourceText": "器械包（低温等离子）、器械包（ETO)、单包装包(老肯等温）、单包装包（EO）、额外包（低温等离子）、额外包（ETO) | 5≤N<10 | 不读取。根据器械把数选择价格区间。 | 132",
+      "sourceRef": "excel:账单规则#三精肾病医院#18",
+      "priority": 28
+    },
+    {
+      "ruleType": "BILL_EXPORT_PRICE_RULE",
+      "name": "器械包（低温等离子）",
+      "stage": "bill_export",
+      "isActive": true,
+      "params": {
+        "acceptedTypes": [
+          "器械包（低温等离子）",
+          "器械包（ETO)",
+          "单包装包(老肯等温）",
+          "单包装包（EO）",
+          "额外包（低温等离子）",
+          "额外包（ETO)"
+        ],
+        "packNameKeywords": null,
+        "packagingMaterial": null,
+        "instrumentCountRange": "1≤N<5",
+        "unitPrice": 70.4,
+        "unitPriceMode": "FIXED",
+        "systemPrice": null,
+        "systemPriceMode": "IGNORE"
+      },
+      "sourceText": "器械包（低温等离子）、器械包（ETO)、单包装包(老肯等温）、单包装包（EO）、额外包（低温等离子）、额外包（ETO) | 1≤N<5 | 不读取。根据器械把数选择价格区间。 | 70.4",
+      "sourceRef": "excel:账单规则#三精肾病医院#19",
+      "priority": 29
+    },
+    {
+      "ruleType": "BILL_EXPORT_PRICE_RULE",
+      "name": "单包装包(老肯等温）",
+      "stage": "bill_export",
+      "isActive": true,
+      "params": {
+        "acceptedTypes": [
+          "单包装包(老肯等温）",
+          "单包装包（EO）",
+          "额外包（低温等离子）",
+          "额外包（ETO)"
+        ],
+        "packNameKeywords": null,
+        "packagingMaterial": "30cm",
+        "instrumentCountRange": null,
+        "unitPrice": 28.0,
+        "unitPriceMode": "FIXED",
+        "systemPrice": null,
+        "systemPriceMode": "IGNORE"
+      },
+      "sourceText": "单包装包(老肯等温）、单包装包（EO）、额外包（低温等离子）、额外包（ETO) | 30cm | 28 | 一件一包，以纸塑袋大小判断",
+      "sourceRef": "excel:账单规则#三精肾病医院#20",
+      "priority": 30
+    },
+    {
+      "ruleType": "BILL_EXPORT_PRICE_RULE",
+      "name": "单包装包(老肯等温）",
+      "stage": "bill_export",
+      "isActive": true,
+      "params": {
+        "acceptedTypes": [
+          "单包装包(老肯等温）",
+          "单包装包（EO）",
+          "额外包（低温等离子）",
+          "额外包（ETO)"
+        ],
+        "packNameKeywords": null,
+        "packagingMaterial": "25cm",
+        "instrumentCountRange": null,
+        "unitPrice": 24.0,
+        "unitPriceMode": "FIXED",
+        "systemPrice": null,
+        "systemPriceMode": "IGNORE"
+      },
+      "sourceText": "单包装包(老肯等温）、单包装包（EO）、额外包（低温等离子）、额外包（ETO) | 25cm | 24",
+      "sourceRef": "excel:账单规则#三精肾病医院#21",
+      "priority": 31
+    },
+    {
+      "ruleType": "BILL_EXPORT_PRICE_RULE",
+      "name": "单包装包(老肯等温）",
+      "stage": "bill_export",
+      "isActive": true,
+      "params": {
+        "acceptedTypes": [
+          "单包装包(老肯等温）",
+          "单包装包（EO）",
+          "额外包（低温等离子）",
+          "额外包（ETO)"
+        ],
+        "packNameKeywords": null,
+        "packagingMaterial": "20cm",
+        "instrumentCountRange": null,
+        "unitPrice": 22.4,
+        "unitPriceMode": "FIXED",
+        "systemPrice": null,
+        "systemPriceMode": "IGNORE"
+      },
+      "sourceText": "单包装包(老肯等温）、单包装包（EO）、额外包（低温等离子）、额外包（ETO) | 20cm | 22.4",
+      "sourceRef": "excel:账单规则#三精肾病医院#22",
+      "priority": 32
+    },
+    {
+      "ruleType": "BILL_EXPORT_PRICE_RULE",
+      "name": "单包装包(老肯等温）",
+      "stage": "bill_export",
+      "isActive": true,
+      "params": {
+        "acceptedTypes": [
+          "单包装包(老肯等温）",
+          "单包装包（EO）",
+          "额外包（低温等离子）",
+          "额外包（ETO)"
+        ],
+        "packNameKeywords": null,
+        "packagingMaterial": "15cm",
+        "instrumentCountRange": null,
+        "unitPrice": 20.0,
+        "unitPriceMode": "FIXED",
+        "systemPrice": null,
+        "systemPriceMode": "IGNORE"
+      },
+      "sourceText": "单包装包(老肯等温）、单包装包（EO）、额外包（低温等离子）、额外包（ETO) | 15cm | 20",
+      "sourceRef": "excel:账单规则#三精肾病医院#23",
+      "priority": 33
+    },
+    {
+      "ruleType": "BILL_EXPORT_PRICE_RULE",
+      "name": "单包装包(老肯等温）",
+      "stage": "bill_export",
+      "isActive": true,
+      "params": {
+        "acceptedTypes": [
+          "单包装包(老肯等温）",
+          "单包装包（EO）",
+          "额外包（低温等离子）",
+          "额外包（ETO)"
+        ],
+        "packNameKeywords": null,
+        "packagingMaterial": "10cm",
+        "instrumentCountRange": null,
+        "unitPrice": 17.6,
+        "unitPriceMode": "FIXED",
+        "systemPrice": null,
+        "systemPriceMode": "IGNORE"
+      },
+      "sourceText": "单包装包(老肯等温）、单包装包（EO）、额外包（低温等离子）、额外包（ETO) | 10cm | 17.6",
+      "sourceRef": "excel:账单规则#三精肾病医院#24",
+      "priority": 34
+    }
+  ]
+}

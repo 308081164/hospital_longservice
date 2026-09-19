@@ -1,0 +1,54 @@
+{
+  "customerCode": "VICTORIA",
+  "customerName": "黑龙江维多利亚妇产医院",
+  "sourceVersion": "医院内勤规则-20260918",
+  "notes": "医院内勤规则 v2 · Excel行 黑龙江维多利亚妇产医院",
+  "attachmentRefs": [],
+  "rules": [
+    {
+      "ruleType": "SETTLEMENT_MIN_CHARGE",
+      "name": "低消",
+      "stage": "settlement",
+      "isActive": true,
+      "params": {
+        "minCharge": 8000.0,
+        "baseComponents": [
+          "sterilize",
+          "logistics"
+        ]
+      },
+      "sourceText": "低于8000元",
+      "sourceRef": "excel:结款函#VICTORIA",
+      "priority": 100
+    },
+    {
+      "ruleType": "SETTLEMENT_MIN_CHARGE",
+      "name": "低消",
+      "stage": "settlement",
+      "isActive": true,
+      "params": {
+        "minCharge": 8000.0,
+        "baseComponents": [
+          "sterilize",
+          "logistics"
+        ]
+      },
+      "sourceText": "灭菌费+物流费 ≥ 8000元",
+      "sourceRef": "excel:低消#黑龙江维多利亚妇产医院",
+      "priority": 10
+    },
+    {
+      "ruleType": "SETTLEMENT_DISCOUNT",
+      "name": "高温五折低温七折",
+      "stage": "settlement",
+      "isActive": true,
+      "params": {
+        "htRate": 0.5,
+        "ltRate": 0.7
+      },
+      "sourceText": "高温五折/低温七折",
+      "sourceRef": "excel:低消折扣#黑龙江维多利亚妇产医院",
+      "priority": 10
+    }
+  ]
+}

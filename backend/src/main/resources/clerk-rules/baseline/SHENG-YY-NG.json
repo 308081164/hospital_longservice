@@ -1,0 +1,21 @@
+{
+  "customerCode": "SHENG-YY-NG",
+  "customerName": "黑龙江省医院（南岗院区）",
+  "sourceVersion": "医院内勤规则-20260918",
+  "notes": "医院内勤规则 v2 · Excel行 黑龙江省医院（南岗/香坊）",
+  "attachmentRefs": [],
+  "rules": [
+    {
+      "ruleType": "DISCOUNT_OVERLAY",
+      "name": "标准价六折",
+      "stage": "bill_export",
+      "isActive": true,
+      "params": {
+        "rate": 0.6
+      },
+      "sourceText": "标准价格六折",
+      "sourceRef": "excel:账单规则#黑龙江省医院（南岗/香坊）#1",
+      "priority": 10
+    }
+  ]
+}

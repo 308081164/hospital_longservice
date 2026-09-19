@@ -31,3 +31,8 @@ export function getClerkRuleIndex() {
     url: '/api/v1/clerk-rules/index'
   })
 }
+
+export function getClerkRuleAttachmentUrl(path: string) {
+  const encoded = encodeURIComponent(path)
+  return `/api/v1/clerk-rules/attachments/file?path=${encoded}`
+}

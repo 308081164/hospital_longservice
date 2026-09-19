@@ -1,0 +1,21 @@
+{
+  "customerCode": "WUCHANG-RM",
+  "customerName": "五常市人民医院",
+  "sourceVersion": "医院内勤规则-20260918",
+  "notes": "医院内勤规则 v2 · Excel行 五常市人民医院",
+  "attachmentRefs": [],
+  "rules": [
+    {
+      "ruleType": "LOGISTICS_WAIVE",
+      "name": "不收物流费",
+      "stage": "settlement",
+      "isActive": true,
+      "params": {
+        "feePerTrip": 0
+      },
+      "sourceText": "无物流费",
+      "sourceRef": "excel:结款函#WUCHANG-RM",
+      "priority": 100
+    }
+  ]
+}

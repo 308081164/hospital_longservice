@@ -1,0 +1,34 @@
+{
+  "customerCode": "RENSHENG",
+  "customerName": "哈尔滨仁胜医院",
+  "sourceVersion": "医院内勤规则-20260918",
+  "notes": "医院内勤规则 v2 · Excel行 哈尔滨仁胜医院",
+  "attachmentRefs": [],
+  "rules": [
+    {
+      "ruleType": "LOGISTICS_CARD_DEDUCT",
+      "name": "物流卡抵扣",
+      "stage": "settlement",
+      "isActive": true,
+      "params": {
+        "deductFromCard": true
+      },
+      "sourceText": "物流卡",
+      "sourceRef": "excel:结款函#RENSHENG",
+      "priority": 100
+    },
+    {
+      "ruleType": "SETTLEMENT_DISCOUNT",
+      "name": "结款八折",
+      "stage": "settlement",
+      "isActive": true,
+      "params": {
+        "rate": 0.8,
+        "target": "sterilize"
+      },
+      "sourceText": "8折",
+      "sourceRef": "excel:结款函#RENSHENG",
+      "priority": 110
+    }
+  ]
+}

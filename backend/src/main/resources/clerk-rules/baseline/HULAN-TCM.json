@@ -1,0 +1,77 @@
+{
+  "customerCode": "HULAN-TCM",
+  "customerName": "呼兰中医院",
+  "sourceVersion": "医院内勤规则-20260918",
+  "notes": "医院内勤规则 v2 · Excel行 呼兰中医院",
+  "attachmentRefs": [],
+  "rules": [
+    {
+      "ruleType": "LOGISTICS_FEE",
+      "name": "物流费",
+      "stage": "settlement",
+      "isActive": true,
+      "params": {
+        "feePerTrip": 185.0
+      },
+      "sourceText": "物流费185元/次",
+      "sourceRef": "excel:结款函#HULAN-TCM",
+      "priority": 100
+    },
+    {
+      "ruleType": "SETTLEMENT_MIN_CHARGE",
+      "name": "低消",
+      "stage": "settlement",
+      "isActive": true,
+      "params": {
+        "minCharge": 10000.0,
+        "baseComponents": [
+          "sterilize",
+          "logistics"
+        ]
+      },
+      "sourceText": "低于10000元",
+      "sourceRef": "excel:结款函#HULAN-TCM",
+      "priority": 110
+    },
+    {
+      "ruleType": "SETTLEMENT_PACK_SPLIT",
+      "name": "备包单独结款",
+      "stage": "settlement",
+      "isActive": true,
+      "params": {
+        "deptKeyword": "手术室（备包）"
+      },
+      "sourceText": "备包",
+      "sourceRef": "excel:结款函#HULAN-TCM",
+      "priority": 120
+    },
+    {
+      "ruleType": "SETTLEMENT_MIN_CHARGE",
+      "name": "低消",
+      "stage": "settlement",
+      "isActive": true,
+      "params": {
+        "minCharge": 10000.0,
+        "baseComponents": [
+          "sterilize",
+          "logistics"
+        ]
+      },
+      "sourceText": "灭菌费+物流费 ≥ 10000元",
+      "sourceRef": "excel:低消#呼兰中医院",
+      "priority": 10
+    },
+    {
+      "ruleType": "LOGISTICS_FEE",
+      "name": "物流费",
+      "stage": "settlement",
+      "isActive": true,
+      "params": {
+        "feePerTrip": 185.0
+      },
+      "sourceText": "185元/次",
+      "sourceRef": "excel:低消物流#呼兰中医院",
+      "priority": 10
+    }
+  ]
+}

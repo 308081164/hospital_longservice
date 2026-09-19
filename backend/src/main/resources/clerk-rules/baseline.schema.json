@@ -6,7 +6,9 @@
   "properties": {
     "customerCode": { "type": "string", "minLength": 1 },
     "customerName": { "type": "string" },
+    "sourceVersion": { "type": "string" },
     "notes": { "type": "string" },
+    "attachmentRefs": { "type": "array", "items": { "type": "string" } },
     "rules": {
       "type": "array",
       "items": { "$ref": "#/$defs/clerkRule" }
@@ -25,7 +27,21 @@
             "FIXED_PRICE_EXPORT",
             "EXPORT_LAYOUT",
             "SETTLEMENT_DISCOUNT",
-            "SEPARATE_PRICING_SYSTEM"
+            "SEPARATE_PRICING_SYSTEM",
+            "SETTLEMENT_MIN_CHARGE",
+            "LOGISTICS_FEE",
+            "LOGISTICS_WAIVE",
+            "LOGISTICS_CARD_DEDUCT",
+            "DEPT_SPLIT",
+            "MERGED_SETTLEMENT",
+            "GUOYAO_SETTLEMENT_FORMULA",
+            "ZERO_ROW_PACKAGING_FEE",
+            "MONTHLY_SUPPLEMENT_REPORT",
+            "SETTLEMENT_PACK_SPLIT",
+            "ATTACHMENT_REF",
+            "BILL_EXPORT_PRICE_RULE",
+            "PACK_NAME_PRICE",
+            "PRICE_VALIDATE_ONLY"
           ]
         },
         "name": { "type": "string", "minLength": 1 },
@@ -35,6 +51,8 @@
         },
         "isActive": { "type": "boolean", "default": true },
         "priority": { "type": "integer" },
+        "sourceText": { "type": "string" },
+        "sourceRef": { "type": "string" },
         "scope": {
           "type": "object",
           "properties": {
@@ -43,12 +61,7 @@
             "acceptedTypes": { "type": "array", "items": { "type": "string" } }
           }
         },
-        "params": { "type": "object" },
-        "migrateFrom": { "type": "string" },
-        "migrationStatus": {
-          "type": "string",
-          "enum": ["active", "pending", "legacy_only"]
-        }
+        "params": { "type": "object" }
       }
     }
   }

@@ -33,7 +33,7 @@
       </ElTable>
     </ElCard>
 
-    <ElDrawer v-model="drawerVisible" :title="selected?.customerName" size="520px">
+    <ElDrawer v-model="drawerVisible" :title="selected?.customerName" size="560px">
       <template v-if="detail">
         <ElAlert
           type="info"
@@ -41,6 +41,22 @@
           class="mb-4"
           :title="t('menus.billingConfig.clerkRulesScopeHint')"
         />
+
+        <div v-if="attachmentRefs.length" class="mb-4">
+          <div class="text-sm font-medium mb-2">{{ t('menus.billingConfig.clerkRuleAttachments') }}</div>
+          <div class="flex flex-wrap gap-2">
+            <ElLink
+              v-for="(ref, idx) in attachmentRefs"
+              :key="idx"
+              :href="getClerkRuleAttachmentUrl(ref)"
+              target="_blank"
+              type="primary"
+            >
+              {{ fileLabel(ref) }}
+            </ElLink>
+          </div>
+        </div>
+
         <div v-for="(rule, idx) in detailRules" :key="idx" class="rule-card mb-3">
           <div class="flex items-center justify-between mb-2">
             <strong>{{ rule.name }}</strong>
@@ -50,12 +66,24 @@
           </div>
           <div class="text-sm text-gray-600">
             <div>{{ rule.ruleType }} · {{ rule.stage }}</div>
+            <div v-if="rule.params" class="mt-1 text-xs font-mono text-gray-500">
+              {{ formatParams(rule.params) }}
+            </div>
+            <div v-if="rule.sourceText" class="mt-1 text-xs text-gray-500">
+              {{ t('menus.billingConfig.clerkRuleSourceText') }}：{{ rule.sourceText }}
+            </div>
             <div v-if="rule.migrationStatus" class="mt-1">
               {{ t('menus.billingConfig.clerkRuleMigration') }}: {{ rule.migrationStatus }}
             </div>
             <div v-if="rule.migrateFrom" class="mt-1 text-xs">{{ rule.migrateFrom }}</div>
           </div>
         </div>
+
+        <ElCollapse v-if="detail.compiled" class="mt-4">
+          <ElCollapseItem :title="t('menus.billingConfig.clerkRuleCompiled')" name="compiled">
+            <pre class="compiled-json">{{ JSON.stringify(detail.compiled, null, 2) }}</pre>
+          </ElCollapseItem>
+        </ElCollapse>
       </template>
     </ElDrawer>
   </div>
@@ -65,6 +93,7 @@
 import { computed, onMounted, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 import {
+  getClerkRuleAttachmentUrl,
   getClerkRuleCustomer,
   getClerkRuleIndex,
   listClerkRuleCustomers,
@@ -85,6 +114,16 @@ const detailRules = computed(() => {
   return Array.isArray(rules) ? rules : []
 })
 
+const attachmentRefs = computed(() => {
+  const refs = detail.value?.baseline?.attachmentRefs
+  return Array.isArray(refs) ? refs.map(String) : []
+})
+
+function fileLabel(path: string) {
+  const parts = path.split('/')
+  return parts[parts.length - 1] || path
+}
+
 async function load() {
   loading.value = true
   try {
@@ -94,6 +133,12 @@ async function load() {
   } finally {
     loading.value = false
   }
+}
+
+function formatParams(params: unknown) {
+  if (!params || typeof params !== 'object') return ''
+  const text = JSON.stringify(params)
+  return text.length > 180 ? text.slice(0, 180) + '…' : text
 }
 
 async function openDetail(row: ClerkRuleCustomerSummary) {
@@ -110,5 +155,14 @@ onMounted(load)
   border: 1px solid var(--el-border-color-lighter);
   border-radius: 8px;
   padding: 12px;
+}
+
+.compiled-json {
+  font-size: 12px;
+  line-height: 1.4;
+  max-height: 320px;
+  overflow: auto;
+  white-space: pre-wrap;
+  word-break: break-all;
 }
 </style>

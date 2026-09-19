@@ -1,16 +1,198 @@
 {
-  "baseline_hash": "clerk-rules-v1-foundation-20260917",
-  "generated_at": "2026-09-17T14:00:00Z",
-  "customer_count": 9,
+  "baseline_hash": "0336c1968af03a3455aa52f3912ce20ca8253c7e1e273d31a564194d791913b9",
+  "generated_at": "2026-09-19T02:46:09Z",
+  "source": "铂康/内勤要求/医院内勤规则-20260918.xlsx",
+  "customer_count": 38,
   "customers": [
-    { "code": "HULAN-RM", "file": "baseline/HULAN-RM.json", "ruleCount": 2 },
-    { "code": "TAIPING-RM", "file": "baseline/TAIPING-RM.json", "ruleCount": 1 },
-    { "code": "ZY3-DIANLI", "file": "baseline/ZY3-DIANLI.json", "ruleCount": 1 },
-    { "code": "HRB-HEU", "file": "baseline/HRB-HEU.json", "ruleCount": 1 },
-    { "code": "HRB-NGJY", "file": "baseline/HRB-NGJY.json", "ruleCount": 1 },
-    { "code": "ZYY-D1", "file": "baseline/ZYY-D1.json", "ruleCount": 2 },
-    { "code": "JIUZHOU-FK", "file": "baseline/JIUZHOU-FK.json", "ruleCount": 2 },
-    { "code": "SHKF-YY", "file": "baseline/SHKF-YY.json", "ruleCount": 1 },
-    { "code": "ERYY-NG", "file": "baseline/ERYY-NG.json", "ruleCount": 1 }
+    {
+      "code": "DAOWAI-RM",
+      "file": "baseline/DAOWAI-RM.json",
+      "ruleCount": 20
+    },
+    {
+      "code": "DONGDA-GC",
+      "file": "baseline/DONGDA-GC.json",
+      "ruleCount": 1
+    },
+    {
+      "code": "ERYY-NG",
+      "file": "baseline/ERYY-NG.json",
+      "ruleCount": 2
+    },
+    {
+      "code": "ERYY-SB",
+      "file": "baseline/ERYY-SB.json",
+      "ruleCount": 4
+    },
+    {
+      "code": "GONGAN-YY",
+      "file": "baseline/GONGAN-YY.json",
+      "ruleCount": 1
+    },
+    {
+      "code": "GUOYAO-2",
+      "file": "baseline/GUOYAO-2.json",
+      "ruleCount": 2
+    },
+    {
+      "code": "GUOYAO-3",
+      "file": "baseline/GUOYAO-3.json",
+      "ruleCount": 2
+    },
+    {
+      "code": "GUOYAO-MAIN",
+      "file": "baseline/GUOYAO-MAIN.json",
+      "ruleCount": 2
+    },
+    {
+      "code": "HIT-YY",
+      "file": "baseline/HIT-YY.json",
+      "ruleCount": 1
+    },
+    {
+      "code": "HRB-2ND",
+      "file": "baseline/HRB-2ND.json",
+      "ruleCount": 2
+    },
+    {
+      "code": "HRB-HEU",
+      "file": "baseline/HRB-HEU.json",
+      "ruleCount": 1
+    },
+    {
+      "code": "HRB-HSZ",
+      "file": "baseline/HRB-HSZ.json",
+      "ruleCount": 2
+    },
+    {
+      "code": "HRB-NGJY",
+      "file": "baseline/HRB-NGJY.json",
+      "ruleCount": 1
+    },
+    {
+      "code": "HRB-WY-EM",
+      "file": "baseline/HRB-WY-EM.json",
+      "ruleCount": 1
+    },
+    {
+      "code": "HUAXIA-EYE",
+      "file": "baseline/HUAXIA-EYE.json",
+      "ruleCount": 1
+    },
+    {
+      "code": "HULAN-HSZ",
+      "file": "baseline/HULAN-HSZ.json",
+      "ruleCount": 2
+    },
+    {
+      "code": "HULAN-RM",
+      "file": "baseline/HULAN-RM.json",
+      "ruleCount": 1
+    },
+    {
+      "code": "HULAN-TCM",
+      "file": "baseline/HULAN-TCM.json",
+      "ruleCount": 5
+    },
+    {
+      "code": "JIUZHOU-FK",
+      "file": "baseline/JIUZHOU-FK.json",
+      "ruleCount": 5
+    },
+    {
+      "code": "NG-FUCHAN",
+      "file": "baseline/NG-FUCHAN.json",
+      "ruleCount": 20
+    },
+    {
+      "code": "RENSHENG",
+      "file": "baseline/RENSHENG.json",
+      "ruleCount": 2
+    },
+    {
+      "code": "SANFU-SQ",
+      "file": "baseline/SANFU-SQ.json",
+      "ruleCount": 2
+    },
+    {
+      "code": "SANJING-SB",
+      "file": "baseline/SANJING-SB.json",
+      "ruleCount": 24
+    },
+    {
+      "code": "SHENG-YY-NG",
+      "file": "baseline/SHENG-YY-NG.json",
+      "ruleCount": 1
+    },
+    {
+      "code": "SHENG-YY-XF",
+      "file": "baseline/SHENG-YY-XF.json",
+      "ruleCount": 1
+    },
+    {
+      "code": "SHKF-YY",
+      "file": "baseline/SHKF-YY.json",
+      "ruleCount": 1
+    },
+    {
+      "code": "TAIPING-RM",
+      "file": "baseline/TAIPING-RM.json",
+      "ruleCount": 1
+    },
+    {
+      "code": "VICTORIA",
+      "file": "baseline/VICTORIA.json",
+      "ruleCount": 3
+    },
+    {
+      "code": "WUCHANG-RM",
+      "file": "baseline/WUCHANG-RM.json",
+      "ruleCount": 1
+    },
+    {
+      "code": "WUJING-ZD",
+      "file": "baseline/WUJING-ZD.json",
+      "ruleCount": 3
+    },
+    {
+      "code": "XIANGFANG-ZY",
+      "file": "baseline/XIANGFANG-ZY.json",
+      "ruleCount": 2
+    },
+    {
+      "code": "YUEMEI-FH",
+      "file": "baseline/YUEMEI-FH.json",
+      "ruleCount": 2
+    },
+    {
+      "code": "ZUYAN-NG",
+      "file": "baseline/ZUYAN-NG.json",
+      "ruleCount": 2
+    },
+    {
+      "code": "ZUYAN-SF",
+      "file": "baseline/ZUYAN-SF.json",
+      "ruleCount": 2
+    },
+    {
+      "code": "ZUYAN-XA",
+      "file": "baseline/ZUYAN-XA.json",
+      "ruleCount": 2
+    },
+    {
+      "code": "ZY3-DIANLI",
+      "file": "baseline/ZY3-DIANLI.json",
+      "ruleCount": 2
+    },
+    {
+      "code": "ZYY-D2-HN",
+      "file": "baseline/ZYY-D2-HN.json",
+      "ruleCount": 1
+    },
+    {
+      "code": "ZYY-D2-NG",
+      "file": "baseline/ZYY-D2-NG.json",
+      "ruleCount": 1
+    }
   ]
 }

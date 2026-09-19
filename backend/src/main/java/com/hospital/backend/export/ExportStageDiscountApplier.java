@@ -57,6 +57,9 @@ public class ExportStageDiscountApplier {
                 continue;
             }
             JsonNode params = policy.path("params");
+            if (params.path("validateOnly").asBoolean(false)) {
+                continue;
+            }
             boolean skipAlreadyDiscounted = params.path("skipWhenAlreadyDiscounted").asBoolean(false);
             if (!skipAlreadyDiscounted && importUnit > baseUnit + 0.02) {
                 baseUnit = importUnit;

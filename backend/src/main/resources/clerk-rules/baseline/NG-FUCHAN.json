@@ -1,0 +1,387 @@
+{
+  "customerCode": "NG-FUCHAN",
+  "customerName": "哈尔滨市南岗区妇产医院",
+  "sourceVersion": "医院内勤规则-20260918",
+  "notes": "医院内勤规则 v2 · Excel行 哈尔滨市南岗妇产医院",
+  "attachmentRefs": [
+    "attachments/2哈尔滨市南岗区妇产医院价格单.pdf"
+  ],
+  "rules": [
+    {
+      "ruleType": "PACK_NAME_PRICE",
+      "name": "腹腔镜",
+      "stage": "bill_export",
+      "isActive": true,
+      "params": {
+        "packNameKeywords": [
+          "腹腔镜"
+        ],
+        "unitPrice": 170.5,
+        "unitPriceMode": "FIXED",
+        "systemPrice": null,
+        "systemPriceMode": "IGNORE"
+      },
+      "sourceText": "腹腔镜 170.5",
+      "sourceRef": "excel:账单规则#哈尔滨市南岗妇产医院#1",
+      "priority": 11
+    },
+    {
+      "ruleType": "PACK_NAME_PRICE",
+      "name": "宫腔镜",
+      "stage": "bill_export",
+      "isActive": true,
+      "params": {
+        "packNameKeywords": [
+          "宫腔镜"
+        ],
+        "unitPrice": 170.5,
+        "unitPriceMode": "FIXED",
+        "systemPrice": null,
+        "systemPriceMode": "IGNORE"
+      },
+      "sourceText": "宫腔镜 170.5",
+      "sourceRef": "excel:账单规则#哈尔滨市南岗妇产医院#2",
+      "priority": 12
+    },
+    {
+      "ruleType": "PACK_NAME_PRICE",
+      "name": "阴式包",
+      "stage": "bill_export",
+      "isActive": true,
+      "params": {
+        "packNameKeywords": [
+          "阴式包"
+        ],
+        "unitPrice": 170.5,
+        "unitPriceMode": "FIXED",
+        "systemPrice": null,
+        "systemPriceMode": "IGNORE"
+      },
+      "sourceText": "阴式包 170.5",
+      "sourceRef": "excel:账单规则#哈尔滨市南岗妇产医院#3",
+      "priority": 13
+    },
+    {
+      "ruleType": "PACK_NAME_PRICE",
+      "name": "引产包",
+      "stage": "bill_export",
+      "isActive": true,
+      "params": {
+        "packNameKeywords": [
+          "引产包"
+        ],
+        "unitPrice": 160.0,
+        "unitPriceMode": "FIXED",
+        "systemPrice": null,
+        "systemPriceMode": "IGNORE"
+      },
+      "sourceText": "引产包 160",
+      "sourceRef": "excel:账单规则#哈尔滨市南岗妇产医院#4",
+      "priority": 14
+    },
+    {
+      "ruleType": "PACK_NAME_PRICE",
+      "name": "妇科包",
+      "stage": "bill_export",
+      "isActive": true,
+      "params": {
+        "packNameKeywords": [
+          "妇科包"
+        ],
+        "unitPrice": 269.5,
+        "unitPriceMode": "FIXED",
+        "systemPrice": null,
+        "systemPriceMode": "IGNORE"
+      },
+      "sourceText": "妇科包 269.5",
+      "sourceRef": "excel:账单规则#哈尔滨市南岗妇产医院#5",
+      "priority": 15
+    },
+    {
+      "ruleType": "PACK_NAME_PRICE",
+      "name": "人流包",
+      "stage": "bill_export",
+      "isActive": true,
+      "params": {
+        "packNameKeywords": [
+          "人流包"
+        ],
+        "unitPrice": 33.0,
+        "unitPriceMode": "FIXED",
+        "systemPrice": null,
+        "systemPriceMode": "IGNORE"
+      },
+      "sourceText": "人流包 33",
+      "sourceRef": "excel:账单规则#哈尔滨市南岗妇产医院#6",
+      "priority": 16
+    },
+    {
+      "ruleType": "PACK_NAME_PRICE",
+      "name": "取环包",
+      "stage": "bill_export",
+      "isActive": true,
+      "params": {
+        "packNameKeywords": [
+          "取环包"
+        ],
+        "unitPrice": 33.0,
+        "unitPriceMode": "FIXED",
+        "systemPrice": null,
+        "systemPriceMode": "IGNORE"
+      },
+      "sourceText": "取环包 33",
+      "sourceRef": "excel:账单规则#哈尔滨市南岗妇产医院#7",
+      "priority": 17
+    },
+    {
+      "ruleType": "PACK_NAME_PRICE",
+      "name": "上环包",
+      "stage": "bill_export",
+      "isActive": true,
+      "params": {
+        "packNameKeywords": [
+          "上环包"
+        ],
+        "unitPrice": 33.0,
+        "unitPriceMode": "FIXED",
+        "systemPrice": null,
+        "systemPriceMode": "IGNORE"
+      },
+      "sourceText": "上环包 33",
+      "sourceRef": "excel:账单规则#哈尔滨市南岗妇产医院#8",
+      "priority": 18
+    },
+    {
+      "ruleType": "PACK_NAME_PRICE",
+      "name": "药流包",
+      "stage": "bill_export",
+      "isActive": true,
+      "params": {
+        "packNameKeywords": [
+          "药流包"
+        ],
+        "unitPrice": 27.5,
+        "unitPriceMode": "FIXED",
+        "systemPrice": null,
+        "systemPriceMode": "IGNORE"
+      },
+      "sourceText": "药流包 27.5",
+      "sourceRef": "excel:账单规则#哈尔滨市南岗妇产医院#9",
+      "priority": 19
+    },
+    {
+      "ruleType": "PACK_NAME_PRICE",
+      "name": "手术包（90布）",
+      "stage": "bill_export",
+      "isActive": true,
+      "params": {
+        "packNameKeywords": [
+          "手术包（90布）"
+        ],
+        "unitPrice": 22.0,
+        "unitPriceMode": "FIXED",
+        "systemPrice": null,
+        "systemPriceMode": "IGNORE"
+      },
+      "sourceText": "手术包（90布） 22",
+      "sourceRef": "excel:账单规则#哈尔滨市南岗妇产医院#10",
+      "priority": 20
+    },
+    {
+      "ruleType": "PACK_NAME_PRICE",
+      "name": "棉球缸",
+      "stage": "bill_export",
+      "isActive": true,
+      "params": {
+        "packNameKeywords": [
+          "棉球缸"
+        ],
+        "unitPrice": 16.0,
+        "unitPriceMode": "FIXED",
+        "systemPrice": null,
+        "systemPriceMode": "IGNORE"
+      },
+      "sourceText": "棉球缸 16",
+      "sourceRef": "excel:账单规则#哈尔滨市南岗妇产医院#11",
+      "priority": 21
+    },
+    {
+      "ruleType": "PACK_NAME_PRICE",
+      "name": "无菌缸",
+      "stage": "bill_export",
+      "isActive": true,
+      "params": {
+        "packNameKeywords": [
+          "无菌缸"
+        ],
+        "unitPrice": 16.0,
+        "unitPriceMode": "FIXED",
+        "systemPrice": null,
+        "systemPriceMode": "IGNORE"
+      },
+      "sourceText": "无菌缸 16",
+      "sourceRef": "excel:账单规则#哈尔滨市南岗妇产医院#12",
+      "priority": 22
+    },
+    {
+      "ruleType": "PACK_NAME_PRICE",
+      "name": "持物钳罐",
+      "stage": "bill_export",
+      "isActive": true,
+      "params": {
+        "packNameKeywords": [
+          "持物钳罐"
+        ],
+        "unitPrice": 18.0,
+        "unitPriceMode": "FIXED",
+        "systemPrice": null,
+        "systemPriceMode": "IGNORE"
+      },
+      "sourceText": "持物钳罐 18",
+      "sourceRef": "excel:账单规则#哈尔滨市南岗妇产医院#13",
+      "priority": 23
+    },
+    {
+      "ruleType": "PACK_NAME_PRICE",
+      "name": "拆线包",
+      "stage": "bill_export",
+      "isActive": true,
+      "params": {
+        "packNameKeywords": [
+          "拆线包"
+        ],
+        "unitPrice": 15.0,
+        "unitPriceMode": "FIXED",
+        "systemPrice": null,
+        "systemPriceMode": "IGNORE"
+      },
+      "sourceText": "拆线包 15",
+      "sourceRef": "excel:账单规则#哈尔滨市南岗妇产医院#14",
+      "priority": 24
+    },
+    {
+      "ruleType": "PACK_NAME_PRICE",
+      "name": "镊子缸",
+      "stage": "bill_export",
+      "isActive": true,
+      "params": {
+        "packNameKeywords": [
+          "镊子缸"
+        ],
+        "unitPrice": 8.0,
+        "unitPriceMode": "FIXED",
+        "systemPrice": null,
+        "systemPriceMode": "IGNORE"
+      },
+      "sourceText": "镊子缸 8",
+      "sourceRef": "excel:账单规则#哈尔滨市南岗妇产医院#15",
+      "priority": 25
+    },
+    {
+      "ruleType": "PACK_NAME_PRICE",
+      "name": "带架方盘",
+      "stage": "bill_export",
+      "isActive": true,
+      "params": {
+        "packNameKeywords": [
+          "带架方盘"
+        ],
+        "unitPrice": 16.5,
+        "unitPriceMode": "FIXED",
+        "systemPrice": null,
+        "systemPriceMode": "IGNORE"
+      },
+      "sourceText": "带架方盘 16.5",
+      "sourceRef": "excel:账单规则#哈尔滨市南岗妇产医院#16",
+      "priority": 26
+    },
+    {
+      "ruleType": "PACK_NAME_PRICE",
+      "name": "治疗盘",
+      "stage": "bill_export",
+      "isActive": true,
+      "params": {
+        "packNameKeywords": [
+          "治疗盘"
+        ],
+        "unitPrice": 16.0,
+        "unitPriceMode": "FIXED",
+        "systemPrice": null,
+        "systemPriceMode": "IGNORE"
+      },
+      "sourceText": "治疗盘 16",
+      "sourceRef": "excel:账单规则#哈尔滨市南岗妇产医院#17",
+      "priority": 27
+    },
+    {
+      "ruleType": "PACK_NAME_PRICE",
+      "name": "敷料包（纸塑袋）",
+      "stage": "bill_export",
+      "isActive": true,
+      "params": {
+        "packNameKeywords": [
+          "敷料包（纸塑袋）"
+        ],
+        "unitPrice": 2.3,
+        "unitPriceMode": "FIXED",
+        "systemPrice": null,
+        "systemPriceMode": "IGNORE"
+      },
+      "sourceText": "敷料包（纸塑袋） 2.3",
+      "sourceRef": "excel:账单规则#哈尔滨市南岗妇产医院#18",
+      "priority": 28
+    },
+    {
+      "ruleType": "PACK_NAME_PRICE",
+      "name": "敷料包（纸塑袋）",
+      "stage": "bill_export",
+      "isActive": true,
+      "params": {
+        "packNameKeywords": [
+          "敷料包（纸塑袋）"
+        ],
+        "unitPrice": 4.0,
+        "unitPriceMode": "FIXED",
+        "systemPrice": null,
+        "systemPriceMode": "IGNORE"
+      },
+      "sourceText": "敷料包（纸塑袋） 4",
+      "sourceRef": "excel:账单规则#哈尔滨市南岗妇产医院#19",
+      "priority": 29
+    },
+    {
+      "ruleType": "BILL_EXPORT_PRICE_RULE",
+      "name": "散包按把",
+      "stage": "bill_export",
+      "isActive": true,
+      "params": {
+        "excludePackNameKeywords": [
+          "腹腔镜",
+          "宫腔镜",
+          "阴式包",
+          "引产包",
+          "妇科包",
+          "人流包",
+          "取环包",
+          "上环包",
+          "药流包",
+          "手术包",
+          "棉球缸",
+          "无菌缸",
+          "持物钳",
+          "拆线包",
+          "镊子缸",
+          "带架方盘",
+          "治疗盘",
+          "敷料包"
+        ],
+        "unitPrice": 8.0,
+        "unitPriceMode": "PER_PIECE",
+        "instrumentCountExpr": "N"
+      },
+      "sourceText": "除了以上包名称 8/把",
+      "sourceRef": "excel:账单规则#哈尔滨市南岗妇产医院#20",
+      "priority": 30
+    }
+  ]
+}

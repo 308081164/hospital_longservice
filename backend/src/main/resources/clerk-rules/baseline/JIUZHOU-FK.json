@@ -1,33 +1,78 @@
 {
   "customerCode": "JIUZHOU-FK",
   "customerName": "黑龙江九洲妇科医院",
-  "notes": "高温五折/低温七折仅在结款函展示，不计入账单计价（2026-08 已从 bill_detail 迁出）",
+  "sourceVersion": "医院内勤规则-20260918",
+  "notes": "医院内勤规则 v2 · Excel行 黑龙江九洲妇科医院",
+  "attachmentRefs": [],
   "rules": [
     {
-      "ruleType": "SETTLEMENT_DISCOUNT",
-      "name": "结款函高温五折",
+      "ruleType": "SETTLEMENT_MIN_CHARGE",
+      "name": "低消",
       "stage": "settlement",
       "isActive": true,
-      "priority": 10,
-      "scope": { "temperature": "HT" },
       "params": {
-        "rate": 0.5,
-        "skipWhenFixedPrice": true
+        "minCharge": 3000.0,
+        "baseComponents": [
+          "sterilize",
+          "logistics"
+        ]
       },
-      "migrationStatus": "active"
+      "sourceText": "低于3000元",
+      "sourceRef": "excel:结款函#JIUZHOU-FK",
+      "priority": 100
+    },
+    {
+      "ruleType": "LOGISTICS_WAIVE",
+      "name": "月减免四次物流",
+      "stage": "settlement",
+      "isActive": true,
+      "params": {
+        "freeCountPerMonth": 4
+      },
+      "sourceText": "减免四次物流",
+      "sourceRef": "excel:结款函#JIUZHOU-FK",
+      "priority": 110
+    },
+    {
+      "ruleType": "SETTLEMENT_MIN_CHARGE",
+      "name": "低消",
+      "stage": "settlement",
+      "isActive": true,
+      "params": {
+        "minCharge": 3000.0,
+        "baseComponents": [
+          "sterilize",
+          "logistics"
+        ]
+      },
+      "sourceText": "灭菌费+物流费 ≥ 3000元",
+      "sourceRef": "excel:低消#黑龙江九洲妇科医院",
+      "priority": 10
+    },
+    {
+      "ruleType": "LOGISTICS_WAIVE",
+      "name": "月减免四次物流",
+      "stage": "settlement",
+      "isActive": true,
+      "params": {
+        "freeCountPerMonth": 4
+      },
+      "sourceText": "减免四次/月",
+      "sourceRef": "excel:低消物流#黑龙江九洲妇科医院",
+      "priority": 10
     },
     {
       "ruleType": "SETTLEMENT_DISCOUNT",
-      "name": "结款函低温七折",
+      "name": "高温五折低温七折",
       "stage": "settlement",
       "isActive": true,
-      "priority": 20,
-      "scope": { "temperature": "LT" },
       "params": {
-        "rate": 0.7,
-        "skipWhenFixedPrice": true
+        "htRate": 0.5,
+        "ltRate": 0.7
       },
-      "migrationStatus": "active"
+      "sourceText": "高温五折/低温七折",
+      "sourceRef": "excel:低消折扣#黑龙江九洲妇科医院",
+      "priority": 10
     }
   ]
 }

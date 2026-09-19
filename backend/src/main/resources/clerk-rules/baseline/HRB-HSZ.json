@@ -1,0 +1,33 @@
+{
+  "customerCode": "HRB-HSZ",
+  "customerName": "哈尔滨市红十字中心医院",
+  "sourceVersion": "医院内勤规则-20260918",
+  "notes": "医院内勤规则 v2 · Excel行 哈尔滨市红十字妇产医院",
+  "attachmentRefs": [],
+  "rules": [
+    {
+      "ruleType": "MONTHLY_SUPPLEMENT_REPORT",
+      "name": "分科室汇总附表",
+      "stage": "both",
+      "isActive": true,
+      "params": {
+        "reportType": "dept_sterilize_summary"
+      },
+      "sourceText": "汇总表",
+      "sourceRef": "excel:结款函#HRB-HSZ",
+      "priority": 100
+    },
+    {
+      "ruleType": "EXPORT_LAYOUT",
+      "name": "账单合并单sheet",
+      "stage": "bill_export",
+      "isActive": true,
+      "params": {
+        "billLayout": "single_sheet"
+      },
+      "sourceText": "合并sheet",
+      "sourceRef": "excel:结款函#HRB-HSZ",
+      "priority": 110
+    }
+  ]
+}

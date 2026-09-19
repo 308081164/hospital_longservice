@@ -1,0 +1,58 @@
+{
+  "customerCode": "ERYY-SB",
+  "customerName": "黑龙江省第二医院（松北院区）",
+  "sourceVersion": "医院内勤规则-20260918",
+  "notes": "医院内勤规则 v2 · Excel行 黑龙江省第二医院（松北区）",
+  "attachmentRefs": [],
+  "rules": [
+    {
+      "ruleType": "PRICE_VALIDATE_ONLY",
+      "name": "标准价七折校对",
+      "stage": "bill_export",
+      "isActive": true,
+      "params": {
+        "rate": 0.7,
+        "validateOnly": true
+      },
+      "sourceText": "标准价格七折（备注：睿思系统导出表格已经为七折，仅为校对，不需要修改价格）",
+      "sourceRef": "excel:账单规则#黑龙江省第二医院（松北区）#1",
+      "priority": 10
+    },
+    {
+      "ruleType": "LOGISTICS_FEE",
+      "name": "物流费",
+      "stage": "settlement",
+      "isActive": true,
+      "params": {
+        "feePerTrip": 98.0
+      },
+      "sourceText": "物流费98元/次",
+      "sourceRef": "excel:结款函#ERYY-SB",
+      "priority": 100
+    },
+    {
+      "ruleType": "LOGISTICS_FEE",
+      "name": "普通物流",
+      "stage": "settlement",
+      "isActive": true,
+      "params": {
+        "feePerTrip": 80.5
+      },
+      "sourceText": "普通物流80.5元/次",
+      "sourceRef": "excel:结款函#ERYY-SB",
+      "priority": 110
+    },
+    {
+      "ruleType": "LOGISTICS_FEE",
+      "name": "加急物流",
+      "stage": "settlement",
+      "isActive": true,
+      "params": {
+        "urgentAmount": 98.0
+      },
+      "sourceText": "加急物流费98元/次",
+      "sourceRef": "excel:结款函#ERYY-SB",
+      "priority": 120
+    }
+  ]
+}

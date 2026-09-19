@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component;
 import java.util.Iterator;
 
 /**
- * 将内勤规则 baseline 编译为导出管线可消费的 billingPolicies / specialRules 结构。
+ * 将内勤规则 baseline 编译为导出/结款管线可消费结构。
  */
 @Component
 public class ClerkRuleCompiler {
@@ -33,6 +33,7 @@ public class ClerkRuleCompiler {
         ArrayNode billingPolicies = MAPPER.createArrayNode();
         ArrayNode fixedPrices = MAPPER.createArrayNode();
         ArrayNode exportLayouts = MAPPER.createArrayNode();
+        ArrayNode clerkRules = MAPPER.createArrayNode();
 
         JsonNode rules = baseline.path("rules");
         if (rules.isArray()) {
@@ -40,12 +41,14 @@ public class ClerkRuleCompiler {
                 if (!rule.path("isActive").asBoolean(true)) {
                     continue;
                 }
+                clerkRules.add(rule);
                 String ruleType = rule.path("ruleType").asText("");
                 String stage = rule.path("stage").asText("bill_export");
                 switch (ruleType) {
                     case "DISCOUNT_OVERLAY":
                     case "PIECE_TIER_DISCOUNT":
-                        if (stageTargetsBillExport(stage)) {
+                        if (stageTargetsBillExport(stage)
+                                && !rule.path("params").path("validateOnly").asBoolean(false)) {
                             billingPolicies.add(toDiscountPolicy(rule, BillingPolicyApplier.STAGE_EXPORT_ONLY));
                         }
                         if (stageTargetsSettlement(stage)) {
@@ -60,6 +63,16 @@ public class ClerkRuleCompiler {
                         break;
                     case "EXPORT_LAYOUT":
                         exportLayouts.add(rule);
+                        break;
+                    case "SETTLEMENT_MIN_CHARGE":
+                        billingPolicies.add(toMonthlySettlementPolicy(rule));
+                        break;
+                    case "LOGISTICS_FEE":
+                    case "LOGISTICS_WAIVE":
+                        billingPolicies.add(toLogisticsPolicy(rule));
+                        break;
+                    case "LOGISTICS_CARD_DEDUCT":
+                        billingPolicies.add(toLogisticsCardPolicy(rule));
                         break;
                     default:
                         break;
@@ -78,8 +91,14 @@ public class ClerkRuleCompiler {
         if (!exportLayouts.isEmpty()) {
             compiled.set("exportLayouts", exportLayouts);
         }
+        if (!clerkRules.isEmpty()) {
+            compiled.set("clerkRules", clerkRules);
+        }
+        if (baseline.has("attachmentRefs")) {
+            compiled.set("attachmentRefs", baseline.get("attachmentRefs"));
+        }
         compiled.put("customerCode", baseline.path("customerCode").asText(customerCode));
-        return compiled.isEmpty() ? null : compiled;
+        return compiled.size() <= 1 ? null : compiled;
     }
 
     public boolean hasActiveBillExportRules(String customerCode) {
@@ -96,7 +115,29 @@ public class ClerkRuleCompiler {
             }
         }
         JsonNode fixed = compiled.path("specialRules").path("fixedPrices");
-        return fixed.isArray() && !fixed.isEmpty();
+        if (fixed.isArray() && !fixed.isEmpty()) {
+            return true;
+        }
+        JsonNode clerkRules = compiled.path("clerkRules");
+        if (clerkRules.isArray()) {
+            for (JsonNode rule : clerkRules) {
+                String stage = rule.path("stage").asText("bill_export");
+                if (!stageTargetsBillExport(stage)) {
+                    continue;
+                }
+                String type = rule.path("ruleType").asText("");
+                if ("ZERO_ROW_PACKAGING_FEE".equals(type)
+                        || "SEPARATE_PRICING_SYSTEM".equals(type)
+                        || "EXPORT_LAYOUT".equals(type)
+                        || "FIXED_PRICE_EXPORT".equals(type)
+                        || "BILL_EXPORT_PRICE_RULE".equals(type)
+                        || "PACK_NAME_PRICE".equals(type)
+                        || "PRICE_VALIDATE_ONLY".equals(type)) {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 
     private static boolean stageTargetsBillExport(String stage) {
@@ -114,13 +155,71 @@ public class ClerkRuleCompiler {
         if (rule.has("priority")) {
             policy.put("priority", rule.path("priority").asInt());
         }
+        ObjectNode scope = MAPPER.createObjectNode();
         if (rule.has("scope")) {
-            policy.set("scope", rule.get("scope"));
-        } else {
-            policy.putObject("scope").put("temperature", "ANY");
+            scope.setAll((ObjectNode) rule.get("scope"));
         }
+        JsonNode ruleParams = rule.path("params");
+        if (ruleParams.has("temperature") && !scope.has("temperature")) {
+            scope.put("temperature", ruleParams.get("temperature").asText());
+        }
+        if (scope.isEmpty()) {
+            scope.put("temperature", "ANY");
+        }
+        policy.set("scope", scope);
         ObjectNode params = MAPPER.createObjectNode();
         params.put("applyStage", applyStage);
+        if (ruleParams.isObject()) {
+            Iterator<String> fields = ruleParams.fieldNames();
+            while (fields.hasNext()) {
+                String field = fields.next();
+                if (!"temperature".equals(field)) {
+                    params.set(field, ruleParams.get(field));
+                }
+            }
+        }
+        policy.set("params", params);
+        return policy;
+    }
+
+    private ObjectNode toMonthlySettlementPolicy(JsonNode rule) {
+        ObjectNode policy = MAPPER.createObjectNode();
+        policy.put("policyType", "MONTHLY_SETTLEMENT");
+        policy.put("name", rule.path("name").asText("低消"));
+        ObjectNode params = MAPPER.createObjectNode();
+        params.put("applyStage", BillingPolicyApplier.STAGE_SETTLEMENT_ONLY);
+        JsonNode ruleParams = rule.path("params");
+        if (ruleParams.isObject()) {
+            Iterator<String> fields = ruleParams.fieldNames();
+            while (fields.hasNext()) {
+                String field = fields.next();
+                params.set(field, ruleParams.get(field));
+            }
+        }
+        policy.set("params", params);
+        return policy;
+    }
+
+    private ObjectNode toLogisticsCardPolicy(JsonNode rule) {
+        ObjectNode policy = MAPPER.createObjectNode();
+        policy.put("policyType", "LOGISTICS");
+        policy.put("name", rule.path("name").asText("物流卡抵扣"));
+        ObjectNode params = MAPPER.createObjectNode();
+        params.put("applyStage", BillingPolicyApplier.STAGE_SETTLEMENT_ONLY);
+        params.put("useLogisticsCard", true);
+        if (rule.path("params").path("deductFromCard").asBoolean(true)) {
+            params.put("cardDeductionEnabled", true);
+        }
+        policy.set("params", params);
+        return policy;
+    }
+
+    private ObjectNode toLogisticsPolicy(JsonNode rule) {
+        ObjectNode policy = MAPPER.createObjectNode();
+        policy.put("policyType", "LOGISTICS");
+        policy.put("name", rule.path("name").asText("物流"));
+        ObjectNode params = MAPPER.createObjectNode();
+        params.put("applyStage", BillingPolicyApplier.STAGE_SETTLEMENT_ONLY);
         JsonNode ruleParams = rule.path("params");
         if (ruleParams.isObject()) {
             Iterator<String> fields = ruleParams.fieldNames();

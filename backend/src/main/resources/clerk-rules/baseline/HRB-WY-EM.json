@@ -1,0 +1,19 @@
+{
+  "customerCode": "HRB-WY-EM",
+  "customerName": "哈尔滨市第五医院（二门诊）",
+  "sourceVersion": "医院内勤规则-20260918",
+  "notes": "医院内勤规则 v2 · Excel行 哈尔滨市第五医院（二门诊）",
+  "attachmentRefs": [],
+  "rules": [
+    {
+      "ruleType": "MERGED_SETTLEMENT",
+      "name": "合并结款",
+      "stage": "settlement",
+      "isActive": true,
+      "params": {},
+      "sourceText": "与哈尔滨市第五医院合并出结款函",
+      "sourceRef": "excel:结款函#HRB-WY-EM",
+      "priority": 100
+    }
+  ]
+}

@@ -1,0 +1,22 @@
+{
+  "customerCode": "HIT-YY",
+  "customerName": "哈尔滨工业大学医院",
+  "sourceVersion": "医院内勤规则-20260918",
+  "notes": "医院内勤规则 v2 · Excel行 哈尔滨工业大学医院",
+  "attachmentRefs": [],
+  "rules": [
+    {
+      "ruleType": "SETTLEMENT_DISCOUNT",
+      "name": "结款八折",
+      "stage": "settlement",
+      "isActive": true,
+      "params": {
+        "rate": 0.8,
+        "target": "sterilize"
+      },
+      "sourceText": "8折",
+      "sourceRef": "excel:结款函#HIT-YY",
+      "priority": 100
+    }
+  ]
+}

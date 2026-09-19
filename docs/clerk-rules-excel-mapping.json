@@ -1,0 +1,447 @@
+{
+  "generated_at": "2026-09-19T02:46:09Z",
+  "source": "铂康/内勤要求/医院内勤规则-20260918.xlsx",
+  "hospital_count": 38,
+  "hospitals": [
+    {
+      "code": "DAOWAI-RM",
+      "name": "哈尔滨市道外区人民医院",
+      "excelRowName": "道外区人民医院",
+      "rules": [
+        {
+          "ruleType": "BILL_EXPORT_PRICE_RULE"
+        }
+      ]
+    },
+    {
+      "code": "DONGDA-GC",
+      "name": "黑龙江东大肛肠医院",
+      "excelRowName": "黑龙江东大肛肠医院",
+      "rules": [
+        {
+          "ruleType": "SETTLEMENT_DISCOUNT"
+        }
+      ]
+    },
+    {
+      "code": "ERYY-NG",
+      "name": "黑龙江省第二医院（南岗院区）",
+      "excelRowName": "黑龙江省第二医院（南岗区）",
+      "rules": [
+        {
+          "ruleType": "LOGISTICS_FEE"
+        },
+        {
+          "ruleType": "PRICE_VALIDATE_ONLY"
+        }
+      ]
+    },
+    {
+      "code": "ERYY-SB",
+      "name": "黑龙江省第二医院（松北院区）",
+      "excelRowName": "黑龙江省第二医院（松北区）",
+      "rules": [
+        {
+          "ruleType": "LOGISTICS_FEE"
+        },
+        {
+          "ruleType": "PRICE_VALIDATE_ONLY"
+        }
+      ]
+    },
+    {
+      "code": "GONGAN-YY",
+      "name": "哈尔滨市公安医院",
+      "excelRowName": "哈尔滨公安医院",
+      "rules": [
+        {
+          "ruleType": "LOGISTICS_WAIVE"
+        }
+      ]
+    },
+    {
+      "code": "GUOYAO-2",
+      "name": "国药总医院第二院区",
+      "excelRowName": "国药总医院（主/二院区）",
+      "rules": [
+        {
+          "ruleType": "GUOYAO_SETTLEMENT_FORMULA"
+        },
+        {
+          "ruleType": "LOGISTICS_CARD_DEDUCT"
+        }
+      ]
+    },
+    {
+      "code": "GUOYAO-3",
+      "name": "国药总医院第三院区",
+      "excelRowName": "国药总医院（三院区）",
+      "rules": [
+        {
+          "ruleType": "GUOYAO_SETTLEMENT_FORMULA"
+        },
+        {
+          "ruleType": "LOGISTICS_CARD_DEDUCT"
+        }
+      ]
+    },
+    {
+      "code": "GUOYAO-MAIN",
+      "name": "国药总医院主院区",
+      "excelRowName": "国药总医院（主/二院区）",
+      "rules": [
+        {
+          "ruleType": "GUOYAO_SETTLEMENT_FORMULA"
+        },
+        {
+          "ruleType": "LOGISTICS_CARD_DEDUCT"
+        }
+      ]
+    },
+    {
+      "code": "HIT-YY",
+      "name": "哈尔滨工业大学医院",
+      "excelRowName": "哈尔滨工业大学医院",
+      "rules": [
+        {
+          "ruleType": "SETTLEMENT_DISCOUNT"
+        }
+      ]
+    },
+    {
+      "code": "HRB-2ND",
+      "name": "哈尔滨市第二医院",
+      "excelRowName": "哈尔滨市第二医院",
+      "rules": [
+        {
+          "ruleType": "LOGISTICS_WAIVE"
+        },
+        {
+          "ruleType": "MONTHLY_SUPPLEMENT_REPORT"
+        }
+      ]
+    },
+    {
+      "code": "HRB-HEU",
+      "name": "哈尔滨工程大学医院",
+      "excelRowName": "哈尔滨工程大学医院",
+      "rules": [
+        {
+          "ruleType": "SETTLEMENT_DISCOUNT"
+        }
+      ]
+    },
+    {
+      "code": "HRB-HSZ",
+      "name": "哈尔滨市红十字中心医院",
+      "excelRowName": "哈尔滨市红十字妇产医院",
+      "rules": [
+        {
+          "ruleType": "EXPORT_LAYOUT"
+        },
+        {
+          "ruleType": "MONTHLY_SUPPLEMENT_REPORT"
+        }
+      ]
+    },
+    {
+      "code": "HRB-NGJY",
+      "name": "哈尔滨市南岗区人民医院（九院）",
+      "excelRowName": "哈尔滨市南岗区人民医院（九院）",
+      "rules": [
+        {
+          "ruleType": "SETTLEMENT_DISCOUNT"
+        }
+      ]
+    },
+    {
+      "code": "HRB-WY-EM",
+      "name": "哈尔滨市第五医院（二门诊）",
+      "excelRowName": "哈尔滨市第五医院（二门诊）",
+      "rules": [
+        {
+          "ruleType": "MERGED_SETTLEMENT"
+        }
+      ]
+    },
+    {
+      "code": "HUAXIA-EYE",
+      "name": "哈尔滨华夏眼科医院",
+      "excelRowName": "哈尔滨华夏眼科医院",
+      "rules": [
+        {
+          "ruleType": "BILL_EXPORT_PRICE_RULE"
+        }
+      ]
+    },
+    {
+      "code": "HULAN-HSZ",
+      "name": "呼兰区红十字医院",
+      "excelRowName": "呼兰区红十字医院",
+      "rules": [
+        {
+          "ruleType": "SETTLEMENT_MIN_CHARGE"
+        }
+      ]
+    },
+    {
+      "code": "HULAN-RM",
+      "name": "呼兰区第一人民医院",
+      "excelRowName": "呼兰区第一人民医院",
+      "rules": [
+        {
+          "ruleType": "DISCOUNT_OVERLAY"
+        }
+      ]
+    },
+    {
+      "code": "HULAN-TCM",
+      "name": "呼兰中医院",
+      "excelRowName": "呼兰中医院",
+      "rules": [
+        {
+          "ruleType": "LOGISTICS_FEE"
+        },
+        {
+          "ruleType": "SETTLEMENT_MIN_CHARGE"
+        },
+        {
+          "ruleType": "SETTLEMENT_PACK_SPLIT"
+        }
+      ]
+    },
+    {
+      "code": "JIUZHOU-FK",
+      "name": "黑龙江九洲妇科医院",
+      "excelRowName": "黑龙江九洲妇科医院",
+      "rules": [
+        {
+          "ruleType": "LOGISTICS_WAIVE"
+        },
+        {
+          "ruleType": "SETTLEMENT_DISCOUNT"
+        },
+        {
+          "ruleType": "SETTLEMENT_MIN_CHARGE"
+        }
+      ]
+    },
+    {
+      "code": "NG-FUCHAN",
+      "name": "哈尔滨市南岗区妇产医院",
+      "excelRowName": "哈尔滨市南岗妇产医院",
+      "rules": [
+        {
+          "ruleType": "BILL_EXPORT_PRICE_RULE"
+        },
+        {
+          "ruleType": "PACK_NAME_PRICE"
+        }
+      ]
+    },
+    {
+      "code": "RENSHENG",
+      "name": "哈尔滨仁胜医院",
+      "excelRowName": "哈尔滨仁胜医院",
+      "rules": [
+        {
+          "ruleType": "LOGISTICS_CARD_DEDUCT"
+        },
+        {
+          "ruleType": "SETTLEMENT_DISCOUNT"
+        }
+      ]
+    },
+    {
+      "code": "SANFU-SQ",
+      "name": "哈尔滨市三辅社区医院",
+      "excelRowName": "香坊中医院+三辅社区医院",
+      "rules": [
+        {
+          "ruleType": "LOGISTICS_FEE"
+        },
+        {
+          "ruleType": "MERGED_SETTLEMENT"
+        }
+      ]
+    },
+    {
+      "code": "SANJING-SB",
+      "name": "哈尔滨市三精肾脏病专科医院",
+      "excelRowName": "三精肾病医院",
+      "rules": [
+        {
+          "ruleType": "BILL_EXPORT_PRICE_RULE"
+        }
+      ]
+    },
+    {
+      "code": "SHENG-YY-NG",
+      "name": "黑龙江省医院（南岗院区）",
+      "excelRowName": "黑龙江省医院（南岗/香坊）",
+      "rules": [
+        {
+          "ruleType": "DISCOUNT_OVERLAY"
+        }
+      ]
+    },
+    {
+      "code": "SHENG-YY-XF",
+      "name": "黑龙江省医院（香坊院区）",
+      "excelRowName": "黑龙江省医院（南岗/香坊）",
+      "rules": [
+        {
+          "ruleType": "DISCOUNT_OVERLAY"
+        }
+      ]
+    },
+    {
+      "code": "SHKF-YY",
+      "name": "黑龙江省社会康复医院",
+      "excelRowName": "黑龙江省社会康复医院",
+      "rules": [
+        {
+          "ruleType": "DISCOUNT_OVERLAY"
+        }
+      ]
+    },
+    {
+      "code": "TAIPING-RM",
+      "name": "哈尔滨市道外区太平人民医院",
+      "excelRowName": "太平人民医院",
+      "rules": [
+        {
+          "ruleType": "LOGISTICS_WAIVE"
+        }
+      ]
+    },
+    {
+      "code": "VICTORIA",
+      "name": "黑龙江维多利亚妇产医院",
+      "excelRowName": "黑龙江维多利亚妇产医院",
+      "rules": [
+        {
+          "ruleType": "SETTLEMENT_DISCOUNT"
+        },
+        {
+          "ruleType": "SETTLEMENT_MIN_CHARGE"
+        }
+      ]
+    },
+    {
+      "code": "WUCHANG-RM",
+      "name": "五常市人民医院",
+      "excelRowName": "五常市人民医院",
+      "rules": [
+        {
+          "ruleType": "LOGISTICS_WAIVE"
+        }
+      ]
+    },
+    {
+      "code": "WUJING-ZD",
+      "name": "武警黑龙江省总队医院",
+      "excelRowName": "武警黑龙江省总队医院",
+      "rules": [
+        {
+          "ruleType": "ZERO_ROW_PACKAGING_FEE"
+        }
+      ]
+    },
+    {
+      "code": "XIANGFANG-ZY",
+      "name": "哈尔滨市香坊区中医院",
+      "excelRowName": "香坊中医院+三辅社区医院",
+      "rules": [
+        {
+          "ruleType": "LOGISTICS_FEE"
+        },
+        {
+          "ruleType": "MERGED_SETTLEMENT"
+        }
+      ]
+    },
+    {
+      "code": "YUEMEI-FH",
+      "name": "悦美芳华医疗门诊医院",
+      "excelRowName": "悦美芳华医疗门诊医院",
+      "rules": [
+        {
+          "ruleType": "SETTLEMENT_MIN_CHARGE"
+        }
+      ]
+    },
+    {
+      "code": "ZUYAN-NG",
+      "name": "祖研-黑龙江省中医医院（南岗院区）",
+      "excelRowName": "祖研-黑龙江省中医医院（南岗/香安/三辅）",
+      "rules": [
+        {
+          "ruleType": "LOGISTICS_FEE"
+        },
+        {
+          "ruleType": "MONTHLY_SUPPLEMENT_REPORT"
+        }
+      ]
+    },
+    {
+      "code": "ZUYAN-SF",
+      "name": "祖研-黑龙江省中医医院（三辅院区）",
+      "excelRowName": "祖研-黑龙江省中医医院（南岗/香安/三辅）",
+      "rules": [
+        {
+          "ruleType": "LOGISTICS_FEE"
+        },
+        {
+          "ruleType": "MONTHLY_SUPPLEMENT_REPORT"
+        }
+      ]
+    },
+    {
+      "code": "ZUYAN-XA",
+      "name": "祖研-黑龙江省中医医院（香安院区）",
+      "excelRowName": "祖研-黑龙江省中医医院（南岗/香安/三辅）",
+      "rules": [
+        {
+          "ruleType": "LOGISTICS_FEE"
+        },
+        {
+          "ruleType": "MONTHLY_SUPPLEMENT_REPORT"
+        }
+      ]
+    },
+    {
+      "code": "ZY3-DIANLI",
+      "name": "黑龙江中医药大学附属第三医院（电力）",
+      "excelRowName": "中医药大学附属第三医院（电力）",
+      "rules": [
+        {
+          "ruleType": "EXPORT_LAYOUT"
+        },
+        {
+          "ruleType": "MONTHLY_SUPPLEMENT_REPORT"
+        }
+      ]
+    },
+    {
+      "code": "ZYY-D2-HN",
+      "name": "黑龙江中医药大学附属第二医院（哈南分院）",
+      "excelRowName": "中医药大学附属第二医院（哈南分院）",
+      "rules": [
+        {
+          "ruleType": "MONTHLY_SUPPLEMENT_REPORT"
+        }
+      ]
+    },
+    {
+      "code": "ZYY-D2-NG",
+      "name": "黑龙江中医药大学附属第二医院（南岗）",
+      "excelRowName": "中医药大学附属第二医院（南岗）",
+      "rules": [
+        {
+          "ruleType": "MONTHLY_SUPPLEMENT_REPORT"
+        }
+      ]
+    }
+  ]
+}

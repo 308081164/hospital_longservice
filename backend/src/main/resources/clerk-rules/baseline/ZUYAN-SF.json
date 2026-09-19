@@ -1,0 +1,33 @@
+{
+  "customerCode": "ZUYAN-SF",
+  "customerName": "祖研-黑龙江省中医医院（三辅院区）",
+  "sourceVersion": "医院内勤规则-20260918",
+  "notes": "医院内勤规则 v2 · Excel行 祖研-黑龙江省中医医院（南岗/香安/三辅）",
+  "attachmentRefs": [],
+  "rules": [
+    {
+      "ruleType": "MONTHLY_SUPPLEMENT_REPORT",
+      "name": "分科室汇总附表",
+      "stage": "both",
+      "isActive": true,
+      "params": {
+        "reportType": "dept_sterilize_summary"
+      },
+      "sourceText": "汇总表",
+      "sourceRef": "excel:结款函#ZUYAN-SF",
+      "priority": 100
+    },
+    {
+      "ruleType": "LOGISTICS_FEE",
+      "name": "三辅物流",
+      "stage": "settlement",
+      "isActive": true,
+      "params": {
+        "feePerTrip": 50
+      },
+      "sourceText": "三辅50",
+      "sourceRef": "excel:结款函#ZUYAN-SF",
+      "priority": 110
+    }
+  ]
+}

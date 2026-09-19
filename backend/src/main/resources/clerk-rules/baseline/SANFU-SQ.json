@@ -1,0 +1,34 @@
+{
+  "customerCode": "SANFU-SQ",
+  "customerName": "哈尔滨市三辅社区医院",
+  "sourceVersion": "医院内勤规则-20260918",
+  "notes": "医院内勤规则 v2 · Excel行 香坊中医院+三辅社区医院",
+  "attachmentRefs": [],
+  "rules": [
+    {
+      "ruleType": "LOGISTICS_FEE",
+      "name": "物流费",
+      "stage": "settlement",
+      "isActive": true,
+      "params": {
+        "feePerTrip": 50.0
+      },
+      "sourceText": "物流费50元/次",
+      "sourceRef": "excel:结款函#SANFU-SQ",
+      "priority": 100
+    },
+    {
+      "ruleType": "MERGED_SETTLEMENT",
+      "name": "合并结款",
+      "stage": "settlement",
+      "isActive": true,
+      "params": {
+        "mergeWith": "XIANGFANG-ZY",
+        "sharedLogisticsFee": 50
+      },
+      "sourceText": "香坊三辅合并",
+      "sourceRef": "excel:结款函#SANFU-SQ",
+      "priority": 10
+    }
+  ]
+}

@@ -1,25 +1,23 @@
 {
   "customerCode": "TAIPING-RM",
-  "customerName": "太平人民医院",
+  "customerName": "哈尔滨市道外区太平人民医院",
+  "sourceVersion": "医院内勤规则-20260918",
+  "notes": "医院内勤规则 v2 · Excel行 太平人民医院",
+  "attachmentRefs": [
+    "attachments/4哈尔滨市道外区太平人民医院价格单_000214.pdf"
+  ],
   "rules": [
     {
-      "ruleType": "PIECE_TIER_DISCOUNT",
-      "name": "2把及以上七五折",
-      "stage": "bill_export",
+      "ruleType": "LOGISTICS_WAIVE",
+      "name": "不收物流费",
+      "stage": "settlement",
       "isActive": true,
-      "priority": 10,
-      "scope": { "temperature": "ANY" },
       "params": {
-        "skipWhenAlreadyDiscounted": true,
-        "pieceTierDiscounts": [
-          { "minPieces": 1, "maxPieces": 1, "rate": 1.0 },
-          { "minPieces": 2, "maxPieces": 2, "rate": 0.75 },
-          { "minPieces": 3, "maxPieces": 3, "rate": 0.891, "originalUnitPriceEquals": 16.5 },
-          { "minPieces": 4, "maxPieces": 999, "rate": 0.75 }
-        ]
+        "feePerTrip": 0
       },
-      "migrateFrom": "customer_billing_policy:太平导出阶段折扣 (export_only)",
-      "migrationStatus": "active"
+      "sourceText": "不收物流费",
+      "sourceRef": "excel:结款函#TAIPING-RM",
+      "priority": 100
     }
   ]
 }

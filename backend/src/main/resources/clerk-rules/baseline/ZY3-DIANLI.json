@@ -1,20 +1,37 @@
 {
   "customerCode": "ZY3-DIANLI",
-  "customerName": "黑龙江省中医药大学附属第三医院（电力）",
+  "customerName": "黑龙江中医药大学附属第三医院（电力）",
+  "sourceVersion": "医院内勤规则-20260918",
+  "notes": "医院内勤规则 v2 · Excel行 中医药大学附属第三医院（电力）",
+  "attachmentRefs": [
+    "attachments/5黑龙江中医药大学附属第三医院8月器械把数.xlsx",
+    "attachments/6黑龙江中医药大学附属第三医院8月器械把数.xlsx"
+  ],
   "rules": [
     {
-      "ruleType": "SETTLEMENT_DISCOUNT",
-      "name": "结款函七折",
+      "ruleType": "MONTHLY_SUPPLEMENT_REPORT",
+      "name": "器械把数汇总",
+      "stage": "both",
+      "isActive": true,
+      "params": {
+        "reportType": "instrument_count_by_dept"
+      },
+      "sourceText": "把数汇总",
+      "sourceRef": "excel:结款函#ZY3-DIANLI",
+      "priority": 100
+    },
+    {
+      "ruleType": "EXPORT_LAYOUT",
+      "name": "结款原价七折并列",
       "stage": "settlement",
       "isActive": true,
-      "priority": 10,
-      "scope": { "temperature": "ANY" },
       "params": {
-        "rate": 0.7,
-        "skipWhenFixedPrice": true
+        "showOriginalAndDiscount": true,
+        "discountRate": 0.7
       },
-      "migrateFrom": "customer_billing_policy:settlement_only",
-      "migrationStatus": "active"
+      "sourceText": "7折并列",
+      "sourceRef": "excel:结款函#ZY3-DIANLI",
+      "priority": 110
     }
   ]
 }

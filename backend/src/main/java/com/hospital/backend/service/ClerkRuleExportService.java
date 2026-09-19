@@ -3,6 +3,7 @@ package com.hospital.backend.service;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.hospital.backend.dto.request.hospital.BillRowItem;
+import com.hospital.backend.dto.request.hospital.HospitalBillTemplateExportRequest;
 import com.hospital.backend.export.ExportFixedPriceApplier;
 import com.hospital.backend.export.ExportStageDiscountApplier;
 import lombok.RequiredArgsConstructor;
@@ -13,10 +14,7 @@ import java.util.List;
 import java.util.Optional;
 
 /**
- * 内勤规则导出服务：在账单导出阶段应用内勤 baseline，与客服计价规则解耦。
- * <p>
- * 当某院存在已激活的内勤 bill_export 规则时，优先使用内勤 baseline 编译结果，
- * 不再叠加 legacy billingPolicies 中的 export_only 策略（避免双重折扣）。
+ * 内勤规则导出服务：账单导出阶段应用 clerk baseline，与客服计价规则解耦。
  */
 @Slf4j
 @Service
@@ -26,6 +24,10 @@ public class ClerkRuleExportService {
     private final ClerkRuleCompiler clerkRuleCompiler;
     private final ExportStageDiscountApplier exportStageDiscountApplier;
     private final ExportFixedPriceApplier exportFixedPriceApplier;
+    private final ClerkBillExportApplier clerkBillExportApplier;
+    private final ClerkBillPriceRuleApplier clerkBillPriceRuleApplier;
+    private final ClerkExportLayoutApplier clerkExportLayoutApplier;
+    private final ClerkMonthlySupplementReportGenerator monthlySupplementReportGenerator;
     private final CustomerResolver customerResolver;
 
     public List<BillRowItem> applyBillExportRules(
@@ -42,35 +44,61 @@ public class ClerkRuleExportService {
         ObjectNode clerkCompiled = clerkRuleCompiler.compileForCustomer(customerCode);
         if (clerkRuleCompiler.hasActiveBillExportRules(customerCode) && clerkCompiled != null) {
             log.debug("Applying clerk bill_export rules for {}", customerCode);
+            ClerkBillPriceRuleApplier.ApplyResult priced =
+                    clerkBillPriceRuleApplier.apply(clerkCompiled, rows);
+            rows = priced.rows();
+            if (!priced.validationWarnings().isEmpty()) {
+                log.debug("Clerk price validation warnings for {}: {}", customerCode, priced.validationWarnings());
+            }
             rows = exportFixedPriceApplier.apply(clerkCompiled, rows);
-            return exportStageDiscountApplier.apply(clerkCompiled, rows);
+            rows = exportStageDiscountApplier.apply(clerkCompiled, rows);
+            rows = clerkBillExportApplier.apply(clerkCompiled, rows);
+            return rows;
         }
         return applyLegacyBillExport(legacyCompiled, rows);
     }
 
-    public JsonNode compileSettlementPolicies(String hospitalName, JsonNode legacyCompiled) {
+    public void applyBillExportLayout(HospitalBillTemplateExportRequest request) {
+        if (request == null || request.getHospitalName() == null) {
+            return;
+        }
+        String customerCode = resolveCustomerCode(request.getHospitalName());
+        if (customerCode == null) {
+            return;
+        }
+        ObjectNode clerkCompiled = clerkRuleCompiler.compileForCustomer(customerCode);
+        clerkExportLayoutApplier.apply(request, clerkCompiled);
+    }
+
+    public JsonNode mergeCompiledForSettlement(String hospitalName, JsonNode legacyCompiled) {
         String customerCode = resolveCustomerCode(hospitalName);
         if (customerCode == null) {
             return legacyCompiled;
         }
         ObjectNode clerkCompiled = clerkRuleCompiler.compileForCustomer(customerCode);
-        if (clerkCompiled == null || !clerkCompiled.has("billingPolicies")) {
+        if (clerkCompiled == null) {
             return legacyCompiled;
         }
-        JsonNode clerkPolicies = clerkCompiled.path("billingPolicies");
-        boolean hasSettlement = false;
-        if (clerkPolicies.isArray()) {
-            for (JsonNode policy : clerkPolicies) {
-                if (BillingPolicyApplier.stageMatches(policy, BillingPolicyApplier.STAGE_SETTLEMENT_ONLY)) {
-                    hasSettlement = true;
-                    break;
-                }
-            }
+        if (clerkCompiled.has("billingPolicies") || clerkCompiled.has("clerkRules")) {
+            return clerkCompiled;
         }
-        if (!hasSettlement) {
-            return legacyCompiled;
+        return legacyCompiled;
+    }
+
+    public JsonNode compileSettlementPolicies(String hospitalName, JsonNode legacyCompiled) {
+        return mergeCompiledForSettlement(hospitalName, legacyCompiled);
+    }
+
+    public byte[] appendMonthlySupplementSheets(String hospitalName, byte[] billWorkbook) {
+        String customerCode = resolveCustomerCode(hospitalName);
+        if (customerCode == null || billWorkbook == null) {
+            return billWorkbook;
         }
-        return clerkCompiled;
+        ObjectNode clerkCompiled = clerkRuleCompiler.compileForCustomer(customerCode);
+        if (!monthlySupplementReportGenerator.hasSupplementReports(clerkCompiled)) {
+            return billWorkbook;
+        }
+        return monthlySupplementReportGenerator.appendSupplementSheets(billWorkbook, clerkCompiled);
     }
 
     private List<BillRowItem> applyLegacyBillExport(JsonNode legacyCompiled, List<BillRowItem> rows) {

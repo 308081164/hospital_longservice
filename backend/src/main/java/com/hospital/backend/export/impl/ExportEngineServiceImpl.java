@@ -21,6 +21,7 @@ import com.hospital.backend.export.ExportType;
 import com.hospital.backend.export.ReconciliationExportDataLoader;
 import com.hospital.backend.export.ReconciliationLegacyExportBridge;
 import com.hospital.backend.export.SettlementJobEnricher;
+import com.hospital.backend.export.model.ColumnMappingConfig;
 import com.hospital.backend.export.model.ResolvedExportTemplate;
 import com.hospital.backend.export.strategy.ExportStrategy;
 import com.hospital.backend.export.strategy.ExportStrategyRegistry;
@@ -93,6 +94,7 @@ public class ExportEngineServiceImpl implements ExportEngineService {
             applyExportStageDiscounts(request);
             byte[] content = legacyExportBridge.generateBillExportBytes(request);
             content = legacyExportBridge.postProcessBillExport(content, request.getTemplateId());
+            content = clerkRuleExportService.appendMonthlySupplementSheets(request.getHospitalName(), content);
             content = applyTemplateTransforms(request, content, ExportType.BILL);
             String filename = safeName(request.getHospitalName()) + "_"
                     + LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmmss")) + ".xlsx";
@@ -292,6 +294,7 @@ public class ExportEngineServiceImpl implements ExportEngineService {
         }
         try {
             JsonNode compiled = resolveCompiledRules(request, hospitalName);
+            clerkRuleExportService.applyBillExportLayout(request);
             request.setRows(clerkRuleExportService.applyBillExportRules(hospitalName, compiled, request.getRows()));
         } catch (Exception e) {
             log.warn("export stage discount skipped for {}: {}", hospitalName, e.getMessage());
@@ -309,12 +312,14 @@ public class ExportEngineServiceImpl implements ExportEngineService {
                     baseRules = JsonUtils.getObjectMapper().readTree(ruleEntity.getRulesJson());
                 }
             }
-            return pricingRuleCompiler.compile(baseRules, hospitalName);
+            JsonNode compiled = pricingRuleCompiler.compile(baseRules, hospitalName);
+            return clerkRuleExportService.mergeCompiledForSettlement(hospitalName, compiled);
         } catch (Exception e) {
             log.warn("compiled rules fallback for job {} ({}): {}", context.getJobId(), hospitalName, e.getMessage());
             try {
-                return pricingRuleCompiler.compile(
+                JsonNode compiled = pricingRuleCompiler.compile(
                         JsonUtils.getObjectMapper().createObjectNode(), hospitalName);
+                return clerkRuleExportService.mergeCompiledForSettlement(hospitalName, compiled);
             } catch (Exception ex) {
                 log.warn("compiled rules unavailable for job {}: {}", context.getJobId(), ex.getMessage());
                 return null;
@@ -346,14 +351,37 @@ public class ExportEngineServiceImpl implements ExportEngineService {
 
     private byte[] applyTemplateTransforms(
             HospitalBillTemplateExportRequest request, byte[] content, ExportType exportType) {
-        return applyTemplateTransforms(request.getTemplateId(), request.getHospitalName(), content, exportType);
+        return applyTemplateTransforms(
+                request.getHospitalName(),
+                content,
+                exportType,
+                request.getClerkRemoveColumns());
     }
 
     private byte[] applyTemplateTransforms(
             String templateId, String hospitalName, byte[] content, ExportType exportType) {
+        return applyTemplateTransforms(hospitalName, content, exportType, null);
+    }
+
+    private byte[] applyTemplateTransforms(
+            String hospitalName,
+            byte[] content,
+            ExportType exportType,
+            java.util.List<String> clerkRemoveColumns) {
         Long customerId = customerResolver.resolveByName(hospitalName).map(c -> c.getId()).orElse(null);
         ResolvedExportTemplate resolved = templateResolverHelper.resolve(customerId, exportType, null);
-        return columnTransformPipeline.apply(content, resolved.getColumnMapping());
+        ColumnMappingConfig mapping = resolved.getColumnMapping();
+        if (mapping == null) {
+            mapping = new ColumnMappingConfig();
+        }
+        if (clerkRemoveColumns != null && !clerkRemoveColumns.isEmpty()) {
+            for (String column : clerkRemoveColumns) {
+                if (column != null && !column.isBlank() && !mapping.getRemoveColumns().contains(column)) {
+                    mapping.getRemoveColumns().add(column);
+                }
+            }
+        }
+        return columnTransformPipeline.apply(content, mapping);
     }
 
     /**
@@ -371,8 +399,9 @@ public class ExportEngineServiceImpl implements ExportEngineService {
             applyExportStageDiscounts(billRequest);
             byte[] content = legacyExportBridge.generateBillExportBytes(billRequest);
             content = legacyExportBridge.postProcessBillExport(content, billRequest.getTemplateId());
-            content = applyTemplateTransforms(
-                    billRequest.getTemplateId(), billRequest.getHospitalName(), content, ExportType.BILL);
+            content = clerkRuleExportService.appendMonthlySupplementSheets(
+                    billRequest.getHospitalName(), content);
+            content = applyTemplateTransforms(billRequest, content, ExportType.BILL);
             String filename = safeName(context.getHospitalName()) + "_"
                     + LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmmss")) + ".xlsx";
             logExport(jobId, exportType.code(), filename, context.getJob());

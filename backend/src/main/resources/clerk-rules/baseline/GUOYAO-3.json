@@ -1,0 +1,35 @@
+{
+  "customerCode": "GUOYAO-3",
+  "customerName": "国药总医院第三院区",
+  "sourceVersion": "医院内勤规则-20260918",
+  "notes": "医院内勤规则 v2 · Excel行 国药总医院（三院区）",
+  "attachmentRefs": [],
+  "rules": [
+    {
+      "ruleType": "LOGISTICS_CARD_DEDUCT",
+      "name": "物流卡抵扣",
+      "stage": "settlement",
+      "isActive": true,
+      "params": {
+        "deductFromCard": true
+      },
+      "sourceText": "物流卡",
+      "sourceRef": "excel:结款函#GUOYAO-3",
+      "priority": 100
+    },
+    {
+      "ruleType": "GUOYAO_SETTLEMENT_FORMULA",
+      "name": "国药结款核算",
+      "stage": "settlement",
+      "isActive": true,
+      "params": {
+        "instrumentPackDivisor": 5.5,
+        "allocationDivisor": 15,
+        "campus": "campus3"
+      },
+      "sourceText": "器械包需要将除了手术室以外其余科室核算器械把数量、核算数量、计费金额。（目前此医院没有开立手术室及妇科手术室）\n器械把数数量核算规则：根据分类统计，例如本行统计手术室器械包，将手术室及妇科手术室器械包的金额/5.5。\n核算数量：以器械把数量为基数/15，可以整除的，直接将商*10得到核算数量（例：器械把数量为150，150/15=10，核算除了位10*10=100）；不可以整除的，保留整数位*10+余数。例：器械把数量为151，150/15=10余1，核算数量为10*10+1=101）\n计费金额为核算数量*5.5\n其余器械包类型按照手术室和非手术室类分别核算。分别为额外包：包含额外包（纸塑袋）",
+      "sourceRef": "excel:结款函#GUOYAO-3",
+      "priority": 110
+    }
+  ]
+}

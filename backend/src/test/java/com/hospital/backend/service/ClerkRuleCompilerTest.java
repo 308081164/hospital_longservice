@@ -12,32 +12,70 @@ class ClerkRuleCompilerTest {
     private final ClerkRuleCompiler compiler = new ClerkRuleCompiler(new ClerkRuleIndex());
 
     @Test
-    void compilesTaipingExportTierDiscount() {
-        ObjectNode compiled = compiler.compileForCustomer("TAIPING-RM");
+    void compilesDaowaiBillExportPriceRules() {
+        ObjectNode compiled = compiler.compileForCustomer("DAOWAI-RM");
+        assertThat(compiled).isNotNull();
+        assertThat(compiler.hasActiveBillExportRules("DAOWAI-RM")).isTrue();
+        boolean hasPriceRule = false;
+        for (JsonNode rule : compiled.path("clerkRules")) {
+            if ("BILL_EXPORT_PRICE_RULE".equals(rule.path("ruleType").asText())) {
+                hasPriceRule = true;
+            }
+        }
+        assertThat(hasPriceRule).isTrue();
+    }
+
+    @Test
+    void compilesEryyValidateOnlyWithoutExportDiscountPolicy() {
+        ObjectNode compiled = compiler.compileForCustomer("ERYY-NG");
+        assertThat(compiled).isNotNull();
+        assertThat(compiler.hasActiveBillExportRules("ERYY-NG")).isTrue();
+        boolean hasValidateOnly = false;
+        for (JsonNode rule : compiled.path("clerkRules")) {
+            if ("PRICE_VALIDATE_ONLY".equals(rule.path("ruleType").asText())) {
+                hasValidateOnly = true;
+            }
+        }
+        assertThat(hasValidateOnly).isTrue();
+        for (JsonNode policy : compiled.path("billingPolicies")) {
+            assertThat(policy.path("params").path("validateOnly").asBoolean(false)).isFalse();
+        }
+    }
+
+    @Test
+    void compilesJiuzhouSettlementDiscounts() {
+        ObjectNode compiled = compiler.compileForCustomer("JIUZHOU-FK");
         assertThat(compiled).isNotNull();
         JsonNode policies = compiled.path("billingPolicies");
         assertThat(policies.isArray()).isTrue();
-        assertThat(policies).hasSize(1);
-        assertThat(policies.get(0).path("params").path("applyStage").asText())
-                .isEqualTo(BillingPolicyApplier.STAGE_EXPORT_ONLY);
-        assertThat(policies.get(0).path("params").path("pieceTierDiscounts").isArray()).isTrue();
+        assertThat(policies.size()).isGreaterThanOrEqualTo(2);
     }
 
     @Test
-    void skipsInactiveHulanDiscountUntilMigration() {
-        ObjectNode compiled = compiler.compileForCustomer("HULAN-RM");
+    void compilesRenshengLogisticsCard() {
+        ObjectNode compiled = compiler.compileForCustomer("RENSHENG");
         assertThat(compiled).isNotNull();
-        assertThat(compiled.path("billingPolicies").isArray()).isFalse();
-        assertThat(compiler.hasActiveBillExportRules("HULAN-RM")).isFalse();
+        boolean hasCard = false;
+        for (JsonNode policy : compiled.path("billingPolicies")) {
+            if ("LOGISTICS".equals(policy.path("policyType").asText())
+                    && policy.path("params").path("useLogisticsCard").asBoolean()) {
+                hasCard = true;
+            }
+        }
+        assertThat(hasCard).isTrue();
     }
 
     @Test
-    void compilesSettlementDiscountForHeu() {
-        ObjectNode compiled = compiler.compileForCustomer("HRB-HEU");
+    void compilesHulanTcmMinCharge() {
+        ObjectNode compiled = compiler.compileForCustomer("HULAN-TCM");
         assertThat(compiled).isNotNull();
-        JsonNode policies = compiled.path("billingPolicies");
-        assertThat(policies.get(0).path("params").path("applyStage").asText())
-                .isEqualTo(BillingPolicyApplier.STAGE_SETTLEMENT_ONLY);
-        assertThat(policies.get(0).path("params").path("rate").asDouble()).isEqualTo(0.9);
+        boolean hasMinCharge = false;
+        for (JsonNode policy : compiled.path("billingPolicies")) {
+            if ("MONTHLY_SETTLEMENT".equals(policy.path("policyType").asText())) {
+                hasMinCharge = true;
+                assertThat(policy.path("params").path("minCharge").asDouble()).isEqualTo(10000);
+            }
+        }
+        assertThat(hasMinCharge).isTrue();
     }
 }

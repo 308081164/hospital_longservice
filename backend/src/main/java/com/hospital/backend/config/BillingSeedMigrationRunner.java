@@ -49,6 +49,8 @@ public class BillingSeedMigrationRunner implements CommandLineRunner {
     private static final String WCSRMYY_OR_DEDUP_MARKER = "billing_seed_wcsrm_yy_or_dedup_20260724_v1";
     /** 生产 DB 一次性清理：删除全部校正价规则（baseline 外残留） */
     private static final String CORRECTION_PRICE_DELETE_ALL_MARKER = "billing_seed_correction_price_delete_all_20260908_v1";
+    /** 内勤规则迁出：清理 DB 中 export_only / settlement_only / 账单七折类 policy */
+    private static final String CLERK_LEGACY_PURGE_MARKER = "billing_clerk_legacy_purge_20260918_v1";
     private static final String CORRECTION_PRICE_DELETE_ALL_FILE =
             "billing-seeds/archive/legacy-2026/phase-correction-price-delete-all-20260908.json";
     /** 删除非 22 家特殊计价客户及其孤儿数据（严格测试口径收敛） */
@@ -274,6 +276,21 @@ public class BillingSeedMigrationRunner implements CommandLineRunner {
                     "彻底删除全部校正价规则（85 条 deleteRules）");
             log.info("Correction price delete-all seed applied: {}", CORRECTION_PRICE_DELETE_ALL_FILE);
         }
+        if (sysSettingMapper.countByKey(CLERK_LEGACY_PURGE_MARKER) == 0) {
+            int purged = purgeLegacyClerkPolicies();
+            insertMarker(CLERK_LEGACY_PURGE_MARKER,
+                    "内勤规则迁出：清理 customer_billing_policy 中 export/settlement 阶段策略");
+            log.info("Clerk legacy policy purge: deleted {} rows", purged);
+        }
+    }
+
+    private int purgeLegacyClerkPolicies() {
+        return jdbcTemplate.update(
+                "DELETE FROM customer_billing_policy WHERE "
+                        + "params LIKE '%export_only%' OR params LIKE '%settlement_only%' "
+                        + "OR name LIKE '%七折%' OR name LIKE '%导出阶段折扣%' "
+                        + "OR (policy_type = 'MONTHLY_SETTLEMENT' AND params LIKE '%minCharge%') "
+                        + "OR (policy_type = 'LOGISTICS' AND name LIKE '%物流%')");
     }
 
     /** 22 家特殊计价客户全部强制开启特色账单（历史遗留 billing_enabled=0 修正，如航天风华 HRB-HTFH）。 */

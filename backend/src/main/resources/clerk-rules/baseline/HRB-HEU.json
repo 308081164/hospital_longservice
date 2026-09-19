@@ -1,20 +1,22 @@
 {
   "customerCode": "HRB-HEU",
   "customerName": "哈尔滨工程大学医院",
+  "sourceVersion": "医院内勤规则-20260918",
+  "notes": "医院内勤规则 v2 · Excel行 哈尔滨工程大学医院",
+  "attachmentRefs": [],
   "rules": [
     {
       "ruleType": "SETTLEMENT_DISCOUNT",
-      "name": "结款函灭菌九折",
+      "name": "结款九折",
       "stage": "settlement",
       "isActive": true,
-      "priority": 10,
-      "scope": { "temperature": "ANY" },
       "params": {
         "rate": 0.9,
-        "skipWhenFixedPrice": true
+        "target": "sterilize"
       },
-      "migrateFrom": "customer_billing_policy:结款函灭菌9折",
-      "migrationStatus": "active"
+      "sourceText": "9折",
+      "sourceRef": "excel:结款函#HRB-HEU",
+      "priority": 100
     }
   ]
 }
