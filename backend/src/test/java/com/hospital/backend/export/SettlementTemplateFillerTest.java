@@ -35,6 +35,29 @@ class SettlementTemplateFillerTest {
     }
 
     @Test
+    void logisticsRemarkShowsUnitPriceWithoutTripCount() throws Exception {
+        HospitalReconciliationJob job = new HospitalReconciliationJob();
+        job.setLogisticsFee(1550.0);
+        job.setLogisticsTripCount(31);
+        job.setLogisticsBreakdown("{\"feePerTrip\":50,\"tripCount\":31,\"payableFee\":1550}");
+
+        JsonNode compiledRules = JsonUtils.getObjectMapper().readTree("""
+                {"billingPolicies":[
+                  {"policyType":"LOGISTICS","name":"物流50","params":{"feePerTrip":50}}
+                ]}
+                """);
+
+        List<SettlementTemplateFiller.SettlementFeeRow> rows = filler.buildFeeRows(job, 1000, compiledRules);
+        SettlementTemplateFiller.SettlementFeeRow logistics = rows.stream()
+                .filter(r -> "物流费用".equals(r.getItemName()))
+                .findFirst()
+                .orElseThrow();
+
+        assertThat(logistics.getRemark()).contains("50.00/次");
+        assertThat(logistics.getRemark()).doesNotContain("趟");
+    }
+
+    @Test
     void usesSettlementAdjustmentWhenBreakdownMissing() {
         HospitalReconciliationJob job = new HospitalReconciliationJob();
         job.setSettlementAdjustment(-500.0);

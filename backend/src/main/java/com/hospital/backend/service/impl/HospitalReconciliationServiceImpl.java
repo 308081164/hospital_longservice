@@ -32,6 +32,7 @@ import com.hospital.backend.export.D8DisplayNameResolver;
 import com.hospital.backend.export.ExportEngineService;
 import com.hospital.backend.export.ExportTemplateResolver;
 import com.hospital.backend.export.ReconciliationLegacyExportBridge;
+import com.hospital.backend.export.SettlementPeriodFormatter;
 import com.hospital.backend.export.ExportType;
 import com.hospital.backend.export.model.ColumnMappingConfig;
 import com.hospital.backend.export.model.ResolvedExportTemplate;
@@ -4199,75 +4200,25 @@ public class HospitalReconciliationServiceImpl implements HospitalReconciliation
                 && (request.getUppercaseTotal() == null || request.getUppercaseTotal().isBlank())) {
             request.setUppercaseTotal(amountToChineseUpper(request.getTotalAmount()));
         }
-        // 从任务中提取方案名称和结算月份（优先取文件名中的月份）
+        // 从任务中提取方案名称与账期（优先 sourceDateRange）
         String planName = null;
-        int year = 0, month = 0;
+        String hospitalNameForTitle = request.getHospitalDisplayName();
+        SettlementPeriodFormatter.BillingPeriod billingPeriod = null;
         if (request.getTemplateId() != null && !request.getTemplateId().isBlank()) {
             try {
                 Long jobId = Long.parseLong(request.getTemplateId());
                 HospitalReconciliationJob job = jobMapper.selectById(jobId);
                 if (job != null) {
-                    // 方案名称：优先 planName，回退 ruleName → hospitalName
                     planName = job.getPlanName();
                     if (planName == null || planName.isBlank()) {
                         planName = job.getRuleName();
                     }
-                    if (planName == null || planName.isBlank()) {
-                        planName = job.getHospitalName();
+                    if (hospitalNameForTitle == null || hospitalNameForTitle.isBlank()) {
+                        hospitalNameForTitle = job.getHospitalName();
                     }
-                    log.info("结款函导出: jobId={}, planName={}, ruleName={}, hospitalName={}, sourceFileName={}",
-                            jobId, planName, job.getRuleName(), job.getHospitalName(), job.getSourceFileName());
-
-                    // 从文件名提取年月（如"2026年4月"、"2026-4月"、"202604月"等）
-                    String srcFile = job.getSourceFileName();
-                    log.info("结款函导出: sourceFileName='{}'", srcFile);
-                    if (srcFile != null && !srcFile.isBlank()) {
-                        java.util.regex.Matcher m = java.util.regex.Pattern.compile(
-                                "(\\d{4})[年\\-\\\\/]?(\\d{1,2})\\s*月").matcher(srcFile);
-                        if (m.find()) {
-                            year = Integer.parseInt(m.group(1));
-                            month = Integer.parseInt(m.group(2));
-                            log.info("结款函导出: 从文件名提取 → year={}, month={}", year, month);
-                        } else {
-                            java.util.regex.Matcher m2 = java.util.regex.Pattern.compile(
-                                    "(\\d{1,2})\\s*月").matcher(srcFile);
-                            if (m2.find()) {
-                                month = Integer.parseInt(m2.group(1));
-                                year = java.time.Year.now().getValue();
-                                log.info("结款函导出: 从文件名(仅月份)提取 → year={}, month={}", year, month);
-                            }
-                        }
-                    }
-                    // 文件名未提取到 → 回退到 sourceDateRange（B4 单元格内容）
-                    if (year == 0 || month == 0) {
-                        String dateRange = job.getSourceDateRange();
-                        log.info("结款函导出: sourceDateRange='{}'", dateRange);
-                        if (dateRange != null && !dateRange.isBlank()) {
-                            java.util.regex.Matcher m3 = java.util.regex.Pattern.compile(
-                                    "(\\d{4})[/\\-](\\d{1,2})[/\\-]\\d{1,2}").matcher(dateRange);
-                            if (m3.find()) {
-                                year = Integer.parseInt(m3.group(1));
-                                month = Integer.parseInt(m3.group(2));
-                                log.info("结款函导出: 从sourceDateRange提取 → year={}, month={}", year, month);
-                            }
-                        }
-                    }
-                    // 最终回退：从请求中的 dateRangeText 解析
-                    if (year == 0 || month == 0) {
-                        String reqDate = request.getDateRangeText();
-                        log.info("结款函导出: request.dateRangeText='{}'", reqDate);
-                        if (reqDate != null && !reqDate.isBlank()) {
-                            java.util.regex.Matcher m4 = java.util.regex.Pattern.compile(
-                                    "(\\d{4})[/\\-年](\\d{1,2})[/\\-月]").matcher(reqDate);
-                            if (m4.find()) {
-                                year = Integer.parseInt(m4.group(1));
-                                month = Integer.parseInt(m4.group(2));
-                                log.info("结款函导出: 从dateRangeText提取 → year={}, month={}", year, month);
-                            }
-                        }
-                    }
-                    log.info("结款函导出: year={}, month={}, hasYearMonth={}",
-                            year, month, (year > 0 && month > 0));
+                    log.info("结款函导出: jobId={}, planName={}, ruleName={}, hospitalName={}, sourceDateRange={}",
+                            jobId, planName, job.getRuleName(), job.getHospitalName(), job.getSourceDateRange());
+                    billingPeriod = SettlementPeriodFormatter.parse(job.getSourceDateRange()).orElse(null);
                 } else {
                     log.warn("结款函导出: job not found for templateId={}", request.getTemplateId());
                 }
@@ -4278,24 +4229,13 @@ public class HospitalReconciliationServiceImpl implements HospitalReconciliation
             log.warn("结款函导出: templateId is null or blank");
         }
 
-        // 回退：如果从任务中未提取到方案名称，从请求的 titleText 提取
+        if (billingPeriod == null) {
+            billingPeriod = SettlementPeriodFormatter.parse(request.getDateRangeText()).orElse(null);
+        }
         if (planName == null || planName.isBlank()) {
             String titleText = request.getTitleText();
             if (titleText != null && !titleText.isBlank()) {
                 planName = titleText.replace("结款通知函", "").replace("结款函", "").trim();
-            }
-        }
-        // 回退：如果年月仍未提取到，从 closingText 中解析日期
-        if (year == 0 || month == 0) {
-            String closing = request.getClosingText();
-            if (closing != null && !closing.isBlank()) {
-                java.util.regex.Matcher m5 = java.util.regex.Pattern.compile(
-                        "(\\d{4})年(\\d{1,2})月(\\d{1,2})日").matcher(closing);
-                if (m5.find()) {
-                    year = Integer.parseInt(m5.group(1));
-                    month = Integer.parseInt(m5.group(2));
-                    log.info("结款函导出: 从closingText提取 → year={}, month={}", year, month);
-                }
             }
         }
 
@@ -4305,7 +4245,7 @@ public class HospitalReconciliationServiceImpl implements HospitalReconciliation
             try (FileInputStream fis = new FileInputStream(templateFile);
                  XSSFWorkbook workbook = new XSSFWorkbook(fis)) {
                 log.info("结款函导出: 模板加载成功, sheets={}", workbook.getNumberOfSheets());
-                createSettlementTemplateWorkbook(workbook, request, planName, year, month);
+                createSettlementTemplateWorkbook(workbook, request, planName, hospitalNameForTitle, billingPeriod);
                 byte[] result = writeWorkbookToBytes(workbook);
                 log.info("结款函导出: 输出字节数={}", result.length);
                 return result;
@@ -4327,9 +4267,11 @@ public class HospitalReconciliationServiceImpl implements HospitalReconciliation
      */
     private void createSettlementTemplateWorkbook(XSSFWorkbook workbook,
                                                   HospitalSettlementTemplateExportRequest request,
-                                                  String planName, int year, int month) {
+                                                  String planName,
+                                                  String hospitalNameForTitle,
+                                                  SettlementPeriodFormatter.BillingPeriod billingPeriod) {
         XSSFSheet sheet = workbook.getSheetAt(0);
-        writeSettlementTemplate(sheet, request, planName, year, month);
+        writeSettlementTemplate(sheet, request, planName, hospitalNameForTitle, billingPeriod);
     }
 
     /**
@@ -4353,10 +4295,14 @@ public class HospitalReconciliationServiceImpl implements HospitalReconciliation
      * @param request 结款函导出请求
      */
     private void writeSettlementTemplate(XSSFSheet sheet, HospitalSettlementTemplateExportRequest request,
-                                         String planName, int year, int month) {
-        log.info("writeSettlementTemplate: planName={}, year={}, month={}, hospitalName={}, feeRows={}",
-                planName, year, month,
-                request.getHospitalDisplayName(),
+                                         String planName,
+                                         String hospitalNameForTitle,
+                                         SettlementPeriodFormatter.BillingPeriod billingPeriod) {
+        String displayHospital = hospitalNameForTitle != null && !hospitalNameForTitle.isBlank()
+                ? hospitalNameForTitle
+                : (request.getHospitalDisplayName() != null ? request.getHospitalDisplayName() : "");
+        log.info("writeSettlementTemplate: planName={}, billingPeriod={}, hospitalName={}, feeRows={}",
+                planName, billingPeriod, displayHospital,
                 request.getFeeRows() != null ? request.getFeeRows().size() : 0);
         int detailStartRow = 12;      // 费用明细起始行（1-indexed）
         int templateDetailRows = 2;   // 模板预设的明细行数
@@ -4364,10 +4310,8 @@ public class HospitalReconciliationServiceImpl implements HospitalReconciliation
         int feeRowCount = request.getFeeRows() != null ? request.getFeeRows().size() : 0;
         int diff = feeRowCount - templateDetailRows;
 
-        boolean hasYearMonth = year > 0 && month > 0;
-        int lastDay = hasYearMonth ? java.time.YearMonth.of(year, month).lengthOfMonth() : 0;
-        log.info("writeSettlementTemplate: hasYearMonth={}, lastDay={}, closingText={}",
-                hasYearMonth, lastDay, request.getClosingText());
+        log.info("writeSettlementTemplate: billingPeriod={}, closingText={}",
+                billingPeriod, request.getClosingText());
 
         // ===== 行数调整：如果费用条目数 ≠ 2，插入或删除行 =====
         if (diff > 0) {
@@ -4392,8 +4336,8 @@ public class HospitalReconciliationServiceImpl implements HospitalReconciliation
         int saluteRow = contentRow + 1;
         int closingRow = saluteRow + 1;
 
-        // ===== Row 6: 方案名称 + "结款通知函" =====
-        String title = (planName != null && !planName.isBlank() ? planName : "") + "结款通知函";
+        // ===== Row 6: 医院名 + 规则名 + "结款通知函" =====
+        String title = SettlementPeriodFormatter.buildTitle(displayHospital, planName);
         log.info("writeSettlementTemplate: D6 title={}", title);
         setCellValue(sheet, "D6", cleanExcelText(title));
 
@@ -4418,14 +4362,15 @@ public class HospitalReconciliationServiceImpl implements HospitalReconciliation
             row8.setHeightInPoints((short) 2);
         }
 
-        // ===== Row 9: 从:YYYY年M月1日  至: YYYY年M月DD日 灭菌费用总清单如下： =====
-        if (hasYearMonth) {
-            String dateRange = "从:" + year + "年" + month + "月1日  至: "
-                    + year + "年" + month + "月" + lastDay + "日 灭菌费用总清单如下：";
+        // ===== Row 9: 结算周期（账期起止日） =====
+        if (billingPeriod != null) {
+            String dateRange = SettlementPeriodFormatter.formatSettlementIntro(billingPeriod);
             log.info("writeSettlementTemplate: D9 dateRange={}", dateRange);
             setCellValue(sheet, "D9", cleanExcelText(dateRange));
-        } else {
+        } else if (request.getDateRangeText() != null && !request.getDateRangeText().isBlank()) {
             setCellValue(sheet, "D9", cleanExcelText(request.getDateRangeText()));
+        } else {
+            setCellValue(sheet, "D9", null);
         }
 
         // ===== 逐行写入费用明细 =====
@@ -4450,13 +4395,21 @@ public class HospitalReconciliationServiceImpl implements HospitalReconciliation
         setCellValue(sheet, uppercaseRow, 6, cleanExcelText(request.getUppercaseTotal()));
         setCellValue(sheet, uppercaseRow, 8, null);
 
-        // ===== 落款：日期修正为该月最后一天 =====
-        if (request.getClosingText() != null && !request.getClosingText().isBlank()) {
-            String closing = request.getClosingText();
-            if (hasYearMonth) {
-                closing = closing.replaceAll("(\\d{4})年(\\d{1,2})月(\\d{1,2})日",
-                        year + "年" + month + "月" + lastDay + "日");
+        // ===== 落款：账期最后一天（覆盖模板硬编码日期） =====
+        String closing = null;
+        if (billingPeriod != null) {
+            if (request.getClosingText() != null && !request.getClosingText().isBlank()) {
+                closing = SettlementPeriodFormatter.replaceClosingDate(request.getClosingText(), billingPeriod);
+            } else {
+                String displayCompany = request.getCompanyName() != null && !request.getCompanyName().isBlank()
+                        ? request.getCompanyName()
+                        : companyName;
+                closing = SettlementPeriodFormatter.buildClosingText(displayCompany, billingPeriod);
             }
+        } else if (request.getClosingText() != null && !request.getClosingText().isBlank()) {
+            closing = request.getClosingText();
+        }
+        if (closing != null && !closing.isBlank()) {
             log.info("writeSettlementTemplate: closingRow={}, closing={}", closingRow, closing);
             setCellValue(sheet, closingRow, 4, cleanExcelText(closing));
         }

@@ -1053,20 +1053,13 @@ public class SettlementTemplateFiller {
             }
             Object waivedTrips = logisticsBreakdown.get("waivedTrips");
             if (waivedTrips instanceof Number waived && waived.intValue() > 0) {
-                if (!remark.isEmpty()) {
+                if (remark.isEmpty()) {
                     remark.append("（");
                 } else {
                     remark.append("（");
                 }
                 remark.append("已免 ").append(waived.intValue()).append(" 次物流费）");
-            } else if (job.getLogisticsTripCount() != null) {
-                if (!remark.isEmpty()) {
-                    remark.append(" · ");
-                }
-                remark.append(job.getLogisticsTripCount()).append(" 趟");
             }
-        } else if (job.getLogisticsTripCount() != null) {
-            remark.append(job.getLogisticsTripCount()).append(" 趟");
         }
         if (cardDeducted > 0) {
             if (!remark.isEmpty()) {
