@@ -9,6 +9,8 @@ import com.hospital.backend.config.ClerkRuleIndex;
 import org.springframework.stereotype.Component;
 
 import java.util.Iterator;
+import java.util.LinkedHashSet;
+import java.util.Set;
 
 /**
  * 将内勤规则 baseline 编译为导出/结款管线可消费结构。
@@ -320,7 +322,7 @@ public class ClerkRuleCompiler {
         if (rules == null || !rules.isArray()) {
             return types;
         }
-        Set<String> seen = new java.util.LinkedHashSet<>();
+        Set<String> seen = new LinkedHashSet<>();
         for (JsonNode rule : rules) {
             if (!"MONTHLY_SUPPLEMENT_REPORT".equals(rule.path("ruleType").asText())) {
                 continue;
