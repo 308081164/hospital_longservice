@@ -9,6 +9,7 @@ import com.hospital.backend.export.BillExportRequestMapper;
 import com.hospital.backend.export.ColumnTransformPipeline;
 import com.hospital.backend.export.ExportContext;
 import com.hospital.backend.service.ClerkRuleExportService;
+import com.hospital.backend.service.ClerkSettlementRequestEnricher;
 import com.hospital.backend.export.ExportType;
 import com.hospital.backend.export.ReconciliationExportDataLoader;
 import com.hospital.backend.export.ReconciliationLegacyExportBridge;
@@ -66,6 +67,8 @@ class ExportEngineServiceImplLegacyRoutingTest {
     @Mock
     private SettlementJobEnricher settlementJobEnricher;
     @Mock
+    private ClerkSettlementRequestEnricher clerkSettlementRequestEnricher;
+    @Mock
     private BillExportLayoutResolver billExportLayoutResolver;
     @Mock
     private ReconciliationLegacyExportBridge legacyExportBridge;
@@ -87,6 +90,7 @@ class ExportEngineServiceImplLegacyRoutingTest {
                 settlementTemplateFiller,
                 billExportRequestMapper,
                 settlementJobEnricher,
+                clerkSettlementRequestEnricher,
                 billExportLayoutResolver);
         ReflectionTestUtils.setField(service, "legacyExportBridge", legacyExportBridge);
     }
