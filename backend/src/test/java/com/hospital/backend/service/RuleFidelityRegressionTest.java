@@ -142,8 +142,7 @@ class RuleFidelityRegressionTest {
         JsonNode rules = RuleFidelityTestSupport.compileForCustomerCode("GUOYAO-2");
         PricingEngine engine = new PricingEngine(rules);
         // 「双纸塑」以词中形态出现（后邻 CJK「袋」）：exact_token 永不命中，contains 包含语义命中。
-        // 客户在生产手工配置的同名规则为精确匹配，且未走种子/manifest 通道被 reconcile 清除（R4），
-        // 本用例锁定补录后的 contains 语义与 FIXED_PRICE 一口价惯例（skipPackaging+skipDiscount）。
+        // 规则已标记 manualReview：命中后保留账单原价供人工核对，不强制套用规则价 8 元。
         PricingEngine.ProcessedResult result = engine.processRow(Map.of(
                 "hospitalName", "国药总医院第二院区",
                 "department", "手术室",
@@ -155,10 +154,13 @@ class RuleFidelityRegressionTest {
                 "unitPrice", 16.5,
                 "totalPrice", 16.5
         ));
-        assertThat(result.expectedUnitPrice).isEqualTo(8.0);
+        assertThat(result.expectedUnitPrice).isEqualTo(16.5);
         assertThat(result.pricingRule).contains("电机厂包名带双");
-        assertThat(result.pricingPath).isEqualTo("fixed");
+        assertThat(result.pricingPath).isEqualTo("preserve");
         assertThat(result.status).isEqualTo("warning");
+        assertThat(result.notes).anyMatch(note -> note.contains("需人工核对"));
+        assertThat(result.billingNotes).isNotNull();
+        assertThat(result.billingNotes.get("manualReview")).isEqualTo(true);
     }
 
     @Test
