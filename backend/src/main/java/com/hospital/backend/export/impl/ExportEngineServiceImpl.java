@@ -30,6 +30,7 @@ import com.hospital.backend.export.SettlementTemplateFiller;
 import com.hospital.backend.mapper.HospitalReconciliationExportLogMapper;
 import com.hospital.backend.mapper.HospitalPricingRuleMapper;
 import com.hospital.backend.service.ClerkRuleExportService;
+import com.hospital.backend.service.ClerkSettlementRequestEnricher;
 import com.hospital.backend.service.CustomerResolver;
 import com.hospital.backend.service.PricingRuleCompiler;
 import lombok.RequiredArgsConstructor;
@@ -58,6 +59,8 @@ public class ExportEngineServiceImpl implements ExportEngineService {
     private final SettlementTemplateFiller settlementTemplateFiller;
     private final BillExportRequestMapper billExportRequestMapper;
     private final SettlementJobEnricher settlementJobEnricher;
+
+    private final ClerkSettlementRequestEnricher clerkSettlementRequestEnricher;
 
     private final BillExportLayoutResolver billExportLayoutResolver;
 
@@ -109,6 +112,9 @@ public class ExportEngineServiceImpl implements ExportEngineService {
     @Override
     public ResponseEntity<byte[]> exportSettlement(HospitalSettlementTemplateExportRequest request) {
         try {
+            if (request.getFeeRows() == null || request.getFeeRows().isEmpty()) {
+                clerkSettlementRequestEnricher.enrich(request);
+            }
             byte[] content = legacyExportBridge.generateSettlementExportBytes(request);
             content = applyTemplateTransforms(request.getTemplateId(), request.getHospitalName(), content, ExportType.SETTLEMENT);
             String filename = safeName(request.getHospitalName()) + "_settlement_"

@@ -16,7 +16,7 @@ BASELINE_DIR = OUT_DIR / "baseline"
 import sys
 
 sys.path.insert(0, str(ROOT / "scripts"))
-from strict_hospital_codes import STRICT_KEEP_CODES  # noqa: E402
+from strict_hospital_codes import MANIFEST_BASELINE_CODES  # noqa: E402
 
 
 def canonical_hash(obj: object) -> str:
@@ -34,7 +34,7 @@ def main() -> int:
 
     index_customers = []
     per_file_hashes: list[str] = []
-    for code in STRICT_KEEP_CODES:
+    for code in MANIFEST_BASELINE_CODES:
         path = BASELINE_DIR / f"{code}.json"
         if not path.is_file():
             print(f"WARN: missing {path}")

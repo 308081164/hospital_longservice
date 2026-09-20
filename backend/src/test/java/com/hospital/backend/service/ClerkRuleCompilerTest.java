@@ -107,4 +107,47 @@ class ClerkRuleCompilerTest {
         }
         assertThat(hasMinCharge).isTrue();
     }
+
+    @Test
+    void compilesZyyD1FuyiClerkRules() {
+        ObjectNode compiled = compiler.compileForCustomer("ZYY-D1");
+        assertThat(compiled).isNotNull();
+        assertThat(compiler.hasActiveBillExportRules("ZYY-D1")).isTrue();
+
+        boolean hasFuyiLayout = false;
+        for (JsonNode layout : compiled.path("exportLayouts")) {
+            JsonNode params = layout.path("params");
+            if ("fuyi_extended_11col".equals(params.path("billColumnLayout").asText())
+                    && "dept_split".equals(params.path("billLayout").asText())) {
+                hasFuyiLayout = true;
+            }
+        }
+        assertThat(hasFuyiLayout).isTrue();
+
+        boolean hasLogistics = false;
+        boolean hasWashing = false;
+        boolean hasUrgent = false;
+        for (JsonNode policy : compiled.path("billingPolicies")) {
+            String type = policy.path("policyType").asText();
+            if ("LOGISTICS".equals(type)
+                    && policy.path("params").path("feePerTrip").asDouble() == 45.0) {
+                hasLogistics = true;
+            }
+            if ("SETTLEMENT_EXTRA".equals(type)
+                    && "手术一区洗涤费用".equals(policy.path("params").path("itemName").asText())) {
+                hasWashing = true;
+            }
+            if ("URGENT".equals(type)
+                    && policy.path("params").path("baseMultiplier").asDouble() == 1.25) {
+                hasUrgent = true;
+            }
+        }
+        assertThat(hasLogistics).isTrue();
+        assertThat(hasWashing).isTrue();
+        assertThat(hasUrgent).isTrue();
+
+        assertThat(compiled.path("exportSupplementTypes"))
+                .extracting(JsonNode::asText)
+                .contains("dept_summary", "logistics_allocation");
+    }
 }

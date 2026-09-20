@@ -1,8 +1,8 @@
 {
-  "baseline_hash": "ef4e889e7baa719326176e240d1e21ec4cfef6ec2771158ca6575072fc8c2587",
-  "generated_at": "2026-09-20T06:59:50Z",
+  "baseline_hash": "bbc3da48ec4bdb723c09cc47e0c7ffefee51dff1ab48ff809d2abc557216c2bc",
+  "generated_at": "2026-09-20T07:35:23Z",
   "source": "billing-rules-manifest@01836c66115726ff7229db58f16020cb6e65f7069beee13551669c1031fd7764",
-  "customer_count": 32,
+  "customer_count": 33,
   "customers": [
     {
       "code": "BINGCHENG-YM",
@@ -195,6 +195,12 @@
       "file": "baseline/XIEDA-YL.json",
       "ruleCount": 6,
       "fileHash": "4940104949144623f25dbd07a03e1e04ad05b64b08ced76b1e6df3e5a6f76399"
+    },
+    {
+      "code": "ZYY-D1",
+      "file": "baseline/ZYY-D1.json",
+      "ruleCount": 26,
+      "fileHash": "003270c3679c602bfc1a5370b0f3e00d98d3c13e10343e131e3c94633be9ca57"
     }
   ]
 }

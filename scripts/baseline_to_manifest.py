@@ -17,7 +17,7 @@ MANIFEST_PATH = ROOT / "backend/src/main/resources/billing-seeds/billing-rules-m
 TEST_MANIFEST_PATH = ROOT / "backend/src/test/resources/billing-rules-manifest.json"
 
 sys.path.insert(0, str(ROOT / "scripts"))
-from strict_hospital_codes import STRICT_KEEP_CODES  # noqa: E402
+from strict_hospital_codes import MANIFEST_BASELINE_CODES  # noqa: E402
 
 
 def canonical_hash(obj: object) -> str:
@@ -33,19 +33,22 @@ def build_manifest(existing: dict | None = None) -> dict:
     existing = existing or {}
     customers: dict = {}
     enabled = 0
-    for code in STRICT_KEEP_CODES:
+    for code in MANIFEST_BASELINE_CODES:
         baseline = load_baseline(code)
         rules = baseline.get("productRules") or []
         billing_enabled = baseline.get("billingEnabled", True)
         if billing_enabled:
             enabled += 1
         prev = (existing.get("customers") or {}).get(code) or {}
+        override = baseline.get("standardPricingOverride")
+        if override is None:
+            override = prev.get("standardPricingOverride")
         customers[code] = {
             "code": code,
             "name": baseline.get("customerName") or prev.get("name") or code,
             "status": prev.get("status"),
-            "billingPricingMode": baseline.get("billingPricingMode"),
-            "standardPricingOverride": prev.get("standardPricingOverride"),
+            "billingPricingMode": baseline.get("billingPricingMode") or prev.get("billingPricingMode"),
+            "standardPricingOverride": override,
             "billingEnabled": billing_enabled,
             "productRules": rules,
             "rule_count": len(rules),
@@ -53,7 +56,7 @@ def build_manifest(existing: dict | None = None) -> dict:
         }
 
     manifest_hash = canonical_hash(
-        {c: customers[c]["productRules"] for c in STRICT_KEEP_CODES if c in customers}
+        {c: customers[c]["productRules"] for c in MANIFEST_BASELINE_CODES if c in customers}
     )
     return {
         "version": existing.get("version", 1),

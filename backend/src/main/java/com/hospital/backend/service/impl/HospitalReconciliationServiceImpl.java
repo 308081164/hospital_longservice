@@ -22,6 +22,10 @@ import com.hospital.backend.service.ProductMatchService;
 import com.hospital.backend.service.SettlementJobFieldsApplier;
 import com.hospital.backend.service.ExternalInstrumentService;
 import com.hospital.backend.service.HospitalReconciliationService;
+import com.hospital.backend.service.ClerkCompiledRulesResolver;
+import com.hospital.backend.service.ClerkExportLayoutMerger;
+import com.hospital.backend.service.ClerkSettlementRequestEnricher;
+import com.hospital.backend.export.fuyi.FuyiSupplementExportService;
 import com.hospital.backend.service.HospitalExportCapabilityService;
 import com.hospital.backend.service.ReconciliationAnomalyDetector;
 import com.hospital.backend.service.ReconciliationHospitalNameResolver;
@@ -218,6 +222,14 @@ public class HospitalReconciliationServiceImpl implements HospitalReconciliation
 
     private final BillExportLayoutResolver billExportLayoutResolver;
 
+    private final ClerkExportLayoutMerger clerkExportLayoutMerger;
+
+    private final ClerkCompiledRulesResolver clerkCompiledRulesResolver;
+
+    private final ClerkSettlementRequestEnricher clerkSettlementRequestEnricher;
+
+    private final FuyiSupplementExportService fuyiSupplementExportService;
+
     private final D8DisplayNameResolver d8DisplayNameResolver;
 
     private final ExportTemplateResolver exportTemplateResolver;
@@ -314,7 +326,7 @@ public class HospitalReconciliationServiceImpl implements HospitalReconciliation
             return;
         }
         try {
-            JsonNode compiled = pricingRuleCompiler.compile(baseRules, hospitalName);
+            JsonNode compiled = clerkCompiledRulesResolver.resolve(job, baseRules);
             settlementJobFieldsApplier.applyAllFromMaps(job, compiled, rows, true);
         } catch (Exception e) {
             log.warn("物流费计算失败: {}", e.getMessage());
@@ -361,7 +373,7 @@ public class HospitalReconciliationServiceImpl implements HospitalReconciliation
             if (baseRules == null) {
                 return Result.fail(400, "无法加载计价规则");
             }
-            JsonNode compiled = pricingRuleCompiler.compile(baseRules, job.getHospitalName());
+            JsonNode compiled = clerkCompiledRulesResolver.resolve(job, baseRules);
             List<Map<String, Object>> rows = loadAllRowsForJob(job);
             Long customerId = customerResolver.resolveByName(job.getHospitalName())
                     .map(c -> c.getId()).orElse(null);
@@ -387,16 +399,15 @@ public class HospitalReconciliationServiceImpl implements HospitalReconciliation
 
     @Override
     public ResponseEntity<byte[]> exportLogisticsAllocation(Long jobId) {
-        Result<LogisticsAllocationPreviewResponse> preview = getLogisticsAllocationPreview(jobId);
-        if (preview.getCode() != 200 || preview.getData() == null) {
-            return ResponseEntity.badRequest().build();
-        }
         try {
             HospitalReconciliationJob job = jobMapper.selectById(jobId);
-            byte[] content = sheetOrchestrator.buildLogisticsAllocationWorkbook(
-                    job != null ? job.getHospitalName() : null,
-                    preview.getData().getDeptAllocations());
-            String filename = (job != null ? safeName(job.getHospitalName()) : "hospital")
+            if (job == null) {
+                return ResponseEntity.notFound().build();
+            }
+            List<HospitalReconciliationRow> rows =
+                    rowMapper.selectByJobIdOrderBySheetNameAscRowNumberAsc(jobId);
+            byte[] content = fuyiSupplementExportService.exportLogisticsAllocation(job, rows);
+            String filename = safeName(job.getHospitalName() != null ? job.getHospitalName() : "hospital")
                     + "_物流分摊_" + LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmmss"))
                     + ".xlsx";
             return ResponseEntity.ok()
@@ -1611,35 +1622,12 @@ public class HospitalReconciliationServiceImpl implements HospitalReconciliation
                 return ResponseEntity.notFound().build();
             }
 
-            // 按科室汇总价格
-            Map<String, Double> deptSums = new LinkedHashMap<>();
             List<HospitalReconciliationRow> rows = rowMapper.selectByJobIdOrderBySheetNameAscRowNumberAsc(jobId);
-            for (HospitalReconciliationRow row : rows) {
-                String sheet = row.getSheetName() != null && !row.getSheetName().isBlank()
-                        ? row.getSheetName() : "(默认)";
-                Double price = row.getCorrectedTotalPrice() != null
-                        ? row.getCorrectedTotalPrice()
-                        : row.getTotalPrice();
-                deptSums.merge(sheet, price != null ? price : 0.0, Double::sum);
-            }
-
-            if (deptSums.isEmpty()) {
+            if (rows == null || rows.isEmpty()) {
                 return ResponseEntity.badRequest().body("该任务没有可汇总的数据".getBytes());
             }
 
-            // 按科室名排序
-            List<Map.Entry<String, Double>> sortedDepts = new ArrayList<>(deptSums.entrySet());
-            sortedDepts.sort(Map.Entry.comparingByKey(java.text.Collator.getInstance(java.util.Locale.CHINA)));
-
-            // 计算总价
-            double grandTotal = sortedDepts.stream().mapToDouble(Map.Entry::getValue).sum();
-
-            // 直接从零创建 xlsx，不依赖模板
-            byte[] content;
-            try (XSSFWorkbook workbook = createDepartmentSummaryWorkbook(
-                    job.getHospitalName(), job, sortedDepts, grandTotal)) {
-                content = writeWorkbookToBytes(workbook);
-            }
+            byte[] content = fuyiSupplementExportService.exportDeptSummary(job, rows);
 
             // 记录导出日志
             String filename = asciiDownloadName(
@@ -2653,6 +2641,7 @@ public class HospitalReconciliationServiceImpl implements HospitalReconciliation
         if (request.getRows() == null || request.getRows().isEmpty()) {
             throw new IllegalArgumentException("该版本没有可导出的数据");
         }
+        clerkExportLayoutMerger.mergeIntoRequest(request);
         File templateFile = new File(billTemplatePath);
 
         // ===== 优先方式1：标准模板导出 =====
@@ -4196,6 +4185,9 @@ public class HospitalReconciliationServiceImpl implements HospitalReconciliation
      */
     @Override
     public byte[] generateSettlementExportBytes(HospitalSettlementTemplateExportRequest request) throws IOException {
+        if (request.getFeeRows() == null || request.getFeeRows().isEmpty()) {
+            clerkSettlementRequestEnricher.enrich(request);
+        }
         if (request.getTotalAmount() != null
                 && (request.getUppercaseTotal() == null || request.getUppercaseTotal().isBlank())) {
             request.setUppercaseTotal(amountToChineseUpper(request.getTotalAmount()));
@@ -5761,10 +5753,19 @@ public class HospitalReconciliationServiceImpl implements HospitalReconciliation
                 // templateId not a job id
             }
         }
-        return new ExportLayoutSettings(
+        ExportLayoutSettings base = new ExportLayoutSettings(
                 billExportLayoutResolver.normalizeBillLayout(billLayout),
                 billExportLayoutResolver.normalizeD8DisplaySource(d8DisplaySource),
                 billColumnLayout != null ? billColumnLayout : BillColumnLayout.STANDARD_8COL);
+        if (request.getHospitalName() != null && !request.getHospitalName().isBlank()) {
+            ClerkExportLayoutMerger.LayoutSettings clerk = clerkExportLayoutMerger.merge(
+                    request.getHospitalName(),
+                    new ClerkExportLayoutMerger.LayoutSettings(
+                            base.billLayout(), base.d8DisplaySource(), base.billColumnLayout()));
+            return new ExportLayoutSettings(
+                    clerk.billLayout(), clerk.d8DisplaySource(), clerk.billColumnLayout());
+        }
+        return base;
     }
 
     private ExportLayoutSettings resolveExportLayoutSettingsForJob(Long jobId) {
@@ -5784,10 +5785,21 @@ public class HospitalReconciliationServiceImpl implements HospitalReconciliation
         Long customerId = customerResolver.resolveByName(job.getHospitalName()).map(c -> c.getId()).orElse(null);
         ResolvedExportTemplate template = exportTemplateResolver.resolve(customerId, ExportType.BILL, null);
         ColumnMappingConfig mapping = template != null ? template.getColumnMapping() : null;
-        return new ExportLayoutSettings(
+        ExportLayoutSettings fromTemplate = new ExportLayoutSettings(
                 billExportLayoutResolver.resolveBillLayout(mapping),
                 billExportLayoutResolver.resolveD8DisplaySource(mapping),
                 billExportLayoutResolver.resolveBillColumnLayout(mapping));
+        if (job.getHospitalName() != null && !job.getHospitalName().isBlank()) {
+            ClerkExportLayoutMerger.LayoutSettings clerk = clerkExportLayoutMerger.merge(
+                    job.getHospitalName(),
+                    new ClerkExportLayoutMerger.LayoutSettings(
+                            fromTemplate.billLayout(),
+                            fromTemplate.d8DisplaySource(),
+                            fromTemplate.billColumnLayout()));
+            return new ExportLayoutSettings(
+                    clerk.billLayout(), clerk.d8DisplaySource(), clerk.billColumnLayout());
+        }
+        return fromTemplate;
     }
 
     /**

@@ -1,23 +1,22 @@
 package com.hospital.backend.export.strategy;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.hospital.backend.allocation.AllocationResult;
-import com.hospital.backend.common.JsonUtils;
 import com.hospital.backend.export.ExportContext;
 import com.hospital.backend.export.ExportResult;
-import com.hospital.backend.export.SheetOrchestrator;
+import com.hospital.backend.export.fuyi.FuyiSupplementExportService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
+/**
+ * 物流分摊导出：统一走客户确认包样表版式（科室/类型/金额/备注）。
+ */
 @Component
 @RequiredArgsConstructor
 public class LogisticsAllocationExportStrategy implements ExportStrategy {
 
-    private final SheetOrchestrator sheetOrchestrator;
-    private final ObjectMapper objectMapper = JsonUtils.getObjectMapper();
+    private final FuyiSupplementExportService supplementExportService;
 
     @Override
     public String strategyKey() {
@@ -26,9 +25,9 @@ public class LogisticsAllocationExportStrategy implements ExportStrategy {
 
     @Override
     public ExportResult export(ExportContext context) throws Exception {
-        AllocationResult allocation = parseAllocationResult(context.getJob().getAllocationResult());
-        byte[] content = sheetOrchestrator.buildLogisticsAllocationWorkbook(allocation);
-        String fileName = safeName(context.getHospitalName()) + "_logistics_v2_"
+        byte[] content = supplementExportService.exportLogisticsAllocation(
+                context.getJob(), context.getRows());
+        String fileName = safeName(context.getHospitalName()) + "_logistics_allocation_"
                 + LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmmss")) + ".xlsx";
         return ExportResult.builder()
                 .content(content)
@@ -37,17 +36,6 @@ public class LogisticsAllocationExportStrategy implements ExportStrategy {
                 .strategyKey(strategyKey())
                 .templateId(context.getTemplate().getTemplateId())
                 .build();
-    }
-
-    private AllocationResult parseAllocationResult(String json) {
-        if (json == null || json.isBlank()) {
-            return null;
-        }
-        try {
-            return objectMapper.readValue(json, AllocationResult.class);
-        } catch (Exception e) {
-            return null;
-        }
     }
 
     private String safeName(String name) {

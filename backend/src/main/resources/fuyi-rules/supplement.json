@@ -1,0 +1,146 @@
+{
+  "description": "附一 ZYY-D1 生产补充规则：尚未写入 附一收费标准.xlsx 的条目，import 时合并进 baseline（Excel 同名规则优先）",
+  "productRules": [
+    {
+      "ruleType": "FIXED_PRICE",
+      "name": "王树人特器w12050",
+      "priority": 8,
+      "price": 328,
+      "keywords": ["王树人特器-26"],
+      "skipPackaging": true,
+      "skipDiscount": true,
+      "sourceRef": "supplement:prod"
+    },
+    {
+      "ruleType": "FIXED_PRICE",
+      "name": "张景欣特器w12050",
+      "priority": 8,
+      "price": 132,
+      "keywords": ["张景欣特器"],
+      "skipPackaging": true,
+      "skipDiscount": true,
+      "sourceRef": "supplement:prod"
+    },
+    {
+      "ruleType": "FIXED_PRICE",
+      "name": "辅料包整包价",
+      "priority": 11,
+      "price": 28,
+      "keywords": ["辅料包"],
+      "skipPackaging": true,
+      "skipDiscount": true,
+      "sourceRef": "supplement:prod"
+    },
+    {
+      "ruleType": "FIXED_PRICE",
+      "name": "孔巾包整包价",
+      "priority": 11,
+      "price": 28,
+      "keywords": ["孔巾包"],
+      "skipPackaging": true,
+      "skipDiscount": true,
+      "sourceRef": "supplement:prod"
+    },
+    {
+      "ruleType": "FIXED_PRICE",
+      "name": "腔镜包整包价",
+      "priority": 11,
+      "price": 28,
+      "keywords": ["腔镜包"],
+      "excludeKeywords": ["腹腔镜"],
+      "skipPackaging": true,
+      "skipDiscount": true,
+      "sourceRef": "supplement:prod"
+    },
+    {
+      "ruleType": "FIXED_PRICE",
+      "name": "球内注药3件最低把价",
+      "priority": 12,
+      "price": 13.2,
+      "keywords": ["球内注药"],
+      "skipPackaging": true,
+      "skipDiscount": true,
+      "sourceRef": "supplement:prod"
+    },
+    {
+      "ruleType": "FIXED_PRICE",
+      "name": "冲洗头-120固定价",
+      "priority": 13,
+      "price": 310.4,
+      "keywords": ["冲洗头-120"],
+      "skipPackaging": true,
+      "skipDiscount": true,
+      "sourceRef": "supplement:prod"
+    },
+    {
+      "ruleType": "FIXED_PRICE",
+      "name": "冲洗头-79固定价",
+      "priority": 13,
+      "price": 220,
+      "keywords": ["冲洗头-79"],
+      "skipPackaging": true,
+      "skipDiscount": true,
+      "sourceRef": "supplement:prod"
+    },
+    {
+      "ruleType": "FIXED_PRICE",
+      "name": "冲洗头-82固定价",
+      "priority": 13,
+      "price": 237.6,
+      "keywords": ["冲洗头-82"],
+      "skipPackaging": true,
+      "skipDiscount": true,
+      "sourceRef": "supplement:prod"
+    },
+    {
+      "ruleType": "FIXED_PRICE",
+      "name": "橄榄头-102固定价",
+      "priority": 13,
+      "price": 257.6,
+      "keywords": ["橄榄头-102"],
+      "skipPackaging": true,
+      "skipDiscount": true,
+      "sourceRef": "supplement:prod"
+    },
+    {
+      "ruleType": "FIXED_PRICE",
+      "name": "保温杯-1Z2044",
+      "priority": 39,
+      "price": 17.6,
+      "keywords": ["保温杯-1Z2044"],
+      "skipPackaging": true,
+      "skipDiscount": true,
+      "sourceRef": "supplement:prod"
+    },
+    {
+      "ruleType": "PRICE_PER_INSTRUMENT",
+      "name": "外来器械4.4每件",
+      "priority": 80,
+      "price": 4.4,
+      "keywords": ["外来"],
+      "skipPackaging": true,
+      "skipDiscount": true,
+      "sourceRef": "supplement:prod"
+    },
+    {
+      "ruleType": "FIXED_PRICE",
+      "name": "外来钉盒40",
+      "priority": 81,
+      "price": 40,
+      "keywords": ["钉盒"],
+      "skipPackaging": true,
+      "skipDiscount": true,
+      "sourceRef": "supplement:prod"
+    },
+    {
+      "ruleType": "FIXED_PRICE",
+      "name": "外来生物监测120",
+      "priority": 82,
+      "price": 120,
+      "keywords": ["生物监测"],
+      "skipPackaging": true,
+      "skipDiscount": true,
+      "sourceRef": "supplement:prod"
+    }
+  ]
+}

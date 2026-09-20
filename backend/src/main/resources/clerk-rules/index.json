@@ -1,8 +1,8 @@
 {
-  "baseline_hash": "0336c1968af03a3455aa52f3912ce20ca8253c7e1e273d31a564194d791913b9",
-  "generated_at": "2026-09-19T02:46:09Z",
-  "source": "铂康/内勤要求/医院内勤规则-20260918.xlsx",
-  "customer_count": 38,
+  "baseline_hash": "a4d30e237462075b158cad37cec4485cab2ea8453a8b99057f34e0c2762d1fb8",
+  "generated_at": "2026-09-20T07:35:18Z",
+  "source": "docs/source/附一收费标准.xlsx + 铂康/内勤要求/医院内勤规则-20260918.xlsx",
+  "customer_count": 39,
   "customers": [
     {
       "code": "DAOWAI-RM",
@@ -137,7 +137,7 @@
     {
       "code": "TAIPING-RM",
       "file": "baseline/TAIPING-RM.json",
-      "ruleCount": 1
+      "ruleCount": 2
     },
     {
       "code": "VICTORIA",
@@ -183,6 +183,11 @@
       "code": "ZY3-DIANLI",
       "file": "baseline/ZY3-DIANLI.json",
       "ruleCount": 2
+    },
+    {
+      "code": "ZYY-D1",
+      "file": "baseline/ZYY-D1.json",
+      "ruleCount": 7
     },
     {
       "code": "ZYY-D2-HN",

@@ -1,0 +1,111 @@
+{
+  "customerCode": "ZYY-D1",
+  "customerName": "黑龙江中医药大学附属第一医院",
+  "sourceVersion": "docs/source/附一收费标准.xlsx",
+  "notes": "中医附一内勤规则 · 独立维护于 docs/source/附一收费标准.xlsx（不纳入医院内勤规则-20260918）。Sheet2 价表同步产物见 billing-rules/baseline/ZYY-D1.json（PricingEngine hybrid 必需，与内勤同源）。",
+  "attachmentRefs": [],
+  "rules": [
+    {
+      "ruleType": "EXPORT_LAYOUT",
+      "name": "附一11列分科室账单",
+      "stage": "bill_export",
+      "isActive": true,
+      "params": {
+        "billLayout": "dept_split",
+        "billColumnLayout": "fuyi_extended_11col",
+        "d8DisplaySource": "hospitalName"
+      },
+      "sourceText": "Sheet1#47-50：包数后插包装材料/把数/单价（把）；分科室多 Sheet",
+      "sourceRef": "excel:docs/source/附一收费标准.xlsx",
+      "priority": 100
+    },
+    {
+      "ruleType": "LOGISTICS_FEE",
+      "name": "物流2.5元每公里18公里",
+      "stage": "settlement",
+      "isActive": true,
+      "params": {
+        "feePerTrip": 45.0
+      },
+      "sourceText": "2.5元/公里×18公里=45元/趟",
+      "sourceRef": "excel:docs/source/附一收费标准.xlsx",
+      "priority": 110
+    },
+    {
+      "ruleType": "URGENT",
+      "name": "加急125%无减免",
+      "stage": "settlement",
+      "isActive": true,
+      "params": {
+        "baseMultiplier": 1.25,
+        "adjustedMultiplier": 1.25,
+        "urgentLogisticsDiscountRate": 1.0
+      },
+      "sourceText": "通用加急灭菌费125%，无医院专属减免",
+      "sourceRef": "excel:docs/source/附一收费标准.xlsx",
+      "priority": 120
+    },
+    {
+      "ruleType": "MONTHLY_SUPPLEMENT_REPORT",
+      "name": "分科室汇总附表",
+      "stage": "both",
+      "isActive": true,
+      "params": {
+        "reportType": "dept_summary"
+      },
+      "sourceText": "分科室汇总表",
+      "sourceRef": "excel:docs/source/附一收费标准.xlsx",
+      "priority": 130
+    },
+    {
+      "ruleType": "MONTHLY_SUPPLEMENT_REPORT",
+      "name": "物流分摊附表",
+      "stage": "both",
+      "isActive": true,
+      "params": {
+        "reportType": "logistics_allocation"
+      },
+      "sourceText": "物流分摊表",
+      "sourceRef": "excel:docs/source/附一收费标准.xlsx",
+      "priority": 140
+    },
+    {
+      "ruleType": "SETTLEMENT_EXTRA",
+      "name": "手术一区洗涤费",
+      "stage": "settlement",
+      "isActive": true,
+      "params": {
+        "itemName": "手术一区洗涤费用",
+        "amountByMonth": {
+          "2026-05": 5275.4,
+          "2026-06": 3987.1
+        },
+        "note": "5月起写入结款函；明细表单独维护，按月录入 amountByMonth"
+      },
+      "sourceText": "本院独有洗涤费独立收费行",
+      "sourceRef": "excel:docs/source/附一收费标准.xlsx",
+      "priority": 150
+    },
+    {
+      "ruleType": "EXPORT_LAYOUT",
+      "name": "包装材料名标准化",
+      "stage": "bill_export",
+      "isActive": true,
+      "params": {
+        "materialAliases": [
+          {
+            "from": "高温纸塑袋",
+            "toPrefix": "纸塑袋"
+          },
+          {
+            "from": "低温纸塑袋",
+            "toPrefix": "低温灭菌"
+          }
+        ]
+      },
+      "sourceText": "Sheet1#52：导出时纸塑袋名称替换为标准名",
+      "sourceRef": "excel:docs/source/附一收费标准.xlsx",
+      "priority": 160
+    }
+  ]
+}

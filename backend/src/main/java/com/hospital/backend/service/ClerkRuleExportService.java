@@ -35,6 +35,7 @@ public class ClerkRuleExportService {
     private final ClerkBillExportApplier clerkBillExportApplier;
     private final ClerkBillPriceRuleApplier clerkBillPriceRuleApplier;
     private final ClerkExportLayoutApplier clerkExportLayoutApplier;
+    private final ClerkExportLayoutMerger clerkExportLayoutMerger;
     private final ClerkMonthlySupplementReportGenerator monthlySupplementReportGenerator;
     private final CustomerResolver customerResolver;
 
@@ -75,6 +76,7 @@ public class ClerkRuleExportService {
         if (customerCode == null) {
             return;
         }
+        clerkExportLayoutMerger.mergeIntoRequest(request);
         ObjectNode clerkCompiled = clerkRuleCompiler.compileForCustomer(customerCode);
         clerkExportLayoutApplier.apply(request, clerkCompiled);
     }

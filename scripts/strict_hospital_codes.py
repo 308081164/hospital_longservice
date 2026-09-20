@@ -51,6 +51,12 @@ STRICT_KEEP_CODES: list[str] = [
     "XIEDA-YL",
 ]
 
+# 中医附一：独立价表 docs/source/附一收费标准.xlsx（非特殊收费 Excel 32 家）
+FUYI_BASELINE_CODES: list[str] = ["ZYY-D1"]
+
+# billing-rules-manifest 落库范围 = 特殊计价 32 家 + 附一
+MANIFEST_BASELINE_CODES: list[str] = list(dict.fromkeys([*STRICT_KEEP_CODES, *FUYI_BASELINE_CODES]))
+
 STRICT_HOSPITALS: list[StrictHospital] = [
     StrictHospital("BINGCHENG-YM", "冰城医美", "哈尔滨冰城医疗美容医院", True),
     StrictHospital("GUOYAO-2", "电机厂", "国药总医院第二院区", True),

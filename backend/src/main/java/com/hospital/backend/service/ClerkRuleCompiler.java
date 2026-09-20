@@ -84,10 +84,26 @@ public class ClerkRuleCompiler {
                     case "LOGISTICS_CARD_DEDUCT":
                         billingPolicies.add(toLogisticsCardPolicy(rule));
                         break;
+                    case "SETTLEMENT_EXTRA":
+                        if (stageTargetsSettlement(stage)) {
+                            billingPolicies.add(toSettlementExtraPolicy(rule));
+                        }
+                        break;
+                    case "URGENT":
+                        billingPolicies.add(toUrgentPolicy(rule));
+                        break;
+                    case "MONTHLY_SUPPLEMENT_REPORT":
+                        // 保留在 clerkRules；exportSupplementTypes 另收集
+                        break;
                     default:
                         break;
                 }
             }
+        }
+
+        ArrayNode supplementTypes = collectExportSupplementTypes(rules);
+        if (!supplementTypes.isEmpty()) {
+            compiled.set("exportSupplementTypes", supplementTypes);
         }
 
         if (!billingPolicies.isEmpty()) {
@@ -257,6 +273,67 @@ public class ClerkRuleCompiler {
         }
         policy.set("params", params);
         return policy;
+    }
+
+    private ObjectNode toSettlementExtraPolicy(JsonNode rule) {
+        ObjectNode policy = MAPPER.createObjectNode();
+        policy.put("policyType", "SETTLEMENT_EXTRA");
+        policy.put("name", rule.path("name").asText("结款附加费"));
+        if (rule.has("priority")) {
+            policy.put("priority", rule.path("priority").asInt());
+        }
+        ObjectNode params = MAPPER.createObjectNode();
+        params.put("applyStage", BillingPolicyApplier.STAGE_SETTLEMENT_ONLY);
+        JsonNode ruleParams = rule.path("params");
+        if (ruleParams.isObject()) {
+            Iterator<String> fields = ruleParams.fieldNames();
+            while (fields.hasNext()) {
+                String field = fields.next();
+                params.set(field, ruleParams.get(field));
+            }
+        }
+        policy.set("params", params);
+        return policy;
+    }
+
+    private ObjectNode toUrgentPolicy(JsonNode rule) {
+        ObjectNode policy = MAPPER.createObjectNode();
+        policy.put("policyType", "URGENT");
+        policy.put("name", rule.path("name").asText("加急"));
+        if (rule.has("priority")) {
+            policy.put("priority", rule.path("priority").asInt());
+        }
+        ObjectNode params = MAPPER.createObjectNode();
+        JsonNode ruleParams = rule.path("params");
+        if (ruleParams.isObject()) {
+            params.setAll((ObjectNode) ruleParams.deepCopy());
+        } else {
+            params.put("baseMultiplier", 1.25);
+            params.put("adjustedMultiplier", 1.25);
+        }
+        policy.set("params", params);
+        return policy;
+    }
+
+    private ArrayNode collectExportSupplementTypes(JsonNode rules) {
+        ArrayNode types = MAPPER.createArrayNode();
+        if (rules == null || !rules.isArray()) {
+            return types;
+        }
+        Set<String> seen = new java.util.LinkedHashSet<>();
+        for (JsonNode rule : rules) {
+            if (!"MONTHLY_SUPPLEMENT_REPORT".equals(rule.path("ruleType").asText())) {
+                continue;
+            }
+            if (!rule.path("isActive").asBoolean(true)) {
+                continue;
+            }
+            String reportType = rule.path("params").path("reportType").asText("").trim();
+            if (!reportType.isBlank() && seen.add(reportType)) {
+                types.add(reportType);
+            }
+        }
+        return types;
     }
 
     private ObjectNode toExportFixedPrice(JsonNode rule) {

@@ -35,6 +35,7 @@ public class HospitalExportCapabilityService {
     private final CustomerResolver customerResolver;
     private final ExportTemplateResolver exportTemplateResolver;
     private final BillExportLayoutResolver billExportLayoutResolver;
+    private final ClerkExportLayoutMerger clerkExportLayoutMerger;
 
     private Map<String, List<String>> hospitalExportTypes = Map.of();
 
@@ -63,7 +64,14 @@ public class HospitalExportCapabilityService {
         if (hospitalName == null || hospitalName.isBlank()) {
             return DEFAULT_TYPES;
         }
-        return hospitalExportTypes.getOrDefault(hospitalName.trim(), DEFAULT_TYPES);
+        List<String> base = new java.util.ArrayList<>(
+                hospitalExportTypes.getOrDefault(hospitalName.trim(), DEFAULT_TYPES));
+        for (String supplement : clerkExportLayoutMerger.resolveSupplementExportTypes(hospitalName)) {
+            if (!base.contains(supplement)) {
+                base.add(supplement);
+            }
+        }
+        return List.copyOf(base);
     }
 
     public boolean hasSpecialExport(String hospitalName) {
