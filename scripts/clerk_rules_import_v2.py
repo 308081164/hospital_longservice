@@ -111,6 +111,33 @@ ATTACHMENT_MAP = {
     ],
 }
 
+TAIPING_PIECE_TIER_RULE = {
+    "ruleType": "PIECE_TIER_DISCOUNT",
+    "name": "太平导出阶梯折扣",
+    "stage": "bill_export",
+    "isActive": True,
+    "params": {
+        "skipWhenAlreadyDiscounted": True,
+        "pieceTierDiscounts": [
+            {"minPieces": 1, "maxPieces": 1, "rate": 1.0},
+            {"minPieces": 2, "maxPieces": 2, "rate": 0.75},
+            {"minPieces": 3, "maxPieces": 3, "rate": 0.891, "originalUnitPriceEquals": 16.5},
+            {"minPieces": 4, "maxPieces": 999, "rate": 0.75},
+        ],
+    },
+    "sourceText": "2+把75%阶梯（legacy phase-bill-s8-fix）",
+    "sourceRef": "seed:phase-bill-s8-fix-20260728",
+    "priority": 10,
+}
+
+
+def supplement_discount_rules(code: str, rules: list[dict]) -> list[dict]:
+    """Excel 未显式描述、但 legacy seed 已验证的折扣规则补全。"""
+    if code == "TAIPING-RM" and not any(r.get("ruleType") == "PIECE_TIER_DISCOUNT" for r in rules):
+        rules = [TAIPING_PIECE_TIER_RULE, *rules]
+    return rules
+
+
 LAYOUT_SHEETS = {
     "GUOYAO-MAIN": "国药结款函样式",
     "GUOYAO-2": "国药结款函样式",
@@ -459,6 +486,7 @@ def build_baselines():
                     _rule("合并结款", "MERGED_SETTLEMENT", "settlement",
                           {"mergeWith": "XIANGFANG-ZY", "sharedLogisticsFee": 50}, "香坊三辅合并", f"excel:结款函#{code}")
                 ]
+            rules = supplement_discount_rules(code, rules)
             baselines[code] = {
                 "customerCode": code,
                 "customerName": CODE_NAMES.get(code, code),

@@ -2,11 +2,29 @@
   "customerCode": "TAIPING-RM",
   "customerName": "哈尔滨市道外区太平人民医院",
   "sourceVersion": "医院内勤规则-20260918",
-  "notes": "医院内勤规则 v2 · Excel行 太平人民医院",
+  "notes": "医院内勤规则 v2 · Excel行 太平人民医院 · 含 legacy 导出阶梯折扣迁移",
   "attachmentRefs": [
     "attachments/4哈尔滨市道外区太平人民医院价格单_000214.pdf"
   ],
   "rules": [
+    {
+      "ruleType": "PIECE_TIER_DISCOUNT",
+      "name": "太平导出阶梯折扣",
+      "stage": "bill_export",
+      "isActive": true,
+      "params": {
+        "skipWhenAlreadyDiscounted": true,
+        "pieceTierDiscounts": [
+          {"minPieces": 1, "maxPieces": 1, "rate": 1.0},
+          {"minPieces": 2, "maxPieces": 2, "rate": 0.75},
+          {"minPieces": 3, "maxPieces": 3, "rate": 0.891, "originalUnitPriceEquals": 16.5},
+          {"minPieces": 4, "maxPieces": 999, "rate": 0.75}
+        ]
+      },
+      "sourceText": "2+把75%阶梯（export_only，legacy phase-bill-s8-fix）",
+      "sourceRef": "seed:phase-bill-s8-fix-20260728",
+      "priority": 10
+    },
     {
       "ruleType": "LOGISTICS_WAIVE",
       "name": "不收物流费",

@@ -598,9 +598,6 @@ public class SettlementTemplateFiller {
         if (rows == null || rows.isEmpty()) {
             return false;
         }
-        if (hospitalName != null && (hospitalName.contains("维多利亚") || hospitalName.contains("九洲"))) {
-            return true;
-        }
         if (compiledRules == null) {
             return false;
         }
@@ -613,6 +610,10 @@ public class SettlementTemplateFiller {
         for (JsonNode policy : policies) {
             if (!"DISCOUNT".equalsIgnoreCase(policy.path("policyType").asText())) {
                 continue;
+            }
+            JsonNode params = policy.path("params");
+            if (params.has("htRate") && params.has("ltRate")) {
+                return true;
             }
             String temp = policy.path("scope").path("temperature").asText("ANY");
             if ("HT".equalsIgnoreCase(temp)) {
@@ -699,12 +700,18 @@ public class SettlementTemplateFiller {
                     if (!"DISCOUNT".equalsIgnoreCase(policy.path("policyType").asText())) {
                         continue;
                     }
+                    JsonNode params = policy.path("params");
                     String scopeTemp = policy.path("scope").path("temperature").asText("ANY");
-                    if (!temperature.equalsIgnoreCase(scopeTemp)) {
-                        continue;
+                    if (temperature.equalsIgnoreCase(scopeTemp)) {
+                        double rate = params.path("rate").asDouble(fallbackRate);
+                        return round2(rawAmount * rate);
                     }
-                    double rate = policy.path("params").path("rate").asDouble(fallbackRate);
-                    return round2(rawAmount * rate);
+                    if ("HT".equalsIgnoreCase(temperature) && params.has("htRate")) {
+                        return round2(rawAmount * params.path("htRate").asDouble(fallbackRate));
+                    }
+                    if ("LT".equalsIgnoreCase(temperature) && params.has("ltRate")) {
+                        return round2(rawAmount * params.path("ltRate").asDouble(fallbackRate));
+                    }
                 }
             }
         }

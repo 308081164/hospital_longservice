@@ -53,6 +53,26 @@ class ClerkBillPriceRuleApplierTest {
     }
 
     @Test
+    void validatesPriceOnlyRuleWithoutChangingExportPrice() {
+        ObjectNode compiled = compiler.compileForCustomer("ERYY-NG");
+        BillRowItem row = new BillRowItem();
+        row.setRowNumber(5);
+        row.setPackName("测试包");
+        row.setExpectedUnitPrice(100.0);
+        row.setUnitPrice(70.0);
+        row.setTotalPrice(70.0);
+
+        var passResult = applier.apply(compiled, List.of(row));
+        assertThat(passResult.rows().get(0).getUnitPrice()).isEqualTo(70.0);
+        assertThat(passResult.validationWarnings()).isEmpty();
+
+        row.setUnitPrice(80.0);
+        var warnResult = applier.apply(compiled, List.of(row));
+        assertThat(warnResult.rows().get(0).getUnitPrice()).isEqualTo(80.0);
+        assertThat(warnResult.validationWarnings()).isNotEmpty();
+    }
+
+    @Test
     void validatesSystemPriceWithoutChangingExportPrice() {
         ObjectNode compiled = compiler.compileForCustomer("DAOWAI-RM");
         BillRowItem row = new BillRowItem();

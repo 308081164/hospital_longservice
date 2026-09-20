@@ -33,20 +33,20 @@ public class ClerkBillPriceRuleApplier {
         List<String> warnings = new ArrayList<>();
         for (BillRowItem row : rows) {
             JsonNode matched = findMatch(rules, row);
-            if (matched == null) {
-                continue;
-            }
-            JsonNode params = matched.path("params");
-            double exportTotal = computeExportTotal(row, params);
-            if (exportTotal >= 0) {
-                row.setTotalPrice(exportTotal);
-                if (row.getPackCount() != null && row.getPackCount() > 0) {
-                    row.setUnitPrice(exportTotal / row.getPackCount());
-                } else {
-                    row.setUnitPrice(exportTotal);
+            if (matched != null) {
+                JsonNode params = matched.path("params");
+                double exportTotal = computeExportTotal(row, params);
+                if (exportTotal >= 0) {
+                    row.setTotalPrice(exportTotal);
+                    if (row.getPackCount() != null && row.getPackCount() > 0) {
+                        row.setUnitPrice(exportTotal / row.getPackCount());
+                    } else {
+                        row.setUnitPrice(exportTotal);
+                    }
                 }
+                maybeValidateSystemPrice(row, params, warnings);
             }
-            maybeValidateSystemPrice(row, params, warnings);
+            validatePriceOnlyRules(compiledClerk, row, warnings);
         }
         return new ApplyResult(rows, warnings);
     }
@@ -174,6 +174,45 @@ public class ClerkBillPriceRuleApplier {
         };
     }
 
+    private void validatePriceOnlyRules(JsonNode compiledClerk, BillRowItem row, List<String> warnings) {
+        JsonNode clerkRules = compiledClerk.path("clerkRules");
+        if (!clerkRules.isArray()) {
+            return;
+        }
+        for (JsonNode rule : clerkRules) {
+            if (!rule.path("isActive").asBoolean(true)) {
+                continue;
+            }
+            if (!"PRICE_VALIDATE_ONLY".equals(rule.path("ruleType").asText(""))) {
+                continue;
+            }
+            JsonNode params = rule.path("params");
+            double rate = params.path("rate").asDouble(1.0);
+            if (rate <= 0 || rate >= 1.0) {
+                continue;
+            }
+            Double standard = row.getExpectedUnitPrice();
+            if (standard == null || standard <= 0) {
+                continue;
+            }
+            double expectedDiscounted = round2(standard * rate);
+            Double actual = row.getUnitPrice();
+            if (actual == null || actual <= 0) {
+                continue;
+            }
+            if (Math.abs(actual - expectedDiscounted) > 0.05) {
+                warnings.add(String.format(
+                        "行%d 标准价七折校对: 期望%.2f(标准%.2f×%.2f) 实际%.2f (%s)",
+                        row.getRowNumber() != null ? row.getRowNumber() : -1,
+                        expectedDiscounted,
+                        standard,
+                        rate,
+                        actual,
+                        row.getPackName()));
+            }
+        }
+    }
+
     private void maybeValidateSystemPrice(BillRowItem row, JsonNode params, List<String> warnings) {
         if (!"VALIDATE_ONLY".equals(params.path("systemPriceMode").asText("IGNORE"))) {
             return;
@@ -209,5 +248,9 @@ public class ClerkBillPriceRuleApplier {
 
     private static String normalize(String text) {
         return text == null ? "" : text.replaceAll("\\s+", "");
+    }
+
+    private static double round2(double value) {
+        return Math.round(value * 100.0) / 100.0;
     }
 }

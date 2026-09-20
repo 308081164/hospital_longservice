@@ -49,6 +49,35 @@ class ClerkRuleCompilerTest {
         JsonNode policies = compiled.path("billingPolicies");
         assertThat(policies.isArray()).isTrue();
         assertThat(policies.size()).isGreaterThanOrEqualTo(2);
+        boolean hasHt = false;
+        boolean hasLt = false;
+        for (JsonNode policy : policies) {
+            String temp = policy.path("scope").path("temperature").asText("");
+            if ("HT".equals(temp)) {
+                hasHt = true;
+                assertThat(policy.path("params").path("rate").asDouble()).isEqualTo(0.5);
+            }
+            if ("LT".equals(temp)) {
+                hasLt = true;
+                assertThat(policy.path("params").path("rate").asDouble()).isEqualTo(0.7);
+            }
+        }
+        assertThat(hasHt).isTrue();
+        assertThat(hasLt).isTrue();
+    }
+
+    @Test
+    void compilesTaipingPieceTierExportDiscount() {
+        ObjectNode compiled = compiler.compileForCustomer("TAIPING-RM");
+        assertThat(compiled).isNotNull();
+        assertThat(compiler.hasActiveBillExportRules("TAIPING-RM")).isTrue();
+        boolean hasPieceTier = false;
+        for (JsonNode policy : compiled.path("billingPolicies")) {
+            if (policy.path("params").path("pieceTierDiscounts").isArray()) {
+                hasPieceTier = true;
+            }
+        }
+        assertThat(hasPieceTier).isTrue();
     }
 
     @Test

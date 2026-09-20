@@ -56,7 +56,17 @@ public class ClerkRuleCompiler {
                         }
                         break;
                     case "SETTLEMENT_DISCOUNT":
-                        billingPolicies.add(toDiscountPolicy(rule, BillingPolicyApplier.STAGE_SETTLEMENT_ONLY));
+                        JsonNode settlementParams = rule.path("params");
+                        if (settlementParams.has("htRate") && settlementParams.has("ltRate")) {
+                            billingPolicies.add(toTemperatureDiscountPolicy(
+                                    rule, "HT", settlementParams.path("htRate").asDouble(),
+                                    BillingPolicyApplier.STAGE_SETTLEMENT_ONLY));
+                            billingPolicies.add(toTemperatureDiscountPolicy(
+                                    rule, "LT", settlementParams.path("ltRate").asDouble(),
+                                    BillingPolicyApplier.STAGE_SETTLEMENT_ONLY));
+                        } else {
+                            billingPolicies.add(toDiscountPolicy(rule, BillingPolicyApplier.STAGE_SETTLEMENT_ONLY));
+                        }
                         break;
                     case "FIXED_PRICE_EXPORT":
                         fixedPrices.add(toExportFixedPrice(rule));
@@ -146,6 +156,23 @@ public class ClerkRuleCompiler {
 
     private static boolean stageTargetsSettlement(String stage) {
         return "settlement".equalsIgnoreCase(stage) || "both".equalsIgnoreCase(stage);
+    }
+
+    private ObjectNode toTemperatureDiscountPolicy(JsonNode rule, String temperature, double rate, String applyStage) {
+        ObjectNode policy = MAPPER.createObjectNode();
+        policy.put("policyType", "DISCOUNT");
+        policy.put("name", rule.path("name").asText("内勤折扣") + "-" + temperature);
+        if (rule.has("priority")) {
+            policy.put("priority", rule.path("priority").asInt());
+        }
+        ObjectNode scope = MAPPER.createObjectNode();
+        scope.put("temperature", temperature);
+        policy.set("scope", scope);
+        ObjectNode params = MAPPER.createObjectNode();
+        params.put("applyStage", applyStage);
+        params.put("rate", rate);
+        policy.set("params", params);
+        return policy;
     }
 
     private ObjectNode toDiscountPolicy(JsonNode rule, String applyStage) {

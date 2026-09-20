@@ -311,6 +311,9 @@
       "excelRowName": "太平人民医院",
       "rules": [
         {
+          "ruleType": "PIECE_TIER_DISCOUNT"
+        },
+        {
           "ruleType": "LOGISTICS_WAIVE"
         }
       ]
