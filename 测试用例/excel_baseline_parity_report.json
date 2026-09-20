@@ -16,7 +16,7 @@
       "code": "GUOYAO-2",
       "name": "电机厂",
       "excel_rows": 6,
-      "baseline_rules": 30,
+      "baseline_rules": 31,
       "ok": true,
       "missing": []
     },
@@ -240,7 +240,7 @@
       "code": "ZY3-DIANLI",
       "name": "中医三院电力",
       "excel_rows": 6,
-      "baseline_rules": 5,
+      "baseline_rules": 6,
       "ok": true,
       "missing": []
     },
@@ -251,12 +251,20 @@
       "baseline_rules": 1,
       "ok": true,
       "missing": []
+    },
+    {
+      "code": "XIEDA-YL",
+      "name": "协大医美",
+      "excel_rows": 3,
+      "baseline_rules": 6,
+      "ok": true,
+      "missing": []
     }
   ],
   "summary": {
-    "total": 31,
-    "pass": 31,
+    "total": 32,
+    "pass": 32,
     "fail": 0,
-    "excel_rows": 141
+    "excel_rows": 144
   }
 }

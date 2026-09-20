@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""31 家特殊计价医院权威清单（路径 A / manifest / Java STRICT_KEEP_CODES 须一致，与特殊收费(4) Excel 各院段落一一对应）。"""
+"""32 家特殊计价医院权威清单（路径 A / manifest / Java STRICT_KEEP_CODES 须一致，与特殊收费 Excel 各院段落一一对应）。"""
 
 from __future__ import annotations
 
@@ -48,6 +48,7 @@ STRICT_KEEP_CODES: list[str] = [
     "SENHAI-YY",
     "ZY3-DIANLI",
     "QILUNJI-YY",
+    "XIEDA-YL",
 ]
 
 STRICT_HOSPITALS: list[StrictHospital] = [
@@ -82,6 +83,7 @@ STRICT_HOSPITALS: list[StrictHospital] = [
     StrictHospital("SENHAI-YY", "森海医院", "森海医院", True),
     StrictHospital("ZY3-DIANLI", "中医三院电力", "黑龙江省中医药大学附属第三医院（电力）", True),
     StrictHospital("QILUNJI-YY", "汽轮机医院", "哈尔滨汽轮机医院", True),
+    StrictHospital("XIEDA-YL", "协大医美", "协大医疗美容", False, "待补充测试材料"),
 ]
 
 STRICT_BY_CODE = {h.code: h for h in STRICT_HOSPITALS}

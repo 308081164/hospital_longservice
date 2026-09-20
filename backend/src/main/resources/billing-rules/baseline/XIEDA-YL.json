@@ -1,0 +1,118 @@
+{
+  "customerCode": "XIEDA-YL",
+  "customerName": "协大医疗美容",
+  "billingEnabled": true,
+  "billingPricingMode": "hybrid",
+  "productRules": [
+    {
+      "ruleType": "PRICE_PER_INSTRUMENT",
+      "name": "协大整形手术包按件5.5",
+      "priority": 6,
+      "price": 5.5,
+      "keywords": [
+        "整形手术包",
+        "整形包"
+      ],
+      "excludeKeywords": [
+        "脂充包"
+      ],
+      "skipPackaging": true,
+      "skipDiscount": true,
+      "isActive": true,
+      "matchMode": "first",
+      "acceptedTypes": [
+        "器械包"
+      ]
+    },
+    {
+      "ruleType": "EXTRA_FEE",
+      "name": "协大整形手术包无纺布加价3",
+      "priority": 7,
+      "fee": 3.0,
+      "keywords": [
+        "整形手术包",
+        "整形包"
+      ],
+      "excludeKeywords": [
+        "脂充包"
+      ],
+      "skipPackaging": true,
+      "skipDiscount": true,
+      "isActive": true,
+      "matchMode": "first",
+      "acceptedTypes": [
+        "器械包"
+      ]
+    },
+    {
+      "ruleType": "PRICE_PER_INSTRUMENT",
+      "name": "协大环钻包按件5.5",
+      "priority": 6,
+      "price": 5.5,
+      "keywords": [
+        "环钻包"
+      ],
+      "skipPackaging": true,
+      "skipDiscount": true,
+      "isActive": true,
+      "matchMode": "first",
+      "excludeKeywords": [
+        "环钻头"
+      ],
+      "acceptedTypes": [
+        "器械包"
+      ]
+    },
+    {
+      "ruleType": "EXTRA_FEE",
+      "name": "协大环钻包无纺布加价3",
+      "priority": 7,
+      "fee": 3.0,
+      "keywords": [
+        "环钻包"
+      ],
+      "skipPackaging": true,
+      "skipDiscount": true,
+      "isActive": true,
+      "matchMode": "first",
+      "excludeKeywords": [
+        "环钻头"
+      ],
+      "acceptedTypes": [
+        "器械包"
+      ]
+    },
+    {
+      "ruleType": "PRICE_PER_INSTRUMENT",
+      "name": "协大脂充包按件5.5",
+      "priority": 6,
+      "price": 5.5,
+      "keywords": [
+        "脂充包"
+      ],
+      "skipPackaging": true,
+      "skipDiscount": true,
+      "isActive": true,
+      "matchMode": "first",
+      "acceptedTypes": [
+        "器械包"
+      ]
+    },
+    {
+      "ruleType": "EXTRA_FEE",
+      "name": "协大脂充包无纺布加价5",
+      "priority": 7,
+      "fee": 5.0,
+      "keywords": [
+        "脂充包"
+      ],
+      "skipPackaging": true,
+      "skipDiscount": true,
+      "isActive": true,
+      "matchMode": "first",
+      "acceptedTypes": [
+        "器械包"
+      ]
+    }
+  ]
+}

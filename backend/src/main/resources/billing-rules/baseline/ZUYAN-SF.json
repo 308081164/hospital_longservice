@@ -6,7 +6,7 @@
   "productRules": [
     {
       "ruleType": "FOLD",
-      "name": "祖研三辅美容科排针>20十合1加盒",
+      "name": "祖研三辅美容科排针>21十合1加盒",
       "priority": 11,
       "keywords": [
         "美容科排针@contains"
@@ -14,7 +14,7 @@
       "threshold": 10,
       "foldRatio": 10,
       "extraCount": 1,
-      "minInstrumentCount": 21,
+      "minInstrumentCount": 22,
       "price": 16.5,
       "skipPackaging": true,
       "skipDiscount": true,
@@ -23,13 +23,13 @@
     },
     {
       "ruleType": "FIXED_PRICE",
-      "name": "祖研三辅美容科排针≤20固定16.5",
+      "name": "祖研三辅美容科排针≤21固定16.5",
       "priority": 10,
       "price": 16.5,
       "keywords": [
         "美容科排针@contains"
       ],
-      "maxInstrumentCount": 20,
+      "maxInstrumentCount": 21,
       "skipPackaging": true,
       "skipDiscount": true,
       "isActive": true,

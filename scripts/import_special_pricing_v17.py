@@ -48,6 +48,8 @@ HOSPITAL_TO_CODE: dict[str, str] = {
     "黑龙江省远东心脑血管医院": "YUANDONG-XN",
     "黑龙江省中医药大学附属第三医院（电力）": "ZY3-DIANLI",
     "哈尔滨汽轮机医院": "QILUNJI-YY",
+    "协大医疗美容": "XIEDA-YL",
+    "协大医疗美容\n（备注：同冰城医美）": "XIEDA-YL",
 }
 
 

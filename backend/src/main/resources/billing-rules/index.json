@@ -1,8 +1,8 @@
 {
-  "baseline_hash": "a8ed61305c3f76a4aec04609e4cc1df73767ffd5d14a30e3a942bb640700c39b",
-  "generated_at": "2026-09-20T05:44:44Z",
+  "baseline_hash": "ef4e889e7baa719326176e240d1e21ec4cfef6ec2771158ca6575072fc8c2587",
+  "generated_at": "2026-09-20T06:59:50Z",
   "source": "billing-rules-manifest@01836c66115726ff7229db58f16020cb6e65f7069beee13551669c1031fd7764",
-  "customer_count": 31,
+  "customer_count": 32,
   "customers": [
     {
       "code": "BINGCHENG-YM",
@@ -14,7 +14,7 @@
       "code": "GUOYAO-2",
       "file": "baseline/GUOYAO-2.json",
       "ruleCount": 31,
-      "fileHash": "907a22d1d2c760099ec1029c87488c5b6bab5024d572500347c9aaa61a439b4b"
+      "fileHash": "6c17bfcbc7e6ac9c9ddc2b1550f610cb818dbbfa84da9b653746f9fc8c8ee7ed"
     },
     {
       "code": "FNN-YY",
@@ -152,19 +152,19 @@
       "code": "YUANDONG-XN",
       "file": "baseline/YUANDONG-XN.json",
       "ruleCount": 2,
-      "fileHash": "48e6d0e59a9ad56b6c04e2ab63cbd762cdb156826a2b23a0e913bec64ff0e19f"
+      "fileHash": "4b80b36559755819ee1489133096c8c409e2cf9ed511dd18cbf96ac951d2f4c3"
     },
     {
       "code": "ZUYAN-SF",
       "file": "baseline/ZUYAN-SF.json",
       "ruleCount": 2,
-      "fileHash": "4d94b6ca5f09870c84a99c211ed27c0dace3ca8f4fe27264473cb0026a537d3e"
+      "fileHash": "7456e37272b62486598aeb56880357f5f872d97b058e2a40e9d7b4fbe2254d9a"
     },
     {
       "code": "AOLAN-YY",
       "file": "baseline/AOLAN-YY.json",
       "ruleCount": 2,
-      "fileHash": "f7aa256e0284c295aec99859846ea61519c4e7f9cbf94f68bf1b7be6aee4acfa"
+      "fileHash": "0effd1f50d97662bcc879567e828714bc1b72121a19a6c8f5e277340d2e7180f"
     },
     {
       "code": "HRB-XK-YY",
@@ -176,19 +176,25 @@
       "code": "SENHAI-YY",
       "file": "baseline/SENHAI-YY.json",
       "ruleCount": 4,
-      "fileHash": "a1e065e37fdb79d1078d33251cceaaef20a78ecc86df01e69221d8e85b284ee3"
+      "fileHash": "52c2ab09e2d8052390b75da3a8ee797ef883e90c28e35ce468fcf46ba9ffee3f"
     },
     {
       "code": "ZY3-DIANLI",
       "file": "baseline/ZY3-DIANLI.json",
       "ruleCount": 6,
-      "fileHash": "a26b9cc1093d265c985cb88322bd6c6551910dc9e10f5097e93e0b901991c750"
+      "fileHash": "8be6afcd4770231704ce32bbcd4d0730fb1e7078f7d06d0533f1ea17cff83e26"
     },
     {
       "code": "QILUNJI-YY",
       "file": "baseline/QILUNJI-YY.json",
       "ruleCount": 1,
       "fileHash": "cb099aab171df68db66eadd52f536054d51f2cfbd213a34c8b8ad3d2ce672ea6"
+    },
+    {
+      "code": "XIEDA-YL",
+      "file": "baseline/XIEDA-YL.json",
+      "ruleCount": 6,
+      "fileHash": "4940104949144623f25dbd07a03e1e04ad05b64b08ced76b1e6df3e5a6f76399"
     }
   ]
 }

@@ -79,6 +79,7 @@ STRICT_KEEP_CODES = [
     "SENHAI-YY",
     "ZY3-DIANLI",
     "QILUNJI-YY",
+    "XIEDA-YL",
 ]
 
 # 种子文件仅以 code 引用客户、未携带规范名时，回退到此映射。

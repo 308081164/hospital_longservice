@@ -6676,10 +6676,10 @@
       "note": "should not match this rule"
     },
     {
-      "id": "ZUYAN-SF__祖研三辅美容科排针>20十合1加盒__hit",
+      "id": "ZUYAN-SF__祖研三辅美容科排针>21十合1加盒__hit",
       "customerCode": "ZUYAN-SF",
       "customerName": "祖研-黑龙江省中医医院（三辅院区）",
-      "ruleName": "祖研三辅美容科排针>20十合1加盒",
+      "ruleName": "祖研三辅美容科排针>21十合1加盒",
       "ruleType": "FOLD",
       "positive": true,
       "row": {
@@ -6696,10 +6696,10 @@
       "note": "active rule should match"
     },
     {
-      "id": "ZUYAN-SF__祖研三辅美容科排针>20十合1加盒__miss",
+      "id": "ZUYAN-SF__祖研三辅美容科排针>21十合1加盒__miss",
       "customerCode": "ZUYAN-SF",
       "customerName": "祖研-黑龙江省中医医院（三辅院区）",
-      "ruleName": "祖研三辅美容科排针>20十合1加盒",
+      "ruleName": "祖研三辅美容科排针>21十合1加盒",
       "ruleType": "FOLD",
       "positive": false,
       "row": {
@@ -6716,10 +6716,10 @@
       "note": "should not match this rule"
     },
     {
-      "id": "ZUYAN-SF__祖研三辅美容科排针≤20固定16.5__hit",
+      "id": "ZUYAN-SF__祖研三辅美容科排针≤21固定16.5__hit",
       "customerCode": "ZUYAN-SF",
       "customerName": "祖研-黑龙江省中医医院（三辅院区）",
-      "ruleName": "祖研三辅美容科排针≤20固定16.5",
+      "ruleName": "祖研三辅美容科排针≤21固定16.5",
       "ruleType": "FIXED_PRICE",
       "positive": true,
       "row": {
@@ -6736,10 +6736,10 @@
       "note": "active rule should match"
     },
     {
-      "id": "ZUYAN-SF__祖研三辅美容科排针≤20固定16.5__miss",
+      "id": "ZUYAN-SF__祖研三辅美容科排针≤21固定16.5__miss",
       "customerCode": "ZUYAN-SF",
       "customerName": "祖研-黑龙江省中医医院（三辅院区）",
-      "ruleName": "祖研三辅美容科排针≤20固定16.5",
+      "ruleName": "祖研三辅美容科排针≤21固定16.5",
       "ruleType": "FIXED_PRICE",
       "positive": false,
       "row": {

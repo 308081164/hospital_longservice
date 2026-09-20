@@ -38,6 +38,8 @@ EXTRA_HOSPITAL_TO_CODE: dict[str, str] = {
     "哈尔滨森海医院": "SENHAI-YY",
     "黑龙江省中医药大学附属第三医院（电力）": "ZY3-DIANLI",
     "哈尔滨汽轮机医院": "QILUNJI-YY",
+    "协大医疗美容": "XIEDA-YL",
+    "协大医疗美容\n（备注：同冰城医美）": "XIEDA-YL",
 }
 
 
@@ -77,13 +79,23 @@ def rule_covers_keyword(rule: dict, keyword: str, mode: str) -> bool:
     rule_type = rule.get("ruleType") or ""
 
     def norm_kw(text: str) -> str:
-        return text[:-9] if text.endswith("@contains") else text
+        if text.endswith("@contains"):
+            return text[:-9]
+        if text.endswith("@regex"):
+            return text[:-6]
+        return text
 
     for raw in raw_kws:
         if not raw:
             continue
         text = str(raw)
         base = norm_kw(text)
+        if text.endswith("@regex"):
+            stem = base.split("\\")[0] if "\\" in base else base
+            placeholder = keyword.replace("几件", "1").replace("多少件", "1")
+            if keyword.startswith(stem) or stem in keyword or stem in placeholder:
+                return True
+            continue
         if base != keyword and keyword not in base and base not in keyword:
             continue
         if rule_type == "FOLD" or mode == "contains" or text.endswith("@contains") or km == "contains":
