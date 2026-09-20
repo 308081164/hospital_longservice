@@ -120,6 +120,26 @@ class BillingConditionEvaluatorTest {
     }
 
     @Test
+    void regexMode_matchesHyphenPieceCount_notBarePrefix() throws Exception {
+        ObjectNode rule = MAPPER.createObjectNode();
+        rule.put("keywordMatchMode", "exact_token");
+        rule.putArray("keywords").add("小件盒-\\d+件@regex");
+
+        assertThat(BillingConditionEvaluator.matchesRuleKeywords(
+                rule, "小件盒-5件", "额外包（ETO）小件盒-5件低温纸塑袋75*200"))
+                .isTrue();
+        assertThat(BillingConditionEvaluator.matchesRuleKeywords(
+                rule, "小件盒-1件/Z7520", "额外包（ETO）小件盒-1件/Z7520低温纸塑袋75*200"))
+                .isTrue();
+        assertThat(BillingConditionEvaluator.matchesRuleKeywords(
+                rule, "小件盒-1", "额外包（ETO）小件盒-1低温纸塑袋75*200"))
+                .isFalse();
+        assertThat(BillingConditionEvaluator.matchesRuleKeywords(
+                rule, "小件盒", "额外包（ETO）小件盒低温纸塑袋75*200"))
+                .isFalse();
+    }
+
+    @Test
     void needleBoxMode_matchesParenFormula_notBareNeedleToken() throws Exception {
         ObjectNode rule = MAPPER.createObjectNode();
         rule.put("keywordMatchMode", "exact_token");

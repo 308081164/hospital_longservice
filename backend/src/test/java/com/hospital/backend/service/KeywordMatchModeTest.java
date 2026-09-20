@@ -55,6 +55,9 @@ class KeywordMatchModeTest {
                         new BillingConditionEvaluator.ParsedKeyword("车针", "contains"),
                         new BillingConditionEvaluator.ParsedKeyword("克氏针", null),
                         new BillingConditionEvaluator.ParsedKeyword("银质针", "exact_token"));
+        assertThat(BillingConditionEvaluator.parseKeywordList("小件盒-\\d+件@regex"))
+                .containsExactly(
+                        new BillingConditionEvaluator.ParsedKeyword("小件盒-\\d+件", "regex"));
         // 中文逗号与空格同样生效
         assertThat(BillingConditionEvaluator.parseKeywordList("车针@exact_token，探针"))
                 .containsExactly(

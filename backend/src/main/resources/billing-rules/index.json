@@ -1,6 +1,6 @@
 {
-  "baseline_hash": "56537c2512735c4229b7bc1e0d81570b7cc40c8e1ed8b908db9d8f5454dbd8fc",
-  "generated_at": "2026-09-17T02:13:18Z",
+  "baseline_hash": "a8ed61305c3f76a4aec04609e4cc1df73767ffd5d14a30e3a942bb640700c39b",
+  "generated_at": "2026-09-20T05:44:44Z",
   "source": "billing-rules-manifest@01836c66115726ff7229db58f16020cb6e65f7069beee13551669c1031fd7764",
   "customer_count": 31,
   "customers": [
@@ -13,8 +13,8 @@
     {
       "code": "GUOYAO-2",
       "file": "baseline/GUOYAO-2.json",
-      "ruleCount": 30,
-      "fileHash": "8c0cb8b8876633c2d12b80707e74cb51c67c3039b2bb639282e8b1ebe314772a"
+      "ruleCount": 31,
+      "fileHash": "907a22d1d2c760099ec1029c87488c5b6bab5024d572500347c9aaa61a439b4b"
     },
     {
       "code": "FNN-YY",
@@ -164,7 +164,7 @@
       "code": "AOLAN-YY",
       "file": "baseline/AOLAN-YY.json",
       "ruleCount": 2,
-      "fileHash": "64a978bbcb2bf0bdf22647d3838de76e79b5c5d23ab0fe4418f8699a098d5237"
+      "fileHash": "f7aa256e0284c295aec99859846ea61519c4e7f9cbf94f68bf1b7be6aee4acfa"
     },
     {
       "code": "HRB-XK-YY",
@@ -181,8 +181,8 @@
     {
       "code": "ZY3-DIANLI",
       "file": "baseline/ZY3-DIANLI.json",
-      "ruleCount": 5,
-      "fileHash": "bfe3a724b88eae4ebbca54fe2737d057edfdc3b6b0af5a983680aca96ec2c16d"
+      "ruleCount": 6,
+      "fileHash": "a26b9cc1093d265c985cb88322bd6c6551910dc9e10f5097e93e0b901991c750"
     },
     {
       "code": "QILUNJI-YY",

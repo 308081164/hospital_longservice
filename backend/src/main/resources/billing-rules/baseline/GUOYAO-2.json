@@ -17,6 +17,7 @@
       "isActive": true,
       "matchMode": "first",
       "keywordMatchMode": "contains",
+      "conditionsJson": "[{\"field\":\"manualReview\",\"value\":true}]",
       "acceptedTypes": [
         "额外包（纸塑袋）"
       ]

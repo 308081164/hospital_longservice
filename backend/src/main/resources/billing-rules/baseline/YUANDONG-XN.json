@@ -10,13 +10,14 @@
       "priority": 10,
       "price": 5.5,
       "keywords": [
-        "双@contains"
+        "/双"
       ],
       "maxInstrumentCount": 2,
       "skipPackaging": false,
       "skipDiscount": true,
       "isActive": true,
       "matchMode": "first",
+      "conditionsJson": "[{\"field\":\"manualReview\",\"value\":true}]",
       "acceptedTypes": [
         "额外包（纸塑袋）"
       ]
@@ -27,13 +28,14 @@
       "priority": 11,
       "price": 5.5,
       "keywords": [
-        "双@contains"
+        "/双"
       ],
       "minInstrumentCount": 3,
       "skipPackaging": true,
       "skipDiscount": true,
       "isActive": true,
       "matchMode": "first",
+      "conditionsJson": "[{\"field\":\"manualReview\",\"value\":true}]",
       "acceptedTypes": [
         "额外包（纸塑袋）"
       ]

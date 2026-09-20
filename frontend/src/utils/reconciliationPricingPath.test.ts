@@ -1,6 +1,7 @@
 import {
   buildPricingFlowTimeline,
   classifyPricingPath,
+  classifySpecialFixedPricingKind,
   readEffectivePricingPath
 } from './reconciliationPricingPath.ts'
 
@@ -119,5 +120,97 @@ assertTrue(
   'product match annotated when fixed price hit'
 )
 assertEqual(timeline[1]?.label, 'pricingFlow.stepCustomerFixed', 'second step is customer fixed hit')
+
+const aolanPerInstrumentRow = {
+  status: 'unchanged',
+  pricingRule: '奥兰双<3按件5.5含包材',
+  pricingPath: 'fixed',
+  matchedRuleId: 501,
+  billingNotes: {
+    matchedRuleId: 501,
+    ruleName: '奥兰双<3按件5.5含包材',
+    effectivePricingPath: 'fixed'
+  },
+  notes: ['奥兰双<3按件5.5含包材，按每件 5.5 元，单包计费件数 2 件，单价按 11 元。']
+}
+
+const perInstrumentClassification = classifyPricingPath(aolanPerInstrumentRow)
+assertEqual(
+  perInstrumentClassification.label,
+  'pricingPath.specialPerInstrument',
+  'per-instrument special rule is not labeled as customer correction'
+)
+assertEqual(
+  classifySpecialFixedPricingKind(aolanPerInstrumentRow),
+  'perInstrument',
+  'per-instrument kind inferred from notes'
+)
+
+const foldRow = {
+  status: 'unchanged',
+  pricingRule: '电机厂指针5合1含包材',
+  pricingPath: 'fixed',
+  matchedRuleId: 902,
+  billingNotes: {
+    matchedRuleId: 902,
+    ruleName: '电机厂指针5合1含包材',
+    effectivePricingPath: 'fixed'
+  },
+  notes: ['电机厂指针5合1含包材，原器械数 8 件，折算为 2 件。']
+}
+
+const foldClassification = classifyPricingPath(foldRow)
+assertEqual(foldClassification.label, 'pricingPath.specialFold', 'fold rule uses special fold badge')
+assertEqual(classifySpecialFixedPricingKind(foldRow), 'fold', 'fold kind inferred from notes')
+
+const specialFixedRow = {
+  status: 'unchanged',
+  pricingRule: '抛光车针盒6件盒1/Z1026',
+  pricingPath: 'fixed',
+  matchedRuleId: 601,
+  billingNotes: {
+    matchedRuleId: 601,
+    ruleName: '抛光车针盒6件盒1/Z1026',
+    effectivePricingPath: 'fixed'
+  },
+  notes: ['抛光车针盒6件盒1/Z1026，单价按 35 元。']
+}
+
+const specialFixedClassification = classifyPricingPath(specialFixedRow)
+assertEqual(
+  specialFixedClassification.label,
+  'pricingPath.specialFixed',
+  'non-correction fixed path uses special fixed badge'
+)
+
+const perInstrumentTimeline = buildPricingFlowTimeline(aolanPerInstrumentRow)
+assertEqual(
+  perInstrumentTimeline[0]?.label,
+  'pricingFlow.stepSpecialPerInstrument',
+  'per-instrument timeline step is not customer fixed'
+)
+
+const aolanManualReviewRow = {
+  status: 'warning',
+  pricingRule: '奥兰双<3按件5.5含包材',
+  pricingPath: 'preserve',
+  matchedRuleId: 501,
+  billingNotes: {
+    matchedRuleId: 501,
+    ruleName: '奥兰双<3按件5.5含包材',
+    effectivePricingPath: 'preserve',
+    manualReview: true
+  },
+  notes: [
+    '【计价告警】命中规则「奥兰双<3按件5.5含包材」，需人工核对，已按账单原价 22 元暂计。'
+  ]
+}
+
+const aolanManualReviewClassification = classifyPricingPath(aolanManualReviewRow)
+assertEqual(
+  aolanManualReviewClassification.label,
+  'pricingPath.manualReview',
+  'double-bag manual review uses manualReview badge'
+)
 
 console.log('reconciliationPricingPath.test.ts: all assertions passed')

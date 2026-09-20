@@ -73,6 +73,70 @@ function isCustomerCorrectionPriceRule(pricingRule: string): boolean {
   return pricingRule.startsWith('校正价') || pricingRule.startsWith('电力校正价')
 }
 
+export type SpecialFixedPricingKind = 'correction' | 'fixed' | 'perInstrument' | 'fold'
+
+const SPECIAL_FIXED_PRICING_LABELS: Record<SpecialFixedPricingKind, string> = {
+  correction: 'pricingPath.customerFixed',
+  fixed: 'pricingPath.specialFixed',
+  perInstrument: 'pricingPath.specialPerInstrument',
+  fold: 'pricingPath.specialFold'
+}
+
+const SPECIAL_FIXED_FLOW_STEP_LABELS: Record<SpecialFixedPricingKind, string> = {
+  correction: 'pricingFlow.stepCustomerFixed',
+  fixed: 'pricingFlow.stepSpecialFixed',
+  perInstrument: 'pricingFlow.stepSpecialPerInstrument',
+  fold: 'pricingFlow.stepSpecialFold'
+}
+
+function readRuleName(row: Record<string, unknown>): string {
+  const billingNotes = normalizeBillingNotes(row.billingNotes ?? row.billing_notes)
+  const fromNotes = billingNotes?.ruleName ?? billingNotes?.rule_name
+  if (typeof fromNotes === 'string' && fromNotes.trim()) {
+    return fromNotes.trim()
+  }
+  return ''
+}
+
+function isPerInstrumentSpecialPricing(row: Record<string, unknown>, pricingRule: string): boolean {
+  if (pricingRule.includes('按件')) return true
+  const ruleName = readRuleName(row)
+  if (ruleName.includes('按件')) return true
+  const notes = readNotes(row)
+  return notes.some((note) => note.includes('按每件') && note.includes('单包计费件数'))
+}
+
+function isFoldSpecialPricing(row: Record<string, unknown>, pricingRule: string): boolean {
+  if (/合\d|折算/.test(pricingRule)) return true
+  const ruleName = readRuleName(row)
+  if (/合\d|折算/.test(ruleName)) return true
+  const notes = readNotes(row)
+  return notes.some((note) => note.includes('折算'))
+}
+
+function isSpecialFixedPathHit(row: Record<string, unknown>, pricingRule: string): boolean {
+  return readEffectivePricingPath(row) === 'fixed' || isCustomerCorrectionPriceRule(pricingRule)
+}
+
+export function classifySpecialFixedPricingKind(
+  row: Record<string, unknown>,
+  pricingRule = readPricingRule(row)
+): SpecialFixedPricingKind | null {
+  if (isCustomerCorrectionPriceRule(pricingRule) || isCustomerCorrectionPriceRule(readRuleName(row))) {
+    return 'correction'
+  }
+  if (readEffectivePricingPath(row) !== 'fixed') {
+    return null
+  }
+  if (isFoldSpecialPricing(row, pricingRule)) {
+    return 'fold'
+  }
+  if (isPerInstrumentSpecialPricing(row, pricingRule)) {
+    return 'perInstrument'
+  }
+  return 'fixed'
+}
+
 function readBillingNotesManualReview(row: Record<string, unknown>): boolean {
   const billingNotes = row.billingNotes ?? row.billing_notes
   if (!billingNotes || typeof billingNotes !== 'object') return false
@@ -112,8 +176,20 @@ export function readEffectivePricingPath(row: Record<string, unknown>): string {
   return raw == null ? '' : String(raw).trim()
 }
 
-function isCustomerFixedPriceHit(row: Record<string, unknown>, pricingRule: string): boolean {
-  return readEffectivePricingPath(row) === 'fixed' || isCustomerCorrectionPriceRule(pricingRule)
+function resolveSpecialFixedPricingLabel(
+  row: Record<string, unknown>,
+  pricingRule: string
+): string | null {
+  const kind = classifySpecialFixedPricingKind(row, pricingRule)
+  return kind ? SPECIAL_FIXED_PRICING_LABELS[kind] : null
+}
+
+function resolveSpecialFixedFlowStepLabel(
+  row: Record<string, unknown>,
+  pricingRule: string
+): string | null {
+  const kind = classifySpecialFixedPricingKind(row, pricingRule)
+  return kind ? SPECIAL_FIXED_FLOW_STEP_LABELS[kind] : null
 }
 
 function formatStructuredProductMatchNote(note: string, identificationOnly: boolean): string {
@@ -164,12 +240,22 @@ export function classifyPricingPath(row: Record<string, unknown>): PricingPathCl
     }
   }
 
-  if (isCustomerFixedPriceHit(row, pricingRule)) {
+  const specialFixedLabel = resolveSpecialFixedPricingLabel(row, pricingRule)
+  if (specialFixedLabel) {
+    const kind = classifySpecialFixedPricingKind(row, pricingRule)
+    const defaultSummary =
+      kind === 'correction'
+        ? '客户校正价'
+        : kind === 'perInstrument'
+          ? '特色按件计价'
+          : kind === 'fold'
+            ? '特色折算'
+            : '特色固定价'
     return {
       category: 'SPECIAL_HIT',
-      label: 'pricingPath.customerFixed',
+      label: specialFixedLabel,
       tagType: 'warning',
-      summary: truncateSummary(pricingRule || '客户校正价')
+      summary: truncateSummary(pricingRule || defaultSummary)
     }
   }
 
@@ -250,7 +336,8 @@ export function buildPricingFlowTimeline(row: Record<string, unknown>): PricingF
   const pricingRule = readPricingRule(row)
   const ctx = parseReconciliationBillingContext(row)
   const notes = readNotes(row)
-  const customerFixedHit = isCustomerFixedPriceHit(row, pricingRule)
+  const specialFixedPathHit = isSpecialFixedPathHit(row, pricingRule)
+  const specialFlowStepLabel = resolveSpecialFixedFlowStepLabel(row, pricingRule)
 
   const productMatchNotes = notes.filter(isStructuredProductMatchNote)
   const pricingNotes = notes.filter((note) => !isStructuredProductMatchNote(note))
@@ -259,14 +346,14 @@ export function buildPricingFlowTimeline(row: Record<string, unknown>): PricingF
     steps.push({
       kind: 'productMatch',
       label: 'pricingFlow.stepProductMatch',
-      detail: formatStructuredProductMatchNote(note, customerFixedHit)
+      detail: formatStructuredProductMatchNote(note, specialFixedPathHit)
     })
   })
 
   if (pricingRule) {
     steps.push({
       kind: 'summary',
-      label: customerFixedHit ? 'pricingFlow.stepCustomerFixed' : 'pricingFlow.stepSummary',
+      label: specialFlowStepLabel ?? 'pricingFlow.stepSummary',
       detail: localizeReconciliationDisplayText(pricingRule)
     })
   }
@@ -274,7 +361,7 @@ export function buildPricingFlowTimeline(row: Record<string, unknown>): PricingF
   if (ctx.ruleName || ctx.matchedRuleId != null) {
     const parts: string[] = []
     if (ctx.ruleName) parts.push(ctx.ruleName)
-    else if (customerFixedHit && pricingRule) parts.push(pricingRule)
+    else if (specialFixedPathHit && pricingRule) parts.push(pricingRule)
     if (ctx.matchedRuleId != null) parts.push(`规则编号（Rule ID）：${ctx.matchedRuleId}`)
     steps.push({
       kind: 'ruleMeta',

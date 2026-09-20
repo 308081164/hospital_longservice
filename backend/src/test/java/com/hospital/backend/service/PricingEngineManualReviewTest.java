@@ -78,6 +78,52 @@ class PricingEngineManualReviewTest {
     }
 
     @Test
+    void aolanDoubleBagSlashRuleMarksManualReviewAndPreservesBillPrice() throws Exception {
+        assertDoubleBagManualReview("AOLAN-YY", "奥兰医院", "奥兰双", "剪刀-1/双/z3040");
+    }
+
+    @Test
+    void yuandongDoubleBagSlashRuleMarksManualReviewAndPreservesBillPrice() throws Exception {
+        assertDoubleBagManualReview("YUANDONG-XN", "黑龙江省远东心脑血管医院", "远东双", "剪刀-1/双/z3040");
+    }
+
+    @Test
+    void senhaiDoubleBagSlashRuleMarksManualReviewAndPreservesBillPrice() throws Exception {
+        assertDoubleBagManualReview("SENHAI-YY", "哈尔滨森海医院", "森海双", "剪刀-1/双/z3040");
+    }
+
+    @Test
+    void guoyaoDoubleBagSlashRuleMarksManualReviewAndPreservesBillPrice() throws Exception {
+        assertDoubleBagManualReview("GUOYAO-2", "国药总医院第二院区", "电机厂双", "剪刀-1/双/z3040");
+    }
+
+    private static void assertDoubleBagManualReview(
+            String customerCode,
+            String hospitalName,
+            String ruleNamePrefix,
+            String packName) throws Exception {
+        PricingEngine engine = PricingEngineTestSupport.engineForCustomerCode(customerCode);
+        PricingEngine.ProcessedResult result = engine.processRow(Map.of(
+                "hospitalName", hospitalName,
+                "type", "额外包（纸塑袋）",
+                "packName", packName,
+                "packageMaterial", "高温纸塑袋75*200",
+                "instrumentCount", 1,
+                "packCount", 1,
+                "unitPrice", 22.0,
+                "totalPrice", 22.0
+        ));
+
+        assertThat(result.pricingRule).contains(ruleNamePrefix);
+        assertThat(result.expectedUnitPrice).isCloseTo(22.0, within(0.001));
+        assertThat(result.status).isEqualTo("warning");
+        assertThat(result.pricingPath).isEqualTo("preserve");
+        assertThat(result.notes).anyMatch(note -> note.contains("需人工核对"));
+        assertThat(result.billingNotes).isNotNull();
+        assertThat(result.billingNotes.get("manualReview")).isEqualTo(true);
+    }
+
+    @Test
     void dianliBaselineBoneTractionFallsBackToManualReviewWithBillPrice() throws Exception {
         PricingEngine engine = PricingEngineTestSupport.engineForCustomerCode("ZY3-DIANLI");
         PricingEngine.ProcessedResult result = engine.processRow(Map.of(

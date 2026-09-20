@@ -8,6 +8,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Pattern;
+import java.util.regex.PatternSyntaxException;
 
 /**
  * 从 PricingEngine 抽出的规则条件评估（TD-02 部分偿还）。
@@ -28,6 +29,9 @@ public final class BillingConditionEvaluator {
      * 不得用裸词「针」exact_token（会误伤 {@code 针-5/z7534} 等普通小件包）。
      */
     public static final String KEYWORD_MATCH_NEEDLE_BOX = "needle_box";
+
+    /** 关键词为 Java 正则，对归一化后的包名做 {@link Matcher#find()} 匹配（Excel 占位词如「几件」→ {@code \\d+件}）。 */
+    public static final String KEYWORD_MATCH_REGEX = "regex";
 
     /** {@code (针5盒1)}、{@code (针-8盒-1)} 等括号内针盒针公式。 */
     private static final Pattern NEEDLE_BOX_IN_PARENS =
@@ -87,6 +91,8 @@ public final class BillingConditionEvaluator {
                 boolean hit;
                 if (KEYWORD_MATCH_NEEDLE_BOX.equalsIgnoreCase(mode)) {
                     hit = matchesNeedleBoxFormula(text);
+                } else if (KEYWORD_MATCH_REGEX.equalsIgnoreCase(mode)) {
+                    hit = matchesKeywordRegex(text, pk.keyword());
                 } else if (KEYWORD_MATCH_CONTAINS.equalsIgnoreCase(mode)) {
                     hit = matchesKeywordContains(text, pk.keyword());
                 } else {
@@ -123,6 +129,10 @@ public final class BillingConditionEvaluator {
                 if (matchesNeedleBoxFormula(text)) {
                     return new ExactTokenKeywordMatch("needle_box", 0, compact);
                 }
+            } else if (KEYWORD_MATCH_REGEX.equalsIgnoreCase(mode)) {
+                if (matchesKeywordRegex(text, pk.keyword())) {
+                    return new ExactTokenKeywordMatch(pk.keyword(), 0, compact);
+                }
             } else if (KEYWORD_MATCH_CONTAINS.equalsIgnoreCase(mode)) {
                 int idx = 0;
                 while ((idx = compactLower.indexOf(kwLower, idx)) != -1) {
@@ -155,7 +165,8 @@ public final class BillingConditionEvaluator {
 
     /**
      * 将逗号分隔的关键词串解析为词级模式列表。
-     * 语法：{@code 词}、{@code 词@contains}、{@code 词@exact}、{@code 词@exact_token}、{@code 针盒针@needle_box}。
+     * 语法：{@code 词}、{@code 词@contains}、{@code 词@exact}、{@code 词@exact_token}、
+     * {@code 针盒针@needle_box}、{@code 小件盒-\\d+件@regex}。
      * 未识别的 @ 后缀原样保留，避免误伤含 @ 的普通关键词。
      */
     public static List<ParsedKeyword> parseKeywordList(String raw) {
@@ -183,6 +194,10 @@ public final class BillingConditionEvaluator {
                     result.add(new ParsedKeyword(trimmed.substring(0, at).trim(), KEYWORD_MATCH_NEEDLE_BOX));
                     continue;
                 }
+                if (KEYWORD_MATCH_REGEX.equals(suffix)) {
+                    result.add(new ParsedKeyword(trimmed.substring(0, at).trim(), KEYWORD_MATCH_REGEX));
+                    continue;
+                }
             }
             result.add(new ParsedKeyword(trimmed, null));
         }
@@ -193,6 +208,18 @@ public final class BillingConditionEvaluator {
      * Excel「包名称带针多少盒1」：括号内 {@code (针N盒1)} 或紧凑 {@code 针盒N针M}。
      * 不匹配裸 {@code 针-N}、{@code 缝合针}、{@code 机扩针-6盒1} 等。
      */
+    public static boolean matchesKeywordRegex(String text, String regexPattern) {
+        if (text == null || regexPattern == null || regexPattern.isBlank()) {
+            return false;
+        }
+        String normalized = normalizeMatchText(text);
+        try {
+            return Pattern.compile(regexPattern).matcher(normalized).find();
+        } catch (PatternSyntaxException ignored) {
+            return false;
+        }
+    }
+
     public static boolean matchesNeedleBoxFormula(String text) {
         if (text == null || text.isBlank()) {
             return false;
