@@ -1,7 +1,6 @@
 package com.hospital.backend.export;
 
 import com.hospital.backend.entity.HospitalReconciliationJob;
-import com.hospital.backend.service.impl.ExcelBillImportSupport;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
@@ -12,11 +11,16 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.util.List;
 import java.util.Optional;
+import java.util.regex.Pattern;
 
 /**
  * 结款函账期解析：优先 job.sourceDateRange，回退原始 Excel B4/表头。
  */
 public final class SettlementPeriodResolver {
+
+    private static final Pattern DATE_RANGE_TEXT = Pattern.compile(
+            "^(从|时间|日期)[：:]?\\s*\\d{4}.*(?:至|到).*\\d{4}.*"
+                    + "|^\\d{4}[/-]\\d{1,2}[/-]\\d{1,2}.*(?:至|到).*\\d{4}.*");
 
     private SettlementPeriodResolver() {
     }
@@ -53,7 +57,7 @@ public final class SettlementPeriodResolver {
             return "";
         }
         for (String text : headerAreaTexts) {
-            if (ExcelBillImportSupport.isDateRangeText(text)) {
+            if (isDateRangeText(text)) {
                 return text.trim();
             }
         }
@@ -73,7 +77,7 @@ public final class SettlementPeriodResolver {
             for (int i = 0; i < workbook.getNumberOfSheets(); i++) {
                 Sheet sheet = workbook.getSheetAt(i);
                 String fromB4 = readCellText(sheet, 3, 1);
-                if (ExcelBillImportSupport.isDateRangeText(fromB4)) {
+                if (isDateRangeText(fromB4)) {
                     return Optional.of(fromB4.trim());
                 }
                 for (int rowIdx = 0; rowIdx <= Math.min(8, sheet.getLastRowNum()); rowIdx++) {
@@ -88,7 +92,7 @@ public final class SettlementPeriodResolver {
                             continue;
                         }
                         String text = cell.toString();
-                        if (ExcelBillImportSupport.isDateRangeText(text)) {
+                        if (isDateRangeText(text)) {
                             return Optional.of(text.trim());
                         }
                     }
@@ -110,5 +114,12 @@ public final class SettlementPeriodResolver {
             return "";
         }
         return cell.toString().trim();
+    }
+
+    private static boolean isDateRangeText(String text) {
+        if (text == null || text.isBlank()) {
+            return false;
+        }
+        return DATE_RANGE_TEXT.matcher(text.trim()).find();
     }
 }
