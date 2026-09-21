@@ -1095,10 +1095,12 @@ public class PricingEngine {
                 continue;
             }
             if (matched.anyPriceMode) {
-                if (findMatchingAcceptedPrice(unitPrice, matched.acceptedPrices) != null) {
+                if (anyPriceAcceptedMatch == null
+                        && findMatchingAcceptedPrice(unitPrice, matched.acceptedPrices) != null) {
                     anyPriceAcceptedMatch = matched;
                 }
-            } else if (Math.abs(matched.price - unitPrice) <= 0.001) {
+            } else if (unitPriceMatch == null
+                    && Math.abs(matched.price - unitPrice) <= 0.001) {
                 unitPriceMatch = matched;
             }
         }
