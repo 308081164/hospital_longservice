@@ -1,7 +1,7 @@
 {
   "version": 1,
-  "generated_at": "2026-09-20T07:35:24Z",
-  "manifest_hash": "d240b94ceeb49755581d1a5e51d3df36d6bcd294036ee0efa49fd8cf7b7a211d",
+  "generated_at": "2026-09-21T06:02:21Z",
+  "manifest_hash": "8d48e054d4d77fecd1eac6d50e4ea04abd3cc20fa431db3fd44c0efa88ee3e24",
   "billing_enabled_count": 33,
   "active_billing_enabled_count": 33,
   "customers": {
@@ -235,6 +235,42 @@
           "skipDiscount": false,
           "keywordMatchMode": "exact_token",
           "price": 5.5,
+          "acceptedTypes": [
+            "额外包（纸塑袋）"
+          ]
+        },
+        {
+          "ruleType": "PRICE_PER_INSTRUMENT",
+          "name": "电机厂双按件5.5免包材自动",
+          "priority": 18,
+          "price": 5.5,
+          "keywords": [
+            "/双"
+          ],
+          "minInstrumentCount": 3,
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": true,
+          "matchMode": "first",
+          "keywordMatchMode": "contains",
+          "acceptedTypes": [
+            "额外包（纸塑袋）"
+          ]
+        },
+        {
+          "ruleType": "EXTRA_FEE",
+          "name": "电机厂双内层纸塑袋加价2.5自动",
+          "priority": 18,
+          "fee": 2.5,
+          "keywords": [
+            "/双"
+          ],
+          "minInstrumentCount": 3,
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": true,
+          "matchMode": "first",
+          "keywordMatchMode": "contains",
           "acceptedTypes": [
             "额外包（纸塑袋）"
           ]
@@ -731,8 +767,8 @@
           ]
         }
       ],
-      "rule_count": 31,
-      "active_rule_count": 31
+      "rule_count": 33,
+      "active_rule_count": 33
     },
     "FNN-YY": {
       "code": "FNN-YY",
@@ -3214,6 +3250,23 @@
       "productRules": [
         {
           "ruleType": "PRICE_PER_INSTRUMENT",
+          "name": "远东双≥3按件5.5免包材自动",
+          "priority": 9,
+          "price": 5.5,
+          "keywords": [
+            "/双"
+          ],
+          "minInstrumentCount": 3,
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": true,
+          "matchMode": "first",
+          "acceptedTypes": [
+            "额外包（纸塑袋）"
+          ]
+        },
+        {
+          "ruleType": "PRICE_PER_INSTRUMENT",
           "name": "远东双<3按件5.5含包材",
           "priority": 10,
           "price": 5.5,
@@ -3249,8 +3302,8 @@
           ]
         }
       ],
-      "rule_count": 2,
-      "active_rule_count": 2
+      "rule_count": 3,
+      "active_rule_count": 3
     },
     "ZUYAN-SF": {
       "code": "ZUYAN-SF",
@@ -3305,6 +3358,23 @@
       "productRules": [
         {
           "ruleType": "PRICE_PER_INSTRUMENT",
+          "name": "奥兰双≥3按件5.5免包材自动",
+          "priority": 9,
+          "price": 5.5,
+          "keywords": [
+            "/双"
+          ],
+          "minInstrumentCount": 3,
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": true,
+          "matchMode": "first",
+          "acceptedTypes": [
+            "额外包（纸塑袋）"
+          ]
+        },
+        {
+          "ruleType": "PRICE_PER_INSTRUMENT",
           "name": "奥兰双<3按件5.5含包材",
           "priority": 10,
           "price": 5.5,
@@ -3340,8 +3410,8 @@
           ]
         }
       ],
-      "rule_count": 2,
-      "active_rule_count": 2
+      "rule_count": 3,
+      "active_rule_count": 3
     },
     "HRB-XK-YY": {
       "code": "HRB-XK-YY",
@@ -3393,6 +3463,23 @@
       "standardPricingOverride": null,
       "billingEnabled": true,
       "productRules": [
+        {
+          "ruleType": "PRICE_PER_INSTRUMENT",
+          "name": "森海双≥3按件5.5免包材自动",
+          "priority": 9,
+          "price": 5.5,
+          "keywords": [
+            "/双"
+          ],
+          "minInstrumentCount": 3,
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": true,
+          "matchMode": "first",
+          "acceptedTypes": [
+            "额外包（纸塑袋）"
+          ]
+        },
         {
           "ruleType": "PRICE_PER_INSTRUMENT",
           "name": "森海双<3按件5.5含包材",
@@ -3469,8 +3556,8 @@
           ]
         }
       ],
-      "rule_count": 4,
-      "active_rule_count": 4
+      "rule_count": 5,
+      "active_rule_count": 5
     },
     "ZY3-DIANLI": {
       "code": "ZY3-DIANLI",

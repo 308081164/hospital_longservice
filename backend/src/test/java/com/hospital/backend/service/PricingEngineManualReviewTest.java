@@ -97,6 +97,71 @@ class PricingEngineManualReviewTest {
         assertDoubleBagManualReview("GUOYAO-2", "国药总医院第二院区", "电机厂双", "剪刀-1/双/z3040");
     }
 
+    @Test
+    void aolanDoubleBagSlashRuleAtLeastThreeInstrumentsSkipsManualReview() throws Exception {
+        assertDoubleBagAutoPricing("AOLAN-YY", "奥兰医院", "奥兰双≥3", "剪刀-3/双/z3040", 3);
+    }
+
+    @Test
+    void yuandongDoubleBagSlashRuleAtLeastThreeInstrumentsSkipsManualReview() throws Exception {
+        assertDoubleBagAutoPricing("YUANDONG-XN", "黑龙江省远东心脑血管医院", "远东双≥3", "剪刀-3/双/z3040", 3);
+    }
+
+    @Test
+    void senhaiDoubleBagSlashRuleAtLeastThreeInstrumentsSkipsManualReview() throws Exception {
+        assertDoubleBagAutoPricing("SENHAI-YY", "哈尔滨森海医院", "森海双≥3", "剪刀-3/双/z3040", 3);
+    }
+
+    @Test
+    void guoyaoDoubleBagSlashRuleAtLeastThreeInstrumentsSkipsManualReview() throws Exception {
+        assertDoubleBagAutoPricing(
+                "GUOYAO-2",
+                "国药总医院第二院区",
+                "电机厂双按件5.5免包材自动",
+                "剪刀-3/双/z3040",
+                3,
+                19.0);
+    }
+
+    private static void assertDoubleBagAutoPricing(
+            String customerCode,
+            String hospitalName,
+            String ruleNamePrefix,
+            String packName,
+            int instrumentCount) throws Exception {
+        assertDoubleBagAutoPricing(
+                customerCode, hospitalName, ruleNamePrefix, packName, instrumentCount, instrumentCount * 5.5);
+    }
+
+    private static void assertDoubleBagAutoPricing(
+            String customerCode,
+            String hospitalName,
+            String ruleNamePrefix,
+            String packName,
+            int instrumentCount,
+            double expectedUnitPrice) throws Exception {
+        PricingEngine engine = PricingEngineTestSupport.engineForCustomerCode(customerCode);
+        PricingEngine.ProcessedResult result = engine.processRow(Map.of(
+                "hospitalName", hospitalName,
+                "type", "额外包（纸塑袋）",
+                "packName", packName,
+                "packageMaterial", "高温纸塑袋75*200",
+                "instrumentCount", instrumentCount,
+                "packCount", 1,
+                "unitPrice", expectedUnitPrice,
+                "totalPrice", expectedUnitPrice
+        ));
+
+        assertThat(result.pricingRule).contains(ruleNamePrefix);
+        assertThat(result.expectedUnitPrice).isCloseTo(expectedUnitPrice, within(0.001));
+        assertThat(result.status).isEqualTo("ok");
+        assertThat(result.pricingPath).isEqualTo("fixed");
+        assertThat(result.notes).noneMatch(note -> note.contains("需人工核对"));
+        if (result.billingNotes != null) {
+            assertThat(result.billingNotes.get("manualReview")).isNotEqualTo(true);
+        }
+    }
+
     private static void assertDoubleBagManualReview(
             String customerCode,
             String hospitalName,

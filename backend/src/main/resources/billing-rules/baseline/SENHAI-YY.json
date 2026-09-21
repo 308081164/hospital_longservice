@@ -6,6 +6,23 @@
   "productRules": [
     {
       "ruleType": "PRICE_PER_INSTRUMENT",
+      "name": "森海双≥3按件5.5免包材自动",
+      "priority": 9,
+      "price": 5.5,
+      "keywords": [
+        "/双"
+      ],
+      "minInstrumentCount": 3,
+      "skipPackaging": true,
+      "skipDiscount": true,
+      "isActive": true,
+      "matchMode": "first",
+      "acceptedTypes": [
+        "额外包（纸塑袋）"
+      ]
+    },
+    {
+      "ruleType": "PRICE_PER_INSTRUMENT",
       "name": "森海双<3按件5.5含包材",
       "priority": 10,
       "price": 5.5,

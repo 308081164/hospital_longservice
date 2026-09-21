@@ -1,6 +1,6 @@
 {
-  "baseline_hash": "bbc3da48ec4bdb723c09cc47e0c7ffefee51dff1ab48ff809d2abc557216c2bc",
-  "generated_at": "2026-09-20T07:35:23Z",
+  "baseline_hash": "10a5ab996d6653537fc74ca0b8c40312eea093b713cdc16392b83bf694dfb762",
+  "generated_at": "2026-09-21T06:02:21Z",
   "source": "billing-rules-manifest@01836c66115726ff7229db58f16020cb6e65f7069beee13551669c1031fd7764",
   "customer_count": 33,
   "customers": [
@@ -13,8 +13,8 @@
     {
       "code": "GUOYAO-2",
       "file": "baseline/GUOYAO-2.json",
-      "ruleCount": 31,
-      "fileHash": "6c17bfcbc7e6ac9c9ddc2b1550f610cb818dbbfa84da9b653746f9fc8c8ee7ed"
+      "ruleCount": 33,
+      "fileHash": "936977e7822e2764fc58a2582ab86d7d03cc60c9ad9ce7c2c854a291032c0a3e"
     },
     {
       "code": "FNN-YY",
@@ -151,8 +151,8 @@
     {
       "code": "YUANDONG-XN",
       "file": "baseline/YUANDONG-XN.json",
-      "ruleCount": 2,
-      "fileHash": "4b80b36559755819ee1489133096c8c409e2cf9ed511dd18cbf96ac951d2f4c3"
+      "ruleCount": 3,
+      "fileHash": "267dc6e6a9f1cd2f153310178fbaf5e405aa5f7343eacb9c10bfa61fa31a423e"
     },
     {
       "code": "ZUYAN-SF",
@@ -163,8 +163,8 @@
     {
       "code": "AOLAN-YY",
       "file": "baseline/AOLAN-YY.json",
-      "ruleCount": 2,
-      "fileHash": "0effd1f50d97662bcc879567e828714bc1b72121a19a6c8f5e277340d2e7180f"
+      "ruleCount": 3,
+      "fileHash": "58d0ef20ed11770f3b044984ea4e7bbbb2b4bb46f37c05eda8ddcf5a8785eea0"
     },
     {
       "code": "HRB-XK-YY",
@@ -175,8 +175,8 @@
     {
       "code": "SENHAI-YY",
       "file": "baseline/SENHAI-YY.json",
-      "ruleCount": 4,
-      "fileHash": "52c2ab09e2d8052390b75da3a8ee797ef883e90c28e35ce468fcf46ba9ffee3f"
+      "ruleCount": 5,
+      "fileHash": "97a6dd32cf604a71e877cd65ff86eb6807d10fef5684cba097c86586bb35c2bc"
     },
     {
       "code": "ZY3-DIANLI",
