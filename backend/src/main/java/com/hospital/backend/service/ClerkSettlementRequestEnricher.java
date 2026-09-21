@@ -9,6 +9,7 @@ import com.hospital.backend.entity.HospitalReconciliationJob;
 import com.hospital.backend.entity.HospitalReconciliationRow;
 import com.hospital.backend.export.SettlementJobEnricher;
 import com.hospital.backend.export.SettlementPeriodFormatter;
+import com.hospital.backend.export.SettlementPeriodResolver;
 import com.hospital.backend.export.SettlementTemplateFiller;
 import com.hospital.backend.mapper.HospitalPricingRuleMapper;
 import com.hospital.backend.mapper.HospitalReconciliationJobMapper;
@@ -54,7 +55,7 @@ public class ClerkSettlementRequestEnricher {
             if (request.getHospitalName() == null || request.getHospitalName().isBlank()) {
                 request.setHospitalName(job.getHospitalName());
             }
-            SettlementPeriodFormatter.parse(job.getSourceDateRange()).ifPresent(period -> {
+            SettlementPeriodResolver.resolve(job).ifPresent(period -> {
                 if (request.getDateRangeText() == null || request.getDateRangeText().isBlank()) {
                     request.setDateRangeText(SettlementPeriodFormatter.formatSettlementIntro(period));
                 }
@@ -63,13 +64,7 @@ public class ClerkSettlementRequestEnricher {
                 }
             });
 
-            double sterilizeTotal = job.getCorrectedTotalPrice() != null
-                    ? job.getCorrectedTotalPrice()
-                    : rows.stream()
-                            .mapToDouble(r -> r.getCorrectedTotalPrice() != null
-                                    ? r.getCorrectedTotalPrice()
-                                    : (r.getTotalPrice() != null ? r.getTotalPrice() : 0))
-                            .sum();
+            double sterilizeTotal = settlementTemplateFiller.resolveSterilizeInputTotal(job, compiled, rows);
             var fillerRows = settlementTemplateFiller.buildFeeRows(job, sterilizeTotal, compiled, rows);
             request.setFeeRows(fillerRows.stream().map(this::toDto).toList());
             request.setTotalAmount(settlementTemplateFiller.computeTotalAmount(fillerRows));

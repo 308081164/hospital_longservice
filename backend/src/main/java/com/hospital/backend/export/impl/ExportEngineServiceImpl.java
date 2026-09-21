@@ -26,6 +26,7 @@ import com.hospital.backend.export.model.ResolvedExportTemplate;
 import com.hospital.backend.export.strategy.ExportStrategy;
 import com.hospital.backend.export.strategy.ExportStrategyRegistry;
 import com.hospital.backend.export.SettlementPeriodFormatter;
+import com.hospital.backend.export.SettlementPeriodResolver;
 import com.hospital.backend.export.SettlementTemplateFiller;
 import com.hospital.backend.mapper.HospitalReconciliationExportLogMapper;
 import com.hospital.backend.mapper.HospitalPricingRuleMapper;
@@ -444,19 +445,14 @@ public class ExportEngineServiceImpl implements ExportEngineService {
             planName = job.getRuleName();
         }
         request.setTitleText(SettlementPeriodFormatter.buildTitle(context.getHospitalName(), planName));
-        SettlementPeriodFormatter.parse(job.getSourceDateRange()).ifPresentOrElse(
+        SettlementPeriodResolver.resolve(job).ifPresentOrElse(
                 period -> {
                     request.setDateRangeText(SettlementPeriodFormatter.formatSettlementIntro(period));
                     request.setClosingText(SettlementPeriodFormatter.buildClosingText(null, period));
                 },
                 () -> request.setDateRangeText(job.getSourceDateRange()));
-        double sterilizeTotal = job.getCorrectedTotalPrice() != null
-                ? job.getCorrectedTotalPrice()
-                : context.getRows().stream()
-                        .mapToDouble(r -> r.getCorrectedTotalPrice() != null
-                                ? r.getCorrectedTotalPrice()
-                                : (r.getTotalPrice() != null ? r.getTotalPrice() : 0))
-                        .sum();
+        double sterilizeTotal = settlementTemplateFiller.resolveSterilizeInputTotal(
+                job, compiledRules, context.getRows());
         var fillerRows = settlementTemplateFiller.buildFeeRows(
                 job,
                 sterilizeTotal,

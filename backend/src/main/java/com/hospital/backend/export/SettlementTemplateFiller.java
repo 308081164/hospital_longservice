@@ -52,6 +52,29 @@ public class SettlementTemplateFiller {
         return buildFeeRows(job, sterilizeTotal, compiledRules, List.of());
     }
 
+    public double resolveSterilizeInputTotal(
+            HospitalReconciliationJob job,
+            JsonNode compiledRules,
+            List<HospitalReconciliationRow> rows) {
+        if (rows != null && !rows.isEmpty()) {
+            double exportTotal = sumBillExportSterilizeTotal(rows, job.getHospitalName());
+            if (exportTotal > 0) {
+                return exportTotal;
+            }
+        }
+        if (job.getCorrectedTotalPrice() != null) {
+            return job.getCorrectedTotalPrice();
+        }
+        if (rows == null || rows.isEmpty()) {
+            return 0;
+        }
+        return rows.stream()
+                .mapToDouble(r -> r.getCorrectedTotalPrice() != null
+                        ? r.getCorrectedTotalPrice()
+                        : (r.getTotalPrice() != null ? r.getTotalPrice() : 0))
+                .sum();
+    }
+
     public List<SettlementFeeRow> buildFeeRows(
             HospitalReconciliationJob job,
             double sterilizeTotal,
@@ -70,19 +93,23 @@ public class SettlementTemplateFiller {
         double baseSterilize = overrideSterilize
                 ? settlementOverride.sterilizeAmount()
                 : resolveSettlementSterilizeBase(job, sterilizeTotal, compiledRules, rows, hospitalName);
-
         if (shouldSplitSterilizeByTemperature(compiledRules, rows, hospitalName)) {
             seq = appendTemperatureSterilizeRows(rowsOut, seq, compiledRules, rows);
         } else {
             double displaySterilize = baseSterilize;
             String sterilizeRemark = "";
             if (compiledRules != null && !overrideSterilize) {
-                BillingPolicyApplier.BillDetailDiscount settlementDiscount =
-                        BillingPolicyApplier.applySettlementDiscount(
-                                compiledRules, "", "", "", hospitalName, baseSterilize);
-                if (settlementDiscount != null) {
-                    displaySterilize = settlementDiscount.price();
-                    sterilizeRemark = settlementDiscount.note();
+                if (hasExportOnlyDiscount(compiledRules)) {
+                    displaySterilize = applyExportDiscountToAmount(compiledRules, baseSterilize);
+                    sterilizeRemark = resolveExportDiscountRemark(compiledRules);
+                } else {
+                    BillingPolicyApplier.BillDetailDiscount settlementDiscount =
+                            BillingPolicyApplier.applySettlementDiscount(
+                                    compiledRules, "", "", "", hospitalName, baseSterilize);
+                    if (settlementDiscount != null) {
+                        displaySterilize = settlementDiscount.price();
+                        sterilizeRemark = settlementDiscount.note();
+                    }
                 }
             }
             rowsOut.add(SettlementFeeRow.builder()
@@ -177,6 +204,60 @@ public class SettlementTemplateFiller {
             return "外来器械费用";
         }
         return "外来器械";
+    }
+
+    private double sumBillExportSterilizeTotal(List<HospitalReconciliationRow> rows, String hospitalName) {
+        boolean isHsz = hospitalName != null && hospitalName.contains("红十字妇产");
+        boolean isShengYy = hospitalName != null && hospitalName.contains("黑龙江省医院");
+        Map<String, List<HospitalReconciliationRow>> byOrder = isHsz
+                ? rows.stream()
+                        .filter(row -> row.getOrderNo() != null && !row.getOrderNo().isBlank())
+                        .collect(java.util.stream.Collectors.groupingBy(row -> row.getOrderNo().trim()))
+                : Map.of();
+        double sum = 0;
+        for (HospitalReconciliationRow row : rows) {
+            if (shouldExcludeFromSettlementSterilizeBase(row, hospitalName, isHsz, isShengYy, byOrder)) {
+                continue;
+            }
+            Double total = BillExportPriceResolver.resolveTotalPrice(row);
+            if (total == null) {
+                total = row.getCorrectedTotalPrice() != null ? row.getCorrectedTotalPrice() : row.getTotalPrice();
+            }
+            if (total != null) {
+                sum += total;
+            }
+        }
+        return round2(sum);
+    }
+
+    private static boolean hasExportOnlyDiscount(JsonNode compiledRules) {
+        return !BillingPolicyApplier.findPoliciesByStage(
+                compiledRules, "DISCOUNT", BillingPolicyApplier.STAGE_EXPORT_ONLY).isEmpty();
+    }
+
+    private static double applyExportDiscountToAmount(JsonNode compiledRules, double baseAmount) {
+        List<JsonNode> policies = BillingPolicyApplier.findPoliciesByStage(
+                compiledRules, "DISCOUNT", BillingPolicyApplier.STAGE_EXPORT_ONLY);
+        if (policies.isEmpty()) {
+            return baseAmount;
+        }
+        double rate = policies.get(0).path("params").path("rate").asDouble(1.0);
+        if (rate <= 0 || rate >= 1.0) {
+            return baseAmount;
+        }
+        return BillingPolicyApplier.round(baseAmount * rate);
+    }
+
+    private static String resolveExportDiscountRemark(JsonNode compiledRules) {
+        List<JsonNode> policies = BillingPolicyApplier.findPoliciesByStage(
+                compiledRules, "DISCOUNT", BillingPolicyApplier.STAGE_EXPORT_ONLY);
+        if (policies.isEmpty()) {
+            return "";
+        }
+        JsonNode params = policies.get(0).path("params");
+        double rate = params.path("rate").asDouble(1.0);
+        return BillingPolicyApplier.formatSettlementDiscountRemark(
+                policies.get(0).path("name").asText(""), rate);
     }
 
     private double resolveSettlementSterilizeBase(

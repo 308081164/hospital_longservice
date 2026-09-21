@@ -8,7 +8,7 @@
     {
       "ruleType": "DISCOUNT_OVERLAY",
       "name": "结款七折",
-      "stage": "settlement",
+      "stage": "bill_export",
       "isActive": true,
       "params": {
         "rate": 0.7

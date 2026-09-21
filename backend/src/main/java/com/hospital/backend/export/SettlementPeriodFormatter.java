@@ -14,6 +14,7 @@ public final class SettlementPeriodFormatter {
 
     private static final Pattern ISO_DATE = Pattern.compile("(\\d{4})[/-](\\d{1,2})[/-](\\d{1,2})");
     private static final Pattern CN_DATE = Pattern.compile("(\\d{4})年(\\d{1,2})月(\\d{1,2})日");
+    private static final Pattern RANGE_SEPARATOR = Pattern.compile("(?:至|到|—|–|-|\\bto\\b)", Pattern.CASE_INSENSITIVE);
 
     private SettlementPeriodFormatter() {
     }
@@ -25,13 +26,17 @@ public final class SettlementPeriodFormatter {
         if (text == null || text.isBlank()) {
             return Optional.empty();
         }
-        List<LocalDate> dates = extractDates(text.trim());
+        String trimmed = text.trim();
+        List<LocalDate> dates = extractDates(trimmed);
         if (dates.isEmpty()) {
             return Optional.empty();
         }
         if (dates.size() == 1) {
             LocalDate only = dates.get(0);
             return Optional.of(new BillingPeriod(only, only));
+        }
+        if (RANGE_SEPARATOR.matcher(trimmed).find()) {
+            return Optional.of(new BillingPeriod(dates.get(0), dates.get(dates.size() - 1)));
         }
         return Optional.of(new BillingPeriod(dates.get(0), dates.get(dates.size() - 1)));
     }

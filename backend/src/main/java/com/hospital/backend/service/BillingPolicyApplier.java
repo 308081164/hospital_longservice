@@ -306,13 +306,41 @@ public final class BillingPolicyApplier {
         String tempScope = policy.path("scope").path("temperature").asText("ANY");
         String tempNote = "ANY".equalsIgnoreCase(tempScope) ? "" : "（" + tempScope + "）";
         Long policyId = policy.has("policyId") ? policy.path("policyId").asLong() : null;
+        String applyStage = params.path("applyStage").asText(STAGE_BILL_DETAIL);
+        String note;
+        if (STAGE_SETTLEMENT_ONLY.equals(applyStage)) {
+            double rate = params.path("rate").asDouble(1.0);
+            note = formatSettlementDiscountRemark(label, rate);
+        } else {
+            note = "命中" + label + tempNote + tierNote + "，基础规则单价 "
+                    + fmt(baseUnitPrice) + " 元 → " + fmt(price) + " 元。";
+        }
         return new BillDetailDiscount(
                 price,
                 " + " + hospitalName + " 折扣",
-                "命中" + label + tempNote + tierNote + "，基础规则单价 "
-                        + fmt(baseUnitPrice) + " 元 → " + fmt(price) + " 元。",
+                note,
                 policyId
         );
+    }
+
+    public static String formatSettlementDiscountRemark(String label, double rate) {
+        if (Math.abs(rate - 0.7) < 0.001) {
+            return "七折优惠";
+        }
+        if (Math.abs(rate - 0.75) < 0.001) {
+            return "七五折优惠";
+        }
+        if (Math.abs(rate - 0.5) < 0.001) {
+            return "五折优惠";
+        }
+        int pct = (int) Math.round(rate * 100);
+        if (pct > 0 && pct < 100) {
+            return pct + "折优惠";
+        }
+        if (label != null && !label.isBlank()) {
+            return label.replace("结款", "").replace("结算", "").trim();
+        }
+        return "";
     }
 
     public static double round(double value) {

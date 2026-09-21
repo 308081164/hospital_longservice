@@ -210,6 +210,18 @@ final class ExcelBillImportSupport {
         return DATE_RANGE_TEXT.matcher(text.trim()).find();
     }
 
+    static String extractDateRangeFromHeaderTexts(List<String> headerAreaTexts) {
+        if (headerAreaTexts == null || headerAreaTexts.isEmpty()) {
+            return "";
+        }
+        for (String text : headerAreaTexts) {
+            if (isDateRangeText(text)) {
+                return text.trim();
+            }
+        }
+        return "";
+    }
+
     private static String readHospitalNameAtStandardColumn(
             List<List<Object>> matrix, int headerRowIndex) {
         String best = "";

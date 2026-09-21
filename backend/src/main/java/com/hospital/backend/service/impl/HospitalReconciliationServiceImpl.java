@@ -698,7 +698,8 @@ public class HospitalReconciliationServiceImpl implements HospitalReconciliation
             ExcelBillImportSupport.WorkbookParseResult parsed =
                     ExcelBillImportSupport.parseWorkbookData(new java.io.ByteArrayInputStream(fileBytes));
             List<Map<String, Object>> allRows = parsed.rows();
-            String dateRangeText = "";
+            String dateRangeText = ExcelBillImportSupport.extractDateRangeFromHeaderTexts(
+                    parsed.headerAreaTexts());
 
             if (allRows.isEmpty()) {
                 return Result.fail(400, "没有识别到有效明细行，请确认 Excel 格式与示例一致。");
@@ -4210,7 +4211,8 @@ public class HospitalReconciliationServiceImpl implements HospitalReconciliation
                     }
                     log.info("结款函导出: jobId={}, planName={}, ruleName={}, hospitalName={}, sourceDateRange={}",
                             jobId, planName, job.getRuleName(), job.getHospitalName(), job.getSourceDateRange());
-                    billingPeriod = SettlementPeriodFormatter.parse(job.getSourceDateRange()).orElse(null);
+                    billingPeriod = com.hospital.backend.export.SettlementPeriodResolver.resolve(job)
+                            .orElse(null);
                 } else {
                     log.warn("结款函导出: job not found for templateId={}", request.getTemplateId());
                 }

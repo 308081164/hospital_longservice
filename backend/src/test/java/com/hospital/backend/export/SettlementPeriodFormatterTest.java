@@ -10,6 +10,17 @@ import static org.assertj.core.api.Assertions.assertThat;
 class SettlementPeriodFormatterTest {
 
     @Test
+    void parsesAugustDateRangeFromBillHeader() {
+        Optional<SettlementPeriodFormatter.BillingPeriod> period = SettlementPeriodFormatter.parse(
+                "从:2026/8/1 00:00:00 至:2026/8/31 23:59:59.999");
+
+        assertThat(period).isPresent();
+        assertThat(period.get().start()).isEqualTo(LocalDate.of(2026, 8, 1));
+        assertThat(period.get().end()).isEqualTo(LocalDate.of(2026, 8, 31));
+        assertThat(SettlementPeriodFormatter.formatClosingDate(period.get())).isEqualTo("2026年8月31日");
+    }
+
+    @Test
     void parsesIsoDateRangeFromBillPeriod() {
         Optional<SettlementPeriodFormatter.BillingPeriod> period = SettlementPeriodFormatter.parse(
                 "从:2026/4/26 00:00:00 至: 2026/5/25 23:59:59.999");

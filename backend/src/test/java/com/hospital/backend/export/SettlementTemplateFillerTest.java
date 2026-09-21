@@ -313,6 +313,66 @@ class SettlementTemplateFillerTest {
     }
 
     @Test
+    void appliesExportDiscountOnceForHulanRmSettlement() throws Exception {
+        HospitalReconciliationJob job = new HospitalReconciliationJob();
+        job.setHospitalName("呼兰区第一人民医院");
+        job.setLogisticsFee(650.0);
+        job.setLogisticsTripCount(13);
+
+        HospitalReconciliationRow row = new HospitalReconciliationRow();
+        row.setPackName("测试包");
+        row.setPackCount(1);
+        row.setCorrectedTotalPrice(10044.65);
+
+        JsonNode compiledRules = JsonUtils.getObjectMapper().readTree("""
+                {"billingPolicies":[
+                  {"policyType":"DISCOUNT","name":"结款七折",
+                   "params":{"rate":0.7,"applyStage":"export_only"},"priority":100},
+                  {"policyType":"LOGISTICS","name":"物流50","params":{"feePerTrip":50}}
+                ]}
+                """);
+
+        double inputTotal = filler.resolveSterilizeInputTotal(job, compiledRules, List.of(row));
+        List<SettlementTemplateFiller.SettlementFeeRow> rows = filler.buildFeeRows(
+                job, inputTotal, compiledRules, List.of(row));
+
+        SettlementTemplateFiller.SettlementFeeRow sterilize = rows.stream()
+                .filter(r -> "灭菌费用".equals(r.getItemName()))
+                .findFirst()
+                .orElseThrow();
+
+        assertThat(inputTotal).isEqualTo(10044.65);
+        assertThat(sterilize.getAmount()).isEqualTo(7031.25);
+        assertThat(sterilize.getRemark()).isEqualTo("七折优惠");
+        assertThat(filler.computeTotalAmount(rows)).isEqualTo(7031.25 + 650.0);
+    }
+
+    @Test
+    void settlementOnlyDiscountRemarkIsShortLabel() throws Exception {
+        HospitalReconciliationJob job = new HospitalReconciliationJob();
+        job.setHospitalName("工程大学医院");
+
+        JsonNode compiledRules = JsonUtils.getObjectMapper().readTree("""
+                {"billingPolicies":[
+                  {"policyType":"DISCOUNT","name":"结款九折",
+                   "params":{"rate":0.9,"applyStage":"settlement_only"},"priority":100}
+                ]}
+                """);
+
+        List<SettlementTemplateFiller.SettlementFeeRow> rows = filler.buildFeeRows(
+                job, 10000.0, compiledRules);
+
+        SettlementTemplateFiller.SettlementFeeRow sterilize = rows.stream()
+                .filter(r -> "灭菌费用".equals(r.getItemName()))
+                .findFirst()
+                .orElseThrow();
+
+        assertThat(sterilize.getAmount()).isEqualTo(9000.0);
+        assertThat(sterilize.getRemark()).isEqualTo("九折优惠");
+        assertThat(sterilize.getRemark()).doesNotContain("命中");
+    }
+
+    @Test
     void appliesWave4OverrideForShengYyXf() throws Exception {
         HospitalReconciliationJob job = new HospitalReconciliationJob();
         job.setHospitalName("黑龙江省医院（香坊院区）");

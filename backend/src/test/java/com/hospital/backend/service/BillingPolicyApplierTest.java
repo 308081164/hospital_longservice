@@ -27,6 +27,13 @@ class BillingPolicyApplierTest {
                 rules, "", "", "", "工程大学", 10000.0);
         assertThat(discount).isNotNull();
         assertThat(discount.price()).isEqualTo(9000.0);
+        assertThat(discount.note()).isEqualTo("九折优惠");
+    }
+
+    @Test
+    void formatSettlementDiscountRemarkUsesSevenFoldLabel() {
+        assertThat(BillingPolicyApplier.formatSettlementDiscountRemark("结款七折", 0.7))
+                .isEqualTo("七折优惠");
     }
 
     @Test
