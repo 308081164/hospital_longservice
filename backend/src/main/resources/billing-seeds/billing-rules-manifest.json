@@ -1,7 +1,7 @@
 {
   "version": 1,
-  "generated_at": "2026-09-21T06:02:21Z",
-  "manifest_hash": "8d48e054d4d77fecd1eac6d50e4ea04abd3cc20fa431db3fd44c0efa88ee3e24",
+  "generated_at": "2026-09-21T08:45:57Z",
+  "manifest_hash": "cb5c35486249195e87f14266e5fdd77c57584e3211456709e05e0d51c63d41af",
   "billing_enabled_count": 33,
   "active_billing_enabled_count": 33,
   "customers": {
@@ -143,6 +143,9 @@
           "keywords": [
             "双@contains"
           ],
+          "excludeKeywords": [
+            "/双"
+          ],
           "skipPackaging": true,
           "skipDiscount": true,
           "isActive": true,
@@ -242,7 +245,7 @@
         {
           "ruleType": "PRICE_PER_INSTRUMENT",
           "name": "电机厂双按件5.5免包材自动",
-          "priority": 18,
+          "priority": 8,
           "price": 5.5,
           "keywords": [
             "/双"
@@ -260,7 +263,7 @@
         {
           "ruleType": "EXTRA_FEE",
           "name": "电机厂双内层纸塑袋加价2.5自动",
-          "priority": 18,
+          "priority": 8,
           "fee": 2.5,
           "keywords": [
             "/双"

@@ -12,6 +12,9 @@
       "keywords": [
         "双@contains"
       ],
+      "excludeKeywords": [
+        "/双"
+      ],
       "skipPackaging": true,
       "skipDiscount": true,
       "isActive": true,
@@ -111,7 +114,7 @@
     {
       "ruleType": "PRICE_PER_INSTRUMENT",
       "name": "电机厂双按件5.5免包材自动",
-      "priority": 18,
+      "priority": 8,
       "price": 5.5,
       "keywords": [
         "/双"
@@ -129,7 +132,7 @@
     {
       "ruleType": "EXTRA_FEE",
       "name": "电机厂双内层纸塑袋加价2.5自动",
-      "priority": 18,
+      "priority": 8,
       "fee": 2.5,
       "keywords": [
         "/双"

@@ -1,6 +1,6 @@
 {
-  "baseline_hash": "10a5ab996d6653537fc74ca0b8c40312eea093b713cdc16392b83bf694dfb762",
-  "generated_at": "2026-09-21T06:02:21Z",
+  "baseline_hash": "54fa8ee8aa95227774cdeee3690a2f0fe587711b05c0448a793ef6358459efa4",
+  "generated_at": "2026-09-21T08:45:57Z",
   "source": "billing-rules-manifest@01836c66115726ff7229db58f16020cb6e65f7069beee13551669c1031fd7764",
   "customer_count": 33,
   "customers": [
@@ -14,7 +14,7 @@
       "code": "GUOYAO-2",
       "file": "baseline/GUOYAO-2.json",
       "ruleCount": 33,
-      "fileHash": "936977e7822e2764fc58a2582ab86d7d03cc60c9ad9ce7c2c854a291032c0a3e"
+      "fileHash": "90fdf12ede731015e01feefff0842d3c6a71b9031c74ca3b68e112bc086729ad"
     },
     {
       "code": "FNN-YY",
