@@ -20,8 +20,11 @@ public class FuyiSupplementExportService {
 
     public byte[] exportDeptSummary(HospitalReconciliationJob job, List<HospitalReconciliationRow> rows)
             throws IOException {
-        String hospitalName = job != null ? job.getHospitalName() : null;
-        return FuyiSupplementWorkbookBuilder.buildDeptSummaryWorkbook(hospitalName, rows);
+        return FuyiSupplementWorkbookBuilder.buildDeptSummaryWorkbook(
+                job,
+                FuyiSupplementWorkbookBuilder.aggregateDeptTotals(rows),
+                exportSupport.resolveWashFee(job),
+                exportSupport.resolveLogisticsFee(job));
     }
 
     public byte[] exportLogisticsAllocation(HospitalReconciliationJob job, List<HospitalReconciliationRow> rows)

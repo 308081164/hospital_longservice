@@ -77,6 +77,16 @@ public final class SettlementPeriodFormatter {
         return company + "\n" + formatClosingDate(period);
     }
 
+    /** 分科室汇总标题：{医院}各科室{起止日期}灭菌价格汇总 */
+    public static String formatDeptSummaryTitle(String hospitalName, BillingPeriod period) {
+        String hospital = hospitalName != null ? hospitalName.trim() : "医院";
+        if (period == null) {
+            return hospital + "各科室灭菌价格汇总";
+        }
+        return hospital + "各科室" + formatCnDate(period.start()) + "-"
+                + formatCnDate(period.end()) + "灭菌价格汇总";
+    }
+
     /** 替换 closingText 中首个 yyyy年M月d日 为账期末日。 */
     public static String replaceClosingDate(String closingText, BillingPeriod period) {
         if (closingText == null || closingText.isBlank() || period == null) {

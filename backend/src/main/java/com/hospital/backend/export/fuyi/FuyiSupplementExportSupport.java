@@ -7,6 +7,7 @@ import com.hospital.backend.entity.HospitalReconciliationJob;
 import com.hospital.backend.entity.HospitalReconciliationRow;
 import com.hospital.backend.mapper.HospitalPricingRuleMapper;
 import com.hospital.backend.service.BillingMonthResolver;
+import com.hospital.backend.service.BillingPolicyInspector;
 import com.hospital.backend.service.ClerkCompiledRulesResolver;
 import com.hospital.backend.service.CustomerResolver;
 import com.hospital.backend.service.LogisticsAllocationService;
@@ -39,6 +40,28 @@ public class FuyiSupplementExportSupport {
         return customerResolver.resolveByName(hospitalName)
                 .map(c -> CUSTOMER_CODE.equals(c.getCode()))
                 .orElse(false);
+    }
+
+    public Double resolveWashFee(HospitalReconciliationJob job) {
+        if (job == null) {
+            return null;
+        }
+        JsonNode baseRules = loadRulesForJob(job);
+        JsonNode compiled = clerkCompiledRulesResolver.resolve(job, baseRules);
+        String billingMonth = BillingMonthResolver.resolve(job);
+        BillingPolicyInspector.OptionalSettlementExtra extra =
+                BillingPolicyInspector.resolveSettlementExtra(compiled, billingMonth);
+        if (extra == null || extra.amount() <= 0.005) {
+            return null;
+        }
+        return roundCurrency(extra.amount());
+    }
+
+    public Double resolveLogisticsFee(HospitalReconciliationJob job) {
+        if (job == null || job.getLogisticsFee() == null) {
+            return null;
+        }
+        return roundCurrency(job.getLogisticsFee());
     }
 
     public Map<String, Double> aggregateDeptTotals(List<HospitalReconciliationRow> rows) {
