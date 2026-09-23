@@ -56,18 +56,14 @@ public final class SettlementPeriodFormatter {
     }
 
     /**
-     * 标题：{医院名}{规则名}结款通知函；规则名缺省为「标准灭菌计费规则」。
+     * 标题：{医院名}结款通知函（不含计费规则名称）。
      */
     public static String buildTitle(String hospitalName, String planName) {
         String hospital = hospitalName != null ? hospitalName.trim() : "";
-        String ruleLabel = resolveRuleLabel(planName);
         if (hospital.isEmpty()) {
-            return ruleLabel + "结款通知函";
+            return "结款通知函";
         }
-        if (ruleLabel.isEmpty() || hospital.equals(ruleLabel)) {
-            return hospital + "结款通知函";
-        }
-        return hospital + ruleLabel + "结款通知函";
+        return hospital + "结款通知函";
     }
 
     public static String buildClosingText(String companyName, BillingPeriod period) {
@@ -95,19 +91,6 @@ public final class SettlementPeriodFormatter {
         return closingText.replaceFirst(
                 "(\\d{4})年(\\d{1,2})月(\\d{1,2})日",
                 formatClosingDate(period));
-    }
-
-    private static String resolveRuleLabel(String planName) {
-        if (planName == null || planName.isBlank()) {
-            return "标准灭菌计费规则";
-        }
-        String trimmed = planName.trim();
-        if (trimmed.endsWith("结款通知函")) {
-            trimmed = trimmed.substring(0, trimmed.length() - "结款通知函".length()).trim();
-        } else if (trimmed.endsWith("结款函")) {
-            trimmed = trimmed.substring(0, trimmed.length() - "结款函".length()).trim();
-        }
-        return trimmed.isBlank() ? "标准灭菌计费规则" : trimmed;
     }
 
     private static List<LocalDate> extractDates(String text) {

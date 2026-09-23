@@ -4330,7 +4330,7 @@ public class HospitalReconciliationServiceImpl implements HospitalReconciliation
         int saluteRow = contentRow + 1;
         int closingRow = saluteRow + 1;
 
-        // ===== Row 6: 医院名 + 规则名 + "结款通知函" =====
+        // ===== Row 6: 医院名 + "结款通知函" =====
         String title = SettlementPeriodFormatter.buildTitle(displayHospital, planName);
         log.info("writeSettlementTemplate: D6 title={}", title);
         setCellValue(sheet, "D6", cleanExcelText(title));

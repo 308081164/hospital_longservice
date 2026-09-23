@@ -42,9 +42,13 @@ class SettlementPeriodFormatterTest {
     }
 
     @Test
-    void buildTitleIncludesHospitalName() {
+    void buildTitleIncludesHospitalNameOnly() {
         assertThat(SettlementPeriodFormatter.buildTitle("黑龙江菁华上德生殖妇产医院", "标准灭菌计费规则"))
-                .isEqualTo("黑龙江菁华上德生殖妇产医院标准灭菌计费规则结款通知函");
+                .isEqualTo("黑龙江菁华上德生殖妇产医院结款通知函");
+        assertThat(SettlementPeriodFormatter.buildTitle("呼兰区第一人民医院", null))
+                .isEqualTo("呼兰区第一人民医院结款通知函");
+        assertThat(SettlementPeriodFormatter.buildTitle("", "标准灭菌计费规则"))
+                .isEqualTo("结款通知函");
     }
 
     @Test
