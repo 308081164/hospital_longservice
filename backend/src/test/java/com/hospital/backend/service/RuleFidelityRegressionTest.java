@@ -363,10 +363,10 @@ class RuleFidelityRegressionTest {
                 "type", "高温无纺布-90×90-50g",
                 "packName", "美容科排针包50件盘1/W6050",
                 "packageMaterial", "无纺布-90×90-50g",
-                "instrumentCount", 153,
-                "packCount", 3,
+                "instrumentCount", 51,
+                "packCount", 1,
                 "unitPrice", 33.0,
-                "totalPrice", 99.0
+                "totalPrice", 33.0
         ));
         assertThat(result.status).isEqualTo("unchanged");
         assertThat(result.expectedUnitPrice).isEqualTo(33.0);
