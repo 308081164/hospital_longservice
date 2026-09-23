@@ -119,7 +119,15 @@ declare namespace Api {
       bagSizes: BagSizeConfig[]
       perPackagePrice: number
       minCharge: number
+      /** 免袋费阈值，常与 minCharge 相同 */
+      freeBagFeeThreshold?: number
+      /** standard | none | fuyi */
+      capMode?: string
+      chargeDoubleBagWhenCapped?: boolean
     }
+
+    /** 低温按件精确价表（引擎优先于 tierPrices） */
+    type LowTempPriceTable = Record<string, number>
 
     /** 低温阶梯价格 */
     interface TierPriceConfig {
@@ -132,12 +140,15 @@ declare namespace Api {
       tierPrices: TierPriceConfig[]
       remainderPerPiecePrice?: number
       minSingleCharge: number
+      priceTable?: LowTempPriceTable
     }
 
     /** 低温纸塑袋配置 */
     interface LowTempPaperPlasticConfig {
       bagSizes: BagSizeConfig[]
       tierPrices: TierPriceConfig[]
+      remainderPerPiecePrice?: number
+      priceTable?: LowTempPriceTable
     }
 
     /** 特殊固定单价规则 */
@@ -146,8 +157,12 @@ declare namespace Api {
       hospitals?: string[]
       keywords: string[]
       price: number
-      pricePerInstrument?: boolean
+      priority?: number
+      matchMode?: string
+      temperature?: string
+      skipDiscount?: boolean
       skipPackaging?: boolean
+      pricePerInstrument?: boolean
       bagSizeEquals?: number
       minBagSizeInclusive?: number
       maxBagSizeInclusive?: number
@@ -162,8 +177,14 @@ declare namespace Api {
       hospitals?: string[]
       keywords: string[]
       keywordMatchMode?: 'exact_token' | 'contains'
+      priority?: number
       threshold: number
       foldRatio: number
+      unitPrice?: number
+      skipPackaging?: boolean
+      flatPackPrice?: number
+      minInstrumentCount?: number
+      maxInstrumentCount?: number
       bagSizeEquals?: number
       minBagSizeInclusive?: number
       maxBagSizeInclusive?: number
@@ -176,6 +197,9 @@ declare namespace Api {
       hospitals?: string[]
       keywords: string[]
       fee: number
+      priority?: number
+      matchMode?: string
+      manualReview?: boolean
       bagSizeEquals?: number
       minBagSizeInclusive?: number
       maxBagSizeInclusive?: number
@@ -184,11 +208,31 @@ declare namespace Api {
       maxInstrumentCount?: number
     }
 
+    /** 价格倍率规则（多由客户商品策略编译注入） */
+    interface SpecialPriceMultiplierRule {
+      name?: string
+      multiplier: number
+      keywords?: string[]
+      skipHospitalDiscount?: boolean
+      priority?: number
+      ruleId?: number
+    }
+
+    /** 0 元导入覆盖价 */
+    interface SpecialZeroPriceOverrideRule {
+      name?: string
+      price: number
+      keywords?: string[]
+      priority?: number
+    }
+
     /** 特殊计费规则 */
     interface SpecialRulesConfig {
       fixedPrices: SpecialFixedPriceRule[]
       foldRules: SpecialFoldRule[]
       extraFees: SpecialExtraFeeRule[]
+      priceMultipliers?: SpecialPriceMultiplierRule[]
+      zeroPriceOverrides?: SpecialZeroPriceOverrideRule[]
     }
 
     /** 包装收费选项 */
@@ -304,6 +348,19 @@ declare namespace Api {
       defaultPageMargin: string
     }
 
+    /** 敷料包无纺布 W 码分档 */
+    interface DressingPackNonWovenConfig {
+      below90: number
+      equals90: number
+      range12to15: number
+    }
+
+    /** 敷料包计价（棉球/纱布纸塑袋固定价 + 无纺布 W 码） */
+    interface DressingPackConfig {
+      cottonPaperPlastic: Record<string, number>
+      nonWoven: DressingPackNonWovenConfig
+    }
+
     /** 定价规则完整配置 */
     interface PricingRules {
       version: string
@@ -311,6 +368,7 @@ declare namespace Api {
       highTemperature: HighTemperatureConfig
       lowTemperature: LowTemperatureConfig
       packaging: PackagingRulesConfig
+      dressingPack?: DressingPackConfig
       needle: NeedleConfig
       cleaning: CleaningRulesConfig
       logistics: LogisticsRulesConfig

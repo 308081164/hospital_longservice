@@ -25,6 +25,8 @@ export type RuleCategoryTheme =
   | 'heat'
   | 'cold'
   | 'packaging'
+  | 'dressing'
+  | 'special'
   | 'needle'
   | 'cleaning'
   | 'logistics'
@@ -203,6 +205,37 @@ const badge = computed(() => props.badge ?? props.category.slice(0, 2))
   color: #14532d;
 }
 
+/* 特色规则：靛紫渐变 */
+.rule-category-panel--special {
+  border-color: #c4b5fd;
+}
+
+.rule-category-panel--special .rule-category-panel__header {
+  background: linear-gradient(135deg, #f5f3ff 0%, #ede9fe 100%);
+  border-bottom: 2px solid #a78bfa;
+}
+
+.rule-category-panel--special .rule-category-panel__badge {
+  width: 44px;
+  height: 44px;
+  border-radius: 8px;
+  background: #7c3aed;
+  color: #fff;
+}
+
+.rule-category-panel--special .rule-category-panel__title {
+  color: #5b21b6;
+}
+
+.rule-category-panel--special .rule-category-panel__subtitle {
+  color: #6d28d9;
+}
+
+.rule-category-panel--special .rule-category-panel__tag {
+  background: #ddd6fe;
+  color: #5b21b6;
+}
+
 /* 小件识别：紫色居中强调条 */
 .rule-category-panel--needle {
   border-color: #d8b4fe;
@@ -278,6 +311,40 @@ const badge = computed(() => props.badge ?? props.category.slice(0, 2))
 .rule-category-panel--cleaning .rule-category-panel__tag {
   background: #e2e8f0;
   color: #334155;
+}
+
+/* 敷料包：青绿圆角卡片 */
+.rule-category-panel--dressing {
+  border-color: #5eead4;
+}
+
+.rule-category-panel--dressing .rule-category-panel__header {
+  margin: 12px 12px 0;
+  padding: 14px 18px;
+  border-radius: 10px;
+  background: linear-gradient(135deg, #f0fdfa 0%, #ccfbf1 100%);
+  border: 1px solid #5eead4;
+}
+
+.rule-category-panel--dressing .rule-category-panel__badge {
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  background: #0d9488;
+  color: #fff;
+}
+
+.rule-category-panel--dressing .rule-category-panel__title {
+  color: #115e59;
+}
+
+.rule-category-panel--dressing .rule-category-panel__subtitle {
+  color: #0f766e;
+}
+
+.rule-category-panel--dressing .rule-category-panel__tag {
+  background: #99f6e4;
+  color: #134e4a;
 }
 
 /* 物流：琥珀斜纹底 */

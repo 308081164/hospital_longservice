@@ -147,24 +147,15 @@
         <ElTableColumn label="别名数" width="80" align="center">
           <template #default="{ row }">{{ row.alias_count ?? row.aliases?.length ?? 0 }}</template>
         </ElTableColumn>
-        <ElTableColumn label="科室/医生" width="100" align="center">
-          <template #default="{ row }">
-            <span v-if="deptPhysicianCountLabel(row)">{{ deptPhysicianCountLabel(row) }}</span>
-            <span v-else class="text-gray-400">—</span>
-          </template>
-        </ElTableColumn>
         <ElTableColumn min-width="180" show-overflow-tooltip>
           <template #default="{ row }">
             <span v-if="policySummaryForCustomer(row)">{{ policySummaryForCustomer(row) }}</span>
             <span v-else class="text-gray-400">—</span>
           </template>
         </ElTableColumn>
-        <ElTableColumn label="操作" width="240" fixed="right" align="center">
+        <ElTableColumn label="操作" width="140" fixed="right" align="center">
           <template #default="{ row }">
             <ElButton type="primary" link @click="openEdit(row)">编辑</ElButton>
-            <ElButton type="primary" link @click="openDeptPhysician(row)">
-              {{ $t('menus.billingConfig.deptPhysician') }}
-            </ElButton>
             <ElButton type="danger" link @click="handleDelete(row)">删除</ElButton>
           </template>
         </ElTableColumn>
@@ -250,21 +241,6 @@
           :state="billingPolicyState"
           :read-only="isReadOnlyConfig"
         />
-
-        <ElFormItem v-if="editingId" :label="$t('menus.billingConfig.deptPhysician')">
-          <div class="flex flex-wrap items-center gap-2 text-sm">
-            <ElTag type="info" effect="plain">
-              {{ $t('menus.billingConfig.departmentCount') }}:
-              {{ deptPhysicianSummary.departments }}
-            </ElTag>
-            <ElTag type="info" effect="plain">
-              {{ $t('menus.billingConfig.physicianCount') }}: {{ deptPhysicianSummary.physicians }}
-            </ElTag>
-            <RouterLink :to="customerDeptPhysicianPath(editingId)" class="text-primary text-xs">
-              {{ $t('menus.billingConfig.goToManage') }}
-            </RouterLink>
-          </div>
-        </ElFormItem>
 
         <CustomerExportTemplatePanel
           ref="exportTemplatePanelRef"
@@ -701,7 +677,6 @@
   )
 
   const billingPolicyState = reactive<BillingPolicyPanelState>(createEmptyBillingPolicyState())
-  const deptPhysicianSummary = reactive({ departments: 0, physicians: 0 })
   const exportTemplatePanelRef = ref<InstanceType<typeof CustomerExportTemplatePanel> | null>(null)
   const ruleConflicts = ref<Array<{ signature: string; ruleIndexes: number[]; ruleNames?: string[] }>>([])
   const showInactiveRules = ref(false)
@@ -1297,13 +1272,6 @@
     }
   }
 
-  function deptPhysicianCountLabel(row: Api.MasterData.CustomerRecord) {
-    const d = row.department_count ?? row.departmentCount
-    const p = row.physician_count ?? row.physicianCount
-    if (d == null && p == null) return null
-    return `${d ?? 0}/${p ?? 0}`
-  }
-
   async function syncLogisticsMergeGroup(customerId: number) {
     const groupId = billingPolicyState.logisticsMergeGroupId
     if (!groupId) return
@@ -1388,25 +1356,6 @@
     void loadProducts()
   }
 
-  function customerDeptPhysicianPath(customerId: number | string) {
-    return `/master-data/customers/${customerId}/dept-physician`
-  }
-
-  function resolveCustomerRowId(row: Api.MasterData.CustomerRecord): number | undefined {
-    const id = row.id ?? (row as { customer_id?: number }).customer_id
-    if (id == null || Number.isNaN(Number(id))) return undefined
-    return Number(id)
-  }
-
-  function openDeptPhysician(row: Api.MasterData.CustomerRecord) {
-    const customerId = resolveCustomerRowId(row)
-    if (!customerId) {
-      ElMessage.warning('无法获取客户 ID')
-      return
-    }
-    void router.push(customerDeptPhysicianPath(customerId))
-  }
-
   function openEdit(row: Api.MasterData.CustomerRecord) {
     advancedCollapseActive.value = []
     showInactiveRules.value = false
@@ -1436,8 +1385,6 @@
     )
     syncBillingPolicyStateFromForm()
     form.productRules = (row.product_rules ?? []).map(normalizeProductRule)
-    deptPhysicianSummary.departments = row.department_count ?? row.departmentCount ?? 0
-    deptPhysicianSummary.physicians = row.physician_count ?? row.physicianCount ?? 0
     resetRuleDialog()
     drawerVisible.value = true
     void loadProducts()

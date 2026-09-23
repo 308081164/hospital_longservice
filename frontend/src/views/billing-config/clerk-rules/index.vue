@@ -41,6 +41,11 @@
           class="mb-4"
           :title="t('menus.billingConfig.clerkRulesScopeHint')"
         />
+        <p class="mb-4 text-xs text-gray-500">
+          全行业默认物流费、结款函与导出命名请在
+          <RouterLink to="/billing-config/bill-operations" class="text-primary">账单运营</RouterLink>
+          中维护。
+        </p>
 
         <div v-if="attachmentRefs.length" class="mb-4">
           <div class="text-sm font-medium mb-2">{{ t('menus.billingConfig.clerkRuleAttachments') }}</div>

@@ -305,6 +305,12 @@
       "logisticsCard": "Logistics Card",
       "roster": "Doctor Roster",
       "externalInstruments": "External Instruments",
+      "billOperations": "Bill Operations",
+      "billOperationsDesc": "Global logistics fees, settlement letter templates, and export naming—separate from sterilization pricing. Per-hospital clerk rules:",
+      "billOperationsClerkHint": ".",
+      "billOpsLogistics": "Logistics",
+      "billOpsSettlement": "Settlement Letter",
+      "billOpsExport": "Export",
       "clerkRules": "Clerk Rules",
       "clerkRulesDesc": "Applied only at bill/settlement export; decoupled from pricing rules",
       "clerkRulesCount": "{count} hospitals",
@@ -898,7 +904,17 @@
       "rowCountWithTotal": "{current} rows, {total} total",
       "anomalyLoading": "Loading all rows from server, please wait for large datasets...",
       "sheetFilterLoading": "Loading department data...",
-      "anomalyFilterActive": "Showing anomalies only ({context}{total} rows)"
+      "anomalyFilterActive": "Showing anomalies only ({context}{total} rows)",
+      "anomalyCategoryAll": "All categories",
+      "anomalyCategoryOption": "{label} ({count})",
+      "anomalyCategories": {
+        "status_warning": "Needs review",
+        "status_corrected": "Corrected",
+        "price_mismatch": "Unit price mismatch",
+        "manual_review": "Manual review",
+        "field_check": "Field check",
+        "amount_difference": "Amount difference"
+      }
     },
     "settlementSummary": {
       "title": "Monthly settlement summary",

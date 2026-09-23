@@ -305,6 +305,12 @@
       "logisticsCard": "物流卡",
       "roster": "花名册管理",
       "externalInstruments": "外来器械",
+      "billOperations": "账单运营",
+      "billOperationsDesc": "全行业默认物流费、结款函模板与导出命名；与灭菌计价分离，统一在此维护。各院差异化内勤规则见",
+      "billOperationsClerkHint": "。",
+      "billOpsLogistics": "物流",
+      "billOpsSettlement": "结款函",
+      "billOpsExport": "导出",
       "clerkRules": "内勤规则",
       "clerkRulesDesc": "仅作用于账单/结款函导出阶段，不参与对价页计价；与特殊计价规则完全解耦",
       "clerkRulesCount": "已建档 {count} 家",
@@ -912,7 +918,17 @@
       "rowCountWithTotal": "{current} 行，共 {total} 行",
       "anomalyLoading": "正在从服务器加载全量数据，数据量较大时请耐心等待...",
       "sheetFilterLoading": "正在加载科室数据...",
-      "anomalyFilterActive": "当前仅显示异常行（{context}共 {total} 条）"
+      "anomalyFilterActive": "当前仅显示异常行（{context}共 {total} 条）",
+      "anomalyCategoryAll": "全部分类",
+      "anomalyCategoryOption": "{label}（{count}）",
+      "anomalyCategories": {
+        "status_warning": "待复核",
+        "status_corrected": "已修正",
+        "price_mismatch": "单价不一致",
+        "manual_review": "人工审核",
+        "field_check": "字段核对",
+        "amount_difference": "金额差额"
+      }
     },
     "settlementSummary": {
       "title": "月度结算摘要",

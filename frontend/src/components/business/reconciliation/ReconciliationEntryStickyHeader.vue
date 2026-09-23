@@ -143,6 +143,27 @@
             <ElIcon v-if="entry.anomalyLoading" class="is-loading"><Loading /></ElIcon>
           </span>
         </ElCheckbox>
+        <ElSelect
+          v-if="entry.onlyShowAbnormal"
+          :model-value="entry.anomalyCategoryFilters ?? []"
+          multiple
+          collapse-tags
+          collapse-tags-tooltip
+          clearable
+          size="small"
+          class="anomaly-category-select"
+          :placeholder="t('reconciliation.preview.anomalyCategoryAll')"
+          :disabled="entry.anomalyLoading || !entry.allAnomalyRows?.length"
+          @change="onAnomalyCategoryChange"
+        >
+          <ElOption
+            v-for="option in anomalyCategoryOptions"
+            :key="option.value"
+            :label="formatAnomalyCategoryLabel(option)"
+            :value="option.value"
+            :disabled="option.count === 0"
+          />
+        </ElSelect>
         <ElButton
           v-if="entry.savedJobId && canEdit"
           size="small"
@@ -211,7 +232,7 @@
         >
           {{
             t('reconciliation.preview.anomalyFilterActive', {
-              context: entry.selectedSheetFilter ? `${entry.selectedSheetFilter} · ` : '',
+              context: anomalyFilterContext,
               total: entry.displayTotal
             })
           }}
@@ -300,6 +321,11 @@
   import { useBillingPermission } from '@/composables/useBillingPermission'
   import { exportTypeI18nKey, resolveJobExportTypes } from '@/utils/hospitalExportCapabilities'
   import { resolveHospitalBadgeName } from '@/utils/reconciliationHospitalName'
+  import {
+    buildAnomalyCategoryOptions,
+    type AnomalyCategoryOption,
+    type ReconciliationAnomalyCategory
+  } from '@/utils/reconciliationAnomaly'
 
   const props = defineProps<{
     fileName: string
@@ -330,6 +356,7 @@
     'select-sheet': [sheetName: string | null]
     process: []
     'toggle-anomaly': []
+    'anomaly-category-change': [filters: ReconciliationAnomalyCategory[]]
     'save-changes': []
     reprice: []
     'open-unmatched': []
@@ -352,6 +379,36 @@
   )
 
   const canExportPerm = computed(() => canExport.value)
+
+  const anomalyCategoryOptions = computed<AnomalyCategoryOption[]>(() =>
+    buildAnomalyCategoryOptions(
+      (props.entry.allAnomalyRows ?? []).map((row) => row as Record<string, unknown>)
+    )
+  )
+
+  const anomalyFilterContext = computed(() => {
+    const sheetPart = props.entry.selectedSheetFilter ? `${props.entry.selectedSheetFilter} · ` : ''
+    const filters = props.entry.anomalyCategoryFilters ?? []
+    if (!filters.length) {
+      return sheetPart
+    }
+    const labels = filters
+      .map((value) => t(`reconciliation.preview.anomalyCategories.${value}`))
+      .join('、')
+    return `${sheetPart}${labels} · `
+  })
+
+  function formatAnomalyCategoryLabel(option: AnomalyCategoryOption): string {
+    const label = t(`reconciliation.preview.anomalyCategories.${option.value}`)
+    return t('reconciliation.preview.anomalyCategoryOption', {
+      label,
+      count: option.count
+    })
+  }
+
+  function onAnomalyCategoryChange(value: ReconciliationAnomalyCategory[]) {
+    emit('anomaly-category-change', value ?? [])
+  }
 
   const reviewLabelMap: Record<string, string> = {
     pending: '待审核',
@@ -625,6 +682,10 @@
     gap: 4px;
     align-items: center;
     font-size: 12px;
+  }
+
+  .anomaly-category-select {
+    width: 168px;
   }
 
   .legend-trigger {

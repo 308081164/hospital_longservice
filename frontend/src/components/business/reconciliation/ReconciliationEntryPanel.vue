@@ -25,6 +25,7 @@
       @select-sheet="(sheet) => emit('select-sheet', sheet)"
       @process="emit('process')"
       @toggle-anomaly="emit('toggle-anomaly')"
+      @anomaly-category-change="(filters) => emit('anomaly-category-change', filters)"
       @save-changes="emit('save-changes')"
       @reprice="emit('reprice')"
       @open-unmatched="emit('open-unmatched')"
@@ -123,6 +124,7 @@
   import ReconciliationRowDetailDialog from '@/components/business/reconciliation/ReconciliationRowDetailDialog.vue'
   import { buildReconciliationRowKey } from '@/composables/useReconciliationEntryEditing'
   import type { ReconciliationHistoryGroup } from '@/composables/useReconciliationHistory'
+  import type { ReconciliationAnomalyCategory } from '@/utils/reconciliationAnomaly'
 
   export interface ReconciliationEntryPanelEntry {
     status: string
@@ -132,6 +134,8 @@
     hospitalName?: string
     processedRows: Record<string, unknown>[]
     onlyShowAbnormal: boolean
+    anomalyCategoryFilters: ReconciliationAnomalyCategory[]
+    allAnomalyRows: Record<string, unknown>[] | null
     anomalyLoading: boolean
     sheetFilterLoading: boolean
     displayPage: number
@@ -184,6 +188,7 @@
     'select-sheet': [sheetName: string | null]
     process: []
     'toggle-anomaly': []
+    'anomaly-category-change': [filters: ReconciliationAnomalyCategory[]]
     'save-changes': []
     reprice: []
     'open-unmatched': []

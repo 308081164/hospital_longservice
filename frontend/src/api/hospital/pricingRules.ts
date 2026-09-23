@@ -119,6 +119,108 @@ function createEmptySpecialRules(): Api.Hospital.SpecialRulesConfig {
     fixedPrices: [],
     foldRules: [],
     extraFees: [],
+    priceMultipliers: [],
+    zeroPriceOverrides: [],
+  }
+}
+
+function normalizePriceTable(value: unknown): Api.Hospital.LowTempPriceTable | undefined {
+  if (!isRecord(value)) return undefined
+  const result: Api.Hospital.LowTempPriceTable = {}
+  for (const [key, price] of Object.entries(value)) {
+    const count = key.trim()
+    if (!count) continue
+    result[count] = toNumber(price, 0)
+  }
+  return Object.keys(result).length ? result : undefined
+}
+
+function normalizeSpecialRules(value: unknown): Api.Hospital.SpecialRulesConfig {
+  const raw = isRecord(value) ? value : {}
+  const fixedPrices = Array.isArray(raw.fixedPrices)
+    ? raw.fixedPrices.map((item) => {
+        const rule = isRecord(item) ? item : {}
+        return {
+          ...rule,
+          name: typeof rule.name === 'string' ? rule.name : '',
+          keywords: Array.isArray(rule.keywords) ? (rule.keywords as string[]).filter(Boolean) : [],
+          price: toNumber(rule.price),
+        } as Api.Hospital.SpecialFixedPriceRule
+      })
+    : []
+  const foldRules = Array.isArray(raw.foldRules)
+    ? raw.foldRules.map((item) => {
+        const rule = isRecord(item) ? item : {}
+        return {
+          ...rule,
+          name: typeof rule.name === 'string' ? rule.name : '',
+          keywords: Array.isArray(rule.keywords) ? (rule.keywords as string[]).filter(Boolean) : [],
+          threshold: toNumber(rule.threshold),
+          foldRatio: toNumber(rule.foldRatio),
+          keywordMatchMode: rule.keywordMatchMode !== undefined
+            ? normalizeKeywordMatchMode(rule.keywordMatchMode)
+            : undefined,
+        } as Api.Hospital.SpecialFoldRule
+      })
+    : []
+  const extraFees = Array.isArray(raw.extraFees)
+    ? raw.extraFees.map((item) => {
+        const rule = isRecord(item) ? item : {}
+        return {
+          ...rule,
+          name: typeof rule.name === 'string' ? rule.name : '',
+          keywords: Array.isArray(rule.keywords) ? (rule.keywords as string[]).filter(Boolean) : [],
+          fee: toNumber(rule.fee),
+        } as Api.Hospital.SpecialExtraFeeRule
+      })
+    : []
+  const priceMultipliers = Array.isArray(raw.priceMultipliers)
+    ? (raw.priceMultipliers as Api.Hospital.SpecialPriceMultiplierRule[])
+    : []
+  const zeroPriceOverrides = Array.isArray(raw.zeroPriceOverrides)
+    ? (raw.zeroPriceOverrides as Api.Hospital.SpecialZeroPriceOverrideRule[])
+    : []
+  return {
+    fixedPrices,
+    foldRules,
+    extraFees,
+    priceMultipliers,
+    zeroPriceOverrides,
+  }
+}
+
+function createDefaultDressingPack(): Api.Hospital.DressingPackConfig {
+  return {
+    cottonPaperPlastic: { '15': 2.5, '20': 4 },
+    nonWoven: {
+      below90: 25,
+      equals90: 30,
+      range12to15: 35,
+    },
+  }
+}
+
+function normalizeDressingPack(value: unknown): Api.Hospital.DressingPackConfig {
+  const raw = isRecord(value) ? value : {}
+  const cottonRaw = isRecord(raw.cottonPaperPlastic) ? raw.cottonPaperPlastic : {}
+  const cottonPaperPlastic: Record<string, number> = {}
+  for (const [key, price] of Object.entries(cottonRaw)) {
+    const size = key.trim()
+    if (!size) continue
+    cottonPaperPlastic[size] = toNumber(price, 0)
+  }
+  if (!Object.keys(cottonPaperPlastic).length) {
+    Object.assign(cottonPaperPlastic, createDefaultDressingPack().cottonPaperPlastic)
+  }
+
+  const nonWovenRaw = isRecord(raw.nonWoven) ? raw.nonWoven : {}
+  return {
+    cottonPaperPlastic,
+    nonWoven: {
+      below90: toNumber(nonWovenRaw.below90, 25),
+      equals90: toNumber(nonWovenRaw.equals90, 30),
+      range12to15: toNumber(nonWovenRaw.range12to15, 35),
+    },
   }
 }
 
@@ -224,6 +326,7 @@ function convertLegacyRules(record: Record<string, unknown>): Record<string, unk
       },
     },
     packaging: createDefaultPackagingRules(),
+    dressingPack: normalizeDressingPack(record.dressingPack),
     needle: isRecord(record.needle) ? record.needle : { threshold: 5, foldRatio: 5, keywordMatchMode: 'exact_token', keywords: ['小件', '探针', '穿刺针', '缝合针', '车针', '拔髓针', '成型片', '根管针', '根管锉', '支抗钉', '洁牙机尖', '球钻', '挖勺'] },
     cleaning: isRecord(record.cleaning)
       ? record.cleaning
@@ -314,6 +417,21 @@ export function validatePricingRules(rules: Partial<Api.Hospital.PricingRules>):
       if (bag.price <= 0) errors.push(`低温纸塑袋袋型 ${index + 1} 的袋费必须大于 0`)
       if (!bag.keywords.length) errors.push(`低温纸塑袋袋型 ${index + 1} 至少需要一个关键词`)
     })
+  }
+
+  if (rules.dressingPack) {
+    const cotton = rules.dressingPack.cottonPaperPlastic ?? {}
+    const sizes = Object.keys(cotton)
+    if (!sizes.length) errors.push('敷料包纸塑袋至少需要配置一个规格单价')
+    sizes.forEach((size) => {
+      if (toNumber(cotton[size], -1) < 0) errors.push(`敷料包纸塑袋规格 ${size}cm 单价不能小于 0`)
+    })
+    const nw = rules.dressingPack.nonWoven
+    if (nw) {
+      if (nw.below90 < 0) errors.push('敷料包无纺布 W<90 单价不能小于 0')
+      if (nw.equals90 < 0) errors.push('敷料包无纺布 W=90 单价不能小于 0')
+      if (nw.range12to15 < 0) errors.push('敷料包无纺布 W120-150 单价不能小于 0')
+    }
   }
 
   if (!rules.packaging) {
@@ -439,7 +557,38 @@ export function normalizePricingRules(raw: unknown): Api.Hospital.PricingRules {
   const logistics = isRecord(record.logistics) ? record.logistics : {}
   const settlementLetter = isRecord(record.settlementLetter) ? record.settlementLetter : {}
   const exportOptions = isRecord(record.exportOptions) ? record.exportOptions : {}
-  const specialRules = isRecord(record.specialRules) ? record.specialRules : {}
+  const highTempPaperPlasticConfig: Api.Hospital.HighTempPaperPlasticConfig = {
+    bagSizes: normalizeBagSizes(highTempPaperPlastic.bagSizes),
+    perPackagePrice: toNumber(highTempPaperPlastic.perPackagePrice),
+    minCharge: toNumber(highTempPaperPlastic.minCharge),
+  }
+  if (highTempPaperPlastic.freeBagFeeThreshold !== undefined) {
+    highTempPaperPlasticConfig.freeBagFeeThreshold = toNumber(highTempPaperPlastic.freeBagFeeThreshold)
+  }
+  if (typeof highTempPaperPlastic.capMode === 'string' && highTempPaperPlastic.capMode.trim()) {
+    highTempPaperPlasticConfig.capMode = highTempPaperPlastic.capMode.trim()
+  }
+  if (highTempPaperPlastic.chargeDoubleBagWhenCapped !== undefined) {
+    highTempPaperPlasticConfig.chargeDoubleBagWhenCapped = Boolean(highTempPaperPlastic.chargeDoubleBagWhenCapped)
+  }
+
+  const lowTempNonWovenConfig: Api.Hospital.LowTempNonWovenConfig = {
+    tierPrices: normalizeTierPrices(lowTempNonWoven.tierPrices),
+    remainderPerPiecePrice: toNumber(lowTempNonWoven.remainderPerPiecePrice, 22),
+    minSingleCharge: toNumber(lowTempNonWoven.minSingleCharge),
+  }
+  const lowTempNonWovenPriceTable = normalizePriceTable(lowTempNonWoven.priceTable)
+  if (lowTempNonWovenPriceTable) lowTempNonWovenConfig.priceTable = lowTempNonWovenPriceTable
+
+  const lowTempPaperPlasticConfig: Api.Hospital.LowTempPaperPlasticConfig = {
+    bagSizes: normalizeBagSizes(lowTempPaperPlastic.bagSizes),
+    tierPrices: normalizeTierPrices(lowTempPaperPlastic.tierPrices),
+  }
+  if (lowTempPaperPlastic.remainderPerPiecePrice !== undefined) {
+    lowTempPaperPlasticConfig.remainderPerPiecePrice = toNumber(lowTempPaperPlastic.remainderPerPiecePrice, 22)
+  }
+  const lowTempPaperPlasticPriceTable = normalizePriceTable(lowTempPaperPlastic.priceTable)
+  if (lowTempPaperPlasticPriceTable) lowTempPaperPlasticConfig.priceTable = lowTempPaperPlasticPriceTable
 
   const rules: Api.Hospital.PricingRules = {
     version: typeof record.version === 'string' ? record.version : '',
@@ -450,23 +599,13 @@ export function normalizePricingRules(raw: unknown): Api.Hospital.PricingRules {
         flatPerPackagePrice: toNumber(highTempNonWoven.flatPerPackagePrice),
         flatRateThreshold: toNumber(highTempNonWoven.flatRateThreshold),
       },
-      paperPlastic: {
-        bagSizes: normalizeBagSizes(highTempPaperPlastic.bagSizes),
-        perPackagePrice: toNumber(highTempPaperPlastic.perPackagePrice),
-        minCharge: toNumber(highTempPaperPlastic.minCharge),
-      },
+      paperPlastic: highTempPaperPlasticConfig,
     },
     lowTemperature: {
-      nonWoven: {
-        tierPrices: normalizeTierPrices(lowTempNonWoven.tierPrices),
-        remainderPerPiecePrice: toNumber(lowTempNonWoven.remainderPerPiecePrice, 22),
-        minSingleCharge: toNumber(lowTempNonWoven.minSingleCharge),
-      },
-      paperPlastic: {
-        bagSizes: normalizeBagSizes(lowTempPaperPlastic.bagSizes),
-        tierPrices: normalizeTierPrices(lowTempPaperPlastic.tierPrices),
-      },
+      nonWoven: lowTempNonWovenConfig,
+      paperPlastic: lowTempPaperPlasticConfig,
     },
+    dressingPack: normalizeDressingPack(record.dressingPack),
     packaging: {
       enabled: packaging.enabled !== undefined ? Boolean(packaging.enabled) : true,
       selfPackedKeywords: Array.isArray(packaging.selfPackedKeywords) ? (packaging.selfPackedKeywords as string[]) : ['仅灭菌', '医院自行打包', '自行打包', '自带包装'],
@@ -497,20 +636,7 @@ export function normalizePricingRules(raw: unknown): Api.Hospital.PricingRules {
       mergeAdjacentDays: Boolean(logistics.mergeAdjacentDays),
       mergeWindowDays: typeof logistics.mergeWindowDays === 'number' ? logistics.mergeWindowDays : 1,
     },
-    specialRules: {
-      fixedPrices: Array.isArray(specialRules.fixedPrices)
-        ? (specialRules.fixedPrices as Api.Hospital.SpecialFixedPriceRule[])
-        : [],
-      foldRules: Array.isArray(specialRules.foldRules)
-        ? (specialRules.foldRules as Api.Hospital.SpecialFoldRule[]).map((rule) => ({
-            ...rule,
-            keywordMatchMode: normalizeKeywordMatchMode(rule.keywordMatchMode),
-          }))
-        : [],
-      extraFees: Array.isArray(specialRules.extraFees)
-        ? (specialRules.extraFees as Api.Hospital.SpecialExtraFeeRule[])
-        : [],
-    },
+    specialRules: normalizeSpecialRules(record.specialRules),
     settlementLetter: {
       companyName: typeof settlementLetter.companyName === 'string' ? settlementLetter.companyName : '',
       rowHeight: typeof settlementLetter.rowHeight === 'number' ? settlementLetter.rowHeight : 20,

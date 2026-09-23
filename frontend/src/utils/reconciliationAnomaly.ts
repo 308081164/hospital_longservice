@@ -2,6 +2,29 @@ import { parseReconciliationBillingContext } from '@/utils/reconciliationBilling
 
 const PRICE_TOLERANCE = 0.001
 
+/** 「仅异常」模式下的分类筛选项（与 isReconciliationAnomalyRow 口径对齐，可多标签叠加）。 */
+export type ReconciliationAnomalyCategory =
+  | 'status_warning'
+  | 'status_corrected'
+  | 'price_mismatch'
+  | 'manual_review'
+  | 'field_check'
+  | 'amount_difference'
+
+export const ALL_ANOMALY_CATEGORIES: ReconciliationAnomalyCategory[] = [
+  'status_warning',
+  'status_corrected',
+  'price_mismatch',
+  'manual_review',
+  'field_check',
+  'amount_difference'
+]
+
+export type AnomalyCategoryOption = {
+  value: ReconciliationAnomalyCategory
+  count: number
+}
+
 function toNumber(value: unknown): number | null {
   if (value == null || value === '') return null
   const parsed = Number(value)
@@ -33,6 +56,35 @@ export function needsManualRuleReview(row: Record<string, unknown>): boolean {
 }
 
 /**
+ * 判定单行归属的异常分类（一行可命中多个分类）。
+ */
+export function classifyReconciliationAnomalyCategories(
+  row: Record<string, unknown>,
+  options?: { includeFieldConsistency?: boolean }
+): ReconciliationAnomalyCategory[] {
+  const categories: ReconciliationAnomalyCategory[] = []
+  const status = String(row.status ?? '')
+  if (status === 'warning') categories.push('status_warning')
+  if (status === 'corrected') categories.push('status_corrected')
+  if (hasUnitPriceMismatch(row)) categories.push('price_mismatch')
+  if (needsManualRuleReview(row)) categories.push('manual_review')
+
+  if (options?.includeFieldConsistency !== false) {
+    const ctx = parseReconciliationBillingContext(row)
+    if (ctx.hasFieldConsistencyIssues || ctx.hasBlockingValidationIssues) {
+      categories.push('field_check')
+    }
+  }
+
+  const difference = toNumber(row.difference)
+  if (difference != null && Math.abs(difference) > PRICE_TOLERANCE) {
+    categories.push('amount_difference')
+  }
+
+  return categories
+}
+
+/**
  * 「仅异常」筛选口径：与后端 export-anomalies / 字段核验告警保持一致。
  * 包含：非 unchanged/skipped 状态、单价不一致、未命中规则、字段核对异常。
  */
@@ -40,19 +92,39 @@ export function isReconciliationAnomalyRow(
   row: Record<string, unknown>,
   options?: { includeFieldConsistency?: boolean }
 ): boolean {
-  const status = String(row.status ?? '')
-  if (status === 'warning' || status === 'corrected') return true
+  return classifyReconciliationAnomalyCategories(row, options).length > 0
+}
 
-  if (hasUnitPriceMismatch(row)) return true
-  if (needsManualRuleReview(row)) return true
+/** 按分类筛选异常行；categories 为空时返回全部 rows。 */
+export function filterRowsByAnomalyCategories<T extends Record<string, unknown>>(
+  rows: T[],
+  categories: ReconciliationAnomalyCategory[]
+): T[] {
+  if (!categories.length) return rows
+  const selected = new Set(categories)
+  return rows.filter((row) =>
+    classifyReconciliationAnomalyCategories(row).some((category) => selected.has(category))
+  )
+}
 
-  if (options?.includeFieldConsistency !== false) {
-    const ctx = parseReconciliationBillingContext(row)
-    if (ctx.hasFieldConsistencyIssues || ctx.hasBlockingValidationIssues) return true
+/** 构建分类下拉选项及命中行数（用于仅异常模式工具栏）。 */
+export function buildAnomalyCategoryOptions(
+  rows: Record<string, unknown>[]
+): AnomalyCategoryOption[] {
+  const counts = new Map<ReconciliationAnomalyCategory, number>()
+  for (const category of ALL_ANOMALY_CATEGORIES) {
+    counts.set(category, 0)
   }
-
-  const difference = toNumber(row.difference)
-  if (difference != null && Math.abs(difference) > PRICE_TOLERANCE) return true
-
-  return false
+  for (const row of rows) {
+    const seen = new Set<ReconciliationAnomalyCategory>()
+    for (const category of classifyReconciliationAnomalyCategories(row)) {
+      if (seen.has(category)) continue
+      seen.add(category)
+      counts.set(category, (counts.get(category) ?? 0) + 1)
+    }
+  }
+  return ALL_ANOMALY_CATEGORIES.map((value) => ({
+    value,
+    count: counts.get(value) ?? 0
+  }))
 }

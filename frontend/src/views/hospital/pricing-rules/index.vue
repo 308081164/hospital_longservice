@@ -4,7 +4,10 @@
       <div class="page-header__text">
         <h1 class="page-title">通用计价规则</h1>
         <p class="page-desc">
-          维护全行业默认灭菌价目。各医院特色方案请在
+          维护全行业默认灭菌与包材价目（高温、低温、敷料包、包装加收、小件折算、导入清洗）。
+          物流费、结款函与导出命名已迁至
+          <RouterLink to="/billing-config/bill-operations" class="link-customers">账单配置 → 账单运营</RouterLink>。
+          各医院特色方案请在
           <RouterLink to="/master-data/customers" class="link-customers">特殊计价客户管理</RouterLink>
           中绑定维护。
         </p>
@@ -175,7 +178,7 @@
               title="高温纸塑袋"
               subtitle="纸塑袋灭菌费、封顶价及按尺寸的袋型价目"
             >
-              <RuleFieldGrid :columns="2">
+              <RuleFieldGrid :columns="3">
                 <RuleNumberField
                   v-model="htpp.perPackagePrice"
                   label="每件灭菌费(元)"
@@ -186,6 +189,25 @@
                   v-model="htpp.minCharge"
                   label="封顶收费(元)"
                   :quick-steps="[0.5, 1, 5, 10]"
+                  @change="markDirty"
+                />
+                <RuleNumberField
+                  v-model="htpp.freeBagFeeThreshold"
+                  label="免袋费阈值(元)"
+                  :quick-steps="[0.5, 1, 5, 10]"
+                  tooltip="≤该金额时不另收纸塑袋费；通常与封顶收费相同"
+                  @change="markDirty"
+                />
+                <RuleSelectField
+                  v-model="htppCapMode"
+                  label="封顶模式"
+                  :options="capModeOptions"
+                  tooltip="全局默认；单院可在客户表覆盖"
+                  @change="markDirty"
+                />
+                <RuleSwitchField
+                  v-model="htpp.chargeDoubleBagWhenCapped"
+                  label="封顶时双袋计费"
                   @change="markDirty"
                 />
               </RuleFieldGrid>
@@ -228,14 +250,36 @@
                 add-label="添加无纺布阶梯"
                 @change="markDirty"
               />
+              <RuleSectionBlock class="mt-4" title="精确价表（无纺布）" subtitle="2 件及以上优先匹配，与 Excel 价表对齐">
+                <RulePriceTableEditor
+                  v-model="ltnw.priceTable"
+                  :tier-prices="ltnw.tierPrices"
+                  @change="markDirty"
+                />
+              </RuleSectionBlock>
             </RuleSectionBlock>
 
             <RuleSectionBlock title="低温纸塑袋" subtitle="阶梯总价与袋型单件价">
+              <RuleFieldGrid :columns="1">
+                <RuleNumberField
+                  v-model="ltpp.remainderPerPiecePrice"
+                  label="阶梯余数单价(元)"
+                  :quick-steps="[1, 5, 10]"
+                  @change="markDirty"
+                />
+              </RuleFieldGrid>
               <RuleTierPriceTable
                 v-model="ltpp.tierPrices"
                 add-label="添加纸塑袋阶梯"
                 @change="markDirty"
               />
+              <RuleSectionBlock class="mt-4" title="精确价表（纸塑袋）" subtitle="2 件及以上优先匹配，与 Excel 价表对齐">
+                <RulePriceTableEditor
+                  v-model="ltpp.priceTable"
+                  :tier-prices="ltpp.tierPrices"
+                  @change="markDirty"
+                />
+              </RuleSectionBlock>
               <RuleBagSizeTable
                 v-model="ltpp.bagSizes"
                 class="mt-4"
@@ -252,12 +296,36 @@
             v-if="activeCategory === '包装'"
             category="包装"
             title="包装收费规则"
-            subtitle="辅料包、纸塑袋等额外包装费用"
+            subtitle="辅料包、纸塑袋等额外包装费用（与敷料包固定价不同：此处为灭菌价之外的加收项）"
             theme="packaging"
             badge="包装"
             tag="加收"
           >
             <RulePackagingTable v-model="pg" @change="markDirty" />
+          </RuleCategoryPanel>
+
+          <RuleCategoryPanel
+            v-if="activeCategory === '敷料包'"
+            category="敷料包"
+            title="敷料包计价"
+            subtitle="棉球/纱布纸塑袋按规格固定价，无纺布按 W 码分档（不计纸塑袋加收）"
+            theme="dressing"
+            badge="敷料"
+            tag="按包"
+          >
+            <RuleDressingPackPanel v-model="dp" @change="markDirty" />
+          </RuleCategoryPanel>
+
+          <RuleCategoryPanel
+            v-if="activeCategory === '特色规则'"
+            category="特色"
+            title="通用特色规则"
+            subtitle="固定单价、特色折算与特殊加收（specialRules，与小件识别 needle 独立）"
+            theme="special"
+            badge="特色"
+            tag="短路"
+          >
+            <RuleSpecialRulesPanel v-model="sr" @change="markDirty" />
           </RuleCategoryPanel>
 
           <RuleCategoryPanel
@@ -341,6 +409,11 @@
               <RuleSwitchField v-model="cl.dropSummaryRows" label="丢弃汇总行" @change="markDirty" />
               <RuleSwitchField v-model="cl.trimPackagingMaterial" label="去除包装材料列噪声" @change="markDirty" />
               <RuleSwitchField
+                v-model="cl.clearInstrumentColumnFormatting"
+                label="清除器械列格式"
+                @change="markDirty"
+              />
+              <RuleSwitchField
                 v-model="cl.recomputeTotalsWhenPriceChanges"
                 label="价格变动时重算合计"
                 @change="markDirty"
@@ -354,135 +427,8 @@
               @change="markDirty"
             />
           </RuleCategoryPanel>
-
-          <RuleCategoryPanel
-            v-if="activeCategory === '物流'"
-            category="物流"
-            title="物流规则"
-            subtitle="按发货日期去重计次收取物流费"
-            theme="logistics"
-            badge="物流"
-            tag="运费"
-          >
-            <RuleFieldGrid :columns="3">
-              <RuleSwitchField v-model="lg.enabled" label="启用物流费" @change="markDirty" />
-              <RuleNumberField
-                v-model="lg.feePerTrip"
-                label="单次费用(元)"
-                :quick-steps="[5, 10, 50]"
-                @change="markDirty"
-              />
-              <RuleNumberField
-                v-model="lg.defaultLogisticsFee"
-                label="默认物流费(元)"
-                :quick-steps="[5, 10, 50]"
-                @change="markDirty"
-              />
-              <RuleNumberField
-                v-model="lg.dayBoundaryHour"
-                label="跨天时间点(时)"
-                kind="integer"
-                :min="0"
-                :max="23"
-                :precision="0"
-                :step="1"
-                @change="markDirty"
-              />
-              <RuleSwitchField v-model="lg.mergeAdjacentDays" label="合并相邻天数" @change="markDirty" />
-              <RuleNumberField
-                v-model="lg.mergeWindowDays"
-                label="合并窗口(天)"
-                kind="integer"
-                :precision="0"
-                :step="1"
-                @change="markDirty"
-              />
-            </RuleFieldGrid>
-          </RuleCategoryPanel>
-
-          <RuleCategoryPanel
-            v-if="activeCategory === '结款函'"
-            category="结款函"
-            title="结款函规则"
-            subtitle="导出结款函的模板、格式与费用项"
-            theme="settlement"
-            badge="结款"
-            tag="导出"
-          >
-            <RuleSectionBlock title="结款函基础设置" subtitle="导出结款函时的全局格式与默认模板">
-              <RuleFieldGrid :columns="3">
-                <RuleTextField v-model="sl.companyName" label="公司名称" placeholder="公司名称" @change="markDirty" />
-                <RuleSelectField
-                  v-model="sl.defaultTemplateId"
-                  label="默认模板"
-                  placeholder="选择默认模板"
-                  :options="settlementTemplateOptions"
-                  @change="markDirty"
-                />
-                <RuleNumberField
-                  v-model="sl.rowHeight"
-                  label="行高"
-                  kind="integer"
-                  :min="1"
-                  :precision="0"
-                  :step="1"
-                  @change="markDirty"
-                />
-                <RuleTextField
-                  v-model="sl.dateRangeTextTemplate"
-                  label="日期范围模板"
-                  placeholder="{start} 至 {end}"
-                  @change="markDirty"
-                />
-                <RuleTextField
-                  v-model="sl.uppercaseTotalLabel"
-                  label="大写金额标签"
-                  placeholder="大写金额"
-                  @change="markDirty"
-                />
-              </RuleFieldGrid>
-            </RuleSectionBlock>
-
-            <RuleSectionBlock title="模板配置" subtitle="按医院关键词匹配不同结款函样式">
-              <RuleSettlementTemplateTable
-                v-model="sl.templates"
-                :available-templates="availableTemplates"
-                @change="onSettlementTemplatesChange"
-                @preview="previewSettlementTemplate"
-              />
-            </RuleSectionBlock>
-
-            <RuleSectionBlock title="费用项配置" subtitle="结款函中列示的费用明细">
-              <RuleFeeItemTable v-model="sl.feeItems" @change="markDirty" />
-            </RuleSectionBlock>
-          </RuleCategoryPanel>
-
-          <RuleCategoryPanel
-            v-if="activeCategory === '导出'"
-            category="导出"
-            title="导出选项"
-            subtitle="账单、异常表与结款函的文件命名及页面选项"
-            theme="export"
-            badge="导出"
-            tag="文件"
-          >
-            <RuleFieldGrid :columns="3">
-              <RuleTextField v-model="eo.billFilePrefix" label="账单文件名前缀" placeholder="账单_" @change="markDirty" />
-              <RuleTextField v-model="eo.warningFilePrefix" label="异常文件名前缀" placeholder="异常_" @change="markDirty" />
-              <RuleTextField v-model="eo.settlementFilePrefix" label="结款函文件名前缀" placeholder="结款函_" @change="markDirty" />
-              <RuleTextField v-model="eo.defaultPageMargin" label="默认页边距" placeholder="1cm" @change="markDirty" />
-              <RuleSwitchField v-model="eo.includeWarningSheet" label="包含异常表" @change="markDirty" />
-            </RuleFieldGrid>
-          </RuleCategoryPanel>
       </div>
     </template>
-
-    <ElDialog v-model="previewDialogVisible" title="结款函模板预览" width="800px" top="5vh">
-      <div class="max-h-[70vh] overflow-auto rounded border bg-white p-4" v-html="sanitizeHtml(previewTemplateHtml)" />
-      <template #footer>
-        <ElButton @click="previewDialogVisible = false">关闭</ElButton>
-      </template>
-    </ElDialog>
 
     <ElDialog v-model="needleImpactDialogVisible" title="小件识别影响预览" width="720px">
       <div v-if="needleImpactResult" class="space-y-3">
@@ -535,18 +481,14 @@ import RuleFieldGrid from '@/components/business/pricing-rules/RuleFieldGrid.vue
 import RuleNumberField from '@/components/business/pricing-rules/RuleNumberField.vue'
 import RuleKeywordField from '@/components/business/pricing-rules/RuleKeywordField.vue'
 import RuleSwitchField from '@/components/business/pricing-rules/RuleSwitchField.vue'
-import RuleTextField from '@/components/business/pricing-rules/RuleTextField.vue'
 import RuleSelectField from '@/components/business/pricing-rules/RuleSelectField.vue'
 import RuleBagSizeTable from '@/components/business/pricing-rules/RuleBagSizeTable.vue'
 import RuleTierPriceTable from '@/components/business/pricing-rules/RuleTierPriceTable.vue'
 import RulePackagingTable from '@/components/business/pricing-rules/RulePackagingTable.vue'
-import RuleSettlementTemplateTable from '@/components/business/pricing-rules/RuleSettlementTemplateTable.vue'
-import RuleFeeItemTable from '@/components/business/pricing-rules/RuleFeeItemTable.vue'
+import RuleDressingPackPanel from '@/components/business/pricing-rules/RuleDressingPackPanel.vue'
+import RuleSpecialRulesPanel from '@/components/business/pricing-rules/RuleSpecialRulesPanel.vue'
+import RulePriceTableEditor from '@/components/business/pricing-rules/RulePriceTableEditor.vue'
 import RuleNeedleKeywordConfigTable from '@/components/business/pricing-rules/RuleNeedleKeywordConfigTable.vue'
-import {
-  listSettlementTemplates,
-  type BackendTemplateRef,
-} from '@/api/hospital/reconciliationsApi'
 
 interface CategoryItem {
   key: string
@@ -557,16 +499,21 @@ const categories: CategoryItem[] = [
   { key: '高温', label: '高温' },
   { key: '低温', label: '低温' },
   { key: '包装', label: '包装' },
+  { key: '敷料包', label: '敷料包' },
+  { key: '特色规则', label: '特色规则' },
   { key: '小件识别', label: '小件识别' },
   { key: '数据清洗', label: '数据清洗' },
-  { key: '物流', label: '物流' },
-  { key: '结款函', label: '结款函' },
-  { key: '导出', label: '导出' },
 ]
 
 const keywordMatchModeOptions = [
   { value: 'exact_token', label: '完整词匹配' },
   { value: 'contains', label: '含关键词即触发' },
+]
+
+const capModeOptions = [
+  { value: 'standard', label: '标准封顶' },
+  { value: 'none', label: '不封顶' },
+  { value: 'fuyi', label: '附一模式' },
 ]
 
 const tabCategories = computed(() => categories)
@@ -582,7 +529,6 @@ const dirty = ref(false)
 const jsonText = ref('')
 const jsonEditEnabled = ref(false)
 const jsonLocalDirty = ref(false)
-const availableTemplates = ref<BackendTemplateRef[]>([])
 const saving = ref(false)
 const loading = ref(true)
 const loadError = ref(false)
@@ -639,6 +585,10 @@ const defaultEmptyRules = (): Api.Hospital.PricingRules => ({
       { name: 'rigip', keywords: ['rigip'], chargePerPack: true, options: [] },
       { name: '纸塑袋', keywords: ['纸塑袋'], chargePerPack: true, options: [] },
     ],
+  },
+  dressingPack: {
+    cottonPaperPlastic: { '15': 2.5, '20': 4 },
+    nonWoven: { below90: 25, equals90: 30, range12to15: 35 },
   },
   needle: { threshold: 5, foldRatio: 5, keywordMatchMode: 'exact_token', keywords: ['小件', '探针', '穿刺针', '缝合针', '车针', '拔髓针', '成型片', '根管针', '根管锉', '支抗钉', '洁牙机尖', '球钻', '挖勺'], keywordConfigs: [] },
   cleaning: {
@@ -713,9 +663,39 @@ const validationErrors = computed(() => {
 
 const htnw = computed(() => currentRule.value!.rules.highTemperature.nonWoven)
 const htpp = computed(() => currentRule.value!.rules.highTemperature.paperPlastic)
+const htppCapMode = computed({
+  get: () => htpp.value.capMode ?? 'standard',
+  set: (val: string) => {
+    htpp.value.capMode = val
+    markDirty()
+  },
+})
 const ltnw = computed(() => currentRule.value!.rules.lowTemperature.nonWoven)
 const ltpp = computed(() => currentRule.value!.rules.lowTemperature.paperPlastic)
 const pg = computed(() => currentRule.value!.rules.packaging)
+const dp = computed(() => {
+  const rules = currentRule.value!.rules
+  if (!rules.dressingPack) {
+    rules.dressingPack = {
+      cottonPaperPlastic: { '15': 2.5, '20': 4 },
+      nonWoven: { below90: 25, equals90: 30, range12to15: 35 },
+    }
+  }
+  return rules.dressingPack
+})
+const sr = computed(() => {
+  const rules = currentRule.value!.rules
+  if (!rules.specialRules) {
+    rules.specialRules = {
+      fixedPrices: [],
+      foldRules: [],
+      extraFees: [],
+      priceMultipliers: [],
+      zeroPriceOverrides: [],
+    }
+  }
+  return rules.specialRules
+})
 const nd = computed(() => currentRule.value!.rules.needle)
 const needleMatchMode = computed({
   get: () => nd.value.keywordMatchMode ?? 'exact_token',
@@ -731,16 +711,6 @@ const needleKeywordConfigs = computed<Api.Hospital.NeedleKeywordConfig[]>({
   },
 })
 const cl = computed(() => currentRule.value!.rules.cleaning)
-const lg = computed(() => currentRule.value!.rules.logistics)
-const sl = computed(() => currentRule.value!.rules.settlementLetter)
-const eo = computed(() => currentRule.value!.rules.exportOptions)
-
-const settlementTemplateOptions = computed(() =>
-  sl.value.templates.map((item) => ({
-    label: item.name || item.hospitalName || item.id,
-    value: item.id,
-  })),
-)
 
 function markDirty() {
   dirty.value = true
@@ -748,17 +718,6 @@ function markDirty() {
 
 function onRuleNameInput() {
   if (!dirty.value) dirty.value = true
-}
-
-function onSettlementTemplatesChange() {
-  const ids = sl.value.templates.map((t) => t.id)
-  if (sl.value.defaultTemplateId && !ids.includes(sl.value.defaultTemplateId)) {
-    sl.value.defaultTemplateId = sl.value.templates[0]?.id
-  }
-  if (!sl.value.defaultTemplateId && sl.value.templates.length) {
-    sl.value.defaultTemplateId = sl.value.templates[0].id
-  }
-  markDirty()
 }
 
 function updateBagKeywords(target: Api.Hospital.BagSizeConfig[], index: number, val: string | number) {
@@ -830,41 +789,6 @@ function updateSummaryKeywords(val: string | number) {
   cl.value.summaryKeywords = String(val).split(',').map((s) => s.trim()).filter(Boolean)
   markDirty()
 }
-
-function addFeeItem() {
-  const nextKey = `fee_${Date.now()}`
-  const maxSort = sl.value.feeItems.reduce((max, f) => Math.max(max, f.sortOrder), 0)
-  sl.value.feeItems.push({ key: nextKey, label: '', remark: '', enabled: true, sortOrder: maxSort + 1 })
-  markDirty()
-}
-
-function removeFeeItem(index: number) {
-  sl.value.feeItems.splice(index, 1)
-  markDirty()
-}
-
-function buildSettlementTemplateId(seed: string): string {
-  const normalized = seed.trim().toLowerCase().replace(/[^a-z0-9\u4e00-\u9fa5]+/g, '_').replace(/^_+|_+$/g, '')
-  return normalized || `template_${Date.now()}`
-}
-
-function addSettlementTemplate() {
-  const nextIndex = sl.value.templates.length + 1
-  sl.value.templates.push({
-    id: buildSettlementTemplateId(`template_${nextIndex}_${Date.now()}`),
-    name: `模板${nextIndex}`,
-    hospitalName: '',
-    templateSheetName: '结款函',
-    titleText: '货款结算单',
-    matchKeywords: [],
-    templateRef: 'default',
-  })
-  if (!sl.value.defaultTemplateId) sl.value.defaultTemplateId = sl.value.templates[0]?.id
-  markDirty()
-}
-
-const previewDialogVisible = ref(false)
-const previewTemplateHtml = ref('')
 
 interface RuleRevisionItem {
   id: number
@@ -1005,54 +929,6 @@ async function handleNeedleImpactPreview() {
   } finally {
     needleImpactLoading.value = false
   }
-}
-
-async function previewSettlementTemplate(index: number) {
-  const template = sl.value.templates[index]
-  const templateId = template.templateRef || 'default'
-  try {
-    const token = useUserStore().accessToken
-    const response = await fetch(resolveApiRequestUrl(`/api/hospital-reconciliations/templates/settlement/${encodeURIComponent(templateId)}/preview`), {
-      headers: token ? { Authorization: `Bearer ${token}` } : {},
-    })
-    if (!response.ok) throw new Error(`HTTP ${response.status}`)
-    previewTemplateHtml.value = await response.text()
-    previewDialogVisible.value = true
-  } catch {
-    previewTemplateHtml.value = `<p style="padding:40px;text-align:center;color:#999">无法加载模板预览，请确认后端模板文件存在。</p>`
-    previewDialogVisible.value = true
-  }
-}
-
-function resolveApiRequestUrl(url: string) {
-  const baseURL = (import.meta.env.VITE_API_URL || '').trim()
-  if (!baseURL || baseURL === '/') {
-    return url
-  }
-  return new URL(url, `${baseURL.replace(/\/$/, '')}/`).toString()
-}
-
-function sanitizeHtml(html: string): string {
-  return html
-    .replace(/<script\b[^>]*>[\s\S]*?<\/script>/gi, '')
-    .replace(/<script\b[^>]*\/>/gi, '')
-    .replace(/\bon\w+\s*=\s*"[^"]*"/gi, '')
-    .replace(/\bon\w+\s*=\s*'[^']*'/gi, '')
-    .replace(/<iframe\b[^>]*>[\s\S]*?<\/iframe>/gi, '')
-}
-
-function removeSettlementTemplate(index: number) {
-  const removed = sl.value.templates[index]
-  sl.value.templates.splice(index, 1)
-  if (removed?.id && sl.value.defaultTemplateId === removed.id) {
-    sl.value.defaultTemplateId = sl.value.templates[0]?.id
-  }
-  markDirty()
-}
-
-function updateSettlementTemplateKeywords(index: number, val: string | number) {
-  sl.value.templates[index].matchKeywords = String(val).split(',').map((s) => s.trim()).filter(Boolean)
-  markDirty()
 }
 
 async function loadRules() {
@@ -1248,24 +1124,14 @@ watch(selectedRuleId, (id) => {
   }
 })
 
-watch(() => route.path, async (newPath, oldPath) => {
+watch(() => route.path, async (newPath) => {
   if (newPath === '/settings/pricing-rules' || newPath === '/hospital/pricing-rules') {
     await loadRules()
-    try {
-      availableTemplates.value = await listSettlementTemplates()
-    } catch {
-      // templates unavailable, selector will be empty
-    }
   }
 }, { immediate: false })
 
 onMounted(async () => {
   await loadRules()
-  try {
-    availableTemplates.value = await listSettlementTemplates()
-  } catch {
-    // templates unavailable, selector will be empty
-  }
 })
 </script>
 

@@ -101,6 +101,7 @@
             @select-sheet="(sheet) => selectEntrySheet(entry, sheet)"
             @process="handleProcessEntry(entry)"
             @toggle-anomaly="toggleAnomalyMode(entry)"
+            @anomaly-category-change="(filters) => onAnomalyCategoryChange(entry, filters)"
             @save-changes="handleSaveEntryChanges(entry)"
             @reprice="handleRepriceEntry(entry)"
             @open-unmatched="openUnmatchedGuide(entry)"
@@ -358,6 +359,8 @@
     } | null
     /** 仅查看异常行 */
     onlyShowAbnormal: boolean
+    /** 仅异常模式下的分类筛选（空数组=全部分类） */
+    anomalyCategoryFilters: ReconciliationAnomalyCategory[]
     /** 仅查看异常模式：全量筛选结果缓存 */
     allAnomalyRows: ProcessedRow[] | null
     /** 异常模式加载中 */
@@ -966,7 +969,11 @@
     isCustomerSpecificPricingRule,
     isGeneralPricingRule
   } from '@/utils/pricingRuleScope'
-  import { isReconciliationAnomalyRow } from '@/utils/reconciliationAnomaly'
+  import {
+    filterRowsByAnomalyCategories,
+    isReconciliationAnomalyRow,
+    type ReconciliationAnomalyCategory
+  } from '@/utils/reconciliationAnomaly'
   import ReconciliationEntryPanel from '@/components/business/reconciliation/ReconciliationEntryPanel.vue'
   import ReconciliationJobDialogs from '@/components/business/reconciliation/ReconciliationJobDialogs.vue'
   import { reconciliationJobActionsKey } from '@/composables/reconciliationJobActionsKey'
@@ -1129,26 +1136,43 @@
     }
     if (entry.onlyShowAbnormal && entry.allAnomalyRows) {
       entry.allAnomalyRows = entry.allAnomalyRows.map(mapRow)
+      syncEntryAnomalyDisplayTotal(entry)
     } else {
       entry.processedRows = entry.processedRows.map(mapRow)
     }
   }
 
+  function syncEntryAnomalyDisplayTotal(entry: UploadEntry) {
+    if (!entry.allAnomalyRows) {
+      entry.displayTotal = 0
+      return
+    }
+    entry.displayTotal = filterRowsByAnomalyCategories(
+      entry.allAnomalyRows.map((row) => rowAsRecord(row)),
+      entry.anomalyCategoryFilters ?? []
+    ).length
+  }
+
+  async function loadEntryAnomalyRows(entry: UploadEntry) {
+    if (!entry.savedJobId) return
+    entry.anomalyLoading = true
+    try {
+      const allRows = await fetchAllRowsForExport(entry.savedJobId)
+      let processed = allRows.map((row) => mapApiRowToProcessedRow(row))
+      processed = processed.filter((row) => isReconciliationAnomalyRow(rowAsRecord(row)))
+      if (entry.selectedSheetFilter) {
+        processed = processed.filter((row) => row.sheetName === entry.selectedSheetFilter)
+      }
+      entry.allAnomalyRows = processed
+      syncEntryAnomalyDisplayTotal(entry)
+    } finally {
+      entry.anomalyLoading = false
+    }
+  }
+
   async function reloadEntryView(entry: UploadEntry) {
     if (entry.onlyShowAbnormal) {
-      entry.anomalyLoading = true
-      try {
-        const allRows = await fetchAllRowsForExport(entry.savedJobId!)
-        let processed = allRows.map((row) => mapApiRowToProcessedRow(row))
-        processed = processed.filter((row) => isReconciliationAnomalyRow(rowAsRecord(row)))
-        if (entry.selectedSheetFilter) {
-          processed = processed.filter((row) => row.sheetName === entry.selectedSheetFilter)
-        }
-        entry.allAnomalyRows = processed
-        entry.displayTotal = processed.length
-      } finally {
-        entry.anomalyLoading = false
-      }
+      await loadEntryAnomalyRows(entry)
       return
     }
     await loadEntryPage(entry, entry.displayPage)
@@ -1412,6 +1436,7 @@
       displayTotal: 0,
       savedSummary: null,
       onlyShowAbnormal: false,
+      anomalyCategoryFilters: [],
       allAnomalyRows: null,
       anomalyLoading: false,
       unmatchedCount: null,
@@ -1679,17 +1704,7 @@
     entry.sheetFilterLoading = true
     try {
       if (entry.onlyShowAbnormal) {
-        entry.anomalyLoading = true
-        const allRows = await fetchAllRowsForExport(entry.savedJobId)
-        let processed = allRows
-          .map((row) => mapApiRowToProcessedRow(row))
-          .filter((row) => isReconciliationAnomalyRow(rowAsRecord(row)))
-        if (sheetName) {
-          processed = processed.filter((row) => row.sheetName === sheetName)
-        }
-        entry.allAnomalyRows = processed
-        entry.displayTotal = processed.length
-        entry.anomalyLoading = false
+        await loadEntryAnomalyRows(entry)
       } else {
         await loadEntryPage(entry, 1)
       }
@@ -1760,6 +1775,7 @@
     if (entry.onlyShowAbnormal) {
       // 关闭异常模式
       entry.onlyShowAbnormal = false
+      entry.anomalyCategoryFilters = []
       entry.allAnomalyRows = null
       entry.anomalyLoading = false
       await loadEntryPage(entry, 1)
@@ -1770,30 +1786,24 @@
     if (!entry.savedJobId) return
 
     entry.onlyShowAbnormal = true
-    entry.anomalyLoading = true
-
+    entry.anomalyCategoryFilters = []
     try {
-      const allRows = await fetchAllRowsForExport(entry.savedJobId)
-      // 用 requestAnimationFrame 延迟同步处理，避免阻塞 UI
-      await new Promise<void>((resolve) => {
-        requestAnimationFrame(() => {
-          let processed = allRows.map((row) => mapApiRowToProcessedRow(row))
-          processed = processed.filter((row) => isReconciliationAnomalyRow(rowAsRecord(row)))
-          if (entry.selectedSheetFilter) {
-            processed = processed.filter((row) => row.sheetName === entry.selectedSheetFilter)
-          }
-          entry.allAnomalyRows = processed
-          entry.displayTotal = entry.allAnomalyRows.length
-          entry.anomalyLoading = false
-          resolve()
-        })
-      })
+      await loadEntryAnomalyRows(entry)
     } catch {
       entry.onlyShowAbnormal = false
+      entry.anomalyCategoryFilters = []
       entry.allAnomalyRows = null
       entry.anomalyLoading = false
       ElMessage.warning('加载全量数据失败，无法使用异常筛选')
     }
+  }
+
+  function onAnomalyCategoryChange(
+    entry: UploadEntry,
+    filters: ReconciliationAnomalyCategory[]
+  ) {
+    entry.anomalyCategoryFilters = filters ?? []
+    syncEntryAnomalyDisplayTotal(entry)
   }
 
   /** 导出异常明细：弹出选项后调用后端接口 */
@@ -1875,7 +1885,10 @@
       return []
     }
     if (entry.onlyShowAbnormal && entry.allAnomalyRows) {
-      return entry.allAnomalyRows
+      return filterRowsByAnomalyCategories(
+        entry.allAnomalyRows.map((row) => rowAsRecord(row)),
+        entry.anomalyCategoryFilters ?? []
+      ) as ProcessedRow[]
     }
     return entry.processedRows
   }

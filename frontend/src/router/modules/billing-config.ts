@@ -75,6 +75,17 @@ export const billingConfigRoutes: AppRouteRecord[] = [
         }
       },
       {
+        path: 'bill-operations',
+        name: 'BillingConfigBillOperations',
+        component: '/billing-config/bill-operations',
+        meta: {
+          title: 'menus.billingConfig.billOperations',
+          icon: 'ri:settings-4-line',
+          keepAlive: true,
+          roles: ['billing_configurator', 'R_SUPER', 'R_ADMIN']
+        }
+      },
+      {
         path: 'clerk-rules',
         name: 'BillingConfigClerkRules',
         component: '/billing-config/clerk-rules',
