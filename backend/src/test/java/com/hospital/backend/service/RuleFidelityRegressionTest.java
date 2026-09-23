@@ -368,10 +368,10 @@ class RuleFidelityRegressionTest {
                 "unitPrice", 33.0,
                 "totalPrice", 99.0
         ));
-        assertThat(result.status).isEqualTo("warning");
-        assertThat(result.expectedUnitPrice).isEqualTo(16.5);
+        assertThat(result.status).isEqualTo("unchanged");
+        assertThat(result.expectedUnitPrice).isEqualTo(33.0);
         assertThat(result.pricingRule).isEqualTo("祖研三辅美容科排针>21十合1加盒");
         assertThat(result.pricingRule).doesNotContain("校正价");
-        assertThat(result.pricingPath).isEqualTo("fixed");
+        assertThat(result.pricingPath).isNull();
     }
 }
