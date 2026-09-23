@@ -18,24 +18,8 @@
         ]
       },
       "sourceText": "低于1500元",
-      "sourceRef": "excel:结款函#HULAN-HSZ",
+      "sourceRef": "excel:结款函#HULAN-HSZ|excel:低消#呼兰区红十字医院",
       "priority": 100
-    },
-    {
-      "ruleType": "SETTLEMENT_MIN_CHARGE",
-      "name": "低消",
-      "stage": "settlement",
-      "isActive": true,
-      "params": {
-        "minCharge": 1500.0,
-        "baseComponents": [
-          "sterilize",
-          "logistics"
-        ]
-      },
-      "sourceText": "灭菌费+物流费 ≥ 1500元",
-      "sourceRef": "excel:低消#呼兰区红十字医院",
-      "priority": 10
     }
   ]
 }

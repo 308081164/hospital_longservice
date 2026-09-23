@@ -8,15 +8,16 @@ export type HospitalExportType =
   | 'instrument_audit'
   | 'logistics_allocation'
   | 'grand_total'
+  | 'sterilize_fee_detail'
 
 /** 与 backend hospital-export-capabilities.json 同步；API 未返回 exportTypes 时的前端回退 */
 const STATIC_HOSPITAL_EXPORT_TYPES: Record<string, string[]> = {
   黑龙江中医药大学附属第一医院: ['bill', 'settlement', 'dept_summary', 'logistics_allocation'],
-  '黑龙江省中医药大学附属第三医院（电力）': ['bill', 'settlement', 'instrument_audit'],
+  '黑龙江省中医药大学附属第三医院（电力）': ['bill', 'settlement', 'instrument_audit', 'sterilize_fee_detail'],
   国药总医院主院区: ['bill', 'settlement'],
   国药总医院第二院区: ['bill', 'settlement'],
   国药总医院第三院区: ['bill', 'settlement'],
-  哈尔滨市第二医院: ['bill', 'settlement'],
+  哈尔滨市第二医院: ['bill', 'settlement', 'dept_summary'],
   哈尔滨市第五医院: [
     'bill',
     'settlement',
@@ -41,9 +42,9 @@ const STATIC_HOSPITAL_EXPORT_TYPES: Record<string, string[]> = {
     'instrument_audit',
     'logistics_allocation'
   ],
-  '祖研-黑龙江省中医医院（南岗院区）': ['bill', 'settlement', 'price_summary'],
-  '祖研-黑龙江省中医医院（三辅院区）': ['bill', 'settlement', 'price_summary'],
-  '祖研-黑龙江省中医医院（香安院区）': ['bill', 'settlement', 'price_summary'],
+  '祖研-黑龙江省中医医院（南岗院区）': ['bill', 'settlement', 'dept_summary', 'price_summary', 'logistics_allocation'],
+  '祖研-黑龙江省中医医院（三辅院区）': ['bill', 'settlement', 'dept_summary', 'price_summary', 'logistics_allocation'],
+  '祖研-黑龙江省中医医院（香安院区）': ['bill', 'settlement', 'dept_summary', 'price_summary', 'logistics_allocation'],
   南岗区妇产医院: ['bill', 'settlement'],
   黑龙江省社会康复医院: ['bill', 'settlement'],
   道外区人民医院: ['bill', 'settlement'],
@@ -56,12 +57,14 @@ const STATIC_HOSPITAL_EXPORT_TYPES: Record<string, string[]> = {
   '黑龙江中医药大学附属第二医院（南岗）': [
     'bill',
     'settlement',
+    'dept_summary',
     'price_summary',
     'instrument_audit'
   ],
   '黑龙江中医药大学附属第二医院（哈南分院）': [
     'bill',
     'settlement',
+    'dept_summary',
     'price_summary',
     'instrument_audit'
   ],
@@ -74,7 +77,7 @@ const STATIC_HOSPITAL_EXPORT_TYPES: Record<string, string[]> = {
   '黑龙江省第二医院（南岗院区）': ['bill', 'settlement'],
   '黑龙江省第二医院（松北院区）': ['bill', 'settlement'],
   哈尔滨市呼兰区第一人民医院: ['bill', 'settlement'],
-  哈尔滨市红十字妇产医院: ['bill', 'settlement'],
+  哈尔滨市红十字妇产医院: ['bill', 'settlement', 'dept_summary'],
   哈尔滨工业大学医院: ['bill', 'settlement'],
   哈尔滨工程大学医院: ['bill', 'settlement'],
   哈尔滨长健医院: ['bill', 'settlement']
@@ -87,7 +90,8 @@ const EXPORT_TYPE_I18N_KEYS: Record<string, string> = {
   price_summary: 'reconciliation.history.export.priceSummary',
   instrument_audit: 'reconciliation.history.export.instrumentAudit',
   logistics_allocation: 'reconciliation.history.export.logisticsAllocation',
-  grand_total: 'reconciliation.history.export.grandTotal'
+  grand_total: 'reconciliation.history.export.grandTotal',
+  sterilize_fee_detail: 'reconciliation.history.export.sterilizeFeeDetail'
 }
 
 const EXPORT_FILE_PREFIX: Record<string, string> = {
@@ -97,7 +101,8 @@ const EXPORT_FILE_PREFIX: Record<string, string> = {
   price_summary: '价格汇总',
   instrument_audit: '器械把数表',
   logistics_allocation: '物流分摊',
-  grand_total: '总汇总'
+  grand_total: '总汇总',
+  sterilize_fee_detail: '消毒灭菌费明细'
 }
 
 export function resolveExportTypesForHospital(hospitalName?: string | null): string[] {

@@ -14,7 +14,7 @@
         "feePerTrip": 185.0
       },
       "sourceText": "物流费185元/次",
-      "sourceRef": "excel:结款函#HULAN-TCM",
+      "sourceRef": "excel:结款函#HULAN-TCM|excel:低消物流#呼兰中医院",
       "priority": 100
     },
     {
@@ -30,7 +30,7 @@
         ]
       },
       "sourceText": "低于10000元",
-      "sourceRef": "excel:结款函#HULAN-TCM",
+      "sourceRef": "excel:结款函#HULAN-TCM|excel:低消#呼兰中医院",
       "priority": 110
     },
     {
@@ -44,34 +44,6 @@
       "sourceText": "备包",
       "sourceRef": "excel:结款函#HULAN-TCM",
       "priority": 120
-    },
-    {
-      "ruleType": "SETTLEMENT_MIN_CHARGE",
-      "name": "低消",
-      "stage": "settlement",
-      "isActive": true,
-      "params": {
-        "minCharge": 10000.0,
-        "baseComponents": [
-          "sterilize",
-          "logistics"
-        ]
-      },
-      "sourceText": "灭菌费+物流费 ≥ 10000元",
-      "sourceRef": "excel:低消#呼兰中医院",
-      "priority": 10
-    },
-    {
-      "ruleType": "LOGISTICS_FEE",
-      "name": "物流费",
-      "stage": "settlement",
-      "isActive": true,
-      "params": {
-        "feePerTrip": 185.0
-      },
-      "sourceText": "185元/次",
-      "sourceRef": "excel:低消物流#呼兰中医院",
-      "priority": 10
     }
   ]
 }

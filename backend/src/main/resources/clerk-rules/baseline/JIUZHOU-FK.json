@@ -18,7 +18,7 @@
         ]
       },
       "sourceText": "低于3000元",
-      "sourceRef": "excel:结款函#JIUZHOU-FK",
+      "sourceRef": "excel:结款函#JIUZHOU-FK|excel:低消#黑龙江九洲妇科医院",
       "priority": 100
     },
     {
@@ -30,36 +30,8 @@
         "freeCountPerMonth": 4
       },
       "sourceText": "减免四次物流",
-      "sourceRef": "excel:结款函#JIUZHOU-FK",
+      "sourceRef": "excel:结款函#JIUZHOU-FK|excel:低消物流#黑龙江九洲妇科医院",
       "priority": 110
-    },
-    {
-      "ruleType": "SETTLEMENT_MIN_CHARGE",
-      "name": "低消",
-      "stage": "settlement",
-      "isActive": true,
-      "params": {
-        "minCharge": 3000.0,
-        "baseComponents": [
-          "sterilize",
-          "logistics"
-        ]
-      },
-      "sourceText": "灭菌费+物流费 ≥ 3000元",
-      "sourceRef": "excel:低消#黑龙江九洲妇科医院",
-      "priority": 10
-    },
-    {
-      "ruleType": "LOGISTICS_WAIVE",
-      "name": "月减免四次物流",
-      "stage": "settlement",
-      "isActive": true,
-      "params": {
-        "freeCountPerMonth": 4
-      },
-      "sourceText": "减免四次/月",
-      "sourceRef": "excel:低消物流#黑龙江九洲妇科医院",
-      "priority": 10
     },
     {
       "ruleType": "SETTLEMENT_DISCOUNT",

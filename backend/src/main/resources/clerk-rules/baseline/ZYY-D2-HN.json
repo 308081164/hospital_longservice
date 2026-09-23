@@ -11,11 +11,35 @@
       "stage": "both",
       "isActive": true,
       "params": {
-        "reportType": "dept_sterilize_summary"
+        "reportType": "dept_summary"
       },
-      "sourceText": "汇总表",
+      "sourceText": "各科室价格汇总（含物流）",
       "sourceRef": "excel:结款函#ZYY-D2-HN",
       "priority": 100
+    },
+    {
+      "ruleType": "MONTHLY_SUPPLEMENT_REPORT",
+      "name": "按包类型价格汇总",
+      "stage": "both",
+      "isActive": true,
+      "params": {
+        "reportType": "price_summary"
+      },
+      "sourceText": "按包类型统计科室包及金额",
+      "sourceRef": "excel:结款函#ZYY-D2-HN",
+      "priority": 101
+    },
+    {
+      "ruleType": "MONTHLY_SUPPLEMENT_REPORT",
+      "name": "按包类型器械量表",
+      "stage": "both",
+      "isActive": true,
+      "params": {
+        "reportType": "instrument_audit"
+      },
+      "sourceText": "按包类型统计（无金额）",
+      "sourceRef": "excel:结款函#ZYY-D2-HN",
+      "priority": 102
     }
   ]
 }

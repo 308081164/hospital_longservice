@@ -8,7 +8,8 @@ public enum ExportType {
     INSTRUMENT_AUDIT("instrument_audit"),
     LOGISTICS_ALLOCATION("logistics_allocation"),
     GRAND_TOTAL("grand_total"),
-    DAILY("daily");
+    DAILY("daily"),
+    STERILIZE_FEE_DETAIL("sterilize_fee_detail");
 
     private final String code;
 

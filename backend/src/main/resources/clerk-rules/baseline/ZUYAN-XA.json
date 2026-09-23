@@ -11,7 +11,7 @@
       "stage": "both",
       "isActive": true,
       "params": {
-        "reportType": "dept_sterilize_summary"
+        "reportType": "dept_summary"
       },
       "sourceText": "汇总表",
       "sourceRef": "excel:结款函#ZUYAN-XA",
@@ -24,11 +24,25 @@
       "isActive": true,
       "params": {
         "feePerTrip": 25,
-        "mergeSameDayWith": "ZUYAN-SF"
+        "mergeSameDayWith": "ZUYAN-SF",
+        "allocateBy": "sterilize_fee_ratio"
       },
       "sourceText": "香安25",
       "sourceRef": "excel:结款函#ZUYAN-XA",
       "priority": 110
+    },
+    {
+      "ruleType": "MONTHLY_SUPPLEMENT_REPORT",
+      "name": "物流费按科室分摊",
+      "stage": "both",
+      "isActive": true,
+      "params": {
+        "reportType": "logistics_allocation",
+        "allocateBy": "sterilize_fee_ratio"
+      },
+      "sourceText": "物流费按科室消毒费比例分摊",
+      "sourceRef": "excel:结款函#ZUYAN-XA",
+      "priority": 120
     }
   ]
 }

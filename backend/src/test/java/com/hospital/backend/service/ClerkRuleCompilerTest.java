@@ -71,6 +71,13 @@ class ClerkRuleCompilerTest {
         ObjectNode compiled = compiler.compileForCustomer("TAIPING-RM");
         assertThat(compiled).isNotNull();
         assertThat(compiler.hasActiveBillExportRules("TAIPING-RM")).isTrue();
+        int billPriceRules = 0;
+        for (JsonNode rule : compiled.path("clerkRules")) {
+            if ("BILL_EXPORT_PRICE_RULE".equals(rule.path("ruleType").asText())) {
+                billPriceRules++;
+            }
+        }
+        assertThat(billPriceRules).isGreaterThanOrEqualTo(20);
         boolean hasPieceTier = false;
         for (JsonNode policy : compiled.path("billingPolicies")) {
             if (policy.path("params").path("pieceTierDiscounts").isArray()) {
@@ -78,6 +85,35 @@ class ClerkRuleCompilerTest {
             }
         }
         assertThat(hasPieceTier).isTrue();
+    }
+
+    @Test
+    void compilesFuyierThreeSupplementTypes() {
+        ObjectNode compiled = compiler.compileForCustomer("ZYY-D2-NG");
+        assertThat(compiled.path("exportSupplementTypes"))
+                .extracting(JsonNode::asText)
+                .containsExactlyInAnyOrder("dept_summary", "price_summary", "instrument_audit");
+    }
+
+    @Test
+    void compilesZy3SterilizeFeeDetailType() {
+        ObjectNode compiled = compiler.compileForCustomer("ZY3-DIANLI");
+        assertThat(compiled.path("exportSupplementTypes"))
+                .extracting(JsonNode::asText)
+                .contains("instrument_audit", "sterilize_fee_detail");
+    }
+
+    @Test
+    void jiuzhouMinChargeNotDuplicatedInPolicies() {
+        ObjectNode compiled = compiler.compileForCustomer("JIUZHOU-FK");
+        int minChargePolicies = 0;
+        for (JsonNode policy : compiled.path("billingPolicies")) {
+            if ("MONTHLY_SETTLEMENT".equals(policy.path("policyType").asText())
+                    && policy.path("params").path("minCharge").asDouble() == 3000.0) {
+                minChargePolicies++;
+            }
+        }
+        assertThat(minChargePolicies).isEqualTo(1);
     }
 
     @Test

@@ -4,8 +4,7 @@
   "sourceVersion": "医院内勤规则-20260918",
   "notes": "医院内勤规则 v2 · Excel行 中医药大学附属第三医院（电力）",
   "attachmentRefs": [
-    "attachments/5黑龙江中医药大学附属第三医院8月器械把数.xlsx",
-    "attachments/6黑龙江中医药大学附属第三医院8月器械把数.xlsx"
+    "attachments/5黑龙江中医药大学附属第三医院8月器械把数.xlsx"
   ],
   "rules": [
     {
@@ -14,7 +13,7 @@
       "stage": "both",
       "isActive": true,
       "params": {
-        "reportType": "instrument_count_by_dept"
+        "reportType": "instrument_audit"
       },
       "sourceText": "把数汇总",
       "sourceRef": "excel:结款函#ZY3-DIANLI",
@@ -32,6 +31,19 @@
       "sourceText": "7折并列",
       "sourceRef": "excel:结款函#ZY3-DIANLI",
       "priority": 110
+    },
+    {
+      "ruleType": "MONTHLY_SUPPLEMENT_REPORT",
+      "name": "消毒灭菌费明细表",
+      "stage": "both",
+      "isActive": true,
+      "params": {
+        "reportType": "sterilize_fee_detail",
+        "discountRate": 0.7
+      },
+      "sourceText": "按消毒方式/包装材料统计包数把数与七折单价金额",
+      "sourceRef": "excel:结款函#ZY3-DIANLI",
+      "priority": 105
     }
   ]
 }

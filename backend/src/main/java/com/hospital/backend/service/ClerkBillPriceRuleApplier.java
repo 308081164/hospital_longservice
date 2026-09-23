@@ -17,7 +17,7 @@ import java.util.regex.Pattern;
 public class ClerkBillPriceRuleApplier {
 
     private static final Pattern RANGE_PATTERN = Pattern.compile(
-            "^(?:(\\d+)\\s*≤\\s*)?N\\s*(?:<\\s*(\\d+))?$", Pattern.CASE_INSENSITIVE);
+            "^(?:(\\d+)\\s*≤\\s*)?N\\s*(?:[>＞]\\s*(\\d+)|<\\s*(\\d+))?$", Pattern.CASE_INSENSITIVE);
 
     public record ApplyResult(List<BillRowItem> rows, List<String> validationWarnings) {}
 
@@ -146,16 +146,21 @@ public class ClerkBillPriceRuleApplier {
             return true;
         }
         int count = instrumentCount(row);
-        Matcher m = RANGE_PATTERN.matcher(rangeExpr.replace(" ", ""));
+        String normalized = rangeExpr.replace(" ", "").replace("＞", ">");
+        Matcher m = RANGE_PATTERN.matcher(normalized);
         if (!m.matches()) {
             return true;
         }
         Integer lower = m.group(1) != null ? Integer.parseInt(m.group(1)) : null;
-        Integer upper = m.group(2) != null ? Integer.parseInt(m.group(2)) : null;
+        Integer greaterThan = m.group(2) != null ? Integer.parseInt(m.group(2)) : null;
+        Integer upperExclusive = m.group(3) != null ? Integer.parseInt(m.group(3)) : null;
         if (lower != null && count < lower) {
             return false;
         }
-        if (upper != null && count >= upper) {
+        if (greaterThan != null && count <= greaterThan) {
+            return false;
+        }
+        if (upperExclusive != null && count >= upperExclusive) {
             return false;
         }
         return true;

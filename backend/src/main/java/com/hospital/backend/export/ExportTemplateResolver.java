@@ -85,6 +85,7 @@ public class ExportTemplateResolver {
             case INSTRUMENT_AUDIT -> ExportTemplateResolverKeys.INSTRUMENT_AUDIT;
             case LOGISTICS_ALLOCATION -> ExportTemplateResolverKeys.LOGISTICS_ALLOCATION;
             case GRAND_TOTAL -> ExportTemplateResolverKeys.GRAND_TOTAL;
+            case STERILIZE_FEE_DETAIL -> ExportTemplateResolverKeys.STERILIZE_FEE_DETAIL;
             default -> DEFAULT_BILL_STRATEGY;
         };
         return ResolvedExportTemplate.builder()

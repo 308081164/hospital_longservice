@@ -11,7 +11,7 @@
       "stage": "both",
       "isActive": true,
       "params": {
-        "reportType": "dept_sterilize_summary"
+        "reportType": "dept_summary"
       },
       "sourceText": "汇总表",
       "sourceRef": "excel:结款函#HRB-HSZ",

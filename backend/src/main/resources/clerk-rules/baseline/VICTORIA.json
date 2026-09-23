@@ -18,24 +18,8 @@
         ]
       },
       "sourceText": "低于8000元",
-      "sourceRef": "excel:结款函#VICTORIA",
+      "sourceRef": "excel:结款函#VICTORIA|excel:低消#黑龙江维多利亚妇产医院",
       "priority": 100
-    },
-    {
-      "ruleType": "SETTLEMENT_MIN_CHARGE",
-      "name": "低消",
-      "stage": "settlement",
-      "isActive": true,
-      "params": {
-        "minCharge": 8000.0,
-        "baseComponents": [
-          "sterilize",
-          "logistics"
-        ]
-      },
-      "sourceText": "灭菌费+物流费 ≥ 8000元",
-      "sourceRef": "excel:低消#黑龙江维多利亚妇产医院",
-      "priority": 10
     },
     {
       "ruleType": "SETTLEMENT_DISCOUNT",

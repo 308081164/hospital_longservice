@@ -10,7 +10,9 @@
       "name": "合并结款",
       "stage": "settlement",
       "isActive": true,
-      "params": {},
+      "params": {
+        "mergeWith": "HRB-WY"
+      },
       "sourceText": "与哈尔滨市第五医院合并出结款函",
       "sourceRef": "excel:结款函#HRB-WY-EM",
       "priority": 100

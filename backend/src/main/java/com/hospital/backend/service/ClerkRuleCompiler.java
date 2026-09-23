@@ -330,7 +330,7 @@ public class ClerkRuleCompiler {
             if (!rule.path("isActive").asBoolean(true)) {
                 continue;
             }
-            String reportType = rule.path("params").path("reportType").asText("").trim();
+            String reportType = sanitizeReportType(rule.path("params").path("reportType").asText("").trim());
             if (!reportType.isBlank() && seen.add(reportType)) {
                 types.add(reportType);
             }
@@ -360,5 +360,16 @@ public class ClerkRuleCompiler {
             }
         }
         return fixed;
+    }
+
+    private static String sanitizeReportType(String reportType) {
+        if (reportType == null || reportType.isBlank()) {
+            return "";
+        }
+        return switch (reportType) {
+            case "dept_sterilize_summary" -> "dept_summary";
+            case "instrument_count_by_dept" -> "instrument_audit";
+            default -> reportType;
+        };
     }
 }

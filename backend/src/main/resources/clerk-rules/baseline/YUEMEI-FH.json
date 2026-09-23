@@ -18,24 +18,8 @@
         ]
       },
       "sourceText": "低于1000元",
-      "sourceRef": "excel:结款函#YUEMEI-FH",
+      "sourceRef": "excel:结款函#YUEMEI-FH|excel:低消#悦美芳华医疗门诊医院",
       "priority": 100
-    },
-    {
-      "ruleType": "SETTLEMENT_MIN_CHARGE",
-      "name": "低消",
-      "stage": "settlement",
-      "isActive": true,
-      "params": {
-        "minCharge": 1000.0,
-        "baseComponents": [
-          "sterilize",
-          "logistics"
-        ]
-      },
-      "sourceText": "灭菌费+物流费 ≥ 1000元",
-      "sourceRef": "excel:低消#悦美芳华医疗门诊医院",
-      "priority": 10
     }
   ]
 }

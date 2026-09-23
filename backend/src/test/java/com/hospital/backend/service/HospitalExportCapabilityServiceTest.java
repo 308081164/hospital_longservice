@@ -91,6 +91,21 @@ class HospitalExportCapabilityServiceTest {
     }
 
     @Test
+    void fuyierHasDeptSummaryPriceSummaryAndInstrumentAudit() {
+        List<String> types = service.getExportTypes("黑龙江中医药大学附属第二医院（南岗）");
+        assertTrue(types.contains("dept_summary"));
+        assertTrue(types.contains("price_summary"));
+        assertTrue(types.contains("instrument_audit"));
+    }
+
+    @Test
+    void dianliHasSterilizeFeeDetail() {
+        List<String> types = service.getExportTypes("黑龙江省中医药大学附属第三医院（电力）");
+        assertTrue(types.contains("sterilize_fee_detail"));
+        assertTrue(types.contains("instrument_audit"));
+    }
+
+    @Test
     void enrichJobResponseMarksSpecialExportForExtraTypesWithoutBilling() {
         ReconciliationJobResponse response = new ReconciliationJobResponse(
                 2L, "哈尔滨市第五医院", "a.xlsx", null, null,

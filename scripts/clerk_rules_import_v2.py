@@ -215,10 +215,44 @@ def _pack_name_keywords(pack_name) -> list[str] | None:
     return [s]
 
 
+REPORT_TYPE_ALIASES = {
+    "dept_sterilize_summary": "dept_summary",
+    "instrument_count_by_dept": "instrument_audit",
+}
+
+
+def _normalize_report_type(report_type: str) -> str:
+    rt = (report_type or "").strip()
+    return REPORT_TYPE_ALIASES.get(rt, rt)
+
+
+def _rule_dedup_key(rule: dict) -> tuple[str, str]:
+    return rule.get("ruleType", ""), json.dumps(rule.get("params") or {}, sort_keys=True, ensure_ascii=False)
+
+
+def dedupe_rules(rules: list[dict]) -> list[dict]:
+    merged: list[dict] = []
+    index: dict[tuple[str, str], int] = {}
+    for rule in rules:
+        key = _rule_dedup_key(rule)
+        if key in index:
+            existing = merged[index[key]]
+            ref = rule.get("sourceRef", "")
+            if ref and ref not in existing.get("sourceRef", ""):
+                existing["sourceRef"] = f"{existing.get('sourceRef', '')}|{ref}".strip("|")
+        else:
+            index[key] = len(merged)
+            merged.append(rule)
+    return merged
+
+
 def parse_bill_row(row: tuple, hospital: str, idx: int) -> list[dict]:
     _, _, pack_type, pack_name, mat, inst, sys_p, unit_p, note = (row + (None,) * 9)[:9]
     rules: list[dict] = []
     ref = f"excel:账单规则#{hospital}#{idx}"
+
+    if unit_p and "系统价格" in str(unit_p) and "折" in str(unit_p):
+        return rules
 
     if pack_type and "标准价格七折" in str(pack_type):
         rules.append(_rule("标准价七折校对", "PRICE_VALIDATE_ONLY", "bill_export",
@@ -372,12 +406,22 @@ def parse_settlement_lines(lines: list[str], code: str) -> list[dict]:
 
     if "分科室灭菌费用汇总表" in text or "三张汇总表" in text:
         rules.append(_rule("分科室汇总附表", "MONTHLY_SUPPLEMENT_REPORT", "both",
-                           {"reportType": "dept_sterilize_summary"}, "汇总表", f"excel:结款函#{code}", priority=prio))
+                           {"reportType": "dept_summary"}, "各科室价格汇总（含物流）", f"excel:结款函#{code}", priority=prio))
+        rules.append(_rule("按包类型价格汇总", "MONTHLY_SUPPLEMENT_REPORT", "both",
+                           {"reportType": "price_summary"}, "按包类型统计科室包及金额", f"excel:结款函#{code}", priority=prio + 1))
+        rules.append(_rule("按包类型器械量表", "MONTHLY_SUPPLEMENT_REPORT", "both",
+                           {"reportType": "instrument_audit"}, "按包类型统计（无金额）", f"excel:结款函#{code}", priority=prio + 2))
         prio += 10
 
     if "器械把数汇总表" in text:
         rules.append(_rule("器械把数汇总", "MONTHLY_SUPPLEMENT_REPORT", "both",
-                           {"reportType": "instrument_count_by_dept"}, "把数汇总", f"excel:结款函#{code}", priority=prio))
+                           {"reportType": "instrument_audit"}, "把数汇总", f"excel:结款函#{code}", priority=prio))
+        prio += 10
+
+    if "消毒灭菌费明细表" in text:
+        rules.append(_rule("消毒灭菌费明细表", "MONTHLY_SUPPLEMENT_REPORT", "both",
+                           {"reportType": "sterilize_fee_detail", "discountRate": 0.7},
+                           "消毒灭菌费明细", f"excel:结款函#{code}", priority=prio))
         prio += 10
 
     if "7折后" in text or "原价和7折" in text:
@@ -386,7 +430,10 @@ def parse_settlement_lines(lines: list[str], code: str) -> list[dict]:
         prio += 10
 
     if "合并" in text and ("结款函" in text or "物流费" in text):
-        rules.append(_rule("合并结款", "MERGED_SETTLEMENT", "settlement", {}, text[:120], f"excel:结款函#{code}", priority=prio))
+        merge_params: dict = {}
+        if code == "HRB-WY-EM":
+            merge_params = {"mergeWith": "HRB-WY"}
+        rules.append(_rule("合并结款", "MERGED_SETTLEMENT", "settlement", merge_params, text[:120], f"excel:结款函#{code}", priority=prio))
         prio += 10
 
     if "南岗/三辅各50" in text or "物流费按科室" in text:
@@ -469,40 +516,55 @@ def load_excel_data():
 def build_baselines():
     bill_by_hospital, settlement, min_charge_extra = load_excel_data()
     baselines: dict[str, dict] = {}
-
+    code_hospitals: dict[str, list[str]] = defaultdict(list)
     for hospital, codes in HOSPITAL_TO_CODES.items():
-        bill_rows = bill_by_hospital.get(hospital, [])
-        settle_lines = settlement.get(hospital, [])
         for code in codes:
-            rules: list[dict] = []
-            for i, row in enumerate(bill_rows, start=1):
-                rules.extend(parse_bill_row(row, hospital, i))
-            rules.extend(parse_settlement_lines(settle_lines, code))
-            if code in min_charge_extra:
-                rules.extend(min_charge_extra[code])
-            # campus-specific settlement overrides
-            if hospital == "香坊中医院+三辅社区医院" and code == "SANFU-SQ":
-                rules = [r for r in rules if r["ruleType"] != "MERGED_SETTLEMENT"] + [
-                    _rule("合并结款", "MERGED_SETTLEMENT", "settlement",
-                          {"mergeWith": "XIANGFANG-ZY", "sharedLogisticsFee": 50}, "香坊三辅合并", f"excel:结款函#{code}")
-                ]
-            rules = supplement_discount_rules(code, rules)
-            baselines[code] = {
-                "customerCode": code,
-                "customerName": CODE_NAMES.get(code, code),
-                "sourceVersion": SOURCE_VERSION,
-                "notes": f"医院内勤规则 v2 · Excel行 {hospital}",
-                "attachmentRefs": ATTACHMENT_MAP.get(code, []),
-                "rules": rules,
-            }
+            code_hospitals[code].append(hospital)
+
+    for code, hospitals in code_hospitals.items():
+        rules: list[dict] = []
+        bill_rows: list[tuple] = []
+        settle_lines: list[str] = []
+        for hospital in hospitals:
+            bill_rows.extend(bill_by_hospital.get(hospital, []))
+            if settlement.get(hospital):
+                settle_lines = settlement.get(hospital, [])
+        for i, row in enumerate(bill_rows, start=1):
+            rules.extend(parse_bill_row(row, hospitals[0], i))
+        rules.extend(parse_settlement_lines(settle_lines, code))
+        if code in min_charge_extra:
+            rules.extend(min_charge_extra[code])
+        if code == "SANFU-SQ":
+            rules = [r for r in rules if r["ruleType"] != "MERGED_SETTLEMENT"] + [
+                _rule("合并结款", "MERGED_SETTLEMENT", "settlement",
+                      {"mergeWith": "XIANGFANG-ZY", "sharedLogisticsFee": 50}, "香坊三辅合并", f"excel:结款函#{code}")
+            ]
+        for rule in rules:
+            if rule.get("ruleType") == "MONTHLY_SUPPLEMENT_REPORT":
+                params = rule.setdefault("params", {})
+                if "reportType" in params:
+                    params["reportType"] = _normalize_report_type(params["reportType"])
+        rules = supplement_discount_rules(code, rules)
+        rules = dedupe_rules(rules)
+        baselines[code] = {
+            "customerCode": code,
+            "customerName": CODE_NAMES.get(code, code),
+            "sourceVersion": SOURCE_VERSION,
+            "notes": f"医院内勤规则 v2 · Excel行 {' / '.join(hospitals)}",
+            "attachmentRefs": ATTACHMENT_MAP.get(code, []),
+            "rules": rules,
+        }
     return baselines
 
 
 def write_outputs(baselines: dict[str, dict]) -> None:
+    BASELINE_DIR.mkdir(parents=True, exist_ok=True)
+    preserve_codes = {p.stem for p in BASELINE_DIR.glob("*.json")} - set(baselines.keys())
     if BASELINE_DIR.exists():
         for f in BASELINE_DIR.glob("*.json"):
+            if f.stem not in baselines:
+                continue
             f.unlink()
-    BASELINE_DIR.mkdir(parents=True, exist_ok=True)
     for code, baseline in sorted(baselines.items()):
         (BASELINE_DIR / f"{code}.json").write_text(
             json.dumps(baseline, ensure_ascii=False, indent=2) + "\n", encoding="utf-8"

@@ -2,7 +2,7 @@
   "customerCode": "TAIPING-RM",
   "customerName": "哈尔滨市道外区太平人民医院",
   "sourceVersion": "医院内勤规则-20260918",
-  "notes": "医院内勤规则 v2 · Excel行 太平人民医院 · 含 legacy 导出阶梯折扣迁移",
+  "notes": "医院内勤规则 v2 · Excel行 太平人民医院 · 含账单价表与 legacy 导出阶梯折扣",
   "attachmentRefs": [
     "attachments/4哈尔滨市道外区太平人民医院价格单_000214.pdf"
   ],
@@ -15,10 +15,27 @@
       "params": {
         "skipWhenAlreadyDiscounted": true,
         "pieceTierDiscounts": [
-          {"minPieces": 1, "maxPieces": 1, "rate": 1.0},
-          {"minPieces": 2, "maxPieces": 2, "rate": 0.75},
-          {"minPieces": 3, "maxPieces": 3, "rate": 0.891, "originalUnitPriceEquals": 16.5},
-          {"minPieces": 4, "maxPieces": 999, "rate": 0.75}
+          {
+            "minPieces": 1,
+            "maxPieces": 1,
+            "rate": 1.0
+          },
+          {
+            "minPieces": 2,
+            "maxPieces": 2,
+            "rate": 0.75
+          },
+          {
+            "minPieces": 3,
+            "maxPieces": 3,
+            "rate": 0.891,
+            "originalUnitPriceEquals": 16.5
+          },
+          {
+            "minPieces": 4,
+            "maxPieces": 999,
+            "rate": 0.75
+          }
         ]
       },
       "sourceText": "2+把75%阶梯（export_only，legacy phase-bill-s8-fix）",
@@ -36,6 +53,553 @@
       "sourceText": "不收物流费",
       "sourceRef": "excel:结款函#TAIPING-RM",
       "priority": 100
+    },
+    {
+      "ruleType": "BILL_EXPORT_PRICE_RULE",
+      "name": "额外包(纸塑袋)",
+      "stage": "bill_export",
+      "isActive": true,
+      "params": {
+        "acceptedTypes": [
+          "额外包(纸塑袋)",
+          "额外包（无纺布）",
+          "器械包（ZSD）",
+          "器械包",
+          "单包装包"
+        ],
+        "packNameKeywords": null,
+        "packagingMaterial": null,
+        "instrumentCountRange": null,
+        "unitPrice": 8.91,
+        "unitPriceMode": "FIXED",
+        "systemPrice": 16.5,
+        "systemPriceMode": "VALIDATE_ONLY"
+      },
+      "sourceText": "额外包(纸塑袋)、额外包（无纺布）、器械包（ZSD）、器械包、单包装包 |  |  | 16.5 | 8.91",
+      "sourceRef": "excel:账单规则#哈尔滨市道外区太平人民医院#1",
+      "priority": 11
+    },
+    {
+      "ruleType": "BILL_EXPORT_PRICE_RULE",
+      "name": "敷料包",
+      "stage": "bill_export",
+      "isActive": true,
+      "params": {
+        "acceptedTypes": [
+          "敷料包"
+        ],
+        "packNameKeywords": null,
+        "packagingMaterial": null,
+        "instrumentCountRange": null,
+        "unitPrice": 18.6,
+        "unitPriceMode": "FIXED",
+        "systemPrice": 25.0,
+        "systemPriceMode": "VALIDATE_ONLY"
+      },
+      "sourceText": "敷料包 |  |  | 25 | 18.6",
+      "sourceRef": "excel:账单规则#哈尔滨市道外区太平人民医院#2",
+      "priority": 12
+    },
+    {
+      "ruleType": "BILL_EXPORT_PRICE_RULE",
+      "name": "敷料包",
+      "stage": "bill_export",
+      "isActive": true,
+      "params": {
+        "acceptedTypes": [
+          "敷料包"
+        ],
+        "packNameKeywords": null,
+        "packagingMaterial": null,
+        "instrumentCountRange": null,
+        "unitPrice": 15.0,
+        "unitPriceMode": "FIXED",
+        "systemPrice": 20.0,
+        "systemPriceMode": "VALIDATE_ONLY"
+      },
+      "sourceText": "敷料包 |  |  | 20 | 15",
+      "sourceRef": "excel:账单规则#哈尔滨市道外区太平人民医院#3",
+      "priority": 13
+    },
+    {
+      "ruleType": "BILL_EXPORT_PRICE_RULE",
+      "name": "敷料包",
+      "stage": "bill_export",
+      "isActive": true,
+      "params": {
+        "acceptedTypes": [
+          "敷料包"
+        ],
+        "packNameKeywords": null,
+        "packagingMaterial": null,
+        "instrumentCountRange": null,
+        "unitPrice": 11.3,
+        "unitPriceMode": "FIXED",
+        "systemPrice": 15.0,
+        "systemPriceMode": "VALIDATE_ONLY"
+      },
+      "sourceText": "敷料包 |  |  | 15 | 11.3",
+      "sourceRef": "excel:账单规则#哈尔滨市道外区太平人民医院#4",
+      "priority": 14
+    },
+    {
+      "ruleType": "BILL_EXPORT_PRICE_RULE",
+      "name": "敷料包（无纺布）",
+      "stage": "bill_export",
+      "isActive": true,
+      "params": {
+        "acceptedTypes": [
+          "敷料包（无纺布）"
+        ],
+        "packNameKeywords": null,
+        "packagingMaterial": null,
+        "instrumentCountRange": null,
+        "unitPrice": 26.3,
+        "unitPriceMode": "FIXED",
+        "systemPrice": 35.0,
+        "systemPriceMode": "VALIDATE_ONLY"
+      },
+      "sourceText": "敷料包（无纺布） |  |  | 35 | 26.3",
+      "sourceRef": "excel:账单规则#哈尔滨市道外区太平人民医院#5",
+      "priority": 15
+    },
+    {
+      "ruleType": "BILL_EXPORT_PRICE_RULE",
+      "name": "敷料包（无纺布）",
+      "stage": "bill_export",
+      "isActive": true,
+      "params": {
+        "acceptedTypes": [
+          "敷料包（无纺布）"
+        ],
+        "packNameKeywords": null,
+        "packagingMaterial": null,
+        "instrumentCountRange": null,
+        "unitPrice": 22.5,
+        "unitPriceMode": "FIXED",
+        "systemPrice": 30.0,
+        "systemPriceMode": "VALIDATE_ONLY"
+      },
+      "sourceText": "敷料包（无纺布） |  |  | 30 | 22.5",
+      "sourceRef": "excel:账单规则#哈尔滨市道外区太平人民医院#6",
+      "priority": 16
+    },
+    {
+      "ruleType": "BILL_EXPORT_PRICE_RULE",
+      "name": "敷料包（无纺布）",
+      "stage": "bill_export",
+      "isActive": true,
+      "params": {
+        "acceptedTypes": [
+          "敷料包（无纺布）"
+        ],
+        "packNameKeywords": null,
+        "packagingMaterial": null,
+        "instrumentCountRange": null,
+        "unitPrice": 18.8,
+        "unitPriceMode": "FIXED",
+        "systemPrice": 25.0,
+        "systemPriceMode": "VALIDATE_ONLY"
+      },
+      "sourceText": "敷料包（无纺布） |  |  | 25 | 18.8",
+      "sourceRef": "excel:账单规则#哈尔滨市道外区太平人民医院#7",
+      "priority": 17
+    },
+    {
+      "ruleType": "BILL_EXPORT_PRICE_RULE",
+      "name": "敷料包（包名称带棉球或者纱布）",
+      "stage": "bill_export",
+      "isActive": true,
+      "params": {
+        "acceptedTypes": [
+          "敷料包"
+        ],
+        "packNameKeywords": [
+          "棉球",
+          "纱布"
+        ],
+        "packagingMaterial": null,
+        "instrumentCountRange": null,
+        "unitPrice": 1.9,
+        "unitPriceMode": "FIXED",
+        "systemPrice": 2.5,
+        "systemPriceMode": "VALIDATE_ONLY"
+      },
+      "sourceText": "敷料包（包名称带棉球或者纱布） |  |  | 2.5 | 1.9",
+      "sourceRef": "excel:账单规则#哈尔滨市道外区太平人民医院#8",
+      "priority": 18
+    },
+    {
+      "ruleType": "BILL_EXPORT_PRICE_RULE",
+      "name": "敷料包（包名称带棉球或者纱布）",
+      "stage": "bill_export",
+      "isActive": true,
+      "params": {
+        "acceptedTypes": [
+          "敷料包"
+        ],
+        "packNameKeywords": [
+          "棉球",
+          "纱布"
+        ],
+        "packagingMaterial": null,
+        "instrumentCountRange": null,
+        "unitPrice": 1.5,
+        "unitPriceMode": "FIXED",
+        "systemPrice": 2.0,
+        "systemPriceMode": "VALIDATE_ONLY"
+      },
+      "sourceText": "敷料包（包名称带棉球或者纱布） |  |  | 2 | 1.5",
+      "sourceRef": "excel:账单规则#哈尔滨市道外区太平人民医院#9",
+      "priority": 19
+    },
+    {
+      "ruleType": "BILL_EXPORT_PRICE_RULE",
+      "name": "敷料包（包名称带棉球或者纱布）",
+      "stage": "bill_export",
+      "isActive": true,
+      "params": {
+        "acceptedTypes": [
+          "敷料包"
+        ],
+        "packNameKeywords": [
+          "棉球",
+          "纱布"
+        ],
+        "packagingMaterial": null,
+        "instrumentCountRange": null,
+        "unitPrice": 1.1,
+        "unitPriceMode": "FIXED",
+        "systemPrice": 1.5,
+        "systemPriceMode": "VALIDATE_ONLY"
+      },
+      "sourceText": "敷料包（包名称带棉球或者纱布） |  |  | 1.5 | 1.1",
+      "sourceRef": "excel:账单规则#哈尔滨市道外区太平人民医院#10",
+      "priority": 20
+    },
+    {
+      "ruleType": "BILL_EXPORT_PRICE_RULE",
+      "name": "敷料包（纸塑袋）",
+      "stage": "bill_export",
+      "isActive": true,
+      "params": {
+        "acceptedTypes": [
+          "敷料包（纸塑袋）"
+        ],
+        "packNameKeywords": null,
+        "packagingMaterial": null,
+        "instrumentCountRange": null,
+        "unitPrice": 3.0,
+        "unitPriceMode": "FIXED",
+        "systemPrice": 4.0,
+        "systemPriceMode": "VALIDATE_ONLY"
+      },
+      "sourceText": "敷料包（纸塑袋） |  |  | 4 | 3",
+      "sourceRef": "excel:账单规则#哈尔滨市道外区太平人民医院#11",
+      "priority": 21
+    },
+    {
+      "ruleType": "BILL_EXPORT_PRICE_RULE",
+      "name": "敷料包（纸塑袋）",
+      "stage": "bill_export",
+      "isActive": true,
+      "params": {
+        "acceptedTypes": [
+          "敷料包（纸塑袋）"
+        ],
+        "packNameKeywords": null,
+        "packagingMaterial": null,
+        "instrumentCountRange": null,
+        "unitPrice": 1.9,
+        "unitPriceMode": "FIXED",
+        "systemPrice": 2.5,
+        "systemPriceMode": "VALIDATE_ONLY"
+      },
+      "sourceText": "敷料包（纸塑袋） |  |  | 2.5 | 1.9",
+      "sourceRef": "excel:账单规则#哈尔滨市道外区太平人民医院#12",
+      "priority": 22
+    },
+    {
+      "ruleType": "BILL_EXPORT_PRICE_RULE",
+      "name": "额外包(纸塑袋)",
+      "stage": "bill_export",
+      "isActive": true,
+      "params": {
+        "acceptedTypes": [
+          "额外包(纸塑袋)"
+        ],
+        "packNameKeywords": null,
+        "packagingMaterial": "25cm",
+        "instrumentCountRange": null,
+        "unitPrice": 9.03,
+        "unitPriceMode": "FIXED",
+        "systemPrice": 16.0,
+        "systemPriceMode": "VALIDATE_ONLY"
+      },
+      "sourceText": "额外包(纸塑袋) | 25cm |  | 16 | 9.03",
+      "sourceRef": "excel:账单规则#哈尔滨市道外区太平人民医院#13",
+      "priority": 23
+    },
+    {
+      "ruleType": "BILL_EXPORT_PRICE_RULE",
+      "name": "额外包(纸塑袋)",
+      "stage": "bill_export",
+      "isActive": true,
+      "params": {
+        "acceptedTypes": [
+          "额外包(纸塑袋)"
+        ],
+        "packNameKeywords": null,
+        "packagingMaterial": "20cm",
+        "instrumentCountRange": null,
+        "unitPrice": 6.83,
+        "unitPriceMode": "FIXED",
+        "systemPrice": 13.0,
+        "systemPriceMode": "VALIDATE_ONLY"
+      },
+      "sourceText": "额外包(纸塑袋) | 20cm |  | 13 | 6.83",
+      "sourceRef": "excel:账单规则#哈尔滨市道外区太平人民医院#14",
+      "priority": 24
+    },
+    {
+      "ruleType": "BILL_EXPORT_PRICE_RULE",
+      "name": "额外包(纸塑袋)",
+      "stage": "bill_export",
+      "isActive": true,
+      "params": {
+        "acceptedTypes": [
+          "额外包(纸塑袋)"
+        ],
+        "packNameKeywords": null,
+        "packagingMaterial": "15cm",
+        "instrumentCountRange": null,
+        "unitPrice": 5.33,
+        "unitPriceMode": "FIXED",
+        "systemPrice": 11.0,
+        "systemPriceMode": "VALIDATE_ONLY"
+      },
+      "sourceText": "额外包(纸塑袋) | 15cm |  | 11 | 5.33",
+      "sourceRef": "excel:账单规则#哈尔滨市道外区太平人民医院#15",
+      "priority": 25
+    },
+    {
+      "ruleType": "BILL_EXPORT_PRICE_RULE",
+      "name": "额外包(纸塑袋)",
+      "stage": "bill_export",
+      "isActive": true,
+      "params": {
+        "acceptedTypes": [
+          "额外包(纸塑袋)"
+        ],
+        "packNameKeywords": null,
+        "packagingMaterial": "10cm",
+        "instrumentCountRange": null,
+        "unitPrice": 3.03,
+        "unitPriceMode": "FIXED",
+        "systemPrice": 8.0,
+        "systemPriceMode": "VALIDATE_ONLY"
+      },
+      "sourceText": "额外包(纸塑袋) | 10cm |  | 8 | 3.03",
+      "sourceRef": "excel:账单规则#哈尔滨市道外区太平人民医院#16",
+      "priority": 26
+    },
+    {
+      "ruleType": "BILL_EXPORT_PRICE_RULE",
+      "name": "器械包（低温等离子）",
+      "stage": "bill_export",
+      "isActive": true,
+      "params": {
+        "acceptedTypes": [
+          "器械包（低温等离子）",
+          "器械包（ETO)",
+          "单包装包(老肯等温）",
+          "单包装包（EO）",
+          "额外包（低温等离子）",
+          "额外包（ETO)"
+        ],
+        "packNameKeywords": null,
+        "packagingMaterial": null,
+        "instrumentCountRange": "10≤N<20",
+        "unitPrice": 225.0,
+        "unitPriceMode": "FIXED",
+        "systemPrice": null,
+        "systemPriceMode": "IGNORE"
+      },
+      "sourceText": "器械包（低温等离子）、器械包（ETO)、单包装包(老肯等温）、单包装包（EO）、额外包（低温等离子）、额外包（ETO) |  | 10≤N<20 | None | 225",
+      "sourceRef": "excel:账单规则#哈尔滨市道外区太平人民医院#17",
+      "priority": 27
+    },
+    {
+      "ruleType": "BILL_EXPORT_PRICE_RULE",
+      "name": "器械包（低温等离子）",
+      "stage": "bill_export",
+      "isActive": true,
+      "params": {
+        "acceptedTypes": [
+          "器械包（低温等离子）",
+          "器械包（ETO)",
+          "单包装包(老肯等温）",
+          "单包装包（EO）",
+          "额外包（低温等离子）",
+          "额外包（ETO)"
+        ],
+        "packNameKeywords": null,
+        "packagingMaterial": null,
+        "instrumentCountRange": "5≤N<10",
+        "unitPrice": 123.8,
+        "unitPriceMode": "FIXED",
+        "systemPrice": null,
+        "systemPriceMode": "IGNORE"
+      },
+      "sourceText": "器械包（低温等离子）、器械包（ETO)、单包装包(老肯等温）、单包装包（EO）、额外包（低温等离子）、额外包（ETO) |  | 5≤N<10 | None | 123.8",
+      "sourceRef": "excel:账单规则#哈尔滨市道外区太平人民医院#18",
+      "priority": 28
+    },
+    {
+      "ruleType": "BILL_EXPORT_PRICE_RULE",
+      "name": "器械包（低温等离子）",
+      "stage": "bill_export",
+      "isActive": true,
+      "params": {
+        "acceptedTypes": [
+          "器械包（低温等离子）",
+          "器械包（ETO)",
+          "单包装包(老肯等温）",
+          "单包装包（EO）",
+          "额外包（低温等离子）",
+          "额外包（ETO)"
+        ],
+        "packNameKeywords": null,
+        "packagingMaterial": null,
+        "instrumentCountRange": "1≤N<5",
+        "unitPrice": 66.0,
+        "unitPriceMode": "FIXED",
+        "systemPrice": null,
+        "systemPriceMode": "IGNORE"
+      },
+      "sourceText": "器械包（低温等离子）、器械包（ETO)、单包装包(老肯等温）、单包装包（EO）、额外包（低温等离子）、额外包（ETO) |  | 1≤N<5 | None | 66",
+      "sourceRef": "excel:账单规则#哈尔滨市道外区太平人民医院#19",
+      "priority": 29
+    },
+    {
+      "ruleType": "BILL_EXPORT_PRICE_RULE",
+      "name": "单包装包(老肯等温）",
+      "stage": "bill_export",
+      "isActive": true,
+      "params": {
+        "acceptedTypes": [
+          "单包装包(老肯等温）",
+          "单包装包（EO）",
+          "额外包（低温等离子）",
+          "额外包（ETO)"
+        ],
+        "packNameKeywords": null,
+        "packagingMaterial": "30cm",
+        "instrumentCountRange": null,
+        "unitPrice": 26.3,
+        "unitPriceMode": "FIXED",
+        "systemPrice": null,
+        "systemPriceMode": "IGNORE"
+      },
+      "sourceText": "单包装包(老肯等温）、单包装包（EO）、额外包（低温等离子）、额外包（ETO) | 30cm |  | None | 26.3",
+      "sourceRef": "excel:账单规则#哈尔滨市道外区太平人民医院#20",
+      "priority": 30
+    },
+    {
+      "ruleType": "BILL_EXPORT_PRICE_RULE",
+      "name": "单包装包(老肯等温）",
+      "stage": "bill_export",
+      "isActive": true,
+      "params": {
+        "acceptedTypes": [
+          "单包装包(老肯等温）",
+          "单包装包（EO）",
+          "额外包（低温等离子）",
+          "额外包（ETO)"
+        ],
+        "packNameKeywords": null,
+        "packagingMaterial": "25cm",
+        "instrumentCountRange": null,
+        "unitPrice": 22.5,
+        "unitPriceMode": "FIXED",
+        "systemPrice": null,
+        "systemPriceMode": "IGNORE"
+      },
+      "sourceText": "单包装包(老肯等温）、单包装包（EO）、额外包（低温等离子）、额外包（ETO) | 25cm |  | None | 22.5",
+      "sourceRef": "excel:账单规则#哈尔滨市道外区太平人民医院#21",
+      "priority": 31
+    },
+    {
+      "ruleType": "BILL_EXPORT_PRICE_RULE",
+      "name": "单包装包(老肯等温）",
+      "stage": "bill_export",
+      "isActive": true,
+      "params": {
+        "acceptedTypes": [
+          "单包装包(老肯等温）",
+          "单包装包（EO）",
+          "额外包（低温等离子）",
+          "额外包（ETO)"
+        ],
+        "packNameKeywords": null,
+        "packagingMaterial": "20cm",
+        "instrumentCountRange": null,
+        "unitPrice": 21.0,
+        "unitPriceMode": "FIXED",
+        "systemPrice": null,
+        "systemPriceMode": "IGNORE"
+      },
+      "sourceText": "单包装包(老肯等温）、单包装包（EO）、额外包（低温等离子）、额外包（ETO) | 20cm |  | None | 21",
+      "sourceRef": "excel:账单规则#哈尔滨市道外区太平人民医院#22",
+      "priority": 32
+    },
+    {
+      "ruleType": "BILL_EXPORT_PRICE_RULE",
+      "name": "单包装包(老肯等温）",
+      "stage": "bill_export",
+      "isActive": true,
+      "params": {
+        "acceptedTypes": [
+          "单包装包(老肯等温）",
+          "单包装包（EO）",
+          "额外包（低温等离子）",
+          "额外包（ETO)"
+        ],
+        "packNameKeywords": null,
+        "packagingMaterial": "15cm",
+        "instrumentCountRange": null,
+        "unitPrice": 18.8,
+        "unitPriceMode": "FIXED",
+        "systemPrice": null,
+        "systemPriceMode": "IGNORE"
+      },
+      "sourceText": "单包装包(老肯等温）、单包装包（EO）、额外包（低温等离子）、额外包（ETO) | 15cm |  | None | 18.8",
+      "sourceRef": "excel:账单规则#哈尔滨市道外区太平人民医院#23",
+      "priority": 33
+    },
+    {
+      "ruleType": "BILL_EXPORT_PRICE_RULE",
+      "name": "单包装包(老肯等温）",
+      "stage": "bill_export",
+      "isActive": true,
+      "params": {
+        "acceptedTypes": [
+          "单包装包(老肯等温）",
+          "单包装包（EO）",
+          "额外包（低温等离子）",
+          "额外包（ETO)"
+        ],
+        "packNameKeywords": null,
+        "packagingMaterial": "10cm",
+        "instrumentCountRange": null,
+        "unitPrice": 16.5,
+        "unitPriceMode": "FIXED",
+        "systemPrice": null,
+        "systemPriceMode": "IGNORE"
+      },
+      "sourceText": "单包装包(老肯等温）、单包装包（EO）、额外包（低温等离子）、额外包（ETO) | 10cm |  | None | 16.5",
+      "sourceRef": "excel:账单规则#哈尔滨市道外区太平人民医院#24",
+      "priority": 34
     }
   ]
 }

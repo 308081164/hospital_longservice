@@ -308,13 +308,16 @@
     {
       "code": "TAIPING-RM",
       "name": "哈尔滨市道外区太平人民医院",
-      "excelRowName": "太平人民医院",
+      "excelRowName": "哈尔滨市道外区太平人民医院 / 太平人民医院",
       "rules": [
         {
-          "ruleType": "PIECE_TIER_DISCOUNT"
+          "ruleType": "BILL_EXPORT_PRICE_RULE"
         },
         {
           "ruleType": "LOGISTICS_WAIVE"
+        },
+        {
+          "ruleType": "PIECE_TIER_DISCOUNT"
         }
       ]
     },

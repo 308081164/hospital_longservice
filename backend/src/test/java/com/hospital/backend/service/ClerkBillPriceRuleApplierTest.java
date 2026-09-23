@@ -73,6 +73,31 @@ class ClerkBillPriceRuleApplierTest {
     }
 
     @Test
+    void appliesTaipingDressingPriceRule() {
+        ObjectNode compiled = compiler.compileForCustomer("TAIPING-RM");
+        BillRowItem row = new BillRowItem();
+        row.setType("敷料包");
+        row.setPackName("敷料大");
+        row.setTotalPrice(30.0);
+
+        var result = applier.apply(compiled, List.of(row));
+        assertThat(result.rows().get(0).getTotalPrice()).isEqualTo(18.6);
+    }
+
+    @Test
+    void appliesTaipingPaperPlasticSizeRule() {
+        ObjectNode compiled = compiler.compileForCustomer("TAIPING-RM");
+        BillRowItem row = new BillRowItem();
+        row.setType("额外包(纸塑袋)");
+        row.setPackageMaterial("纸塑袋20cm");
+        row.setPackName("测试");
+        row.setTotalPrice(20.0);
+
+        var result = applier.apply(compiled, List.of(row));
+        assertThat(result.rows().get(0).getTotalPrice()).isEqualTo(6.83);
+    }
+
+    @Test
     void validatesSystemPriceWithoutChangingExportPrice() {
         ObjectNode compiled = compiler.compileForCustomer("DAOWAI-RM");
         BillRowItem row = new BillRowItem();

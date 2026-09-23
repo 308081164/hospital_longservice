@@ -14,6 +14,7 @@ public final class ExportTemplateResolverKeys {
     public static final String INSTRUMENT_AUDIT = "instrument_audit";
     public static final String LOGISTICS_ALLOCATION = "logistics_allocation";
     public static final String GRAND_TOTAL = "grand_total";
+    public static final String STERILIZE_FEE_DETAIL = "sterilize_fee_detail";
 
     private ExportTemplateResolverKeys() {}
 }

@@ -1,6 +1,6 @@
 {
-  "baseline_hash": "a4d30e237462075b158cad37cec4485cab2ea8453a8b99057f34e0c2762d1fb8",
-  "generated_at": "2026-09-20T07:35:18Z",
+  "baseline_hash": "9a341ba241b02c54c709b70a9d701860970908a54832c45d9446e25ce1ff3473",
+  "generated_at": "2026-09-23T06:37:23Z",
   "source": "docs/source/附一收费标准.xlsx + 铂康/内勤要求/医院内勤规则-20260918.xlsx",
   "customer_count": 39,
   "customers": [
@@ -82,7 +82,7 @@
     {
       "code": "HULAN-HSZ",
       "file": "baseline/HULAN-HSZ.json",
-      "ruleCount": 2
+      "ruleCount": 1
     },
     {
       "code": "HULAN-RM",
@@ -92,12 +92,12 @@
     {
       "code": "HULAN-TCM",
       "file": "baseline/HULAN-TCM.json",
-      "ruleCount": 5
+      "ruleCount": 3
     },
     {
       "code": "JIUZHOU-FK",
       "file": "baseline/JIUZHOU-FK.json",
-      "ruleCount": 5
+      "ruleCount": 3
     },
     {
       "code": "NG-FUCHAN",
@@ -137,12 +137,12 @@
     {
       "code": "TAIPING-RM",
       "file": "baseline/TAIPING-RM.json",
-      "ruleCount": 2
+      "ruleCount": 26
     },
     {
       "code": "VICTORIA",
       "file": "baseline/VICTORIA.json",
-      "ruleCount": 3
+      "ruleCount": 2
     },
     {
       "code": "WUCHANG-RM",
@@ -162,27 +162,27 @@
     {
       "code": "YUEMEI-FH",
       "file": "baseline/YUEMEI-FH.json",
-      "ruleCount": 2
+      "ruleCount": 1
     },
     {
       "code": "ZUYAN-NG",
       "file": "baseline/ZUYAN-NG.json",
-      "ruleCount": 2
+      "ruleCount": 3
     },
     {
       "code": "ZUYAN-SF",
       "file": "baseline/ZUYAN-SF.json",
-      "ruleCount": 2
+      "ruleCount": 3
     },
     {
       "code": "ZUYAN-XA",
       "file": "baseline/ZUYAN-XA.json",
-      "ruleCount": 2
+      "ruleCount": 3
     },
     {
       "code": "ZY3-DIANLI",
       "file": "baseline/ZY3-DIANLI.json",
-      "ruleCount": 2
+      "ruleCount": 3
     },
     {
       "code": "ZYY-D1",
@@ -192,12 +192,12 @@
     {
       "code": "ZYY-D2-HN",
       "file": "baseline/ZYY-D2-HN.json",
-      "ruleCount": 1
+      "ruleCount": 3
     },
     {
       "code": "ZYY-D2-NG",
       "file": "baseline/ZYY-D2-NG.json",
-      "ruleCount": 1
+      "ruleCount": 3
     }
   ]
 }
