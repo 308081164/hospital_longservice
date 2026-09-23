@@ -116,7 +116,7 @@ class BillExportPriceResolverTest {
     }
 
     @Test
-    void prefersImportUnitPriceForPerPieceColumn() {
+    void singlePiecePerPieceAlignsWithUnitPriceDespiteImportSnapshot() {
         BillRowItem row = new BillRowItem();
         row.setPackCount(1);
         row.setInstrumentCount(1);
@@ -125,7 +125,39 @@ class BillExportPriceResolverTest {
         row.setOriginal(Map.of("importUnitPrice", 22.4));
 
         assertThat(BillExportPriceResolver.resolveUnitPrice(row)).isEqualTo(30.4);
-        assertThat(BillExportPriceResolver.resolvePerPiecePrice(row)).isEqualTo(22.4);
+        assertThat(BillExportPriceResolver.resolvePerPiecePrice(row)).isEqualTo(30.4);
+        assertThat(BillExportPriceResolver.resolveTotalPrice(row)).isEqualTo(30.4);
+    }
+
+    @Test
+    void singlePieceStaleCorrectedTotalKeepsThreeColumnsConsistent() {
+        BillRowItem row = new BillRowItem();
+        row.setPackCount(1);
+        row.setInstrumentCount(1);
+        row.setUnitPrice(6.40);
+        row.setExpectedUnitPrice(6.40);
+        row.setTotalPrice(8.00);
+        row.setCorrectedTotalPrice(8.00);
+        row.setOriginal(Map.of("importUnitPrice", 6.40));
+
+        assertThat(BillExportPriceResolver.resolveTotalPrice(row)).isEqualTo(6.40);
+        assertThat(BillExportPriceResolver.resolveUnitPrice(row)).isEqualTo(6.40);
+        assertThat(BillExportPriceResolver.resolvePerPiecePrice(row)).isEqualTo(6.40);
+    }
+
+    @Test
+    void singlePieceStaleCorrectedTotalForEntityRow() {
+        HospitalReconciliationRow row = new HospitalReconciliationRow();
+        row.setPackCount(1);
+        row.setInstrumentCount(1);
+        row.setUnitPrice(6.40);
+        row.setExpectedUnitPrice(6.40);
+        row.setTotalPrice(8.00);
+        row.setCorrectedTotalPrice(8.00);
+
+        assertThat(BillExportPriceResolver.resolveTotalPrice(row)).isEqualTo(6.40);
+        assertThat(BillExportPriceResolver.resolveUnitPrice(row)).isEqualTo(6.40);
+        assertThat(BillExportPriceResolver.resolvePerPiecePrice(row)).isEqualTo(6.40);
     }
 
     @Test
@@ -140,7 +172,7 @@ class BillExportPriceResolverTest {
     }
 
     @Test
-    void entityRowPerPieceUsesOriginalUnitPrice() {
+    void entityRowSinglePiecePerPieceAlignsWithResolvedUnitPrice() {
         HospitalReconciliationRow row = new HospitalReconciliationRow();
         row.setUnitPrice(22.4);
         row.setExpectedUnitPrice(30.4);
@@ -148,7 +180,7 @@ class BillExportPriceResolverTest {
         row.setInstrumentCount(1);
         row.setCorrectedTotalPrice(30.4);
 
-        assertThat(BillExportPriceResolver.resolvePerPiecePrice(row)).isEqualTo(22.4);
+        assertThat(BillExportPriceResolver.resolvePerPiecePrice(row)).isEqualTo(30.4);
         assertThat(BillExportPriceResolver.resolveUnitPrice(row)).isEqualTo(30.4);
     }
 }

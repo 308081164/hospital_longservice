@@ -39,7 +39,7 @@ public final class BillExportPriceResolver {
     }
 
     /**
-     * L 列「单价（把）」：优先保留原始导入把价，否则由校正总价按包数×器械数反推。
+     * L 列「单价（把）」：多把行由校正总价反推；单把行与 M 列单价保持一致。
      */
     public static Double resolvePerPiecePrice(BillRowItem row) {
         if (row == null) {
@@ -49,13 +49,6 @@ public final class BillExportPriceResolver {
         Double derived = derivePerPieceFromTotals(row.getPackCount(), row.getInstrumentCount(),
                 resolveTotalPrice(row));
         if (instruments > 1 && derived != null) {
-            return derived;
-        }
-        Double importPrice = readImportUnitPrice(row.getOriginal());
-        if (importPrice != null) {
-            return importPrice;
-        }
-        if (derived != null) {
             return derived;
         }
         return resolveUnitPrice(row);
@@ -106,24 +99,7 @@ public final class BillExportPriceResolver {
         if (instruments > 1 && derived != null) {
             return derived;
         }
-        if (row.getUnitPrice() != null) {
-            return row.getUnitPrice();
-        }
-        if (derived != null) {
-            return derived;
-        }
         return resolveUnitPrice(row);
-    }
-
-    private static Double readImportUnitPrice(java.util.Map<String, Object> original) {
-        if (original == null) {
-            return null;
-        }
-        Object value = original.get("importUnitPrice");
-        if (value instanceof Number number) {
-            return round(number.doubleValue());
-        }
-        return null;
     }
 
     private static Double derivePerPieceFromTotals(Integer packCount, Integer instrumentCount, Double total) {
@@ -161,14 +137,7 @@ public final class BillExportPriceResolver {
         if (Math.abs(correctedTotalPrice - recomputed) <= 0.001) {
             return correctedTotalPrice;
         }
-        boolean correctedMatchesOriginal = totalPrice != null
-                && Math.abs(correctedTotalPrice - totalPrice) <= 0.001;
-        boolean unitChanged = unitPrice != null
-                && Math.abs(expectedUnitPrice - unitPrice) > 0.001;
-        if (correctedMatchesOriginal && unitChanged) {
-            return recomputed;
-        }
-        return correctedTotalPrice;
+        return recomputed;
     }
 
     private static double round(double value) {
