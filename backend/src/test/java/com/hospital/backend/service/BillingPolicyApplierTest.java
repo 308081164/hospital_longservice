@@ -104,6 +104,59 @@ class BillingPolicyApplierTest {
                 .isEmpty();
     }
 
+    @Test
+    void stackedBillDetailDiscountsRoundAtEachStep() {
+        ObjectNode rules = mapper.createObjectNode();
+        ArrayNode policies = rules.putArray("billingPolicies");
+        ObjectNode first = policies.addObject();
+        first.put("policyType", "DISCOUNT");
+        first.put("name", "附一对账八折");
+        first.put("priority", 10);
+        first.putObject("scope").put("temperature", "ANY");
+        ObjectNode firstParams = first.putObject("params");
+        firstParams.put("applyStage", "bill_detail");
+        firstParams.put("rate", 0.8);
+        firstParams.put("skipWhenFixedPrice", false);
+
+        ObjectNode second = policies.addObject();
+        second.put("policyType", "DISCOUNT");
+        second.put("name", "附一对账九九折");
+        second.put("priority", 20);
+        second.putObject("scope").put("temperature", "ANY");
+        ObjectNode secondParams = second.putObject("params");
+        secondParams.put("applyStage", "bill_detail");
+        secondParams.put("rate", 0.99);
+        secondParams.put("skipWhenFixedPrice", false);
+
+        BillingPolicyApplier.BillDetailDiscount discount = BillingPolicyApplier.applyBillDetailDiscounts(
+                rules, "器械包", "测试", "纸塑袋 10cm", "中医附一", 8.0, 1, false, false);
+
+        assertThat(discount).isNotNull();
+        assertThat(discount.price()).isEqualTo(6.34);
+        assertThat(discount.note()).contains("0.8").contains("0.99");
+    }
+
+    @Test
+    void secondDiscountStepRoundsHalfUpExample() {
+        ObjectNode rules = mapper.createObjectNode();
+        ArrayNode policies = rules.putArray("billingPolicies");
+        ObjectNode policy = policies.addObject();
+        policy.put("policyType", "DISCOUNT");
+        policy.put("name", "附一对账九九折");
+        policy.put("priority", 20);
+        policy.putObject("scope").put("temperature", "ANY");
+        ObjectNode params = policy.putObject("params");
+        params.put("applyStage", "bill_detail");
+        params.put("rate", 0.99);
+        params.put("skipWhenFixedPrice", false);
+
+        BillingPolicyApplier.BillDetailDiscount discount = BillingPolicyApplier.applyBillDetailDiscounts(
+                rules, "器械包", "测试", "纸塑袋", "中医附一", 6.4, 1, false, false);
+
+        assertThat(discount).isNotNull();
+        assertThat(discount.price()).isEqualTo(6.39);
+    }
+
     private ObjectNode rulesWithDiscount(String applyStage, double rate, String temperature) {
         ObjectNode rules = mapper.createObjectNode();
         ArrayNode policies = rules.putArray("billingPolicies");

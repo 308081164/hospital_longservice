@@ -126,9 +126,15 @@ public final class BillingPolicyApplier {
         if (billingPolicies.isArray() && !billingPolicies.isEmpty()) {
             String rowTemp = BillingConditionEvaluator.resolveRowTemperature(
                     type + packName + packageMaterial);
-            JsonNode matched = findScopedDiscountPolicy(billingPolicies, rowTemp, hitFixedPrice, targetStage);
-            if (matched != null) {
-                return toBillDetailDiscount(matched, hospitalName, baseUnitPrice, billingPieces);
+            List<JsonNode> matchedPolicies = findScopedDiscountPolicies(
+                    billingPolicies, rowTemp, hitFixedPrice, targetStage);
+            if (!matchedPolicies.isEmpty()) {
+                if (matchedPolicies.size() == 1) {
+                    return toBillDetailDiscount(
+                            matchedPolicies.get(0), hospitalName, baseUnitPrice, billingPieces);
+                }
+                return toStackedBillDetailDiscount(
+                        matchedPolicies, hospitalName, baseUnitPrice, billingPieces, targetStage);
             }
             if (STAGE_BILL_DETAIL.equals(targetStage)) {
                 return null;
@@ -234,6 +240,28 @@ public final class BillingPolicyApplier {
             String rowTemp,
             boolean hitFixedPrice,
             String targetStage) {
+        List<JsonNode> matched = findScopedDiscountPolicies(policies, rowTemp, hitFixedPrice, targetStage);
+        if (matched.isEmpty()) {
+            return null;
+        }
+        for (JsonNode policy : matched) {
+            String scopeTemp = policy.path("scope").path("temperature").asText("ANY");
+            if (!"ANY".equalsIgnoreCase(scopeTemp)) {
+                return policy;
+            }
+        }
+        return matched.get(0);
+    }
+
+    /**
+     * 返回同一 targetStage 下所有可叠加的折扣策略（按 priority 升序）。
+     * 若存在分温策略则仅返回分温命中项；否则返回全部 ANY 策略以便逐步叠乘（如附一 0.8×0.99）。
+     */
+    private static List<JsonNode> findScopedDiscountPolicies(
+            JsonNode policies,
+            String rowTemp,
+            boolean hitFixedPrice,
+            String targetStage) {
         List<JsonNode> discounts = new ArrayList<>();
         for (JsonNode policy : policies) {
             if ("DISCOUNT".equalsIgnoreCase(policy.path("policyType").asText())
@@ -242,7 +270,8 @@ public final class BillingPolicyApplier {
             }
         }
         discounts.sort(Comparator.comparingInt(p -> p.path("priority").asInt(100)));
-        JsonNode anyFallback = null;
+        List<JsonNode> scoped = new ArrayList<>();
+        List<JsonNode> anyScoped = new ArrayList<>();
         for (JsonNode policy : discounts) {
             String scopeTemp = policy.path("scope").path("temperature").asText("ANY");
             if (!BillingConditionEvaluator.temperatureScopeMatches(scopeTemp, rowTemp)) {
@@ -252,12 +281,15 @@ public final class BillingPolicyApplier {
                 continue;
             }
             if ("ANY".equalsIgnoreCase(scopeTemp)) {
-                anyFallback = policy;
-                continue;
+                anyScoped.add(policy);
+            } else {
+                scoped.add(policy);
             }
-            return policy;
         }
-        return anyFallback;
+        if (!scoped.isEmpty()) {
+            return scoped;
+        }
+        return anyScoped;
     }
 
     static boolean stageMatches(JsonNode policy, String targetStage) {
@@ -281,6 +313,57 @@ public final class BillingPolicyApplier {
         return applyStage.equalsIgnoreCase(targetStage)
                 || (STAGE_BILL_DETAIL.equals(targetStage)
                 && ("after_base".equalsIgnoreCase(applyStage) || "bill_detail".equalsIgnoreCase(applyStage)));
+    }
+
+    private static BillDetailDiscount toStackedBillDetailDiscount(
+            List<JsonNode> policies,
+            String hospitalName,
+            double baseUnitPrice,
+            int billingPieces,
+            String targetStage) {
+        double price = baseUnitPrice;
+        StringBuilder note = new StringBuilder();
+        List<String> labels = new ArrayList<>();
+        Long lastPolicyId = null;
+        for (JsonNode policy : policies) {
+            JsonNode params = policy.path("params");
+            List<PieceTierDiscount> tiers = parsePieceTierDiscounts(params);
+            String label = policy.path("name").asText("客户折扣");
+            labels.add(label);
+            if (policy.has("policyId")) {
+                lastPolicyId = policy.path("policyId").asLong();
+            }
+            if (!tiers.isEmpty()) {
+                double before = price;
+                price = applyPieceTierRate(price, billingPieces, tiers);
+                note.append(label).append("：").append(fmt(before)).append(" 元 → ")
+                        .append(fmt(price)).append(" 元；");
+                continue;
+            }
+            double rate = params.path("rate").asDouble(1.0);
+            if (rate <= 0 || rate >= 1.0) {
+                continue;
+            }
+            double before = price;
+            price = round(before * rate);
+            note.append(label).append("：").append(fmt(before)).append(" 元 × ")
+                    .append(rate).append(" = ").append(fmt(price)).append(" 元；");
+        }
+        if (note.isEmpty()) {
+            return null;
+        }
+        String joinedLabels = String.join(" + ", labels);
+        String summary = STAGE_SETTLEMENT_ONLY.equals(targetStage)
+                ? note.toString()
+                : "命中" + joinedLabels + "，基础规则单价 "
+                        + fmt(baseUnitPrice) + " 元 → " + fmt(price) + " 元（"
+                        + note.substring(0, note.length() - 1) + "）。";
+        return new BillDetailDiscount(
+                price,
+                " + " + hospitalName + " 折扣",
+                summary,
+                lastPolicyId
+        );
     }
 
     private static BillDetailDiscount toBillDetailDiscount(

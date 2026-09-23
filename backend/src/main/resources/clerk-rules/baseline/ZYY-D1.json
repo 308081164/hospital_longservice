@@ -2,7 +2,7 @@
   "customerCode": "ZYY-D1",
   "customerName": "黑龙江中医药大学附属第一医院",
   "sourceVersion": "docs/source/附一收费标准.xlsx",
-  "notes": "中医附一内勤规则 · 独立维护于 docs/source/附一收费标准.xlsx（不纳入医院内勤规则-20260918）。Sheet2 价表同步产物见 billing-rules/baseline/ZYY-D1.json（PricingEngine hybrid 必需，与内勤同源）。",
+  "notes": "中医附一内勤规则 · 2026-09-23 电话确认：调价/整院折扣类 clerk 规则已封存；对账叠折改由 billing-rules/baseline/ZYY-D1.json billingPolicies。",
   "attachmentRefs": [],
   "rules": [
     {
@@ -106,6 +106,34 @@
       "sourceText": "Sheet1#52：导出时纸塑袋名称替换为标准名",
       "sourceRef": "excel:docs/source/附一收费标准.xlsx",
       "priority": 160
+    },
+    {
+      "ruleType": "DISCOUNT_OVERLAY",
+      "name": "整院八折（封存）",
+      "stage": "bill_export",
+      "isActive": false,
+      "params": {
+        "rate": 0.8,
+        "validateOnly": true,
+        "_sealedReason": "2026-09-23 电话确认：旧整院折扣/export 调价封存，改 billing baseline 对账叠折"
+      },
+      "sourceText": "整院折扣/export 阶段调价（已停用）",
+      "sourceRef": "sealed:phone-20260923",
+      "priority": 170
+    },
+    {
+      "ruleType": "PRICE_VALIDATE_ONLY",
+      "name": "标准价叠折校对（封存）",
+      "stage": "bill_export",
+      "isActive": false,
+      "params": {
+        "rate": 0.792,
+        "validateOnly": true,
+        "_sealedReason": "2026-09-23 旧复合调价方案封存；现行 0.8×0.99 分步四舍五入见 billingPolicies"
+      },
+      "sourceText": "旧版类型特色单价/export 校对（已停用）",
+      "sourceRef": "sealed:phone-20260923",
+      "priority": 180
     }
   ]
 }

@@ -6,6 +6,7 @@ import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.hospital.backend.common.JsonUtils;
 import com.hospital.backend.entity.Customer;
+import com.hospital.backend.entity.CustomerBillingPolicy;
 import com.hospital.backend.entity.CustomerProductRule;
 import com.hospital.backend.mapper.CustomerBillingPolicyMapper;
 import com.hospital.backend.mapper.CustomerBillingRuleGroupMapper;
@@ -81,7 +82,9 @@ public final class PricingEngineTestSupport {
         }
         Customer customer = toCustomer(customerNode);
         List<CustomerProductRule> rules = toProductRules(customerNode.path("productRules"), customer.getId());
-        PricingRuleCompiler compiler = mockCompiler(customer, rules);
+        List<CustomerBillingPolicy> policies = toBillingPolicies(
+                customerNode.path("billingPolicies"), customer.getId());
+        PricingRuleCompiler compiler = mockCompiler(customer, rules, policies);
         JsonNode base = MAPPER.valueToTree(DefaultPricingTemplate.buildRulesMap());
         return compiler.compileForCustomer(base, customer, customer.getCanonicalName());
     }
@@ -126,7 +129,10 @@ public final class PricingEngineTestSupport {
         return map;
     }
 
-    public static PricingRuleCompiler mockCompiler(Customer customer, List<CustomerProductRule> rules) {
+    public static PricingRuleCompiler mockCompiler(
+            Customer customer,
+            List<CustomerProductRule> rules,
+            List<CustomerBillingPolicy> billingPolicies) {
         CustomerResolver customerResolver = Mockito.mock(CustomerResolver.class);
         CustomerProductRuleMapper productRuleMapper = Mockito.mock(CustomerProductRuleMapper.class);
         CustomerDiscountMapper discountMapper = Mockito.mock(CustomerDiscountMapper.class);
@@ -142,7 +148,8 @@ public final class PricingEngineTestSupport {
         when(customerResolver.hospitalNamesForCustomer(customer)).thenReturn(List.of(customer.getCanonicalName()));
         when(productRuleMapper.selectByCustomerId(customer.getId())).thenReturn(rules);
         when(discountMapper.selectByCustomerId(customer.getId())).thenReturn(List.of());
-        when(billingPolicyMapper.selectByCustomerId(customer.getId())).thenReturn(List.of());
+        when(billingPolicyMapper.selectByCustomerId(customer.getId())).thenReturn(
+                billingPolicies != null ? billingPolicies : List.of());
         when(ruleGroupMapper.selectByCustomerIdAndCode(anyLong(), anyString())).thenReturn(null);
 
         return new PricingRuleCompiler(
@@ -156,6 +163,10 @@ public final class PricingEngineTestSupport {
                 productMatchRuleMapper,
                 ruleSchemaValidator
         );
+    }
+
+    public static PricingRuleCompiler mockCompiler(Customer customer, List<CustomerProductRule> rules) {
+        return mockCompiler(customer, rules, List.of());
     }
 
     private static Customer toCustomer(JsonNode node) {
@@ -181,6 +192,36 @@ public final class PricingEngineTestSupport {
             customer.setStandardPricingOverride(node.path("standardPricingOverride").toString());
         }
         return customer;
+    }
+
+    private static List<CustomerBillingPolicy> toBillingPolicies(JsonNode policiesNode, Long customerId) {
+        List<CustomerBillingPolicy> policies = new ArrayList<>();
+        if (!policiesNode.isArray()) {
+            return policies;
+        }
+        long id = 50_000L;
+        for (JsonNode policyNode : policiesNode) {
+            if (!policyNode.path("isActive").asBoolean(true)) {
+                continue;
+            }
+            CustomerBillingPolicy policy = new CustomerBillingPolicy();
+            policy.setId(id++);
+            policy.setCustomerId(customerId);
+            policy.setPolicyType(policyNode.path("policyType").asText("DISCOUNT"));
+            policy.setName(policyNode.path("name").asText());
+            if (policyNode.hasNonNull("priority")) {
+                policy.setPriority(policyNode.path("priority").asInt());
+            }
+            if (policyNode.has("scope") && !policyNode.get("scope").isNull()) {
+                policy.setScope(policyNode.get("scope").toString());
+            }
+            if (policyNode.has("params") && !policyNode.get("params").isNull()) {
+                policy.setParams(policyNode.get("params").toString());
+            }
+            policy.setIsActive(true);
+            policies.add(policy);
+        }
+        return policies;
     }
 
     private static List<CustomerProductRule> toProductRules(JsonNode rulesNode, Long customerId) {

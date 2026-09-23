@@ -4,7 +4,38 @@
   "billingEnabled": true,
   "billingPricingMode": "hybrid",
   "sourceVersion": "docs/source/附一收费标准.xlsx",
-  "notes": "中医附一独立价表 · 权威来源 docs/source/附一收费标准.xlsx（Sheet2 标准价 + 特殊收费；补充规则见 fuyi-rules/supplement.json）",
+  "notes": "中医附一独立价表 · 2026-09-23 电话确认：对账试用改为标准计价×0.8×0.99（逐步四舍五入）；原 productRules 封存保留。",
+  "billingPolicies": [
+    {
+      "policyType": "DISCOUNT",
+      "name": "附一对账八折",
+      "priority": 10,
+      "scope": {
+        "temperature": "ANY"
+      },
+      "params": {
+        "rate": 0.8,
+        "applyStage": "bill_detail",
+        "skipWhenFixedPrice": false
+      },
+      "sourceRef": "phone:2026-09-23"
+    },
+    {
+      "policyType": "DISCOUNT",
+      "name": "附一对账九九折",
+      "priority": 20,
+      "scope": {
+        "temperature": "ANY"
+      },
+      "params": {
+        "rate": 0.99,
+        "applyStage": "bill_detail",
+        "skipWhenFixedPrice": false
+      },
+      "sourceRef": "phone:2026-09-23"
+    }
+  ],
+  "archivedProductRulesNote": "2026-09-23 封存：类型特色规则暂停，对账改走标准价叠折试用",
   "standardPricingOverride": {
     "highTemperature": {
       "paperPlastic": {
@@ -155,7 +186,7 @@
       "priority": 5,
       "skipPackaging": true,
       "skipDiscount": true,
-      "isActive": true,
+      "isActive": false,
       "matchMode": "first",
       "price": 30.38,
       "keywords": [
@@ -174,7 +205,8 @@
       ],
       "skipPackaging": true,
       "skipDiscount": true,
-      "sourceRef": "supplement:prod"
+      "sourceRef": "supplement:prod",
+      "isActive": false
     },
     {
       "ruleType": "FIXED_PRICE",
@@ -186,7 +218,8 @@
       ],
       "skipPackaging": true,
       "skipDiscount": true,
-      "sourceRef": "supplement:prod"
+      "sourceRef": "supplement:prod",
+      "isActive": false
     },
     {
       "ruleType": "FIXED_PRICE",
@@ -194,7 +227,7 @@
       "priority": 10,
       "skipPackaging": true,
       "skipDiscount": true,
-      "isActive": true,
+      "isActive": false,
       "matchMode": "first",
       "price": 21.99,
       "keywords": [
@@ -213,7 +246,8 @@
       ],
       "skipPackaging": true,
       "skipDiscount": true,
-      "sourceRef": "supplement:prod"
+      "sourceRef": "supplement:prod",
+      "isActive": false
     },
     {
       "ruleType": "FIXED_PRICE",
@@ -228,7 +262,8 @@
       ],
       "skipPackaging": true,
       "skipDiscount": true,
-      "sourceRef": "supplement:prod"
+      "sourceRef": "supplement:prod",
+      "isActive": false
     },
     {
       "ruleType": "FIXED_PRICE",
@@ -240,7 +275,8 @@
       ],
       "skipPackaging": true,
       "skipDiscount": true,
-      "sourceRef": "supplement:prod"
+      "sourceRef": "supplement:prod",
+      "isActive": false
     },
     {
       "ruleType": "FIXED_PRICE",
@@ -252,7 +288,8 @@
       ],
       "skipPackaging": true,
       "skipDiscount": true,
-      "sourceRef": "supplement:prod"
+      "sourceRef": "supplement:prod",
+      "isActive": false
     },
     {
       "ruleType": "FIXED_PRICE",
@@ -264,7 +301,8 @@
       ],
       "skipPackaging": true,
       "skipDiscount": true,
-      "sourceRef": "supplement:prod"
+      "sourceRef": "supplement:prod",
+      "isActive": false
     },
     {
       "ruleType": "FIXED_PRICE",
@@ -276,7 +314,8 @@
       ],
       "skipPackaging": true,
       "skipDiscount": true,
-      "sourceRef": "supplement:prod"
+      "sourceRef": "supplement:prod",
+      "isActive": false
     },
     {
       "ruleType": "FIXED_PRICE",
@@ -288,7 +327,8 @@
       ],
       "skipPackaging": true,
       "skipDiscount": true,
-      "sourceRef": "supplement:prod"
+      "sourceRef": "supplement:prod",
+      "isActive": false
     },
     {
       "ruleType": "FIXED_PRICE",
@@ -300,7 +340,8 @@
       ],
       "skipPackaging": true,
       "skipDiscount": true,
-      "sourceRef": "supplement:prod"
+      "sourceRef": "supplement:prod",
+      "isActive": false
     },
     {
       "ruleType": "FOLD",
@@ -308,7 +349,7 @@
       "priority": 15,
       "skipPackaging": true,
       "skipDiscount": true,
-      "isActive": true,
+      "isActive": false,
       "matchMode": "first",
       "keywords": [
         "橄榄头"
@@ -323,7 +364,7 @@
       "priority": 16,
       "skipPackaging": true,
       "skipDiscount": true,
-      "isActive": true,
+      "isActive": false,
       "matchMode": "first",
       "keywords": [
         "冲洗头"
@@ -338,7 +379,7 @@
       "priority": 30,
       "skipPackaging": true,
       "skipDiscount": true,
-      "isActive": true,
+      "isActive": false,
       "matchMode": "first",
       "price": 70.33,
       "keywords": [
@@ -353,7 +394,7 @@
       "priority": 31,
       "skipPackaging": true,
       "skipDiscount": true,
-      "isActive": true,
+      "isActive": false,
       "matchMode": "first",
       "price": 131.87,
       "keywords": [
@@ -368,7 +409,7 @@
       "priority": 32,
       "skipPackaging": true,
       "skipDiscount": true,
-      "isActive": true,
+      "isActive": false,
       "matchMode": "first",
       "price": 239.76,
       "keywords": [
@@ -387,7 +428,8 @@
       ],
       "skipPackaging": true,
       "skipDiscount": true,
-      "sourceRef": "supplement:prod"
+      "sourceRef": "supplement:prod",
+      "isActive": false
     },
     {
       "ruleType": "FIXED_PRICE",
@@ -395,7 +437,7 @@
       "priority": 70,
       "skipPackaging": true,
       "skipDiscount": true,
-      "isActive": true,
+      "isActive": false,
       "matchMode": "first",
       "price": 3.2,
       "keywords": [
@@ -410,7 +452,7 @@
       "priority": 71,
       "skipPackaging": true,
       "skipDiscount": true,
-      "isActive": true,
+      "isActive": false,
       "matchMode": "first",
       "price": 2.0,
       "keywords": [
@@ -426,7 +468,7 @@
       "priority": 72,
       "skipPackaging": true,
       "skipDiscount": true,
-      "isActive": true,
+      "isActive": false,
       "matchMode": "first",
       "price": 27.97,
       "keywords": [
@@ -440,7 +482,7 @@
       "priority": 73,
       "skipPackaging": true,
       "skipDiscount": true,
-      "isActive": true,
+      "isActive": false,
       "matchMode": "first",
       "price": 19.98,
       "keywords": [
@@ -454,7 +496,7 @@
       "priority": 74,
       "skipPackaging": true,
       "skipDiscount": true,
-      "isActive": true,
+      "isActive": false,
       "matchMode": "first",
       "price": 23.98,
       "keywords": [
@@ -472,7 +514,8 @@
       ],
       "skipPackaging": true,
       "skipDiscount": true,
-      "sourceRef": "supplement:prod"
+      "sourceRef": "supplement:prod",
+      "isActive": false
     },
     {
       "ruleType": "FIXED_PRICE",
@@ -484,7 +527,8 @@
       ],
       "skipPackaging": true,
       "skipDiscount": true,
-      "sourceRef": "supplement:prod"
+      "sourceRef": "supplement:prod",
+      "isActive": false
     },
     {
       "ruleType": "FIXED_PRICE",
@@ -496,7 +540,8 @@
       ],
       "skipPackaging": true,
       "skipDiscount": true,
-      "sourceRef": "supplement:prod"
+      "sourceRef": "supplement:prod",
+      "isActive": false
     }
   ]
 }

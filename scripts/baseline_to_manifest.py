@@ -50,9 +50,10 @@ def build_manifest(existing: dict | None = None) -> dict:
             "billingPricingMode": baseline.get("billingPricingMode") or prev.get("billingPricingMode"),
             "standardPricingOverride": override,
             "billingEnabled": billing_enabled,
+            "billingPolicies": baseline.get("billingPolicies") or prev.get("billingPolicies"),
             "productRules": rules,
             "rule_count": len(rules),
-            "active_rule_count": len(rules),
+            "active_rule_count": len([r for r in rules if r.get("isActive", True)]),
         }
 
     manifest_hash = canonical_hash(
@@ -84,6 +85,7 @@ def stable_manifest_view(manifest: dict) -> dict:
             code: {
                 "billingEnabled": node.get("billingEnabled"),
                 "billingPricingMode": node.get("billingPricingMode"),
+                "billingPolicies": node.get("billingPolicies"),
                 "productRules": node.get("productRules"),
             }
             for code, node in customers.items()

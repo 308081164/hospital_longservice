@@ -55,7 +55,7 @@ def _rule(
         "priority": priority,
         "skipPackaging": True,
         "skipDiscount": True,
-        "isActive": True,
+        "isActive": False,
         "matchMode": "first",
     }
     if price is not None:
@@ -259,7 +259,34 @@ def build_billing_baseline(wb) -> dict:
         "billingEnabled": True,
         "billingPricingMode": "hybrid",
         "sourceVersion": SOURCE_VERSION,
-        "notes": "中医附一独立价表 · 权威来源 docs/source/附一收费标准.xlsx（Sheet2 标准价 + 特殊收费；补充规则见 fuyi-rules/supplement.json）",
+        "notes": "中医附一独立价表 · 2026-09-23 电话确认：对账试用改为标准计价×0.8×0.99（逐步四舍五入）；原 productRules 封存保留。",
+        "billingPolicies": [
+            {
+                "policyType": "DISCOUNT",
+                "name": "附一对账八折",
+                "priority": 10,
+                "scope": {"temperature": "ANY"},
+                "params": {
+                    "rate": 0.8,
+                    "applyStage": "bill_detail",
+                    "skipWhenFixedPrice": False,
+                },
+                "sourceRef": "phone:2026-09-23",
+            },
+            {
+                "policyType": "DISCOUNT",
+                "name": "附一对账九九折",
+                "priority": 20,
+                "scope": {"temperature": "ANY"},
+                "params": {
+                    "rate": 0.99,
+                    "applyStage": "bill_detail",
+                    "skipWhenFixedPrice": False,
+                },
+                "sourceRef": "phone:2026-09-23",
+            },
+        ],
+        "archivedProductRulesNote": "2026-09-23 封存：类型特色规则暂停，对账改走标准价叠折试用",
         "standardPricingOverride": build_standard_pricing_override(ws2),
         "productRules": product_rules,
     }
@@ -272,15 +299,17 @@ def _clerk_rule(
     params: dict,
     source_text: str,
     priority: int,
+    *,
+    is_active: bool = True,
 ) -> dict:
     return {
         "ruleType": rule_type,
         "name": name,
         "stage": stage,
-        "isActive": True,
+        "isActive": is_active,
         "params": params,
         "sourceText": source_text,
-        "sourceRef": f"excel:{SOURCE_VERSION}",
+        "sourceRef": f"excel:{SOURCE_VERSION}" if is_active else "sealed:phone-20260923",
         "priority": priority,
     }
 
@@ -361,12 +390,38 @@ def build_clerk_baseline(wb) -> dict:
             "Sheet1#52：导出时纸塑袋名称替换为标准名",
             160,
         ),
+        _clerk_rule(
+            "整院八折（封存）",
+            "DISCOUNT_OVERLAY",
+            "bill_export",
+            {
+                "rate": 0.8,
+                "validateOnly": True,
+                "_sealedReason": "2026-09-23 电话确认：旧整院折扣/export 调价封存，改 billing baseline 对账叠折",
+            },
+            "整院折扣/export 阶段调价（已停用）",
+            170,
+            is_active=False,
+        ),
+        _clerk_rule(
+            "标准价叠折校对（封存）",
+            "PRICE_VALIDATE_ONLY",
+            "bill_export",
+            {
+                "rate": 0.792,
+                "validateOnly": True,
+                "_sealedReason": "2026-09-23 旧复合调价方案封存；现行 0.8×0.99 分步四舍五入见 billingPolicies",
+            },
+            "旧版类型特色单价/export 校对（已停用）",
+            180,
+            is_active=False,
+        ),
     ]
     return {
         "customerCode": CUSTOMER_CODE,
         "customerName": CUSTOMER_NAME,
         "sourceVersion": SOURCE_VERSION,
-        "notes": "中医附一内勤规则 · 独立维护于 docs/source/附一收费标准.xlsx（不纳入医院内勤规则-20260918）。Sheet2 价表同步产物见 billing-rules/baseline/ZYY-D1.json（PricingEngine hybrid 必需，与内勤同源）。",
+        "notes": "中医附一内勤规则 · 2026-09-23 电话确认：调价/整院折扣类 clerk 规则已封存；对账叠折改由 billing-rules/baseline/ZYY-D1.json billingPolicies。",
         "attachmentRefs": [],
         "rules": rules,
     }

@@ -374,4 +374,26 @@ class RuleFidelityRegressionTest {
         assertThat(result.pricingRule).doesNotContain("校正价");
         assertThat(result.pricingPath).isNull();
     }
+
+    @Test
+    void zyyD1UsesStandardPricingWithStackedReconciliationDiscount() throws Exception {
+        JsonNode rules = RuleFidelityTestSupport.compileForCustomerCode("ZYY-D1");
+        PricingEngine engine = new PricingEngine(rules);
+        PricingEngine.ProcessedResult result = engine.processRow(Map.of(
+                "hospitalName", "黑龙江中医药大学附属第一医院",
+                "department", "手术室",
+                "type", "额外包(纸塑袋)",
+                "packName", "测试包-1/W6050",
+                "packageMaterial", "高温纸塑袋10cm",
+                "instrumentCount", 1,
+                "packCount", 1,
+                "unitPrice", 5.06,
+                "totalPrice", 5.06
+        ));
+        assertThat(result.expectedUnitPrice).isEqualTo(5.06);
+        assertThat(result.status).isEqualTo("unchanged");
+        assertThat(result.notes).anyMatch(note -> note.contains("附一对账八折"));
+        assertThat(result.notes).anyMatch(note -> note.contains("附一对账九九折"));
+        assertThat(result.pricingRule).doesNotContain("30°腹腔镜");
+    }
 }

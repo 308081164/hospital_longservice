@@ -4,7 +4,9 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.hospital.backend.common.JsonUtils;
 import com.hospital.backend.config.BaselineRuleIndex;
 import com.hospital.backend.entity.Customer;
+import com.hospital.backend.entity.CustomerBillingPolicy;
 import com.hospital.backend.entity.CustomerProductRule;
+import com.hospital.backend.mapper.CustomerBillingPolicyMapper;
 import com.hospital.backend.mapper.CustomerMapper;
 import com.hospital.backend.mapper.CustomerProductRuleMapper;
 import com.hospital.backend.service.BaselineRuleSyncService;
@@ -31,6 +33,7 @@ public class BaselineRuleSyncServiceImpl implements BaselineRuleSyncService {
     private final BaselineRuleIndex baselineRuleIndex;
     private final CustomerMapper customerMapper;
     private final CustomerProductRuleMapper productRuleMapper;
+    private final CustomerBillingPolicyMapper billingPolicyMapper;
     private final RuleChangeAuditService ruleChangeAuditService;
     private final PricingRuleCompileCache compileCache;
 
@@ -54,6 +57,7 @@ public class BaselineRuleSyncServiceImpl implements BaselineRuleSyncService {
             }
         }
         int purged = purgeOrphanRules(customerId, baselineNode, dryRun);
+        syncBillingPolicies(customerId, baselineNode, dryRun);
         Customer customer = customerMapper.selectById(customerId);
         if (customer != null) {
             compileCache.invalidateCustomer(customerId);
@@ -377,6 +381,68 @@ public class BaselineRuleSyncServiceImpl implements BaselineRuleSyncService {
             productRuleMapper.insert(rule);
         } else {
             productRuleMapper.updateById(rule);
+        }
+    }
+
+    /** baseline billingPolicies → customer_billing_policy（按 name 对齐 upsert，baseline 外 DISCOUNT 策略删除）。 */
+    private void syncBillingPolicies(Long customerId, JsonNode baselineNode, boolean dryRun) {
+        JsonNode policies = baselineNode.path("billingPolicies");
+        if (!policies.isArray()) {
+            return;
+        }
+        Set<String> baselineNames = new HashSet<>();
+        for (JsonNode policyNode : policies) {
+            String name = text(policyNode, "name");
+            if (name == null || name.isBlank()) {
+                continue;
+            }
+            baselineNames.add(name);
+            if (dryRun) {
+                continue;
+            }
+            upsertBillingPolicy(customerId, policyNode);
+        }
+        if (dryRun) {
+            return;
+        }
+        for (CustomerBillingPolicy existing : billingPolicyMapper.selectByCustomerIdAndType(customerId, "DISCOUNT")) {
+            if (baselineNames.contains(existing.getName())) {
+                continue;
+            }
+            billingPolicyMapper.deleteById(existing.getId());
+        }
+    }
+
+    private void upsertBillingPolicy(Long customerId, JsonNode policyNode) {
+        String name = text(policyNode, "name");
+        if (name == null || name.isBlank()) {
+            return;
+        }
+        CustomerBillingPolicy policy = billingPolicyMapper.selectByCustomerIdAndType(customerId, "DISCOUNT").stream()
+                .filter(p -> name.equals(p.getName()))
+                .findFirst()
+                .orElse(null);
+        boolean insert = policy == null;
+        if (insert) {
+            policy = new CustomerBillingPolicy();
+            policy.setCustomerId(customerId);
+            policy.setName(name);
+        }
+        policy.setPolicyType(text(policyNode, "policyType", "DISCOUNT"));
+        if (policyNode.has("scope") && !policyNode.get("scope").isNull()) {
+            policy.setScope(policyNode.get("scope").toString());
+        }
+        if (policyNode.has("params") && !policyNode.get("params").isNull()) {
+            policy.setParams(policyNode.get("params").toString());
+        }
+        if (policyNode.hasNonNull("priority")) {
+            policy.setPriority(intVal(policyNode, "priority", 100));
+        }
+        policy.setIsActive(bool(policyNode, "isActive", true));
+        if (insert) {
+            billingPolicyMapper.insert(policy);
+        } else {
+            billingPolicyMapper.updateById(policy);
         }
     }
 
