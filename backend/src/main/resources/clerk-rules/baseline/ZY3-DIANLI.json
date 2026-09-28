@@ -9,6 +9,20 @@
   ],
   "rules": [
     {
+      "ruleType": "EXPORT_LAYOUT",
+      "name": "保留导出列",
+      "stage": "bill_export",
+      "isActive": true,
+      "params": {
+        "keepColumns": [
+          "器械数"
+        ]
+      },
+      "sourceText": "账单导出需要保留器械数量列",
+      "sourceRef": "excel:账单规则#黑龙江省中医药大学附属第三医院（电力）#header",
+      "priority": 5
+    },
+    {
       "ruleType": "MONTHLY_SUPPLEMENT_REPORT",
       "name": "器械把数汇总",
       "stage": "both",

@@ -4,5 +4,46 @@
   "sourceVersion": "医院内勤规则-20260924",
   "notes": "医院内勤规则 v2 · Excel行 哈尔滨华夏眼科医院",
   "attachmentRefs": [],
-  "rules": []
+  "rules": [
+    {
+      "ruleType": "BILL_EXPORT_PRICE_RULE",
+      "name": "额外包(纸塑袋)",
+      "stage": "bill_export",
+      "isActive": true,
+      "params": {
+        "acceptedTypes": [
+          "额外包(纸塑袋)",
+          "额外包（无纺布）",
+          "器械包（ZSD）",
+          "器械包",
+          "单包装包"
+        ],
+        "packNameKeywords": null,
+        "packagingMaterial": null,
+        "instrumentCountRange": "N≥3",
+        "unitPrice": 2.75,
+        "unitPriceMode": "PER_PIECE",
+        "systemPrice": null,
+        "systemPriceMode": "IGNORE"
+      },
+      "sourceText": "额外包(纸塑袋)、额外包（无纺布）、器械包（ZSD）、器械包、单包装包 | N≥3 | 2.75/把",
+      "sourceRef": "excel:账单规则#哈尔滨华夏眼科医院#1",
+      "priority": 11
+    },
+    {
+      "ruleType": "EXPORT_LAYOUT",
+      "name": "保留导出列",
+      "stage": "bill_export",
+      "isActive": true,
+      "params": {
+        "keepColumns": [
+          "包装材料",
+          "器械数"
+        ]
+      },
+      "sourceText": "账单导出需要保留包装材料列和器械数量列",
+      "sourceRef": "excel:账单规则#哈尔滨华夏眼科医院#header",
+      "priority": 5
+    }
+  ]
 }

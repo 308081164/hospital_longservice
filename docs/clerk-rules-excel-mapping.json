@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-09-28T05:26:54Z",
+  "generated_at": "2026-09-28T06:17:33Z",
   "source": "铂康/内勤要求/医院内勤规则-20260924.xlsx",
   "hospital_count": 39,
   "hospitals": [
@@ -17,7 +17,14 @@
       "code": "DAOWAI-RM",
       "name": "哈尔滨市道外区人民医院",
       "excelRowName": "道外区人民医院",
-      "rules": []
+      "rules": [
+        {
+          "ruleType": "BILL_EXPORT_PRICE_RULE"
+        },
+        {
+          "ruleType": "EXPORT_LAYOUT"
+        }
+      ]
     },
     {
       "code": "DONGDA-GC",
@@ -177,7 +184,14 @@
       "code": "HUAXIA-EYE",
       "name": "哈尔滨华夏眼科医院",
       "excelRowName": "哈尔滨华夏眼科医院",
-      "rules": []
+      "rules": [
+        {
+          "ruleType": "BILL_EXPORT_PRICE_RULE"
+        },
+        {
+          "ruleType": "EXPORT_LAYOUT"
+        }
+      ]
     },
     {
       "code": "HULAN-HSZ",
@@ -234,7 +248,17 @@
       "code": "NG-FUCHAN",
       "name": "哈尔滨市南岗区妇产医院",
       "excelRowName": "哈尔滨市南岗妇产医院",
-      "rules": []
+      "rules": [
+        {
+          "ruleType": "BILL_EXPORT_PRICE_RULE"
+        },
+        {
+          "ruleType": "EXPORT_LAYOUT"
+        },
+        {
+          "ruleType": "PACK_NAME_PRICE"
+        }
+      ]
     },
     {
       "code": "RENSHENG",
@@ -266,7 +290,14 @@
       "code": "SANJING-SB",
       "name": "哈尔滨市三精肾脏病专科医院",
       "excelRowName": "三精肾病医院",
-      "rules": []
+      "rules": [
+        {
+          "ruleType": "BILL_EXPORT_PRICE_RULE"
+        },
+        {
+          "ruleType": "EXPORT_LAYOUT"
+        }
+      ]
     },
     {
       "code": "SHENG-YY-NG",
@@ -303,6 +334,12 @@
       "name": "哈尔滨市道外区太平人民医院",
       "excelRowName": "哈尔滨市道外区太平人民医院 / 太平人民医院",
       "rules": [
+        {
+          "ruleType": "BILL_EXPORT_PRICE_RULE"
+        },
+        {
+          "ruleType": "EXPORT_LAYOUT"
+        },
         {
           "ruleType": "LOGISTICS_WAIVE"
         },
@@ -341,7 +378,14 @@
       "code": "WUJING-ZD",
       "name": "武警黑龙江省总队医院",
       "excelRowName": "武警黑龙江省总队医院",
-      "rules": []
+      "rules": [
+        {
+          "ruleType": "EXPORT_LAYOUT"
+        },
+        {
+          "ruleType": "ZERO_ROW_PACKAGING_FEE"
+        }
+      ]
     },
     {
       "code": "XIANGFANG-ZY",

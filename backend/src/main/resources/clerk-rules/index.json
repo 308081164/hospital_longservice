@@ -1,6 +1,6 @@
 {
-  "baseline_hash": "6394189e153f79ec96449e33398dc250a64369a31f1d79e17c400d6cba04721c",
-  "generated_at": "2026-09-28T05:26:54Z",
+  "baseline_hash": "4703fb2f6032a81558fab3b0cd01400d62686707b9c0e3bef9847f252b54f1f9",
+  "generated_at": "2026-09-28T06:17:33Z",
   "source": "铂康/内勤要求/医院内勤规则-20260924.xlsx",
   "customer_count": 39,
   "customers": [
@@ -12,7 +12,7 @@
     {
       "code": "DAOWAI-RM",
       "file": "baseline/DAOWAI-RM.json",
-      "ruleCount": 0
+      "ruleCount": 21
     },
     {
       "code": "DONGDA-GC",
@@ -82,7 +82,7 @@
     {
       "code": "HUAXIA-EYE",
       "file": "baseline/HUAXIA-EYE.json",
-      "ruleCount": 0
+      "ruleCount": 2
     },
     {
       "code": "HULAN-HSZ",
@@ -107,7 +107,7 @@
     {
       "code": "NG-FUCHAN",
       "file": "baseline/NG-FUCHAN.json",
-      "ruleCount": 0
+      "ruleCount": 21
     },
     {
       "code": "RENSHENG",
@@ -122,7 +122,7 @@
     {
       "code": "SANJING-SB",
       "file": "baseline/SANJING-SB.json",
-      "ruleCount": 0
+      "ruleCount": 25
     },
     {
       "code": "SHENG-YY-NG",
@@ -142,7 +142,7 @@
     {
       "code": "TAIPING-RM",
       "file": "baseline/TAIPING-RM.json",
-      "ruleCount": 2
+      "ruleCount": 27
     },
     {
       "code": "VICTORIA",
@@ -157,7 +157,7 @@
     {
       "code": "WUJING-ZD",
       "file": "baseline/WUJING-ZD.json",
-      "ruleCount": 0
+      "ruleCount": 4
     },
     {
       "code": "XIANGFANG-ZY",
@@ -187,7 +187,7 @@
     {
       "code": "ZY3-DIANLI",
       "file": "baseline/ZY3-DIANLI.json",
-      "ruleCount": 3
+      "ruleCount": 4
     },
     {
       "code": "ZYY-D2-HN",

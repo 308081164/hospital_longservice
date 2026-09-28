@@ -188,6 +188,34 @@ class ClerkRuleCompilerTest {
     }
 
     @Test
+    void compilesNgFuchanPackNamePriceAndScatterPieceRule() {
+        ObjectNode compiled = compiler.compileForCustomer("NG-FUCHAN");
+        assertThat(compiled).isNotNull();
+        assertThat(compiler.hasActiveBillExportRules("NG-FUCHAN")).isTrue();
+
+        boolean hasGongqiang = false;
+        boolean hasScatterPiece = false;
+        boolean hasExportLayout = false;
+        for (JsonNode rule : compiled.path("clerkRules")) {
+            String type = rule.path("ruleType").asText();
+            if ("PACK_NAME_PRICE".equals(type) && "宫腔镜".equals(rule.path("name").asText())) {
+                hasGongqiang = true;
+                assertThat(rule.path("params").path("unitPrice").asDouble()).isEqualTo(170.5);
+            }
+            if ("BILL_EXPORT_PRICE_RULE".equals(type) && "散包按把".equals(rule.path("name").asText())) {
+                hasScatterPiece = true;
+                assertThat(rule.path("params").path("unitPriceMode").asText()).isEqualTo("PER_PIECE");
+            }
+            if ("EXPORT_LAYOUT".equals(type)) {
+                hasExportLayout = true;
+            }
+        }
+        assertThat(hasGongqiang).isTrue();
+        assertThat(hasScatterPiece).isTrue();
+        assertThat(hasExportLayout).isTrue();
+    }
+
+    @Test
     void compilesAolanYyPriceTableFromOverflowSheet() {
         ObjectNode compiled = compiler.compileForCustomer("AOLAN-YY");
         assertThat(compiled).isNotNull();

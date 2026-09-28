@@ -217,6 +217,35 @@ def _pack_name_keywords(pack_name) -> list[str] | None:
     return [s]
 
 
+def _split_excel_hospital_header(raw: str) -> tuple[str, str | None]:
+    """Excel 医院名单元格常带换行附注，取首行作映射键、余下作附注。"""
+    s = str(raw).strip()
+    if "\n" not in s:
+        return s, None
+    name, annotation = s.split("\n", 1)
+    return name.strip(), (annotation.strip() or None)
+
+
+def _layout_rules_from_header_annotation(annotation: str, hospital: str) -> list[dict]:
+    keep_cols: list[str] = []
+    if "包装材料" in annotation:
+        keep_cols.append("包装材料")
+    if "器械数量" in annotation:
+        keep_cols.append("器械数")
+    if not keep_cols:
+        return []
+    ref = f"excel:账单规则#{hospital}#header"
+    return [_rule(
+        "保留导出列",
+        "EXPORT_LAYOUT",
+        "bill_export",
+        {"keepColumns": keep_cols},
+        annotation,
+        ref,
+        priority=5,
+    )]
+
+
 REPORT_TYPE_ALIASES = {
     "dept_sterilize_summary": "dept_summary",
     "instrument_count_by_dept": "instrument_audit",
@@ -302,13 +331,18 @@ def parse_bill_row(row: tuple, hospital: str, idx: int) -> list[dict]:
                 "instrumentCountExpr": str(inst) if inst else "N",
             }, f"{pack_name} {unit_p}", ref, priority=10 + idx))
             return rules
-        rules.append(_rule(kw[0] if kw else "按包名", "PACK_NAME_PRICE", "bill_export", {
+        pack_params = {
             "packNameKeywords": kw,
             "unitPrice": unit_val,
             "unitPriceMode": unit_mode or "FIXED",
             "systemPrice": sys_val,
             "systemPriceMode": sys_mode,
-        }, f"{pack_name} {unit_p}", ref, priority=10 + idx))
+        }
+        if mat:
+            pack_params["packagingMaterial"] = str(mat).strip()
+        rule_name = str(mat).strip() if mat else (kw[0] if kw else "按包名")
+        rules.append(_rule(rule_name, "PACK_NAME_PRICE", "bill_export", pack_params,
+                           f"{pack_name} {mat or ''} {unit_p}".strip(), ref, priority=10 + idx))
         return rules
 
     types = _split_types(pack_type)
@@ -514,6 +548,7 @@ def parse_aolan_row(row: tuple, idx: int) -> dict | None:
 def load_excel_data():
     wb = openpyxl.load_workbook(XLSX, read_only=True, data_only=True)
     bill_by_hospital: dict[str, list] = defaultdict(list)
+    hospital_annotations: dict[str, str] = {}
     ws = wb["账单规则"]
     cur = None
     idx = 0
@@ -522,7 +557,9 @@ def load_excel_data():
             continue
         seq, name = row[0], row[1]
         if name:
-            cur = str(name).strip()
+            cur, annotation = _split_excel_hospital_header(str(name))
+            if annotation:
+                hospital_annotations[cur] = annotation
             idx = 0
         if not cur:
             continue
@@ -558,11 +595,11 @@ def load_excel_data():
                 aolan_rules.append(parsed)
 
     wb.close()
-    return bill_by_hospital, settlement, min_charge, aolan_rules
+    return bill_by_hospital, settlement, min_charge, aolan_rules, hospital_annotations
 
 
 def build_baselines():
-    bill_by_hospital, settlement, min_charge_extra, aolan_rules = load_excel_data()
+    bill_by_hospital, settlement, min_charge_extra, aolan_rules, hospital_annotations = load_excel_data()
     baselines: dict[str, dict] = {}
     code_hospitals: dict[str, list[str]] = defaultdict(list)
     for hospital, codes in HOSPITAL_TO_CODES.items():
@@ -579,6 +616,10 @@ def build_baselines():
                 settle_lines = settlement.get(hospital, [])
         for i, row in enumerate(bill_rows, start=1):
             rules.extend(parse_bill_row(row, hospitals[0], i))
+        for hospital in hospitals:
+            annotation = hospital_annotations.get(hospital)
+            if annotation:
+                rules.extend(_layout_rules_from_header_annotation(annotation, hospital))
         rules.extend(parse_settlement_lines(settle_lines, code))
         if code in min_charge_extra:
             rules.extend(min_charge_extra[code])
