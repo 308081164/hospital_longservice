@@ -116,15 +116,17 @@ jobs:
              if [ -d '${DEPLOY_PATH}/deploy/nginx-frontend-shared-net.conf' ]; then \
                rm -rf '${DEPLOY_PATH}/deploy/nginx-frontend-shared-net.conf'; \
              fi"
+          chmod +x deploy/sync-backend-via-ssh.sh
+          SSH_KEY_FILE=~/.ssh/deploy_key DEPLOY_PATH="${DEPLOY_PATH}" \
+            bash deploy/sync-backend-via-ssh.sh
           scp -i ~/.ssh/deploy_key -o StrictHostKeyChecking=no -P "${SSH_PORT}" \
             docker-compose.prod.yml \
-            "${SSH_USER}@${SSH_HOST}:${DEPLOY_PATH}/"
-          scp -i ~/.ssh/deploy_key -o StrictHostKeyChecking=no -P "${SSH_PORT}" -r \
-            backend \
             "${SSH_USER}@${SSH_HOST}:${DEPLOY_PATH}/"
           scp -i ~/.ssh/deploy_key -o StrictHostKeyChecking=no -P "${SSH_PORT}" \
             deploy/reset-database-on-server.sh \
             deploy/docker-login-ghcr.sh \
+            deploy/sync-backend-via-ssh.sh \
+            deploy/transfer-images-via-ssh.sh \
             deploy/nginx-hospital.conf \
             deploy/nginx-frontend-shared-net.conf \
             "${SSH_USER}@${SSH_HOST}:${DEPLOY_PATH}/deploy/"

@@ -141,25 +141,23 @@ jobs:
           SSH_PORT: ${{ secrets.SSH_PORT || 22 }}
           DEPLOY_PATH: ${{ secrets.DEPLOY_PATH || '/mnt/newdisk/app/Hospital' }}
         run: |
+          set -e
+          PORT="${SSH_PORT:-22}"
+          DPATH="${DEPLOY_PATH:-/mnt/newdisk/app/Hospital}"
+          SCP_OPTS="-i ~/.ssh/deploy_key -o StrictHostKeyChecking=no -o ServerAliveInterval=30 -o ServerAliveCountMax=120 -o ConnectTimeout=30"
           mkdir -p ~/.ssh
           printf '%s\n' "$SSH_KEY" > ~/.ssh/deploy_key
           chmod 600 ~/.ssh/deploy_key
-          ssh-keyscan -p "${SSH_PORT}" -H "$SSH_HOST" >> ~/.ssh/known_hosts 2>/dev/null || true
-          ssh -i ~/.ssh/deploy_key -o StrictHostKeyChecking=no -p "${SSH_PORT}" \
-            "${SSH_USER}@${SSH_HOST}" \
-            "mkdir -p '${DEPLOY_PATH}/deploy' && \
-             if [ -d '${DEPLOY_PATH}/deploy/nginx-frontend-shared-net.conf' ]; then \
-               rm -rf '${DEPLOY_PATH}/deploy/nginx-frontend-shared-net.conf'; \
-             fi"
-          scp -i ~/.ssh/deploy_key -o StrictHostKeyChecking=no -P "${SSH_PORT}" \
+          ssh-keyscan -p "$PORT" -H "$SSH_HOST" >> ~/.ssh/known_hosts 2>/dev/null || true
+          chmod +x deploy/sync-backend-via-ssh.sh
+          SSH_KEY_FILE=~/.ssh/deploy_key DEPLOY_PATH="$DPATH" \
+            bash deploy/sync-backend-via-ssh.sh
+          scp $SCP_OPTS -P "$PORT" \
             docker-compose.prod.yml \
-            "${SSH_USER}@${SSH_HOST}:${DEPLOY_PATH}/"
-          scp -i ~/.ssh/deploy_key -o StrictHostKeyChecking=no -P "${SSH_PORT}" -r \
-            backend \
-            "${SSH_USER}@${SSH_HOST}:${DEPLOY_PATH}/"
-          ssh -i ~/.ssh/deploy_key -o StrictHostKeyChecking=no -p "${SSH_PORT}" \
-            "${SSH_USER}@${SSH_HOST}" "mkdir -p '${DEPLOY_PATH}/deploy/sql'"
-          scp -i ~/.ssh/deploy_key -o StrictHostKeyChecking=no -P "${SSH_PORT}" \
+            "${SSH_USER}@${SSH_HOST}:${DPATH}/"
+          ssh -i ~/.ssh/deploy_key -o StrictHostKeyChecking=no -o ServerAliveInterval=30 -p "$PORT" \
+            "${SSH_USER}@${SSH_HOST}" "mkdir -p '${DPATH}/deploy/sql'"
+          scp $SCP_OPTS -P "$PORT" \
             deploy/nginx-hospital.conf \
             deploy/nginx-frontend-shared-net.conf \
             deploy/archive-prod-release-before-deploy.sh \
@@ -175,11 +173,13 @@ jobs:
             deploy/run-prod-verify.sh \
             deploy/prod-smoke-docker.sh \
             deploy/docker-login-ghcr.sh \
-            "${SSH_USER}@${SSH_HOST}:${DEPLOY_PATH}/deploy/"
-          scp -i ~/.ssh/deploy_key -o StrictHostKeyChecking=no -P "${SSH_PORT}" \
+            deploy/sync-backend-via-ssh.sh \
+            deploy/transfer-images-via-ssh.sh \
+            "${SSH_USER}@${SSH_HOST}:${DPATH}/deploy/"
+          scp $SCP_OPTS -P "$PORT" \
             deploy/sql/p0-6-billing-toggle.sql \
             deploy/sql/schema_011_pricing_rule_overrides.sql \
-            "${SSH_USER}@${SSH_HOST}:${DEPLOY_PATH}/deploy/sql/"
+            "${SSH_USER}@${SSH_HOST}:${DPATH}/deploy/sql/"
 
       - name: Archive current production release (before pull)
         env:
@@ -201,16 +201,10 @@ jobs:
             "chmod +x '${DPATH}/deploy/archive-prod-release-before-deploy.sh' 2>/dev/null || true; \
              DEPLOY_PATH='${DPATH}' bash '${DPATH}/deploy/archive-prod-release-before-deploy.sh'"
 
-      - name: Pull service images on server (runner SSH)
+      - name: Transfer service images to server (runner pull + save/load)
         env:
           IMAGE_BACKEND: ${{ steps.images.outputs.backend_sha }}
           IMAGE_FRONTEND: ${{ steps.images.outputs.frontend_sha }}
-          DEPLOY_PATH: ${{ secrets.DEPLOY_PATH }}
-          GHCR_USERNAME: ${{ secrets.GHCR_USERNAME }}
-          GHCR_READ_TOKEN: ${{ secrets.GHCR_READ_TOKEN }}
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          GITHUB_ACTOR: ${{ github.actor }}
-          GITHUB_REPOSITORY_OWNER: ${{ github.repository_owner }}
           GITHUB_SHA: ${{ github.sha }}
           SSH_HOST: ${{ secrets.SSH_HOST }}
           SSH_USER: ${{ secrets.SSH_USER }}
@@ -219,35 +213,17 @@ jobs:
         run: |
           set -e
           PORT="${SSH_PORT:-22}"
-          DPATH="${DEPLOY_PATH:-/mnt/newdisk/app/Hospital}"
           mkdir -p ~/.ssh
           printf '%s\n' "$SSH_KEY" > ~/.ssh/deploy_pull_key
           chmod 600 ~/.ssh/deploy_pull_key
           ssh-keyscan -p "$PORT" -H "$SSH_HOST" >> ~/.ssh/known_hosts 2>/dev/null || true
           echo "DEPLOY_STAGE=pull SHA=${GITHUB_SHA:-unknown}"
-
-          {
-            echo 'set -e'
-            echo "export DEPLOY_PATH=$(printf %q "$DPATH")"
-            echo "export GHCR_USERNAME=$(printf %q "${GHCR_USERNAME:-}")"
-            echo "export GHCR_READ_TOKEN=$(printf %q "${GHCR_READ_TOKEN:-}")"
-            echo "export GITHUB_TOKEN=$(printf %q "${GITHUB_TOKEN:-}")"
-            echo "export GITHUB_ACTOR=$(printf %q "${GITHUB_ACTOR:-}")"
-            echo "export GITHUB_REPOSITORY_OWNER=$(printf %q "${GITHUB_REPOSITORY_OWNER:-}")"
-            echo "cd $(printf %q "$DPATH")"
-            echo "chmod +x deploy/docker-login-ghcr.sh"
-            echo "bash deploy/docker-login-ghcr.sh"
-            echo "echo DEPLOY_STAGE=pull SHA=$(printf %q "${GITHUB_SHA:-unknown}")"
-            echo "export IMAGE_BACKEND=$(printf %q "$IMAGE_BACKEND")"
-            echo "export IMAGE_FRONTEND=$(printf %q "$IMAGE_FRONTEND")"
-            echo "docker compose -f docker-compose.prod.yml pull"
-            echo "echo DEPLOY_STAGE=pull OK"
-          } | ssh -i ~/.ssh/deploy_pull_key \
-              -o StrictHostKeyChecking=no \
-              -o ServerAliveInterval=30 \
-              -o ServerAliveCountMax=360 \
-              -p "$PORT" \
-              "$SSH_USER@$SSH_HOST" bash -s
+          chmod +x deploy/transfer-images-via-ssh.sh
+          SSH_KEY_FILE=~/.ssh/deploy_pull_key \
+            IMAGE_BACKEND="$IMAGE_BACKEND" \
+            IMAGE_FRONTEND="$IMAGE_FRONTEND" \
+            bash deploy/transfer-images-via-ssh.sh
+          echo "DEPLOY_STAGE=pull OK"
 
       - name: Deploy stack on server (mysql + backend)
         uses: appleboy/ssh-action@v1.2.5
