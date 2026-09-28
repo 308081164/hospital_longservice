@@ -174,6 +174,7 @@ jobs:
             deploy/verify-billing-api-on-server.sh \
             deploy/run-prod-verify.sh \
             deploy/prod-smoke-docker.sh \
+            deploy/docker-login-ghcr.sh \
             "${SSH_USER}@${SSH_HOST}:${DEPLOY_PATH}/deploy/"
           scp -i ~/.ssh/deploy_key -o StrictHostKeyChecking=no -P "${SSH_PORT}" \
             deploy/sql/p0-6-billing-toggle.sql \
@@ -205,8 +206,11 @@ jobs:
           IMAGE_BACKEND: ${{ steps.images.outputs.backend_sha }}
           IMAGE_FRONTEND: ${{ steps.images.outputs.frontend_sha }}
           DEPLOY_PATH: ${{ secrets.DEPLOY_PATH }}
-          GHCR_USER: ${{ secrets.GHCR_USERNAME }}
-          GHCR_TOKEN: ${{ secrets.GHCR_READ_TOKEN }}
+          GHCR_USERNAME: ${{ secrets.GHCR_USERNAME }}
+          GHCR_READ_TOKEN: ${{ secrets.GHCR_READ_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_ACTOR: ${{ github.actor }}
+          GITHUB_REPOSITORY_OWNER: ${{ github.repository_owner }}
           GITHUB_SHA: ${{ github.sha }}
           SSH_HOST: ${{ secrets.SSH_HOST }}
           SSH_USER: ${{ secrets.SSH_USER }}
@@ -224,11 +228,16 @@ jobs:
 
           {
             echo 'set -e'
+            echo "export DEPLOY_PATH=$(printf %q "$DPATH")"
+            echo "export GHCR_USERNAME=$(printf %q "${GHCR_USERNAME:-}")"
+            echo "export GHCR_READ_TOKEN=$(printf %q "${GHCR_READ_TOKEN:-}")"
+            echo "export GITHUB_TOKEN=$(printf %q "${GITHUB_TOKEN:-}")"
+            echo "export GITHUB_ACTOR=$(printf %q "${GITHUB_ACTOR:-}")"
+            echo "export GITHUB_REPOSITORY_OWNER=$(printf %q "${GITHUB_REPOSITORY_OWNER:-}")"
             echo "cd $(printf %q "$DPATH")"
+            echo "chmod +x deploy/docker-login-ghcr.sh"
+            echo "bash deploy/docker-login-ghcr.sh"
             echo "echo DEPLOY_STAGE=pull SHA=$(printf %q "${GITHUB_SHA:-unknown}")"
-            if [ -n "${GHCR_TOKEN:-}" ] && [ -n "${GHCR_USER:-}" ]; then
-              echo "echo $(printf %q "$GHCR_TOKEN") | docker login ghcr.io -u $(printf %q "$GHCR_USER") --password-stdin"
-            fi
             echo "export IMAGE_BACKEND=$(printf %q "$IMAGE_BACKEND")"
             echo "export IMAGE_FRONTEND=$(printf %q "$IMAGE_FRONTEND")"
             echo "docker compose -f docker-compose.prod.yml pull"
@@ -246,8 +255,11 @@ jobs:
           IMAGE_BACKEND: ${{ steps.images.outputs.backend_sha }}
           IMAGE_FRONTEND: ${{ steps.images.outputs.frontend_sha }}
           DEPLOY_PATH: ${{ secrets.DEPLOY_PATH }}
-          GHCR_USER: ${{ secrets.GHCR_USERNAME }}
-          GHCR_TOKEN: ${{ secrets.GHCR_READ_TOKEN }}
+          GHCR_USERNAME: ${{ secrets.GHCR_USERNAME }}
+          GHCR_READ_TOKEN: ${{ secrets.GHCR_READ_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_ACTOR: ${{ github.actor }}
+          GITHUB_REPOSITORY_OWNER: ${{ github.repository_owner }}
           GITHUB_SHA: ${{ github.sha }}
         with:
           host: ${{ secrets.SSH_HOST }}
@@ -256,7 +268,7 @@ jobs:
           port: ${{ secrets.SSH_PORT || 22 }}
           command_timeout: 2h
           timeout: 2m
-          envs: IMAGE_BACKEND,IMAGE_FRONTEND,DEPLOY_PATH,GHCR_USER,GHCR_TOKEN,GITHUB_SHA
+          envs: IMAGE_BACKEND,IMAGE_FRONTEND,DEPLOY_PATH,GHCR_USERNAME,GHCR_READ_TOKEN,GITHUB_TOKEN,GITHUB_ACTOR,GITHUB_REPOSITORY_OWNER,GITHUB_SHA
           script: |
             set -e
             DPATH="${DEPLOY_PATH:-/mnt/newdisk/app/Hospital}"
@@ -268,9 +280,8 @@ jobs:
               exit 1
             fi
 
-            if [ -n "$GHCR_TOKEN" ] && [ -n "$GHCR_USER" ]; then
-              echo "$GHCR_TOKEN" | docker login ghcr.io -u "$GHCR_USER" --password-stdin
-            fi
+            chmod +x deploy/docker-login-ghcr.sh
+            DEPLOY_PATH="$DPATH" bash deploy/docker-login-ghcr.sh
             CI_IMAGE_BACKEND="${IMAGE_BACKEND}"
             CI_IMAGE_FRONTEND="${IMAGE_FRONTEND}"
             set -a && source .env && set +a
@@ -399,8 +410,11 @@ jobs:
           IMAGE_BACKEND: ${{ steps.images.outputs.backend_sha }}
           IMAGE_FRONTEND: ${{ steps.images.outputs.frontend_sha }}
           DEPLOY_PATH: ${{ secrets.DEPLOY_PATH }}
-          GHCR_USER: ${{ secrets.GHCR_USERNAME }}
-          GHCR_TOKEN: ${{ secrets.GHCR_READ_TOKEN }}
+          GHCR_USERNAME: ${{ secrets.GHCR_USERNAME }}
+          GHCR_READ_TOKEN: ${{ secrets.GHCR_READ_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_ACTOR: ${{ github.actor }}
+          GITHUB_REPOSITORY_OWNER: ${{ github.repository_owner }}
           GITHUB_SHA: ${{ github.sha }}
         with:
           host: ${{ secrets.SSH_HOST }}
@@ -409,15 +423,14 @@ jobs:
           port: ${{ secrets.SSH_PORT || 22 }}
           command_timeout: 45m
           timeout: 2m
-          envs: IMAGE_BACKEND,IMAGE_FRONTEND,DEPLOY_PATH,GHCR_USER,GHCR_TOKEN,GITHUB_SHA
+          envs: IMAGE_BACKEND,IMAGE_FRONTEND,DEPLOY_PATH,GHCR_USERNAME,GHCR_READ_TOKEN,GITHUB_TOKEN,GITHUB_ACTOR,GITHUB_REPOSITORY_OWNER,GITHUB_SHA
           script: |
             set -e
             DPATH="${DEPLOY_PATH:-/mnt/newdisk/app/Hospital}"
             cd "$DPATH"
             echo "DEPLOY_SCRIPT_TAG=hospital-frontend SHA=${GITHUB_SHA:-unknown}"
-            if [ -n "$GHCR_TOKEN" ] && [ -n "$GHCR_USER" ]; then
-              echo "$GHCR_TOKEN" | docker login ghcr.io -u "$GHCR_USER" --password-stdin
-            fi
+            chmod +x deploy/docker-login-ghcr.sh
+            DEPLOY_PATH="$DPATH" bash deploy/docker-login-ghcr.sh
             CI_IMAGE_BACKEND="${IMAGE_BACKEND}"
             CI_IMAGE_FRONTEND="${IMAGE_FRONTEND}"
             set -a && source .env && set +a
@@ -467,6 +480,7 @@ jobs:
             deploy/verify-billing-api-on-server.sh \
             deploy/run-prod-verify.sh \
             deploy/prod-smoke-docker.sh \
+            deploy/docker-login-ghcr.sh \
             "${SSH_USER}@${SSH_HOST}:${DEPLOY_PATH}/deploy/"
           scp -i ~/.ssh/deploy_billing_key -o StrictHostKeyChecking=no -P "${SSH_PORT}" \
             deploy/sql/p0-6-billing-toggle.sql \

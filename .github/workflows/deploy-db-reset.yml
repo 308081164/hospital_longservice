@@ -124,6 +124,7 @@ jobs:
             "${SSH_USER}@${SSH_HOST}:${DEPLOY_PATH}/"
           scp -i ~/.ssh/deploy_key -o StrictHostKeyChecking=no -P "${SSH_PORT}" \
             deploy/reset-database-on-server.sh \
+            deploy/docker-login-ghcr.sh \
             deploy/nginx-hospital.conf \
             deploy/nginx-frontend-shared-net.conf \
             "${SSH_USER}@${SSH_HOST}:${DEPLOY_PATH}/deploy/"
@@ -134,8 +135,11 @@ jobs:
           IMAGE_BACKEND: ${{ steps.images.outputs.backend }}
           IMAGE_FRONTEND: ${{ steps.images.outputs.frontend }}
           DEPLOY_PATH: ${{ secrets.DEPLOY_PATH }}
-          GHCR_USER: ${{ secrets.GHCR_USERNAME }}
-          GHCR_TOKEN: ${{ secrets.GHCR_READ_TOKEN }}
+          GHCR_USERNAME: ${{ secrets.GHCR_USERNAME }}
+          GHCR_READ_TOKEN: ${{ secrets.GHCR_READ_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_ACTOR: ${{ github.actor }}
+          GITHUB_REPOSITORY_OWNER: ${{ github.repository_owner }}
           GITHUB_SHA: ${{ github.sha }}
         with:
           host: ${{ secrets.SSH_HOST }}
@@ -144,7 +148,7 @@ jobs:
           port: ${{ secrets.SSH_PORT || 22 }}
           command_timeout: 2h
           timeout: 2m
-          envs: IMAGE_BACKEND,IMAGE_FRONTEND,DEPLOY_PATH,GHCR_USER,GHCR_TOKEN,GITHUB_SHA
+          envs: IMAGE_BACKEND,IMAGE_FRONTEND,DEPLOY_PATH,GHCR_USERNAME,GHCR_READ_TOKEN,GITHUB_TOKEN,GITHUB_ACTOR,GITHUB_REPOSITORY_OWNER,GITHUB_SHA
           script: |
             set -e
             DPATH="${DEPLOY_PATH:-/mnt/newdisk/app/Hospital}"
@@ -156,11 +160,8 @@ jobs:
               exit 1
             fi
 
-            chmod +x deploy/reset-database-on-server.sh
-
-            if [ -n "$GHCR_TOKEN" ] && [ -n "$GHCR_USER" ]; then
-              echo "$GHCR_TOKEN" | docker login ghcr.io -u "$GHCR_USER" --password-stdin
-            fi
+            chmod +x deploy/reset-database-on-server.sh deploy/docker-login-ghcr.sh
+            DEPLOY_PATH="$DPATH" bash deploy/docker-login-ghcr.sh
             export IMAGE_BACKEND IMAGE_FRONTEND
 
             bash deploy/reset-database-on-server.sh
