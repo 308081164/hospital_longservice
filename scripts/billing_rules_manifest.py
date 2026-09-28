@@ -80,6 +80,8 @@ STRICT_KEEP_CODES = [
     "ZY3-DIANLI",
     "QILUNJI-YY",
     "XIEDA-YL",
+    "ERYY-SB",
+    "SHENG-YY-NG",
 ]
 
 # 种子文件仅以 code 引用客户、未携带规范名时，回退到此映射。

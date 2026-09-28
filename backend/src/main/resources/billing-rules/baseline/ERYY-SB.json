@@ -1,0 +1,71 @@
+{
+  "customerCode": "ERYY-SB",
+  "customerName": "黑龙江省第二医院（松北区）",
+  "billingEnabled": true,
+  "billingPricingMode": "hybrid",
+  "productRules": [
+    {
+      "ruleType": "PRICE_PER_INSTRUMENT",
+      "name": "省二松北双<3按件5.5含包材",
+      "priority": 10,
+      "price": 5.5,
+      "keywords": [
+        "/双"
+      ],
+      "maxInstrumentCount": 2,
+      "skipPackaging": false,
+      "skipDiscount": true,
+      "isActive": true,
+      "matchMode": "first",
+      "conditionsJson": "[{\"field\":\"manualReview\",\"value\":true}]",
+      "acceptedTypes": [
+        "额外包（纸塑袋）"
+      ]
+    },
+    {
+      "ruleType": "PRICE_PER_INSTRUMENT",
+      "name": "省二松北双≥3按件5.5外层袋",
+      "priority": 11,
+      "price": 5.5,
+      "keywords": [
+        "/双"
+      ],
+      "materials": [
+        "纸塑袋"
+      ],
+      "minInstrumentCount": 3,
+      "skipPackaging": false,
+      "skipDiscount": true,
+      "isActive": true,
+      "matchMode": "first",
+      "conditionsJson": "[{\"field\":\"manualReview\",\"value\":true}]",
+      "acceptedTypes": [
+        "额外包（纸塑袋）"
+      ]
+    },
+    {
+      "ruleType": "FIXED_PRICE",
+      "name": "省二松北钉≥10固定50",
+      "priority": 12,
+      "price": 50.0,
+      "keywords": [
+        "钉@contains"
+      ],
+      "excludeKeywords": [
+        "头钉",
+        "拉力钉",
+        "空心钉",
+        "髓内钉",
+        "固定钉"
+      ],
+      "minInstrumentCount": 10,
+      "skipPackaging": true,
+      "skipDiscount": true,
+      "isActive": true,
+      "matchMode": "first",
+      "acceptedTypes": [
+        "额外包（纸塑袋）"
+      ]
+    }
+  ]
+}

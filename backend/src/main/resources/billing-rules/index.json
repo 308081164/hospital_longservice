@@ -1,8 +1,8 @@
 {
-  "baseline_hash": "54fa8ee8aa95227774cdeee3690a2f0fe587711b05c0448a793ef6358459efa4",
-  "generated_at": "2026-09-21T08:45:57Z",
+  "baseline_hash": "559bbe635446c3e80f84cc2104af1c88a8e266f479d19442519c342f767918ee",
+  "generated_at": "2026-09-28T01:56:25Z",
   "source": "billing-rules-manifest@01836c66115726ff7229db58f16020cb6e65f7069beee13551669c1031fd7764",
-  "customer_count": 33,
+  "customer_count": 35,
   "customers": [
     {
       "code": "BINGCHENG-YM",
@@ -158,7 +158,7 @@
       "code": "ZUYAN-SF",
       "file": "baseline/ZUYAN-SF.json",
       "ruleCount": 2,
-      "fileHash": "7456e37272b62486598aeb56880357f5f872d97b058e2a40e9d7b4fbe2254d9a"
+      "fileHash": "71c923862fac9529baa512008122ccd3cbba42aadfea4076060ff41671e708a9"
     },
     {
       "code": "AOLAN-YY",
@@ -197,10 +197,22 @@
       "fileHash": "4940104949144623f25dbd07a03e1e04ad05b64b08ced76b1e6df3e5a6f76399"
     },
     {
+      "code": "ERYY-SB",
+      "file": "baseline/ERYY-SB.json",
+      "ruleCount": 3,
+      "fileHash": "850c3abd19ae854b694293d6bf3d44601945b2b1b41cdb8fee674223ad1b0309"
+    },
+    {
+      "code": "SHENG-YY-NG",
+      "file": "baseline/SHENG-YY-NG.json",
+      "ruleCount": 12,
+      "fileHash": "bbc900de898e06d9227017078470cf6039dde07ed4de21ce01c84bacb6468c23"
+    },
+    {
       "code": "ZYY-D1",
       "file": "baseline/ZYY-D1.json",
       "ruleCount": 26,
-      "fileHash": "003270c3679c602bfc1a5370b0f3e00d98d3c13e10343e131e3c94633be9ca57"
+      "fileHash": "d360c0d7c5ba4cd1ee09ce173c3583e3e82f24344833e0f592371307490c5afe"
     }
   ]
 }

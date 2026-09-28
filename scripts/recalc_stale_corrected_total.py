@@ -150,6 +150,7 @@ def main() -> int:
     parser.add_argument("--customer-code", help="Filter jobs, e.g. ZYY-D1")
     parser.add_argument("--all", action="store_true", help="All hospitals (use with care)")
     parser.add_argument("--apply", action="store_true", help="Write updates (default: dry-run)")
+    parser.add_argument("--dry-run", action="store_true", help="Explicit dry-run (default behaviour)")
     parser.add_argument("--sample", type=int, default=10, help="Sample rows to print in dry-run")
     args = parser.parse_args()
 

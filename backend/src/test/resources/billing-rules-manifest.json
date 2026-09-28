@@ -1,9 +1,9 @@
 {
   "version": 1,
-  "generated_at": "2026-09-23T05:37:03Z",
-  "manifest_hash": "2f4178164d833d854fc85366cef16545da2228247a4c22254dc55b59a25193a5",
-  "billing_enabled_count": 33,
-  "active_billing_enabled_count": 33,
+  "generated_at": "2026-09-28T01:56:25Z",
+  "manifest_hash": "4788b7dc2ca0692be8150dbae2510c1de1cb11b519830cd4166b4eefdfafdccf",
+  "billing_enabled_count": 35,
+  "active_billing_enabled_count": 35,
   "customers": {
     "BINGCHENG-YM": {
       "code": "BINGCHENG-YM",
@@ -3875,6 +3875,305 @@
       ],
       "rule_count": 6,
       "active_rule_count": 6
+    },
+    "ERYY-SB": {
+      "code": "ERYY-SB",
+      "name": "黑龙江省第二医院（松北区）",
+      "status": null,
+      "billingPricingMode": "hybrid",
+      "standardPricingOverride": null,
+      "billingEnabled": true,
+      "billingPolicies": null,
+      "productRules": [
+        {
+          "ruleType": "PRICE_PER_INSTRUMENT",
+          "name": "省二松北双<3按件5.5含包材",
+          "priority": 10,
+          "price": 5.5,
+          "keywords": [
+            "/双"
+          ],
+          "maxInstrumentCount": 2,
+          "skipPackaging": false,
+          "skipDiscount": true,
+          "isActive": true,
+          "matchMode": "first",
+          "conditionsJson": "[{\"field\":\"manualReview\",\"value\":true}]",
+          "acceptedTypes": [
+            "额外包（纸塑袋）"
+          ]
+        },
+        {
+          "ruleType": "PRICE_PER_INSTRUMENT",
+          "name": "省二松北双≥3按件5.5外层袋",
+          "priority": 11,
+          "price": 5.5,
+          "keywords": [
+            "/双"
+          ],
+          "materials": [
+            "纸塑袋"
+          ],
+          "minInstrumentCount": 3,
+          "skipPackaging": false,
+          "skipDiscount": true,
+          "isActive": true,
+          "matchMode": "first",
+          "conditionsJson": "[{\"field\":\"manualReview\",\"value\":true}]",
+          "acceptedTypes": [
+            "额外包（纸塑袋）"
+          ]
+        },
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "省二松北钉≥10固定50",
+          "priority": 12,
+          "price": 50.0,
+          "keywords": [
+            "钉@contains"
+          ],
+          "excludeKeywords": [
+            "头钉",
+            "拉力钉",
+            "空心钉",
+            "髓内钉",
+            "固定钉"
+          ],
+          "minInstrumentCount": 10,
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": true,
+          "matchMode": "first",
+          "acceptedTypes": [
+            "额外包（纸塑袋）"
+          ]
+        }
+      ],
+      "rule_count": 3,
+      "active_rule_count": 3
+    },
+    "SHENG-YY-NG": {
+      "code": "SHENG-YY-NG",
+      "name": "黑龙江省医院（南岗院区）",
+      "status": null,
+      "billingPricingMode": "hybrid",
+      "standardPricingOverride": null,
+      "billingEnabled": true,
+      "billingPolicies": null,
+      "productRules": [
+        {
+          "ruleType": "PRICE_PER_INSTRUMENT",
+          "name": "省医院南岗门皮手术包按件5.5",
+          "priority": 10,
+          "price": 5.5,
+          "keywords": [
+            "门皮 手术包-6件（双信封包装"
+          ],
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": true,
+          "matchMode": "first",
+          "acceptedTypes": [
+            "器械包（ZSD）"
+          ]
+        },
+        {
+          "ruleType": "EXTRA_FEE",
+          "name": "省医院南岗门皮手术包双信封加价3.38",
+          "priority": 11,
+          "fee": 3.38,
+          "keywords": [
+            "门皮 手术包-6件（双信封包装"
+          ],
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": true,
+          "matchMode": "first",
+          "acceptedTypes": [
+            "器械包（ZSD）"
+          ]
+        },
+        {
+          "ruleType": "PRICE_PER_INSTRUMENT",
+          "name": "省医院南岗手术包6件按件5.5",
+          "priority": 10,
+          "price": 5.5,
+          "keywords": [
+            "手术包-6件（双信封包装"
+          ],
+          "excludeKeywords": [
+            "门皮"
+          ],
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": true,
+          "matchMode": "first",
+          "acceptedTypes": [
+            "器械包（ZSD）"
+          ]
+        },
+        {
+          "ruleType": "EXTRA_FEE",
+          "name": "省医院南岗手术包6件双信封加价3.38",
+          "priority": 11,
+          "fee": 3.38,
+          "keywords": [
+            "手术包-6件（双信封包装"
+          ],
+          "excludeKeywords": [
+            "门皮"
+          ],
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": true,
+          "matchMode": "first",
+          "acceptedTypes": [
+            "器械包（ZSD）"
+          ]
+        },
+        {
+          "ruleType": "PRICE_PER_INSTRUMENT",
+          "name": "省医院南岗胸包15件按件5.5",
+          "priority": 10,
+          "price": 5.5,
+          "keywords": [
+            "胸包-15件（双信封包装"
+          ],
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": true,
+          "matchMode": "first",
+          "acceptedTypes": [
+            "器械包（ZSD）"
+          ]
+        },
+        {
+          "ruleType": "EXTRA_FEE",
+          "name": "省医院南岗胸包15件双信封加价3.38",
+          "priority": 11,
+          "fee": 3.38,
+          "keywords": [
+            "胸包-15件（双信封包装"
+          ],
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": true,
+          "matchMode": "first",
+          "acceptedTypes": [
+            "器械包（ZSD）"
+          ]
+        },
+        {
+          "ruleType": "FOLD",
+          "name": "省医院南岗灯泡≤5按1件含包材",
+          "priority": 12,
+          "keywords": [
+            "灯泡@contains"
+          ],
+          "threshold": 5,
+          "foldRatio": 5,
+          "maxInstrumentCount": 5,
+          "skipPackaging": false,
+          "temperature": "LT",
+          "isActive": true,
+          "matchMode": "first",
+          "skipDiscount": false,
+          "acceptedTypes": [
+            "额外包低温等离子"
+          ]
+        },
+        {
+          "ruleType": "FOLD",
+          "name": "省医院南岗灯泡>5折算22",
+          "priority": 13,
+          "keywords": [
+            "灯泡@contains"
+          ],
+          "threshold": 5,
+          "foldRatio": 5,
+          "minInstrumentCount": 6,
+          "price": 22.0,
+          "skipPackaging": true,
+          "temperature": "LT",
+          "isActive": true,
+          "matchMode": "first",
+          "skipDiscount": false,
+          "acceptedTypes": [
+            "额外包低温等离子"
+          ]
+        },
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "省医院南岗止血带0元",
+          "priority": 14,
+          "price": 0.0,
+          "keywords": [
+            "止血带"
+          ],
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": true,
+          "matchMode": "first",
+          "acceptedTypes": [
+            "额外包（仅消毒）"
+          ]
+        },
+        {
+          "ruleType": "PRICE_PER_INSTRUMENT",
+          "name": "省医院南岗双≥3按件5.5免包材自动",
+          "priority": 9,
+          "price": 5.5,
+          "keywords": [
+            "/双"
+          ],
+          "minInstrumentCount": 3,
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": true,
+          "matchMode": "first",
+          "acceptedTypes": [
+            "额外包（纸塑袋）"
+          ]
+        },
+        {
+          "ruleType": "PRICE_PER_INSTRUMENT",
+          "name": "省医院南岗双<3按件5.5含包材",
+          "priority": 10,
+          "price": 5.5,
+          "keywords": [
+            "/双"
+          ],
+          "maxInstrumentCount": 2,
+          "skipPackaging": false,
+          "skipDiscount": true,
+          "isActive": true,
+          "matchMode": "first",
+          "conditionsJson": "[{\"field\":\"manualReview\",\"value\":true}]",
+          "acceptedTypes": [
+            "额外包（纸塑袋）"
+          ]
+        },
+        {
+          "ruleType": "PRICE_PER_INSTRUMENT",
+          "name": "省医院南岗双≥3按件5.5免包材",
+          "priority": 11,
+          "price": 5.5,
+          "keywords": [
+            "/双"
+          ],
+          "minInstrumentCount": 3,
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": true,
+          "matchMode": "first",
+          "conditionsJson": "[{\"field\":\"manualReview\",\"value\":true}]",
+          "acceptedTypes": [
+            "额外包（纸塑袋）"
+          ]
+        }
+      ],
+      "rule_count": 12,
+      "active_rule_count": 12
     },
     "ZYY-D1": {
       "code": "ZYY-D1",
