@@ -28,7 +28,7 @@ class BillExportPriceResolverTest {
     void derivesPerPieceUsingPerPackInstrumentCount() {
         BillRowItem row = new BillRowItem();
         row.setPackCount(2);
-        row.setInstrumentCount(10);
+        row.setInstrumentCount(5);
         row.setExpectedUnitPrice(22.0);
         row.setCorrectedTotalPrice(44.0);
 

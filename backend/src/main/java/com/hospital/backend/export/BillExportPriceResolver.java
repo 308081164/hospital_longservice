@@ -107,10 +107,8 @@ public final class BillExportPriceResolver {
             return null;
         }
         int packs = packCount != null ? Math.max(1, packCount) : 1;
-        int instruments = instrumentCount != null ? Math.max(1, instrumentCount) : 1;
-        int perPackInstruments = packs > 1
-                ? Math.max(1, (int) Math.round((double) instruments / packs))
-                : instruments;
+        // 11 列「单包内器械数量/把」：instrumentCount 为包内件数，非全行合计。
+        int perPackInstruments = instrumentCount != null ? Math.max(1, instrumentCount) : 1;
         return round(total / (packs * perPackInstruments));
     }
 
