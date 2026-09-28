@@ -337,7 +337,7 @@ public class ClerkBillPriceRuleApplier {
         return Optional.empty();
     }
 
-    static boolean isRuleDisabled(Set<String> disabledRuleIds, String customerCode, String ruleName) {
+    public static boolean isRuleDisabled(Set<String> disabledRuleIds, String customerCode, String ruleName) {
         if (disabledRuleIds == null || disabledRuleIds.isEmpty() || ruleName == null || ruleName.isBlank()) {
             return false;
         }

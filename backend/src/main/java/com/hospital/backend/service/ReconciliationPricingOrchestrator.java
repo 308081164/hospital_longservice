@@ -136,7 +136,7 @@ public class ReconciliationPricingOrchestrator {
         return disabledCategories != null && disabledCategories.contains(category);
     }
 
-    static Set<String> parseDisabledCategories(String pricingRuleOverridesJson) {
+    public static Set<String> parseDisabledCategories(String pricingRuleOverridesJson) {
         if (pricingRuleOverridesJson == null || pricingRuleOverridesJson.isBlank()) {
             return Set.of();
         }
@@ -159,7 +159,7 @@ public class ReconciliationPricingOrchestrator {
         }
     }
 
-    static String serializeDisabledCategories(Set<String> disabledCategories) {
+    public static String serializeDisabledCategories(Set<String> disabledCategories) {
         ObjectNode root = JsonUtils.getObjectMapper().createObjectNode();
         ArrayNode array = root.putArray("disabledCategories");
         if (disabledCategories != null) {
