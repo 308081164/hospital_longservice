@@ -23,8 +23,6 @@ import java.util.Set;
  */
 final class ExcelBillImportSupport {
 
-    private static final java.util.regex.Pattern HOSPITAL_SUFFIX = java.util.regex.Pattern.compile(
-            "(医院|诊所|集团|中心|卫生院|卫生服务中心|医疗美容|妇产医院|肛肠医院)$");
     private static final java.util.regex.Pattern DATE_RANGE_TEXT = java.util.regex.Pattern.compile(
             "^(从|时间|日期)[：:]?\\s*\\d{4}.*(?:至|到).*\\d{4}.*"
                     + "|^\\d{4}[/-]\\d{1,2}[/-]\\d{1,2}.*(?:至|到).*\\d{4}.*");
@@ -143,46 +141,12 @@ final class ExcelBillImportSupport {
 
     private static void collectHospitalDisplayNames(
             List<List<Object>> matrix, int headerRowIndex, Set<String> out) {
-        String fromStandardD = readHospitalNameAtStandardColumn(matrix, headerRowIndex);
-        if (!fromStandardD.isBlank()) {
-            out.add(fromStandardD);
+        if (!out.isEmpty()) {
             return;
         }
-        String best = "";
-        int scanEnd = Math.min(matrix.size(), headerRowIndex + 2);
-        for (int r = 0; r < scanEnd; r++) {
-            List<Object> row = matrix.get(r);
-            if (r == headerRowIndex + 1) {
-                // 部分账单在表头下一行放医院全称汇总行（列位置不固定，如冰城 111.xlsx）
-                for (Object cell : row) {
-                    String text = sanitizeStr(cell);
-                    if (text.isBlank()) {
-                        continue;
-                    }
-                    if ((text.contains("医院") || text.contains("诊所")) && isLikelyHospitalDisplayName(text)) {
-                        String trimmed = text.trim();
-                        if (trimmed.length() > best.length()) {
-                            best = trimmed;
-                        }
-                    }
-                }
-                continue;
-            }
-            for (Object cell : row) {
-                String text = sanitizeStr(cell);
-                if (text.isBlank()) {
-                    continue;
-                }
-                if ((text.contains("医院") || text.contains("诊所")) && isLikelyHospitalDisplayName(text)) {
-                    String trimmed = text.trim();
-                    if (trimmed.length() > best.length()) {
-                        best = trimmed;
-                    }
-                }
-            }
-        }
-        if (!best.isBlank()) {
-            out.add(best);
+        String fromD = resolveHospitalNameFromColumnD(matrix, headerRowIndex);
+        if (!fromD.isBlank()) {
+            out.add(fromD);
         }
     }
 
@@ -191,6 +155,9 @@ final class ExcelBillImportSupport {
             return false;
         }
         String trimmed = name.trim();
+        if (!trimmed.contains("医院")) {
+            return false;
+        }
         if (trimmed.contains("发货单汇总表") || isDateRangeText(trimmed)) {
             return false;
         }
@@ -200,7 +167,13 @@ final class ExcelBillImportSupport {
         if (trimmed.contains("医院") && trimmed.contains("至")) {
             return false;
         }
-        return HOSPITAL_SUFFIX.matcher(trimmed).find() || trimmed.length() >= 6;
+        if (trimmed.matches("^[\\d.]+$")) {
+            return false;
+        }
+        if ("发货日期".equals(trimmed)) {
+            return false;
+        }
+        return true;
     }
 
     static boolean isDateRangeText(String text) {
@@ -222,27 +195,28 @@ final class ExcelBillImportSupport {
         return "";
     }
 
-    private static String readHospitalNameAtStandardColumn(
-            List<List<Object>> matrix, int headerRowIndex) {
-        String best = "";
-        int[] rowCandidates = {headerRowIndex - 1, 8, headerRowIndex + 1};
-        for (int rowIndex : rowCandidates) {
-            if (rowIndex < 0 || rowIndex >= matrix.size()) {
-                continue;
-            }
-            List<Object> row = matrix.get(rowIndex);
-            if (row.size() <= STANDARD_HOSPITAL_NAME_COLUMN) {
-                continue;
-            }
-            String text = sanitizeStr(row.get(STANDARD_HOSPITAL_NAME_COLUMN));
-            if (text.isBlank() || !isLikelyHospitalDisplayName(text)) {
-                continue;
-            }
-            if (text.length() > best.length()) {
-                best = text.trim();
-            }
+    /** 铂康标准账单：医院全称仅在 D8 或 D9（二选一），D9 优先。 */
+    static String resolveHospitalNameFromColumnD(List<List<Object>> matrix, int headerRowIndex) {
+        String d9 = readColumnDCell(matrix, 8);
+        if (isLikelyHospitalDisplayName(d9)) {
+            return d9.trim();
         }
-        return best;
+        String d8 = readColumnDCell(matrix, 7);
+        if (isLikelyHospitalDisplayName(d8)) {
+            return d8.trim();
+        }
+        return "";
+    }
+
+    private static String readColumnDCell(List<List<Object>> matrix, int rowIndex) {
+        if (rowIndex < 0 || rowIndex >= matrix.size()) {
+            return "";
+        }
+        List<Object> row = matrix.get(rowIndex);
+        if (row.size() <= STANDARD_HOSPITAL_NAME_COLUMN) {
+            return "";
+        }
+        return sanitizeStr(row.get(STANDARD_HOSPITAL_NAME_COLUMN));
     }
 
     private static List<List<Object>> readSheetMatrix(Sheet sheet) {

@@ -285,20 +285,6 @@
     return ''
   }
 
-  /** 从表头元数据区取最长、最可信的机构全称（避免命中明细行里的短词）。 */
-  function pickBestHospitalNameFromHeaderArea(headerArea: unknown[][]): string {
-    let best = ''
-    for (const row of headerArea) {
-      for (const cell of row) {
-        const text = String(cell ?? '').trim()
-        if (isLikelyHospitalName(text) && text.length > best.length) {
-          best = text
-        }
-      }
-    }
-    return best
-  }
-
   /** 在表头区域查找日期范围文本（兼容不同格式的日期前缀） */
   function findDateRangeText(rows: unknown[][]): string {
     // 尝试常见前缀
@@ -471,12 +457,7 @@
     const titleText =
       findRowText(matrix.slice(0, headerRowIndex), '发货单汇总表') || '发货单汇总表-显示包装材料'
     const dateRangeText = findDateRangeText(matrix.slice(0, headerRowIndex))
-    const headerArea = matrix.slice(0, headerRowIndex + 1)
-    const summaryRow = matrix[headerRowIndex + 1] ?? []
-    const hospitalDisplayName =
-      extractStandardHospitalNameFromMatrix(matrix, headerRowIndex) ||
-      pickBestHospitalNameFromHeaderArea(headerArea) ||
-      pickBestHospitalNameFromHeaderArea([summaryRow])
+    const hospitalDisplayName = extractStandardHospitalNameFromMatrix(matrix, headerRowIndex)
     return { sheetName, titleText, dateRangeText, hospitalDisplayName }
   }
 

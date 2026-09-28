@@ -55,6 +55,8 @@ public class BillingSeedMigrationRunner implements CommandLineRunner {
             "billing-seeds/archive/legacy-2026/phase-correction-price-delete-all-20260908.json";
     /** 删除非 22 家特殊计价客户及其孤儿数据（严格测试口径收敛） */
     private static final String STALE_CUSTOMER_CLEANUP_MARKER = "billing_seed_stale_customer_cleanup_20260827_v1";
+    /** 省二院南岗/松北文件名别名（对账徽章 filename 兜底） */
+    private static final String ERYY_FILENAME_ALIAS_MARKER = "billing_seed_erreyy_filename_alias_20260928_v1";
 
     /** 最终保留的特殊计价客户 code（与 scripts/strict_hospital_codes.py STRICT_KEEP_CODES 一致） */
     private static final java.util.List<String> STRICT_KEEP_CODES = java.util.List.of(
@@ -283,6 +285,28 @@ public class BillingSeedMigrationRunner implements CommandLineRunner {
                     "内勤规则迁出：清理 customer_billing_policy 中 export/settlement 阶段策略");
             log.info("Clerk legacy policy purge: deleted {} rows", purged);
         }
+        if (sysSettingMapper.countByKey(ERYY_FILENAME_ALIAS_MARKER) == 0) {
+            ensureEreryyFilenameAliases();
+            insertMarker(ERYY_FILENAME_ALIAS_MARKER, "省二院南岗/松北文件名别名 + Excel 南岗区/松北区写法");
+            log.info("ERYY filename aliases applied.");
+        }
+    }
+
+    private void ensureEreryyFilenameAliases() {
+        ensureAliasForCustomer("ERYY-NG", "省二院南岗", "exact");
+        ensureAliasForCustomer("ERYY-NG", "黑龙江省第二医院（南岗区）", "exact");
+        ensureAliasForCustomer("ERYY-SB", "省二院松北", "exact");
+        ensureAliasForCustomer("ERYY-SB", "黑龙江省第二医院（松北区）", "exact");
+    }
+
+    private void ensureAliasForCustomer(String code, String alias, String matchType) {
+        Customer customer = customerMapper.selectByCode(code);
+        if (customer == null) {
+            log.warn("Skip alias {} → {} (customer missing)", alias, code);
+            return;
+        }
+        ensureCustomerAliasExact(customer.getId(), alias, matchType, "hospital_name_fix_20260928", 100);
+        log.info("Alias ensured {} → {}", alias, code);
     }
 
     private int purgeLegacyClerkPolicies() {

@@ -102,10 +102,16 @@ public class ReconciliationHospitalNameResolver {
             return false;
         }
         String trimmed = name.trim();
+        if (!trimmed.contains("医院")) {
+            return false;
+        }
         if (trimmed.contains("发货单汇总表") || isDateRangeText(trimmed)) {
             return false;
         }
-        return HOSPITAL_SUFFIX.matcher(trimmed).find() || trimmed.length() >= 6;
+        if (trimmed.matches("^[\\d.]+$") || "发货日期".equals(trimmed)) {
+            return false;
+        }
+        return true;
     }
 
     public boolean isDateRangeText(String name) {
@@ -153,21 +159,21 @@ public class ReconciliationHospitalNameResolver {
             List<String> sheetHospitalNames,
             List<String> headerAreaTexts) {
         Set<String> ordered = new LinkedHashSet<>();
+        if (!isLikelyDepartmentName(hospitalNameParam)) {
+            addCandidate(ordered, hospitalNameParam);
+        }
+        addCandidate(ordered, inferFromFileName(sourceFileName));
         if (sheetHospitalNames != null) {
             for (String name : sheetHospitalNames) {
                 if (isLikelyHospitalName(name)) {
                     addCandidate(ordered, name);
+                    break;
                 }
             }
         }
         for (String aliasResolved : enrichHospitalNamesFromHeaderTexts(headerAreaTexts)) {
             addCandidate(ordered, aliasResolved);
         }
-        if (!isLikelyDepartmentName(hospitalNameParam)) {
-            addCandidate(ordered, hospitalNameParam);
-        }
-        // 文件名仅作最后兜底（优先使用 Excel 表头/别名解析结果）
-        addCandidate(ordered, inferFromFileName(sourceFileName));
         addCandidate(ordered, hospitalNameParam);
         return new ArrayList<>(ordered);
     }
