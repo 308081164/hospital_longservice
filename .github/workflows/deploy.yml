@@ -169,6 +169,7 @@ jobs:
             deploy/reapply-billing-manifest-on-server.sh \
             deploy/reapply-billing-p0-6-on-server.sh \
             deploy/apply-p0-6-billing-sql.sh \
+            deploy/apply-schema-011-pricing-overrides.sh \
             deploy/mysql-hospital-cli.sh \
             deploy/verify-billing-api-on-server.sh \
             deploy/run-prod-verify.sh \
@@ -176,6 +177,7 @@ jobs:
             "${SSH_USER}@${SSH_HOST}:${DEPLOY_PATH}/deploy/"
           scp -i ~/.ssh/deploy_key -o StrictHostKeyChecking=no -P "${SSH_PORT}" \
             deploy/sql/p0-6-billing-toggle.sql \
+            deploy/sql/schema_011_pricing_rule_overrides.sql \
             "${SSH_USER}@${SSH_HOST}:${DEPLOY_PATH}/deploy/sql/"
 
       - name: Archive current production release (before pull)
@@ -290,6 +292,10 @@ jobs:
             if [ -f deploy/reapply-billing-baseline-on-server.sh ]; then
               echo "DEPLOY_STAGE=billing_baseline_sync_deferred"
               echo "计费规则将在 backend 启动后由 baseline sync runner 同步"
+            fi
+            if [ -f deploy/apply-schema-011-pricing-overrides.sh ]; then
+              chmod +x deploy/apply-schema-011-pricing-overrides.sh
+              bash deploy/apply-schema-011-pricing-overrides.sh
             fi
             docker compose -f docker-compose.prod.yml up -d --no-deps --force-recreate backend
             echo "DEPLOY_STAGE=backend_container_started"
@@ -456,6 +462,7 @@ jobs:
             deploy/reapply-billing-manifest-on-server.sh \
             deploy/reapply-billing-p0-6-on-server.sh \
             deploy/apply-p0-6-billing-sql.sh \
+            deploy/apply-schema-011-pricing-overrides.sh \
             deploy/mysql-hospital-cli.sh \
             deploy/verify-billing-api-on-server.sh \
             deploy/run-prod-verify.sh \
@@ -463,6 +470,7 @@ jobs:
             "${SSH_USER}@${SSH_HOST}:${DEPLOY_PATH}/deploy/"
           scp -i ~/.ssh/deploy_billing_key -o StrictHostKeyChecking=no -P "${SSH_PORT}" \
             deploy/sql/p0-6-billing-toggle.sql \
+            deploy/sql/schema_011_pricing_rule_overrides.sql \
             "${SSH_USER}@${SSH_HOST}:${DEPLOY_PATH}/deploy/sql/"
 
       - name: Reconcile billing baseline and verify on server

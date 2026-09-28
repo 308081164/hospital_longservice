@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""从 医院内勤规则-20260918.xlsx 生成 clerk-rules v2 baseline。"""
+"""从 医院内勤规则-20260924.xlsx 生成 clerk-rules v2 baseline。"""
 from __future__ import annotations
 
 import hashlib
@@ -13,13 +13,13 @@ from pathlib import Path
 import openpyxl
 
 ROOT = Path(__file__).resolve().parents[1]
-XLSX = ROOT / "铂康/内勤要求/医院内勤规则-20260918.xlsx"
+XLSX = ROOT / "铂康/内勤要求/医院内勤规则-20260924.xlsx"
 CLERK_DIR = ROOT / "backend/src/main/resources/clerk-rules"
 BASELINE_DIR = CLERK_DIR / "baseline"
 ATTACH_DST = CLERK_DIR / "attachments"
 MAPPING_OUT = ROOT / "docs/clerk-rules-excel-mapping.json"
 HOSPITAL_LIST_OUT = ROOT / "docs/内勤规则医院清单.md"
-SOURCE_VERSION = "医院内勤规则-20260918"
+SOURCE_VERSION = "医院内勤规则-20260924"
 
 CODE_NAMES = {
     "DAOWAI-RM": "哈尔滨市道外区人民医院",
@@ -60,6 +60,7 @@ CODE_NAMES = {
     "DONGDA-GC": "黑龙江东大肛肠医院",
     "ZYY-D2-NG": "黑龙江中医药大学附属第二医院（南岗）",
     "ZYY-D2-HN": "黑龙江中医药大学附属第二医院（哈南分院）",
+    "AOLAN-YY": "黑龙江奥兰医院",
 }
 
 HOSPITAL_TO_CODES: dict[str, list[str]] = {
@@ -98,6 +99,7 @@ HOSPITAL_TO_CODES: dict[str, list[str]] = {
     "黑龙江东大肛肠医院": ["DONGDA-GC"],
     "中医药大学附属第二医院（南岗）": ["ZYY-D2-NG"],
     "中医药大学附属第二医院（哈南分院）": ["ZYY-D2-HN"],
+    "奥兰医院": ["AOLAN-YY"],
 }
 
 ATTACHMENT_MAP = {
@@ -472,6 +474,43 @@ def parse_min_charge_row(row) -> dict | None:
     return rules
 
 
+def _parse_aolan_instrument_range(raw) -> str | None:
+    if raw is None:
+        return None
+    s = str(raw).strip()
+    if not s:
+        return None
+    s = s.replace("件", "").replace(" ", "")
+    if s.startswith("≤"):
+        n = s[1:]
+        return f"N<{int(n) + 1}" if n.isdigit() else s
+    if s.startswith("<"):
+        return f"N{s}"
+    return s
+
+
+def parse_aolan_row(row: tuple, idx: int) -> dict | None:
+    """奥兰医院规则 sheet：序号, 包名, 器械件数, 类型, 价格。"""
+    seq, pack_name, inst, pack_type, _, price = (row + (None,) * 6)[:6]
+    if not pack_name or str(pack_name).strip() in ("包名", "附件二：消毒灭菌服务价格表"):
+        return None
+    try:
+        unit_val = float(price)
+    except (TypeError, ValueError):
+        return None
+    name = str(pack_name).strip()
+    ref = f"excel:奥兰医院规则#{idx}"
+    params = {
+        "packNameKeywords": [name],
+        "acceptedTypes": _split_types(pack_type) if pack_type else None,
+        "instrumentCountRange": _parse_aolan_instrument_range(inst),
+        "unitPrice": unit_val,
+        "unitPriceMode": "FIXED",
+        "systemPriceMode": "IGNORE",
+    }
+    return _rule(name, "PACK_NAME_PRICE", "bill_export", params, f"{name} {inst} {price}", ref, priority=10 + idx)
+
+
 def load_excel_data():
     wb = openpyxl.load_workbook(XLSX, read_only=True, data_only=True)
     bill_by_hospital: dict[str, list] = defaultdict(list)
@@ -509,12 +548,21 @@ def load_excel_data():
             for code in HOSPITAL_TO_CODES.get(str(row[0]).strip(), []):
                 min_charge[code].extend(parse_min_charge_row(row) or [])
 
+    aolan_rules: list[dict] = []
+    if "奥兰医院规则" in wb.sheetnames:
+        idx = 0
+        for row in wb["奥兰医院规则"].iter_rows(values_only=True):
+            parsed = parse_aolan_row(row, idx)
+            if parsed:
+                idx += 1
+                aolan_rules.append(parsed)
+
     wb.close()
-    return bill_by_hospital, settlement, min_charge
+    return bill_by_hospital, settlement, min_charge, aolan_rules
 
 
 def build_baselines():
-    bill_by_hospital, settlement, min_charge_extra = load_excel_data()
+    bill_by_hospital, settlement, min_charge_extra, aolan_rules = load_excel_data()
     baselines: dict[str, dict] = {}
     code_hospitals: dict[str, list[str]] = defaultdict(list)
     for hospital, codes in HOSPITAL_TO_CODES.items():
@@ -534,6 +582,8 @@ def build_baselines():
         rules.extend(parse_settlement_lines(settle_lines, code))
         if code in min_charge_extra:
             rules.extend(min_charge_extra[code])
+        if code == "AOLAN-YY" and aolan_rules:
+            rules.extend(aolan_rules)
         if code == "SANFU-SQ":
             rules = [r for r in rules if r["ruleType"] != "MERGED_SETTLEMENT"] + [
                 _rule("合并结款", "MERGED_SETTLEMENT", "settlement",

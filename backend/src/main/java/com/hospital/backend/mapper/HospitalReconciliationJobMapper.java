@@ -24,6 +24,9 @@ public interface HospitalReconciliationJobMapper {
 
     void updateById(HospitalReconciliationJob job);
 
+    void updatePricingRuleOverrides(@org.apache.ibatis.annotations.Param("id") Long id,
+            @org.apache.ibatis.annotations.Param("pricingRuleOverrides") String pricingRuleOverrides);
+
     void updateAllocationResult(@org.apache.ibatis.annotations.Param("id") Long id,
                                 @org.apache.ibatis.annotations.Param("allocationResult") String allocationResult);
 }

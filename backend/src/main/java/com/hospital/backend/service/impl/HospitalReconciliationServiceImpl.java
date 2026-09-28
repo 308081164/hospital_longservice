@@ -23,6 +23,8 @@ import com.hospital.backend.service.SettlementJobFieldsApplier;
 import com.hospital.backend.service.ExternalInstrumentService;
 import com.hospital.backend.service.HospitalReconciliationService;
 import com.hospital.backend.service.ClerkCompiledRulesResolver;
+import com.hospital.backend.service.ClerkRuleCompiler;
+import com.hospital.backend.service.ReconciliationPricingOrchestrator;
 import com.hospital.backend.service.ClerkExportLayoutMerger;
 import com.hospital.backend.service.ClerkSettlementRequestEnricher;
 import com.hospital.backend.export.fuyi.FuyiSupplementExportService;
@@ -41,6 +43,7 @@ import com.hospital.backend.export.ExportType;
 import com.hospital.backend.export.model.ColumnMappingConfig;
 import com.hospital.backend.export.model.ResolvedExportTemplate;
 import com.hospital.backend.dto.request.hospital.*;
+import com.hospital.backend.dto.response.hospital.PricingRuleInfoResponse;
 import com.hospital.backend.dto.response.hospital.ReconciliationExportLogResponse;
 import com.hospital.backend.dto.response.hospital.ReconciliationJobResponse;
 import com.hospital.backend.dto.response.hospital.TemplateRefResponse;
@@ -226,6 +229,10 @@ public class HospitalReconciliationServiceImpl implements HospitalReconciliation
 
     private final ClerkCompiledRulesResolver clerkCompiledRulesResolver;
 
+    private final ClerkRuleCompiler clerkRuleCompiler;
+
+    private final ReconciliationPricingOrchestrator reconciliationPricingOrchestrator;
+
     private final ClerkSettlementRequestEnricher clerkSettlementRequestEnricher;
 
     private final FuyiSupplementExportService fuyiSupplementExportService;
@@ -315,6 +322,20 @@ public class HospitalReconciliationServiceImpl implements HospitalReconciliation
         PricingEngine engine = new PricingEngine(compiled);
         engine.enableStructuredProductMatch(productMatchService);
         return engine;
+    }
+
+    private PricingEngine.ProcessedResult processRowWithOrchestrator(
+            Map<String, Object> rowMap,
+            PricingEngine engine,
+            String hospitalName,
+            Set<String> disabledCategories) {
+        Optional<Customer> customer = customerResolver.resolveByName(hospitalName);
+        String customerCode = customer.map(Customer::getCode).orElse(null);
+        JsonNode clerkCompiled = customerCode != null
+                ? clerkRuleCompiler.compileForCustomer(customerCode)
+                : null;
+        return reconciliationPricingOrchestrator.processRow(
+                rowMap, engine, clerkCompiled, customerCode, disabledCategories);
     }
 
     private void applyLogisticsToJob(
@@ -731,6 +752,7 @@ public class HospitalReconciliationServiceImpl implements HospitalReconciliation
                     .orElseGet(() -> pricingRuleCompiler.compile(rulesJson, hospitalName));
             PricingEngine engine = new PricingEngine(compiledRules);
             engine.enableStructuredProductMatch(productMatchService);
+            Set<String> disabledCategories = ReconciliationPricingOrchestrator.parseDisabledCategories(null);
             List<Map<String, Object>> rowsToPrice = new ArrayList<>();
             for (Map<String, Object> row : allRows) {
                 row.put("hospitalName", hospitalName);
@@ -744,7 +766,8 @@ public class HospitalReconciliationServiceImpl implements HospitalReconciliation
 
             for (Map<String, Object> row : rowsToPrice) {
                 enrichProductMatch(row);
-                PricingEngine.ProcessedResult pr = engine.processRow(row);
+                PricingEngine.ProcessedResult pr = processRowWithOrchestrator(
+                        row, engine, hospitalName, disabledCategories);
                 row.put("expectedUnitPrice", pr.expectedUnitPrice);
                 row.put("correctedTotalPrice", pr.correctedTotalPrice);
                 row.put("difference", pr.difference);
@@ -1227,6 +1250,11 @@ public class HospitalReconciliationServiceImpl implements HospitalReconciliation
      * @return 重新定价后的行数据 + 摘要统计
      */
     public Result<Map<String, Object>> reprice(Long jobId) {
+        return reprice(jobId, null);
+    }
+
+    @Override
+    public Result<Map<String, Object>> reprice(Long jobId, com.hospital.backend.dto.request.hospital.RepriceRequest request) {
         HospitalReconciliationJob job = jobMapper.selectById(jobId);
         if (job == null) {
             return Result.fail(404, "核对任务不存在");
@@ -1246,11 +1274,8 @@ public class HospitalReconciliationServiceImpl implements HospitalReconciliation
             }
 
             String hospitalName = job.getHospitalName();
-            JsonNode compiledRules = customerResolver.resolveByName(hospitalName)
-                    .map(customer -> pricingRuleCompiler.compileForCustomer(rulesJson, customer, hospitalName))
-                    .orElseGet(() -> pricingRuleCompiler.compile(rulesJson, hospitalName));
-            PricingEngine engine = new PricingEngine(compiledRules);
-            engine.enableStructuredProductMatch(productMatchService);
+            Set<String> disabledCategories = resolveDisabledCategories(job, request);
+            PricingEngine engine = buildPricingEngine(rulesJson, hospitalName);
             List<HospitalReconciliationRow> rawRows =
                     rowMapper.selectByJobIdOrderBySheetNameAscRowNumberAsc(jobId);
 
@@ -1262,7 +1287,8 @@ public class HospitalReconciliationServiceImpl implements HospitalReconciliation
                 Map<String, Object> rowMap = rowEntityToMap(row);
                 rowMap.put("hospitalName", job.getHospitalName());
                 enrichProductMatch(rowMap);
-                PricingEngine.ProcessedResult pr = engine.processRow(rowMap);
+                PricingEngine.ProcessedResult pr = processRowWithOrchestrator(
+                        rowMap, engine, hospitalName, disabledCategories);
                 applyBatchCorrection(rowMap, pr);
                 pricedRows.add(rowMap);
 
@@ -1346,7 +1372,10 @@ public class HospitalReconciliationServiceImpl implements HospitalReconciliation
             rowMap.put("hospitalName", job.getHospitalName());
             enrichProductMatch(rowMap);
             PricingEngine engine = buildPricingEngine(rulesJson, job.getHospitalName());
-            PricingEngine.ProcessedResult pr = engine.processRow(rowMap);
+            Set<String> disabledCategories = ReconciliationPricingOrchestrator.parseDisabledCategories(
+                    job.getPricingRuleOverrides());
+            PricingEngine.ProcessedResult pr = processRowWithOrchestrator(
+                    rowMap, engine, job.getHospitalName(), disabledCategories);
             applyBatchCorrection(rowMap, pr);
 
             fillRowEntityFromMap(row, rowMap);
@@ -1372,6 +1401,138 @@ public class HospitalReconciliationServiceImpl implements HospitalReconciliation
             log.error("单行重算失败 jobId={} rowId={}: {}", jobId, rowId, e.getMessage(), e);
             return Result.fail(500, "单行重算失败: " + e.getMessage());
         }
+    }
+
+    @Override
+    public Result<PricingRuleInfoResponse> getPricingRules(Long jobId) {
+        HospitalReconciliationJob job = jobMapper.selectById(jobId);
+        if (job == null) {
+            return Result.fail(404, "核对任务不存在");
+        }
+        return Result.success(buildPricingRuleInfoResponse(job));
+    }
+
+    @Override
+    @Transactional
+    public Result<PricingRuleInfoResponse> updatePricingRuleOverrides(
+            Long jobId,
+            com.hospital.backend.dto.request.hospital.PricingRuleOverridesRequest request) {
+        HospitalReconciliationJob job = jobMapper.selectById(jobId);
+        if (job == null) {
+            return Result.fail(404, "核对任务不存在");
+        }
+        if (!"pending".equals(job.getReviewStatus())) {
+            return Result.fail(400, "该版本已审核，不可修改规则覆盖");
+        }
+        Set<String> disabled = new LinkedHashSet<>();
+        if (request != null && request.getDisabledCategories() != null) {
+            for (String category : request.getDisabledCategories()) {
+                if (category != null && !category.isBlank()) {
+                    disabled.add(category.trim());
+                }
+            }
+        }
+        String json = ReconciliationPricingOrchestrator.serializeDisabledCategories(disabled);
+        jobMapper.updatePricingRuleOverrides(jobId, json);
+        job.setPricingRuleOverrides(json);
+        return Result.success(buildPricingRuleInfoResponse(job));
+    }
+
+    private PricingRuleInfoResponse buildPricingRuleInfoResponse(HospitalReconciliationJob job) {
+        PricingRuleInfoResponse response = new PricingRuleInfoResponse();
+        Set<String> disabledCategories = ReconciliationPricingOrchestrator.parseDisabledCategories(
+                job.getPricingRuleOverrides());
+        response.setDisabledCategories(new ArrayList<>(disabledCategories));
+
+        Optional<Customer> customer = customerResolver.resolveByName(job.getHospitalName());
+        if (customer.isEmpty()) {
+            response.setToggles(List.of());
+            return response;
+        }
+        String customerCode = customer.get().getCode();
+        response.setCustomerCode(customerCode);
+        JsonNode clerkCompiled = clerkRuleCompiler.compileForCustomer(customerCode);
+        if (clerkCompiled == null) {
+            response.setToggles(List.of());
+            return response;
+        }
+
+        int priceRuleCount = 0;
+        int discountRuleCount = 0;
+        JsonNode clerkRules = clerkCompiled.path("clerkRules");
+        if (clerkRules.isArray()) {
+            for (JsonNode rule : clerkRules) {
+                if (!rule.path("isActive").asBoolean(true)) {
+                    continue;
+                }
+                String group = resolveClerkRuleGroup(
+                        rule.path("ruleType").asText(""),
+                        rule.path("stage").asText("bill_export"));
+                if ("clerk_price".equals(group)) {
+                    priceRuleCount++;
+                } else if ("clerk_discount".equals(group)) {
+                    if (!rule.path("params").path("validateOnly").asBoolean(false)) {
+                        discountRuleCount++;
+                    }
+                }
+            }
+        }
+
+        List<PricingRuleInfoResponse.CategoryToggle> toggles = new ArrayList<>();
+        toggles.add(buildCategoryToggle(
+                ReconciliationPricingOrchestrator.CATEGORY_CLERK_PRICE,
+                "内勤计价规则",
+                priceRuleCount,
+                disabledCategories));
+        toggles.add(buildCategoryToggle(
+                ReconciliationPricingOrchestrator.CATEGORY_CLERK_DISCOUNT,
+                "内勤折扣规则",
+                discountRuleCount,
+                disabledCategories));
+        response.setToggles(toggles);
+        return response;
+    }
+
+    private static PricingRuleInfoResponse.CategoryToggle buildCategoryToggle(
+            String category,
+            String label,
+            int ruleCount,
+            Set<String> disabledCategories) {
+        PricingRuleInfoResponse.CategoryToggle toggle = new PricingRuleInfoResponse.CategoryToggle();
+        toggle.setCategory(category);
+        toggle.setLabel(label);
+        toggle.setRuleCount(ruleCount);
+        toggle.setAvailable(ruleCount > 0);
+        toggle.setEnabled(!disabledCategories.contains(category));
+        return toggle;
+    }
+
+    private static String resolveClerkRuleGroup(String ruleType, String stage) {
+        if (!"bill_export".equals(stage) && !"both".equals(stage)) {
+            return null;
+        }
+        if ("BILL_EXPORT_PRICE_RULE".equals(ruleType) || "PACK_NAME_PRICE".equals(ruleType)) {
+            return "clerk_price";
+        }
+        if ("DISCOUNT_OVERLAY".equals(ruleType) || "PIECE_TIER_DISCOUNT".equals(ruleType)) {
+            return "clerk_discount";
+        }
+        return null;
+    }
+
+    private Set<String> resolveDisabledCategories(
+            HospitalReconciliationJob job,
+            com.hospital.backend.dto.request.hospital.RepriceRequest request) {
+        if (request != null && request.getDisabledCategories() != null) {
+            Set<String> disabled = new LinkedHashSet<>();
+            for (String category : request.getDisabledCategories()) {
+                if (category != null && !category.isBlank()) {
+                    disabled.add(category.trim());
+                }
+            }
+            return disabled;
+        }
+        return ReconciliationPricingOrchestrator.parseDisabledCategories(job.getPricingRuleOverrides());
     }
 
     /** 将人工修正的冲突字段覆盖到行数据（null 字段不修改） */

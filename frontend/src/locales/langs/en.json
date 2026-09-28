@@ -878,7 +878,24 @@
       "tabRegular": "Regular bill",
       "tabExternal": "External instruments ({count})",
       "suggestedDepartment": "Suggested dept",
-      "pricingRuleColumn": "Pricing rule"
+      "pricingRuleColumn": "Pricing rule",
+      "disabledClerkLayers": "Disabled: {names}",
+      "pricingLayerClerk": "Clerk pricing",
+      "pricingLayerSpecial": "Special pricing",
+      "pricingLayerStandard": "Standard pricing",
+      "priceBeforeDiscount": "Price before discount",
+      "priceAfterDiscount": "Price after discount"
+    },
+    "pricingRules": {
+      "title": "Reconciliation clerk rules",
+      "categoryHint": "Two master toggles only: disable clerk pricing to fall back to special/standard; disable clerk discount to skip the discount layer.",
+      "clerkPriceGroup": "Clerk pricing",
+      "clerkDiscountGroup": "Clerk discount",
+      "ruleCount": "{count} rules",
+      "notAvailable": "No rules in this layer",
+      "applyAndReprice": "Apply & reprice",
+      "applySuccess": "Toggles applied and repriced",
+      "applyFailed": "Failed to apply toggles"
     },
     "columns": {
       "rowNumber": "Row #",
@@ -1210,6 +1227,7 @@
     }
   },
   "pricingPath": {
+    "clerkHit": "Clerk pricing",
     "specialHit": "Special rule",
     "customerFixed": "Customer correction price",
     "specialFixed": "Special fixed price",

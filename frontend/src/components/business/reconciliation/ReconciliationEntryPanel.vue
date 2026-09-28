@@ -28,6 +28,7 @@
       @anomaly-category-change="(filters) => emit('anomaly-category-change', filters)"
       @save-changes="emit('save-changes')"
       @reprice="emit('reprice')"
+      @open-clerk-rules="emit('open-clerk-rules')"
       @open-unmatched="emit('open-unmatched')"
       @export-anomaly="emit('export-anomaly')"
       @version-change="(key, id) => emit('version-change', key, id)"
@@ -191,6 +192,7 @@
     'anomaly-category-change': [filters: ReconciliationAnomalyCategory[]]
     'save-changes': []
     reprice: []
+    'open-clerk-rules': []
     'open-unmatched': []
     'export-anomaly': []
     'page-change': [page: number]

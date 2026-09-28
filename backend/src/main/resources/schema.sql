@@ -106,6 +106,7 @@ CREATE TABLE IF NOT EXISTS hospital_reconciliation_job (
     logistics_breakdown JSON,
     original_total_price DECIMAL(12,2) DEFAULT 0,
     corrected_total_price DECIMAL(12,2) DEFAULT 0,
+    pricing_rule_overrides JSON,
     created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;

@@ -1,10 +1,32 @@
 {
   "customerCode": "HRB-HSZ",
   "customerName": "哈尔滨市红十字中心医院",
-  "sourceVersion": "医院内勤规则-20260918",
+  "sourceVersion": "医院内勤规则-20260924",
   "notes": "医院内勤规则 v2 · Excel行 哈尔滨市红十字妇产医院",
   "attachmentRefs": [],
   "rules": [
+    {
+      "ruleType": "BILL_EXPORT_PRICE_RULE",
+      "name": "导入的账单不是分科室账单",
+      "stage": "bill_export",
+      "isActive": true,
+      "params": {
+        "acceptedTypes": [
+          "导入的账单不是分科室账单",
+          "需要识别"
+        ],
+        "packNameKeywords": null,
+        "packagingMaterial": null,
+        "instrumentCountRange": null,
+        "unitPrice": null,
+        "unitPriceMode": "FIXED",
+        "systemPrice": null,
+        "systemPriceMode": "IGNORE"
+      },
+      "sourceText": "导入的账单不是分科室账单，需要识别",
+      "sourceRef": "excel:账单规则#哈尔滨市红十字妇产医院#1",
+      "priority": 11
+    },
     {
       "ruleType": "MONTHLY_SUPPLEMENT_REPORT",
       "name": "分科室汇总附表",
@@ -13,9 +35,33 @@
       "params": {
         "reportType": "dept_summary"
       },
-      "sourceText": "汇总表",
+      "sourceText": "各科室价格汇总（含物流）",
       "sourceRef": "excel:结款函#HRB-HSZ",
       "priority": 100
+    },
+    {
+      "ruleType": "MONTHLY_SUPPLEMENT_REPORT",
+      "name": "按包类型价格汇总",
+      "stage": "both",
+      "isActive": true,
+      "params": {
+        "reportType": "price_summary"
+      },
+      "sourceText": "按包类型统计科室包及金额",
+      "sourceRef": "excel:结款函#HRB-HSZ",
+      "priority": 101
+    },
+    {
+      "ruleType": "MONTHLY_SUPPLEMENT_REPORT",
+      "name": "按包类型器械量表",
+      "stage": "both",
+      "isActive": true,
+      "params": {
+        "reportType": "instrument_audit"
+      },
+      "sourceText": "按包类型统计（无金额）",
+      "sourceRef": "excel:结款函#HRB-HSZ",
+      "priority": 102
     },
     {
       "ruleType": "EXPORT_LAYOUT",

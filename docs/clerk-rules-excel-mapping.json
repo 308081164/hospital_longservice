@@ -1,17 +1,23 @@
 {
-  "generated_at": "2026-09-19T02:46:09Z",
-  "source": "铂康/内勤要求/医院内勤规则-20260918.xlsx",
-  "hospital_count": 38,
+  "generated_at": "2026-09-28T05:26:54Z",
+  "source": "铂康/内勤要求/医院内勤规则-20260924.xlsx",
+  "hospital_count": 39,
   "hospitals": [
+    {
+      "code": "AOLAN-YY",
+      "name": "黑龙江奥兰医院",
+      "excelRowName": "奥兰医院",
+      "rules": [
+        {
+          "ruleType": "PACK_NAME_PRICE"
+        }
+      ]
+    },
     {
       "code": "DAOWAI-RM",
       "name": "哈尔滨市道外区人民医院",
       "excelRowName": "道外区人民医院",
-      "rules": [
-        {
-          "ruleType": "BILL_EXPORT_PRICE_RULE"
-        }
-      ]
+      "rules": []
     },
     {
       "code": "DONGDA-GC",
@@ -137,6 +143,9 @@
       "excelRowName": "哈尔滨市红十字妇产医院",
       "rules": [
         {
+          "ruleType": "BILL_EXPORT_PRICE_RULE"
+        },
+        {
           "ruleType": "EXPORT_LAYOUT"
         },
         {
@@ -168,11 +177,7 @@
       "code": "HUAXIA-EYE",
       "name": "哈尔滨华夏眼科医院",
       "excelRowName": "哈尔滨华夏眼科医院",
-      "rules": [
-        {
-          "ruleType": "BILL_EXPORT_PRICE_RULE"
-        }
-      ]
+      "rules": []
     },
     {
       "code": "HULAN-HSZ",
@@ -188,11 +193,7 @@
       "code": "HULAN-RM",
       "name": "呼兰区第一人民医院",
       "excelRowName": "呼兰区第一人民医院",
-      "rules": [
-        {
-          "ruleType": "DISCOUNT_OVERLAY"
-        }
-      ]
+      "rules": []
     },
     {
       "code": "HULAN-TCM",
@@ -216,6 +217,9 @@
       "excelRowName": "黑龙江九洲妇科医院",
       "rules": [
         {
+          "ruleType": "DISCOUNT_OVERLAY"
+        },
+        {
           "ruleType": "LOGISTICS_WAIVE"
         },
         {
@@ -230,14 +234,7 @@
       "code": "NG-FUCHAN",
       "name": "哈尔滨市南岗区妇产医院",
       "excelRowName": "哈尔滨市南岗妇产医院",
-      "rules": [
-        {
-          "ruleType": "BILL_EXPORT_PRICE_RULE"
-        },
-        {
-          "ruleType": "PACK_NAME_PRICE"
-        }
-      ]
+      "rules": []
     },
     {
       "code": "RENSHENG",
@@ -269,11 +266,7 @@
       "code": "SANJING-SB",
       "name": "哈尔滨市三精肾脏病专科医院",
       "excelRowName": "三精肾病医院",
-      "rules": [
-        {
-          "ruleType": "BILL_EXPORT_PRICE_RULE"
-        }
-      ]
+      "rules": []
     },
     {
       "code": "SHENG-YY-NG",
@@ -301,7 +294,7 @@
       "excelRowName": "黑龙江省社会康复医院",
       "rules": [
         {
-          "ruleType": "DISCOUNT_OVERLAY"
+          "ruleType": "SETTLEMENT_DISCOUNT"
         }
       ]
     },
@@ -310,9 +303,6 @@
       "name": "哈尔滨市道外区太平人民医院",
       "excelRowName": "哈尔滨市道外区太平人民医院 / 太平人民医院",
       "rules": [
-        {
-          "ruleType": "BILL_EXPORT_PRICE_RULE"
-        },
         {
           "ruleType": "LOGISTICS_WAIVE"
         },
@@ -326,6 +316,9 @@
       "name": "黑龙江维多利亚妇产医院",
       "excelRowName": "黑龙江维多利亚妇产医院",
       "rules": [
+        {
+          "ruleType": "DISCOUNT_OVERLAY"
+        },
         {
           "ruleType": "SETTLEMENT_DISCOUNT"
         },
@@ -348,11 +341,7 @@
       "code": "WUJING-ZD",
       "name": "武警黑龙江省总队医院",
       "excelRowName": "武警黑龙江省总队医院",
-      "rules": [
-        {
-          "ruleType": "ZERO_ROW_PACKAGING_FEE"
-        }
-      ]
+      "rules": []
     },
     {
       "code": "XIANGFANG-ZY",
@@ -419,7 +408,7 @@
     {
       "code": "ZY3-DIANLI",
       "name": "黑龙江中医药大学附属第三医院（电力）",
-      "excelRowName": "中医药大学附属第三医院（电力）",
+      "excelRowName": "黑龙江省中医药大学附属第三医院（电力） / 中医药大学附属第三医院（电力）",
       "rules": [
         {
           "ruleType": "EXPORT_LAYOUT"

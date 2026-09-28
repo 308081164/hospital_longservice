@@ -104,6 +104,7 @@
             @anomaly-category-change="(filters) => onAnomalyCategoryChange(entry, filters)"
             @save-changes="handleSaveEntryChanges(entry)"
             @reprice="handleRepriceEntry(entry)"
+            @open-clerk-rules="openClerkRulesDrawer(entry)"
             @open-unmatched="openUnmatchedGuide(entry)"
             @export-anomaly="openExportAnomalyDialog(entry)"
             @page-change="(p) => onEntryPageChange(entry, p)"
@@ -152,6 +153,12 @@
   <PricingFlowDrawer
     v-model:visible="pricingFlowDrawerVisible"
     :row="pricingFlowRow"
+  />
+  <ReconciliationClerkRulesDrawer
+    v-model:visible="clerkRulesDrawerVisible"
+    :job-id="clerkRulesJobId"
+    :can-edit="clerkRulesCanEdit"
+    @repriced="onClerkRulesRepriced"
   />
 
   <ElDialog
@@ -960,6 +967,7 @@
   import { reconciliationJobActionsKey } from '@/composables/reconciliationJobActionsKey'
   import ReconciliationNoticeBell from '@/components/business/reconciliation/ReconciliationNoticeBell.vue'
   import PricingFlowDrawer from '@/components/business/reconciliation/PricingFlowDrawer.vue'
+  import ReconciliationClerkRulesDrawer from '@/components/business/reconciliation/ReconciliationClerkRulesDrawer.vue'
   import BillingRoleBadge from '@/components/business/BillingRoleBadge.vue'
   import {
     buildReconciliationRowKey,
@@ -991,6 +999,28 @@
   function openPricingFlowDetail(row: Record<string, unknown>) {
     pricingFlowRow.value = row
     pricingFlowDrawerVisible.value = true
+  }
+
+  const clerkRulesDrawerVisible = ref(false)
+  const clerkRulesJobId = ref<number | null>(null)
+  const clerkRulesEntryId = ref<string | null>(null)
+  const clerkRulesCanEdit = ref(true)
+
+  function openClerkRulesDrawer(entry: UploadEntry) {
+    if (!entry.savedJobId) return
+    clerkRulesJobId.value = entry.savedJobId
+    clerkRulesEntryId.value = entry.id
+    clerkRulesCanEdit.value = canEditEntry(entry)
+    clerkRulesDrawerVisible.value = true
+  }
+
+  function onClerkRulesRepriced(rows: Record<string, unknown>[]) {
+    const entryId = clerkRulesEntryId.value
+    if (!entryId) return
+    const entry = uploadEntries.value.find((e) => e.id === entryId)
+    if (entry) {
+      applyRepricedRowsToEntry(entry, rows)
+    }
   }
 
   function mapApiRowToProcessedRow(row: Record<string, unknown>): ProcessedRow {

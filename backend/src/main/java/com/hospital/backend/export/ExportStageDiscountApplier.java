@@ -4,16 +4,21 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.hospital.backend.dto.request.hospital.BillRowItem;
 import com.hospital.backend.service.BillingConditionEvaluator;
 import com.hospital.backend.service.BillingPolicyApplier;
+import com.hospital.backend.service.ClerkBillPriceRuleApplier;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
+import java.util.Set;
 
 /**
  * 导出阶段折扣应用器 —— 原价导入、折扣导出（P4-08 / FR-M2-03 / FR-M2-05）。
  */
 @Component
 public class ExportStageDiscountApplier {
+
+    public record ClerkDiscountHit(String ruleName, double unitPriceBefore, double unitPriceAfter, JsonNode policy) {}
 
     public List<BillRowItem> apply(JsonNode compiledRules, List<BillRowItem> rows) {
         if (compiledRules == null || rows == null || rows.isEmpty()) {
@@ -187,5 +192,63 @@ public class ExportStageDiscountApplier {
 
     private String safe(String value) {
         return value == null ? "" : value;
+    }
+
+    /**
+     * 对账编排：在已有基价上应用首条未禁用的 bill_export 折扣策略。
+     */
+    public Optional<ClerkDiscountHit> tryApplyDiscount(
+            JsonNode compiledRules,
+            BillRowItem row,
+            Set<String> disabledRuleIds,
+            String customerCode) {
+        if (compiledRules == null || row == null) {
+            return Optional.empty();
+        }
+        List<JsonNode> exportPolicies = BillingPolicyApplier.findPoliciesByStage(
+                compiledRules, "DISCOUNT", BillingPolicyApplier.STAGE_EXPORT_ONLY);
+        if (exportPolicies.isEmpty()) {
+            return Optional.empty();
+        }
+        double before = row.getExpectedUnitPrice() != null ? row.getExpectedUnitPrice() : 0;
+        if (before <= 0) {
+            return Optional.empty();
+        }
+        BillRowItem working = copyRow(row);
+        working.setExpectedUnitPrice(before);
+        working.setUnitPrice(before);
+        for (JsonNode policy : exportPolicies) {
+            String policyName = policy.path("name").asText("");
+            if (ClerkBillPriceRuleApplier.isRuleDisabled(disabledRuleIds, customerCode, policyName)) {
+                continue;
+            }
+            if (policy.path("params").path("validateOnly").asBoolean(false)) {
+                continue;
+            }
+            BillRowItem discounted = applyToRow(working, List.of(policy));
+            double after = discounted.getExpectedUnitPrice() != null
+                    ? discounted.getExpectedUnitPrice()
+                    : discounted.getUnitPrice() != null ? discounted.getUnitPrice() : before;
+            if (Math.abs(after - before) > 0.001) {
+                return Optional.of(new ClerkDiscountHit(policyName, before, after, policy));
+            }
+        }
+        return Optional.empty();
+    }
+
+    private static BillRowItem copyRow(BillRowItem source) {
+        BillRowItem copy = new BillRowItem();
+        copy.setType(source.getType());
+        copy.setPackName(source.getPackName());
+        copy.setPackageMaterial(source.getPackageMaterial());
+        copy.setPackCount(source.getPackCount());
+        copy.setInstrumentCount(source.getInstrumentCount());
+        copy.setUnitPrice(source.getUnitPrice());
+        copy.setTotalPrice(source.getTotalPrice());
+        copy.setExpectedUnitPrice(source.getExpectedUnitPrice());
+        copy.setCorrectedTotalPrice(source.getCorrectedTotalPrice());
+        copy.setNotes(source.getNotes() != null ? new ArrayList<>(source.getNotes()) : null);
+        copy.setOriginal(source.getOriginal());
+        return copy;
     }
 }

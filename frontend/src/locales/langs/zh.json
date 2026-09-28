@@ -847,6 +847,16 @@
       "urgentTag": "加急",
       "pendingReviewDifference": "待复核差额",
       "billingNotes": "计费说明",
+      "pricingLayerSection": "三层计价",
+      "pricingLayer": "计价层级",
+      "pricingLayerClerk": "内勤计价",
+      "pricingLayerSpecial": "客服特色计价",
+      "pricingLayerStandard": "客服标准计价",
+      "clerkRuleName": "内勤计价规则",
+      "clerkDiscountRuleName": "内勤折扣规则",
+      "priceBeforeDiscount": "折扣前单价",
+      "priceAfterDiscount": "折扣后单价",
+      "disabledClerkLayers": "已关闭：{names}",
       "multiPriceHit": "多报价命中 {price} 元",
       "multiPriceTag": "多报价",
       "multiPriceTagHit": "多报价命中",
@@ -893,6 +903,17 @@
       "suggestedDepartment": "建议科室",
       "billingEmpty": "暂无计费追溯信息",
       "pricingRuleColumn": "计价规则"
+    },
+    "pricingRules": {
+      "title": "对账内勤规则",
+      "categoryHint": "仅两个总开关：关闭「内勤计价」则整层回落到客服特色/标准计价；关闭「内勤折扣」则跳过折扣层。",
+      "clerkPriceGroup": "内勤计价规则",
+      "clerkDiscountGroup": "内勤折扣规则",
+      "ruleCount": "含 {count} 条规则",
+      "notAvailable": "该院暂无此类规则",
+      "applyAndReprice": "应用并重算",
+      "applySuccess": "规则开关已应用并完成重算",
+      "applyFailed": "应用规则开关失败"
     },
     "columns": {
       "rowNumber": "行号",
@@ -1261,6 +1282,7 @@
     }
   },
   "pricingPath": {
+    "clerkHit": "内勤计价",
     "specialHit": "特色规则",
     "customerFixed": "客户校正价",
     "specialFixed": "特色固定价",
@@ -1292,6 +1314,8 @@
     "stepRuleMeta": "关联规则",
     "stepMultiPrice": "多报价匹配",
     "stepNote": "计价说明",
+    "stepPricingLayer": "三层计价",
+    "stepCalculation": "计算步骤",
     "stepNoteIndex": "步骤 {index}",
     "traceMeta": "追溯元数据（Trace Metadata）",
     "pricingPath": "计价路径（Pricing Path）",

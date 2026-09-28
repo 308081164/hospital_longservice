@@ -213,4 +213,32 @@ assertEqual(
   'double-bag manual review uses manualReview badge'
 )
 
+const clerkHitRow = {
+  status: 'corrected',
+  pricingRule: '内勤计价：整形包',
+  pricingPath: 'clerk',
+  billingNotes: {
+    pricingLayer: 'clerk',
+    clerkRuleName: '整形包',
+    clerkDiscountRuleName: '导出七五折',
+    priceBeforeDiscount: 10,
+    priceAfterDiscount: 7.5,
+    calculationSteps: ['内勤计价命中：整形包', '内勤折扣：导出七五折']
+  }
+}
+
+const clerkClassification = classifyPricingPath(clerkHitRow)
+assertEqual(clerkClassification.label, 'pricingPath.clerkHit', 'clerk layer uses clerkHit badge')
+assertTrue(clerkClassification.summary.includes('整形包'), 'clerk summary shows rule name')
+
+const clerkTimeline = buildPricingFlowTimeline(clerkHitRow)
+assertTrue(
+  clerkTimeline.some((step) => step.label === 'pricingFlow.stepPricingLayer'),
+  'timeline includes pricing layer step'
+)
+assertTrue(
+  clerkTimeline.some((step) => step.label === 'pricingFlow.stepCalculation'),
+  'timeline includes calculation steps'
+)
+
 console.log('reconciliationPricingPath.test.ts: all assertions passed')

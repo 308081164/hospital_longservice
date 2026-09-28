@@ -1,7 +1,7 @@
 {
   "customerCode": "ZUYAN-SF",
   "customerName": "祖研-黑龙江省中医医院（三辅院区）",
-  "sourceVersion": "医院内勤规则-20260918",
+  "sourceVersion": "医院内勤规则-20260924",
   "notes": "医院内勤规则 v2 · Excel行 祖研-黑龙江省中医医院（南岗/香安/三辅）",
   "attachmentRefs": [],
   "rules": [
@@ -13,9 +13,33 @@
       "params": {
         "reportType": "dept_summary"
       },
-      "sourceText": "汇总表",
+      "sourceText": "各科室价格汇总（含物流）",
       "sourceRef": "excel:结款函#ZUYAN-SF",
       "priority": 100
+    },
+    {
+      "ruleType": "MONTHLY_SUPPLEMENT_REPORT",
+      "name": "按包类型价格汇总",
+      "stage": "both",
+      "isActive": true,
+      "params": {
+        "reportType": "price_summary"
+      },
+      "sourceText": "按包类型统计科室包及金额",
+      "sourceRef": "excel:结款函#ZUYAN-SF",
+      "priority": 101
+    },
+    {
+      "ruleType": "MONTHLY_SUPPLEMENT_REPORT",
+      "name": "按包类型器械量表",
+      "stage": "both",
+      "isActive": true,
+      "params": {
+        "reportType": "instrument_audit"
+      },
+      "sourceText": "按包类型统计（无金额）",
+      "sourceRef": "excel:结款函#ZUYAN-SF",
+      "priority": 102
     },
     {
       "ruleType": "LOGISTICS_FEE",
@@ -23,25 +47,11 @@
       "stage": "settlement",
       "isActive": true,
       "params": {
-        "feePerTrip": 50,
-        "allocateBy": "sterilize_fee_ratio"
+        "feePerTrip": 50
       },
       "sourceText": "三辅50",
       "sourceRef": "excel:结款函#ZUYAN-SF",
       "priority": 110
-    },
-    {
-      "ruleType": "MONTHLY_SUPPLEMENT_REPORT",
-      "name": "物流费按科室分摊",
-      "stage": "both",
-      "isActive": true,
-      "params": {
-        "reportType": "logistics_allocation",
-        "allocateBy": "sterilize_fee_ratio"
-      },
-      "sourceText": "物流费按科室消毒费比例分摊",
-      "sourceRef": "excel:结款函#ZUYAN-SF",
-      "priority": 120
     }
   ]
 }

@@ -1,13 +1,18 @@
 {
-  "baseline_hash": "9a341ba241b02c54c709b70a9d701860970908a54832c45d9446e25ce1ff3473",
-  "generated_at": "2026-09-23T06:37:23Z",
-  "source": "docs/source/附一收费标准.xlsx + 铂康/内勤要求/医院内勤规则-20260918.xlsx",
+  "baseline_hash": "6394189e153f79ec96449e33398dc250a64369a31f1d79e17c400d6cba04721c",
+  "generated_at": "2026-09-28T05:26:54Z",
+  "source": "铂康/内勤要求/医院内勤规则-20260924.xlsx",
   "customer_count": 39,
   "customers": [
     {
+      "code": "AOLAN-YY",
+      "file": "baseline/AOLAN-YY.json",
+      "ruleCount": 195
+    },
+    {
       "code": "DAOWAI-RM",
       "file": "baseline/DAOWAI-RM.json",
-      "ruleCount": 20
+      "ruleCount": 0
     },
     {
       "code": "DONGDA-GC",
@@ -52,7 +57,7 @@
     {
       "code": "HRB-2ND",
       "file": "baseline/HRB-2ND.json",
-      "ruleCount": 2
+      "ruleCount": 4
     },
     {
       "code": "HRB-HEU",
@@ -62,7 +67,7 @@
     {
       "code": "HRB-HSZ",
       "file": "baseline/HRB-HSZ.json",
-      "ruleCount": 2
+      "ruleCount": 5
     },
     {
       "code": "HRB-NGJY",
@@ -77,7 +82,7 @@
     {
       "code": "HUAXIA-EYE",
       "file": "baseline/HUAXIA-EYE.json",
-      "ruleCount": 1
+      "ruleCount": 0
     },
     {
       "code": "HULAN-HSZ",
@@ -87,7 +92,7 @@
     {
       "code": "HULAN-RM",
       "file": "baseline/HULAN-RM.json",
-      "ruleCount": 1
+      "ruleCount": 0
     },
     {
       "code": "HULAN-TCM",
@@ -97,12 +102,12 @@
     {
       "code": "JIUZHOU-FK",
       "file": "baseline/JIUZHOU-FK.json",
-      "ruleCount": 3
+      "ruleCount": 4
     },
     {
       "code": "NG-FUCHAN",
       "file": "baseline/NG-FUCHAN.json",
-      "ruleCount": 20
+      "ruleCount": 0
     },
     {
       "code": "RENSHENG",
@@ -117,7 +122,7 @@
     {
       "code": "SANJING-SB",
       "file": "baseline/SANJING-SB.json",
-      "ruleCount": 24
+      "ruleCount": 0
     },
     {
       "code": "SHENG-YY-NG",
@@ -137,12 +142,12 @@
     {
       "code": "TAIPING-RM",
       "file": "baseline/TAIPING-RM.json",
-      "ruleCount": 26
+      "ruleCount": 2
     },
     {
       "code": "VICTORIA",
       "file": "baseline/VICTORIA.json",
-      "ruleCount": 2
+      "ruleCount": 3
     },
     {
       "code": "WUCHANG-RM",
@@ -152,7 +157,7 @@
     {
       "code": "WUJING-ZD",
       "file": "baseline/WUJING-ZD.json",
-      "ruleCount": 3
+      "ruleCount": 0
     },
     {
       "code": "XIANGFANG-ZY",
@@ -167,27 +172,22 @@
     {
       "code": "ZUYAN-NG",
       "file": "baseline/ZUYAN-NG.json",
-      "ruleCount": 3
+      "ruleCount": 4
     },
     {
       "code": "ZUYAN-SF",
       "file": "baseline/ZUYAN-SF.json",
-      "ruleCount": 3
+      "ruleCount": 4
     },
     {
       "code": "ZUYAN-XA",
       "file": "baseline/ZUYAN-XA.json",
-      "ruleCount": 3
+      "ruleCount": 4
     },
     {
       "code": "ZY3-DIANLI",
       "file": "baseline/ZY3-DIANLI.json",
       "ruleCount": 3
-    },
-    {
-      "code": "ZYY-D1",
-      "file": "baseline/ZYY-D1.json",
-      "ruleCount": 9
     },
     {
       "code": "ZYY-D2-HN",

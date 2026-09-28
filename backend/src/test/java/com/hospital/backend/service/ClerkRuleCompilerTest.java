@@ -186,4 +186,21 @@ class ClerkRuleCompilerTest {
                 .extracting(JsonNode::asText)
                 .contains("dept_summary", "logistics_allocation");
     }
+
+    @Test
+    void compilesAolanYyPriceTableFromOverflowSheet() {
+        ObjectNode compiled = compiler.compileForCustomer("AOLAN-YY");
+        assertThat(compiled).isNotNull();
+        assertThat(compiler.hasActiveBillExportRules("AOLAN-YY")).isTrue();
+
+        boolean hasZhengxingPack = false;
+        for (JsonNode rule : compiled.path("clerkRules")) {
+            if ("整形包".equals(rule.path("name").asText())
+                    && "PACK_NAME_PRICE".equals(rule.path("ruleType").asText())) {
+                hasZhengxingPack = true;
+                assertThat(rule.path("params").path("unitPrice").asDouble()).isEqualTo(8.0);
+            }
+        }
+        assertThat(hasZhengxingPack).isTrue();
+    }
 }

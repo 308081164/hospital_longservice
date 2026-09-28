@@ -38,6 +38,7 @@
         <result property="originalTotalPrice" column="original_total_price"/>
         <result property="correctedTotalPrice" column="corrected_total_price"/>
         <result property="allocationResult" column="allocation_result"/>
+        <result property="pricingRuleOverrides" column="pricing_rule_overrides"/>
         <result property="createdAt" column="created_at"/>
         <result property="updatedAt" column="updated_at"/>
     </resultMap>
@@ -79,6 +80,7 @@
         <result property="originalTotalPrice" column="original_total_price"/>
         <result property="correctedTotalPrice" column="corrected_total_price"/>
         <result property="allocationResult" column="allocation_result"/>
+        <result property="pricingRuleOverrides" column="pricing_rule_overrides"/>
         <result property="createdAt" column="created_at"/>
         <result property="updatedAt" column="updated_at"/>
     </resultMap>
@@ -119,6 +121,7 @@
             <if test="deductionBreakdown != null">deduction_breakdown,</if>
             <if test="originalTotalPrice != null">original_total_price,</if>
             <if test="correctedTotalPrice != null">corrected_total_price,</if>
+            <if test="pricingRuleOverrides != null">pricing_rule_overrides,</if>
             created_at,
             updated_at,
         </trim>
@@ -157,6 +160,7 @@
             <if test="deductionBreakdown != null">#{deductionBreakdown},</if>
             <if test="originalTotalPrice != null">#{originalTotalPrice},</if>
             <if test="correctedTotalPrice != null">#{correctedTotalPrice},</if>
+            <if test="pricingRuleOverrides != null">#{pricingRuleOverrides},</if>
             NOW(),
             NOW(),
         </trim>
@@ -223,8 +227,16 @@
             <if test="skippedRows != null">skipped_rows = #{skippedRows},</if>
             <if test="totalDifference != null">total_difference = #{totalDifference},</if>
             <if test="rowsJson != null">rows_json = #{rowsJson},</if>
+            <if test="pricingRuleOverrides != null">pricing_rule_overrides = #{pricingRuleOverrides},</if>
             updated_at = NOW(),
         </set>
+        WHERE id = #{id}
+    </update>
+
+    <update id="updatePricingRuleOverrides">
+        UPDATE hospital_reconciliation_job
+        SET pricing_rule_overrides = #{pricingRuleOverrides},
+            updated_at = NOW()
         WHERE id = #{id}
     </update>
 

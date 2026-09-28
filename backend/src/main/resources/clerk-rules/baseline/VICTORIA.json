@@ -1,7 +1,7 @@
 {
   "customerCode": "VICTORIA",
   "customerName": "黑龙江维多利亚妇产医院",
-  "sourceVersion": "医院内勤规则-20260918",
+  "sourceVersion": "医院内勤规则-20260924",
   "notes": "医院内勤规则 v2 · Excel行 黑龙江维多利亚妇产医院",
   "attachmentRefs": [],
   "rules": [
@@ -20,6 +20,18 @@
       "sourceText": "低于8000元",
       "sourceRef": "excel:结款函#VICTORIA|excel:低消#黑龙江维多利亚妇产医院",
       "priority": 100
+    },
+    {
+      "ruleType": "DISCOUNT_OVERLAY",
+      "name": "结款七折",
+      "stage": "settlement",
+      "isActive": true,
+      "params": {
+        "rate": 0.7
+      },
+      "sourceText": "7折",
+      "sourceRef": "excel:结款函#VICTORIA",
+      "priority": 110
     },
     {
       "ruleType": "SETTLEMENT_DISCOUNT",

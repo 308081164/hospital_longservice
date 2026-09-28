@@ -7,6 +7,8 @@ import org.springframework.stereotype.Component;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Optional;
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -20,6 +22,38 @@ public class ClerkBillPriceRuleApplier {
             "^(?:(\\d+)\\s*≤\\s*)?N\\s*(?:[>＞]\\s*(\\d+)|<\\s*(\\d+))?$", Pattern.CASE_INSENSITIVE);
 
     public record ApplyResult(List<BillRowItem> rows, List<String> validationWarnings) {}
+
+    public record ClerkPriceHit(String ruleName, String ruleType, double unitPrice, JsonNode matchedRule) {}
+
+    /** 内勤账单价规则命中结果（对账三层计价编排器使用）。 */
+    public record PriceRuleMatch(JsonNode rule, double exportTotal) {}
+
+    public Optional<PriceRuleMatch> findMatchingPriceRule(
+            JsonNode compiledClerk,
+            BillRowItem row,
+            String customerCode,
+            Set<String> disabledRuleIds) {
+        if (compiledClerk == null || row == null) {
+            return Optional.empty();
+        }
+        List<JsonNode> rules = collectPriceRules(compiledClerk);
+        if (rules.isEmpty()) {
+            return Optional.empty();
+        }
+        rules.sort(Comparator.comparingInt(r -> r.path("priority").asInt(100)));
+        for (JsonNode rule : rules) {
+            if (isRuleDisabled(rule, customerCode, disabledRuleIds)) {
+                continue;
+            }
+            if (matches(rule.path("params"), row)) {
+                double exportTotal = computeExportTotal(row, rule.path("params"));
+                if (exportTotal >= 0) {
+                    return Optional.of(new PriceRuleMatch(rule, exportTotal));
+                }
+            }
+        }
+        return Optional.empty();
+    }
 
     public ApplyResult apply(JsonNode compiledClerk, List<BillRowItem> rows) {
         if (compiledClerk == null || rows == null || rows.isEmpty()) {
@@ -49,6 +83,10 @@ public class ClerkBillPriceRuleApplier {
             validatePriceOnlyRules(compiledClerk, row, warnings);
         }
         return new ApplyResult(rows, warnings);
+    }
+
+    static boolean isRuleDisabled(JsonNode rule, String customerCode, Set<String> disabledRuleIds) {
+        return isRuleDisabled(disabledRuleIds, customerCode, rule.path("name").asText(""));
     }
 
     private static List<JsonNode> collectPriceRules(JsonNode compiledClerk) {
@@ -257,5 +295,55 @@ public class ClerkBillPriceRuleApplier {
 
     private static double round2(double value) {
         return Math.round(value * 100.0) / 100.0;
+    }
+
+    /**
+     * 对账编排：命中首条未禁用的内勤计价规则并返回单价（不修改行对象）。
+     */
+    public Optional<ClerkPriceHit> tryApplyFirstMatch(
+            JsonNode compiledClerk,
+            BillRowItem row,
+            Set<String> disabledRuleIds,
+            String customerCode) {
+        if (compiledClerk == null || row == null) {
+            return Optional.empty();
+        }
+        List<JsonNode> rules = collectPriceRules(compiledClerk);
+        if (rules.isEmpty()) {
+            return Optional.empty();
+        }
+        rules.sort(Comparator.comparingInt(r -> r.path("priority").asInt(100)));
+        for (JsonNode rule : rules) {
+            String ruleName = rule.path("name").asText("");
+            if (isRuleDisabled(disabledRuleIds, customerCode, ruleName)) {
+                continue;
+            }
+            if (!matches(rule.path("params"), row)) {
+                continue;
+            }
+            JsonNode params = rule.path("params");
+            double exportTotal = computeExportTotal(row, params);
+            if (exportTotal < 0) {
+                continue;
+            }
+            int packCount = packCount(row);
+            double unitPrice = packCount > 0 ? round2(exportTotal / packCount) : round2(exportTotal);
+            return Optional.of(new ClerkPriceHit(
+                    ruleName,
+                    rule.path("ruleType").asText(""),
+                    unitPrice,
+                    rule));
+        }
+        return Optional.empty();
+    }
+
+    static boolean isRuleDisabled(Set<String> disabledRuleIds, String customerCode, String ruleName) {
+        if (disabledRuleIds == null || disabledRuleIds.isEmpty() || ruleName == null || ruleName.isBlank()) {
+            return false;
+        }
+        if (customerCode != null && disabledRuleIds.contains(customerCode + ":" + ruleName)) {
+            return true;
+        }
+        return disabledRuleIds.contains(ruleName);
     }
 }

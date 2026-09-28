@@ -209,6 +209,45 @@
           </ul>
         </section>
 
+        <section v-if="pricingLayerInfo" class="detail-section">
+          <div class="detail-section-title">{{ t('reconciliation.detail.pricingLayerSection') }}</div>
+          <div class="detail-grid">
+            <div v-if="pricingLayerInfo.layerLabel" class="detail-item">
+              <span class="detail-label">{{ t('reconciliation.detail.pricingLayer') }}</span>
+              <span class="detail-value">{{ pricingLayerInfo.layerLabel }}</span>
+            </div>
+            <div v-if="pricingLayerInfo.clerkRuleName" class="detail-item">
+              <span class="detail-label">{{ t('reconciliation.detail.clerkRuleName') }}</span>
+              <span class="detail-value">{{ pricingLayerInfo.clerkRuleName }}</span>
+            </div>
+            <div v-if="pricingLayerInfo.clerkDiscountRuleName" class="detail-item">
+              <span class="detail-label">{{ t('reconciliation.detail.clerkDiscountRuleName') }}</span>
+              <span class="detail-value">{{ pricingLayerInfo.clerkDiscountRuleName }}</span>
+            </div>
+            <div v-if="pricingLayerInfo.priceBeforeDiscount != null" class="detail-item">
+              <span class="detail-label">{{ t('reconciliation.detail.priceBeforeDiscount') }}</span>
+              <span class="detail-value">{{ formatCurrency(pricingLayerInfo.priceBeforeDiscount) }}</span>
+            </div>
+            <div v-if="pricingLayerInfo.priceAfterDiscount != null" class="detail-item">
+              <span class="detail-label">{{ t('reconciliation.detail.priceAfterDiscount') }}</span>
+              <span class="detail-value">{{ formatCurrency(pricingLayerInfo.priceAfterDiscount) }}</span>
+            </div>
+          </div>
+          <ElAlert
+            v-if="pricingLayerInfo.disabledLayers.length"
+            class="mt-2"
+            type="info"
+            :closable="false"
+            show-icon
+          >
+            <template #title>
+              <span class="text-xs">
+                {{ t('reconciliation.detail.disabledClerkLayers', { names: pricingLayerInfo.disabledLayers.join('、') }) }}
+              </span>
+            </template>
+          </ElAlert>
+        </section>
+
         <section v-if="pricingRuleSummary" class="detail-section">
           <div class="detail-section-title">{{ t('pricingFlow.ruleSummary') }}</div>
           <div class="detail-value text-sm">{{ localizedPricingRuleSummary }}</div>
@@ -382,6 +421,7 @@
     fieldConsistencyViolationLabel,
     formatReconciliationCurrency,
     hasBillingDetail,
+    normalizeBillingNotes,
     parseReconciliationBillingContext
   } from '@/utils/reconciliationBillingNotes'
   import { hasPricingDetail } from '@/utils/reconciliationPricingPath'
@@ -447,6 +487,53 @@
     }
     return parts.filter(Boolean).join(' · ')
   })
+
+  const pricingLayerInfo = computed(() => {
+    const notes = normalizeBillingNotes(props.row.billingNotes ?? props.row.billing_notes)
+    if (!notes) return null
+    const layer = String(notes.pricingLayer ?? notes.pricing_layer ?? '').trim()
+    const clerkRuleName = String(notes.clerkRuleName ?? notes.clerk_rule_name ?? '').trim()
+    const clerkDiscountRuleName = String(
+      notes.clerkDiscountRuleName ?? notes.clerk_discount_rule_name ?? ''
+    ).trim()
+    const priceBeforeDiscount = numberOrNull(notes.priceBeforeDiscount ?? notes.price_before_discount)
+    const priceAfterDiscount = numberOrNull(notes.priceAfterDiscount ?? notes.price_after_discount)
+    const disabledLayers = Array.isArray(notes.disabledClerkLayers ?? notes.disabled_clerk_layers)
+      ? (notes.disabledClerkLayers ?? notes.disabled_clerk_layers).filter(
+          (item): item is string => typeof item === 'string'
+        )
+      : []
+    if (
+      !layer &&
+      !clerkRuleName &&
+      !clerkDiscountRuleName &&
+      priceBeforeDiscount == null &&
+      priceAfterDiscount == null &&
+      !disabledLayers.length
+    ) {
+      return null
+    }
+    const layerLabel =
+      layer === 'clerk'
+        ? t('reconciliation.detail.pricingLayerClerk')
+        : layer === 'special'
+          ? t('reconciliation.detail.pricingLayerSpecial')
+          : layer === 'standard'
+            ? t('reconciliation.detail.pricingLayerStandard')
+            : layer
+    return {
+      layerLabel,
+      clerkRuleName,
+      clerkDiscountRuleName,
+      priceBeforeDiscount,
+      priceAfterDiscount,
+      disabledLayers
+    }
+  })
+
+  function numberOrNull(value: unknown): number | null {
+    return typeof value === 'number' && Number.isFinite(value) ? value : null
+  }
 
   function formatCurrency(value: number | null | undefined): string {
     return formatReconciliationCurrency(value)

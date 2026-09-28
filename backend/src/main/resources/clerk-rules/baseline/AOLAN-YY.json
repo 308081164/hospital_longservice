@@ -1,0 +1,4104 @@
+{
+  "customerCode": "AOLAN-YY",
+  "customerName": "黑龙江奥兰医院",
+  "sourceVersion": "医院内勤规则-20260924",
+  "notes": "医院内勤规则 v2 · Excel行 奥兰医院",
+  "attachmentRefs": [],
+  "rules": [
+    {
+      "ruleType": "PACK_NAME_PRICE",
+      "name": "整形包",
+      "stage": "bill_export",
+      "isActive": true,
+      "params": {
+        "packNameKeywords": [
+          "整形包"
+        ],
+        "acceptedTypes": [
+          "高温蒸汽灭菌"
+        ],
+        "instrumentCountRange": "N<7",
+        "unitPrice": 8.0,
+        "unitPriceMode": "FIXED",
+        "systemPriceMode": "IGNORE"
+      },
+      "sourceText": "整形包 ≤6 8",
+      "sourceRef": "excel:奥兰医院规则#0",
+      "priority": 10
+    },
+    {
+      "ruleType": "PACK_NAME_PRICE",
+      "name": "缝合包妇科",
+      "stage": "bill_export",
+      "isActive": true,
+      "params": {
+        "packNameKeywords": [
+          "缝合包妇科"
+        ],
+        "acceptedTypes": [
+          "高温蒸汽灭菌"
+        ],
+        "instrumentCountRange": "N<16",
+        "unitPrice": 12.0,
+        "unitPriceMode": "FIXED",
+        "systemPriceMode": "IGNORE"
+      },
+      "sourceText": "缝合包妇科 ≤15 12",
+      "sourceRef": "excel:奥兰医院规则#1",
+      "priority": 11
+    },
+    {
+      "ruleType": "PACK_NAME_PRICE",
+      "name": "上取环包",
+      "stage": "bill_export",
+      "isActive": true,
+      "params": {
+        "packNameKeywords": [
+          "上取环包"
+        ],
+        "acceptedTypes": [
+          "高温蒸汽灭菌"
+        ],
+        "instrumentCountRange": "N<13",
+        "unitPrice": 31.0,
+        "unitPriceMode": "FIXED",
+        "systemPriceMode": "IGNORE"
+      },
+      "sourceText": "上取环包 ≤12 31",
+      "sourceRef": "excel:奥兰医院规则#2",
+      "priority": 12
+    },
+    {
+      "ruleType": "PACK_NAME_PRICE",
+      "name": "人流包",
+      "stage": "bill_export",
+      "isActive": true,
+      "params": {
+        "packNameKeywords": [
+          "人流包"
+        ],
+        "acceptedTypes": [
+          "高温蒸汽灭菌"
+        ],
+        "instrumentCountRange": "N<20",
+        "unitPrice": 40.0,
+        "unitPriceMode": "FIXED",
+        "systemPriceMode": "IGNORE"
+      },
+      "sourceText": "人流包 ≤19 40",
+      "sourceRef": "excel:奥兰医院规则#3",
+      "priority": 13
+    },
+    {
+      "ruleType": "PACK_NAME_PRICE",
+      "name": "宫腔镜器械包",
+      "stage": "bill_export",
+      "isActive": true,
+      "params": {
+        "packNameKeywords": [
+          "宫腔镜器械包"
+        ],
+        "acceptedTypes": [
+          "高温蒸汽灭菌"
+        ],
+        "instrumentCountRange": "N<20",
+        "unitPrice": 40.0,
+        "unitPriceMode": "FIXED",
+        "systemPriceMode": "IGNORE"
+      },
+      "sourceText": "宫腔镜器械包 ≤19 40",
+      "sourceRef": "excel:奥兰医院规则#4",
+      "priority": 14
+    },
+    {
+      "ruleType": "PACK_NAME_PRICE",
+      "name": "小缝合包门诊",
+      "stage": "bill_export",
+      "isActive": true,
+      "params": {
+        "packNameKeywords": [
+          "小缝合包门诊"
+        ],
+        "acceptedTypes": [
+          "高温蒸汽灭菌"
+        ],
+        "instrumentCountRange": null,
+        "unitPrice": 16.5,
+        "unitPriceMode": "FIXED",
+        "systemPriceMode": "IGNORE"
+      },
+      "sourceText": "小缝合包门诊 None 16.5",
+      "sourceRef": "excel:奥兰医院规则#5",
+      "priority": 15
+    },
+    {
+      "ruleType": "PACK_NAME_PRICE",
+      "name": "收外清创缝合",
+      "stage": "bill_export",
+      "isActive": true,
+      "params": {
+        "packNameKeywords": [
+          "收外清创缝合"
+        ],
+        "acceptedTypes": [
+          "高温蒸汽灭菌"
+        ],
+        "instrumentCountRange": null,
+        "unitPrice": 50.0,
+        "unitPriceMode": "FIXED",
+        "systemPriceMode": "IGNORE"
+      },
+      "sourceText": "收外清创缝合 None 50",
+      "sourceRef": "excel:奥兰医院规则#6",
+      "priority": 16
+    },
+    {
+      "ruleType": "PACK_NAME_PRICE",
+      "name": "小缝合包",
+      "stage": "bill_export",
+      "isActive": true,
+      "params": {
+        "packNameKeywords": [
+          "小缝合包"
+        ],
+        "acceptedTypes": [
+          "高温蒸汽灭菌"
+        ],
+        "instrumentCountRange": "N<44",
+        "unitPrice": 157.0,
+        "unitPriceMode": "FIXED",
+        "systemPriceMode": "IGNORE"
+      },
+      "sourceText": "小缝合包 ≤43 157",
+      "sourceRef": "excel:奥兰医院规则#7",
+      "priority": 17
+    },
+    {
+      "ruleType": "PACK_NAME_PRICE",
+      "name": "静脉切开包",
+      "stage": "bill_export",
+      "isActive": true,
+      "params": {
+        "packNameKeywords": [
+          "静脉切开包"
+        ],
+        "acceptedTypes": [
+          "高温蒸汽灭菌"
+        ],
+        "instrumentCountRange": "N<16",
+        "unitPrice": 93.0,
+        "unitPriceMode": "FIXED",
+        "systemPriceMode": "IGNORE"
+      },
+      "sourceText": "静脉切开包 ≤15 93",
+      "sourceRef": "excel:奥兰医院规则#8",
+      "priority": 18
+    },
+    {
+      "ruleType": "PACK_NAME_PRICE",
+      "name": "骨科基础包",
+      "stage": "bill_export",
+      "isActive": true,
+      "params": {
+        "packNameKeywords": [
+          "骨科基础包"
+        ],
+        "acceptedTypes": [
+          "高温蒸汽灭菌"
+        ],
+        "instrumentCountRange": "N<55",
+        "unitPrice": 197.0,
+        "unitPriceMode": "FIXED",
+        "systemPriceMode": "IGNORE"
+      },
+      "sourceText": "骨科基础包 ≤54 197",
+      "sourceRef": "excel:奥兰医院规则#9",
+      "priority": 19
+    },
+    {
+      "ruleType": "PACK_NAME_PRICE",
+      "name": "开胸基础包",
+      "stage": "bill_export",
+      "isActive": true,
+      "params": {
+        "packNameKeywords": [
+          "开胸基础包"
+        ],
+        "acceptedTypes": [
+          "高温蒸汽灭菌"
+        ],
+        "instrumentCountRange": "N<66",
+        "unitPrice": 220.0,
+        "unitPriceMode": "FIXED",
+        "systemPriceMode": "IGNORE"
+      },
+      "sourceText": "开胸基础包 ≤65 220",
+      "sourceRef": "excel:奥兰医院规则#10",
+      "priority": 20
+    },
+    {
+      "ruleType": "PACK_NAME_PRICE",
+      "name": "胸科小包",
+      "stage": "bill_export",
+      "isActive": true,
+      "params": {
+        "packNameKeywords": [
+          "胸科小包"
+        ],
+        "acceptedTypes": [
+          "高温蒸汽灭菌"
+        ],
+        "instrumentCountRange": "N<19",
+        "unitPrice": 70.0,
+        "unitPriceMode": "FIXED",
+        "systemPriceMode": "IGNORE"
+      },
+      "sourceText": "胸科小包 ≤18 70",
+      "sourceRef": "excel:奥兰医院规则#11",
+      "priority": 21
+    },
+    {
+      "ruleType": "PACK_NAME_PRICE",
+      "name": "肛肠包",
+      "stage": "bill_export",
+      "isActive": true,
+      "params": {
+        "packNameKeywords": [
+          "肛肠包"
+        ],
+        "acceptedTypes": [
+          "高温蒸汽灭菌"
+        ],
+        "instrumentCountRange": "N<7",
+        "unitPrice": 25.0,
+        "unitPriceMode": "FIXED",
+        "systemPriceMode": "IGNORE"
+      },
+      "sourceText": "肛肠包 ≤6 25",
+      "sourceRef": "excel:奥兰医院规则#12",
+      "priority": 22
+    },
+    {
+      "ruleType": "PACK_NAME_PRICE",
+      "name": "手显微器械包",
+      "stage": "bill_export",
+      "isActive": true,
+      "params": {
+        "packNameKeywords": [
+          "手显微器械包"
+        ],
+        "acceptedTypes": [
+          "高温蒸汽灭菌"
+        ],
+        "instrumentCountRange": null,
+        "unitPrice": 62.0,
+        "unitPriceMode": "FIXED",
+        "systemPriceMode": "IGNORE"
+      },
+      "sourceText": "手显微器械包 None 62",
+      "sourceRef": "excel:奥兰医院规则#13",
+      "priority": 23
+    },
+    {
+      "ruleType": "PACK_NAME_PRICE",
+      "name": "宫颈活体取样",
+      "stage": "bill_export",
+      "isActive": true,
+      "params": {
+        "packNameKeywords": [
+          "宫颈活体取样"
+        ],
+        "acceptedTypes": [
+          "高温蒸汽灭菌"
+        ],
+        "instrumentCountRange": "N<17",
+        "unitPrice": 70.0,
+        "unitPriceMode": "FIXED",
+        "systemPriceMode": "IGNORE"
+      },
+      "sourceText": "宫颈活体取样 ≤16 70",
+      "sourceRef": "excel:奥兰医院规则#14",
+      "priority": 24
+    },
+    {
+      "ruleType": "PACK_NAME_PRICE",
+      "name": "四肢包",
+      "stage": "bill_export",
+      "isActive": true,
+      "params": {
+        "packNameKeywords": [
+          "四肢包"
+        ],
+        "acceptedTypes": [
+          "高温蒸汽灭菌"
+        ],
+        "instrumentCountRange": "N<52",
+        "unitPrice": 185.0,
+        "unitPriceMode": "FIXED",
+        "systemPriceMode": "IGNORE"
+      },
+      "sourceText": "四肢包 ≤51 185",
+      "sourceRef": "excel:奥兰医院规则#15",
+      "priority": 25
+    },
+    {
+      "ruleType": "PACK_NAME_PRICE",
+      "name": "手外科",
+      "stage": "bill_export",
+      "isActive": true,
+      "params": {
+        "packNameKeywords": [
+          "手外科"
+        ],
+        "acceptedTypes": [
+          "高温蒸汽灭菌"
+        ],
+        "instrumentCountRange": "N<41",
+        "unitPrice": 146.0,
+        "unitPriceMode": "FIXED",
+        "systemPriceMode": "IGNORE"
+      },
+      "sourceText": "手外科 ≤40 146",
+      "sourceRef": "excel:奥兰医院规则#16",
+      "priority": 26
+    },
+    {
+      "ruleType": "PACK_NAME_PRICE",
+      "name": "开腹包",
+      "stage": "bill_export",
+      "isActive": true,
+      "params": {
+        "packNameKeywords": [
+          "开腹包"
+        ],
+        "acceptedTypes": [
+          "高温蒸汽灭菌"
+        ],
+        "instrumentCountRange": "N<70",
+        "unitPrice": 250.0,
+        "unitPriceMode": "FIXED",
+        "systemPriceMode": "IGNORE"
+      },
+      "sourceText": "开腹包 ≤69 250",
+      "sourceRef": "excel:奥兰医院规则#17",
+      "priority": 27
+    },
+    {
+      "ruleType": "PACK_NAME_PRICE",
+      "name": "上环器",
+      "stage": "bill_export",
+      "isActive": true,
+      "params": {
+        "packNameKeywords": [
+          "上环器"
+        ],
+        "acceptedTypes": [
+          "高温蒸汽灭菌"
+        ],
+        "instrumentCountRange": "N<2",
+        "unitPrice": 5.0,
+        "unitPriceMode": "FIXED",
+        "systemPriceMode": "IGNORE"
+      },
+      "sourceText": "上环器 ≤1 5",
+      "sourceRef": "excel:奥兰医院规则#18|excel:奥兰医院规则#28",
+      "priority": 28
+    },
+    {
+      "ruleType": "PACK_NAME_PRICE",
+      "name": "弯盘",
+      "stage": "bill_export",
+      "isActive": true,
+      "params": {
+        "packNameKeywords": [
+          "弯盘"
+        ],
+        "acceptedTypes": [
+          "高温蒸汽灭菌"
+        ],
+        "instrumentCountRange": "N<2",
+        "unitPrice": 12.0,
+        "unitPriceMode": "FIXED",
+        "systemPriceMode": "IGNORE"
+      },
+      "sourceText": "弯盘 ≤1 12",
+      "sourceRef": "excel:奥兰医院规则#19",
+      "priority": 29
+    },
+    {
+      "ruleType": "PACK_NAME_PRICE",
+      "name": "麻杯",
+      "stage": "bill_export",
+      "isActive": true,
+      "params": {
+        "packNameKeywords": [
+          "麻杯"
+        ],
+        "acceptedTypes": [
+          "高温蒸汽灭菌"
+        ],
+        "instrumentCountRange": "N<2",
+        "unitPrice": 5.0,
+        "unitPriceMode": "FIXED",
+        "systemPriceMode": "IGNORE"
+      },
+      "sourceText": "麻杯 ≤1 5",
+      "sourceRef": "excel:奥兰医院规则#20",
+      "priority": 30
+    },
+    {
+      "ruleType": "PACK_NAME_PRICE",
+      "name": "碗",
+      "stage": "bill_export",
+      "isActive": true,
+      "params": {
+        "packNameKeywords": [
+          "碗"
+        ],
+        "acceptedTypes": [
+          "高温蒸汽灭菌"
+        ],
+        "instrumentCountRange": "N<2",
+        "unitPrice": 12.0,
+        "unitPriceMode": "FIXED",
+        "systemPriceMode": "IGNORE"
+      },
+      "sourceText": "碗 ≤1 12",
+      "sourceRef": "excel:奥兰医院规则#21",
+      "priority": 31
+    },
+    {
+      "ruleType": "PACK_NAME_PRICE",
+      "name": "扩棒",
+      "stage": "bill_export",
+      "isActive": true,
+      "params": {
+        "packNameKeywords": [
+          "扩棒"
+        ],
+        "acceptedTypes": [
+          "高温蒸汽灭菌"
+        ],
+        "instrumentCountRange": "N<8",
+        "unitPrice": 25.0,
+        "unitPriceMode": "FIXED",
+        "systemPriceMode": "IGNORE"
+      },
+      "sourceText": "扩棒 ≤7 25",
+      "sourceRef": "excel:奥兰医院规则#22",
+      "priority": 32
+    },
+    {
+      "ruleType": "PACK_NAME_PRICE",
+      "name": "肌钩",
+      "stage": "bill_export",
+      "isActive": true,
+      "params": {
+        "packNameKeywords": [
+          "肌钩"
+        ],
+        "acceptedTypes": [
+          "高温蒸汽灭菌"
+        ],
+        "instrumentCountRange": "N<3",
+        "unitPrice": 10.0,
+        "unitPriceMode": "FIXED",
+        "systemPriceMode": "IGNORE"
+      },
+      "sourceText": "肌钩 ≤2 10",
+      "sourceRef": "excel:奥兰医院规则#23",
+      "priority": 33
+    },
+    {
+      "ruleType": "PACK_NAME_PRICE",
+      "name": "探针",
+      "stage": "bill_export",
+      "isActive": true,
+      "params": {
+        "packNameKeywords": [
+          "探针"
+        ],
+        "acceptedTypes": [
+          "高温蒸汽灭菌"
+        ],
+        "instrumentCountRange": "N<2",
+        "unitPrice": 5.0,
+        "unitPriceMode": "FIXED",
+        "systemPriceMode": "IGNORE"
+      },
+      "sourceText": "探针 ≤1 5",
+      "sourceRef": "excel:奥兰医院规则#24",
+      "priority": 34
+    },
+    {
+      "ruleType": "PACK_NAME_PRICE",
+      "name": "活检钳",
+      "stage": "bill_export",
+      "isActive": true,
+      "params": {
+        "packNameKeywords": [
+          "活检钳"
+        ],
+        "acceptedTypes": [
+          "高温蒸汽灭菌"
+        ],
+        "instrumentCountRange": "N<2",
+        "unitPrice": 8.0,
+        "unitPriceMode": "FIXED",
+        "systemPriceMode": "IGNORE"
+      },
+      "sourceText": "活检钳 ≤1 8",
+      "sourceRef": "excel:奥兰医院规则#25",
+      "priority": 35
+    },
+    {
+      "ruleType": "PACK_NAME_PRICE",
+      "name": "宫颈钳",
+      "stage": "bill_export",
+      "isActive": true,
+      "params": {
+        "packNameKeywords": [
+          "宫颈钳"
+        ],
+        "acceptedTypes": [
+          "高温蒸汽灭菌"
+        ],
+        "instrumentCountRange": null,
+        "unitPrice": 8.0,
+        "unitPriceMode": "FIXED",
+        "systemPriceMode": "IGNORE"
+      },
+      "sourceText": "宫颈钳 None 8",
+      "sourceRef": "excel:奥兰医院规则#26",
+      "priority": 36
+    },
+    {
+      "ruleType": "PACK_NAME_PRICE",
+      "name": "卵圆钳",
+      "stage": "bill_export",
+      "isActive": true,
+      "params": {
+        "packNameKeywords": [
+          "卵圆钳"
+        ],
+        "acceptedTypes": [
+          "高温蒸汽灭菌"
+        ],
+        "instrumentCountRange": null,
+        "unitPrice": 8.0,
+        "unitPriceMode": "FIXED",
+        "systemPriceMode": "IGNORE"
+      },
+      "sourceText": "卵圆钳 None 8",
+      "sourceRef": "excel:奥兰医院规则#27",
+      "priority": 37
+    },
+    {
+      "ruleType": "PACK_NAME_PRICE",
+      "name": "取环器",
+      "stage": "bill_export",
+      "isActive": true,
+      "params": {
+        "packNameKeywords": [
+          "取环器"
+        ],
+        "acceptedTypes": [
+          "高温蒸汽灭菌"
+        ],
+        "instrumentCountRange": null,
+        "unitPrice": 5.0,
+        "unitPriceMode": "FIXED",
+        "systemPriceMode": "IGNORE"
+      },
+      "sourceText": "取环器 None 5",
+      "sourceRef": "excel:奥兰医院规则#29",
+      "priority": 39
+    },
+    {
+      "ruleType": "PACK_NAME_PRICE",
+      "name": "组织剪",
+      "stage": "bill_export",
+      "isActive": true,
+      "params": {
+        "packNameKeywords": [
+          "组织剪"
+        ],
+        "acceptedTypes": [
+          "高温蒸汽灭菌"
+        ],
+        "instrumentCountRange": "N<2",
+        "unitPrice": 5.0,
+        "unitPriceMode": "FIXED",
+        "systemPriceMode": "IGNORE"
+      },
+      "sourceText": "组织剪 ≤1 5",
+      "sourceRef": "excel:奥兰医院规则#30",
+      "priority": 40
+    },
+    {
+      "ruleType": "PACK_NAME_PRICE",
+      "name": "大镊子",
+      "stage": "bill_export",
+      "isActive": true,
+      "params": {
+        "packNameKeywords": [
+          "大镊子"
+        ],
+        "acceptedTypes": [
+          "高温蒸汽灭菌"
+        ],
+        "instrumentCountRange": "N<2",
+        "unitPrice": 5.0,
+        "unitPriceMode": "FIXED",
+        "systemPriceMode": "IGNORE"
+      },
+      "sourceText": "大镊子 ≤1 5",
+      "sourceRef": "excel:奥兰医院规则#31",
+      "priority": 41
+    },
+    {
+      "ruleType": "PACK_NAME_PRICE",
+      "name": "蚊式",
+      "stage": "bill_export",
+      "isActive": true,
+      "params": {
+        "packNameKeywords": [
+          "蚊式"
+        ],
+        "acceptedTypes": [
+          "高温蒸汽灭菌"
+        ],
+        "instrumentCountRange": "N<2",
+        "unitPrice": 5.0,
+        "unitPriceMode": "FIXED",
+        "systemPriceMode": "IGNORE"
+      },
+      "sourceText": "蚊式 ≤1 5",
+      "sourceRef": "excel:奥兰医院规则#32",
+      "priority": 42
+    },
+    {
+      "ruleType": "PACK_NAME_PRICE",
+      "name": "8号扩棒",
+      "stage": "bill_export",
+      "isActive": true,
+      "params": {
+        "packNameKeywords": [
+          "8号扩棒"
+        ],
+        "acceptedTypes": [
+          "高温蒸汽灭菌"
+        ],
+        "instrumentCountRange": "N<2",
+        "unitPrice": 5.0,
+        "unitPriceMode": "FIXED",
+        "systemPriceMode": "IGNORE"
+      },
+      "sourceText": "8号扩棒 ≤1 5",
+      "sourceRef": "excel:奥兰医院规则#33",
+      "priority": 43
+    },
+    {
+      "ruleType": "PACK_NAME_PRICE",
+      "name": "8.5号扩棒",
+      "stage": "bill_export",
+      "isActive": true,
+      "params": {
+        "packNameKeywords": [
+          "8.5号扩棒"
+        ],
+        "acceptedTypes": [
+          "高温蒸汽灭菌"
+        ],
+        "instrumentCountRange": "N<2",
+        "unitPrice": 5.0,
+        "unitPriceMode": "FIXED",
+        "systemPriceMode": "IGNORE"
+      },
+      "sourceText": "8.5号扩棒 ≤1 5",
+      "sourceRef": "excel:奥兰医院规则#34",
+      "priority": 44
+    },
+    {
+      "ruleType": "PACK_NAME_PRICE",
+      "name": "5号吸头",
+      "stage": "bill_export",
+      "isActive": true,
+      "params": {
+        "packNameKeywords": [
+          "5号吸头"
+        ],
+        "acceptedTypes": [
+          "高温蒸汽灭菌"
+        ],
+        "instrumentCountRange": "N<2",
+        "unitPrice": 5.0,
+        "unitPriceMode": "FIXED",
+        "systemPriceMode": "IGNORE"
+      },
+      "sourceText": "5号吸头 ≤1 5",
+      "sourceRef": "excel:奥兰医院规则#35",
+      "priority": 45
+    },
+    {
+      "ruleType": "PACK_NAME_PRICE",
+      "name": "8号吸头",
+      "stage": "bill_export",
+      "isActive": true,
+      "params": {
+        "packNameKeywords": [
+          "8号吸头"
+        ],
+        "acceptedTypes": [
+          "高温蒸汽灭菌"
+        ],
+        "instrumentCountRange": "N<2",
+        "unitPrice": 5.0,
+        "unitPriceMode": "FIXED",
+        "systemPriceMode": "IGNORE"
+      },
+      "sourceText": "8号吸头 ≤1 5",
+      "sourceRef": "excel:奥兰医院规则#36",
+      "priority": 46
+    },
+    {
+      "ruleType": "PACK_NAME_PRICE",
+      "name": "小弯",
+      "stage": "bill_export",
+      "isActive": true,
+      "params": {
+        "packNameKeywords": [
+          "小弯"
+        ],
+        "acceptedTypes": [
+          "高温蒸汽灭菌"
+        ],
+        "instrumentCountRange": "N<3",
+        "unitPrice": 12.0,
+        "unitPriceMode": "FIXED",
+        "systemPriceMode": "IGNORE"
+      },
+      "sourceText": "小弯 ≤2 12",
+      "sourceRef": "excel:奥兰医院规则#37",
+      "priority": 47
+    },
+    {
+      "ruleType": "PACK_NAME_PRICE",
+      "name": "3号刀柄",
+      "stage": "bill_export",
+      "isActive": true,
+      "params": {
+        "packNameKeywords": [
+          "3号刀柄"
+        ],
+        "acceptedTypes": [
+          "高温蒸汽灭菌"
+        ],
+        "instrumentCountRange": "N<2",
+        "unitPrice": 5.0,
+        "unitPriceMode": "FIXED",
+        "systemPriceMode": "IGNORE"
+      },
+      "sourceText": "3号刀柄 ≤1 5",
+      "sourceRef": "excel:奥兰医院规则#38",
+      "priority": 48
+    },
+    {
+      "ruleType": "PACK_NAME_PRICE",
+      "name": "平镊",
+      "stage": "bill_export",
+      "isActive": true,
+      "params": {
+        "packNameKeywords": [
+          "平镊"
+        ],
+        "acceptedTypes": [
+          "高温蒸汽灭菌"
+        ],
+        "instrumentCountRange": "N<3",
+        "unitPrice": 10.0,
+        "unitPriceMode": "FIXED",
+        "systemPriceMode": "IGNORE"
+      },
+      "sourceText": "平镊 ≤2 10",
+      "sourceRef": "excel:奥兰医院规则#39",
+      "priority": 49
+    },
+    {
+      "ruleType": "PACK_NAME_PRICE",
+      "name": "平镊",
+      "stage": "bill_export",
+      "isActive": true,
+      "params": {
+        "packNameKeywords": [
+          "平镊"
+        ],
+        "acceptedTypes": [
+          "高温蒸汽灭菌"
+        ],
+        "instrumentCountRange": "N<2",
+        "unitPrice": 5.0,
+        "unitPriceMode": "FIXED",
+        "systemPriceMode": "IGNORE"
+      },
+      "sourceText": "平镊 ≤1 5",
+      "sourceRef": "excel:奥兰医院规则#40",
+      "priority": 50
+    },
+    {
+      "ruleType": "PACK_NAME_PRICE",
+      "name": "持针器",
+      "stage": "bill_export",
+      "isActive": true,
+      "params": {
+        "packNameKeywords": [
+          "持针器"
+        ],
+        "acceptedTypes": [
+          "高温蒸汽灭菌"
+        ],
+        "instrumentCountRange": "N<2",
+        "unitPrice": 5.0,
+        "unitPriceMode": "FIXED",
+        "systemPriceMode": "IGNORE"
+      },
+      "sourceText": "持针器 ≤1 5",
+      "sourceRef": "excel:奥兰医院规则#41",
+      "priority": 51
+    },
+    {
+      "ruleType": "PACK_NAME_PRICE",
+      "name": "四爪钩(布)",
+      "stage": "bill_export",
+      "isActive": true,
+      "params": {
+        "packNameKeywords": [
+          "四爪钩(布)"
+        ],
+        "acceptedTypes": [
+          "高温蒸汽灭菌"
+        ],
+        "instrumentCountRange": "N<3",
+        "unitPrice": 12.0,
+        "unitPriceMode": "FIXED",
+        "systemPriceMode": "IGNORE"
+      },
+      "sourceText": "四爪钩(布) ≤2 12",
+      "sourceRef": "excel:奥兰医院规则#42",
+      "priority": 52
+    },
+    {
+      "ruleType": "PACK_NAME_PRICE",
+      "name": "盆2盘2杯2",
+      "stage": "bill_export",
+      "isActive": true,
+      "params": {
+        "packNameKeywords": [
+          "盆2盘2杯2"
+        ],
+        "acceptedTypes": [
+          "高温蒸汽灭菌"
+        ],
+        "instrumentCountRange": "N<7",
+        "unitPrice": 25.0,
+        "unitPriceMode": "FIXED",
+        "systemPriceMode": "IGNORE"
+      },
+      "sourceText": "盆2盘2杯2 ≤6 25",
+      "sourceRef": "excel:奥兰医院规则#43",
+      "priority": 53
+    },
+    {
+      "ruleType": "PACK_NAME_PRICE",
+      "name": "阴道拉钩(袋)",
+      "stage": "bill_export",
+      "isActive": true,
+      "params": {
+        "packNameKeywords": [
+          "阴道拉钩(袋)"
+        ],
+        "acceptedTypes": [
+          "高温蒸汽灭菌"
+        ],
+        "instrumentCountRange": "N<3",
+        "unitPrice": 10.0,
+        "unitPriceMode": "FIXED",
+        "systemPriceMode": "IGNORE"
+      },
+      "sourceText": "阴道拉钩(袋) ≤2 10",
+      "sourceRef": "excel:奥兰医院规则#44",
+      "priority": 54
+    },
+    {
+      "ruleType": "PACK_NAME_PRICE",
+      "name": "直钳",
+      "stage": "bill_export",
+      "isActive": true,
+      "params": {
+        "packNameKeywords": [
+          "直钳"
+        ],
+        "acceptedTypes": [
+          "高温蒸汽灭菌"
+        ],
+        "instrumentCountRange": "N<2",
+        "unitPrice": 5.0,
+        "unitPriceMode": "FIXED",
+        "systemPriceMode": "IGNORE"
+      },
+      "sourceText": "直钳 ≤1 5",
+      "sourceRef": "excel:奥兰医院规则#45",
+      "priority": 55
+    },
+    {
+      "ruleType": "PACK_NAME_PRICE",
+      "name": "小S拉钩件(布)",
+      "stage": "bill_export",
+      "isActive": true,
+      "params": {
+        "packNameKeywords": [
+          "小S拉钩件(布)"
+        ],
+        "acceptedTypes": [
+          "高温蒸汽灭菌"
+        ],
+        "instrumentCountRange": "N<3",
+        "unitPrice": 12.0,
+        "unitPriceMode": "FIXED",
+        "systemPriceMode": "IGNORE"
+      },
+      "sourceText": "小S拉钩件(布) ≤2 12",
+      "sourceRef": "excel:奥兰医院规则#46",
+      "priority": 56
+    },
+    {
+      "ruleType": "PACK_NAME_PRICE",
+      "name": "咬骨钳(袋)",
+      "stage": "bill_export",
+      "isActive": true,
+      "params": {
+        "packNameKeywords": [
+          "咬骨钳(袋)"
+        ],
+        "acceptedTypes": [
+          "高温蒸汽灭菌"
+        ],
+        "instrumentCountRange": "N<2",
+        "unitPrice": 8.0,
+        "unitPriceMode": "FIXED",
+        "systemPriceMode": "IGNORE"
+      },
+      "sourceText": "咬骨钳(袋) ≤1 8",
+      "sourceRef": "excel:奥兰医院规则#47",
+      "priority": 57
+    },
+    {
+      "ruleType": "PACK_NAME_PRICE",
+      "name": "组织钳",
+      "stage": "bill_export",
+      "isActive": true,
+      "params": {
+        "packNameKeywords": [
+          "组织钳"
+        ],
+        "acceptedTypes": [
+          "高温蒸汽灭菌"
+        ],
+        "instrumentCountRange": "N<3",
+        "unitPrice": 12.0,
+        "unitPriceMode": "FIXED",
+        "systemPriceMode": "IGNORE"
+      },
+      "sourceText": "组织钳 ≤2 12",
+      "sourceRef": "excel:奥兰医院规则#48",
+      "priority": 58
+    },
+    {
+      "ruleType": "PACK_NAME_PRICE",
+      "name": "压肠板",
+      "stage": "bill_export",
+      "isActive": true,
+      "params": {
+        "packNameKeywords": [
+          "压肠板"
+        ],
+        "acceptedTypes": [
+          "高温蒸汽灭菌"
+        ],
+        "instrumentCountRange": "N<2",
+        "unitPrice": 5.0,
+        "unitPriceMode": "FIXED",
+        "systemPriceMode": "IGNORE"
+      },
+      "sourceText": "压肠板 ≤1 5",
+      "sourceRef": "excel:奥兰医院规则#49",
+      "priority": 59
+    },
+    {
+      "ruleType": "PACK_NAME_PRICE",
+      "name": "组织拉钩",
+      "stage": "bill_export",
+      "isActive": true,
+      "params": {
+        "packNameKeywords": [
+          "组织拉钩"
+        ],
+        "acceptedTypes": [
+          "高温蒸汽灭菌"
+        ],
+        "instrumentCountRange": "N<3",
+        "unitPrice": 10.0,
+        "unitPriceMode": "FIXED",
+        "systemPriceMode": "IGNORE"
+      },
+      "sourceText": "组织拉钩 ≤2 10",
+      "sourceRef": "excel:奥兰医院规则#50",
+      "priority": 60
+    },
+    {
+      "ruleType": "PACK_NAME_PRICE",
+      "name": "刮勺1骨剥1",
+      "stage": "bill_export",
+      "isActive": true,
+      "params": {
+        "packNameKeywords": [
+          "刮勺1骨剥1"
+        ],
+        "acceptedTypes": [
+          "高温蒸汽灭菌"
+        ],
+        "instrumentCountRange": "N<3",
+        "unitPrice": 8.0,
+        "unitPriceMode": "FIXED",
+        "systemPriceMode": "IGNORE"
+      },
+      "sourceText": "刮勺1骨剥1 ≤2 8",
+      "sourceRef": "excel:奥兰医院规则#51",
+      "priority": 61
+    },
+    {
+      "ruleType": "PACK_NAME_PRICE",
+      "name": "中弯",
+      "stage": "bill_export",
+      "isActive": true,
+      "params": {
+        "packNameKeywords": [
+          "中弯"
+        ],
+        "acceptedTypes": [
+          "高温蒸汽灭菌"
+        ],
+        "instrumentCountRange": "N<3",
+        "unitPrice": 12.0,
+        "unitPriceMode": "FIXED",
+        "systemPriceMode": "IGNORE"
+      },
+      "sourceText": "中弯 ≤2 12",
+      "sourceRef": "excel:奥兰医院规则#52",
+      "priority": 62
+    },
+    {
+      "ruleType": "PACK_NAME_PRICE",
+      "name": "线剪",
+      "stage": "bill_export",
+      "isActive": true,
+      "params": {
+        "packNameKeywords": [
+          "线剪"
+        ],
+        "acceptedTypes": [
+          "高温蒸汽灭菌"
+        ],
+        "instrumentCountRange": "N<2",
+        "unitPrice": 5.0,
+        "unitPriceMode": "FIXED",
+        "systemPriceMode": "IGNORE"
+      },
+      "sourceText": "线剪 ≤1 5",
+      "sourceRef": "excel:奥兰医院规则#53",
+      "priority": 63
+    },
+    {
+      "ruleType": "PACK_NAME_PRICE",
+      "name": "阑尾加件",
+      "stage": "bill_export",
+      "isActive": true,
+      "params": {
+        "packNameKeywords": [
+          "阑尾加件"
+        ],
+        "acceptedTypes": [
+          "高温蒸汽灭菌"
+        ],
+        "instrumentCountRange": "N<4",
+        "unitPrice": 10.0,
+        "unitPriceMode": "FIXED",
+        "systemPriceMode": "IGNORE"
+      },
+      "sourceText": "阑尾加件 ≤3 10",
+      "sourceRef": "excel:奥兰医院规则#54",
+      "priority": 64
+    },
+    {
+      "ruleType": "PACK_NAME_PRICE",
+      "name": "肺叶钳（布)",
+      "stage": "bill_export",
+      "isActive": true,
+      "params": {
+        "packNameKeywords": [
+          "肺叶钳（布)"
+        ],
+        "acceptedTypes": [
+          "高温蒸汽灭菌"
+        ],
+        "instrumentCountRange": "N<3",
+        "unitPrice": 12.0,
+        "unitPriceMode": "FIXED",
+        "systemPriceMode": "IGNORE"
+      },
+      "sourceText": "肺叶钳（布) ≤2 12",
+      "sourceRef": "excel:奥兰医院规则#55",
+      "priority": 65
+    },
+    {
+      "ruleType": "PACK_NAME_PRICE",
+      "name": "持物钳罐(布)",
+      "stage": "bill_export",
+      "isActive": true,
+      "params": {
+        "packNameKeywords": [
+          "持物钳罐(布)"
+        ],
+        "acceptedTypes": [
+          "高温蒸汽灭菌"
+        ],
+        "instrumentCountRange": "N<3",
+        "unitPrice": 12.0,
+        "unitPriceMode": "FIXED",
+        "systemPriceMode": "IGNORE"
+      },
+      "sourceText": "持物钳罐(布) ≤2 12",
+      "sourceRef": "excel:奥兰医院规则#56",
+      "priority": 66
+    },
+    {
+      "ruleType": "PACK_NAME_PRICE",
+      "name": "古凿",
+      "stage": "bill_export",
+      "isActive": true,
+      "params": {
+        "packNameKeywords": [
+          "古凿"
+        ],
+        "acceptedTypes": [
+          "高温蒸汽灭菌"
+        ],
+        "instrumentCountRange": "N<2",
+        "unitPrice": 8.0,
+        "unitPriceMode": "FIXED",
+        "systemPriceMode": "IGNORE"
+      },
+      "sourceText": "古凿 ≤1 8",
+      "sourceRef": "excel:奥兰医院规则#57",
+      "priority": 67
+    },
+    {
+      "ruleType": "PACK_NAME_PRICE",
+      "name": "S拉钩(布)",
+      "stage": "bill_export",
+      "isActive": true,
+      "params": {
+        "packNameKeywords": [
+          "S拉钩(布)"
+        ],
+        "acceptedTypes": [
+          "高温蒸汽灭菌"
+        ],
+        "instrumentCountRange": "N<3",
+        "unitPrice": 10.0,
+        "unitPriceMode": "FIXED",
+        "systemPriceMode": "IGNORE"
+      },
+      "sourceText": "S拉钩(布) ≤2 10",
+      "sourceRef": "excel:奥兰医院规则#58",
+      "priority": 68
+    },
+    {
+      "ruleType": "PACK_NAME_PRICE",
+      "name": "骨锉",
+      "stage": "bill_export",
+      "isActive": true,
+      "params": {
+        "packNameKeywords": [
+          "骨锉"
+        ],
+        "acceptedTypes": [
+          "高温蒸汽灭菌"
+        ],
+        "instrumentCountRange": "N<2",
+        "unitPrice": 5.0,
+        "unitPriceMode": "FIXED",
+        "systemPriceMode": "IGNORE"
+      },
+      "sourceText": "骨锉 ≤1 5",
+      "sourceRef": "excel:奥兰医院规则#59",
+      "priority": 69
+    },
+    {
+      "ruleType": "PACK_NAME_PRICE",
+      "name": "胃钳",
+      "stage": "bill_export",
+      "isActive": true,
+      "params": {
+        "packNameKeywords": [
+          "胃钳"
+        ],
+        "acceptedTypes": [
+          "高温蒸汽灭菌"
+        ],
+        "instrumentCountRange": "N<2",
+        "unitPrice": 8.0,
+        "unitPriceMode": "FIXED",
+        "systemPriceMode": "IGNORE"
+      },
+      "sourceText": "胃钳 ≤1 8",
+      "sourceRef": "excel:奥兰医院规则#60",
+      "priority": 70
+    },
+    {
+      "ruleType": "PACK_NAME_PRICE",
+      "name": "折弯器",
+      "stage": "bill_export",
+      "isActive": true,
+      "params": {
+        "packNameKeywords": [
+          "折弯器"
+        ],
+        "acceptedTypes": [
+          "高温蒸汽灭菌"
+        ],
+        "instrumentCountRange": "N<3",
+        "unitPrice": 10.0,
+        "unitPriceMode": "FIXED",
+        "systemPriceMode": "IGNORE"
+      },
+      "sourceText": "折弯器 ≤2 10",
+      "sourceRef": "excel:奥兰医院规则#61",
+      "priority": 71
+    },
+    {
+      "ruleType": "PACK_NAME_PRICE",
+      "name": "双爪钩",
+      "stage": "bill_export",
+      "isActive": true,
+      "params": {
+        "packNameKeywords": [
+          "双爪钩"
+        ],
+        "acceptedTypes": [
+          "高温蒸汽灭菌"
+        ],
+        "instrumentCountRange": "N<2",
+        "unitPrice": 5.0,
+        "unitPriceMode": "FIXED",
+        "systemPriceMode": "IGNORE"
+      },
+      "sourceText": "双爪钩 ≤1 5",
+      "sourceRef": "excel:奥兰医院规则#62",
+      "priority": 72
+    },
+    {
+      "ruleType": "PACK_NAME_PRICE",
+      "name": "窥器",
+      "stage": "bill_export",
+      "isActive": true,
+      "params": {
+        "packNameKeywords": [
+          "窥器"
+        ],
+        "acceptedTypes": [
+          "高温蒸汽灭菌"
+        ],
+        "instrumentCountRange": "N<2",
+        "unitPrice": 8.0,
+        "unitPriceMode": "FIXED",
+        "systemPriceMode": "IGNORE"
+      },
+      "sourceText": "窥器 ≤1 8",
+      "sourceRef": "excel:奥兰医院规则#63",
+      "priority": 73
+    },
+    {
+      "ruleType": "PACK_NAME_PRICE",
+      "name": "戳卡配件",
+      "stage": "bill_export",
+      "isActive": true,
+      "params": {
+        "packNameKeywords": [
+          "戳卡配件"
+        ],
+        "acceptedTypes": [
+          "高温蒸汽灭菌"
+        ],
+        "instrumentCountRange": "N<3",
+        "unitPrice": 10.0,
+        "unitPriceMode": "FIXED",
+        "systemPriceMode": "IGNORE"
+      },
+      "sourceText": "戳卡配件 ≤2 10",
+      "sourceRef": "excel:奥兰医院规则#64",
+      "priority": 74
+    },
+    {
+      "ruleType": "PACK_NAME_PRICE",
+      "name": "戳卡配件",
+      "stage": "bill_export",
+      "isActive": true,
+      "params": {
+        "packNameKeywords": [
+          "戳卡配件"
+        ],
+        "acceptedTypes": [
+          "高温蒸汽灭菌"
+        ],
+        "instrumentCountRange": "N<4",
+        "unitPrice": 10.0,
+        "unitPriceMode": "FIXED",
+        "systemPriceMode": "IGNORE"
+      },
+      "sourceText": "戳卡配件 ≤3 10",
+      "sourceRef": "excel:奥兰医院规则#65",
+      "priority": 75
+    },
+    {
+      "ruleType": "PACK_NAME_PRICE",
+      "name": "直钳",
+      "stage": "bill_export",
+      "isActive": true,
+      "params": {
+        "packNameKeywords": [
+          "直钳"
+        ],
+        "acceptedTypes": [
+          "高温蒸汽灭菌"
+        ],
+        "instrumentCountRange": "N<3",
+        "unitPrice": 12.0,
+        "unitPriceMode": "FIXED",
+        "systemPriceMode": "IGNORE"
+      },
+      "sourceText": "直钳 ≤2 12",
+      "sourceRef": "excel:奥兰医院规则#66",
+      "priority": 76
+    },
+    {
+      "ruleType": "PACK_NAME_PRICE",
+      "name": "持镜器",
+      "stage": "bill_export",
+      "isActive": true,
+      "params": {
+        "packNameKeywords": [
+          "持镜器"
+        ],
+        "acceptedTypes": [
+          "高温蒸汽灭菌"
+        ],
+        "instrumentCountRange": "N<3",
+        "unitPrice": 8.0,
+        "unitPriceMode": "FIXED",
+        "systemPriceMode": "IGNORE"
+      },
+      "sourceText": "持镜器 ≤2 8",
+      "sourceRef": "excel:奥兰医院规则#67",
+      "priority": 77
+    },
+    {
+      "ruleType": "PACK_NAME_PRICE",
+      "name": "镊钩",
+      "stage": "bill_export",
+      "isActive": true,
+      "params": {
+        "packNameKeywords": [
+          "镊钩"
+        ],
+        "acceptedTypes": [
+          "高温蒸汽灭菌"
+        ],
+        "instrumentCountRange": "N<3",
+        "unitPrice": 8.0,
+        "unitPriceMode": "FIXED",
+        "systemPriceMode": "IGNORE"
+      },
+      "sourceText": "镊钩 ≤2 8",
+      "sourceRef": "excel:奥兰医院规则#68",
+      "priority": 78
+    },
+    {
+      "ruleType": "PACK_NAME_PRICE",
+      "name": "直角钳",
+      "stage": "bill_export",
+      "isActive": true,
+      "params": {
+        "packNameKeywords": [
+          "直角钳"
+        ],
+        "acceptedTypes": [
+          "高温蒸汽灭菌"
+        ],
+        "instrumentCountRange": "N<2",
+        "unitPrice": 5.0,
+        "unitPriceMode": "FIXED",
+        "systemPriceMode": "IGNORE"
+      },
+      "sourceText": "直角钳 ≤1 5",
+      "sourceRef": "excel:奥兰医院规则#69",
+      "priority": 79
+    },
+    {
+      "ruleType": "PACK_NAME_PRICE",
+      "name": "鞍钩",
+      "stage": "bill_export",
+      "isActive": true,
+      "params": {
+        "packNameKeywords": [
+          "鞍钩"
+        ],
+        "acceptedTypes": [
+          "高温蒸汽灭菌"
+        ],
+        "instrumentCountRange": "N<3",
+        "unitPrice": 10.0,
+        "unitPriceMode": "FIXED",
+        "systemPriceMode": "IGNORE"
+      },
+      "sourceText": "鞍钩 ≤2 10",
+      "sourceRef": "excel:奥兰医院规则#70",
+      "priority": 80
+    },
+    {
+      "ruleType": "PACK_NAME_PRICE",
+      "name": "机器人器械",
+      "stage": "bill_export",
+      "isActive": true,
+      "params": {
+        "packNameKeywords": [
+          "机器人器械"
+        ],
+        "acceptedTypes": [
+          "高温蒸汽灭菌"
+        ],
+        "instrumentCountRange": "N<5",
+        "unitPrice": 2.0,
+        "unitPriceMode": "FIXED",
+        "systemPriceMode": "IGNORE"
+      },
+      "sourceText": "机器人器械 ≤4 2",
+      "sourceRef": "excel:奥兰医院规则#71",
+      "priority": 81
+    },
+    {
+      "ruleType": "PACK_NAME_PRICE",
+      "name": "吸引管",
+      "stage": "bill_export",
+      "isActive": true,
+      "params": {
+        "packNameKeywords": [
+          "吸引管"
+        ],
+        "acceptedTypes": [
+          "高温蒸汽灭菌"
+        ],
+        "instrumentCountRange": "N<3",
+        "unitPrice": 10.0,
+        "unitPriceMode": "FIXED",
+        "systemPriceMode": "IGNORE"
+      },
+      "sourceText": "吸引管 ≤2 10",
+      "sourceRef": "excel:奥兰医院规则#72",
+      "priority": 82
+    },
+    {
+      "ruleType": "PACK_NAME_PRICE",
+      "name": "气腹管",
+      "stage": "bill_export",
+      "isActive": true,
+      "params": {
+        "packNameKeywords": [
+          "气腹管"
+        ],
+        "acceptedTypes": [
+          "低温等离子"
+        ],
+        "instrumentCountRange": "N<2",
+        "unitPrice": 20.0,
+        "unitPriceMode": "FIXED",
+        "systemPriceMode": "IGNORE"
+      },
+      "sourceText": "气腹管 ≤1 20",
+      "sourceRef": "excel:奥兰医院规则#73",
+      "priority": 83
+    },
+    {
+      "ruleType": "PACK_NAME_PRICE",
+      "name": "结扎钳",
+      "stage": "bill_export",
+      "isActive": true,
+      "params": {
+        "packNameKeywords": [
+          "结扎钳"
+        ],
+        "acceptedTypes": [
+          "低温等离子"
+        ],
+        "instrumentCountRange": "N<2",
+        "unitPrice": 20.0,
+        "unitPriceMode": "FIXED",
+        "systemPriceMode": "IGNORE"
+      },
+      "sourceText": "结扎钳 ≤1 20",
+      "sourceRef": "excel:奥兰医院规则#74",
+      "priority": 84
+    },
+    {
+      "ruleType": "PACK_NAME_PRICE",
+      "name": "剪刀",
+      "stage": "bill_export",
+      "isActive": true,
+      "params": {
+        "packNameKeywords": [
+          "剪刀"
+        ],
+        "acceptedTypes": [
+          "低温等离子"
+        ],
+        "instrumentCountRange": "N<2",
+        "unitPrice": 20.0,
+        "unitPriceMode": "FIXED",
+        "systemPriceMode": "IGNORE"
+      },
+      "sourceText": "剪刀 ≤1 20",
+      "sourceRef": "excel:奥兰医院规则#75",
+      "priority": 85
+    },
+    {
+      "ruleType": "PACK_NAME_PRICE",
+      "name": "Storz镜头光纤",
+      "stage": "bill_export",
+      "isActive": true,
+      "params": {
+        "packNameKeywords": [
+          "Storz镜头光纤"
+        ],
+        "acceptedTypes": [
+          "低温等离子"
+        ],
+        "instrumentCountRange": "N<3",
+        "unitPrice": 30.0,
+        "unitPriceMode": "FIXED",
+        "systemPriceMode": "IGNORE"
+      },
+      "sourceText": "Storz镜头光纤 ≤2 30",
+      "sourceRef": "excel:奥兰医院规则#76",
+      "priority": 86
+    },
+    {
+      "ruleType": "PACK_NAME_PRICE",
+      "name": "弯分离钳",
+      "stage": "bill_export",
+      "isActive": true,
+      "params": {
+        "packNameKeywords": [
+          "弯分离钳"
+        ],
+        "acceptedTypes": [
+          "低温等离子"
+        ],
+        "instrumentCountRange": "N<2",
+        "unitPrice": 2.0,
+        "unitPriceMode": "FIXED",
+        "systemPriceMode": "IGNORE"
+      },
+      "sourceText": "弯分离钳 ≤1 2",
+      "sourceRef": "excel:奥兰医院规则#77",
+      "priority": 87
+    },
+    {
+      "ruleType": "PACK_NAME_PRICE",
+      "name": "宫腔镜查镜(内镜1内鞘1外鞘1)",
+      "stage": "bill_export",
+      "isActive": true,
+      "params": {
+        "packNameKeywords": [
+          "宫腔镜查镜(内镜1内鞘1外鞘1)"
+        ],
+        "acceptedTypes": [
+          "低温等离子"
+        ],
+        "instrumentCountRange": "N<4",
+        "unitPrice": 44.0,
+        "unitPriceMode": "FIXED",
+        "systemPriceMode": "IGNORE"
+      },
+      "sourceText": "宫腔镜查镜(内镜1内鞘1外鞘1) ≤3 44",
+      "sourceRef": "excel:奥兰医院规则#78",
+      "priority": 88
+    },
+    {
+      "ruleType": "PACK_NAME_PRICE",
+      "name": "宫腔镜术镜(内镜1内鞘1外鞘1)",
+      "stage": "bill_export",
+      "isActive": true,
+      "params": {
+        "packNameKeywords": [
+          "宫腔镜术镜(内镜1内鞘1外鞘1)"
+        ],
+        "acceptedTypes": [
+          "低温等离子"
+        ],
+        "instrumentCountRange": "N<4",
+        "unitPrice": 5.0,
+        "unitPriceMode": "FIXED",
+        "systemPriceMode": "IGNORE"
+      },
+      "sourceText": "宫腔镜术镜(内镜1内鞘1外鞘1) ≤3 5",
+      "sourceRef": "excel:奥兰医院规则#79",
+      "priority": 89
+    },
+    {
+      "ruleType": "PACK_NAME_PRICE",
+      "name": "宫腔镜软剪",
+      "stage": "bill_export",
+      "isActive": true,
+      "params": {
+        "packNameKeywords": [
+          "宫腔镜软剪"
+        ],
+        "acceptedTypes": [
+          "低温等离子"
+        ],
+        "instrumentCountRange": null,
+        "unitPrice": 30.0,
+        "unitPriceMode": "FIXED",
+        "systemPriceMode": "IGNORE"
+      },
+      "sourceText": "宫腔镜软剪 None 30",
+      "sourceRef": "excel:奥兰医院规则#80",
+      "priority": 90
+    },
+    {
+      "ruleType": "PACK_NAME_PRICE",
+      "name": "宫腔镜软钳(软钳1)",
+      "stage": "bill_export",
+      "isActive": true,
+      "params": {
+        "packNameKeywords": [
+          "宫腔镜软钳(软钳1)"
+        ],
+        "acceptedTypes": [
+          "低温等离子"
+        ],
+        "instrumentCountRange": "N<2",
+        "unitPrice": 3.0,
+        "unitPriceMode": "FIXED",
+        "systemPriceMode": "IGNORE"
+      },
+      "sourceText": "宫腔镜软钳(软钳1) ≤1 3",
+      "sourceRef": "excel:奥兰医院规则#81",
+      "priority": 91
+    },
+    {
+      "ruleType": "PACK_NAME_PRICE",
+      "name": "宫腔镜螺旋帽",
+      "stage": "bill_export",
+      "isActive": true,
+      "params": {
+        "packNameKeywords": [
+          "宫腔镜螺旋帽"
+        ],
+        "acceptedTypes": [
+          "低温等离子"
+        ],
+        "instrumentCountRange": "N<3",
+        "unitPrice": 40.0,
+        "unitPriceMode": "FIXED",
+        "systemPriceMode": "IGNORE"
+      },
+      "sourceText": "宫腔镜螺旋帽 ≤2 40",
+      "sourceRef": "excel:奥兰医院规则#82",
+      "priority": 92
+    },
+    {
+      "ruleType": "PACK_NAME_PRICE",
+      "name": "无损伤钳",
+      "stage": "bill_export",
+      "isActive": true,
+      "params": {
+        "packNameKeywords": [
+          "无损伤钳"
+        ],
+        "acceptedTypes": [
+          "低温等离子"
+        ],
+        "instrumentCountRange": "N<2",
+        "unitPrice": 2.0,
+        "unitPriceMode": "FIXED",
+        "systemPriceMode": "IGNORE"
+      },
+      "sourceText": "无损伤钳 ≤1 2",
+      "sourceRef": "excel:奥兰医院规则#83",
+      "priority": 93
+    },
+    {
+      "ruleType": "PACK_NAME_PRICE",
+      "name": "单极线",
+      "stage": "bill_export",
+      "isActive": true,
+      "params": {
+        "packNameKeywords": [
+          "单极线"
+        ],
+        "acceptedTypes": [
+          "低温等离子"
+        ],
+        "instrumentCountRange": "N<2",
+        "unitPrice": 26.0,
+        "unitPriceMode": "FIXED",
+        "systemPriceMode": "IGNORE"
+      },
+      "sourceText": "单极线 ≤1 26",
+      "sourceRef": "excel:奥兰医院规则#84",
+      "priority": 94
+    },
+    {
+      "ruleType": "PACK_NAME_PRICE",
+      "name": "持针器",
+      "stage": "bill_export",
+      "isActive": true,
+      "params": {
+        "packNameKeywords": [
+          "持针器"
+        ],
+        "acceptedTypes": [
+          "低温等离子"
+        ],
+        "instrumentCountRange": "N<2",
+        "unitPrice": 2.0,
+        "unitPriceMode": "FIXED",
+        "systemPriceMode": "IGNORE"
+      },
+      "sourceText": "持针器 ≤1 2",
+      "sourceRef": "excel:奥兰医院规则#85",
+      "priority": 95
+    },
+    {
+      "ruleType": "PACK_NAME_PRICE",
+      "name": "吸引器",
+      "stage": "bill_export",
+      "isActive": true,
+      "params": {
+        "packNameKeywords": [
+          "吸引器"
+        ],
+        "acceptedTypes": [
+          "低温等离子"
+        ],
+        "instrumentCountRange": "N<2",
+        "unitPrice": 17.0,
+        "unitPriceMode": "FIXED",
+        "systemPriceMode": "IGNORE"
+      },
+      "sourceText": "吸引器 ≤1 17",
+      "sourceRef": "excel:奥兰医院规则#86",
+      "priority": 96
+    },
+    {
+      "ruleType": "PACK_NAME_PRICE",
+      "name": "电凝钩",
+      "stage": "bill_export",
+      "isActive": true,
+      "params": {
+        "packNameKeywords": [
+          "电凝钩"
+        ],
+        "acceptedTypes": [
+          "低温等离子"
+        ],
+        "instrumentCountRange": "N<2",
+        "unitPrice": 12.0,
+        "unitPriceMode": "FIXED",
+        "systemPriceMode": "IGNORE"
+      },
+      "sourceText": "电凝钩 ≤1 12",
+      "sourceRef": "excel:奥兰医院规则#87",
+      "priority": 97
+    },
+    {
+      "ruleType": "PACK_NAME_PRICE",
+      "name": "机器人戳卡",
+      "stage": "bill_export",
+      "isActive": true,
+      "params": {
+        "packNameKeywords": [
+          "机器人戳卡"
+        ],
+        "acceptedTypes": [
+          "低温等离子"
+        ],
+        "instrumentCountRange": "N<3",
+        "unitPrice": 30.0,
+        "unitPriceMode": "FIXED",
+        "systemPriceMode": "IGNORE"
+      },
+      "sourceText": "机器人戳卡 ≤2 30",
+      "sourceRef": "excel:奥兰医院规则#88",
+      "priority": 98
+    },
+    {
+      "ruleType": "PACK_NAME_PRICE",
+      "name": "气腹针",
+      "stage": "bill_export",
+      "isActive": true,
+      "params": {
+        "packNameKeywords": [
+          "气腹针"
+        ],
+        "acceptedTypes": [
+          "低温等离子"
+        ],
+        "instrumentCountRange": "N<2",
+        "unitPrice": 17.0,
+        "unitPriceMode": "FIXED",
+        "systemPriceMode": "IGNORE"
+      },
+      "sourceText": "气腹针 ≤1 17",
+      "sourceRef": "excel:奥兰医院规则#89",
+      "priority": 99
+    },
+    {
+      "ruleType": "PACK_NAME_PRICE",
+      "name": "戳卡密封组件",
+      "stage": "bill_export",
+      "isActive": true,
+      "params": {
+        "packNameKeywords": [
+          "戳卡密封组件"
+        ],
+        "acceptedTypes": [
+          "低温等离子"
+        ],
+        "instrumentCountRange": "N<3",
+        "unitPrice": 60.0,
+        "unitPriceMode": "FIXED",
+        "systemPriceMode": "IGNORE"
+      },
+      "sourceText": "戳卡密封组件 ≤2 60",
+      "sourceRef": "excel:奥兰医院规则#90",
+      "priority": 100
+    },
+    {
+      "ruleType": "PACK_NAME_PRICE",
+      "name": "超声刀导线",
+      "stage": "bill_export",
+      "isActive": true,
+      "params": {
+        "packNameKeywords": [
+          "超声刀导线"
+        ],
+        "acceptedTypes": [
+          "低温等离子"
+        ],
+        "instrumentCountRange": "N<2",
+        "unitPrice": 25.0,
+        "unitPriceMode": "FIXED",
+        "systemPriceMode": "IGNORE"
+      },
+      "sourceText": "超声刀导线 ≤1 25",
+      "sourceRef": "excel:奥兰医院规则#91",
+      "priority": 101
+    },
+    {
+      "ruleType": "PACK_NAME_PRICE",
+      "name": "持镜壁腹腔镜结口件",
+      "stage": "bill_export",
+      "isActive": true,
+      "params": {
+        "packNameKeywords": [
+          "持镜壁腹腔镜结口件"
+        ],
+        "acceptedTypes": [
+          "低温等离子"
+        ],
+        "instrumentCountRange": "N<3",
+        "unitPrice": 30.0,
+        "unitPriceMode": "FIXED",
+        "systemPriceMode": "IGNORE"
+      },
+      "sourceText": "持镜壁腹腔镜结口件 ≤2 30",
+      "sourceRef": "excel:奥兰医院规则#92",
+      "priority": 102
+    },
+    {
+      "ruleType": "PACK_NAME_PRICE",
+      "name": "手术衣",
+      "stage": "bill_export",
+      "isActive": true,
+      "params": {
+        "packNameKeywords": [
+          "手术衣"
+        ],
+        "acceptedTypes": [
+          "高温蒸汽灭菌"
+        ],
+        "instrumentCountRange": null,
+        "unitPrice": 19.0,
+        "unitPriceMode": "FIXED",
+        "systemPriceMode": "IGNORE"
+      },
+      "sourceText": "手术衣 None 19",
+      "sourceRef": "excel:奥兰医院规则#93",
+      "priority": 103
+    },
+    {
+      "ruleType": "PACK_NAME_PRICE",
+      "name": "刷手服",
+      "stage": "bill_export",
+      "isActive": true,
+      "params": {
+        "packNameKeywords": [
+          "刷手服"
+        ],
+        "acceptedTypes": [
+          "高温蒸汽灭菌"
+        ],
+        "instrumentCountRange": null,
+        "unitPrice": 19.0,
+        "unitPriceMode": "FIXED",
+        "systemPriceMode": "IGNORE"
+      },
+      "sourceText": "刷手服 None 19",
+      "sourceRef": "excel:奥兰医院规则#94",
+      "priority": 104
+    },
+    {
+      "ruleType": "PACK_NAME_PRICE",
+      "name": "孔巾",
+      "stage": "bill_export",
+      "isActive": true,
+      "params": {
+        "packNameKeywords": [
+          "孔巾"
+        ],
+        "acceptedTypes": [
+          "高温蒸汽灭菌"
+        ],
+        "instrumentCountRange": null,
+        "unitPrice": 12.0,
+        "unitPriceMode": "FIXED",
+        "systemPriceMode": "IGNORE"
+      },
+      "sourceText": "孔巾 None 12",
+      "sourceRef": "excel:奥兰医院规则#95",
+      "priority": 105
+    },
+    {
+      "ruleType": "PACK_NAME_PRICE",
+      "name": "中小单",
+      "stage": "bill_export",
+      "isActive": true,
+      "params": {
+        "packNameKeywords": [
+          "中小单"
+        ],
+        "acceptedTypes": [
+          "高温蒸汽灭菌"
+        ],
+        "instrumentCountRange": null,
+        "unitPrice": 15.0,
+        "unitPriceMode": "FIXED",
+        "systemPriceMode": "IGNORE"
+      },
+      "sourceText": "中小单 None 15",
+      "sourceRef": "excel:奥兰医院规则#96",
+      "priority": 106
+    },
+    {
+      "ruleType": "PACK_NAME_PRICE",
+      "name": "绷带",
+      "stage": "bill_export",
+      "isActive": true,
+      "params": {
+        "packNameKeywords": [
+          "绷带"
+        ],
+        "acceptedTypes": [
+          "高温蒸汽灭菌"
+        ],
+        "instrumentCountRange": null,
+        "unitPrice": 2.0,
+        "unitPriceMode": "FIXED",
+        "systemPriceMode": "IGNORE"
+      },
+      "sourceText": "绷带 None 2",
+      "sourceRef": "excel:奥兰医院规则#97",
+      "priority": 107
+    },
+    {
+      "ruleType": "PACK_NAME_PRICE",
+      "name": "甲状腺单",
+      "stage": "bill_export",
+      "isActive": true,
+      "params": {
+        "packNameKeywords": [
+          "甲状腺单"
+        ],
+        "acceptedTypes": [
+          "高温蒸汽灭菌"
+        ],
+        "instrumentCountRange": null,
+        "unitPrice": 15.0,
+        "unitPriceMode": "FIXED",
+        "systemPriceMode": "IGNORE"
+      },
+      "sourceText": "甲状腺单 None 15",
+      "sourceRef": "excel:奥兰医院规则#98",
+      "priority": 108
+    },
+    {
+      "ruleType": "PACK_NAME_PRICE",
+      "name": "体表包",
+      "stage": "bill_export",
+      "isActive": true,
+      "params": {
+        "packNameKeywords": [
+          "体表包"
+        ],
+        "acceptedTypes": [
+          "高温蒸汽灭菌"
+        ],
+        "instrumentCountRange": "N<52",
+        "unitPrice": 160.0,
+        "unitPriceMode": "FIXED",
+        "systemPriceMode": "IGNORE"
+      },
+      "sourceText": "体表包 ≤51 160",
+      "sourceRef": "excel:奥兰医院规则#99",
+      "priority": 109
+    },
+    {
+      "ruleType": "PACK_NAME_PRICE",
+      "name": "血管夹",
+      "stage": "bill_export",
+      "isActive": true,
+      "params": {
+        "packNameKeywords": [
+          "血管夹"
+        ],
+        "acceptedTypes": [
+          "高温蒸汽灭菌"
+        ],
+        "instrumentCountRange": null,
+        "unitPrice": 5.0,
+        "unitPriceMode": "FIXED",
+        "systemPriceMode": "IGNORE"
+      },
+      "sourceText": "血管夹 None 5",
+      "sourceRef": "excel:奥兰医院规则#100",
+      "priority": 110
+    },
+    {
+      "ruleType": "PACK_NAME_PRICE",
+      "name": "持针钳",
+      "stage": "bill_export",
+      "isActive": true,
+      "params": {
+        "packNameKeywords": [
+          "持针钳"
+        ],
+        "acceptedTypes": [
+          "高温蒸汽灭菌"
+        ],
+        "instrumentCountRange": null,
+        "unitPrice": 8.0,
+        "unitPriceMode": "FIXED",
+        "systemPriceMode": "IGNORE"
+      },
+      "sourceText": "持针钳 None 8",
+      "sourceRef": "excel:奥兰医院规则#101",
+      "priority": 111
+    },
+    {
+      "ruleType": "PACK_NAME_PRICE",
+      "name": "腔镜组织钳",
+      "stage": "bill_export",
+      "isActive": true,
+      "params": {
+        "packNameKeywords": [
+          "腔镜组织钳"
+        ],
+        "acceptedTypes": [
+          "低温等离子"
+        ],
+        "instrumentCountRange": null,
+        "unitPrice": 12.0,
+        "unitPriceMode": "FIXED",
+        "systemPriceMode": "IGNORE"
+      },
+      "sourceText": "腔镜组织钳 None 12",
+      "sourceRef": "excel:奥兰医院规则#102",
+      "priority": 112
+    },
+    {
+      "ruleType": "PACK_NAME_PRICE",
+      "name": "持物缸(内有卵圆钳)",
+      "stage": "bill_export",
+      "isActive": true,
+      "params": {
+        "packNameKeywords": [
+          "持物缸(内有卵圆钳)"
+        ],
+        "acceptedTypes": [
+          "高温蒸汽灭菌"
+        ],
+        "instrumentCountRange": null,
+        "unitPrice": 12.0,
+        "unitPriceMode": "FIXED",
+        "systemPriceMode": "IGNORE"
+      },
+      "sourceText": "持物缸(内有卵圆钳) None 12",
+      "sourceRef": "excel:奥兰医院规则#103",
+      "priority": 113
+    },
+    {
+      "ruleType": "PACK_NAME_PRICE",
+      "name": "持夹钳",
+      "stage": "bill_export",
+      "isActive": true,
+      "params": {
+        "packNameKeywords": [
+          "持夹钳"
+        ],
+        "acceptedTypes": [
+          "低温等离子"
+        ],
+        "instrumentCountRange": null,
+        "unitPrice": 12.0,
+        "unitPriceMode": "FIXED",
+        "systemPriceMode": "IGNORE"
+      },
+      "sourceText": "持夹钳 None 12",
+      "sourceRef": "excel:奥兰医院规则#104",
+      "priority": 114
+    },
+    {
+      "ruleType": "PACK_NAME_PRICE",
+      "name": "腔镜剪刀",
+      "stage": "bill_export",
+      "isActive": true,
+      "params": {
+        "packNameKeywords": [
+          "腔镜剪刀"
+        ],
+        "acceptedTypes": [
+          "低温等离子"
+        ],
+        "instrumentCountRange": null,
+        "unitPrice": 12.0,
+        "unitPriceMode": "FIXED",
+        "systemPriceMode": "IGNORE"
+      },
+      "sourceText": "腔镜剪刀 None 12",
+      "sourceRef": "excel:奥兰医院规则#105",
+      "priority": 115
+    },
+    {
+      "ruleType": "PACK_NAME_PRICE",
+      "name": "动静脉吻合器",
+      "stage": "bill_export",
+      "isActive": true,
+      "params": {
+        "packNameKeywords": [
+          "动静脉吻合器"
+        ],
+        "acceptedTypes": [
+          "高温蒸汽灭菌"
+        ],
+        "instrumentCountRange": "N<10",
+        "unitPrice": 25.0,
+        "unitPriceMode": "FIXED",
+        "systemPriceMode": "IGNORE"
+      },
+      "sourceText": "动静脉吻合器 ≤9 25",
+      "sourceRef": "excel:奥兰医院规则#106",
+      "priority": 116
+    },
+    {
+      "ruleType": "PACK_NAME_PRICE",
+      "name": "胸科小切口包",
+      "stage": "bill_export",
+      "isActive": true,
+      "params": {
+        "packNameKeywords": [
+          "胸科小切口包"
+        ],
+        "acceptedTypes": [
+          "高温蒸汽灭菌"
+        ],
+        "instrumentCountRange": "N<28",
+        "unitPrice": 81.0,
+        "unitPriceMode": "FIXED",
+        "systemPriceMode": "IGNORE"
+      },
+      "sourceText": "胸科小切口包 ≤27 81",
+      "sourceRef": "excel:奥兰医院规则#107",
+      "priority": 117
+    },
+    {
+      "ruleType": "PACK_NAME_PRICE",
+      "name": "阑尾钳子",
+      "stage": "bill_export",
+      "isActive": true,
+      "params": {
+        "packNameKeywords": [
+          "阑尾钳子"
+        ],
+        "acceptedTypes": [
+          "高温蒸汽灭菌"
+        ],
+        "instrumentCountRange": null,
+        "unitPrice": 8.0,
+        "unitPriceMode": "FIXED",
+        "systemPriceMode": "IGNORE"
+      },
+      "sourceText": "阑尾钳子 None 8",
+      "sourceRef": "excel:奥兰医院规则#108",
+      "priority": 118
+    },
+    {
+      "ruleType": "PACK_NAME_PRICE",
+      "name": "直钳",
+      "stage": "bill_export",
+      "isActive": true,
+      "params": {
+        "packNameKeywords": [
+          "直钳"
+        ],
+        "acceptedTypes": [
+          "高温蒸汽灭菌"
+        ],
+        "instrumentCountRange": "N<7",
+        "unitPrice": 28.0,
+        "unitPriceMode": "FIXED",
+        "systemPriceMode": "IGNORE"
+      },
+      "sourceText": "直钳 ≤6 28",
+      "sourceRef": "excel:奥兰医院规则#109",
+      "priority": 119
+    },
+    {
+      "ruleType": "PACK_NAME_PRICE",
+      "name": "中弯",
+      "stage": "bill_export",
+      "isActive": true,
+      "params": {
+        "packNameKeywords": [
+          "中弯"
+        ],
+        "acceptedTypes": [
+          "高温蒸汽灭菌"
+        ],
+        "instrumentCountRange": "N<5",
+        "unitPrice": 22.0,
+        "unitPriceMode": "FIXED",
+        "systemPriceMode": "IGNORE"
+      },
+      "sourceText": "中弯 ≤4 22",
+      "sourceRef": "excel:奥兰医院规则#110",
+      "priority": 120
+    },
+    {
+      "ruleType": "PACK_NAME_PRICE",
+      "name": "腹壁拉钩",
+      "stage": "bill_export",
+      "isActive": true,
+      "params": {
+        "packNameKeywords": [
+          "腹壁拉钩"
+        ],
+        "acceptedTypes": [
+          "高温蒸汽灭菌"
+        ],
+        "instrumentCountRange": "N<9",
+        "unitPrice": 22.0,
+        "unitPriceMode": "FIXED",
+        "systemPriceMode": "IGNORE"
+      },
+      "sourceText": "腹壁拉钩 ≤8 22",
+      "sourceRef": "excel:奥兰医院规则#111",
+      "priority": 121
+    },
+    {
+      "ruleType": "PACK_NAME_PRICE",
+      "name": "胸腔止血钳",
+      "stage": "bill_export",
+      "isActive": true,
+      "params": {
+        "packNameKeywords": [
+          "胸腔止血钳"
+        ],
+        "acceptedTypes": [
+          "高温蒸汽灭菌"
+        ],
+        "instrumentCountRange": null,
+        "unitPrice": 8.0,
+        "unitPriceMode": "FIXED",
+        "systemPriceMode": "IGNORE"
+      },
+      "sourceText": "胸腔止血钳 None 8",
+      "sourceRef": "excel:奥兰医院规则#112",
+      "priority": 122
+    },
+    {
+      "ruleType": "PACK_NAME_PRICE",
+      "name": "静脉探子",
+      "stage": "bill_export",
+      "isActive": true,
+      "params": {
+        "packNameKeywords": [
+          "静脉探子"
+        ],
+        "acceptedTypes": [
+          "高温蒸汽灭菌"
+        ],
+        "instrumentCountRange": null,
+        "unitPrice": 8.0,
+        "unitPriceMode": "FIXED",
+        "systemPriceMode": "IGNORE"
+      },
+      "sourceText": "静脉探子 None 8",
+      "sourceRef": "excel:奥兰医院规则#113",
+      "priority": 123
+    },
+    {
+      "ruleType": "PACK_NAME_PRICE",
+      "name": "镊子筒",
+      "stage": "bill_export",
+      "isActive": true,
+      "params": {
+        "packNameKeywords": [
+          "镊子筒"
+        ],
+        "acceptedTypes": [
+          "高温蒸汽灭菌"
+        ],
+        "instrumentCountRange": null,
+        "unitPrice": 8.0,
+        "unitPriceMode": "FIXED",
+        "systemPriceMode": "IGNORE"
+      },
+      "sourceText": "镊子筒 None 8",
+      "sourceRef": "excel:奥兰医院规则#114",
+      "priority": 124
+    },
+    {
+      "ruleType": "PACK_NAME_PRICE",
+      "name": "中弯钳",
+      "stage": "bill_export",
+      "isActive": true,
+      "params": {
+        "packNameKeywords": [
+          "中弯钳"
+        ],
+        "acceptedTypes": [
+          "高温蒸汽灭菌"
+        ],
+        "instrumentCountRange": null,
+        "unitPrice": 6.0,
+        "unitPriceMode": "FIXED",
+        "systemPriceMode": "IGNORE"
+      },
+      "sourceText": "中弯钳 None 6",
+      "sourceRef": "excel:奥兰医院规则#115",
+      "priority": 125
+    },
+    {
+      "ruleType": "PACK_NAME_PRICE",
+      "name": "转换头",
+      "stage": "bill_export",
+      "isActive": true,
+      "params": {
+        "packNameKeywords": [
+          "转换头"
+        ],
+        "acceptedTypes": [
+          "低温等离子灭菌"
+        ],
+        "instrumentCountRange": null,
+        "unitPrice": 12.0,
+        "unitPriceMode": "FIXED",
+        "systemPriceMode": "IGNORE"
+      },
+      "sourceText": "转换头 None 12",
+      "sourceRef": "excel:奥兰医院规则#116",
+      "priority": 126
+    },
+    {
+      "ruleType": "PACK_NAME_PRICE",
+      "name": "混色胶帽",
+      "stage": "bill_export",
+      "isActive": true,
+      "params": {
+        "packNameKeywords": [
+          "混色胶帽"
+        ],
+        "acceptedTypes": [
+          "低温等离子灭菌"
+        ],
+        "instrumentCountRange": "N<14",
+        "unitPrice": 120.0,
+        "unitPriceMode": "FIXED",
+        "systemPriceMode": "IGNORE"
+      },
+      "sourceText": "混色胶帽 ≤13 120",
+      "sourceRef": "excel:奥兰医院规则#117",
+      "priority": 127
+    },
+    {
+      "ruleType": "PACK_NAME_PRICE",
+      "name": "白胶帽",
+      "stage": "bill_export",
+      "isActive": true,
+      "params": {
+        "packNameKeywords": [
+          "白胶帽"
+        ],
+        "acceptedTypes": [
+          "低温等离子灭菌"
+        ],
+        "instrumentCountRange": "N<5",
+        "unitPrice": 40.0,
+        "unitPriceMode": "FIXED",
+        "systemPriceMode": "IGNORE"
+      },
+      "sourceText": "白胶帽 ≤4 40",
+      "sourceRef": "excel:奥兰医院规则#118",
+      "priority": 128
+    },
+    {
+      "ruleType": "PACK_NAME_PRICE",
+      "name": "双极线+无损伤钳",
+      "stage": "bill_export",
+      "isActive": true,
+      "params": {
+        "packNameKeywords": [
+          "双极线+无损伤钳"
+        ],
+        "acceptedTypes": [
+          "低温等离子灭菌"
+        ],
+        "instrumentCountRange": null,
+        "unitPrice": 35.0,
+        "unitPriceMode": "FIXED",
+        "systemPriceMode": "IGNORE"
+      },
+      "sourceText": "双极线+无损伤钳 None 35",
+      "sourceRef": "excel:奥兰医院规则#119",
+      "priority": 129
+    },
+    {
+      "ruleType": "PACK_NAME_PRICE",
+      "name": "小缝合包",
+      "stage": "bill_export",
+      "isActive": true,
+      "params": {
+        "packNameKeywords": [
+          "小缝合包"
+        ],
+        "acceptedTypes": [
+          "高温蒸汽灭菌"
+        ],
+        "instrumentCountRange": "N<9",
+        "unitPrice": 24.0,
+        "unitPriceMode": "FIXED",
+        "systemPriceMode": "IGNORE"
+      },
+      "sourceText": "小缝合包 ≤8 24",
+      "sourceRef": "excel:奥兰医院规则#120",
+      "priority": 130
+    },
+    {
+      "ruleType": "PACK_NAME_PRICE",
+      "name": "电钻",
+      "stage": "bill_export",
+      "isActive": true,
+      "params": {
+        "packNameKeywords": [
+          "电钻"
+        ],
+        "acceptedTypes": [
+          "高温蒸汽灭菌"
+        ],
+        "instrumentCountRange": "N<6",
+        "unitPrice": 40.0,
+        "unitPriceMode": "FIXED",
+        "systemPriceMode": "IGNORE"
+      },
+      "sourceText": "电钻 ≤5 40",
+      "sourceRef": "excel:奥兰医院规则#121",
+      "priority": 131
+    },
+    {
+      "ruleType": "PACK_NAME_PRICE",
+      "name": "胃肠包",
+      "stage": "bill_export",
+      "isActive": true,
+      "params": {
+        "packNameKeywords": [
+          "胃肠包"
+        ],
+        "acceptedTypes": [
+          "高温蒸汽灭菌"
+        ],
+        "instrumentCountRange": "N<18",
+        "unitPrice": 45.0,
+        "unitPriceMode": "FIXED",
+        "systemPriceMode": "IGNORE"
+      },
+      "sourceText": "胃肠包 ≤17 45",
+      "sourceRef": "excel:奥兰医院规则#122",
+      "priority": 132
+    },
+    {
+      "ruleType": "PACK_NAME_PRICE",
+      "name": "膨宫管",
+      "stage": "bill_export",
+      "isActive": true,
+      "params": {
+        "packNameKeywords": [
+          "膨宫管"
+        ],
+        "acceptedTypes": [
+          "高温蒸汽灭菌"
+        ],
+        "instrumentCountRange": null,
+        "unitPrice": 12.0,
+        "unitPriceMode": "FIXED",
+        "systemPriceMode": "IGNORE"
+      },
+      "sourceText": "膨宫管 None 12",
+      "sourceRef": "excel:奥兰医院规则#123",
+      "priority": 133
+    },
+    {
+      "ruleType": "PACK_NAME_PRICE",
+      "name": "持骨钳",
+      "stage": "bill_export",
+      "isActive": true,
+      "params": {
+        "packNameKeywords": [
+          "持骨钳"
+        ],
+        "acceptedTypes": [
+          "高温蒸汽灭菌"
+        ],
+        "instrumentCountRange": null,
+        "unitPrice": 17.0,
+        "unitPriceMode": "FIXED",
+        "systemPriceMode": "IGNORE"
+      },
+      "sourceText": "持骨钳 None 17",
+      "sourceRef": "excel:奥兰医院规则#124",
+      "priority": 134
+    },
+    {
+      "ruleType": "PACK_NAME_PRICE",
+      "name": "麻杯",
+      "stage": "bill_export",
+      "isActive": true,
+      "params": {
+        "packNameKeywords": [
+          "麻杯"
+        ],
+        "acceptedTypes": [
+          "高温蒸汽灭菌"
+        ],
+        "instrumentCountRange": "N<3",
+        "unitPrice": 10.0,
+        "unitPriceMode": "FIXED",
+        "systemPriceMode": "IGNORE"
+      },
+      "sourceText": "麻杯 ≤2 10",
+      "sourceRef": "excel:奥兰医院规则#125",
+      "priority": 135
+    },
+    {
+      "ruleType": "PACK_NAME_PRICE",
+      "name": "刮勺",
+      "stage": "bill_export",
+      "isActive": true,
+      "params": {
+        "packNameKeywords": [
+          "刮勺"
+        ],
+        "acceptedTypes": [
+          "高温蒸汽灭菌"
+        ],
+        "instrumentCountRange": null,
+        "unitPrice": 5.0,
+        "unitPriceMode": "FIXED",
+        "systemPriceMode": "IGNORE"
+      },
+      "sourceText": "刮勺 None 5",
+      "sourceRef": "excel:奥兰医院规则#126",
+      "priority": 136
+    },
+    {
+      "ruleType": "PACK_NAME_PRICE",
+      "name": "骨膜剥离子",
+      "stage": "bill_export",
+      "isActive": true,
+      "params": {
+        "packNameKeywords": [
+          "骨膜剥离子"
+        ],
+        "acceptedTypes": [
+          "高温蒸汽灭菌"
+        ],
+        "instrumentCountRange": "N<3",
+        "unitPrice": 8.0,
+        "unitPriceMode": "FIXED",
+        "systemPriceMode": "IGNORE"
+      },
+      "sourceText": "骨膜剥离子 ≤2 8",
+      "sourceRef": "excel:奥兰医院规则#127",
+      "priority": 137
+    },
+    {
+      "ruleType": "PACK_NAME_PRICE",
+      "name": "7#刀柄",
+      "stage": "bill_export",
+      "isActive": true,
+      "params": {
+        "packNameKeywords": [
+          "7#刀柄"
+        ],
+        "acceptedTypes": [
+          "高温蒸汽灭菌"
+        ],
+        "instrumentCountRange": null,
+        "unitPrice": 6.0,
+        "unitPriceMode": "FIXED",
+        "systemPriceMode": "IGNORE"
+      },
+      "sourceText": "7#刀柄 None 6",
+      "sourceRef": "excel:奥兰医院规则#128",
+      "priority": 138
+    },
+    {
+      "ruleType": "PACK_NAME_PRICE",
+      "name": "小开利",
+      "stage": "bill_export",
+      "isActive": true,
+      "params": {
+        "packNameKeywords": [
+          "小开利"
+        ],
+        "acceptedTypes": [
+          "高温蒸汽灭菌"
+        ],
+        "instrumentCountRange": "N<3",
+        "unitPrice": 8.0,
+        "unitPriceMode": "FIXED",
+        "systemPriceMode": "IGNORE"
+      },
+      "sourceText": "小开利 ≤2 8",
+      "sourceRef": "excel:奥兰医院规则#129",
+      "priority": 139
+    },
+    {
+      "ruleType": "PACK_NAME_PRICE",
+      "name": "钢丝0.8",
+      "stage": "bill_export",
+      "isActive": true,
+      "params": {
+        "packNameKeywords": [
+          "钢丝0.8"
+        ],
+        "acceptedTypes": [
+          "高温蒸汽灭菌"
+        ],
+        "instrumentCountRange": null,
+        "unitPrice": 6.0,
+        "unitPriceMode": "FIXED",
+        "systemPriceMode": "IGNORE"
+      },
+      "sourceText": "钢丝0.8 None 6",
+      "sourceRef": "excel:奥兰医院规则#130",
+      "priority": 140
+    },
+    {
+      "ruleType": "PACK_NAME_PRICE",
+      "name": "金属锁定接骨板钉系统及配件",
+      "stage": "bill_export",
+      "isActive": true,
+      "params": {
+        "packNameKeywords": [
+          "金属锁定接骨板钉系统及配件"
+        ],
+        "acceptedTypes": [
+          "高温蒸汽灭菌"
+        ],
+        "instrumentCountRange": null,
+        "unitPrice": 80.0,
+        "unitPriceMode": "FIXED",
+        "systemPriceMode": "IGNORE"
+      },
+      "sourceText": "金属锁定接骨板钉系统及配件 None 80",
+      "sourceRef": "excel:奥兰医院规则#131",
+      "priority": 141
+    },
+    {
+      "ruleType": "PACK_NAME_PRICE",
+      "name": "金属锁定接骨板钉系统及配件(含植入物",
+      "stage": "bill_export",
+      "isActive": true,
+      "params": {
+        "packNameKeywords": [
+          "金属锁定接骨板钉系统及配件(含植入物"
+        ],
+        "acceptedTypes": [
+          "高温蒸汽灭菌"
+        ],
+        "instrumentCountRange": null,
+        "unitPrice": 120.0,
+        "unitPriceMode": "FIXED",
+        "systemPriceMode": "IGNORE"
+      },
+      "sourceText": "金属锁定接骨板钉系统及配件(含植入物 None 120",
+      "sourceRef": "excel:奥兰医院规则#132",
+      "priority": 142
+    },
+    {
+      "ruleType": "PACK_NAME_PRICE",
+      "name": "克氏针2.5",
+      "stage": "bill_export",
+      "isActive": true,
+      "params": {
+        "packNameKeywords": [
+          "克氏针2.5"
+        ],
+        "acceptedTypes": [
+          "高温蒸汽灭菌"
+        ],
+        "instrumentCountRange": null,
+        "unitPrice": 5.0,
+        "unitPriceMode": "FIXED",
+        "systemPriceMode": "IGNORE"
+      },
+      "sourceText": "克氏针2.5 None 5",
+      "sourceRef": "excel:奥兰医院规则#133",
+      "priority": 143
+    },
+    {
+      "ruleType": "PACK_NAME_PRICE",
+      "name": "妇科旋切器",
+      "stage": "bill_export",
+      "isActive": true,
+      "params": {
+        "packNameKeywords": [
+          "妇科旋切器"
+        ],
+        "acceptedTypes": [
+          "高温蒸汽灭菌"
+        ],
+        "instrumentCountRange": null,
+        "unitPrice": 12.0,
+        "unitPriceMode": "FIXED",
+        "systemPriceMode": "IGNORE"
+      },
+      "sourceText": "妇科旋切器 None 12",
+      "sourceRef": "excel:奥兰医院规则#134",
+      "priority": 144
+    },
+    {
+      "ruleType": "PACK_NAME_PRICE",
+      "name": "电钻",
+      "stage": "bill_export",
+      "isActive": true,
+      "params": {
+        "packNameKeywords": [
+          "电钻"
+        ],
+        "acceptedTypes": [
+          "高温蒸汽灭菌"
+        ],
+        "instrumentCountRange": "N<4",
+        "unitPrice": 24.0,
+        "unitPriceMode": "FIXED",
+        "systemPriceMode": "IGNORE"
+      },
+      "sourceText": "电钻 ≤3 24",
+      "sourceRef": "excel:奥兰医院规则#135",
+      "priority": 145
+    },
+    {
+      "ruleType": "PACK_NAME_PRICE",
+      "name": "灯柄",
+      "stage": "bill_export",
+      "isActive": true,
+      "params": {
+        "packNameKeywords": [
+          "灯柄"
+        ],
+        "acceptedTypes": [
+          "高温蒸汽灭菌"
+        ],
+        "instrumentCountRange": "N<3",
+        "unitPrice": 30.0,
+        "unitPriceMode": "FIXED",
+        "systemPriceMode": "IGNORE"
+      },
+      "sourceText": "灯柄 ≤2 30",
+      "sourceRef": "excel:奥兰医院规则#136",
+      "priority": 146
+    },
+    {
+      "ruleType": "PACK_NAME_PRICE",
+      "name": "骨科",
+      "stage": "bill_export",
+      "isActive": true,
+      "params": {
+        "packNameKeywords": [
+          "骨科"
+        ],
+        "acceptedTypes": [
+          "高温蒸汽灭菌"
+        ],
+        "instrumentCountRange": "N<18",
+        "unitPrice": 50.0,
+        "unitPriceMode": "FIXED",
+        "systemPriceMode": "IGNORE"
+      },
+      "sourceText": "骨科 ≤17 50",
+      "sourceRef": "excel:奥兰医院规则#137",
+      "priority": 147
+    },
+    {
+      "ruleType": "PACK_NAME_PRICE",
+      "name": "窥阴器",
+      "stage": "bill_export",
+      "isActive": true,
+      "params": {
+        "packNameKeywords": [
+          "窥阴器"
+        ],
+        "acceptedTypes": [
+          "高温蒸汽灭菌"
+        ],
+        "instrumentCountRange": "N<2",
+        "unitPrice": 10.0,
+        "unitPriceMode": "FIXED",
+        "systemPriceMode": "IGNORE"
+      },
+      "sourceText": "窥阴器 ≤1 10",
+      "sourceRef": "excel:奥兰医院规则#138",
+      "priority": 148
+    },
+    {
+      "ruleType": "PACK_NAME_PRICE",
+      "name": "大抓钳",
+      "stage": "bill_export",
+      "isActive": true,
+      "params": {
+        "packNameKeywords": [
+          "大抓钳"
+        ],
+        "acceptedTypes": [
+          "高温蒸汽灭菌"
+        ],
+        "instrumentCountRange": "N<2",
+        "unitPrice": 15.0,
+        "unitPriceMode": "FIXED",
+        "systemPriceMode": "IGNORE"
+      },
+      "sourceText": "大抓钳 ≤1 15",
+      "sourceRef": "excel:奥兰医院规则#139",
+      "priority": 149
+    },
+    {
+      "ruleType": "PACK_NAME_PRICE",
+      "name": "双极十线",
+      "stage": "bill_export",
+      "isActive": true,
+      "params": {
+        "packNameKeywords": [
+          "双极十线"
+        ],
+        "acceptedTypes": [
+          "高温蒸汽灭菌"
+        ],
+        "instrumentCountRange": null,
+        "unitPrice": 15.0,
+        "unitPriceMode": "FIXED",
+        "systemPriceMode": "IGNORE"
+      },
+      "sourceText": "双极十线 None 15",
+      "sourceRef": "excel:奥兰医院规则#140",
+      "priority": 150
+    },
+    {
+      "ruleType": "PACK_NAME_PRICE",
+      "name": "单级十线",
+      "stage": "bill_export",
+      "isActive": true,
+      "params": {
+        "packNameKeywords": [
+          "单级十线"
+        ],
+        "acceptedTypes": [
+          "高温蒸汽灭菌"
+        ],
+        "instrumentCountRange": null,
+        "unitPrice": 15.0,
+        "unitPriceMode": "FIXED",
+        "systemPriceMode": "IGNORE"
+      },
+      "sourceText": "单级十线 None 15",
+      "sourceRef": "excel:奥兰医院规则#141",
+      "priority": 151
+    },
+    {
+      "ruleType": "PACK_NAME_PRICE",
+      "name": "左弯",
+      "stage": "bill_export",
+      "isActive": true,
+      "params": {
+        "packNameKeywords": [
+          "左弯"
+        ],
+        "acceptedTypes": [
+          "高温蒸汽灭菌"
+        ],
+        "instrumentCountRange": "N<2",
+        "unitPrice": 15.0,
+        "unitPriceMode": "FIXED",
+        "systemPriceMode": "IGNORE"
+      },
+      "sourceText": "左弯 ≤1 15",
+      "sourceRef": "excel:奥兰医院规则#142",
+      "priority": 152
+    },
+    {
+      "ruleType": "PACK_NAME_PRICE",
+      "name": "举宫器",
+      "stage": "bill_export",
+      "isActive": true,
+      "params": {
+        "packNameKeywords": [
+          "举宫器"
+        ],
+        "acceptedTypes": [
+          "高温蒸汽灭菌"
+        ],
+        "instrumentCountRange": "N<2",
+        "unitPrice": 15.0,
+        "unitPriceMode": "FIXED",
+        "systemPriceMode": "IGNORE"
+      },
+      "sourceText": "举宫器 ≤1 15",
+      "sourceRef": "excel:奥兰医院规则#143",
+      "priority": 153
+    },
+    {
+      "ruleType": "PACK_NAME_PRICE",
+      "name": "止血钳(26#）",
+      "stage": "bill_export",
+      "isActive": true,
+      "params": {
+        "packNameKeywords": [
+          "止血钳(26#）"
+        ],
+        "acceptedTypes": [
+          "高温蒸汽灭菌"
+        ],
+        "instrumentCountRange": null,
+        "unitPrice": 8.0,
+        "unitPriceMode": "FIXED",
+        "systemPriceMode": "IGNORE"
+      },
+      "sourceText": "止血钳(26#） None 8",
+      "sourceRef": "excel:奥兰医院规则#144",
+      "priority": 154
+    },
+    {
+      "ruleType": "PACK_NAME_PRICE",
+      "name": "长镊",
+      "stage": "bill_export",
+      "isActive": true,
+      "params": {
+        "packNameKeywords": [
+          "长镊"
+        ],
+        "acceptedTypes": [
+          "高温蒸汽灭菌"
+        ],
+        "instrumentCountRange": null,
+        "unitPrice": 5.0,
+        "unitPriceMode": "FIXED",
+        "systemPriceMode": "IGNORE"
+      },
+      "sourceText": "长镊 None 5",
+      "sourceRef": "excel:奥兰医院规则#145",
+      "priority": 155
+    },
+    {
+      "ruleType": "PACK_NAME_PRICE",
+      "name": "镊子(小)",
+      "stage": "bill_export",
+      "isActive": true,
+      "params": {
+        "packNameKeywords": [
+          "镊子(小)"
+        ],
+        "acceptedTypes": [
+          "高温蒸汽灭菌"
+        ],
+        "instrumentCountRange": null,
+        "unitPrice": 5.0,
+        "unitPriceMode": "FIXED",
+        "systemPriceMode": "IGNORE"
+      },
+      "sourceText": "镊子(小) None 5",
+      "sourceRef": "excel:奥兰医院规则#146",
+      "priority": 156
+    },
+    {
+      "ruleType": "PACK_NAME_PRICE",
+      "name": "吸宫管8#",
+      "stage": "bill_export",
+      "isActive": true,
+      "params": {
+        "packNameKeywords": [
+          "吸宫管8#"
+        ],
+        "acceptedTypes": [
+          "高温蒸汽灭菌"
+        ],
+        "instrumentCountRange": null,
+        "unitPrice": 5.0,
+        "unitPriceMode": "FIXED",
+        "systemPriceMode": "IGNORE"
+      },
+      "sourceText": "吸宫管8# None 5",
+      "sourceRef": "excel:奥兰医院规则#147",
+      "priority": 157
+    },
+    {
+      "ruleType": "PACK_NAME_PRICE",
+      "name": "吸宫管5#",
+      "stage": "bill_export",
+      "isActive": true,
+      "params": {
+        "packNameKeywords": [
+          "吸宫管5#"
+        ],
+        "acceptedTypes": [
+          "高温蒸汽灭菌"
+        ],
+        "instrumentCountRange": null,
+        "unitPrice": 5.0,
+        "unitPriceMode": "FIXED",
+        "systemPriceMode": "IGNORE"
+      },
+      "sourceText": "吸宫管5# None 5",
+      "sourceRef": "excel:奥兰医院规则#148",
+      "priority": 158
+    },
+    {
+      "ruleType": "PACK_NAME_PRICE",
+      "name": "舌钳",
+      "stage": "bill_export",
+      "isActive": true,
+      "params": {
+        "packNameKeywords": [
+          "舌钳"
+        ],
+        "acceptedTypes": [
+          "高温蒸汽灭菌"
+        ],
+        "instrumentCountRange": null,
+        "unitPrice": 5.0,
+        "unitPriceMode": "FIXED",
+        "systemPriceMode": "IGNORE"
+      },
+      "sourceText": "舌钳 None 5",
+      "sourceRef": "excel:奥兰医院规则#149",
+      "priority": 159
+    },
+    {
+      "ruleType": "PACK_NAME_PRICE",
+      "name": "开口器",
+      "stage": "bill_export",
+      "isActive": true,
+      "params": {
+        "packNameKeywords": [
+          "开口器"
+        ],
+        "acceptedTypes": [
+          "高温蒸汽灭菌"
+        ],
+        "instrumentCountRange": null,
+        "unitPrice": 8.0,
+        "unitPriceMode": "FIXED",
+        "systemPriceMode": "IGNORE"
+      },
+      "sourceText": "开口器 None 8",
+      "sourceRef": "excel:奥兰医院规则#150",
+      "priority": 160
+    },
+    {
+      "ruleType": "PACK_NAME_PRICE",
+      "name": "后穹隆穿刺针",
+      "stage": "bill_export",
+      "isActive": true,
+      "params": {
+        "packNameKeywords": [
+          "后穹隆穿刺针"
+        ],
+        "acceptedTypes": [
+          "高温蒸汽灭菌"
+        ],
+        "instrumentCountRange": null,
+        "unitPrice": 5.0,
+        "unitPriceMode": "FIXED",
+        "systemPriceMode": "IGNORE"
+      },
+      "sourceText": "后穹隆穿刺针 None 5",
+      "sourceRef": "excel:奥兰医院规则#151",
+      "priority": 161
+    },
+    {
+      "ruleType": "PACK_NAME_PRICE",
+      "name": "扩棒10#",
+      "stage": "bill_export",
+      "isActive": true,
+      "params": {
+        "packNameKeywords": [
+          "扩棒10#"
+        ],
+        "acceptedTypes": [
+          "高温蒸汽灭菌"
+        ],
+        "instrumentCountRange": null,
+        "unitPrice": 5.0,
+        "unitPriceMode": "FIXED",
+        "systemPriceMode": "IGNORE"
+      },
+      "sourceText": "扩棒10# None 5",
+      "sourceRef": "excel:奥兰医院规则#152",
+      "priority": 162
+    },
+    {
+      "ruleType": "PACK_NAME_PRICE",
+      "name": "扩棒9#",
+      "stage": "bill_export",
+      "isActive": true,
+      "params": {
+        "packNameKeywords": [
+          "扩棒9#"
+        ],
+        "acceptedTypes": [
+          "高温蒸汽灭菌"
+        ],
+        "instrumentCountRange": null,
+        "unitPrice": 5.0,
+        "unitPriceMode": "FIXED",
+        "systemPriceMode": "IGNORE"
+      },
+      "sourceText": "扩棒9# None 5",
+      "sourceRef": "excel:奥兰医院规则#153",
+      "priority": 163
+    },
+    {
+      "ruleType": "PACK_NAME_PRICE",
+      "name": "小剪刀",
+      "stage": "bill_export",
+      "isActive": true,
+      "params": {
+        "packNameKeywords": [
+          "小剪刀"
+        ],
+        "acceptedTypes": [
+          "高温蒸汽灭菌"
+        ],
+        "instrumentCountRange": null,
+        "unitPrice": 5.0,
+        "unitPriceMode": "FIXED",
+        "systemPriceMode": "IGNORE"
+      },
+      "sourceText": "小剪刀 None 5",
+      "sourceRef": "excel:奥兰医院规则#154",
+      "priority": 164
+    },
+    {
+      "ruleType": "PACK_NAME_PRICE",
+      "name": "克氏针2.0",
+      "stage": "bill_export",
+      "isActive": true,
+      "params": {
+        "packNameKeywords": [
+          "克氏针2.0"
+        ],
+        "acceptedTypes": [
+          "高温蒸汽灭菌"
+        ],
+        "instrumentCountRange": "1",
+        "unitPrice": 5.0,
+        "unitPriceMode": "FIXED",
+        "systemPriceMode": "IGNORE"
+      },
+      "sourceText": "克氏针2.0 1 5",
+      "sourceRef": "excel:奥兰医院规则#155",
+      "priority": 165
+    },
+    {
+      "ruleType": "PACK_NAME_PRICE",
+      "name": "克氏针",
+      "stage": "bill_export",
+      "isActive": true,
+      "params": {
+        "packNameKeywords": [
+          "克氏针"
+        ],
+        "acceptedTypes": [
+          "高温蒸汽灭菌"
+        ],
+        "instrumentCountRange": "N<5",
+        "unitPrice": 20.0,
+        "unitPriceMode": "FIXED",
+        "systemPriceMode": "IGNORE"
+      },
+      "sourceText": "克氏针 ≤4 20",
+      "sourceRef": "excel:奥兰医院规则#156",
+      "priority": 166
+    },
+    {
+      "ruleType": "PACK_NAME_PRICE",
+      "name": "器械包",
+      "stage": "bill_export",
+      "isActive": true,
+      "params": {
+        "packNameKeywords": [
+          "器械包"
+        ],
+        "acceptedTypes": [
+          "高温蒸汽灭菌"
+        ],
+        "instrumentCountRange": "N<19",
+        "unitPrice": 50.0,
+        "unitPriceMode": "FIXED",
+        "systemPriceMode": "IGNORE"
+      },
+      "sourceText": "器械包 ≤18 50",
+      "sourceRef": "excel:奥兰医院规则#157",
+      "priority": 167
+    },
+    {
+      "ruleType": "PACK_NAME_PRICE",
+      "name": "宫腔镜包",
+      "stage": "bill_export",
+      "isActive": true,
+      "params": {
+        "packNameKeywords": [
+          "宫腔镜包"
+        ],
+        "acceptedTypes": [
+          "高温蒸汽灭菌"
+        ],
+        "instrumentCountRange": "N<4",
+        "unitPrice": 9.0,
+        "unitPriceMode": "FIXED",
+        "systemPriceMode": "IGNORE"
+      },
+      "sourceText": "宫腔镜包 ≤3 9",
+      "sourceRef": "excel:奥兰医院规则#158",
+      "priority": 168
+    },
+    {
+      "ruleType": "PACK_NAME_PRICE",
+      "name": "取环勾",
+      "stage": "bill_export",
+      "isActive": true,
+      "params": {
+        "packNameKeywords": [
+          "取环勾"
+        ],
+        "acceptedTypes": [
+          "高温蒸汽灭菌"
+        ],
+        "instrumentCountRange": null,
+        "unitPrice": 5.0,
+        "unitPriceMode": "FIXED",
+        "systemPriceMode": "IGNORE"
+      },
+      "sourceText": "取环勾 None 5",
+      "sourceRef": "excel:奥兰医院规则#159",
+      "priority": 169
+    },
+    {
+      "ruleType": "PACK_NAME_PRICE",
+      "name": "灯柄",
+      "stage": "bill_export",
+      "isActive": true,
+      "params": {
+        "packNameKeywords": [
+          "灯柄"
+        ],
+        "acceptedTypes": [
+          "高温蒸汽灭菌"
+        ],
+        "instrumentCountRange": null,
+        "unitPrice": 15.0,
+        "unitPriceMode": "FIXED",
+        "systemPriceMode": "IGNORE"
+      },
+      "sourceText": "灯柄 None 15",
+      "sourceRef": "excel:奥兰医院规则#160",
+      "priority": 170
+    },
+    {
+      "ruleType": "PACK_NAME_PRICE",
+      "name": "缝合包",
+      "stage": "bill_export",
+      "isActive": true,
+      "params": {
+        "packNameKeywords": [
+          "缝合包"
+        ],
+        "acceptedTypes": [
+          "高温蒸汽灭菌"
+        ],
+        "instrumentCountRange": "N<52",
+        "unitPrice": 140.0,
+        "unitPriceMode": "FIXED",
+        "systemPriceMode": "IGNORE"
+      },
+      "sourceText": "缝合包 ≤51 140",
+      "sourceRef": "excel:奥兰医院规则#161",
+      "priority": 171
+    },
+    {
+      "ruleType": "PACK_NAME_PRICE",
+      "name": "疼痛包",
+      "stage": "bill_export",
+      "isActive": true,
+      "params": {
+        "packNameKeywords": [
+          "疼痛包"
+        ],
+        "acceptedTypes": [
+          "高温蒸汽灭菌"
+        ],
+        "instrumentCountRange": "N<53",
+        "unitPrice": 140.0,
+        "unitPriceMode": "FIXED",
+        "systemPriceMode": "IGNORE"
+      },
+      "sourceText": "疼痛包 ≤52 140",
+      "sourceRef": "excel:奥兰医院规则#162",
+      "priority": 172
+    },
+    {
+      "ruleType": "PACK_NAME_PRICE",
+      "name": "剪刀(妇科)",
+      "stage": "bill_export",
+      "isActive": true,
+      "params": {
+        "packNameKeywords": [
+          "剪刀(妇科)"
+        ],
+        "acceptedTypes": [
+          "高温蒸汽灭菌"
+        ],
+        "instrumentCountRange": null,
+        "unitPrice": 5.0,
+        "unitPriceMode": "FIXED",
+        "systemPriceMode": "IGNORE"
+      },
+      "sourceText": "剪刀(妇科) None 5",
+      "sourceRef": "excel:奥兰医院规则#163",
+      "priority": 173
+    },
+    {
+      "ruleType": "PACK_NAME_PRICE",
+      "name": "剪刀(外科)",
+      "stage": "bill_export",
+      "isActive": true,
+      "params": {
+        "packNameKeywords": [
+          "剪刀(外科)"
+        ],
+        "acceptedTypes": [
+          "高温蒸汽灭菌"
+        ],
+        "instrumentCountRange": null,
+        "unitPrice": 5.0,
+        "unitPriceMode": "FIXED",
+        "systemPriceMode": "IGNORE"
+      },
+      "sourceText": "剪刀(外科) None 5",
+      "sourceRef": "excel:奥兰医院规则#164",
+      "priority": 174
+    },
+    {
+      "ruleType": "PACK_NAME_PRICE",
+      "name": "驱血带",
+      "stage": "bill_export",
+      "isActive": true,
+      "params": {
+        "packNameKeywords": [
+          "驱血带"
+        ],
+        "acceptedTypes": [
+          "高温蒸汽灭菌"
+        ],
+        "instrumentCountRange": null,
+        "unitPrice": 5.0,
+        "unitPriceMode": "FIXED",
+        "systemPriceMode": "IGNORE"
+      },
+      "sourceText": "驱血带 None 5",
+      "sourceRef": "excel:奥兰医院规则#165",
+      "priority": 175
+    },
+    {
+      "ruleType": "PACK_NAME_PRICE",
+      "name": "弯钳",
+      "stage": "bill_export",
+      "isActive": true,
+      "params": {
+        "packNameKeywords": [
+          "弯钳"
+        ],
+        "acceptedTypes": [
+          "高温蒸汽灭菌"
+        ],
+        "instrumentCountRange": null,
+        "unitPrice": 5.0,
+        "unitPriceMode": "FIXED",
+        "systemPriceMode": "IGNORE"
+      },
+      "sourceText": "弯钳 None 5",
+      "sourceRef": "excel:奥兰医院规则#166",
+      "priority": 176
+    },
+    {
+      "ruleType": "PACK_NAME_PRICE",
+      "name": "腹壁拉钩",
+      "stage": "bill_export",
+      "isActive": true,
+      "params": {
+        "packNameKeywords": [
+          "腹壁拉钩"
+        ],
+        "acceptedTypes": [
+          "高温蒸汽灭菌"
+        ],
+        "instrumentCountRange": "N<5",
+        "unitPrice": 12.0,
+        "unitPriceMode": "FIXED",
+        "systemPriceMode": "IGNORE"
+      },
+      "sourceText": "腹壁拉钩 ≤4 12",
+      "sourceRef": "excel:奥兰医院规则#167",
+      "priority": 177
+    },
+    {
+      "ruleType": "PACK_NAME_PRICE",
+      "name": "甲状腺拉钩",
+      "stage": "bill_export",
+      "isActive": true,
+      "params": {
+        "packNameKeywords": [
+          "甲状腺拉钩"
+        ],
+        "acceptedTypes": [
+          "高温蒸汽灭菌"
+        ],
+        "instrumentCountRange": null,
+        "unitPrice": 10.0,
+        "unitPriceMode": "FIXED",
+        "systemPriceMode": "IGNORE"
+      },
+      "sourceText": "甲状腺拉钩 None 10",
+      "sourceRef": "excel:奥兰医院规则#168",
+      "priority": 178
+    },
+    {
+      "ruleType": "PACK_NAME_PRICE",
+      "name": "蚊式钳包",
+      "stage": "bill_export",
+      "isActive": true,
+      "params": {
+        "packNameKeywords": [
+          "蚊式钳包"
+        ],
+        "acceptedTypes": [
+          "高温蒸汽灭菌"
+        ],
+        "instrumentCountRange": null,
+        "unitPrice": 22.0,
+        "unitPriceMode": "FIXED",
+        "systemPriceMode": "IGNORE"
+      },
+      "sourceText": "蚊式钳包 None 22",
+      "sourceRef": "excel:奥兰医院规则#169",
+      "priority": 179
+    },
+    {
+      "ruleType": "PACK_NAME_PRICE",
+      "name": "气管拉钩",
+      "stage": "bill_export",
+      "isActive": true,
+      "params": {
+        "packNameKeywords": [
+          "气管拉钩"
+        ],
+        "acceptedTypes": [
+          "高温蒸汽灭菌"
+        ],
+        "instrumentCountRange": null,
+        "unitPrice": 10.0,
+        "unitPriceMode": "FIXED",
+        "systemPriceMode": "IGNORE"
+      },
+      "sourceText": "气管拉钩 None 10",
+      "sourceRef": "excel:奥兰医院规则#170",
+      "priority": 180
+    },
+    {
+      "ruleType": "PACK_NAME_PRICE",
+      "name": "止血钳",
+      "stage": "bill_export",
+      "isActive": true,
+      "params": {
+        "packNameKeywords": [
+          "止血钳"
+        ],
+        "acceptedTypes": [
+          "高温蒸汽灭菌"
+        ],
+        "instrumentCountRange": null,
+        "unitPrice": 5.0,
+        "unitPriceMode": "FIXED",
+        "systemPriceMode": "IGNORE"
+      },
+      "sourceText": "止血钳 None 5",
+      "sourceRef": "excel:奥兰医院规则#171",
+      "priority": 181
+    },
+    {
+      "ruleType": "PACK_NAME_PRICE",
+      "name": "金属骨板钉系统及配件(内含植入物)(外习",
+      "stage": "bill_export",
+      "isActive": true,
+      "params": {
+        "packNameKeywords": [
+          "金属骨板钉系统及配件(内含植入物)(外习"
+        ],
+        "acceptedTypes": [
+          "高温蒸汽灭菌"
+        ],
+        "instrumentCountRange": null,
+        "unitPrice": 120.0,
+        "unitPriceMode": "FIXED",
+        "systemPriceMode": "IGNORE"
+      },
+      "sourceText": "金属骨板钉系统及配件(内含植入物)(外习 None 120",
+      "sourceRef": "excel:奥兰医院规则#172",
+      "priority": 182
+    },
+    {
+      "ruleType": "PACK_NAME_PRICE",
+      "name": "左胫骨干骨折切开复位内固定术器械包(外习",
+      "stage": "bill_export",
+      "isActive": true,
+      "params": {
+        "packNameKeywords": [
+          "左胫骨干骨折切开复位内固定术器械包(外习"
+        ],
+        "acceptedTypes": [
+          "高温蒸汽灭菌"
+        ],
+        "instrumentCountRange": null,
+        "unitPrice": 80.0,
+        "unitPriceMode": "FIXED",
+        "systemPriceMode": "IGNORE"
+      },
+      "sourceText": "左胫骨干骨折切开复位内固定术器械包(外习 None 80",
+      "sourceRef": "excel:奥兰医院规则#173",
+      "priority": 183
+    },
+    {
+      "ruleType": "PACK_NAME_PRICE",
+      "name": "有胫骨骨折内固定装置取除术器械包(外来)",
+      "stage": "bill_export",
+      "isActive": true,
+      "params": {
+        "packNameKeywords": [
+          "有胫骨骨折内固定装置取除术器械包(外来)"
+        ],
+        "acceptedTypes": [
+          "高温蒸汽灭菌"
+        ],
+        "instrumentCountRange": null,
+        "unitPrice": 80.0,
+        "unitPriceMode": "FIXED",
+        "systemPriceMode": "IGNORE"
+      },
+      "sourceText": "有胫骨骨折内固定装置取除术器械包(外来) None 80",
+      "sourceRef": "excel:奥兰医院规则#174",
+      "priority": 184
+    },
+    {
+      "ruleType": "PACK_NAME_PRICE",
+      "name": "断钉取出器械包(外来)",
+      "stage": "bill_export",
+      "isActive": true,
+      "params": {
+        "packNameKeywords": [
+          "断钉取出器械包(外来)"
+        ],
+        "acceptedTypes": [
+          "高温蒸汽灭菌"
+        ],
+        "instrumentCountRange": null,
+        "unitPrice": 80.0,
+        "unitPriceMode": "FIXED",
+        "systemPriceMode": "IGNORE"
+      },
+      "sourceText": "断钉取出器械包(外来) None 80",
+      "sourceRef": "excel:奥兰医院规则#175",
+      "priority": 185
+    },
+    {
+      "ruleType": "PACK_NAME_PRICE",
+      "name": "椎板咬骨钳",
+      "stage": "bill_export",
+      "isActive": true,
+      "params": {
+        "packNameKeywords": [
+          "椎板咬骨钳"
+        ],
+        "acceptedTypes": [
+          "高温蒸汽灭菌"
+        ],
+        "instrumentCountRange": null,
+        "unitPrice": 8.0,
+        "unitPriceMode": "FIXED",
+        "systemPriceMode": "IGNORE"
+      },
+      "sourceText": "椎板咬骨钳 None 8",
+      "sourceRef": "excel:奥兰医院规则#176",
+      "priority": 186
+    },
+    {
+      "ruleType": "PACK_NAME_PRICE",
+      "name": "椎板拉钩",
+      "stage": "bill_export",
+      "isActive": true,
+      "params": {
+        "packNameKeywords": [
+          "椎板拉钩"
+        ],
+        "acceptedTypes": [
+          "高温蒸汽灭菌"
+        ],
+        "instrumentCountRange": null,
+        "unitPrice": 8.0,
+        "unitPriceMode": "FIXED",
+        "systemPriceMode": "IGNORE"
+      },
+      "sourceText": "椎板拉钩 None 8",
+      "sourceRef": "excel:奥兰医院规则#177",
+      "priority": 187
+    },
+    {
+      "ruleType": "PACK_NAME_PRICE",
+      "name": "灯罩",
+      "stage": "bill_export",
+      "isActive": true,
+      "params": {
+        "packNameKeywords": [
+          "灯罩"
+        ],
+        "acceptedTypes": [
+          "高温蒸汽灭菌"
+        ],
+        "instrumentCountRange": null,
+        "unitPrice": 8.0,
+        "unitPriceMode": "FIXED",
+        "systemPriceMode": "IGNORE"
+      },
+      "sourceText": "灯罩 None 8",
+      "sourceRef": "excel:奥兰医院规则#178",
+      "priority": 188
+    },
+    {
+      "ruleType": "PACK_NAME_PRICE",
+      "name": "老虎钳(方头)",
+      "stage": "bill_export",
+      "isActive": true,
+      "params": {
+        "packNameKeywords": [
+          "老虎钳(方头)"
+        ],
+        "acceptedTypes": [
+          "高温蒸汽灭菌"
+        ],
+        "instrumentCountRange": null,
+        "unitPrice": 8.0,
+        "unitPriceMode": "FIXED",
+        "systemPriceMode": "IGNORE"
+      },
+      "sourceText": "老虎钳(方头) None 8",
+      "sourceRef": "excel:奥兰医院规则#179",
+      "priority": 189
+    },
+    {
+      "ruleType": "PACK_NAME_PRICE",
+      "name": "钢丝钳",
+      "stage": "bill_export",
+      "isActive": true,
+      "params": {
+        "packNameKeywords": [
+          "钢丝钳"
+        ],
+        "acceptedTypes": [
+          "高温蒸汽灭菌"
+        ],
+        "instrumentCountRange": null,
+        "unitPrice": 8.0,
+        "unitPriceMode": "FIXED",
+        "systemPriceMode": "IGNORE"
+      },
+      "sourceText": "钢丝钳 None 8",
+      "sourceRef": "excel:奥兰医院规则#180",
+      "priority": 190
+    },
+    {
+      "ruleType": "PACK_NAME_PRICE",
+      "name": "克氏针剪",
+      "stage": "bill_export",
+      "isActive": true,
+      "params": {
+        "packNameKeywords": [
+          "克氏针剪"
+        ],
+        "acceptedTypes": [
+          "高温蒸汽灭菌"
+        ],
+        "instrumentCountRange": null,
+        "unitPrice": 5.0,
+        "unitPriceMode": "FIXED",
+        "systemPriceMode": "IGNORE"
+      },
+      "sourceText": "克氏针剪 None 5",
+      "sourceRef": "excel:奥兰医院规则#181",
+      "priority": 191
+    },
+    {
+      "ruleType": "PACK_NAME_PRICE",
+      "name": "霍夫曼拉钩",
+      "stage": "bill_export",
+      "isActive": true,
+      "params": {
+        "packNameKeywords": [
+          "霍夫曼拉钩"
+        ],
+        "acceptedTypes": [
+          "高温蒸汽灭菌"
+        ],
+        "instrumentCountRange": "N<3",
+        "unitPrice": 10.0,
+        "unitPriceMode": "FIXED",
+        "systemPriceMode": "IGNORE"
+      },
+      "sourceText": "霍夫曼拉钩 ≤2 10",
+      "sourceRef": "excel:奥兰医院规则#182",
+      "priority": 192
+    },
+    {
+      "ruleType": "PACK_NAME_PRICE",
+      "name": "骨剪",
+      "stage": "bill_export",
+      "isActive": true,
+      "params": {
+        "packNameKeywords": [
+          "骨剪"
+        ],
+        "acceptedTypes": [
+          "高温蒸汽灭菌"
+        ],
+        "instrumentCountRange": null,
+        "unitPrice": 5.0,
+        "unitPriceMode": "FIXED",
+        "systemPriceMode": "IGNORE"
+      },
+      "sourceText": "骨剪 None 5",
+      "sourceRef": "excel:奥兰医院规则#183",
+      "priority": 193
+    },
+    {
+      "ruleType": "PACK_NAME_PRICE",
+      "name": "神经拉钩",
+      "stage": "bill_export",
+      "isActive": true,
+      "params": {
+        "packNameKeywords": [
+          "神经拉钩"
+        ],
+        "acceptedTypes": [
+          "高温蒸汽灭菌"
+        ],
+        "instrumentCountRange": null,
+        "unitPrice": 6.0,
+        "unitPriceMode": "FIXED",
+        "systemPriceMode": "IGNORE"
+      },
+      "sourceText": "神经拉钩 None 6",
+      "sourceRef": "excel:奥兰医院规则#184",
+      "priority": 194
+    },
+    {
+      "ruleType": "PACK_NAME_PRICE",
+      "name": "神经剥离子",
+      "stage": "bill_export",
+      "isActive": true,
+      "params": {
+        "packNameKeywords": [
+          "神经剥离子"
+        ],
+        "acceptedTypes": [
+          "高温蒸汽灭菌"
+        ],
+        "instrumentCountRange": null,
+        "unitPrice": 8.0,
+        "unitPriceMode": "FIXED",
+        "systemPriceMode": "IGNORE"
+      },
+      "sourceText": "神经剥离子 None 8",
+      "sourceRef": "excel:奥兰医院规则#185",
+      "priority": 195
+    },
+    {
+      "ruleType": "PACK_NAME_PRICE",
+      "name": "小镊子",
+      "stage": "bill_export",
+      "isActive": true,
+      "params": {
+        "packNameKeywords": [
+          "小镊子"
+        ],
+        "acceptedTypes": [
+          "高温蒸汽灭菌"
+        ],
+        "instrumentCountRange": null,
+        "unitPrice": 5.0,
+        "unitPriceMode": "FIXED",
+        "systemPriceMode": "IGNORE"
+      },
+      "sourceText": "小镊子 None 5",
+      "sourceRef": "excel:奥兰医院规则#186",
+      "priority": 196
+    },
+    {
+      "ruleType": "PACK_NAME_PRICE",
+      "name": "荷花钳",
+      "stage": "bill_export",
+      "isActive": true,
+      "params": {
+        "packNameKeywords": [
+          "荷花钳"
+        ],
+        "acceptedTypes": [
+          "高温蒸汽灭菌"
+        ],
+        "instrumentCountRange": null,
+        "unitPrice": 5.0,
+        "unitPriceMode": "FIXED",
+        "systemPriceMode": "IGNORE"
+      },
+      "sourceText": "荷花钳 None 5",
+      "sourceRef": "excel:奥兰医院规则#187",
+      "priority": 197
+    },
+    {
+      "ruleType": "PACK_NAME_PRICE",
+      "name": "吸引器头",
+      "stage": "bill_export",
+      "isActive": true,
+      "params": {
+        "packNameKeywords": [
+          "吸引器头"
+        ],
+        "acceptedTypes": [
+          "高温蒸汽灭菌"
+        ],
+        "instrumentCountRange": null,
+        "unitPrice": 5.0,
+        "unitPriceMode": "FIXED",
+        "systemPriceMode": "IGNORE"
+      },
+      "sourceText": "吸引器头 None 5",
+      "sourceRef": "excel:奥兰医院规则#188",
+      "priority": 198
+    },
+    {
+      "ruleType": "PACK_NAME_PRICE",
+      "name": "点式复位钳",
+      "stage": "bill_export",
+      "isActive": true,
+      "params": {
+        "packNameKeywords": [
+          "点式复位钳"
+        ],
+        "acceptedTypes": [
+          "高温蒸汽灭菌"
+        ],
+        "instrumentCountRange": null,
+        "unitPrice": 5.0,
+        "unitPriceMode": "FIXED",
+        "systemPriceMode": "IGNORE"
+      },
+      "sourceText": "点式复位钳 None 5",
+      "sourceRef": "excel:奥兰医院规则#189",
+      "priority": 199
+    },
+    {
+      "ruleType": "PACK_NAME_PRICE",
+      "name": "长柄镊",
+      "stage": "bill_export",
+      "isActive": true,
+      "params": {
+        "packNameKeywords": [
+          "长柄镊"
+        ],
+        "acceptedTypes": [
+          "高温蒸汽灭菌"
+        ],
+        "instrumentCountRange": null,
+        "unitPrice": 5.0,
+        "unitPriceMode": "FIXED",
+        "systemPriceMode": "IGNORE"
+      },
+      "sourceText": "长柄镊 None 5",
+      "sourceRef": "excel:奥兰医院规则#190",
+      "priority": 200
+    },
+    {
+      "ruleType": "PACK_NAME_PRICE",
+      "name": "拉钩",
+      "stage": "bill_export",
+      "isActive": true,
+      "params": {
+        "packNameKeywords": [
+          "拉钩"
+        ],
+        "acceptedTypes": [
+          "高温蒸汽灭菌"
+        ],
+        "instrumentCountRange": null,
+        "unitPrice": 5.0,
+        "unitPriceMode": "FIXED",
+        "systemPriceMode": "IGNORE"
+      },
+      "sourceText": "拉钩 None 5",
+      "sourceRef": "excel:奥兰医院规则#191",
+      "priority": 201
+    },
+    {
+      "ruleType": "PACK_NAME_PRICE",
+      "name": "髓核钳-3M",
+      "stage": "bill_export",
+      "isActive": true,
+      "params": {
+        "packNameKeywords": [
+          "髓核钳-3M"
+        ],
+        "acceptedTypes": [
+          "高温蒸汽灭菌"
+        ],
+        "instrumentCountRange": null,
+        "unitPrice": 5.0,
+        "unitPriceMode": "FIXED",
+        "systemPriceMode": "IGNORE"
+      },
+      "sourceText": "髓核钳-3M None 5",
+      "sourceRef": "excel:奥兰医院规则#192",
+      "priority": 202
+    },
+    {
+      "ruleType": "PACK_NAME_PRICE",
+      "name": "金属吸引器",
+      "stage": "bill_export",
+      "isActive": true,
+      "params": {
+        "packNameKeywords": [
+          "金属吸引器"
+        ],
+        "acceptedTypes": [
+          "高温蒸汽灭菌"
+        ],
+        "instrumentCountRange": null,
+        "unitPrice": 8.0,
+        "unitPriceMode": "FIXED",
+        "systemPriceMode": "IGNORE"
+      },
+      "sourceText": "金属吸引器 None 8",
+      "sourceRef": "excel:奥兰医院规则#193",
+      "priority": 203
+    },
+    {
+      "ruleType": "PACK_NAME_PRICE",
+      "name": "圆头骨剥-3M",
+      "stage": "bill_export",
+      "isActive": true,
+      "params": {
+        "packNameKeywords": [
+          "圆头骨剥-3M"
+        ],
+        "acceptedTypes": [
+          "高温蒸汽灭菌"
+        ],
+        "instrumentCountRange": null,
+        "unitPrice": 8.0,
+        "unitPriceMode": "FIXED",
+        "systemPriceMode": "IGNORE"
+      },
+      "sourceText": "圆头骨剥-3M None 8",
+      "sourceRef": "excel:奥兰医院规则#194",
+      "priority": 204
+    },
+    {
+      "ruleType": "PACK_NAME_PRICE",
+      "name": "合苞钳",
+      "stage": "bill_export",
+      "isActive": true,
+      "params": {
+        "packNameKeywords": [
+          "合苞钳"
+        ],
+        "acceptedTypes": [
+          "高温蒸汽灭菌"
+        ],
+        "instrumentCountRange": null,
+        "unitPrice": 5.0,
+        "unitPriceMode": "FIXED",
+        "systemPriceMode": "IGNORE"
+      },
+      "sourceText": "合苞钳 None 5",
+      "sourceRef": "excel:奥兰医院规则#195",
+      "priority": 205
+    }
+  ]
+}

@@ -1,7 +1,7 @@
 {
   "customerCode": "SHENG-YY-XF",
   "customerName": "黑龙江省医院（香坊院区）",
-  "sourceVersion": "医院内勤规则-20260918",
+  "sourceVersion": "医院内勤规则-20260924",
   "notes": "医院内勤规则 v2 · Excel行 黑龙江省医院（南岗/香坊）",
   "attachmentRefs": [],
   "rules": [
@@ -13,7 +13,7 @@
       "params": {
         "rate": 0.6
       },
-      "sourceText": "标准价格六折",
+      "sourceText": "标准价格六折，低温器械（器械包（低温等离子）、器械包（ETO)、单包装包(老肯等温）、单包装包（EO）、额外包（低温等离子）、额外包（ETO)）最高收费180元，超过180元，统一收费180元",
       "sourceRef": "excel:账单规则#黑龙江省医院（南岗/香坊）#1",
       "priority": 10
     }

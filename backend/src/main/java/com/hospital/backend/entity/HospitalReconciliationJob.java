@@ -109,4 +109,7 @@ public class HospitalReconciliationJob extends BaseEntity {
 
     @JsonProperty("allocation_result")
     private String allocationResult;
+
+    @JsonProperty("pricing_rule_overrides")
+    private String pricingRuleOverrides;
 }

@@ -7,7 +7,10 @@ import com.hospital.backend.dto.request.hospital.ExportAnomaliesRequest;
 import com.hospital.backend.dto.request.hospital.HospitalBillTemplateExportRequest;
 import com.hospital.backend.dto.request.hospital.HospitalSettlementTemplateExportRequest;
 import com.hospital.backend.dto.request.hospital.ReconciliationReviewRequest;
+import com.hospital.backend.dto.request.hospital.PricingRuleOverridesRequest;
+import com.hospital.backend.dto.request.hospital.RepriceRequest;
 import com.hospital.backend.dto.request.hospital.RepriceRowRequest;
+import com.hospital.backend.dto.response.hospital.PricingRuleInfoResponse;
 import com.hospital.backend.dto.response.hospital.ReconciliationExportLogResponse;
 import com.hospital.backend.dto.response.hospital.ReconciliationJobResponse;
 import com.hospital.backend.dto.response.hospital.TemplateRefResponse;
@@ -104,9 +107,23 @@ public class HospitalReconciliationController {
         return hospitalReconciliationService.updateRowsUrgent(jobId, request);
     }
 
+    @GetMapping("/hospital-reconciliations/{jobId}/pricing-rules")
+    public Result<PricingRuleInfoResponse> getPricingRules(@PathVariable Long jobId) {
+        return hospitalReconciliationService.getPricingRules(jobId);
+    }
+
+    @PutMapping("/hospital-reconciliations/{jobId}/pricing-rule-overrides")
+    public Result<PricingRuleInfoResponse> updatePricingRuleOverrides(
+            @PathVariable Long jobId,
+            @RequestBody PricingRuleOverridesRequest request) {
+        return hospitalReconciliationService.updatePricingRuleOverrides(jobId, request);
+    }
+
     @PostMapping("/hospital-reconciliations/{jobId}/reprice")
-    public Result<Map<String, Object>> reprice(@PathVariable Long jobId) {
-        return hospitalReconciliationService.reprice(jobId);
+    public Result<Map<String, Object>> reprice(
+            @PathVariable Long jobId,
+            @RequestBody(required = false) RepriceRequest request) {
+        return hospitalReconciliationService.reprice(jobId, request);
     }
 
     /** 单行保存并重算：应用人工修正字段 → 引擎重算该行 → 原地持久化 */

@@ -1,7 +1,7 @@
 {
   "customerCode": "JIUZHOU-FK",
   "customerName": "黑龙江九洲妇科医院",
-  "sourceVersion": "医院内勤规则-20260918",
+  "sourceVersion": "医院内勤规则-20260924",
   "notes": "医院内勤规则 v2 · Excel行 黑龙江九洲妇科医院",
   "attachmentRefs": [],
   "rules": [
@@ -32,6 +32,18 @@
       "sourceText": "减免四次物流",
       "sourceRef": "excel:结款函#JIUZHOU-FK|excel:低消物流#黑龙江九洲妇科医院",
       "priority": 110
+    },
+    {
+      "ruleType": "DISCOUNT_OVERLAY",
+      "name": "结款七折",
+      "stage": "settlement",
+      "isActive": true,
+      "params": {
+        "rate": 0.7
+      },
+      "sourceText": "7折",
+      "sourceRef": "excel:结款函#JIUZHOU-FK",
+      "priority": 120
     },
     {
       "ruleType": "SETTLEMENT_DISCOUNT",

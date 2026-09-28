@@ -179,6 +179,14 @@
           v-if="entry.savedJobId && canEdit"
           size="small"
           plain
+          @click="emit('open-clerk-rules')"
+        >
+          对账规则
+        </ElButton>
+        <ElButton
+          v-if="entry.savedJobId && canEdit"
+          size="small"
+          plain
           :loading="isRepricing"
           @click="emit('reprice')"
         >
@@ -359,6 +367,7 @@
     'anomaly-category-change': [filters: ReconciliationAnomalyCategory[]]
     'save-changes': []
     reprice: []
+    'open-clerk-rules': []
     'open-unmatched': []
     'export-anomaly': []
     'version-change': [groupKey: string, jobId: number]

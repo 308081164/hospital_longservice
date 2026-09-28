@@ -1,21 +1,22 @@
 {
   "customerCode": "SHKF-YY",
   "customerName": "黑龙江省社会康复医院",
-  "sourceVersion": "医院内勤规则-20260918",
+  "sourceVersion": "医院内勤规则-20260924",
   "notes": "医院内勤规则 v2 · Excel行 黑龙江省社会康复医院",
   "attachmentRefs": [],
   "rules": [
     {
-      "ruleType": "DISCOUNT_OVERLAY",
-      "name": "标准价七五折",
-      "stage": "bill_export",
+      "ruleType": "SETTLEMENT_DISCOUNT",
+      "name": "结款七五折",
+      "stage": "settlement",
       "isActive": true,
       "params": {
-        "rate": 0.75
+        "rate": 0.75,
+        "target": "sterilize"
       },
-      "sourceText": "标准价格七五折",
-      "sourceRef": "excel:账单规则#黑龙江省社会康复医院#1",
-      "priority": 10
+      "sourceText": "75折",
+      "sourceRef": "excel:结款函#SHKF-YY",
+      "priority": 100
     }
   ]
 }

@@ -303,6 +303,11 @@
         :hospital-name="detailData?.hospitalName"
         :job-id="detailData?.id"
       />
+      <ReconciliationPricingRulePanel
+        :job-id="detailData?.id"
+        :can-edit="canEditReconciliationRows && detailData?.reviewStatus === 'pending'"
+        @repriced="handlePricingRulesRepriced"
+      />
       <ReconciliationAllocationPanel
         :allocation="detailAllocation"
         :running="isRunningAllocation"
@@ -505,6 +510,7 @@
   import ReconciliationDataTable from '@/components/business/reconciliation/ReconciliationDataTable.vue'
   import ReconciliationExportWizard from '@/components/business/reconciliation/ReconciliationExportWizard.vue'
   import ReconciliationAllocationPanel from '@/components/business/reconciliation/ReconciliationAllocationPanel.vue'
+  import ReconciliationPricingRulePanel from '@/components/business/reconciliation/ReconciliationPricingRulePanel.vue'
   import UatHelperPanel from '@/components/business/reconciliation/UatHelperPanel.vue'
   import PricingFlowDrawer from '@/components/business/reconciliation/PricingFlowDrawer.vue'
   import { useBillingPermission } from '@/composables/useBillingPermission'
@@ -863,6 +869,23 @@
     }
   }
 
+  function applyRepriceRowsToCache(allRows: Record<string, unknown>[]) {
+    const newCache = new Map<number, Record<string, unknown>[]>()
+    const pageSize = detailPageSize.value
+    for (let i = 0; i < allRows.length; i += pageSize) {
+      const page = Math.floor(i / pageSize) + 1
+      newCache.set(page, allRows.slice(i, i + pageSize))
+    }
+    detailRowsTotal.value = allRows.length
+    detailRowsCache.value = newCache
+    const maxPage = Math.ceil(allRows.length / detailPageSize.value) || 1
+    if (detailPage.value > maxPage) detailPage.value = 1
+  }
+
+  function handlePricingRulesRepriced(rows: Record<string, unknown>[]) {
+    applyRepriceRowsToCache(rows)
+  }
+
   async function handleFixDetailRows() {
     if (!detailData.value) return
     try {
@@ -882,16 +905,7 @@
     try {
       const result = await repriceReconciliation(detailData.value.id)
       const allRows = result.rows
-      const newCache = new Map<number, Record<string, unknown>[]>()
-      const pageSize = detailPageSize.value
-      for (let i = 0; i < allRows.length; i += pageSize) {
-        const page = Math.floor(i / pageSize) + 1
-        newCache.set(page, allRows.slice(i, i + pageSize))
-      }
-      detailRowsTotal.value = allRows.length
-      detailRowsCache.value = newCache
-      const maxPage = Math.ceil(allRows.length / detailPageSize.value) || 1
-      if (detailPage.value > maxPage) detailPage.value = 1
+      applyRepriceRowsToCache(allRows)
       detailData.value = {
         ...detailData.value,
         totalRows: result.summary.total,

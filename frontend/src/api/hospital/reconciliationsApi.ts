@@ -159,10 +159,38 @@ export interface RepriceResult {
   }
 }
 
-export function repriceReconciliation(jobId: number) {
+export interface PricingCategoryToggle {
+  category: 'clerk_price' | 'clerk_discount'
+  label: string
+  enabled: boolean
+  available: boolean
+  rule_count: number
+}
+
+export interface PricingRulesInfo {
+  customer_code?: string
+  disabled_categories: string[]
+  toggles: PricingCategoryToggle[]
+}
+
+export function fetchPricingRules(jobId: number) {
+  return request.get<PricingRulesInfo>({
+    url: `/api/hospital-reconciliations/${jobId}/pricing-rules`,
+  })
+}
+
+export function updatePricingRuleOverrides(jobId: number, disabledCategories: string[]) {
+  return request.put<PricingRulesInfo>({
+    url: `/api/hospital-reconciliations/${jobId}/pricing-rule-overrides`,
+    data: { disabledCategories },
+  })
+}
+
+export function repriceReconciliation(jobId: number, disabledCategories?: string[]) {
   return request.request<RepriceResult>({
     url: `/api/hospital-reconciliations/${jobId}/reprice`,
     method: 'POST',
+    data: disabledCategories?.length ? { disabledCategories } : undefined,
   })
 }
 

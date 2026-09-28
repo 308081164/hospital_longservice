@@ -6,6 +6,7 @@ import {
 import { localizeReconciliationDisplayText } from '@/utils/reconciliationDisplayText'
 
 export type PricingPathCategory =
+  | 'CLERK_HIT'
   | 'SPECIAL_HIT'
   | 'STANDARD'
   | 'PRESERVE'
@@ -137,6 +138,31 @@ export function classifySpecialFixedPricingKind(
   return 'fixed'
 }
 
+function readPricingLayer(row: Record<string, unknown>): string {
+  const billingNotes = normalizeBillingNotes(row.billingNotes ?? row.billing_notes)
+  const layer = billingNotes?.pricingLayer ?? billingNotes?.pricing_layer
+  return typeof layer === 'string' ? layer.trim() : ''
+}
+
+function readClerkRuleName(row: Record<string, unknown>): string {
+  const billingNotes = normalizeBillingNotes(row.billingNotes ?? row.billing_notes)
+  const name = billingNotes?.clerkRuleName ?? billingNotes?.clerk_rule_name
+  return typeof name === 'string' ? name.trim() : ''
+}
+
+function readClerkDiscountRuleName(row: Record<string, unknown>): string {
+  const billingNotes = normalizeBillingNotes(row.billingNotes ?? row.billing_notes)
+  const name = billingNotes?.clerkDiscountRuleName ?? billingNotes?.clerk_discount_rule_name
+  return typeof name === 'string' ? name.trim() : ''
+}
+
+function readCalculationSteps(row: Record<string, unknown>): string[] {
+  const billingNotes = normalizeBillingNotes(row.billingNotes ?? row.billing_notes)
+  const steps = billingNotes?.calculationSteps ?? billingNotes?.calculation_steps
+  if (!Array.isArray(steps)) return []
+  return steps.filter((step): step is string => typeof step === 'string')
+}
+
 function readBillingNotesManualReview(row: Record<string, unknown>): boolean {
   const billingNotes = row.billingNotes ?? row.billing_notes
   if (!billingNotes || typeof billingNotes !== 'object') return false
@@ -203,6 +229,17 @@ export function classifyPricingPath(row: Record<string, unknown>): PricingPathCl
   const pricingRule = readPricingRule(row)
   const status = readStatus(row)
   const effectivePath = readEffectivePricingPath(row)
+  const pricingLayer = readPricingLayer(row)
+  const clerkRuleName = readClerkRuleName(row)
+
+  if (pricingLayer === 'clerk' || effectivePath === 'clerk' || pricingRule.startsWith('内勤计价')) {
+    return {
+      category: 'CLERK_HIT',
+      label: 'pricingPath.clerkHit',
+      tagType: 'success',
+      summary: truncateSummary(clerkRuleName || pricingRule.replace(/^内勤计价：?/, '') || '内勤计价')
+    }
+  }
 
   if (status === 'skipped') {
     return {
@@ -338,9 +375,42 @@ export function buildPricingFlowTimeline(row: Record<string, unknown>): PricingF
   const notes = readNotes(row)
   const specialFixedPathHit = isSpecialFixedPathHit(row, pricingRule)
   const specialFlowStepLabel = resolveSpecialFixedFlowStepLabel(row, pricingRule)
+  const pricingLayer = readPricingLayer(row)
+  const clerkRuleName = readClerkRuleName(row)
+  const clerkDiscountRuleName = readClerkDiscountRuleName(row)
+  const calculationSteps = readCalculationSteps(row)
 
   const productMatchNotes = notes.filter(isStructuredProductMatchNote)
   const pricingNotes = notes.filter((note) => !isStructuredProductMatchNote(note))
+
+  if (pricingLayer || clerkRuleName || clerkDiscountRuleName) {
+    const layerParts = [
+      pricingLayer === 'clerk'
+        ? '内勤计价'
+        : pricingLayer === 'special'
+          ? '客服特色计价'
+          : pricingLayer === 'standard'
+            ? '客服标准计价'
+            : null,
+      clerkRuleName ? `规则：${clerkRuleName}` : null,
+      clerkDiscountRuleName ? `折扣：${clerkDiscountRuleName}` : null
+    ].filter(Boolean)
+    if (layerParts.length) {
+      steps.push({
+        kind: 'policy',
+        label: 'pricingFlow.stepPricingLayer',
+        detail: layerParts.join(' · ')
+      })
+    }
+  }
+
+  calculationSteps.forEach((step) => {
+    steps.push({
+      kind: 'note',
+      label: 'pricingFlow.stepCalculation',
+      detail: step
+    })
+  })
 
   productMatchNotes.forEach((note) => {
     steps.push({

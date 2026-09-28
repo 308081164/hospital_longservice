@@ -6,7 +6,10 @@ import com.hospital.backend.dto.request.hospital.ExportAnomaliesRequest;
 import com.hospital.backend.dto.request.hospital.HospitalBillTemplateExportRequest;
 import com.hospital.backend.dto.request.hospital.HospitalSettlementTemplateExportRequest;
 import com.hospital.backend.dto.request.hospital.ReconciliationReviewRequest;
+import com.hospital.backend.dto.request.hospital.PricingRuleOverridesRequest;
+import com.hospital.backend.dto.request.hospital.RepriceRequest;
 import com.hospital.backend.dto.request.hospital.RepriceRowRequest;
+import com.hospital.backend.dto.response.hospital.PricingRuleInfoResponse;
 import com.hospital.backend.dto.response.logistics.LogisticsAllocationPreviewResponse;
 import com.hospital.backend.dto.response.hospital.ReconciliationExportLogResponse;
 import com.hospital.backend.dto.response.hospital.ReconciliationJobResponse;
@@ -43,7 +46,13 @@ public interface HospitalReconciliationService {
 
     Result<Map<String, Object>> reprice(Long jobId);
 
+    Result<Map<String, Object>> reprice(Long jobId, RepriceRequest request);
+
     Result<Map<String, Object>> repriceRow(Long jobId, Long rowId, RepriceRowRequest request);
+
+    Result<PricingRuleInfoResponse> getPricingRules(Long jobId);
+
+    Result<PricingRuleInfoResponse> updatePricingRuleOverrides(Long jobId, PricingRuleOverridesRequest request);
 
     Result<ReconciliationExportLogResponse> createExportLog(Long jobId, CreateExportLogRequest request);
 
