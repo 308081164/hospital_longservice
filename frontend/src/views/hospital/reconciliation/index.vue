@@ -66,7 +66,6 @@
           :class="{ 'entry-section-first': entryIndex === 0 }"
         >
           <ReconciliationEntryPanel
-            v-if="entry.workbook"
             :file-name="entry.file.name"
             :rule-label="entryRuleDisplay(entry).label"
             :rule-tooltip="entryRuleDisplay(entry).tooltip"
@@ -112,6 +111,7 @@
             @row-field-change="(row, field, value) => handleEntryRowFieldChange(entry, row, field, value)"
             @fix-single-row="(row) => handleEntryFixSingleRow(entry, row)"
             @reprice-row="(row) => handleEntryRepriceRow(entry, row)"
+            @retry-parse="handleRetryParseEntry(entry)"
             @version-change="setGroupSelectedVersion"
           >
             <template #status-badge>
@@ -1427,10 +1427,6 @@
 
   /** 添加一个上传条目 */
   async function addUploadEntry(file: File) {
-    if (!effectiveRules.value) {
-      ElMessage.warning('规则尚未加载成功，暂时不能处理 Excel')
-      return
-    }
     const entry = reactive<UploadEntry>({
       id: Date.now().toString() + '-' + Math.random().toString(36).slice(2, 8),
       file,
@@ -1457,6 +1453,16 @@
       sheetFilterLoading: false
     })
     uploadEntries.value.push(entry)
+    if (!effectiveRules.value) {
+      entry.status = 'pending'
+      entry.errorMessage = isRuleLoading.value
+        ? ''
+        : '规则尚未加载成功，暂时不能解析 Excel'
+      if (!isRuleLoading.value) {
+        ElMessage.warning('规则尚未加载成功，暂时不能处理 Excel')
+      }
+      return
+    }
     ensureEntryEditor(entry.id)
     await reparseEntry(entry)
     await resolveEntryRule(entry)
@@ -1517,9 +1523,23 @@
     }
   }
 
+  async function handleRetryParseEntry(entry: UploadEntry) {
+    await reparseEntry(entry)
+    if (entry.workbook) {
+      await resolveEntryRule(entry)
+    }
+  }
+
   /** 解析单个条目的 Excel */
   async function reparseEntry(entry: UploadEntry) {
-    if (!effectiveRules.value) return
+    if (!effectiveRules.value) {
+      entry.status = 'pending'
+      entry.errorMessage = isRuleLoading.value
+        ? ''
+        : '规则尚未加载成功，暂时不能解析 Excel'
+      return
+    }
+    ensureEntryEditor(entry.id)
     entry.status = 'parsing'
     entry.errorMessage = ''
     try {

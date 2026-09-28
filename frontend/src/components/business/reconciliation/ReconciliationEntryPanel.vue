@@ -23,6 +23,7 @@
       :is-repricing="isRepricing"
       @remove="emit('remove')"
       @select-sheet="(sheet) => emit('select-sheet', sheet)"
+      @retry-parse="emit('retry-parse')"
       @process="emit('process')"
       @toggle-anomaly="emit('toggle-anomaly')"
       @anomaly-category-change="(filters) => emit('anomaly-category-change', filters)"
@@ -129,6 +130,7 @@
 
   export interface ReconciliationEntryPanelEntry {
     status: string
+    errorMessage?: string
     savedJobId: number | null
     selectedSheetFilter: string | null
     /** 识别出的医院全称（Excel 内容优先），用于文件条头部展示 */
@@ -187,6 +189,7 @@
   const emit = defineEmits<{
     remove: []
     'select-sheet': [sheetName: string | null]
+    'retry-parse': []
     process: []
     'toggle-anomaly': []
     'anomaly-category-change': [filters: ReconciliationAnomalyCategory[]]

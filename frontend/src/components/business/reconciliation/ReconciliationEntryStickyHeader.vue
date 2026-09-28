@@ -45,10 +45,9 @@
       </ElButton>
     </div>
 
-    <!-- Row 2: sheet segments + save；解析成功（有 workbook）即需展示，
-         否则新上传条目永远没有「校对并保存」入口（processedRows 处理后才产生） -->
-    <div v-if="entry.workbook" class="sticky-row sticky-row--sheets">
-      <div class="sheet-segmented" role="tablist">
+    <!-- Row 2: sheet segments + save；上传后即展示，解析中/失败时显示状态而非空白 -->
+    <div class="sticky-row sticky-row--sheets">
+      <div v-if="entry.workbook" class="sheet-segmented" role="tablist">
         <button
           v-if="entry.savedJobId"
           type="button"
@@ -60,7 +59,7 @@
           {{ t('reconciliation.upload.allSheets') }}
         </button>
         <button
-          v-for="sheet in entry.workbook?.previews ?? []"
+          v-for="sheet in entry.workbook.previews"
           :key="sheet.name"
           type="button"
           role="tab"
@@ -79,27 +78,60 @@
           </span>
         </button>
       </div>
+      <div v-else class="sheet-status-hint">
+        <span
+          v-if="entry.status === 'parsing' || entry.status === 'pending'"
+          class="toolbar-hint toolbar-hint--loading"
+        >
+          {{
+            entry.status === 'parsing'
+              ? t('reconciliation.upload.parsing')
+              : isRuleLoading
+                ? t('reconciliation.upload.ruleLoading')
+                : t('reconciliation.upload.parsing')
+          }}
+        </span>
+        <span v-else-if="entry.status === 'error'" class="toolbar-hint toolbar-hint--error">
+          {{ entry.errorMessage || '解析失败' }}
+        </span>
+      </div>
       <div class="sticky-row__trailing">
         <span v-if="entry.sheetFilterLoading" class="toolbar-hint toolbar-hint--loading">
           {{ t('reconciliation.preview.sheetFilterLoading') }}
         </span>
         <ElButton
+          v-if="!entry.workbook && entry.status === 'error'"
+          type="primary"
+          size="small"
+          plain
+          :disabled="isRuleLoading || !activeRule"
+          @click="emit('retry-parse')"
+        >
+          重新解析
+        </ElButton>
+        <ElButton
+          v-else
           type="primary"
           size="small"
           :disabled="
-            !['parsed', 'process_error'].includes(entry.status) || !activeRule || isRuleLoading
+            !entry.workbook ||
+            !['parsed', 'process_error'].includes(entry.status) ||
+            !activeRule ||
+            isRuleLoading
           "
-          :loading="entry.status === 'processing'"
+          :loading="entry.status === 'processing' || entry.status === 'parsing'"
           @click="emit('process')"
         >
           {{
             entry.status === 'processing'
               ? '处理中…'
-              : entry.status === 'process_error'
-                ? '重新处理'
-                : entry.savedJobId
-                  ? savedVersionLabel || '已保存'
-                  : '校对并保存'
+              : entry.status === 'parsing'
+                ? t('reconciliation.upload.parsing')
+                : entry.status === 'process_error'
+                  ? '重新处理'
+                  : entry.savedJobId
+                    ? savedVersionLabel || '已保存'
+                    : '校对并保存'
           }}
         </ElButton>
       </div>
@@ -362,6 +394,7 @@
   const emit = defineEmits<{
     remove: []
     'select-sheet': [sheetName: string | null]
+    'retry-parse': []
     process: []
     'toggle-anomaly': []
     'anomaly-category-change': [filters: ReconciliationAnomalyCategory[]]
@@ -684,6 +717,18 @@
 
   .toolbar-hint--warn {
     color: var(--el-color-warning);
+  }
+
+  .toolbar-hint--error {
+    color: var(--el-color-danger);
+  }
+
+  .sheet-status-hint {
+    display: flex;
+    flex: 1 1 auto;
+    align-items: center;
+    min-width: 0;
+    font-size: 12px;
   }
 
   .anomaly-checkbox-label {
