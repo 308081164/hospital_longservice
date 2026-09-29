@@ -6,9 +6,6 @@
     destroy-on-close
     @update:model-value="emit('update:visible', $event)"
   >
-    <p class="mb-4 text-xs text-gray-500">
-      仅两个总开关：内勤计价层、内勤折扣层。修改后点「应用并重算」预览结果（不自动保存，需点「保存修改」落库）。
-    </p>
     <ReconciliationPricingRulePanel
       :job-id="jobId"
       :can-edit="canEdit"

@@ -1446,14 +1446,14 @@ public class HospitalReconciliationServiceImpl implements HospitalReconciliation
 
         Optional<Customer> customer = customerResolver.resolveByName(job.getHospitalName());
         if (customer.isEmpty()) {
-            response.setToggles(List.of());
+            response.setToggles(buildDefaultCategoryToggles(disabledCategories, 0, 0));
             return response;
         }
         String customerCode = customer.get().getCode();
         response.setCustomerCode(customerCode);
         JsonNode clerkCompiled = clerkRuleCompiler.compileForCustomer(customerCode);
         if (clerkCompiled == null) {
-            response.setToggles(List.of());
+            response.setToggles(buildDefaultCategoryToggles(disabledCategories, 0, 0));
             return response;
         }
 
@@ -1478,6 +1478,14 @@ public class HospitalReconciliationServiceImpl implements HospitalReconciliation
             }
         }
 
+        response.setToggles(buildDefaultCategoryToggles(disabledCategories, priceRuleCount, discountRuleCount));
+        return response;
+    }
+
+    private static List<PricingRuleInfoResponse.CategoryToggle> buildDefaultCategoryToggles(
+            Set<String> disabledCategories,
+            int priceRuleCount,
+            int discountRuleCount) {
         List<PricingRuleInfoResponse.CategoryToggle> toggles = new ArrayList<>();
         toggles.add(buildCategoryToggle(
                 ReconciliationPricingOrchestrator.CATEGORY_CLERK_PRICE,
@@ -1489,8 +1497,7 @@ public class HospitalReconciliationServiceImpl implements HospitalReconciliation
                 "内勤折扣规则",
                 discountRuleCount,
                 disabledCategories));
-        response.setToggles(toggles);
-        return response;
+        return toggles;
     }
 
     private static PricingRuleInfoResponse.CategoryToggle buildCategoryToggle(
