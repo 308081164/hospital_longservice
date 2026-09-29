@@ -1,5 +1,5 @@
 {
-  "baseline_hash": "4703fb2f6032a81558fab3b0cd01400d62686707b9c0e3bef9847f252b54f1f9",
+  "baseline_hash": "08853cc1fea794d227e0ce6473cd7ea6c03324335642bc063bc7fc9108fc7bbf",
   "generated_at": "2026-09-28T06:17:33Z",
   "source": "铂康/内勤要求/医院内勤规则-20260924.xlsx",
   "customer_count": 39,
@@ -7,7 +7,7 @@
     {
       "code": "AOLAN-YY",
       "file": "baseline/AOLAN-YY.json",
-      "ruleCount": 195
+      "ruleCount": 196
     },
     {
       "code": "DAOWAI-RM",

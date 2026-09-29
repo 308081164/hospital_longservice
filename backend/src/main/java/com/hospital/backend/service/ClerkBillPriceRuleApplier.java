@@ -148,23 +148,19 @@ public class ClerkBillPriceRuleApplier {
     private boolean matchesPackName(JsonNode params, String packName) {
         String text = packName != null ? packName : "";
         JsonNode exclude = params.path("excludePackNameKeywords");
-        if (exclude.isArray()) {
-            for (JsonNode kw : exclude) {
-                if (text.contains(kw.asText())) {
-                    return false;
-                }
+        if (exclude.isArray() && !exclude.isEmpty()) {
+            if (BillingConditionEvaluator.matchesKeywordsByMode(
+                    text, exclude, BillingConditionEvaluator.KEYWORD_MATCH_CONTAINS)) {
+                return false;
             }
         }
         JsonNode keywords = params.path("packNameKeywords");
         if (!keywords.isArray() || keywords.isEmpty()) {
             return true;
         }
-        for (JsonNode kw : keywords) {
-            if (text.contains(kw.asText())) {
-                return true;
-            }
-        }
-        return false;
+        String matchMode = params.path("packNameMatchMode").asText(
+                BillingConditionEvaluator.KEYWORD_MATCH_EXACT_TOKEN);
+        return BillingConditionEvaluator.matchesKeywordsByMode(text, keywords, matchMode);
     }
 
     private boolean matchesPackaging(JsonNode packagingMaterial, String rowMaterial) {

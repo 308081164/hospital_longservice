@@ -1,6 +1,8 @@
 package com.hospital.backend.service;
 
+import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.hospital.backend.common.JsonUtils;
 import com.hospital.backend.config.ClerkRuleIndex;
 import com.hospital.backend.dto.request.hospital.BillRowItem;
 import org.junit.jupiter.api.Test;
@@ -45,7 +47,7 @@ class ClerkBillPriceRuleApplierTest {
         ObjectNode compiled = compiler.compileForCustomer("NG-FUCHAN");
         BillRowItem row = new BillRowItem();
         row.setType("器械包");
-        row.setPackName("妇科腹腔镜手术包");
+        row.setPackName("腹腔镜");
         row.setTotalPrice(200.0);
 
         var result = applier.apply(compiled, List.of(row));
@@ -109,5 +111,92 @@ class ClerkBillPriceRuleApplierTest {
         var result = applier.apply(compiled, List.of(row));
         assertThat(result.rows().get(0).getTotalPrice()).isEqualTo(19.0);
         assertThat(result.validationWarnings()).isNotEmpty();
+    }
+
+    @Test
+    void aolanPackNamePriceMatchesInstrumentPackTypeNotSterilizationLabel() {
+        ObjectNode compiled = compiler.compileForCustomer("AOLAN-YY");
+        BillRowItem row = new BillRowItem();
+        row.setType("器械包");
+        row.setPackName("骨科基础包-42件");
+        row.setInstrumentCount(42);
+        row.setPackCount(1);
+        row.setTotalPrice(236.5);
+
+        var result = applier.apply(compiled, List.of(row));
+        assertThat(result.rows().get(0).getTotalPrice()).isEqualTo(197.0);
+    }
+
+    @Test
+    void aolanPackNamePriceHonorsInstrumentCountRange() {
+        ObjectNode compiled = compiler.compileForCustomer("AOLAN-YY");
+        BillRowItem row = new BillRowItem();
+        row.setType("器械包");
+        row.setPackName("整形包");
+        row.setInstrumentCount(6);
+        row.setPackCount(1);
+        row.setTotalPrice(99.0);
+
+        var result = applier.apply(compiled, List.of(row));
+        assertThat(result.rows().get(0).getTotalPrice()).isEqualTo(8.0);
+    }
+
+    @Test
+    void aolanExactPackNameDoesNotMatchEmbeddedShorterKeyword() {
+        ObjectNode compiled = compiler.compileForCustomer("AOLAN-YY");
+        BillRowItem row = new BillRowItem();
+        row.setType("器械包");
+        row.setPackName("小缝合包门诊");
+        row.setInstrumentCount(43);
+        row.setPackCount(1);
+        row.setTotalPrice(99.0);
+
+        var result = applier.apply(compiled, List.of(row));
+        assertThat(result.rows().get(0).getTotalPrice()).isEqualTo(16.5);
+    }
+
+    @Test
+    void packNameKeywordsUseExactTokenByDefault() {
+        ObjectNode compiled = compiledWithPackNameRule("小缝合包", 157.0);
+        BillRowItem embedded = new BillRowItem();
+        embedded.setPackName("小缝合包门诊");
+        embedded.setInstrumentCount(43);
+        embedded.setTotalPrice(99.0);
+
+        BillRowItem exact = new BillRowItem();
+        exact.setPackName("小缝合包");
+        exact.setInstrumentCount(43);
+        exact.setTotalPrice(99.0);
+
+        assertThat(applier.apply(compiled, List.of(embedded)).rows().get(0).getTotalPrice()).isEqualTo(99.0);
+        assertThat(applier.apply(compiled, List.of(exact)).rows().get(0).getTotalPrice()).isEqualTo(157.0);
+    }
+
+    @Test
+    void packNameKeywordsSupportContainsSuffix() {
+        ObjectNode compiled = compiledWithPackNameRule("棉球@contains", 2.0);
+        BillRowItem row = new BillRowItem();
+        row.setPackName("敷料棉球-10个");
+        row.setTotalPrice(30.0);
+
+        assertThat(applier.apply(compiled, List.of(row)).rows().get(0).getTotalPrice()).isEqualTo(2.0);
+    }
+
+    private static ObjectNode compiledWithPackNameRule(String keyword, double price) {
+        ObjectNode compiled = JsonUtils.getObjectMapper().createObjectNode();
+        ArrayNode clerkRules = compiled.putArray("clerkRules");
+        ObjectNode rule = JsonUtils.getObjectMapper().createObjectNode();
+        rule.put("ruleType", "PACK_NAME_PRICE");
+        rule.put("stage", "bill_export");
+        rule.put("name", keyword);
+        rule.put("isActive", true);
+        rule.put("priority", 10);
+        ObjectNode params = rule.putObject("params");
+        ArrayNode keywords = params.putArray("packNameKeywords");
+        keywords.add(keyword);
+        params.put("unitPrice", price);
+        params.put("unitPriceMode", "FIXED");
+        clerkRules.add(rule);
+        return compiled;
     }
 }

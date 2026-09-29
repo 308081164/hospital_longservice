@@ -1,6 +1,8 @@
 package com.hospital.backend.service;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.node.ArrayNode;
+import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.hospital.backend.dto.request.hospital.BillRowItem;
 import org.springframework.stereotype.Component;
 
@@ -49,8 +51,14 @@ public class ClerkBillExportApplier {
             }
             String pack = row.getPackName() != null ? row.getPackName() : "";
             String mat = row.getPackageMaterial() != null ? row.getPackageMaterial() : "";
-            if (!packNameKeyword.isBlank() && !pack.contains(packNameKeyword)) {
-                continue;
+            if (!packNameKeyword.isBlank()) {
+                ArrayNode keywords = JsonNodeFactory.instance.arrayNode();
+                keywords.add(packNameKeyword);
+                String matchMode = params.path("packNameMatchMode").asText(
+                        BillingConditionEvaluator.KEYWORD_MATCH_EXACT_TOKEN);
+                if (!BillingConditionEvaluator.matchesKeywordsByMode(pack, keywords, matchMode)) {
+                    continue;
+                }
             }
             if (!packagingMaterial.isBlank() && !mat.contains(packagingMaterial) && !pack.contains(packagingMaterial)) {
                 continue;

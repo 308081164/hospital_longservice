@@ -360,7 +360,7 @@ def parse_bill_row(row: tuple, hospital: str, idx: int) -> list[dict]:
         "systemPriceMode": sys_mode,
     }
     if pack_type and "包名称带棉球或者纱布" in str(pack_type):
-        params["packNameKeywords"] = ["棉球", "纱布"]
+        params["packNameKeywords"] = ["棉球@contains", "纱布@contains"]
         params["acceptedTypes"] = ["敷料包"]
 
     rules.append(_rule(
@@ -524,8 +524,11 @@ def _parse_aolan_instrument_range(raw) -> str | None:
 
 
 def parse_aolan_row(row: tuple, idx: int) -> dict | None:
-    """奥兰医院规则 sheet：序号, 包名, 器械件数, 类型, 价格。"""
-    seq, pack_name, inst, pack_type, _, price = (row + (None,) * 6)[:6]
+    """奥兰医院规则 sheet：序号, 器械包类型(参考), 包名, 器械件数, 价格。
+
+    2026-09-29 起奥兰改为仅按包名匹配，不再用 acceptedTypes 门控 Excel「类型」列。
+    """
+    seq, _pack_type_hint, pack_name, inst, price = (row + (None,) * 6)[:5]
     if not pack_name or str(pack_name).strip() in ("包名", "附件二：消毒灭菌服务价格表"):
         return None
     try:
@@ -536,7 +539,6 @@ def parse_aolan_row(row: tuple, idx: int) -> dict | None:
     ref = f"excel:奥兰医院规则#{idx}"
     params = {
         "packNameKeywords": [name],
-        "acceptedTypes": _split_types(pack_type) if pack_type else None,
         "instrumentCountRange": _parse_aolan_instrument_range(inst),
         "unitPrice": unit_val,
         "unitPriceMode": "FIXED",

@@ -227,6 +227,7 @@ class ClerkRuleCompilerTest {
                     && "PACK_NAME_PRICE".equals(rule.path("ruleType").asText())) {
                 hasZhengxingPack = true;
                 assertThat(rule.path("params").path("unitPrice").asDouble()).isEqualTo(8.0);
+                assertThat(rule.path("params").has("acceptedTypes")).isFalse();
             }
         }
         assertThat(hasZhengxingPack).isTrue();

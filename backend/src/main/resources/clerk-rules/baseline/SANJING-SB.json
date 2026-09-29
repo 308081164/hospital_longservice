@@ -252,8 +252,8 @@
           "敷料包"
         ],
         "packNameKeywords": [
-          "棉球",
-          "纱布"
+          "棉球@contains",
+          "纱布@contains"
         ],
         "packagingMaterial": null,
         "instrumentCountRange": null,
@@ -276,8 +276,8 @@
           "敷料包"
         ],
         "packNameKeywords": [
-          "棉球",
-          "纱布"
+          "棉球@contains",
+          "纱布@contains"
         ],
         "packagingMaterial": null,
         "instrumentCountRange": null,
@@ -300,8 +300,8 @@
           "敷料包"
         ],
         "packNameKeywords": [
-          "棉球",
-          "纱布"
+          "棉球@contains",
+          "纱布@contains"
         ],
         "packagingMaterial": null,
         "instrumentCountRange": null,
