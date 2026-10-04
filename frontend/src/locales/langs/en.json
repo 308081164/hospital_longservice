@@ -955,6 +955,24 @@
       "ratio": "Ratio",
       "allocatedFee": "Allocated fee"
     },
+    "exportPreflight": {
+      "pendingReviewTitle": "Rows still pending review",
+      "pendingReviewMessage": "{count} row(s) still need review. Open details to verify before export?",
+      "viewDetail": "View details",
+      "proceedExport": "Export anyway",
+      "markApprovedTitle": "Update review status",
+      "markApprovedMessage": "No pending rows. Mark this job as approved?",
+      "markApprovedAndExport": "Approve and export",
+      "exportOnly": "Export only",
+      "reviewPendingTitle": "Rows still pending review",
+      "reviewPendingMessage": "{count} row(s) still need review. Continue review?",
+      "proceedReview": "Continue review",
+      "priceDriftTitle": "Rule prices not persisted",
+      "priceDriftMessage": "{count} row(s) have bill unit price different from rule unit price, and corrected total is not saved.",
+      "localUnsavedMessage": "You have unsaved table edits on this page; export uses the database version.",
+      "priceDriftConsequence": "Run Reprice or single-row Fix and save before export; otherwise Excel may still show original bill prices.",
+      "unpersistedRowsHint": "Unpersisted rule prices: {count} row(s)"
+    },
     "exportAnomaly": {
       "title": "Export anomaly rows",
       "description": "By default only rows with a non-zero price difference are exported.",
@@ -1055,7 +1073,8 @@
       "reprice": "Reprice",
       "dirtyHint": "Unsaved changes",
       "saveSuccess": "Changes saved",
-      "repriceStaged": "Repriced — click Save changes to persist"
+      "repriceStaged": "Repriced — click Save changes to persist",
+      "repricePersisted": "Repriced and saved; export will use corrected prices"
     },
     "notice": {
       "title": "Rule change notices",

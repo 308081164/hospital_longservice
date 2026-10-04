@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""34 家特殊计价医院权威清单（路径 A / manifest / Java STRICT_KEEP_CODES 须一致，与特殊收费 Excel 各院段落一一对应）。"""
+"""36 家特殊计价医院权威清单（路径 A / manifest / Java STRICT_KEEP_CODES 须一致，与特殊收费 Excel 各院段落一一对应）。"""
 
 from __future__ import annotations
 
@@ -51,6 +51,8 @@ STRICT_KEEP_CODES: list[str] = [
     "XIEDA-YL",
     "ERYY-SB",
     "SHENG-YY-NG",
+    "SHENG-YY-XF",
+    "HRB-HIT",
 ]
 
 # 中医附一：独立价表 docs/source/附一收费标准.xlsx（非特殊收费 Excel 32 家）
@@ -94,6 +96,8 @@ STRICT_HOSPITALS: list[StrictHospital] = [
     StrictHospital("XIEDA-YL", "协大医美", "协大医疗美容", False, "待补充测试材料"),
     StrictHospital("ERYY-SB", "省二松北", "黑龙江省第二医院（松北院区）", True),
     StrictHospital("SHENG-YY-NG", "省医院南岗", "黑龙江省医院（南岗院区）", True),
+    StrictHospital("SHENG-YY-XF", "省医院香坊", "黑龙江省医院（香坊院区）", True),
+    StrictHospital("HRB-HIT", "哈工大", "哈尔滨工业大学医院", True),
 ]
 
 STRICT_BY_CODE = {h.code: h for h in STRICT_HOSPITALS}

@@ -16,7 +16,7 @@
       "code": "GUOYAO-2",
       "name": "电机厂",
       "excel_rows": 6,
-      "baseline_rules": 31,
+      "baseline_rules": 33,
       "ok": true,
       "missing": []
     },
@@ -200,7 +200,7 @@
       "code": "YUANDONG-XN",
       "name": "远东心脑血管",
       "excel_rows": 2,
-      "baseline_rules": 2,
+      "baseline_rules": 3,
       "ok": true,
       "missing": []
     },
@@ -216,7 +216,7 @@
       "code": "AOLAN-YY",
       "name": "奥兰医院",
       "excel_rows": 2,
-      "baseline_rules": 2,
+      "baseline_rules": 3,
       "ok": true,
       "missing": []
     },
@@ -232,7 +232,7 @@
       "code": "SENHAI-YY",
       "name": "森海医院",
       "excel_rows": 4,
-      "baseline_rules": 4,
+      "baseline_rules": 5,
       "ok": true,
       "missing": []
     },
@@ -259,12 +259,44 @@
       "baseline_rules": 6,
       "ok": true,
       "missing": []
+    },
+    {
+      "code": "ERYY-SB",
+      "name": "省二松北",
+      "excel_rows": 3,
+      "baseline_rules": 3,
+      "ok": true,
+      "missing": []
+    },
+    {
+      "code": "SHENG-YY-NG",
+      "name": "省医院南岗",
+      "excel_rows": 8,
+      "baseline_rules": 12,
+      "ok": true,
+      "missing": []
+    },
+    {
+      "code": "SHENG-YY-XF",
+      "name": "省医院香坊",
+      "excel_rows": 7,
+      "baseline_rules": 8,
+      "ok": true,
+      "missing": []
+    },
+    {
+      "code": "HRB-HIT",
+      "name": "哈工大",
+      "excel_rows": 3,
+      "baseline_rules": 3,
+      "ok": true,
+      "missing": []
     }
   ],
   "summary": {
-    "total": 32,
-    "pass": 32,
+    "total": 36,
+    "pass": 36,
     "fail": 0,
-    "excel_rows": 144
+    "excel_rows": 170
   }
 }

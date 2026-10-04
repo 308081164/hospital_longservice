@@ -11,6 +11,8 @@ public class ExportValidationResponse {
     private int totalRows;
     private int warningRows;
     private int correctedRows;
+    /** 规则单价与原单价不一致且修正总价未按规则落库的行数（导出可能仍用原价） */
+    private int unpersistedRulePriceRows;
     private Double totalDifference;
     private Double logisticsFee;
     private Double settlementAdjustment;

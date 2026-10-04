@@ -984,7 +984,12 @@
       "exportOnly": "仅导出",
       "reviewPendingTitle": "仍有待复核行",
       "reviewPendingMessage": "当前有 {count} 行待复核，建议先点击「查看详情」核对。是否仍要继续审核？",
-      "proceedReview": "继续审核"
+      "proceedReview": "继续审核",
+      "priceDriftTitle": "规则价尚未写入修正列",
+      "priceDriftMessage": "检测到 {count} 行账单单价与规则单价不一致，且修正总价尚未落库。",
+      "localUnsavedMessage": "当前页面尚有未保存的表格修改，导出将使用已写入数据库的版本。",
+      "priceDriftConsequence": "建议先执行「一键修正」或单行「修正」并确认已保存后再导出；若继续导出，Excel 可能仍显示原始账单价格。",
+      "unpersistedRowsHint": "规则价未落库：{count} 行"
     },
     "exportAnomaly": {
       "title": "导出异常明细",
@@ -1101,7 +1106,8 @@
       "reprice": "一键修正",
       "dirtyHint": "有未保存的修改",
       "saveSuccess": "修改已保存",
-      "repriceStaged": "已重新计价，请点击「保存修改」写入版本"
+      "repriceStaged": "已重新计价，请点击「保存修改」写入版本",
+      "repricePersisted": "已重新计价并保存，导出将使用修正后的价格"
     },
     "notice": {
       "title": "规则变更通知",

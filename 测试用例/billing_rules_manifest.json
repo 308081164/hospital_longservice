@@ -1,9 +1,9 @@
 {
   "version": 1,
-  "generated_at": "2026-09-17T02:34:07.411114+00:00",
-  "manifest_hash": "852cc04b0ded725ce3386dcba05cbacac31ee8704044be3f9cf685bf25e421b0",
-  "billing_enabled_count": 13,
-  "active_billing_enabled_count": 13,
+  "generated_at": "2026-09-28T02:47:17.474800+00:00",
+  "manifest_hash": "6199ce954643da488e2e71f4e2b6f3c2201042a8c71616d2bd51aa51c5d90b20",
+  "billing_enabled_count": 14,
+  "active_billing_enabled_count": 14,
   "customers": {
     "BINGCHENG-YM": {
       "code": "BINGCHENG-YM",
@@ -188,6 +188,17 @@
       ],
       "rule_count": 1,
       "active_rule_count": 1
+    },
+    "SHENG-YY-NG": {
+      "code": "SHENG-YY-NG",
+      "name": "黑龙江省医院（南岗院区）",
+      "status": null,
+      "billingPricingMode": "hybrid",
+      "standardPricingOverride": null,
+      "billingEnabled": true,
+      "productRules": [],
+      "rule_count": 0,
+      "active_rule_count": 0
     },
     "XINFA-HSZ": {
       "code": "XINFA-HSZ",

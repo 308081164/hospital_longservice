@@ -11,6 +11,7 @@ import com.hospital.backend.dto.response.export.ExportPreviewResponse;
 import com.hospital.backend.dto.response.export.ExportValidationResponse;
 import com.hospital.backend.entity.HospitalReconciliationExportLog;
 import com.hospital.backend.entity.HospitalReconciliationJob;
+import com.hospital.backend.entity.HospitalReconciliationRow;
 import com.hospital.backend.entity.HospitalPricingRule;
 import com.hospital.backend.common.JsonUtils;
 import com.hospital.backend.export.ColumnTransformPipeline;
@@ -42,6 +43,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
 
 @Slf4j
 @Service
@@ -157,6 +159,7 @@ public class ExportEngineServiceImpl implements ExportEngineService {
         HospitalReconciliationJob job = context.getJob();
         ExportProfileFields profile = buildExportProfileFields(context);
         int warnings = job.getWarningRows() != null ? job.getWarningRows() : 0;
+        int unpersistedRulePriceRows = countUnpersistedRulePriceRows(context.getRows());
 
         double sterilizeTotal = job.getCorrectedTotalPrice() != null
                 ? job.getCorrectedTotalPrice()
@@ -180,6 +183,9 @@ public class ExportEngineServiceImpl implements ExportEngineService {
             message = "结款函勾稽未通过：合计 " + settlementTotal + " 与分项之和不一致";
         } else if (allocationBalanced != null && !allocationBalanced) {
             message = "科室分配勾稽未通过，请先运行 allocate";
+        } else if (unpersistedRulePriceRows > 0) {
+            message = "存在 " + unpersistedRulePriceRows
+                    + " 行规则单价已算出但修正总价未落库，导出账单可能仍按原价计价";
         } else if (warnings > 0) {
             message = "存在 " + warnings + " 行待复核，建议先查看详情核对";
         } else {
@@ -191,6 +197,7 @@ public class ExportEngineServiceImpl implements ExportEngineService {
                 .totalRows(job.getTotalRows() != null ? job.getTotalRows() : context.getRows().size())
                 .warningRows(warnings)
                 .correctedRows(job.getCorrectedRows() != null ? job.getCorrectedRows() : 0)
+                .unpersistedRulePriceRows(unpersistedRulePriceRows)
                 .totalDifference(job.getTotalDifference())
                 .logisticsFee(job.getLogisticsFee())
                 .settlementAdjustment(job.getSettlementAdjustment())
@@ -471,6 +478,47 @@ public class ExportEngineServiceImpl implements ExportEngineService {
         dto.setAmount(row.getAmount());
         dto.setRemark(row.getRemark());
         return dto;
+    }
+
+    private static int countUnpersistedRulePriceRows(List<HospitalReconciliationRow> rows) {
+        if (rows == null || rows.isEmpty()) {
+            return 0;
+        }
+        int count = 0;
+        for (HospitalReconciliationRow row : rows) {
+            if (isUnpersistedRulePrice(row)) {
+                count++;
+            }
+        }
+        return count;
+    }
+
+    /**
+     * 规则单价与原单价不一致，且修正总价未按规则单价×包数落库（仍为 null 或等于原价）。
+     */
+    static boolean isUnpersistedRulePrice(HospitalReconciliationRow row) {
+        if (row == null) {
+            return false;
+        }
+        Double expected = row.getExpectedUnitPrice();
+        Double unit = row.getUnitPrice();
+        if (expected == null || unit == null) {
+            return false;
+        }
+        if (Math.abs(unit - expected) <= 0.001) {
+            return false;
+        }
+        int packs = row.getPackCount() != null ? Math.max(1, row.getPackCount()) : 1;
+        double expectedTotal = Math.round(expected * packs * 100.0) / 100.0;
+        Double corrected = row.getCorrectedTotalPrice();
+        Double total = row.getTotalPrice();
+        if (corrected == null) {
+            return true;
+        }
+        if (total != null && Math.abs(corrected - total) <= 0.001) {
+            return true;
+        }
+        return Math.abs(corrected - expectedTotal) > 0.001;
     }
 
     private void logExport(Long jobId, String exportType, String fileName, HospitalReconciliationJob job) {

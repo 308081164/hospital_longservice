@@ -82,6 +82,8 @@ STRICT_KEEP_CODES = [
     "XIEDA-YL",
     "ERYY-SB",
     "SHENG-YY-NG",
+    "SHENG-YY-XF",
+    "HRB-HIT",
 ]
 
 # 种子文件仅以 code 引用客户、未携带规范名时，回退到此映射。

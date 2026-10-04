@@ -1,0 +1,139 @@
+{
+  "customerCode": "SHENG-YY-XF",
+  "customerName": "黑龙江省医院（香坊院区）",
+  "billingEnabled": true,
+  "billingPricingMode": "hybrid",
+  "productRules": [
+    {
+      "ruleType": "PRICE_PER_INSTRUMENT",
+      "name": "省医院香坊双≥3按件5.5免包材",
+      "priority": 9,
+      "price": 5.5,
+      "keywords": [
+        "/双"
+      ],
+      "minInstrumentCount": 3,
+      "skipPackaging": true,
+      "skipDiscount": true,
+      "isActive": true,
+      "matchMode": "first",
+      "acceptedTypes": [
+        "额外包（纸塑袋）"
+      ]
+    },
+    {
+      "ruleType": "PRICE_PER_INSTRUMENT",
+      "name": "省医院香坊双<3按件5.5含包材",
+      "priority": 10,
+      "price": 5.5,
+      "keywords": [
+        "/双"
+      ],
+      "maxInstrumentCount": 2,
+      "skipPackaging": false,
+      "skipDiscount": true,
+      "isActive": true,
+      "matchMode": "first",
+      "conditionsJson": "[{\"field\":\"manualReview\",\"value\":true}]",
+      "acceptedTypes": [
+        "额外包（纸塑袋）"
+      ]
+    },
+    {
+      "ruleType": "FIXED_PRICE",
+      "name": "省医院香坊止血带0元",
+      "priority": 14,
+      "price": 0.0,
+      "keywords": [
+        "止血带"
+      ],
+      "skipPackaging": true,
+      "skipDiscount": true,
+      "isActive": true,
+      "matchMode": "first",
+      "acceptedTypes": [
+        "额外包（仅消毒）"
+      ]
+    },
+    {
+      "ruleType": "PRICE_PER_INSTRUMENT",
+      "name": "省医院香坊120无纺布器械包按件5.5",
+      "priority": 10,
+      "price": 5.5,
+      "keywords": [
+        "器械包-\\d+件（用120无纺布包装）@regex"
+      ],
+      "skipPackaging": true,
+      "skipDiscount": true,
+      "isActive": true,
+      "matchMode": "first",
+      "acceptedTypes": [
+        "额外包（无纺布）"
+      ]
+    },
+    {
+      "ruleType": "EXTRA_FEE",
+      "name": "省医院香坊120无纺布器械包加价5",
+      "priority": 11,
+      "fee": 5.0,
+      "keywords": [
+        "器械包-\\d+件（用120无纺布包装）@regex"
+      ],
+      "skipPackaging": true,
+      "skipDiscount": true,
+      "isActive": true,
+      "matchMode": "first",
+      "acceptedTypes": [
+        "额外包（无纺布）"
+      ]
+    },
+    {
+      "ruleType": "FIXED_PRICE",
+      "name": "省医院香坊环氧乙烷组件固定30",
+      "priority": 15,
+      "price": 30.0,
+      "keywords": [
+        "环氧乙烷组件-1包（医院自行打包）"
+      ],
+      "skipPackaging": true,
+      "skipDiscount": true,
+      "isActive": true,
+      "matchMode": "first",
+      "acceptedTypes": [
+        "额外包（ETO）"
+      ]
+    },
+    {
+      "ruleType": "FIXED_PRICE",
+      "name": "省医院香坊玻切包固定35",
+      "priority": 16,
+      "price": 35.0,
+      "keywords": [
+        "玻切包（自行打包）/W9050"
+      ],
+      "skipPackaging": true,
+      "skipDiscount": true,
+      "isActive": true,
+      "matchMode": "first",
+      "acceptedTypes": [
+        "额外包低温等离子"
+      ]
+    },
+    {
+      "ruleType": "FIXED_PRICE",
+      "name": "省医院香坊过氧化氢组件固定35",
+      "priority": 17,
+      "price": 35.0,
+      "keywords": [
+        "过氧化氢组件-1包"
+      ],
+      "skipPackaging": true,
+      "skipDiscount": true,
+      "isActive": true,
+      "matchMode": "first",
+      "acceptedTypes": [
+        "额外包低温等离子"
+      ]
+    }
+  ]
+}

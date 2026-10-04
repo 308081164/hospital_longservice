@@ -3,6 +3,7 @@
     v-model="exportWizardVisible"
     :job-id="exportWizardJob?.id"
     :hospital-name="exportWizardJob?.hospitalName"
+    :has-local-unsaved-changes="exportWizardLocalUnsaved"
     :initial-export-type="exportWizardInitialType"
     :allowed-export-types="exportWizardAllowedTypes"
     :monthly-breakdown="exportWizardJob?.monthlyBreakdown ?? null"
@@ -307,6 +308,7 @@
         :job-id="detailData?.id"
         :can-edit="canEditReconciliationRows && detailData?.reviewStatus === 'pending'"
         @repriced="handlePricingRulesRepriced"
+        @persisted="handlePricingRulesPersisted"
       />
       <ReconciliationAllocationPanel
         :allocation="detailAllocation"
@@ -516,6 +518,9 @@
   import { useBillingPermission } from '@/composables/useBillingPermission'
   import { useReconciliationTableColumns } from '@/composables/useReconciliationTableColumns'
   import { reconciliationJobActionsKey } from '@/composables/reconciliationJobActionsKey'
+  import type { ReconciliationExportPreflightContext } from '@/composables/reconciliationJobActionsKey'
+  import { buildReconciliationRowKey } from '@/composables/useReconciliationEntryEditing'
+  import { applyRulePriceToRow } from '@/utils/reconciliationPricePersistence'
   import {
     runExportPreflight,
     runReviewPreflight
@@ -620,6 +625,7 @@
 
   const exportWizardVisible = ref(false)
   const exportWizardJob = ref<Api.Hospital.ReconciliationJob | null>(null)
+  const exportWizardLocalUnsaved = ref(false)
   const exportWizardInitialType = ref('bill')
   const exportWizardAllowedTypes = ref<string[]>(['bill', 'settlement'])
 
@@ -830,8 +836,25 @@
   }
 
   async function handleFixSingleRow(row: Record<string, unknown>) {
+    if (!detailData.value) return
+    applyRulePriceToRow(row)
     applySingleRowCorrection(row)
-    await updateDetailSummary()
+    try {
+      const allRows = await fetchAllDetailRows()
+      const key = buildReconciliationRowKey(row)
+      const rowsToSave = allRows.map((item) =>
+        buildReconciliationRowKey(item) === key ? { ...item, ...row } : item
+      )
+      const updated = await updateHospitalReconciliationRows(detailData.value.id, rowsToSave)
+      detailData.value = { ...detailData.value, ...updated }
+      applyRepriceRowsToCache(rowsToSave)
+      emit('patch-history', updated)
+      ElMessage.success(t('reconciliation.inlineEdit.saveSuccess'))
+    } catch (error) {
+      ElMessage.error(
+        error instanceof Error ? error.message : t('reconciliation.detail.saveFailed')
+      )
+    }
   }
 
   async function handleMarkUrgent(isUrgent: boolean) {
@@ -886,6 +909,13 @@
     applyRepriceRowsToCache(rows)
   }
 
+  function handlePricingRulesPersisted(updated: Api.Hospital.ReconciliationJob) {
+    if (detailData.value?.id === updated.id) {
+      detailData.value = { ...detailData.value, ...updated }
+    }
+    emit('patch-history', updated)
+  }
+
   async function handleFixDetailRows() {
     if (!detailData.value) return
     try {
@@ -904,10 +934,12 @@
     isFixingDetailRows.value = true
     try {
       const result = await repriceReconciliation(detailData.value.id)
-      const allRows = result.rows
+      const allRows = (result.rows ?? []) as Record<string, unknown>[]
+      const updated = await updateHospitalReconciliationRows(detailData.value.id, allRows)
       applyRepriceRowsToCache(allRows)
       detailData.value = {
         ...detailData.value,
+        ...updated,
         totalRows: result.summary.total,
         correctedRows: result.summary.corrected,
         unchangedRows: result.summary.unchanged,
@@ -915,10 +947,8 @@
         skippedRows: result.summary.skipped,
         totalDifference: result.summary.totalDifference
       }
-      const changedCount = result.summary.corrected + result.summary.warning
-      ElMessage.success(
-        `一键修正完成，共 ${result.summary.total} 行已重新计算（${changedCount} 行有差异），请确认后点击「保存修改」`
-      )
+      emit('patch-history', updated)
+      ElMessage.success(t('reconciliation.inlineEdit.repricePersisted'))
     } catch (error) {
       ElMessage.error(
         error instanceof Error ? error.message : t('reconciliation.detail.batchFixFailed')
@@ -1013,7 +1043,11 @@
     reviewVisible.value = true
   }
 
-  async function requestExport(item: Api.Hospital.ReconciliationJob, type: string) {
+  async function requestExport(
+    item: Api.Hospital.ReconciliationJob,
+    type: string,
+    context?: ReconciliationExportPreflightContext
+  ) {
     if (!canExport.value) return
     const outcome = await runExportPreflight(item, {
       reviewerName: operatorName.value.trim() || '未命名审核人',
@@ -1024,6 +1058,7 @@
     })
     if (!outcome.proceed) return
     applyJobPatchToLists(outcome.job)
+    exportWizardLocalUnsaved.value = context?.hasLocalUnsavedChanges === true
     openExportWizard(outcome.job, type)
   }
 

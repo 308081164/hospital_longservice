@@ -1,9 +1,9 @@
 {
   "version": 1,
-  "generated_at": "2026-09-28T01:56:25Z",
-  "manifest_hash": "4788b7dc2ca0692be8150dbae2510c1de1cb11b519830cd4166b4eefdfafdccf",
-  "billing_enabled_count": 35,
-  "active_billing_enabled_count": 35,
+  "generated_at": "2026-10-04T06:43:16Z",
+  "manifest_hash": "b9990b80b95989fae0cab0d394015748498853a729658f892ad8bb5e69654174",
+  "billing_enabled_count": 37,
+  "active_billing_enabled_count": 37,
   "customers": {
     "BINGCHENG-YM": {
       "code": "BINGCHENG-YM",
@@ -4175,6 +4175,219 @@
       "rule_count": 12,
       "active_rule_count": 12
     },
+    "SHENG-YY-XF": {
+      "code": "SHENG-YY-XF",
+      "name": "黑龙江省医院（香坊院区）",
+      "status": null,
+      "billingPricingMode": "hybrid",
+      "standardPricingOverride": null,
+      "billingEnabled": true,
+      "billingPolicies": null,
+      "productRules": [
+        {
+          "ruleType": "PRICE_PER_INSTRUMENT",
+          "name": "省医院香坊双≥3按件5.5免包材",
+          "priority": 9,
+          "price": 5.5,
+          "keywords": [
+            "/双"
+          ],
+          "minInstrumentCount": 3,
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": true,
+          "matchMode": "first",
+          "acceptedTypes": [
+            "额外包（纸塑袋）"
+          ]
+        },
+        {
+          "ruleType": "PRICE_PER_INSTRUMENT",
+          "name": "省医院香坊双<3按件5.5含包材",
+          "priority": 10,
+          "price": 5.5,
+          "keywords": [
+            "/双"
+          ],
+          "maxInstrumentCount": 2,
+          "skipPackaging": false,
+          "skipDiscount": true,
+          "isActive": true,
+          "matchMode": "first",
+          "conditionsJson": "[{\"field\":\"manualReview\",\"value\":true}]",
+          "acceptedTypes": [
+            "额外包（纸塑袋）"
+          ]
+        },
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "省医院香坊止血带0元",
+          "priority": 14,
+          "price": 0.0,
+          "keywords": [
+            "止血带"
+          ],
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": true,
+          "matchMode": "first",
+          "acceptedTypes": [
+            "额外包（仅消毒）"
+          ]
+        },
+        {
+          "ruleType": "PRICE_PER_INSTRUMENT",
+          "name": "省医院香坊120无纺布器械包按件5.5",
+          "priority": 10,
+          "price": 5.5,
+          "keywords": [
+            "器械包-\\d+件（用120无纺布包装）@regex"
+          ],
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": true,
+          "matchMode": "first",
+          "acceptedTypes": [
+            "额外包（无纺布）"
+          ]
+        },
+        {
+          "ruleType": "EXTRA_FEE",
+          "name": "省医院香坊120无纺布器械包加价5",
+          "priority": 11,
+          "fee": 5.0,
+          "keywords": [
+            "器械包-\\d+件（用120无纺布包装）@regex"
+          ],
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": true,
+          "matchMode": "first",
+          "acceptedTypes": [
+            "额外包（无纺布）"
+          ]
+        },
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "省医院香坊环氧乙烷组件固定30",
+          "priority": 15,
+          "price": 30.0,
+          "keywords": [
+            "环氧乙烷组件-1包（医院自行打包）"
+          ],
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": true,
+          "matchMode": "first",
+          "acceptedTypes": [
+            "额外包（ETO）"
+          ]
+        },
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "省医院香坊玻切包固定35",
+          "priority": 16,
+          "price": 35.0,
+          "keywords": [
+            "玻切包（自行打包）/W9050"
+          ],
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": true,
+          "matchMode": "first",
+          "acceptedTypes": [
+            "额外包低温等离子"
+          ]
+        },
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "省医院香坊过氧化氢组件固定35",
+          "priority": 17,
+          "price": 35.0,
+          "keywords": [
+            "过氧化氢组件-1包"
+          ],
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": true,
+          "matchMode": "first",
+          "acceptedTypes": [
+            "额外包低温等离子"
+          ]
+        }
+      ],
+      "rule_count": 8,
+      "active_rule_count": 8
+    },
+    "HRB-HIT": {
+      "code": "HRB-HIT",
+      "name": "哈尔滨工业大学医院",
+      "status": null,
+      "billingPricingMode": "hybrid",
+      "standardPricingOverride": null,
+      "billingEnabled": true,
+      "billingPolicies": null,
+      "productRules": [
+        {
+          "ruleType": "FOLD",
+          "name": "哈工大针架5合1加架含包材",
+          "priority": 10,
+          "keywords": [
+            "针架1针@contains"
+          ],
+          "threshold": 5,
+          "foldRatio": 5,
+          "extraCount": 1,
+          "maxInstrumentCount": 6,
+          "price": 5.5,
+          "skipPackaging": false,
+          "skipDiscount": true,
+          "isActive": true,
+          "matchMode": "first",
+          "acceptedTypes": [
+            "额外包（纸塑袋）"
+          ]
+        },
+        {
+          "ruleType": "FOLD",
+          "name": "哈工大针架5合1加架免包材",
+          "priority": 11,
+          "keywords": [
+            "针架1针@contains"
+          ],
+          "threshold": 5,
+          "foldRatio": 5,
+          "extraCount": 1,
+          "minInstrumentCount": 7,
+          "price": 5.5,
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": true,
+          "matchMode": "first",
+          "acceptedTypes": [
+            "额外包（纸塑袋）"
+          ]
+        },
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "哈工大克氏针48钢丝固定77",
+          "priority": 12,
+          "price": 77.0,
+          "keywords": [
+            "克氏针48钢丝4/W6050"
+          ],
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": true,
+          "matchMode": "first",
+          "acceptedTypes": [
+            "额外包（无纺布）"
+          ]
+        }
+      ],
+      "rule_count": 3,
+      "active_rule_count": 3
+    },
     "ZYY-D1": {
       "code": "ZYY-D1",
       "name": "黑龙江中医药大学附属第一医院",
@@ -4717,10 +4930,130 @@
           "skipDiscount": true,
           "sourceRef": "supplement:prod",
           "isActive": false
+        },
+        {
+          "ruleType": "PRICE_PER_INSTRUMENT",
+          "name": "附一特殊收费换药包120布按件5.5",
+          "priority": 90,
+          "price": 5.5,
+          "keywords": [
+            "换药包(120布)"
+          ],
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": true,
+          "matchMode": "first",
+          "acceptedTypes": [
+            "器械包（ZSD）"
+          ],
+          "sourceRef": "excel:特殊收费(13)#各医院"
+        },
+        {
+          "ruleType": "EXTRA_FEE",
+          "name": "附一特殊收费换药包120布加价6.25",
+          "priority": 91,
+          "fee": 6.25,
+          "keywords": [
+            "换药包(120布)"
+          ],
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": true,
+          "matchMode": "first",
+          "acceptedTypes": [
+            "器械包（ZSD）"
+          ],
+          "sourceRef": "excel:特殊收费(13)#各医院"
+        },
+        {
+          "ruleType": "FOLD",
+          "name": "附一特殊收费工字帽胶帽≤5按1件含包材",
+          "priority": 92,
+          "keywords": [
+            "工字帽@contains",
+            "胶帽@contains"
+          ],
+          "threshold": 5,
+          "foldRatio": 5,
+          "maxInstrumentCount": 5,
+          "skipPackaging": false,
+          "temperature": "LT",
+          "isActive": true,
+          "matchMode": "first",
+          "skipDiscount": false,
+          "acceptedTypes": [
+            "额外包（ETO）",
+            "额外包低温等离子"
+          ],
+          "sourceRef": "excel:特殊收费(13)#各医院"
+        },
+        {
+          "ruleType": "FOLD",
+          "name": "附一特殊收费工字帽胶帽>5折算22",
+          "priority": 93,
+          "keywords": [
+            "工字帽@contains",
+            "胶帽@contains"
+          ],
+          "threshold": 5,
+          "foldRatio": 5,
+          "minInstrumentCount": 6,
+          "price": 22.0,
+          "skipPackaging": true,
+          "temperature": "LT",
+          "isActive": true,
+          "matchMode": "first",
+          "skipDiscount": false,
+          "acceptedTypes": [
+            "额外包（ETO）",
+            "额外包低温等离子"
+          ],
+          "sourceRef": "excel:特殊收费(13)#各医院"
+        },
+        {
+          "ruleType": "FOLD",
+          "name": "附一特殊收费橄榄头≤5按1件含包材",
+          "priority": 94,
+          "keywords": [
+            "橄榄头@contains"
+          ],
+          "threshold": 5,
+          "foldRatio": 5,
+          "maxInstrumentCount": 5,
+          "skipPackaging": false,
+          "temperature": "LT",
+          "isActive": true,
+          "matchMode": "first",
+          "skipDiscount": false,
+          "acceptedTypes": [
+            "额外包低温等离子"
+          ],
+          "sourceRef": "excel:特殊收费(13)#各医院"
+        },
+        {
+          "ruleType": "FOLD",
+          "name": "附一特殊收费橄榄头>5折算22",
+          "priority": 95,
+          "keywords": [
+            "橄榄头@contains"
+          ],
+          "threshold": 5,
+          "foldRatio": 5,
+          "minInstrumentCount": 6,
+          "price": 22.0,
+          "skipPackaging": true,
+          "temperature": "LT",
+          "isActive": true,
+          "matchMode": "first",
+          "skipDiscount": false,
+          "acceptedTypes": [
+            "额外包低温等离子"
+          ],
+          "sourceRef": "excel:特殊收费(13)#各医院"
         }
       ],
-      "rule_count": 26,
-      "active_rule_count": 0
+      "rule_count": 32,
+      "active_rule_count": 6
     }
   }
 }

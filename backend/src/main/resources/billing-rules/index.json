@@ -1,8 +1,8 @@
 {
-  "baseline_hash": "559bbe635446c3e80f84cc2104af1c88a8e266f479d19442519c342f767918ee",
-  "generated_at": "2026-09-28T01:56:25Z",
+  "baseline_hash": "58f1bf084812b922de972bf809fb73fa373de0306de43795b9b57246fa206e5a",
+  "generated_at": "2026-10-04T06:43:16Z",
   "source": "billing-rules-manifest@01836c66115726ff7229db58f16020cb6e65f7069beee13551669c1031fd7764",
-  "customer_count": 35,
+  "customer_count": 37,
   "customers": [
     {
       "code": "BINGCHENG-YM",
@@ -209,10 +209,22 @@
       "fileHash": "bbc900de898e06d9227017078470cf6039dde07ed4de21ce01c84bacb6468c23"
     },
     {
+      "code": "SHENG-YY-XF",
+      "file": "baseline/SHENG-YY-XF.json",
+      "ruleCount": 8,
+      "fileHash": "cd4b0475d45ab00e143dc13fe18de5fb4587d3c97a56d4525f404b554bfa9d0c"
+    },
+    {
+      "code": "HRB-HIT",
+      "file": "baseline/HRB-HIT.json",
+      "ruleCount": 3,
+      "fileHash": "c6eb2d93cb0c78d073ec1a609399ed3536f00aed1023c4fb1dd6b2ba02560826"
+    },
+    {
       "code": "ZYY-D1",
       "file": "baseline/ZYY-D1.json",
-      "ruleCount": 26,
-      "fileHash": "d360c0d7c5ba4cd1ee09ce173c3583e3e82f24344833e0f592371307490c5afe"
+      "ruleCount": 32,
+      "fileHash": "c3c192da0266f1a4f10b1bdcc464a52a668700442839b41878976f66ba0f7341"
     }
   ]
 }

@@ -166,6 +166,7 @@ export function useReconciliationEntryEditing() {
     jobId: number,
     options?: {
       onRepriced?: (rows: Record<string, unknown>[], summary: Record<string, unknown>) => void
+      onJobUpdated?: (job: Api.Hospital.ReconciliationJob) => void | Promise<void>
     }
   ): Promise<boolean> {
     try {
@@ -187,10 +188,11 @@ export function useReconciliationEntryEditing() {
       const result = await repriceReconciliation(jobId)
       const rows = (result.rows ?? []) as Record<string, unknown>[]
       pendingRepricedRows.value = rows
-      dirtyRows.value = new Map()
-      dirtyFields.value = new Map()
+      const updated = await updateHospitalReconciliationRows(jobId, rows)
+      clearDirty()
+      await options?.onJobUpdated?.(updated)
       options?.onRepriced?.(rows, result.summary as Record<string, unknown>)
-      ElMessage.success(t('reconciliation.inlineEdit.repriceStaged'))
+      ElMessage.success(t('reconciliation.inlineEdit.repricePersisted'))
       return true
     } catch (error) {
       ElMessage.error(

@@ -10,6 +10,7 @@
       :job-id="jobId"
       :can-edit="canEdit"
       @repriced="(rows) => emit('repriced', rows)"
+      @persisted="(job) => emit('persisted', job)"
     />
   </ElDrawer>
 </template>
@@ -32,6 +33,7 @@
   const emit = defineEmits<{
     'update:visible': [value: boolean]
     repriced: [rows: Record<string, unknown>[]]
+    persisted: [job: Api.Hospital.ReconciliationJob]
   }>()
 
   const { t } = useI18n()

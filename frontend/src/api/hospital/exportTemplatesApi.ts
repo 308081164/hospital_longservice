@@ -57,6 +57,8 @@ export interface ExportValidationResult {
   totalRows: number
   warningRows: number
   correctedRows: number
+  /** 规则单价已算出但修正总价未落库的行数 */
+  unpersistedRulePriceRows?: number
   totalDifference?: number
   logisticsFee?: number
   settlementAdjustment?: number

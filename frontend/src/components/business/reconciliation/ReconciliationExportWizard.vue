@@ -103,6 +103,20 @@
         }}
       </ElAlert>
       <ElAlert
+        v-if="validation && (validation.unpersistedRulePriceRows ?? 0) > 0"
+        type="warning"
+        :closable="false"
+        show-icon
+        class="mb-4"
+        :title="
+          t('reconciliation.exportPreflight.unpersistedRowsHint', {
+            count: validation.unpersistedRulePriceRows
+          })
+        "
+      >
+        {{ t('reconciliation.exportPreflight.priceDriftConsequence') }}
+      </ElAlert>
+      <ElAlert
         v-if="validation"
         :type="validation.ready ? 'success' : 'warning'"
         :closable="false"
@@ -175,10 +189,12 @@
     exportFilePrefix,
     exportTypeI18nKey
   } from '@/utils/hospitalExportCapabilities'
+  import { runExportPricePreflight } from '@/composables/reconciliationExportPricePreflight'
 
   const props = defineProps<{
     jobId?: number | null
     hospitalName?: string
+    hasLocalUnsavedChanges?: boolean
     initialExportType?: string
     allowedExportTypes?: string[]
     monthlyBreakdown?: {
@@ -319,6 +335,12 @@
 
   async function confirmDownload() {
     if (!props.jobId) return
+    const priceOk = await runExportPricePreflight({
+      t,
+      unpersistedRulePriceRows: validation.value?.unpersistedRulePriceRows,
+      hasLocalUnsavedChanges: props.hasLocalUnsavedChanges
+    })
+    if (!priceOk) return
     if (validation.value && !validation.value.ready) {
       try {
         await ElMessageBox.confirm(

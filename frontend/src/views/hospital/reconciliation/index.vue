@@ -159,6 +159,7 @@
     :job-id="clerkRulesJobId"
     :can-edit="clerkRulesCanEdit"
     @repriced="onClerkRulesRepriced"
+    @persisted="onClerkRulesPersisted"
   />
 
   <ElDialog
@@ -946,6 +947,7 @@
     getReconciliationRows,
     getUnmatchedProducts,
     repriceReconciliationRow,
+    updateHospitalReconciliationRows,
     type UnmatchedProductItem
   } from '@/api/hospital/reconciliationsApi'
   import { quickOnboardProduct } from '@/api/master-data/productsApi'
@@ -1021,6 +1023,17 @@
     if (entry) {
       applyRepricedRowsToEntry(entry, rows)
     }
+  }
+
+  function onClerkRulesPersisted(job: Api.Hospital.ReconciliationJob) {
+    const entryId = clerkRulesEntryId.value
+    if (!entryId) return
+    const entry = uploadEntries.value.find((e) => e.id === entryId)
+    if (!entry) return
+    const editor = ensureEntryEditor(entry.id)
+    editor.applySummaryToEntry(entry, job)
+    editor.clearDirty()
+    void refreshEntryHistory()
   }
 
   function mapApiRowToProcessedRow(row: Record<string, unknown>): ProcessedRow {
@@ -1209,7 +1222,11 @@
     if (!entry.savedJobId) return
     const editor = ensureEntryEditor(entry.id)
     await editor.repriceAndStage(entry.savedJobId, {
-      onRepriced: (rows) => applyRepricedRowsToEntry(entry, rows)
+      onRepriced: (rows) => applyRepricedRowsToEntry(entry, rows),
+      onJobUpdated: async (job) => {
+        editor.applySummaryToEntry(entry, job)
+        await refreshEntryHistory()
+      }
     })
   }
 
@@ -1219,12 +1236,32 @@
     return entryRepricingRowIds[entryId] ?? null
   }
 
-  function handleEntryFixSingleRow(entry: UploadEntry, row: Record<string, unknown>) {
+  async function handleEntryFixSingleRow(entry: UploadEntry, row: Record<string, unknown>) {
+    if (!entry.savedJobId) return
     applySingleRowCorrection(row)
     const editor = ensureEntryEditor(entry.id)
-    editor.markDirty(row, 'status', 'corrected')
-    if (row['difference'] != null) {
-      editor.markDirty(row, 'difference', row['difference'])
+    try {
+      const allRows = await fetchAllRowsForExport(entry.savedJobId)
+      const key = buildReconciliationRowKey(row)
+      const rowsToSave = allRows.map((item) =>
+        buildReconciliationRowKey(item) === key ? { ...item, ...row } : item
+      )
+      const updated = await updateHospitalReconciliationRows(entry.savedJobId, rowsToSave)
+      editor.clearDirty()
+      editor.applySummaryToEntry(entry, updated)
+      await refreshEntryHistory()
+      ElMessage.success(t('reconciliation.inlineEdit.saveSuccess'))
+    } catch (error) {
+      editor.markDirty(row, 'status', row['status'])
+      if (row['difference'] != null) {
+        editor.markDirty(row, 'difference', row['difference'])
+      }
+      if (row['correctedTotalPrice'] != null) {
+        editor.markDirty(row, 'correctedTotalPrice', row['correctedTotalPrice'])
+      }
+      ElMessage.error(
+        error instanceof Error ? error.message : t('reconciliation.detail.saveFailed')
+      )
     }
   }
 
@@ -1267,6 +1304,13 @@
     return entryEditors[entryId]?.hasDirty.value ?? false
   }
 
+  function hasUnsavedForJob(jobId: number | null | undefined): boolean {
+    if (!jobId) return false
+    return uploadEntries.value.some(
+      (entry) => entry.savedJobId === jobId && entryHasDirty(entry.id)
+    )
+  }
+
   function entryIsSaving(entryId: string): boolean {
     return entryEditors[entryId]?.isSaving.value ?? false
   }
@@ -1298,7 +1342,10 @@
   provide(reconciliationJobActionsKey, {
     openDetail: (item) => jobDialogsRef.value?.openDetail(item),
     openReview: (item) => jobDialogsRef.value?.openReview(item),
-    requestExport: (item, type) => jobDialogsRef.value?.requestExport(item, type)
+    requestExport: (item, type, context) =>
+      jobDialogsRef.value?.requestExport(item, type, {
+        hasLocalUnsavedChanges: context?.hasLocalUnsavedChanges ?? hasUnsavedForJob(item.id)
+      })
   })
 
   const exportAnomalyDialogVisible = ref(false)

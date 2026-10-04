@@ -68,6 +68,7 @@
   import {
     fetchPricingRules,
     repriceReconciliation,
+    updateHospitalReconciliationRows,
     updatePricingRuleOverrides,
     type PricingCategoryToggle
   } from '@/api/hospital/reconciliationsApi'
@@ -81,6 +82,7 @@
 
   const emit = defineEmits<{
     repriced: [rows: Record<string, unknown>[]]
+    persisted: [job: Api.Hospital.ReconciliationJob]
   }>()
 
   const { t } = useI18n()
@@ -181,8 +183,11 @@
       toggles.value = normalizeToggles(info.toggles ?? toggles.value)
       customerCode.value = info.customer_code ?? customerCode.value
       const result = await repriceReconciliation(props.jobId, disabledCategories.value)
+      const rows = (result.rows ?? []) as Record<string, unknown>[]
+      const updated = await updateHospitalReconciliationRows(props.jobId, rows)
       savedDisabledCategories.value = [...disabledCategories.value]
-      emit('repriced', result.rows)
+      emit('repriced', rows)
+      emit('persisted', updated)
       ElMessage.success(t('reconciliation.pricingRules.applySuccess'))
     } catch (error) {
       ElMessage.error(

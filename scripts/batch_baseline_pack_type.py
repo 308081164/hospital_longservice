@@ -48,6 +48,11 @@ EXCEL_HOSPITAL_TO_CODE: dict[str, str] = {
     "奥兰医院": "AOLAN-YY",
     "哈尔滨市胸科医院": "HRB-XK-YY",
     "哈尔滨森海医院": "SENHAI-YY",
+    "黑龙江中医药大学附属第一医院": "ZYY-D1",
+    "黑龙江省第二医院（松北区）": "ERYY-SB",
+    "黑龙江省医院（南岗院区）": "SHENG-YY-NG",
+    "黑龙江省医院（香坊院区）": "SHENG-YY-XF",
+    "哈尔滨工业大学医院": "HRB-HIT",
 }
 
 QUOTE_RE = re.compile(r"[“\"']([^”\"']+)[”\"']")
