@@ -1,7 +1,7 @@
 {
   "version": 1,
-  "generated_at": "2026-10-04T06:43:16Z",
-  "manifest_hash": "b9990b80b95989fae0cab0d394015748498853a729658f892ad8bb5e69654174",
+  "generated_at": "2026-10-09T08:54:05Z",
+  "manifest_hash": "fde77f495f1a275c9fd90934e418728b92e15776f86105067d7bcc1e48e4b614",
   "billing_enabled_count": 37,
   "active_billing_enabled_count": 37,
   "customers": {
@@ -3525,7 +3525,6 @@
           "skipDiscount": true,
           "isActive": true,
           "matchMode": "first",
-          "conditionsJson": "[{\"field\":\"manualReview\",\"value\":true}]",
           "acceptedTypes": [
             "额外包（纸塑袋）"
           ]
@@ -3541,7 +3540,7 @@
           "minInstrumentCount": 3,
           "skipPackaging": true,
           "skipDiscount": true,
-          "isActive": true,
+          "isActive": false,
           "matchMode": "first",
           "conditionsJson": "[{\"field\":\"manualReview\",\"value\":true}]",
           "acceptedTypes": [
@@ -3589,7 +3588,7 @@
         }
       ],
       "rule_count": 5,
-      "active_rule_count": 5
+      "active_rule_count": 4
     },
     "ZY3-DIANLI": {
       "code": "ZY3-DIANLI",
@@ -4329,11 +4328,101 @@
       "billingPolicies": null,
       "productRules": [
         {
+          "ruleType": "FIXED_PRICE",
+          "name": "哈工大换药碗-1 13",
+          "priority": 4,
+          "price": 13.0,
+          "keywords": [
+            "换药碗-1",
+            "换药器-1"
+          ],
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": true,
+          "matchMode": "first",
+          "acceptedTypes": [
+            "额外包（纸塑袋）",
+            "额外包(纸塑袋)"
+          ]
+        },
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "哈工大换药碗-2 16.5",
+          "priority": 4,
+          "price": 16.5,
+          "keywords": [
+            "换药碗-2",
+            "换药器-2"
+          ],
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": true,
+          "matchMode": "first",
+          "acceptedTypes": [
+            "额外包（纸塑袋）",
+            "额外包(纸塑袋)"
+          ]
+        },
+        {
+          "ruleType": "PRICE_PER_INSTRUMENT",
+          "name": "哈工大种植盒23件5.5/件",
+          "priority": 4,
+          "price": 5.5,
+          "keywords": [
+            "种植盒-23件"
+          ],
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": true,
+          "matchMode": "first",
+          "acceptedTypes": [
+            "器械包（ZSD）",
+            "器械包(ZSD)"
+          ]
+        },
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "哈工大棉球不带线2.5",
+          "priority": 4,
+          "price": 2.5,
+          "keywords": [
+            "棉球（不带线）",
+            "棉球(不带线)"
+          ],
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": true,
+          "matchMode": "first",
+          "acceptedTypes": [
+            "敷料包（纸塑袋）",
+            "敷料包(纸塑袋)"
+          ]
+        },
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "哈工大胆囊包10件165",
+          "priority": 4,
+          "price": 165.0,
+          "keywords": [
+            "胆囊包10件",
+            "胆囊包-10件"
+          ],
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": true,
+          "matchMode": "first",
+          "acceptedTypes": [
+            "额外包（纸塑袋）",
+            "额外包(纸塑袋)"
+          ]
+        },
+        {
           "ruleType": "FOLD",
           "name": "哈工大针架5合1加架含包材",
           "priority": 10,
           "keywords": [
-            "针架1针@contains"
+            "针架1针@contains",
+            "针架-1针@contains"
           ],
           "threshold": 5,
           "foldRatio": 5,
@@ -4345,7 +4434,8 @@
           "isActive": true,
           "matchMode": "first",
           "acceptedTypes": [
-            "额外包（纸塑袋）"
+            "额外包（纸塑袋）",
+            "额外包(纸塑袋)"
           ]
         },
         {
@@ -4353,7 +4443,8 @@
           "name": "哈工大针架5合1加架免包材",
           "priority": 11,
           "keywords": [
-            "针架1针@contains"
+            "针架1针@contains",
+            "针架-1针@contains"
           ],
           "threshold": 5,
           "foldRatio": 5,
@@ -4365,7 +4456,8 @@
           "isActive": true,
           "matchMode": "first",
           "acceptedTypes": [
-            "额外包（纸塑袋）"
+            "额外包（纸塑袋）",
+            "额外包(纸塑袋)"
           ]
         },
         {
@@ -4381,12 +4473,13 @@
           "isActive": true,
           "matchMode": "first",
           "acceptedTypes": [
-            "额外包（无纺布）"
+            "额外包（无纺布）",
+            "额外包(无纺布)"
           ]
         }
       ],
-      "rule_count": 3,
-      "active_rule_count": 3
+      "rule_count": 8,
+      "active_rule_count": 8
     },
     "ZYY-D1": {
       "code": "ZYY-D1",

@@ -173,7 +173,18 @@ public class PricingEngine {
 
 
         // 袋尺寸检测（带缓存）。部分特例规则需要先知道袋型，例如“20cm 以下 5 件算 1 件”。
-        int bagSize = detectBagSize(packageMaterial + packName);
+        boolean doubleMarkInNameEarly = DOUBLE_BAG_MARK.matcher(packName).find();
+        boolean isDoubleEarly = doubleMarkInNameEarly || packageMaterial.contains("双层袋");
+        int bagSize;
+        int zBagSize;
+        if (isDoubleEarly) {
+            DoubleBagSizes doubleBagSizes = resolveDoubleBagSizes(packageMaterial, packName);
+            bagSize = doubleBagSizes.outerSize();
+            zBagSize = doubleBagSizes.innerSize();
+        } else {
+            bagSize = detectBagSize(packageMaterial + packName);
+            zBagSize = 0;
+        }
         PackTypeRegistry.MaterialFamily materialFamily = PackTypeRegistry.classifyMaterial(packageMaterial);
         boolean isPaperPlastic = materialFamily == PackTypeRegistry.MaterialFamily.HIGH_TEMP_PAPER
                 || materialFamily == PackTypeRegistry.MaterialFamily.LOW_TEMP_PAPER;
@@ -188,13 +199,8 @@ public class PricingEngine {
         boolean isLowTemp = !disableLowTemp && packTypeDef
                 .map(def -> def.sterilization() == PackTypeRegistry.SterilizationMode.LOW_TEMP_EO)
                 .orElse(false);
-        boolean doubleMarkInName = DOUBLE_BAG_MARK.matcher(packName).find();
-        boolean isDouble = doubleMarkInName || packageMaterial.contains("双层袋");
-        int zBagSize = doubleMarkInName ? extractSizeAfterDouble(packName) : 0;
-        // 「/双」后接任意内容均认定双层袋：标记后未带尺寸数字时，第二层袋按外层袋尺寸计费。
-        if (doubleMarkInName && zBagSize <= 0) {
-            zBagSize = bagSize;
-        }
+        boolean doubleMarkInName = doubleMarkInNameEarly;
+        boolean isDouble = isDoubleEarly;
         SpecialPriceResult preMatchedSpecialPrice = zeroPriceOverride != null
                 ? zeroPriceOverride
                 : findSpecialFixedPrice(
@@ -573,11 +579,19 @@ public class PricingEngine {
         }
 
         if (specialPrice != null && !skipPackaging && isPaperPlastic && !isLowTemp && expectedUnitPrice != null) {
-            Double bagAddon = computeHighTempBagAddon(bagSize, zBagSize, isDouble, instrumentCount);
+            Double bagAddon = computeHighTempBagAddon(bagSize, zBagSize, isDouble, perPackRawInstrumentCount);
             if (bagAddon != null && bagAddon > 0) {
                 expectedUnitPrice = round(expectedUnitPrice + bagAddon);
                 pricingRule = pricingRule + " + 纸塑袋费";
                 notes.add("按件计价叠加纸塑袋费 " + fmt(bagAddon) + " 元。");
+            }
+            if (isDouble && perPackRawInstrumentCount > 0 && perPackRawInstrumentCount < 3) {
+                double capPrice = rules.path("highTemperature").path("paperPlastic").path("minCharge").asDouble(16.5);
+                if (expectedUnitPrice > capPrice) {
+                    notes.add("双层纸塑袋按件计价含包材，封顶 " + fmt(capPrice) + " 元（原计 "
+                            + fmt(expectedUnitPrice) + " 元）。");
+                    expectedUnitPrice = round(capPrice);
+                }
             }
         }
 
@@ -1596,6 +1610,47 @@ public class PricingEngine {
         return null;
     }
 
+    private record DoubleBagSizes(int outerSize, int innerSize) {}
+
+    /**
+     * 双层袋尺寸：包装材料列可列出两层袋规（中文/英文逗号分隔）；否则沿用包名 /双 后尺寸或外层兜底。
+     */
+    private DoubleBagSizes resolveDoubleBagSizes(String packageMaterial, String packName) {
+        List<String> segments = splitPackageMaterialSegments(packageMaterial);
+        if (segments.size() >= 2) {
+            int outer = detectBagSize(segments.get(0));
+            int inner = detectBagSize(segments.get(1));
+            if (outer <= 0) {
+                outer = detectBagSize(packageMaterial + packName);
+            }
+            if (inner <= 0) {
+                inner = outer;
+            }
+            return new DoubleBagSizes(outer, inner);
+        }
+        int outer = detectBagSize(packageMaterial + packName);
+        int inner = DOUBLE_BAG_MARK.matcher(packName).find() ? extractSizeAfterDouble(packName) : 0;
+        if (inner <= 0) {
+            inner = outer;
+        }
+        return new DoubleBagSizes(outer, inner);
+    }
+
+    private static List<String> splitPackageMaterialSegments(String packageMaterial) {
+        if (packageMaterial == null || packageMaterial.isBlank()) {
+            return List.of();
+        }
+        String[] parts = packageMaterial.split("[,，;；]");
+        List<String> segments = new ArrayList<>();
+        for (String part : parts) {
+            String trimmed = part.trim();
+            if (!trimmed.isEmpty()) {
+                segments.add(trimmed);
+            }
+        }
+        return segments;
+    }
+
     private int detectBagSize(String input) {
         if (input == null || input.isEmpty()) return 0;
         String key = input.replaceAll("\\s+", "");
@@ -2093,6 +2148,10 @@ public class PricingEngine {
             if (zBagConfig != null) {
                 bagFee2 = zBagConfig.path("price").asDouble();
             }
+        }
+        if (isDouble && rawInstrumentCount > 0 && rawInstrumentCount < 3) {
+            double total = bagFee1 + bagFee2;
+            return total > 0 ? round(total) : null;
         }
         if (rawInstrumentCount >= 3 && isDouble) {
             Double cottonInner = resolvePerPiecePaperPlasticBagAddon(innerBagSize > 0 ? innerBagSize : effectiveSize);

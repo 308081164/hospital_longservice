@@ -231,6 +231,8 @@ public class HospitalReconciliationServiceImpl implements HospitalReconciliation
 
     private final ClerkRuleCompiler clerkRuleCompiler;
 
+    private final com.hospital.backend.config.ClerkRuleIndex clerkRuleIndex;
+
     private final ReconciliationPricingOrchestrator reconciliationPricingOrchestrator;
 
     private final ClerkSettlementRequestEnricher clerkSettlementRequestEnricher;
@@ -331,6 +333,9 @@ public class HospitalReconciliationServiceImpl implements HospitalReconciliation
             Set<String> disabledCategories) {
         Optional<Customer> customer = customerResolver.resolveByName(hospitalName);
         String customerCode = customer.map(Customer::getCode).orElse(null);
+        if (customerCode == null) {
+            customerCode = clerkRuleIndex.resolveCustomerCodeByHospitalName(hospitalName);
+        }
         JsonNode clerkCompiled = customerCode != null
                 ? clerkRuleCompiler.compileForCustomer(customerCode)
                 : null;

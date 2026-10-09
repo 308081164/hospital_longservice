@@ -30,7 +30,6 @@
       @save-changes="emit('save-changes')"
       @reprice="emit('reprice')"
       @open-clerk-rules="emit('open-clerk-rules')"
-      @open-unmatched="emit('open-unmatched')"
       @export-anomaly="emit('export-anomaly')"
       @version-change="(key, id) => emit('version-change', key, id)"
     >
@@ -144,7 +143,6 @@
     displayPage: number
     displayPageSize: number
     displayTotal: number
-    unmatchedCount?: number | null
     savedSheetWarningCounts?: Record<string, number> | null
     workbook: {
       previews: Array<{ name: string; dataRows: number; headerRowIndex: number }>
@@ -196,7 +194,6 @@
     'save-changes': []
     reprice: []
     'open-clerk-rules': []
-    'open-unmatched': []
     'export-anomaly': []
     'page-change': [page: number]
     'open-pricing-flow': [row: Record<string, unknown>]

@@ -28,6 +28,8 @@ final class ExcelBillImportSupport {
                     + "|^\\d{4}[/-]\\d{1,2}[/-]\\d{1,2}.*(?:至|到).*\\d{4}.*");
     /** 铂康标准账单医院名固定列：D 列（0-based index 3）。 */
     private static final int STANDARD_HOSPITAL_NAME_COLUMN = 3;
+    /** 合并汇总表：医院全称常出现在首列（发货日期列）汇总行。 */
+    private static final int SUMMARY_HOSPITAL_NAME_COLUMN = 0;
 
     private ExcelBillImportSupport() {
     }
@@ -147,6 +149,11 @@ final class ExcelBillImportSupport {
         String fromD = resolveHospitalNameFromColumnD(matrix, headerRowIndex);
         if (!fromD.isBlank()) {
             out.add(fromD);
+            return;
+        }
+        String fromSummaryColA = resolveHospitalNameFromColumnASummaryRows(matrix, headerRowIndex);
+        if (!fromSummaryColA.isBlank()) {
+            out.add(fromSummaryColA);
         }
     }
 
@@ -208,6 +215,25 @@ final class ExcelBillImportSupport {
         return "";
     }
 
+    /**
+     * 合并单 sheet 账单（如红十字处理后表）：医院名在表头下一行 A 列汇总行，D8/D9 为空。
+     */
+    static String resolveHospitalNameFromColumnASummaryRows(List<List<Object>> matrix, int headerRowIndex) {
+        for (int r = headerRowIndex + 1; r < matrix.size(); r++) {
+            List<Object> row = matrix.get(r);
+            if (row.isEmpty()) {
+                continue;
+            }
+            String colA = sanitizeStr(row.size() > SUMMARY_HOSPITAL_NAME_COLUMN
+                    ? row.get(SUMMARY_HOSPITAL_NAME_COLUMN) : null);
+            if (!isHospitalSummaryRow(colA) || !isLikelyHospitalDisplayName(colA)) {
+                continue;
+            }
+            return colA.trim();
+        }
+        return "";
+    }
+
     private static String readColumnDCell(List<List<Object>> matrix, int rowIndex) {
         if (rowIndex < 0 || rowIndex >= matrix.size()) {
             return "";
@@ -221,8 +247,18 @@ final class ExcelBillImportSupport {
 
     private static List<List<Object>> readSheetMatrix(Sheet sheet) {
         List<List<Object>> matrix = new ArrayList<>();
-        for (Row row : sheet) {
+        // 按 Excel 行号（0-based）对齐，D8/D9 与表头行索引才能与铂康模板一致
+        int lastRow = sheet.getLastRowNum();
+        if (lastRow < 0) {
+            return matrix;
+        }
+        for (int r = 0; r <= lastRow; r++) {
+            Row row = sheet.getRow(r);
             List<Object> rowData = new ArrayList<>();
+            if (row == null) {
+                matrix.add(rowData);
+                continue;
+            }
             short lastCell = row.getLastCellNum();
             if (lastCell < 0) {
                 matrix.add(rowData);
@@ -272,7 +308,7 @@ final class ExcelBillImportSupport {
 
     static int findHeaderRowIndex(List<List<Object>> matrix) {
         for (int r = 0; r < matrix.size(); r++) {
-            Set<String> norm = normalizedCells(matrix.get(r));
+            Set<String> norm = normalizedHeaderCells(matrix.get(r));
             if (norm.contains("发货日期") && norm.contains("包名")
                     && norm.contains("包装材料") && norm.contains("器械数")
                     && norm.contains("单价") && norm.contains("总价")) {
@@ -280,7 +316,7 @@ final class ExcelBillImportSupport {
             }
         }
         for (int r = 0; r < matrix.size(); r++) {
-            Set<String> norm = normalizedCells(matrix.get(r));
+            Set<String> norm = normalizedHeaderCells(matrix.get(r));
             if (norm.contains("发货日期") && norm.contains("包名")
                     && norm.contains("单价") && norm.contains("总价")) {
                 return r;
@@ -326,6 +362,7 @@ final class ExcelBillImportSupport {
         aliasHeader(headerMap, "灭菌日期", "发货日期");
         aliasHeader(headerMap, "器械名称", "包名");
         aliasHeader(headerMap, "单包内器械数量/把", "器械数");
+        aliasHeader(headerMap, "器械数量", "器械数");
         aliasHeader(headerMap, "灭菌锅次", "发货单号");
         aliasHeader(headerMap, "病人ID", "包类别号");
         return headerMap;
@@ -352,6 +389,15 @@ final class ExcelBillImportSupport {
             if (!text.isEmpty()) {
                 norm.add(text);
             }
+        }
+        return norm;
+    }
+
+    /** 表头行归一化：兼容「器械\\n数量」「器械数量」等等价于「器械数」。 */
+    private static Set<String> normalizedHeaderCells(List<Object> row) {
+        Set<String> norm = normalizedCells(row);
+        if (norm.contains("器械数量")) {
+            norm.add("器械数");
         }
         return norm;
     }

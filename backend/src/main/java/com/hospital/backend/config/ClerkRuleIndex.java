@@ -76,6 +76,27 @@ public class ClerkRuleIndex {
         return baselineByCode.get(customerCode);
     }
 
+    /**
+     * 当 {@link com.hospital.backend.service.CustomerResolver} 未命中时，用内勤 baseline 的 customerName 回退解析。
+     */
+    public String resolveCustomerCodeByHospitalName(String hospitalName) {
+        if (hospitalName == null || hospitalName.isBlank()) {
+            return null;
+        }
+        String trimmed = hospitalName.trim();
+        for (String code : customerCodes) {
+            JsonNode baseline = baselineByCode.get(code);
+            if (baseline == null) {
+                continue;
+            }
+            String canonical = baseline.path("customerName").asText("").trim();
+            if (!canonical.isEmpty() && trimmed.equals(canonical)) {
+                return code;
+            }
+        }
+        return null;
+    }
+
     public List<JsonNode> listBaselines() {
         List<JsonNode> list = new ArrayList<>();
         for (String code : customerCodes) {

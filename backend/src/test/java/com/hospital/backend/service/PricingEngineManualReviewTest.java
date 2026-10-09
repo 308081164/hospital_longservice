@@ -88,8 +88,23 @@ class PricingEngineManualReviewTest {
     }
 
     @Test
-    void senhaiDoubleBagSlashRuleMarksManualReviewAndPreservesBillPrice() throws Exception {
-        assertDoubleBagManualReview("SENHAI-YY", "哈尔滨森海医院", "森海双", "剪刀-1/双/z3040");
+    void senhaiDoubleBagSlashRuleAutoPricesWithPackagingCap() throws Exception {
+        PricingEngine engine = PricingEngineTestSupport.engineForCustomerCode("SENHAI-YY");
+        PricingEngine.ProcessedResult result = engine.processRow(Map.of(
+                "hospitalName", "哈尔滨森海医院",
+                "type", "额外包（纸塑袋）",
+                "packName", "剪刀-1/双/z3040",
+                "packageMaterial", "高温纸塑袋75*200",
+                "instrumentCount", 1,
+                "packCount", 1,
+                "unitPrice", 22.0,
+                "totalPrice", 22.0
+        ));
+
+        assertThat(result.pricingRule).contains("森海双<3");
+        assertThat(result.expectedUnitPrice).isCloseTo(16.5, within(0.001));
+        assertThat(result.pricingPath).isEqualTo("fixed");
+        assertThat(result.notes).noneMatch(note -> note.contains("需人工核对"));
     }
 
     @Test

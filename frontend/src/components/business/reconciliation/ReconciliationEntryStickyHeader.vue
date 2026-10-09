@@ -227,14 +227,6 @@
         <ElButton
           v-if="entry.savedJobId"
           size="small"
-          plain
-          @click="emit('open-unmatched')"
-        >
-          待建档 {{ entry.unmatchedCount ?? '…' }}
-        </ElButton>
-        <ElButton
-          v-if="entry.savedJobId"
-          size="small"
           type="danger"
           plain
           :disabled="summary.warning === 0 && summary.corrected === 0"
@@ -401,7 +393,6 @@
     'save-changes': []
     reprice: []
     'open-clerk-rules': []
-    'open-unmatched': []
     'export-anomaly': []
     'version-change': [groupKey: string, jobId: number]
   }>()

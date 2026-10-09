@@ -1,6 +1,6 @@
 {
-  "baseline_hash": "58f1bf084812b922de972bf809fb73fa373de0306de43795b9b57246fa206e5a",
-  "generated_at": "2026-10-04T06:43:16Z",
+  "baseline_hash": "00093cffad471730f2e7f547fe847e8c40160fc33cde68ced76260696d9b2523",
+  "generated_at": "2026-10-09T07:52:53Z",
   "source": "billing-rules-manifest@01836c66115726ff7229db58f16020cb6e65f7069beee13551669c1031fd7764",
   "customer_count": 37,
   "customers": [
@@ -217,8 +217,8 @@
     {
       "code": "HRB-HIT",
       "file": "baseline/HRB-HIT.json",
-      "ruleCount": 3,
-      "fileHash": "c6eb2d93cb0c78d073ec1a609399ed3536f00aed1023c4fb1dd6b2ba02560826"
+      "ruleCount": 8,
+      "fileHash": "06a12e4cb5532743d56633951fa6a673068b16522dd14f52116c69fea7b74883"
     },
     {
       "code": "ZYY-D1",

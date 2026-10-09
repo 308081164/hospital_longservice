@@ -27,7 +27,8 @@ public final class PackNameSpecParser {
     private static final Pattern STANDALONE_PIECE_NOT_HYPHEN =
             Pattern.compile("(?<![-－])(\\d+)件");
     /** 针架复合：器械数列通常按架计，不做字段件数核对。 */
-    private static final Pattern NEEDLE_RACK_PATTERN = Pattern.compile("针架\\d+针\\d+");
+    private static final Pattern NEEDLE_RACK_PATTERN =
+            Pattern.compile("针架[-－]?\\d+针[-－]?\\d+");
     /** 紧凑复合至少两段「名+数」，如 盆1碗1；单段 排针20 不算。 */
     private static final Pattern COMPACT_MULTI_SEGMENT =
             Pattern.compile("[\\p{L}\\p{Script=Han}]\\d+[\\p{L}\\p{Script=Han}]\\d+");

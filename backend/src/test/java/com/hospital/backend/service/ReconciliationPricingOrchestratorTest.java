@@ -78,6 +78,8 @@ class ReconciliationPricingOrchestratorTest {
         assertThat(result.billingNotes.get("clerkDiscountRuleName")).isEqualTo("导出七五折");
         assertThat(result.billingNotes.get("priceBeforeDiscount")).isEqualTo(10.0);
         assertThat(result.billingNotes.get("priceAfterDiscount")).isEqualTo(7.5);
+        assertThat(result.correctedTotalPrice).isEqualTo(7.5);
+        assertThat(result.status).isEqualTo("corrected");
     }
 
     @Test

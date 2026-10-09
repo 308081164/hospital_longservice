@@ -85,13 +85,15 @@ class ExcelBillImportSupportHospitalNameTest {
     }
 
     @Test
-    void ignoresSummaryRowOutsideColumnD() throws Exception {
+    void extractsHospitalNameFromColumnASummaryWhenDColumnEmpty() throws Exception {
         try (XSSFWorkbook wb = new XSSFWorkbook()) {
-            Sheet sheet = wb.createSheet("手术室");
+            Sheet sheet = wb.createSheet("账单");
             Row header = sheet.createRow(7);
             header.createCell(0).setCellValue("发货日期");
             header.createCell(1).setCellValue("发货单号");
             header.createCell(4).setCellValue("包名");
+            header.createCell(8).setCellValue("单价");
+            header.createCell(9).setCellValue("总价");
             Row summary = sheet.createRow(8);
             summary.createCell(0).setCellValue("三精肾病医院");
 
@@ -99,7 +101,27 @@ class ExcelBillImportSupportHospitalNameTest {
             wb.write(bos);
 
             List<String> names = ExcelBillImportSupport.extractHospitalDisplayNames(bos.toByteArray());
-            assertThat(names).isEmpty();
+            assertThat(names).containsExactly("三精肾病医院");
+        }
+    }
+
+    @Test
+    void prefersDColumnHospitalNameOverColumnASummary() throws Exception {
+        try (XSSFWorkbook wb = new XSSFWorkbook()) {
+            Sheet sheet = wb.createSheet("账单");
+            sheet.createRow(7).createCell(3).setCellValue("呼兰中医院");
+            Row header = sheet.createRow(8);
+            header.createCell(0).setCellValue("发货日期");
+            header.createCell(4).setCellValue("包名");
+            header.createCell(8).setCellValue("单价");
+            header.createCell(9).setCellValue("总价");
+            sheet.createRow(9).createCell(0).setCellValue("三精肾病医院");
+
+            ByteArrayOutputStream bos = new ByteArrayOutputStream();
+            wb.write(bos);
+
+            List<String> names = ExcelBillImportSupport.extractHospitalDisplayNames(bos.toByteArray());
+            assertThat(names).containsExactly("呼兰中医院");
         }
     }
 }

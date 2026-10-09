@@ -87,26 +87,30 @@ public class ReconciliationPricingOrchestrator {
                 && clerkCompiled != null
                 && result.expectedUnitPrice != null
                 && result.expectedUnitPrice > 0) {
+            double preDiscountUnit = result.expectedUnitPrice;
             BillRowItem discountRow = toBillRowItem(rowMap);
-            discountRow.setExpectedUnitPrice(result.expectedUnitPrice);
-            discountRow.setUnitPrice(result.expectedUnitPrice);
-            List<BillRowItem> discounted = exportStageDiscountApplier.apply(clerkCompiled, List.of(discountRow));
-            if (!discounted.isEmpty()) {
-                BillRowItem after = discounted.get(0);
-                if (after.getExpectedUnitPrice() != null
-                        && Math.abs(after.getExpectedUnitPrice() - result.expectedUnitPrice) > 0.001) {
-                    clerkDiscountRuleName = extractDiscountRuleName(after);
-                    priceAfterDiscount = after.getExpectedUnitPrice();
-                    result.expectedUnitPrice = priceAfterDiscount;
-                    calculationSteps.add("内勤折扣："
-                            + (clerkDiscountRuleName != null ? clerkDiscountRuleName : "已应用"));
-                    if (after.getNotes() != null) {
-                        if (result.notes == null) {
-                            result.notes = new ArrayList<>();
-                        }
-                        result.notes.addAll(after.getNotes());
-                    }
+            discountRow.setOriginal(null);
+            discountRow.setExpectedUnitPrice(preDiscountUnit);
+            discountRow.setUnitPrice(preDiscountUnit);
+            Optional<ExportStageDiscountApplier.ClerkDiscountHit> hit =
+                    exportStageDiscountApplier.tryApplyDiscount(
+                            clerkCompiled, discountRow, Set.of(), customerCode);
+            if (hit.isPresent()
+                    && Math.abs(hit.get().unitPriceAfter() - preDiscountUnit) > 0.001) {
+                ExportStageDiscountApplier.ClerkDiscountHit applied = hit.get();
+                clerkDiscountRuleName = applied.ruleName();
+                priceAfterDiscount = applied.unitPriceAfter();
+                result.expectedUnitPrice = priceAfterDiscount;
+                calculationSteps.add("内勤折扣："
+                        + (clerkDiscountRuleName != null ? clerkDiscountRuleName : "已应用"));
+                if (result.notes == null) {
+                    result.notes = new ArrayList<>();
                 }
+                result.notes.add(String.format(
+                        "导出阶段折扣：%s，单价 %.2f",
+                        clerkDiscountRuleName != null ? clerkDiscountRuleName : "客户折扣",
+                        priceAfterDiscount));
+                syncCorrectionTotals(result, rowMap);
             }
         }
 
@@ -267,5 +271,19 @@ public class ReconciliationPricingOrchestrator {
 
     private static double round2(double value) {
         return Math.round(value * 100.0) / 100.0;
+    }
+
+    /** 内勤折扣改写规则单价后，同步修正总价/差额/状态（与 applyBatchCorrection 口径一致）。 */
+    private static void syncCorrectionTotals(PricingEngine.ProcessedResult result, Map<String, Object> rowMap) {
+        if (result.expectedUnitPrice == null) {
+            return;
+        }
+        int packs = Math.max(intVal(rowMap, "packCount", 1), 1);
+        double correctedTotal = round2(result.expectedUnitPrice * packs);
+        result.correctedTotalPrice = correctedTotal;
+        Double totalPrice = doubleVal(rowMap, "totalPrice");
+        double originalTotal = totalPrice != null ? totalPrice : 0.0;
+        result.difference = round2(correctedTotal - originalTotal);
+        result.status = Math.abs(result.difference) > 0.001 ? "corrected" : "unchanged";
     }
 }

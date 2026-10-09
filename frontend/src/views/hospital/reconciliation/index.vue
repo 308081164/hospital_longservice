@@ -104,7 +104,6 @@
             @save-changes="handleSaveEntryChanges(entry)"
             @reprice="handleRepriceEntry(entry)"
             @open-clerk-rules="openClerkRulesDrawer(entry)"
-            @open-unmatched="openUnmatchedGuide(entry)"
             @export-anomaly="openExportAnomalyDialog(entry)"
             @page-change="(p) => onEntryPageChange(entry, p)"
             @open-pricing-flow="openPricingFlowDetail"
@@ -182,43 +181,6 @@
       </ElButton>
     </template>
   </ElDialog>
-
-  <ElDrawer v-model="unmatchedDrawerVisible" title="待建档产品引导" size="560px" destroy-on-close>
-    <ElAlert
-      v-if="unmatchedLoading"
-      type="info"
-      :closable="false"
-      title="正在分析未命中产品..."
-      class="mb-4"
-    />
-    <div v-else class="space-y-3">
-      <p class="text-sm text-gray-500"
-        >共 {{ unmatchedItems.length }} 项未在产品库命中，可快捷录入建档。</p
-      >
-      <div
-        v-for="(item, idx) in unmatchedItems"
-        :key="idx"
-        class="rounded-lg border border-gray-200 p-3"
-      >
-        <div class="font-medium text-gray-800">{{ item.pack_name }}</div>
-        <div class="mt-1 text-xs text-gray-500">
-          {{ item.type }} · {{ item.package_material }} · {{ item.row_count }} 行
-        </div>
-        <div class="mt-1 text-xs text-blue-600">
-          建议族：{{ item.suggested_family }}（{{ item.suggested_category_code }}）
-        </div>
-        <ElButton
-          class="mt-2"
-          size="small"
-          type="primary"
-          :loading="onboardingKey === `${item.pack_name}|${item.type}`"
-          @click="quickOnboardFromUnmatched(item)"
-        >
-          快捷录入
-        </ElButton>
-      </div>
-    </div>
-  </ElDrawer>
 </template>
 
 <script lang="ts">
@@ -359,8 +321,6 @@
     allAnomalyRows: ProcessedRow[] | null
     /** 异常模式加载中 */
     anomalyLoading: boolean
-    /** 未命中产品数量 */
-    unmatchedCount?: number | null
     /** 保存后按科室筛选（sheetName） */
     selectedSheetFilter: string | null
     /** 各科室行数（保存后来自后端） */
@@ -945,12 +905,9 @@
     importHospitalReconciliation,
     listHospitalReconciliations,
     getReconciliationRows,
-    getUnmatchedProducts,
     repriceReconciliationRow,
-    updateHospitalReconciliationRows,
-    type UnmatchedProductItem
+    updateHospitalReconciliationRows
   } from '@/api/hospital/reconciliationsApi'
-  import { quickOnboardProduct } from '@/api/master-data/productsApi'
   import {
     isPlaceholderHospitalName,
     resolveHospitalBadgeName
@@ -1353,11 +1310,6 @@
   const exportIncludeFieldConsistency = ref(false)
   const exportAnomalyLoading = ref(false)
 
-  const unmatchedDrawerVisible = ref(false)
-  const unmatchedLoading = ref(false)
-  const unmatchedItems = ref<UnmatchedProductItem[]>([])
-  const unmatchedJobId = ref<number | null>(null)
-  const onboardingKey = ref('')
 
   const effectiveRules = computed(() => activeRule.value?.rules ?? null)
 
@@ -1493,7 +1445,6 @@
       anomalyCategoryFilters: [],
       allAnomalyRows: null,
       anomalyLoading: false,
-      unmatchedCount: null,
       selectedSheetFilter: null,
       savedSheetRowCounts: null,
       savedSheetWarningCounts: null,
@@ -1721,7 +1672,7 @@
     }
     entry.displayTotal = saved.totalRows ?? 0
     entry.displayPage = 1
-    await Promise.all([loadEntryPage(entry, 1), refreshEntryHistory(), refreshUnmatchedCount(entry)])
+    await Promise.all([loadEntryPage(entry, 1), refreshEntryHistory()])
     entry.status = 'saved'
     entry.errorMessage = ''
   }
@@ -1788,58 +1739,6 @@
       }
     } finally {
       entry.sheetFilterLoading = false
-    }
-  }
-
-  async function refreshUnmatchedCount(entry: UploadEntry) {
-    if (!entry.savedJobId) return
-    try {
-      const result = await getUnmatchedProducts(entry.savedJobId)
-      entry.unmatchedCount = result.unmatched_count
-    } catch {
-      entry.unmatchedCount = null
-    }
-  }
-
-  async function openUnmatchedGuide(entry: UploadEntry) {
-    if (!entry.savedJobId) return
-    unmatchedJobId.value = entry.savedJobId
-    unmatchedDrawerVisible.value = true
-    unmatchedLoading.value = true
-    try {
-      const result = await getUnmatchedProducts(entry.savedJobId)
-      unmatchedItems.value = result.items ?? []
-      entry.unmatchedCount = result.unmatched_count
-    } catch {
-      unmatchedItems.value = []
-      ElMessage.error('加载未命中产品失败')
-    } finally {
-      unmatchedLoading.value = false
-    }
-  }
-
-  async function quickOnboardFromUnmatched(item: UnmatchedProductItem) {
-    const key = `${item.pack_name}|${item.type ?? ''}`
-    onboardingKey.value = key
-    try {
-      await quickOnboardProduct({
-        familyName: item.suggested_family || item.pack_name,
-        packName: item.pack_name,
-        type: item.type,
-        packageMaterial: item.package_material,
-        categoryCode: item.suggested_category_code
-      })
-      ElMessage.success(`已建档：${item.suggested_family || item.pack_name}`)
-      if (unmatchedJobId.value) {
-        const result = await getUnmatchedProducts(unmatchedJobId.value)
-        unmatchedItems.value = result.items ?? []
-        const entry = uploadEntries.value.find((e) => e.savedJobId === unmatchedJobId.value)
-        if (entry) entry.unmatchedCount = result.unmatched_count
-      }
-    } catch {
-      ElMessage.error('快捷录入失败')
-    } finally {
-      onboardingKey.value = ''
     }
   }
 

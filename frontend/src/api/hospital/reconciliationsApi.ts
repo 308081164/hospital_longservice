@@ -127,25 +127,6 @@ export function getReconciliationRows(jobId: number, page = 1, size = 200, sheet
   })
 }
 
-export interface UnmatchedProductItem {
-  pack_name: string
-  type?: string
-  package_material?: string
-  row_count: number
-  total_difference?: number
-  suggested_family?: string
-  spec_fingerprint?: string
-  suggested_category_code?: string
-  likely_small_item?: boolean
-  matched_needle_keywords?: string[]
-}
-
-export function getUnmatchedProducts(jobId: number) {
-  return request.get<{ job_id: number; unmatched_count: number; items: UnmatchedProductItem[] }>({
-    url: `/api/hospital-reconciliations/${jobId}/unmatched-products`,
-  })
-}
-
 /** 重新定价：使用任务关联的计费规则重新计算所有行（不保存，仅供预览） */
 export interface RepriceResult {
   rows: Record<string, unknown>[]

@@ -34,7 +34,6 @@
       "skipDiscount": true,
       "isActive": true,
       "matchMode": "first",
-      "conditionsJson": "[{\"field\":\"manualReview\",\"value\":true}]",
       "acceptedTypes": [
         "额外包（纸塑袋）"
       ]
@@ -50,7 +49,7 @@
       "minInstrumentCount": 3,
       "skipPackaging": true,
       "skipDiscount": true,
-      "isActive": true,
+      "isActive": false,
       "matchMode": "first",
       "conditionsJson": "[{\"field\":\"manualReview\",\"value\":true}]",
       "acceptedTypes": [

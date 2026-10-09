@@ -112,6 +112,7 @@ class PackNameSpecParserTest {
     private static Stream<Arguments> skipPieceCountCases() {
         return Stream.of(
                 Arguments.of("车针架1针4/Z1026"),
+                Arguments.of("针架-1针-6/Z1020"),
                 Arguments.of("手机721001/z7526"),
                 Arguments.of("手机5X1729/z7526"),
                 Arguments.of("手机-Z0034/z7526"));
