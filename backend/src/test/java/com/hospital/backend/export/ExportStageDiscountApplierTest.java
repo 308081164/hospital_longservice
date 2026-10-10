@@ -195,6 +195,26 @@ class ExportStageDiscountApplierTest {
     }
 
     @Test
+    void doesNotDiscountTwiceWhenOrchestratorAlreadyRecordedTheRule() {
+        ObjectNode rules = mapper.createObjectNode();
+        ArrayNode policies = rules.putArray("billingPolicies");
+        ObjectNode policy = policies.addObject();
+        policy.put("policyType", "DISCOUNT");
+        policy.put("name", "标准价七折");
+        policy.putObject("scope").put("temperature", "ANY");
+        ObjectNode params = policy.putObject("params");
+        params.put("applyStage", "export_only");
+        params.put("rate", 0.7);
+
+        BillRowItem row = row(1, 24.5);
+        row.setNotes(List.of("导出阶段折扣：标准价七折，单价 24.50"));
+
+        List<BillRowItem> result = applier.apply(rules, List.of(row));
+        assertThat(result.get(0).getUnitPrice()).isEqualTo(24.5);
+        assertThat(result.get(0).getExpectedUnitPrice()).isEqualTo(24.5);
+    }
+
+    @Test
     void tierThreeRateAppliesOnlyWhenOriginalUnitMatches() {
         List<BillingPolicyApplier.PieceTierDiscount> tiers = List.of(
                 new BillingPolicyApplier.PieceTierDiscount(1, 2, 0.75, 2, null, null),

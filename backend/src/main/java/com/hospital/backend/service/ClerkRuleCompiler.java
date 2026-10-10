@@ -31,11 +31,23 @@ public class ClerkRuleCompiler {
         if (baseline == null || !baseline.isObject()) {
             return null;
         }
+        return compileBaseline(baseline, customerCode);
+    }
+
+    /**
+     * 编译一份内勤 baseline。账单面对账折扣（含历史 {@code PRICE_VALIDATE_ONLY} /
+     * {@code validateOnly}）会生成真正改写规则单价的 export_only 折扣策略。
+     */
+    public ObjectNode compileBaseline(JsonNode baseline, String customerCode) {
+        if (baseline == null || !baseline.isObject()) {
+            return null;
+        }
         ObjectNode compiled = MAPPER.createObjectNode();
         ArrayNode billingPolicies = MAPPER.createArrayNode();
         ArrayNode fixedPrices = MAPPER.createArrayNode();
         ArrayNode exportLayouts = MAPPER.createArrayNode();
         ArrayNode clerkRules = MAPPER.createArrayNode();
+        ObjectNode settlementPackSplit = null;
 
         JsonNode rules = baseline.path("rules");
         if (rules.isArray()) {
@@ -49,12 +61,16 @@ public class ClerkRuleCompiler {
                 switch (ruleType) {
                     case "DISCOUNT_OVERLAY":
                     case "PIECE_TIER_DISCOUNT":
-                        if (stageTargetsBillExport(stage)
-                                && !rule.path("params").path("validateOnly").asBoolean(false)) {
-                            billingPolicies.add(toDiscountPolicy(rule, BillingPolicyApplier.STAGE_EXPORT_ONLY));
+                        if (stageTargetsBillExport(stage)) {
+                            billingPolicies.add(toApplyingBillDiscountPolicy(rule));
                         }
                         if (stageTargetsSettlement(stage)) {
                             billingPolicies.add(toDiscountPolicy(rule, BillingPolicyApplier.STAGE_SETTLEMENT_ONLY));
+                        }
+                        break;
+                    case "PRICE_VALIDATE_ONLY":
+                        if (stageTargetsBillExport(stage) && hasBillFacingDiscountRate(rule)) {
+                            billingPolicies.add(toApplyingBillDiscountPolicy(rule));
                         }
                         break;
                     case "SETTLEMENT_DISCOUNT":
@@ -97,10 +113,19 @@ public class ClerkRuleCompiler {
                     case "MONTHLY_SUPPLEMENT_REPORT":
                         // 保留在 clerkRules；exportSupplementTypes 另收集
                         break;
+                    case "SETTLEMENT_PACK_SPLIT":
+                        if (stageTargetsSettlement(stage) && rule.path("params").isObject()) {
+                            settlementPackSplit = (ObjectNode) rule.path("params").deepCopy();
+                        }
+                        break;
                     default:
                         break;
                 }
             }
+        }
+
+        if (settlementPackSplit != null) {
+            compiled.set("settlementPackSplit", settlementPackSplit);
         }
 
         ArrayNode supplementTypes = collectExportSupplementTypes(rules);
@@ -191,6 +216,28 @@ public class ClerkRuleCompiler {
         params.put("rate", rate);
         policy.set("params", params);
         return policy;
+    }
+
+    /**
+     * 账单导出/对账行折扣：忽略 validateOnly，让规则单价等于折后价。
+     * 结款阶段策略仍走 {@link #toDiscountPolicy}，不在这里改结算口径。
+     */
+    private ObjectNode toApplyingBillDiscountPolicy(JsonNode rule) {
+        ObjectNode policy = toDiscountPolicy(rule, BillingPolicyApplier.STAGE_EXPORT_ONLY);
+        JsonNode params = policy.get("params");
+        if (params instanceof ObjectNode objectParams) {
+            objectParams.remove("validateOnly");
+        }
+        return policy;
+    }
+
+    private static boolean hasBillFacingDiscountRate(JsonNode rule) {
+        JsonNode params = rule.path("params");
+        if (params.path("pieceTierDiscounts").isArray() && !params.path("pieceTierDiscounts").isEmpty()) {
+            return true;
+        }
+        double rate = params.path("rate").asDouble(Double.NaN);
+        return !Double.isNaN(rate) && rate > 0 && rate < 1.0;
     }
 
     private ObjectNode toDiscountPolicy(JsonNode rule, String applyStage) {

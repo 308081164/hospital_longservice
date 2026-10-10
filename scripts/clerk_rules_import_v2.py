@@ -286,8 +286,8 @@ def parse_bill_row(row: tuple, hospital: str, idx: int) -> list[dict]:
         return rules
 
     if pack_type and "标准价格七折" in str(pack_type):
-        rules.append(_rule("标准价七折校对", "PRICE_VALIDATE_ONLY", "bill_export",
-                           {"rate": 0.7, "validateOnly": True}, str(pack_type), ref))
+        rules.append(_rule("标准价七折", "DISCOUNT_OVERLAY", "bill_export",
+                           {"rate": 0.7}, str(pack_type), ref))
         return rules
     if pack_type and "标准价格六折" in str(pack_type):
         rules.append(_rule("标准价六折", "DISCOUNT_OVERLAY", "bill_export",

@@ -65,6 +65,9 @@ public class ExportStageDiscountApplier {
             if (params.path("validateOnly").asBoolean(false)) {
                 continue;
             }
+            if (discountAlreadyApplied(row, policy)) {
+                continue;
+            }
             boolean skipAlreadyDiscounted = params.path("skipWhenAlreadyDiscounted").asBoolean(false);
             if (!skipAlreadyDiscounted && importUnit > baseUnit + 0.02) {
                 baseUnit = importUnit;
@@ -136,6 +139,24 @@ public class ExportStageDiscountApplier {
         notes.add("导出阶段折扣：" + policy.path("name").asText("客户折扣")
                 + "，单价 " + String.format("%.2f", discounted));
         row.setNotes(notes);
+    }
+
+    /** 对账编排已把折后价写入规则单价并记下备注时，导出不再乘第二次。 */
+    private boolean discountAlreadyApplied(BillRowItem row, JsonNode policy) {
+        if (row.getNotes() == null || row.getNotes().isEmpty()) {
+            return false;
+        }
+        String name = policy.path("name").asText("").trim();
+        if (name.isEmpty()) {
+            return false;
+        }
+        String marker = "导出阶段折扣：" + name;
+        for (String note : row.getNotes()) {
+            if (note != null && note.contains(marker)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     private Double resolveOriginalImportUnit(BillRowItem row) {

@@ -41,15 +41,11 @@ public class ClerkBillPriceRuleApplier {
             return Optional.empty();
         }
         rules.sort(Comparator.comparingInt(r -> r.path("priority").asInt(100)));
-        for (JsonNode rule : rules) {
-            if (isRuleDisabled(rule, customerCode, disabledRuleIds)) {
-                continue;
-            }
-            if (matches(rule.path("params"), row)) {
-                double exportTotal = computeExportTotal(row, rule.path("params"));
-                if (exportTotal >= 0) {
-                    return Optional.of(new PriceRuleMatch(rule, exportTotal));
-                }
+        JsonNode matched = selectBestPriceRule(rules, row, customerCode, disabledRuleIds);
+        if (matched != null) {
+            double exportTotal = computeExportTotal(row, matched.path("params"));
+            if (exportTotal >= 0) {
+                return Optional.of(new PriceRuleMatch(matched, exportTotal));
             }
         }
         return Optional.empty();
@@ -60,25 +56,24 @@ public class ClerkBillPriceRuleApplier {
             return new ApplyResult(rows, List.of());
         }
         List<JsonNode> rules = collectPriceRules(compiledClerk);
-        if (rules.isEmpty()) {
-            return new ApplyResult(rows, List.of());
-        }
         rules.sort(Comparator.comparingInt(r -> r.path("priority").asInt(100)));
         List<String> warnings = new ArrayList<>();
         for (BillRowItem row : rows) {
-            JsonNode matched = findMatch(rules, row);
-            if (matched != null) {
-                JsonNode params = matched.path("params");
-                double exportTotal = computeExportTotal(row, params);
-                if (exportTotal >= 0) {
-                    row.setTotalPrice(exportTotal);
-                    if (row.getPackCount() != null && row.getPackCount() > 0) {
-                        row.setUnitPrice(exportTotal / row.getPackCount());
-                    } else {
-                        row.setUnitPrice(exportTotal);
+            if (!rules.isEmpty()) {
+                JsonNode matched = findMatch(rules, row);
+                if (matched != null) {
+                    JsonNode params = matched.path("params");
+                    double exportTotal = computeExportTotal(row, params);
+                    if (exportTotal >= 0) {
+                        row.setTotalPrice(exportTotal);
+                        if (row.getPackCount() != null && row.getPackCount() > 0) {
+                            row.setUnitPrice(exportTotal / row.getPackCount());
+                        } else {
+                            row.setUnitPrice(exportTotal);
+                        }
                     }
+                    maybeValidateSystemPrice(row, params, warnings);
                 }
-                maybeValidateSystemPrice(row, params, warnings);
             }
             validatePriceOnlyRules(compiledClerk, row, warnings);
         }
@@ -108,12 +103,7 @@ public class ClerkBillPriceRuleApplier {
     }
 
     private JsonNode findMatch(List<JsonNode> rules, BillRowItem row) {
-        for (JsonNode rule : rules) {
-            if (matches(rule.path("params"), row)) {
-                return rule;
-            }
-        }
-        return null;
+        return selectBestPriceRule(rules, row, null, null);
     }
 
     private boolean matches(JsonNode params, BillRowItem row) {
@@ -172,7 +162,7 @@ public class ClerkBillPriceRuleApplier {
             return true;
         }
         String actual = rowMaterial != null ? rowMaterial : "";
-        return actual.contains(expected) || normalize(actual).contains(normalize(expected));
+        return ClerkPackagingMaterialMatcher.matches(expected, actual);
     }
 
     private boolean matchesInstrumentRange(String rangeExpr, BillRowItem row) {
@@ -180,7 +170,8 @@ public class ClerkBillPriceRuleApplier {
             return true;
         }
         int count = instrumentCount(row);
-        String normalized = rangeExpr.replace(" ", "").replace("＞", ">");
+        String normalized = rangeExpr.replace(" ", "").replace("＞", ">").replace("＜", "<");
+        normalized = normalizeInstrumentRangeExpr(normalized);
         Matcher m = RANGE_PATTERN.matcher(normalized);
         if (!m.matches()) {
             return true;
@@ -285,6 +276,21 @@ public class ClerkBillPriceRuleApplier {
         return row.getPackCount() != null && row.getPackCount() > 0 ? row.getPackCount() : 1;
     }
 
+    private static String normalizeInstrumentRangeExpr(String expr) {
+        if (expr == null || expr.isBlank()) {
+            return expr;
+        }
+        Matcher nLowerBound = Pattern.compile("^N≥(\\d+)$").matcher(expr);
+        if (nLowerBound.matches()) {
+            return nLowerBound.group(1) + "≤N";
+        }
+        Matcher nUpperBound = Pattern.compile("^N≤(\\d+)$").matcher(expr);
+        if (nUpperBound.matches()) {
+            return "N<" + (Integer.parseInt(nUpperBound.group(1)) + 1);
+        }
+        return expr.replace("≥", ">=").replace("≤", "<=");
+    }
+
     private static String normalize(String text) {
         return text == null ? "" : text.replaceAll("\\s+", "");
     }
@@ -309,28 +315,68 @@ public class ClerkBillPriceRuleApplier {
             return Optional.empty();
         }
         rules.sort(Comparator.comparingInt(r -> r.path("priority").asInt(100)));
-        for (JsonNode rule : rules) {
-            String ruleName = rule.path("name").asText("");
-            if (isRuleDisabled(disabledRuleIds, customerCode, ruleName)) {
-                continue;
+        JsonNode matched = selectBestPriceRule(rules, row, customerCode, disabledRuleIds);
+        if (matched != null) {
+            String ruleName = matched.path("name").asText("");
+            JsonNode params = matched.path("params");
+            double exportTotal = computeExportTotal(row, params);
+            if (exportTotal >= 0) {
+                int packCount = packCount(row);
+                double unitPrice = packCount > 0 ? round2(exportTotal / packCount) : round2(exportTotal);
+                return Optional.of(new ClerkPriceHit(
+                        ruleName,
+                        matched.path("ruleType").asText(""),
+                        unitPrice,
+                        matched));
             }
-            if (!matches(rule.path("params"), row)) {
+        }
+        return Optional.empty();
+    }
+
+    private JsonNode selectBestPriceRule(
+            List<JsonNode> rules,
+            BillRowItem row,
+            String customerCode,
+            Set<String> disabledRuleIds) {
+        JsonNode best = null;
+        int bestPriority = Integer.MAX_VALUE;
+        boolean bestSpecificPackaging = false;
+        for (JsonNode rule : rules) {
+            if (disabledRuleIds != null
+                    && isRuleDisabled(rule, customerCode, disabledRuleIds)) {
                 continue;
             }
             JsonNode params = rule.path("params");
-            double exportTotal = computeExportTotal(row, params);
-            if (exportTotal < 0) {
+            if (!matches(params, row)) {
                 continue;
             }
-            int packCount = packCount(row);
-            double unitPrice = packCount > 0 ? round2(exportTotal / packCount) : round2(exportTotal);
-            return Optional.of(new ClerkPriceHit(
-                    ruleName,
-                    rule.path("ruleType").asText(""),
-                    unitPrice,
-                    rule));
+            boolean specificPackaging = hasPackagingConstraint(params);
+            int priority = rule.path("priority").asInt(100);
+            if (best == null) {
+                best = rule;
+                bestPriority = priority;
+                bestSpecificPackaging = specificPackaging;
+                continue;
+            }
+            if (specificPackaging && !bestSpecificPackaging) {
+                best = rule;
+                bestPriority = priority;
+                bestSpecificPackaging = true;
+                continue;
+            }
+            if (specificPackaging == bestSpecificPackaging && priority < bestPriority) {
+                best = rule;
+                bestPriority = priority;
+            }
         }
-        return Optional.empty();
+        return best;
+    }
+
+    private static boolean hasPackagingConstraint(JsonNode params) {
+        if (params == null || !params.has("packagingMaterial") || params.path("packagingMaterial").isNull()) {
+            return false;
+        }
+        return !params.path("packagingMaterial").asText("").isBlank();
     }
 
     public static boolean isRuleDisabled(Set<String> disabledRuleIds, String customerCode, String ruleName) {

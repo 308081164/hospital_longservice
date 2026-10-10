@@ -45,7 +45,7 @@
           "ruleType": "LOGISTICS_FEE"
         },
         {
-          "ruleType": "PRICE_VALIDATE_ONLY"
+          "ruleType": "DISCOUNT_OVERLAY"
         }
       ]
     },
@@ -58,7 +58,7 @@
           "ruleType": "LOGISTICS_FEE"
         },
         {
-          "ruleType": "PRICE_VALIDATE_ONLY"
+          "ruleType": "DISCOUNT_OVERLAY"
         }
       ]
     },

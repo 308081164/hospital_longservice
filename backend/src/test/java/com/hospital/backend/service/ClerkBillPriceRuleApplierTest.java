@@ -17,6 +17,40 @@ class ClerkBillPriceRuleApplierTest {
     private final ClerkRuleCompiler compiler = new ClerkRuleCompiler(new ClerkRuleIndex());
 
     @Test
+    void matchesPaperPlasticDimensionToCmTierForSanjing() {
+        ObjectNode compiled = compiler.compileForCustomer("SANJING-SB");
+        BillRowItem row = new BillRowItem();
+        row.setType("额外包(纸塑袋)");
+        row.setPackName("盘-1/Z3032");
+        row.setPackageMaterial("高温纸塑袋300*320");
+        row.setInstrumentCount(1);
+        row.setPackCount(1);
+        row.setTotalPrice(30.0);
+
+        var match = applier.findMatchingPriceRule(compiled, row, "SANJING-SB", java.util.Set.of());
+        assertThat(match).isPresent();
+        assertThat(match.get().rule().path("params").path("packagingMaterial").asText()).isEqualTo("25cm");
+        assertThat(match.get().exportTotal()).isEqualTo(12.8);
+    }
+
+    @Test
+    void matchesPaperPlasticDimensionToCmTierForSanjing20cm() {
+        ObjectNode compiled = compiler.compileForCustomer("SANJING-SB");
+        BillRowItem row = new BillRowItem();
+        row.setType("额外包(纸塑袋)");
+        row.setPackName("测试");
+        row.setPackageMaterial("高温纸塑袋200*250");
+        row.setInstrumentCount(1);
+        row.setPackCount(1);
+        row.setTotalPrice(30.0);
+
+        var match = applier.findMatchingPriceRule(compiled, row, "SANJING-SB", java.util.Set.of());
+        assertThat(match).isPresent();
+        assertThat(match.get().rule().path("params").path("packagingMaterial").asText()).isEqualTo("20cm");
+        assertThat(match.get().exportTotal()).isEqualTo(10.4);
+    }
+
+    @Test
     void appliesPerPiecePriceForDaowaiInstrumentPack() {
         ObjectNode compiled = compiler.compileForCustomer("DAOWAI-RM");
         BillRowItem row = new BillRowItem();
@@ -55,23 +89,28 @@ class ClerkBillPriceRuleApplierTest {
     }
 
     @Test
-    void validatesPriceOnlyRuleWithoutChangingExportPrice() {
+    void eryyNgBillDiscountRewritesRuleUnitPrice() {
         ObjectNode compiled = compiler.compileForCustomer("ERYY-NG");
+        assertThat(compiled).isNotNull();
         BillRowItem row = new BillRowItem();
         row.setRowNumber(5);
         row.setPackName("测试包");
+        row.setType("额外包(纸塑袋)");
+        row.setPackageMaterial("高温纸塑袋100*200");
+        row.setPackCount(1);
+        row.setInstrumentCount(1);
         row.setExpectedUnitPrice(100.0);
-        row.setUnitPrice(70.0);
-        row.setTotalPrice(70.0);
+        row.setUnitPrice(100.0);
+        row.setTotalPrice(100.0);
 
-        var passResult = applier.apply(compiled, List.of(row));
-        assertThat(passResult.rows().get(0).getUnitPrice()).isEqualTo(70.0);
-        assertThat(passResult.validationWarnings()).isEmpty();
+        var priced = applier.apply(compiled, List.of(row));
+        assertThat(priced.rows().get(0).getUnitPrice()).isEqualTo(100.0);
+        assertThat(priced.validationWarnings()).isEmpty();
 
-        row.setUnitPrice(80.0);
-        var warnResult = applier.apply(compiled, List.of(row));
-        assertThat(warnResult.rows().get(0).getUnitPrice()).isEqualTo(80.0);
-        assertThat(warnResult.validationWarnings()).isNotEmpty();
+        var discounted = new com.hospital.backend.export.ExportStageDiscountApplier()
+                .apply(compiled, priced.rows());
+        assertThat(discounted.get(0).getExpectedUnitPrice()).isEqualTo(70.0);
+        assertThat(discounted.get(0).getUnitPrice()).isEqualTo(70.0);
     }
 
     @Test

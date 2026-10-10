@@ -6,13 +6,12 @@
   "attachmentRefs": [],
   "rules": [
     {
-      "ruleType": "PRICE_VALIDATE_ONLY",
-      "name": "标准价七折校对",
+      "ruleType": "DISCOUNT_OVERLAY",
+      "name": "标准价七折",
       "stage": "bill_export",
       "isActive": true,
       "params": {
-        "rate": 0.7,
-        "validateOnly": true
+        "rate": 0.7
       },
       "sourceText": "标准价格七折",
       "sourceRef": "excel:账单规则#黑龙江省第二医院（南岗区）#1",

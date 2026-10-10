@@ -1476,9 +1476,7 @@ public class HospitalReconciliationServiceImpl implements HospitalReconciliation
                 if ("clerk_price".equals(group)) {
                     priceRuleCount++;
                 } else if ("clerk_discount".equals(group)) {
-                    if (!rule.path("params").path("validateOnly").asBoolean(false)) {
-                        discountRuleCount++;
-                    }
+                    discountRuleCount++;
                 }
             }
         }
@@ -1526,7 +1524,9 @@ public class HospitalReconciliationServiceImpl implements HospitalReconciliation
         if ("BILL_EXPORT_PRICE_RULE".equals(ruleType) || "PACK_NAME_PRICE".equals(ruleType)) {
             return "clerk_price";
         }
-        if ("DISCOUNT_OVERLAY".equals(ruleType) || "PIECE_TIER_DISCOUNT".equals(ruleType)) {
+        if ("DISCOUNT_OVERLAY".equals(ruleType)
+                || "PIECE_TIER_DISCOUNT".equals(ruleType)
+                || "PRICE_VALIDATE_ONLY".equals(ruleType)) {
             return "clerk_discount";
         }
         return null;

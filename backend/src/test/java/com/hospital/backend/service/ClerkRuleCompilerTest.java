@@ -12,6 +12,14 @@ class ClerkRuleCompilerTest {
     private final ClerkRuleCompiler compiler = new ClerkRuleCompiler(new ClerkRuleIndex());
 
     @Test
+    void compilesHulanTcmSettlementPackSplit() {
+        ObjectNode compiled = compiler.compileForCustomer("HULAN-TCM");
+        assertThat(compiled).isNotNull();
+        assertThat(compiled.path("settlementPackSplit").path("deptKeyword").asText())
+                .isEqualTo("手术室（备包）");
+    }
+
+    @Test
     void compilesDaowaiBillExportPriceRules() {
         ObjectNode compiled = compiler.compileForCustomer("DAOWAI-RM");
         assertThat(compiled).isNotNull();
@@ -26,20 +34,49 @@ class ClerkRuleCompilerTest {
     }
 
     @Test
-    void compilesEryyValidateOnlyWithoutExportDiscountPolicy() {
+    void compilesEryyBillDiscountOntoExportPolicy() {
         ObjectNode compiled = compiler.compileForCustomer("ERYY-NG");
         assertThat(compiled).isNotNull();
         assertThat(compiler.hasActiveBillExportRules("ERYY-NG")).isTrue();
-        boolean hasValidateOnly = false;
-        for (JsonNode rule : compiled.path("clerkRules")) {
-            if ("PRICE_VALIDATE_ONLY".equals(rule.path("ruleType").asText())) {
-                hasValidateOnly = true;
-            }
-        }
-        assertThat(hasValidateOnly).isTrue();
+        boolean hasBillDiscount = false;
         for (JsonNode policy : compiled.path("billingPolicies")) {
+            if (!"DISCOUNT".equals(policy.path("policyType").asText())) {
+                continue;
+            }
+            if (!"export_only".equals(policy.path("params").path("applyStage").asText())) {
+                continue;
+            }
+            hasBillDiscount = true;
+            assertThat(policy.path("name").asText()).isEqualTo("标准价七折");
+            assertThat(policy.path("params").path("rate").asDouble()).isEqualTo(0.7);
             assertThat(policy.path("params").path("validateOnly").asBoolean(false)).isFalse();
         }
+        assertThat(hasBillDiscount).isTrue();
+    }
+
+    @Test
+    void legacyValidateOnlyPriceRuleStillAppliesBillDiscount() {
+        ObjectNode baseline = com.hospital.backend.common.JsonUtils.getObjectMapper().createObjectNode();
+        baseline.put("customerCode", "LEGACY");
+        var rules = baseline.putArray("rules");
+        var rule = rules.addObject();
+        rule.put("ruleType", "PRICE_VALIDATE_ONLY");
+        rule.put("name", "标准价七折校对");
+        rule.put("stage", "bill_export");
+        rule.put("isActive", true);
+        rule.putObject("params").put("rate", 0.7).put("validateOnly", true);
+
+        ObjectNode compiled = compiler.compileBaseline(baseline, "LEGACY");
+        assertThat(compiled).isNotNull();
+        JsonNode policy = null;
+        for (JsonNode candidate : compiled.path("billingPolicies")) {
+            if ("export_only".equals(candidate.path("params").path("applyStage").asText())) {
+                policy = candidate;
+            }
+        }
+        assertThat(policy).isNotNull();
+        assertThat(policy.path("params").path("rate").asDouble()).isEqualTo(0.7);
+        assertThat(policy.path("params").has("validateOnly")).isFalse();
     }
 
     @Test
