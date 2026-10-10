@@ -111,7 +111,7 @@ push main
   → 独立 job：post-deploy-parity-gate（生产对版只读闸门）
 ```
 
-另有 `prod-drift-watchdog.yml` 每 20 分钟定时巡检生产漂移（见 1.4）。
+另有 `prod-drift-watchdog.yml` 可手动巡检生产漂移（周期检查已关闭，见 1.4）。
 
 ### 1.2 根因分类（五类）
 
@@ -148,7 +148,7 @@ push main
 - **经过**：针盒 FOLD 修复合入 main 后，CI 单测（`ff8dd88d` 修复的期望值问题）失败，deploy job 被阻断。没有任何告警，团队数日未察觉生产仍跑旧代码。
 - **根因**：部署依赖 CI 绿灯，但 CI 红时没有主动通知；也没有「生产版本 vs main」的对版巡检。
 - **修复**：`ff8dd88d` 修复单测使流水线转绿。
-- **现行防护**：`prod-drift-watchdog.yml` 每 20 分钟比对生产 `/version` 的 gitSha 与 main HEAD，落后即 Actions 失败并邮件通知仓库 watcher。
+- **现行防护**：`prod-drift-watchdog.yml` 可手动比对生产 `/version` 的 gitSha 与 main HEAD（原每 20 分钟 cron 已关闭），落后即 Actions 失败并邮件通知仓库 watcher。
 
 #### 事故 3/5：`c25632b9` Job #800、`37050295` 市五院 Job #807（历史数据未重算）
 
@@ -191,7 +191,7 @@ push main
 | **frontend 延后替换** | `deploy.yml` 部署脚本 | 旧前端一直服务到 backend 通过硬闸门，消除额外停机/不一致窗口 |
 | **reconcile 状态落库** | `BillingRulesManifestReconciler` | reconcile 结果写入 DB marker（`billing_rules_manifest_reconcile_status`），`/version` 返回 `rulesReconcileStatus`/`rulesManifestHash`/`rulesReconciledAt` |
 | **一键体检 CLI** | `./bin/hospital-cli status` | L0 健康 → L1 版本/SHA 对版 → L6 规则 hash 对版 + reconcile 状态 → L8 billing_enabled 计数，一次跑完 |
-| **生产漂移巡检** | `.github/workflows/prod-drift-watchdog.yml` | 每 20 分钟比对生产版本/manifest hash/reconcile 状态与 main，漂移即失败并邮件通知（30 分钟部署在途宽限） |
+| **生产漂移巡检** | `.github/workflows/prod-drift-watchdog.yml` | 手动比对生产版本/manifest hash/reconcile 状态与 main（周期 cron 已关闭），漂移即失败并邮件通知（30 分钟部署在途宽限） |
 | **旧版本 SPA 强制失效** | `frontend/src/utils/sys/versionEnforcer.ts` 等（`51179c57`） | 构建生成 `dist/version.json` 指纹，运行时轮询比对；失配即清空 localStorage/sessionStorage/cookies，全屏阻断遮罩倒计时后 cache-bust 硬刷新；60s 防死循环窗口 |
 | **X-App-Version 响应头** | `AppVersionHeaderFilter` + axios 拦截器 | 后端所有响应（含 401）携带版本头；前端逐请求核对，已阻断时拒绝一切新请求 |
 | **nginx 禁缓存修复** | `deploy/nginx-frontend-shared-net.conf` | `/version.json` 禁缓存；补齐 SPA 回退 `no-cache, no-store, must-revalidate`（旧 HTML 缓存根因之一） |

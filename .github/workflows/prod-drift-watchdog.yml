@@ -1,4 +1,5 @@
-# 生产漂移巡检：定时比对「生产实际运行版本/规则 hash」与「main HEAD」。
+# 生产漂移巡检：比对「生产实际运行版本/规则 hash」与「main HEAD」。
+# 周期检查已关闭（原 schedule cron: "*/20 * * * *"）。需要时在 Actions 页手动运行。
 # 覆盖历史事故场景：
 #   - CI 单测失败阻断 deploy（49201f9b 针盒 FOLD 修复在 main 上但生产未更新，无人察觉）
 #   - 部署中途失败/部分部署（89bc9893）
@@ -7,8 +8,6 @@
 name: Prod Drift Watchdog
 
 on:
-  schedule:
-    - cron: "*/20 * * * *"
   workflow_dispatch:
 
 # 巡检只读，允许多实例但无意义，串行即可
