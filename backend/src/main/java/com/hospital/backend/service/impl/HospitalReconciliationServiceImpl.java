@@ -33,6 +33,8 @@ import com.hospital.backend.service.ReconciliationAnomalyDetector;
 import com.hospital.backend.service.ReconciliationHospitalNameResolver;
 import com.hospital.backend.service.ReconciliationVersionGroup;
 import com.hospital.backend.export.BillColumnLayout;
+import com.hospital.backend.export.BillExportColumnWidths;
+import com.hospital.backend.export.BillPrintFooter;
 import com.hospital.backend.export.BillExportLayoutResolver;
 import com.hospital.backend.export.D8DisplayNameResolver;
 import com.hospital.backend.export.ExportEngineService;
@@ -831,8 +833,14 @@ public class HospitalReconciliationServiceImpl implements HospitalReconciliation
             job.setOperatorName(operatorName);
             job.setSourceDateRange(dateRangeText);
             if (customerUnresolved) {
-                job.setReviewComment("customerUnresolved: 未能解析到系统客户「"
-                        + hospitalName + "」，特色规则未生效，请确认医院名称或别名配置。");
+                String clerkCode = clerkRuleIndex.resolveCustomerCodeByHospitalName(hospitalName);
+                if (clerkCode != null) {
+                    job.setReviewComment("customerUnresolved: 系统客户档案未收录「"
+                            + hospitalName + "」，已按内勤规则 " + clerkCode + " 计算账单折扣。");
+                } else {
+                    job.setReviewComment("customerUnresolved: 未能解析到系统客户「"
+                            + hospitalName + "」，特色规则未生效，请确认医院名称或别名配置。");
+                }
             }
 
             // 8. 保存任务后关联物流导入并计算物流费
@@ -2918,25 +2926,8 @@ public class HospitalReconciliationServiceImpl implements HospitalReconciliation
         // A(0)=窄分隔 B(1)=日期标签 C(2)=窄分隔
         // D(3)=发货日期 E(4)=发货单号 F(5)=类型
         // G(6)=包类别号 H(7)=包名 I(8)=包数 J(9)=单价 K(10)=总价
-        sheet.setColumnWidth(0, (int) (2.0 * 256));
-        sheet.setColumnWidth(1, (int) (13.0 * 256));
-        sheet.setColumnWidth(2, (int) (2.0 * 256));
-        sheet.setColumnWidth(3, (int) (15.5 * 256));
-        sheet.setColumnWidth(4, (int) (15.5 * 256));
-        sheet.setColumnWidth(5, (int) (12.0 * 256));   // F列 — 类型
-        sheet.setColumnWidth(6, (int) (18.0 * 256));
-        sheet.setColumnWidth(7, (int) (30.0 * 256));
-        sheet.setColumnWidth(8, (int) (10.0 * 256));   // I列 — 包数
-        if (columnLayout.isExtended()) {
-            sheet.setColumnWidth(9, (int) (18.0 * 256));   // J列 — 包装材料
-            sheet.setColumnWidth(10, (int) (14.0 * 256));  // K列 — 单包内器械数量/把
-            sheet.setColumnWidth(11, (int) (12.0 * 256));  // L列 — 单价（把）
-            sheet.setColumnWidth(12, (int) (12.0 * 256));  // M列 — 单价
-            sheet.setColumnWidth(13, (int) (12.0 * 256));  // N列 — 总价
-        } else {
-            sheet.setColumnWidth(9, (int) (12.0 * 256));   // J列 — 单价
-            sheet.setColumnWidth(10, (int) (12.0 * 256));  // K列 — 总价
-        }
+        // 类型 28、包名 42（字符单位），保证中文单行可见；见 BillExportColumnWidths。
+        BillExportColumnWidths.applyTemplateWidths(sheet, columnLayout);
 
         // -- 字体 --
         XSSFFont font10 = wb.createFont();
@@ -3258,6 +3249,9 @@ public class HospitalReconciliationServiceImpl implements HospitalReconciliation
                         log.info("postProcessBillExport: sheet[{}] skip autoSizeColumn ({} rows > threshold {})",
                                 workbook.getSheetName(i), rowCount, BILL_EXPORT_AUTO_SIZE_ROW_THRESHOLD);
                     }
+                    // 自动列宽会把汉字列估窄；类型/包名保持可读下限，且不改回按页宽缩放。
+                    BillExportColumnWidths.enforceReadableMinimums(sheet, headerRow);
+                    applyBillPrintFooter(sheet);
 
                     // 4. 第10行（首行数据）灰色底色（D 至 maxCol）
                     if (shouldApplyBillExportRowDecorations(rowCount)) {
@@ -4329,6 +4323,13 @@ public class HospitalReconciliationServiceImpl implements HospitalReconciliation
         } catch (Exception e) {
             log.warn("设置自动筛选失败: {}", e.getMessage());
         }
+
+        applyBillPrintFooter(sheet);
+    }
+
+    /** 账单打印页脚：仅页码「第 &P 页，共 &N 页」。 */
+    private void applyBillPrintFooter(Sheet sheet) {
+        BillPrintFooter.apply(sheet);
     }
 
     // ========================================================================
@@ -4799,11 +4800,13 @@ public class HospitalReconciliationServiceImpl implements HospitalReconciliation
                 + ".bill-divider { width: 100%; border-top: 1px solid #222; height: 0; }\n"
                 + ".bill-summary-row th { background: #7ea7bf; color: #fff; font-weight: 400; }\n"
                 + ".bill-column-row th { background: #f6f6f6; font-weight: 400; }\n"
+                + BillPrintFooter.htmlCss()
                 + "@media print { html, body { margin: 0; padding: 0; } "
                 + "body { -webkit-print-color-adjust: exact; print-color-adjust: exact; } "
                 + ".bill-sheet.page-break { break-after: page; page-break-after: always; } }\n"
                 + "</style>\n</head>\n<body>\n"
                 + sectionsHtml.toString()
+                + BillPrintFooter.htmlBlock()
                 // 自动打印脚本（页面完全加载后延迟 200ms 弹出打印对话框）
                 + "<script>window.addEventListener('load',function(){setTimeout(function(){window.print();},200);});</script>\n"
                 + "</body>\n</html>";
@@ -5487,6 +5490,9 @@ public class HospitalReconciliationServiceImpl implements HospitalReconciliation
             for (int j = 0; j < rows.get(0).size(); j++) {
                 int maxWidth = getMaxWidth(rows, j);
                 sheet.setColumnWidth(j, (maxWidth + 4) * 256);
+            }
+            if ("账单".equals(title)) {
+                applyBillPrintFooter(sheet);
             }
 
             return writeWorkbookToBytes(workbook);

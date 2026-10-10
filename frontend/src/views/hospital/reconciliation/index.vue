@@ -185,49 +185,14 @@
 
 <script lang="ts">
   import * as XLSX from 'xlsx'
+  import { isLikelyHospitalName } from '@/utils/reconciliationHospitalName'
   import {
-    extractStandardHospitalNameFromMatrix,
-    isLikelyHospitalName
-  } from '@/utils/reconciliationHospitalName'
-
-  type SheetTemplateMeta = {
-    sheetName: string
-    titleText: string
-    dateRangeText: string
-    hospitalDisplayName: string
-  }
-
-  type SheetPreview = {
-    name: string
-    totalRows: number
-    dataRows: number
-    headerRowIndex: number
-  }
-
-  type RawWorkbook = {
-    fileName: string
-    sheetNames: string[]
-    previews: SheetPreview[]
-    sheetMetas: SheetTemplateMeta[]
-    rows: HospitalRow[]
-  }
-
-  type HospitalRow = {
-    sheetName: string
-    rowNumber: number
-    deliveryDateRaw: string | number | null
-    deliveryDate: string
-    orderNo: string
-    type: string
-    categoryNo: string
-    packName: string
-    packageMaterial: string
-    packCount: number
-    instrumentCount: number
-    unitPrice: number | null
-    totalPrice: number | null
-    original: Record<string, unknown>
-  }
+    isExcelDateNumber,
+    readHospitalWorkbook,
+    type HospitalRow,
+    type RawWorkbook,
+    type SheetTemplateMeta
+  } from '@/utils/reconciliationWorkbookParse'
 
   type ProcessedRow = HospitalRow & {
     id?: number
@@ -243,34 +208,6 @@
     matchedVariantId?: number | null
     pricingPath?: string | null
     billingNotes?: Record<string, unknown> | null
-  }
-
-  function findRowText(rows: unknown[][], keyword: string): string {
-    for (const row of rows) {
-      for (const cell of row) {
-        const text = String(cell ?? '').trim()
-        if (text && text.includes(keyword)) return text
-      }
-    }
-    return ''
-  }
-
-  /** 在表头区域查找日期范围文本（兼容不同格式的日期前缀） */
-  function findDateRangeText(rows: unknown[][]): string {
-    // 尝试常见前缀
-    const prefixes = ['从:', '从：', '时间:', '时间：', '日期:', '日期：']
-    for (const prefix of prefixes) {
-      const found = findRowText(rows, prefix)
-      if (found) return found
-    }
-    // 回退：查找包含年份且含"至"/"到"的单元格
-    for (const row of rows) {
-      for (const cell of row) {
-        const text = String(cell ?? '').trim()
-        if (text && /\d{4}.*(?:至|到).*\d{4}/.test(text)) return text
-      }
-    }
-    return ''
   }
 
   type EntryStatus =
@@ -331,47 +268,6 @@
     sheetFilterLoading: boolean
   }
 
-  function sanitizeCellText(value: unknown, normalizeFormatting = false): string {
-    const text = String(value ?? '').trim()
-    return normalizeFormatting
-      ? text
-          .replace(/[\r\n\t]+/g, ' ')
-          .replace(/[：:]\s*$/g, '')
-          .replace(/\s+/g, ' ')
-          .trim()
-      : text
-  }
-
-  function normalizeText(value: unknown): string {
-    return String(value ?? '')
-      .replace(/\s+/g, '')
-      .trim()
-  }
-
-  function toNumber(value: unknown): number | null {
-    if (typeof value === 'number' && Number.isFinite(value)) return value
-    const normalized = String(value ?? '')
-      .replace(/,/g, '')
-      .replace(/￥/g, '')
-      .trim()
-    if (!normalized) return null
-    const parsed = Number(normalized)
-    return Number.isFinite(parsed) ? parsed : null
-  }
-
-  function isExcelDateNumber(value: unknown): boolean {
-    return typeof value === 'number' && value > 40000 && value < 60000
-  }
-
-  function formatExcelDate(value: unknown): string {
-    if (isExcelDateNumber(value)) {
-      const parsed = XLSX.SSF.parse_date_code(value as number)
-      if (!parsed) return String(value)
-      return `${parsed.y}-${String(parsed.m).padStart(2, '0')}-${String(parsed.d).padStart(2, '0')}`
-    }
-    return String(value ?? '').trim()
-  }
-
   function roundCurrency(value: number): number {
     return Math.round(value * 100) / 100
   }
@@ -387,129 +283,6 @@
     if (value > 0) return `+${abs}`
     if (value < 0) return `-${abs}`
     return abs
-  }
-
-  function getCell(row: unknown[], headerMap: Map<string, number>, headerName: string): unknown {
-    const index = headerMap.get(normalizeText(headerName))
-    return index === undefined ? null : (row[index] ?? null)
-  }
-
-  function findHeaderRowIndex(matrix: unknown[][]): number {
-    return matrix.findIndex((row) => {
-      const normalized = row.map((cell) => normalizeText(cell))
-      return (
-        normalized.includes(normalizeText('发货日期')) &&
-        normalized.includes(normalizeText('包名')) &&
-        normalized.includes(normalizeText('包装材料')) &&
-        normalized.includes(normalizeText('器械数')) &&
-        normalized.includes(normalizeText('单价')) &&
-        normalized.includes(normalizeText('总价'))
-      )
-    })
-  }
-
-  function createHeaderMap(headerRow: unknown[]): Map<string, number> {
-    const map = new Map<string, number>()
-    headerRow.forEach((cell, index) => {
-      const key = normalizeText(cell)
-      if (key && !map.has(key)) map.set(key, index)
-    })
-    return map
-  }
-
-  function extractSheetTemplateMeta(
-    sheetName: string,
-    matrix: unknown[][],
-    headerRowIndex: number
-  ): SheetTemplateMeta {
-    const titleText =
-      findRowText(matrix.slice(0, headerRowIndex), '发货单汇总表') || '发货单汇总表-显示包装材料'
-    const dateRangeText = findDateRangeText(matrix.slice(0, headerRowIndex))
-    const hospitalDisplayName = extractStandardHospitalNameFromMatrix(matrix, headerRowIndex)
-    return { sheetName, titleText, dateRangeText, hospitalDisplayName }
-  }
-
-  function isDetailRow(
-    row: {
-      deliveryDateRaw: unknown
-      orderNo: string
-      type: string
-      packName: string
-      packageMaterial: string
-    },
-    rules: Api.Hospital.PricingRules
-  ): boolean {
-    const combinedText = [row.orderNo, row.type, row.packName, row.packageMaterial].join(' ')
-    const hasDate =
-      isExcelDateNumber(row.deliveryDateRaw) ||
-      /\d{4}[/-]\d{1,2}[/-]\d{1,2}/.test(String(row.deliveryDateRaw ?? ''))
-    const hasKeyFields = Boolean(row.type && row.packName)
-    const looksLikeSummary =
-      rules.cleaning.dropSummaryRows &&
-      rules.cleaning.summaryKeywords.some((kw) => combinedText.includes(kw))
-    const looksInvalid = !row.type || !row.packName
-    return hasDate && hasKeyFields && !looksLikeSummary && !looksInvalid
-  }
-
-  function extractHospitalRows(
-    sheetName: string,
-    matrix: unknown[][],
-    headerRowIndex: number,
-    headerMap: Map<string, number>,
-    rules: Api.Hospital.PricingRules
-  ): HospitalRow[] {
-    const rows: HospitalRow[] = []
-    for (let i = headerRowIndex + 1; i < matrix.length; i += 1) {
-      const row = matrix[i] ?? []
-      const deliveryDateRaw = getCell(row, headerMap, '发货日期') as string | number | null
-      const orderNo = sanitizeCellText(getCell(row, headerMap, '发货单号'))
-      const type = sanitizeCellText(getCell(row, headerMap, '类型'))
-      const categoryNo = sanitizeCellText(getCell(row, headerMap, '包类别号'))
-      const packName = sanitizeCellText(
-        getCell(row, headerMap, '包名'),
-        rules.cleaning.clearInstrumentColumnFormatting
-      )
-      const packageMaterial = sanitizeCellText(
-        getCell(row, headerMap, '包装材料'),
-        rules.cleaning.trimPackagingMaterial || rules.cleaning.clearInstrumentColumnFormatting
-      )
-      const packCount = toNumber(getCell(row, headerMap, '包数')) ?? 0
-      const instrumentCount = toNumber(getCell(row, headerMap, '器械数')) ?? 0
-      const unitPrice = toNumber(getCell(row, headerMap, '单价'))
-      const totalPrice = toNumber(getCell(row, headerMap, '总价'))
-
-      if (!isDetailRow({ deliveryDateRaw, orderNo, type, packName, packageMaterial }, rules))
-        continue
-
-      rows.push({
-        sheetName,
-        rowNumber: i + 1,
-        deliveryDateRaw,
-        deliveryDate: formatExcelDate(deliveryDateRaw),
-        orderNo,
-        type,
-        categoryNo,
-        packName,
-        packageMaterial,
-        packCount,
-        instrumentCount,
-        unitPrice,
-        totalPrice,
-        original: {
-          deliveryDateRaw,
-          orderNo,
-          type,
-          categoryNo,
-          packName,
-          packageMaterial,
-          packCount,
-          instrumentCount,
-          unitPrice,
-          totalPrice
-        }
-      })
-    }
-    return rows
   }
 
   function formatDateTime(value: string): string {
@@ -832,49 +605,6 @@
     }
   }
 
-  async function readHospitalWorkbook(
-    file: File,
-    rules: Api.Hospital.PricingRules
-  ): Promise<RawWorkbook> {
-    const buffer = await file.arrayBuffer()
-    const workbook = XLSX.read(buffer, { type: 'array', cellDates: false })
-    const sheetNames = workbook.SheetNames
-    const previews: SheetPreview[] = []
-    const sheetMetas: SheetTemplateMeta[] = []
-    const rows: HospitalRow[] = []
-
-    for (const sheetName of sheetNames) {
-      const worksheet = workbook.Sheets[sheetName]
-      const rawMatrix = XLSX.utils.sheet_to_json<(string | number)[]>(worksheet, {
-        header: 1,
-        defval: '',
-        blankrows: false,
-        raw: true
-      })
-      const matrix = rules.cleaning.removeFirstRow ? rawMatrix.slice(1) : rawMatrix
-
-      const headerRowIndex = findHeaderRowIndex(matrix)
-      if (headerRowIndex < 0) continue
-
-      const headerMap = createHeaderMap(matrix[headerRowIndex] as unknown[])
-      const sheetRows = extractHospitalRows(sheetName, matrix, headerRowIndex, headerMap, rules)
-      sheetMetas.push(extractSheetTemplateMeta(sheetName, matrix, headerRowIndex))
-
-      previews.push({
-        name: sheetName,
-        totalRows: matrix.length,
-        dataRows: sheetRows.length,
-        headerRowIndex
-      })
-      rows.push(...sheetRows)
-    }
-
-    if (rows.length === 0) {
-      throw new Error('没有识别到有效明细行，请确认 Excel 格式与示例一致。')
-    }
-
-    return { fileName: file.name, sheetNames, previews, sheetMetas, rows }
-  }
 </script>
 
 <script setup lang="ts">
@@ -910,6 +640,7 @@
   } from '@/api/hospital/reconciliationsApi'
   import {
     isPlaceholderHospitalName,
+    isValidHospitalName,
     resolveHospitalBadgeName
   } from '@/utils/reconciliationHospitalName'
   import {
@@ -1466,7 +1197,32 @@
     await resolveEntryRule(entry)
   }
 
+  function entryHasClerkPricingHit(entry: UploadEntry) {
+    return entry.processedRows.some((row) => {
+      const notes = row.billingNotes
+      if (!notes || typeof notes !== 'object') return false
+      const layer = String(
+        (notes as Record<string, unknown>).pricingLayer ??
+          (notes as Record<string, unknown>).pricing_layer ??
+          ''
+      ).trim()
+      const clerkRule = String(
+        (notes as Record<string, unknown>).clerkRuleName ??
+          (notes as Record<string, unknown>).clerk_rule_name ??
+          ''
+      ).trim()
+      return layer === 'clerk' || clerkRule.length > 0
+    })
+  }
+
   function entryRuleDisplay(entry: UploadEntry) {
+    if (entryHasClerkPricingHit(entry)) {
+      return {
+        label: '内勤计价',
+        scope: 'special' as const,
+        tooltip: '对账行已命中内勤账单价/包名特价规则（与顶栏客服规则名可并存）'
+      }
+    }
     const rule = entry.rule ?? activeRule.value
     const name = rule?.name ?? '标准灭菌计费规则'
     const special = rule ? isCustomerSpecificPricingRule(rule) : false
@@ -1649,14 +1405,18 @@
     saved: Api.Hospital.ReconciliationJob
   ) {
     entry.savedJobId = saved.id
-    entry.hospitalName = resolveHospitalBadgeName({
-      hospitalName: isPlaceholderHospitalName(saved.hospitalName)
-        ? entry.hospitalName
-        : saved.hospitalName || entry.hospitalName,
-      fileName: entry.file.name,
-      sheetHospitalDisplayNames:
-        entry.workbook?.sheetMetas?.map((meta) => meta.hospitalDisplayName) ?? []
-    })
+    const savedName = (saved.hospitalName ?? '').trim()
+    // 保存后以服务端解析名为准。表头 D9「南岗区」不能盖过已落库的「南岗院区」。
+    entry.hospitalName = isValidHospitalName(savedName)
+      ? savedName
+      : resolveHospitalBadgeName({
+          hospitalName: isPlaceholderHospitalName(saved.hospitalName)
+            ? entry.hospitalName
+            : saved.hospitalName || entry.hospitalName,
+          fileName: entry.file.name,
+          sheetHospitalDisplayNames:
+            entry.workbook?.sheetMetas?.map((meta) => meta.hospitalDisplayName) ?? []
+        })
     entry.savedSheetRowCounts = saved.sheetRowCounts ?? null
     entry.savedSheetWarningCounts = saved.sheetWarningCounts ?? null
     entry.selectedSheetFilter = null

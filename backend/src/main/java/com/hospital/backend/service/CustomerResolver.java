@@ -1,5 +1,6 @@
 package com.hospital.backend.service;
 
+import com.hospital.backend.config.ClerkRuleIndex;
 import com.hospital.backend.entity.Customer;
 import com.hospital.backend.entity.CustomerAlias;
 import com.hospital.backend.mapper.CustomerAliasMapper;
@@ -27,22 +28,31 @@ public class CustomerResolver {
             return Optional.empty();
         }
         String trimmed = hospitalName.trim();
-
-        List<Customer> exactMatches = new ArrayList<>();
-        for (Customer customer : customerMapper.selectAll()) {
-            if (trimmed.equals(customer.getCanonicalName())) {
-                exactMatches.add(customer);
+        List<String> variants = ClerkRuleIndex.campusLabelVariants(trimmed);
+        List<Customer> all = customerMapper.selectAll();
+        for (String variant : variants) {
+            List<Customer> exactMatches = new ArrayList<>();
+            for (Customer customer : all) {
+                if (variant.equals(customer.getCanonicalName())) {
+                    exactMatches.add(customer);
+                }
             }
-        }
-        if (!exactMatches.isEmpty()) {
-            return Optional.of(selectPreferredCustomer(exactMatches));
+            if (!exactMatches.isEmpty()) {
+                return Optional.of(selectPreferredCustomer(exactMatches));
+            }
         }
 
         List<CustomerAlias> aliases = customerAliasMapper.selectAllActive();
-        return aliases.stream()
-                .filter(alias -> matchesAlias(trimmed, alias))
-                .min(Comparator.comparingInt(CustomerAlias::getPriority))
-                .flatMap(alias -> Optional.ofNullable(customerMapper.selectById(alias.getCustomerId())));
+        for (String variant : variants) {
+            Optional<Customer> aliasHit = aliases.stream()
+                    .filter(alias -> matchesAlias(variant, alias))
+                    .min(Comparator.comparingInt(CustomerAlias::getPriority))
+                    .flatMap(alias -> Optional.ofNullable(customerMapper.selectById(alias.getCustomerId())));
+            if (aliasHit.isPresent()) {
+                return aliasHit;
+            }
+        }
+        return Optional.empty();
     }
 
     public List<String> hospitalNamesForCustomer(Customer customer) {

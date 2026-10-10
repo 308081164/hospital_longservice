@@ -128,6 +128,31 @@ class SettlementTemplateFillerTest {
     }
 
     @Test
+    void hulanTcmSurgicalPackMultipliesFixedUnitByPackCount() throws Exception {
+        HospitalReconciliationJob job = new HospitalReconciliationJob();
+        job.setHospitalName("呼兰中医院");
+        JsonNode compiledRules = com.hospital.backend.common.JsonUtils.getObjectMapper().readTree("""
+                {"settlementPackSplit":{"deptKeyword":"手术室（备包）"}}
+                """);
+
+        HospitalReconciliationRow surgical = new HospitalReconciliationRow();
+        surgical.setSheetName("手术室（备包）");
+        surgical.setPackName("外科包");
+        surgical.setPackCount(13);
+        surgical.setUnitPrice(249.5);
+        surgical.setCorrectedTotalPrice(3243.5);
+
+        List<SettlementTemplateFiller.SettlementFeeRow> rows = filler.buildFeeRows(
+                job, 1000.0, compiledRules, List.of(surgical));
+
+        assertThat(rows.stream()
+                .filter(r -> "外科包".equals(r.getItemName()))
+                .mapToDouble(SettlementTemplateFiller.SettlementFeeRow::getAmount)
+                .findFirst()
+                .orElse(0)).isEqualTo(3243.5);
+    }
+
+    @Test
     void addsHulanTcmSpecialPackRows() {
         HospitalReconciliationJob job = new HospitalReconciliationJob();
         job.setHospitalName("呼兰中医院");

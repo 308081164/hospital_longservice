@@ -76,6 +76,22 @@ export function resolveHospitalNameFromColumnD(
   return ''
 }
 
+/**
+ * 合并单 sheet（发货单汇总表）：医院全称在表头之后的 A 列汇总行，D8/D9 为空。
+ * 只接受含「医院」的单元格，科室行（如 ICU病房）会被跳过。
+ */
+export function resolveHospitalNameFromColumnASummary(
+  matrix: unknown[][],
+  headerRowIndex: number
+): string {
+  if (headerRowIndex < 0) return ''
+  for (let i = headerRowIndex + 1; i < matrix.length; i += 1) {
+    const text = String(matrix[i]?.[0] ?? '').trim()
+    if (isValidHospitalName(text)) return text
+  }
+  return ''
+}
+
 /** @deprecated 使用 resolveHospitalNameFromColumnD；保留同名导出供现有调用方。 */
 export function extractStandardHospitalNameFromMatrix(
   matrix: unknown[][],
@@ -140,6 +156,12 @@ export function resolveReconciliationHospitalName(options: {
   currentName?: string | null
   sheetHospitalDisplayNames?: Array<string | null | undefined>
 }): string {
+  const sheetName = (options.sheetHospitalDisplayNames ?? [])
+    .map((name) => (name ?? '').trim())
+    .find((name) => isValidHospitalName(name))
+  // 文件名「省医院香坊」也含「医院」，不能盖过表内 D8/D9 的院区全称。
+  if (sheetName) return sheetName
+
   const candidates = buildHospitalNameCandidates(options)
   for (const name of candidates) {
     if (isValidHospitalName(name)) return name

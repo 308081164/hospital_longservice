@@ -62,6 +62,13 @@ class ShengYyNgClerkDiscountOrchestratorTest {
     void clerkIndexResolvesCustomerCodeWhenNameMatchesBaseline() {
         ClerkRuleIndex index = new ClerkRuleIndex();
         assertThat(index.resolveCustomerCodeByHospitalName(HOSPITAL)).isEqualTo("SHENG-YY-NG");
+        assertThat(index.resolveCustomerCodeByHospitalName("省医院南岗")).isEqualTo("SHENG-YY-NG");
+        assertThat(index.resolveCustomerCodeByHospitalName("省医院香坊")).isEqualTo("SHENG-YY-XF");
+        assertThat(index.resolveCustomerCodeByHospitalName("黑龙江省医院（香坊院区）")).isEqualTo("SHENG-YY-XF");
+        assertThat(index.resolveCustomerCodeByHospitalName("黑龙江省第二医院（南岗区）")).isEqualTo("ERYY-NG");
+        assertThat(index.resolveCustomerCodeByHospitalName("省二院南岗")).isEqualTo("ERYY-NG");
+        assertThat(index.resolveCustomerCodeByHospitalName("黑龙江省第二医院（松北区）")).isEqualTo("ERYY-SB");
+        assertThat(index.resolveCustomerCodeByHospitalName("省二院松北")).isEqualTo("ERYY-SB");
     }
 
     private static Map<String, Object> baseRow(double unitPrice, double totalPrice) {

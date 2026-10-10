@@ -2,6 +2,7 @@ import {
   displayHospitalNameForJob,
   extractStandardHospitalNameFromMatrix,
   inferHospitalNameFromFileName,
+  resolveHospitalNameFromColumnASummary,
   isDateRangeText,
   isLikelyDepartmentName,
   isPlaceholderHospitalName,
@@ -117,6 +118,24 @@ assertEqual(
   '黑龙江谋大医院',
   'first valid D8/D9 sheet name used when present'
 )
+assertEqual(
+  resolveReconciliationHospitalName({
+    fileName: '省医院香坊.xlsx',
+    currentName: '省医院香坊',
+    sheetHospitalDisplayNames: ['黑龙江省医院（香坊院区）']
+  }),
+  '黑龙江省医院（香坊院区）',
+  'sheet campus name wins over filename that also contains 医院'
+)
+assertEqual(
+  resolveReconciliationHospitalName({
+    fileName: '省医院南岗.xlsx',
+    currentName: '省医院南岗',
+    sheetHospitalDisplayNames: ['黑龙江省医院（南岗院区）']
+  }),
+  '黑龙江省医院（南岗院区）',
+  '省医院南岗 uses D9 full name'
+)
 
 const d8Matrix: unknown[][] = Array.from({ length: 10 }, () => [])
 d8Matrix[3] = ['', '', '', '从:2026/6/1 00:00:00 至: 2026/6/30 23:59:59.999']
@@ -156,6 +175,20 @@ assertEqual(
   displayHospitalNameForJob('未命名医院', '谋大6月账单-未改.xlsx'),
   '谋大',
   'history card uses filename when db has placeholder'
+)
+
+assertEqual(
+  resolveHospitalNameFromColumnASummary(
+    [
+      ['发货日期', '包名'],
+      ['哈尔滨红十字妇产医院'],
+      ['ICU病房'],
+      ['2026-08-11', '湿化瓶-1/Z3032']
+    ],
+    0
+  ),
+  '哈尔滨红十字妇产医院',
+  'column A summary row is the hospital when D8/D9 is empty'
 )
 
 console.log('reconciliationHospitalName tests passed')

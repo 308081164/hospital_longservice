@@ -152,4 +152,19 @@ class CustomerResolverTest {
         assertThat(customerResolver.resolveByName("电机厂").orElseThrow().getCode()).isEqualTo("GUOYAO-2");
         assertThat(customerResolver.resolveByName("国药总医院第二院区").orElseThrow().getCode()).isEqualTo("GUOYAO-2");
     }
+
+    @Test
+    void matchesCampusCanonicalWhenBillWritesQuInsteadOfYuanqu() {
+        Customer shengYyNg = new Customer();
+        shengYyNg.setId(49L);
+        shengYyNg.setCode("SHENG-YY-NG");
+        shengYyNg.setCanonicalName("黑龙江省医院（南岗院区）");
+        shengYyNg.setBillingEnabled(true);
+        shengYyNg.setStatus("active");
+
+        when(customerMapper.selectAll()).thenReturn(List.of(shengYyNg));
+
+        assertThat(customerResolver.resolveByName("黑龙江省医院（南岗区）").orElseThrow().getCode())
+                .isEqualTo("SHENG-YY-NG");
+    }
 }

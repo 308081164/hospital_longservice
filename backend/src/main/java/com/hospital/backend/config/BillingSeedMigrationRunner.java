@@ -57,6 +57,7 @@ public class BillingSeedMigrationRunner implements CommandLineRunner {
     private static final String STALE_CUSTOMER_CLEANUP_MARKER = "billing_seed_stale_customer_cleanup_20260827_v1";
     /** 省二院南岗/松北文件名别名（对账徽章 filename 兜底） */
     private static final String ERYY_FILENAME_ALIAS_MARKER = "billing_seed_erreyy_filename_alias_20260928_v1";
+    private static final String BILL_DISCOUNT_ALIAS_MARKER = "billing_seed_bill_discount_alias_20261010_v1";
 
     /** 最终保留的特殊计价客户 code（与 scripts/strict_hospital_codes.py STRICT_KEEP_CODES 一致） */
     private static final java.util.List<String> STRICT_KEEP_CODES = java.util.List.of(
@@ -290,6 +291,11 @@ public class BillingSeedMigrationRunner implements CommandLineRunner {
             insertMarker(ERYY_FILENAME_ALIAS_MARKER, "省二院南岗/松北文件名别名 + Excel 南岗区/松北区写法");
             log.info("ERYY filename aliases applied.");
         }
+        if (sysSettingMapper.countByKey(BILL_DISCOUNT_ALIAS_MARKER) == 0) {
+            ensureBillDiscountHospitalAliases();
+            insertMarker(BILL_DISCOUNT_ALIAS_MARKER, "省二/省医院账单折扣：文件名短称与南岗区/松北区别名");
+            log.info("Bill discount hospital aliases applied.");
+        }
     }
 
     private void ensureEreryyFilenameAliases() {
@@ -299,13 +305,21 @@ public class BillingSeedMigrationRunner implements CommandLineRunner {
         ensureAliasForCustomer("ERYY-SB", "黑龙江省第二医院（松北区）", "exact");
     }
 
+    /** 导入文件名是「省医院南岗」这类短称时，仍能落到带账单折扣的客户。 */
+    private void ensureBillDiscountHospitalAliases() {
+        ensureEreryyFilenameAliases();
+        ensureAliasForCustomer("SHENG-YY-NG", "省医院南岗", "exact");
+        ensureAliasForCustomer("SHENG-YY-XF", "省医院香坊", "exact");
+    }
+
     private void ensureAliasForCustomer(String code, String alias, String matchType) {
         Customer customer = customerMapper.selectByCode(code);
         if (customer == null) {
             log.warn("Skip alias {} → {} (customer missing)", alias, code);
             return;
         }
-        ensureCustomerAliasExact(customer.getId(), alias, matchType, "hospital_name_fix_20260928", 100);
+        // customer_alias.source 是 VARCHAR(20)，超长会让启动迁移直接失败。
+        ensureCustomerAliasExact(customer.getId(), alias, matchType, "bill_discount_v1", 100);
         log.info("Alias ensured {} → {}", alias, code);
     }
 

@@ -1,5 +1,6 @@
 package com.hospital.backend.service;
 
+import com.hospital.backend.config.ClerkRuleIndex;
 import com.hospital.backend.entity.Customer;
 import com.hospital.backend.entity.CustomerAlias;
 import com.hospital.backend.mapper.CustomerAliasMapper;
@@ -31,7 +32,7 @@ class ReconciliationHospitalNameResolverTest {
 
     @org.junit.jupiter.api.BeforeEach
     void setUp() {
-        resolver = new ReconciliationHospitalNameResolver(customerResolver);
+        resolver = new ReconciliationHospitalNameResolver(customerResolver, new ClerkRuleIndex());
     }
 
     @Test
@@ -125,6 +126,49 @@ class ReconciliationHospitalNameResolverTest {
                 List.of("发货单汇总表", "哈尔滨"));
 
         assertThat(resolved).isEqualTo("三精肾病医院");
+    }
+
+    @Test
+    void prefersExcelCampusNameOverShortFileNameContainingHospital() {
+        Customer customer = new Customer();
+        customer.setId(42L);
+        customer.setCanonicalName("黑龙江省医院（香坊院区）");
+
+        when(customerMapper.selectAll()).thenReturn(List.of(customer));
+        when(customerAliasMapper.selectAllActive()).thenReturn(List.of());
+
+        String resolved = resolver.resolve(
+                "省医院香坊",
+                "省医院香坊.xlsx",
+                List.of("黑龙江省医院（香坊院区）"));
+
+        assertThat(resolved).isEqualTo("黑龙江省医院（香坊院区）");
+    }
+
+    @Test
+    void mapsNangangQuBillToClerkCanonicalWhenCustomerRowMissing() {
+        when(customerMapper.selectAll()).thenReturn(List.of());
+        when(customerAliasMapper.selectAllActive()).thenReturn(List.of());
+
+        String resolved = resolver.resolve(
+                "黑龙江省第二医院（南岗区）",
+                "省二院南岗.xlsx",
+                List.of("黑龙江省第二医院（南岗区）"));
+
+        assertThat(resolved).isEqualTo("黑龙江省第二医院（南岗院区）");
+    }
+
+    @Test
+    void keepsLongerExcelNameWhenShortFileNameDoesNotMatchCustomer() {
+        when(customerMapper.selectAll()).thenReturn(List.of());
+        when(customerAliasMapper.selectAllActive()).thenReturn(List.of());
+
+        String resolved = resolver.resolve(
+                "省医院南岗",
+                "省医院南岗.xlsx",
+                List.of("黑龙江省医院（南岗院区）"));
+
+        assertThat(resolved).isEqualTo("黑龙江省医院（南岗院区）");
     }
 
     @Test

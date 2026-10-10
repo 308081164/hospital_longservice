@@ -146,7 +146,7 @@ public class SettlementTemplateFiller {
             }
         }
 
-        appendSpecialPackSettlementRows(rowsOut, rows, job.getHospitalName());
+        appendSpecialPackSettlementRows(rowsOut, rows, job.getHospitalName(), compiledRules);
         appendUrgentSettlementRows(rowsOut, job, compiledRules, hospitalName);
         appendSettlementExtraRows(rowsOut, job, compiledRules);
 
@@ -272,7 +272,7 @@ public class SettlementTemplateFiller {
                 sterilizeTotal = round2(Math.max(0, sterilizeTotal - excludedTotal));
             }
         }
-        return resolveBaseSterilizeTotal(sterilizeTotal, rows, hospitalName);
+        return resolveBaseSterilizeTotal(sterilizeTotal, rows, hospitalName, compiledRules);
     }
 
     private double sumSettlementExcludedRowTotals(List<HospitalReconciliationRow> rows, String hospitalName) {
@@ -398,11 +398,12 @@ public class SettlementTemplateFiller {
     private double resolveBaseSterilizeTotal(
             double sterilizeTotal,
             List<HospitalReconciliationRow> rows,
-            String hospitalName) {
+            String hospitalName,
+            JsonNode compiledRules) {
         if (rows == null || rows.isEmpty() || !isHulanTcmHospital(hospitalName)) {
             return sterilizeTotal;
         }
-        double specialPackTotal = sumSpecialPackTotals(rows);
+        double specialPackTotal = sumSpecialPackTotals(rows, compiledRules);
         if (specialPackTotal <= 0) {
             return sterilizeTotal;
         }
@@ -633,25 +634,8 @@ public class SettlementTemplateFiller {
         return type.startsWith("额外包") || type.startsWith("器械包") || type.startsWith("单包装");
     }
 
-    private double sumSpecialPackTotals(List<HospitalReconciliationRow> rows) {
-        Map<String, PackSettlementAggregate> aggregates = new LinkedHashMap<>();
-        for (String keyword : HULAN_TCM_SETTLEMENT_PACK_KEYWORDS) {
-            aggregates.put(keyword, new PackSettlementAggregate());
-        }
-        for (HospitalReconciliationRow row : rows) {
-            String packName = str(row.getPackName()).trim();
-            for (String keyword : HULAN_TCM_SETTLEMENT_PACK_KEYWORDS) {
-                if (!matchesSettlementPackKeyword(packName, keyword)) {
-                    continue;
-                }
-                PackSettlementAggregate agg = aggregates.get(keyword);
-                int count = row.getPackCount() != null ? row.getPackCount() : 0;
-                Double total = row.getCorrectedTotalPrice() != null
-                        ? row.getCorrectedTotalPrice()
-                        : row.getTotalPrice();
-                agg.add(count, total != null ? total : 0, row.getUnitPrice());
-            }
-        }
+    private double sumSpecialPackTotals(List<HospitalReconciliationRow> rows, JsonNode compiledRules) {
+        Map<String, PackSettlementAggregate> aggregates = aggregateSpecialPackRows(rows, compiledRules);
         double sum = 0;
         for (String keyword : HULAN_TCM_SETTLEMENT_PACK_KEYWORDS) {
             PackSettlementAggregate agg = aggregates.get(keyword);
@@ -660,11 +644,7 @@ public class SettlementTemplateFiller {
             }
             Double fixedPrice = HULAN_TCM_SETTLEMENT_PACK_FIXED_PRICE.get(keyword);
             if (fixedPrice != null) {
-                if ("外科包".equals(keyword)) {
-                    sum += fixedPrice;
-                } else {
-                    sum += fixedPrice * Math.max(1, agg.packCount());
-                }
+                sum += fixedPrice * Math.max(1, agg.packCount());
             } else {
                 sum += agg.totalAmount();
             }
@@ -845,15 +825,41 @@ public class SettlementTemplateFiller {
     private void appendSpecialPackSettlementRows(
             List<SettlementFeeRow> rowsOut,
             List<HospitalReconciliationRow> rows,
-            String hospitalName) {
+            String hospitalName,
+            JsonNode compiledRules) {
         if (rows == null || rows.isEmpty() || !isHulanTcmHospital(hospitalName)) {
             return;
         }
+        Map<String, PackSettlementAggregate> aggregates = aggregateSpecialPackRows(rows, compiledRules);
+        for (String keyword : HULAN_TCM_SETTLEMENT_PACK_KEYWORDS) {
+            PackSettlementAggregate agg = aggregates.get(keyword);
+            if (agg.packCount() <= 0 && Math.abs(agg.totalAmount()) < 0.01) {
+                continue;
+            }
+            Double fixedPrice = HULAN_TCM_SETTLEMENT_PACK_FIXED_PRICE.get(keyword);
+            double amount = fixedPrice != null
+                    ? round2(fixedPrice * Math.max(1, agg.packCount()))
+                    : round2(agg.totalAmount());
+            rowsOut.add(SettlementFeeRow.builder()
+                    .sequence(rowsOut.size() + 1)
+                    .itemName(keyword)
+                    .amount(amount)
+                    .remark(formatPackRemark(agg, fixedPrice))
+                    .build());
+        }
+    }
+
+    private Map<String, PackSettlementAggregate> aggregateSpecialPackRows(
+            List<HospitalReconciliationRow> rows,
+            JsonNode compiledRules) {
         Map<String, PackSettlementAggregate> aggregates = new LinkedHashMap<>();
         for (String keyword : HULAN_TCM_SETTLEMENT_PACK_KEYWORDS) {
             aggregates.put(keyword, new PackSettlementAggregate());
         }
         for (HospitalReconciliationRow row : rows) {
+            if (!rowMatchesSettlementPackSplit(compiledRules, row)) {
+                continue;
+            }
             String packName = str(row.getPackName()).trim();
             for (String keyword : HULAN_TCM_SETTLEMENT_PACK_KEYWORDS) {
                 if (!matchesSettlementPackKeyword(packName, keyword)) {
@@ -867,25 +873,18 @@ public class SettlementTemplateFiller {
                 agg.add(count, total != null ? total : 0, row.getUnitPrice());
             }
         }
-        for (String keyword : HULAN_TCM_SETTLEMENT_PACK_KEYWORDS) {
-            PackSettlementAggregate agg = aggregates.get(keyword);
-            if (agg.packCount() <= 0 && Math.abs(agg.totalAmount()) < 0.01) {
-                continue;
-            }
-            Double fixedPrice = HULAN_TCM_SETTLEMENT_PACK_FIXED_PRICE.get(keyword);
-            double amount = fixedPrice != null
-                    ? round2(fixedPrice * Math.max(1, agg.packCount()))
-                    : round2(agg.totalAmount());
-            if ("外科包".equals(keyword) && fixedPrice != null) {
-                amount = fixedPrice;
-            }
-            rowsOut.add(SettlementFeeRow.builder()
-                    .sequence(rowsOut.size() + 1)
-                    .itemName(keyword)
-                    .amount(amount)
-                    .remark(formatPackRemark(agg, fixedPrice))
-                    .build());
+        return aggregates;
+    }
+
+    private static boolean rowMatchesSettlementPackSplit(JsonNode compiledRules, HospitalReconciliationRow row) {
+        if (compiledRules == null || !compiledRules.has("settlementPackSplit")) {
+            return true;
         }
+        String deptKeyword = compiledRules.path("settlementPackSplit").path("deptKeyword").asText("").trim();
+        if (deptKeyword.isEmpty()) {
+            return true;
+        }
+        return str(row.getSheetName()).contains(deptKeyword);
     }
 
     private static boolean matchesSettlementPackKeyword(String packName, String keyword) {

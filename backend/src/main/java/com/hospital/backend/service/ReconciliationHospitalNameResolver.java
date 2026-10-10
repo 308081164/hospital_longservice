@@ -1,5 +1,6 @@
 package com.hospital.backend.service;
 
+import com.hospital.backend.config.ClerkRuleIndex;
 import com.hospital.backend.entity.Customer;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -35,6 +36,7 @@ public class ReconciliationHospitalNameResolver {
     private static final Pattern FILE_YEAR_PREFIX = Pattern.compile("^\\d{4}[\\s_-]?");
 
     private final CustomerResolver customerResolver;
+    private final ClerkRuleIndex clerkRuleIndex;
 
     public String resolve(String hospitalNameParam, String sourceFileName) {
         return resolve(hospitalNameParam, sourceFileName, List.of(), List.of());
@@ -50,21 +52,51 @@ public class ReconciliationHospitalNameResolver {
             List<String> sheetHospitalNames,
             List<String> headerAreaTexts) {
         List<String> candidates = buildCandidates(hospitalNameParam, sourceFileName, sheetHospitalNames, headerAreaTexts);
+        Customer bestHospitalCustomer = null;
+        int bestHospitalSourceLength = -1;
+        String bestUnresolvedHospital = null;
+        Customer shortNameCustomer = null;
         for (String candidate : candidates) {
-            if (isLikelyDepartmentName(candidate)) {
+            if (isLikelyDepartmentName(candidate) || isDateRangeText(candidate)) {
                 continue;
             }
-            if (isLikelyHospitalName(candidate)) {
-                Optional<Customer> customer = customerResolver.resolveByName(candidate);
-                if (customer.isPresent()) {
-                    return customer.get().getCanonicalName();
-                }
-                // Excel 已识别出机构全称时，优先保留原文，避免后续弱别名误绑市五院等客户。
-                return candidate;
-            }
             Optional<Customer> customer = customerResolver.resolveByName(candidate);
-            if (customer.isPresent()) {
-                return customer.get().getCanonicalName();
+            if (isLikelyHospitalName(candidate)) {
+                if (customer.isPresent() && candidate.length() > bestHospitalSourceLength) {
+                    bestHospitalCustomer = customer.get();
+                    bestHospitalSourceLength = candidate.length();
+                }
+                if (bestUnresolvedHospital == null || candidate.length() > bestUnresolvedHospital.length()) {
+                    bestUnresolvedHospital = candidate;
+                }
+                continue;
+            }
+            if (customer.isPresent() && shortNameCustomer == null) {
+                shortNameCustomer = customer.get();
+            }
+        }
+        if (bestHospitalCustomer != null) {
+            return bestHospitalCustomer.getCanonicalName();
+        }
+        // 客户档案没有 ERYY-NG 时，D9「南岗区」仍要落成内勤规范名「南岗院区」，后续才能套到七折。
+        if (bestUnresolvedHospital != null) {
+            String clerkCanonical = clerkRuleIndex.canonicalCustomerName(bestUnresolvedHospital);
+            if (clerkCanonical != null && !clerkCanonical.isBlank()) {
+                return clerkCanonical;
+            }
+            return bestUnresolvedHospital;
+        }
+        if (shortNameCustomer != null) {
+            return shortNameCustomer.getCanonicalName();
+        }
+
+        for (String candidate : candidates) {
+            if (isLikelyDepartmentName(candidate) || isDateRangeText(candidate)) {
+                continue;
+            }
+            String clerkCanonical = clerkRuleIndex.canonicalCustomerName(candidate);
+            if (clerkCanonical != null && !clerkCanonical.isBlank()) {
+                return clerkCanonical;
             }
         }
 
