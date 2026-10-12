@@ -43,6 +43,9 @@ public class ReconciliationPricingOrchestrator {
             Set<String> disabledCategories) {
         List<String> calculationSteps = new ArrayList<>();
         BillRowItem clerkRow = toBillRowItem(rowMap);
+        if (isDressingPack(stringVal(rowMap, "type"))) {
+            return preserveDressingOriginal(rowMap, calculationSteps);
+        }
         boolean clerkPriceDisabled = isCategoryDisabled(disabledCategories, CATEGORY_CLERK_PRICE);
         boolean clerkDiscountDisabled = isCategoryDisabled(disabledCategories, CATEGORY_CLERK_DISCOUNT);
 
@@ -69,6 +72,10 @@ public class ReconciliationPricingOrchestrator {
             result.status = "unchanged";
             result.notes = new ArrayList<>();
             result.notes.add(String.format("内勤账单价规则「%s」，单价 %.2f", clerkRuleName, unitPrice));
+            attachFieldValidation(result, rowMap);
+            if (hasFieldValidationIssue(result) && "unchanged".equals(result.status)) {
+                result.status = "warning";
+            }
             pricingLayer = "clerk";
             calculationSteps.add("内勤计价命中：" + clerkRuleName);
             priceBeforeDiscount = unitPrice;
@@ -86,7 +93,8 @@ public class ReconciliationPricingOrchestrator {
         if (!clerkDiscountDisabled
                 && clerkCompiled != null
                 && result.expectedUnitPrice != null
-                && result.expectedUnitPrice > 0) {
+                && result.expectedUnitPrice > 0
+                && !result.skipHospitalDiscount) {
             double preDiscountUnit = result.expectedUnitPrice;
             BillRowItem discountRow = toBillRowItem(rowMap);
             discountRow.setOriginal(null);
@@ -114,6 +122,7 @@ public class ReconciliationPricingOrchestrator {
             }
         }
 
+        rewriteFinalPriceNote(result, rowMap);
         Map<String, Object> billingNotes = result.billingNotes != null
                 ? new LinkedHashMap<>(result.billingNotes)
                 : new LinkedHashMap<>();
@@ -240,6 +249,86 @@ public class ReconciliationPricingOrchestrator {
         return null;
     }
 
+    private static boolean isDressingPack(String type) {
+        return type != null && type.contains("敷料包");
+    }
+
+    private PricingEngine.ProcessedResult preserveDressingOriginal(
+            Map<String, Object> rowMap, List<String> calculationSteps) {
+        PricingEngine.ProcessedResult result = new PricingEngine.ProcessedResult();
+        Double bill = doubleVal(rowMap, "unitPrice");
+        result.expectedUnitPrice = bill;
+        result.pricingRule = "敷料包保留睿思原价";
+        result.pricingPath = "preserve";
+        result.status = "unchanged";
+        result.skipHospitalDiscount = true;
+        result.notes = new ArrayList<>();
+        result.notes.add("敷料包不做包材核对，规则单价保持账单原价，不再打折。");
+        int packs = Math.max(1, packCount(rowMap));
+        if (bill != null) {
+            result.correctedTotalPrice = round2(bill * packs);
+            Double total = doubleVal(rowMap, "totalPrice");
+            result.difference = total == null ? null : round2(result.correctedTotalPrice - total);
+        }
+        calculationSteps.add("敷料包：保留原价");
+        Map<String, Object> billingNotes = new LinkedHashMap<>();
+        billingNotes.put("pricingLayer", "preserve");
+        billingNotes.put("calculationSteps", calculationSteps);
+        result.billingNotes = billingNotes;
+        return result;
+    }
+
+    private static void attachFieldValidation(PricingEngine.ProcessedResult result, Map<String, Object> rowMap) {
+        String type = stringVal(rowMap, "type");
+        String packName = stringVal(rowMap, "packName");
+        String material = stringVal(rowMap, "packageMaterial");
+        int instrumentCount = intVal(rowMap, "instrumentCount", 0);
+        int packs = packCount(rowMap);
+        List<BillRowFieldConsistencyValidator.Violation> violations =
+                BillRowFieldConsistencyValidator.validate(type, packName, material, instrumentCount, packs);
+        if (violations.isEmpty()) {
+            return;
+        }
+        if (result.notes == null) {
+            result.notes = new ArrayList<>();
+        }
+        for (BillRowFieldConsistencyValidator.Violation violation : violations) {
+            result.notes.add("【字段核对】" + violation.message());
+        }
+        Map<String, Object> fieldNotes = BillRowFieldConsistencyValidator.toBillingNotes(violations);
+        if (result.billingNotes == null) {
+            result.billingNotes = new LinkedHashMap<>();
+        }
+        if (fieldNotes != null) {
+            result.billingNotes.put("fieldConsistency", fieldNotes);
+        }
+    }
+
+    private static boolean hasFieldValidationIssue(PricingEngine.ProcessedResult result) {
+        if (result.notes == null) {
+            return false;
+        }
+        for (String note : result.notes) {
+            if (note != null && note.startsWith("【字段核对】") && !note.startsWith("【字段核对】规则单价")) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private static void rewriteFinalPriceNote(PricingEngine.ProcessedResult result, Map<String, Object> rowMap) {
+        if (result.notes == null) {
+            result.notes = new ArrayList<>();
+        }
+        result.notes.removeIf(note -> note != null && note.startsWith("【字段核对】规则单价"));
+        Double bill = doubleVal(rowMap, "unitPrice");
+        Double expected = result.expectedUnitPrice;
+        if (bill == null || expected == null || Math.abs(expected - bill) <= 0.001) {
+            return;
+        }
+        result.notes.add(String.format("【字段核对】规则单价 %.2f 元与原账单价 %.2f 元不一致，请人工复核。", expected, bill));
+    }
+
     private static int packCount(Map<String, Object> rowMap) {
         Object raw = rowMap.get("packCount");
         if (raw instanceof Number number) {
@@ -284,6 +373,11 @@ public class ReconciliationPricingOrchestrator {
         Double totalPrice = doubleVal(rowMap, "totalPrice");
         double originalTotal = totalPrice != null ? totalPrice : 0.0;
         result.difference = round2(correctedTotal - originalTotal);
-        result.status = Math.abs(result.difference) > 0.001 ? "corrected" : "unchanged";
+        boolean keepFieldWarning = hasFieldValidationIssue(result);
+        if (Math.abs(result.difference) > 0.001) {
+            result.status = keepFieldWarning ? "warning" : "corrected";
+        } else if (!keepFieldWarning) {
+            result.status = "unchanged";
+        }
     }
 }

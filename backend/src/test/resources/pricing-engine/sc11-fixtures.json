@@ -235,8 +235,8 @@
       "id": "t04_guoyao2_pointer_12",
       "sc11Type": "SC11-T04",
       "source": "特殊收费(11).xlsx#电机厂#指针",
-      "customerCode": "GUOYAO-2",
-      "hospitalName": "国药总医院第二院区",
+      "customerCode": "DIANJI-YY",
+      "hospitalName": "电机厂医院",
       "row": {
         "department": "手术室",
         "type": "额外包(纸塑袋)",
@@ -245,7 +245,8 @@
         "instrumentCount": 12,
         "packCount": 1,
         "unitPrice": 16.5,
-        "totalPrice": 16.5
+        "totalPrice": 16.5,
+        "hospitalName": "电机厂医院"
       },
       "expect": {
         "status": "unchanged",
@@ -335,8 +336,8 @@
       "id": "t05_guoyao2_pointer_20",
       "sc11Type": "SC11-T05",
       "source": "特殊收费(11).xlsx#电机厂#指针＞10",
-      "customerCode": "GUOYAO-2",
-      "hospitalName": "国药总医院第二院区",
+      "customerCode": "DIANJI-YY",
+      "hospitalName": "电机厂医院",
       "row": {
         "department": "手术室",
         "type": "额外包(纸塑袋)",
@@ -345,7 +346,8 @@
         "instrumentCount": 20,
         "packCount": 1,
         "unitPrice": 22.0,
-        "totalPrice": 22.0
+        "totalPrice": 22.0,
+        "hospitalName": "电机厂医院"
       },
       "expect": {
         "status": "unchanged",

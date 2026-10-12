@@ -6,53 +6,38 @@
   "productRules": [
     {
       "ruleType": "PRICE_PER_INSTRUMENT",
-      "name": "奥兰双≥3按件5.5免包材自动",
-      "priority": 9,
-      "price": 5.5,
-      "keywords": [
-        "/双"
-      ],
-      "minInstrumentCount": 3,
-      "skipPackaging": true,
-      "skipDiscount": true,
-      "isActive": true,
-      "matchMode": "first",
-      "acceptedTypes": [
-        "额外包（纸塑袋）"
-      ]
-    },
-    {
-      "ruleType": "PRICE_PER_INSTRUMENT",
-      "name": "奥兰双<3按件5.5含包材",
+      "name": "奥兰双<3按件5.5加列出的袋",
       "priority": 10,
       "price": 5.5,
-      "keywords": [
-        "/双"
-      ],
       "maxInstrumentCount": 2,
+      "conditionsJson": "[{\"field\": \"bagAddon\", \"value\": \"all\"}]",
+      "keywords": [
+        "双@contains"
+      ],
       "skipPackaging": false,
       "skipDiscount": true,
       "isActive": true,
       "matchMode": "first",
-      "conditionsJson": "[{\"field\":\"manualReview\",\"value\":true}]",
+      "keywordMatchMode": "contains",
       "acceptedTypes": [
         "额外包（纸塑袋）"
       ]
     },
     {
       "ruleType": "PRICE_PER_INSTRUMENT",
-      "name": "奥兰双≥3按件5.5免包材",
+      "name": "奥兰双≥3按件5.5不加袋",
       "priority": 11,
       "price": 5.5,
-      "keywords": [
-        "/双"
-      ],
       "minInstrumentCount": 3,
-      "skipPackaging": true,
+      "conditionsJson": "[{\"field\": \"bagAddon\", \"value\": \"none\"}]",
+      "keywords": [
+        "双@contains"
+      ],
+      "skipPackaging": false,
       "skipDiscount": true,
       "isActive": true,
       "matchMode": "first",
-      "conditionsJson": "[{\"field\":\"manualReview\",\"value\":true}]",
+      "keywordMatchMode": "contains",
       "acceptedTypes": [
         "额外包（纸塑袋）"
       ]

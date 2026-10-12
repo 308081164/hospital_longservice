@@ -30,7 +30,7 @@ HOSPITAL_TO_CODE: dict[str, str] = {
     "方南南医院": "FNN-YY",
     "春语医疗美容医院": "CHUNYU-YL",
     "松电慢病": "HRB-SD-MB",
-    "电机厂医院": "GUOYAO-2",
+    "电机厂医院": "DIANJI-YY",
     "省监狱管理局医院": "HLJ-JYGLJ-YY",
     "祖研-黑龙江省中医医院（南岗院区）": "ZUYAN-NG",
     "祖研-黑龙江省中医医院（三辅院区）": "ZUYAN-SF",
@@ -55,6 +55,10 @@ HOSPITAL_TO_CODE: dict[str, str] = {
     "黑龙江省医院（南岗院区）": "SHENG-YY-NG",
     "黑龙江省医院（香坊院区）": "SHENG-YY-XF",
     "哈尔滨工业大学医院": "HRB-HIT",
+    "五常市人民医院": "WUCHANG-RM",
+    "黑龙江菁华上德生殖妇产医院": "JINGHUA-SD",
+    "哈尔滨红十字医院": "HRB-HSZ",
+    "哈尔滨市第二医院": "HRB-2ND",
 }
 
 

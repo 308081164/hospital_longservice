@@ -1,0 +1,80 @@
+{
+  "customerCode": "HRB-HSZ",
+  "customerName": "哈尔滨红十字医院",
+  "billingEnabled": true,
+  "billingPricingMode": "hybrid",
+  "productRules": [
+    {
+      "ruleType": "FIXED_PRICE",
+      "name": "红十字一件一包固定22",
+      "priority": 8,
+      "price": 22.0,
+      "keywords": [],
+      "skipPackaging": true,
+      "skipDiscount": true,
+      "isActive": true,
+      "matchMode": "first",
+      "acceptedTypes": [
+        "额外包低温等离子",
+        "额外包（ETO）",
+        "单包装（低温老肯）",
+        "单包装（EO）"
+      ],
+      "maxInstrumentCount": 1
+    },
+    {
+      "ruleType": "PRICE_PER_INSTRUMENT",
+      "name": "红十字双<3按件5.5加列出的袋",
+      "priority": 10,
+      "price": 5.5,
+      "maxInstrumentCount": 2,
+      "conditionsJson": "[{\"field\": \"bagAddon\", \"value\": \"all\"}, {\"field\": \"capDoubleBag\", \"value\": true}]",
+      "keywords": [
+        "双@contains"
+      ],
+      "skipPackaging": false,
+      "skipDiscount": true,
+      "isActive": true,
+      "matchMode": "first",
+      "keywordMatchMode": "contains",
+      "acceptedTypes": [
+        "额外包（纸塑袋）"
+      ]
+    },
+    {
+      "ruleType": "PRICE_PER_INSTRUMENT",
+      "name": "红十字双≥3按件5.5不加袋",
+      "priority": 11,
+      "price": 5.5,
+      "minInstrumentCount": 3,
+      "conditionsJson": "[{\"field\": \"bagAddon\", \"value\": \"none\"}]",
+      "keywords": [
+        "双@contains"
+      ],
+      "skipPackaging": false,
+      "skipDiscount": true,
+      "isActive": true,
+      "matchMode": "first",
+      "keywordMatchMode": "contains",
+      "acceptedTypes": [
+        "额外包（纸塑袋）"
+      ]
+    },
+    {
+      "ruleType": "FIXED_PRICE",
+      "name": "红十字针盒固定16.5",
+      "priority": 20,
+      "price": 16.5,
+      "keywords": [
+        "针盒-1/W6050"
+      ],
+      "skipPackaging": true,
+      "skipDiscount": true,
+      "isActive": true,
+      "matchMode": "first",
+      "acceptedTypes": [
+        "敷料包（无纺布）"
+      ]
+    }
+  ]
+}

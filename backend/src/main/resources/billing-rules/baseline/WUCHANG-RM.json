@@ -1,0 +1,48 @@
+{
+  "customerCode": "WUCHANG-RM",
+  "customerName": "五常市人民医院",
+  "billingEnabled": true,
+  "billingPricingMode": "hybrid",
+  "productRules": [
+    {
+      "ruleType": "FOLD",
+      "name": "五常骨元针≤10含包材",
+      "priority": 14,
+      "keywords": [
+        "骨元针@contains"
+      ],
+      "threshold": 5,
+      "foldRatio": 5,
+      "price": 5.5,
+      "maxInstrumentCount": 10,
+      "skipPackaging": false,
+      "skipDiscount": false,
+      "isActive": true,
+      "matchMode": "first",
+      "keywordMatchMode": "contains",
+      "acceptedTypes": [
+        "额外包（纸塑袋）"
+      ]
+    },
+    {
+      "ruleType": "FOLD",
+      "name": "五常骨元针>10免包材",
+      "priority": 15,
+      "keywords": [
+        "骨元针@contains"
+      ],
+      "threshold": 5,
+      "foldRatio": 5,
+      "price": 5.5,
+      "minInstrumentCount": 11,
+      "skipPackaging": true,
+      "skipDiscount": false,
+      "isActive": true,
+      "matchMode": "first",
+      "keywordMatchMode": "contains",
+      "acceptedTypes": [
+        "额外包（纸塑袋）"
+      ]
+    }
+  ]
+}

@@ -1,8 +1,8 @@
 {
-  "baseline_hash": "00093cffad471730f2e7f547fe847e8c40160fc33cde68ced76260696d9b2523",
-  "generated_at": "2026-10-09T07:52:53Z",
+  "baseline_hash": "2e85959777a5a13cab6b6c326c4b9ee587aeab5df9263c9bb7172e31c8d8218f",
+  "generated_at": "2026-10-12T03:08:57Z",
   "source": "billing-rules-manifest@01836c66115726ff7229db58f16020cb6e65f7069beee13551669c1031fd7764",
-  "customer_count": 37,
+  "customer_count": 42,
   "customers": [
     {
       "code": "BINGCHENG-YM",
@@ -13,8 +13,8 @@
     {
       "code": "GUOYAO-2",
       "file": "baseline/GUOYAO-2.json",
-      "ruleCount": 33,
-      "fileHash": "90fdf12ede731015e01feefff0842d3c6a71b9031c74ca3b68e112bc086729ad"
+      "ruleCount": 0,
+      "fileHash": "992deb0b833c5cffb6a93a0bfe9ab3bda0292f43f29b2c0c19f7dea5d9ec05a4"
     },
     {
       "code": "FNN-YY",
@@ -151,8 +151,8 @@
     {
       "code": "YUANDONG-XN",
       "file": "baseline/YUANDONG-XN.json",
-      "ruleCount": 3,
-      "fileHash": "267dc6e6a9f1cd2f153310178fbaf5e405aa5f7343eacb9c10bfa61fa31a423e"
+      "ruleCount": 2,
+      "fileHash": "05cd2ff54a695a1c39dbbcebe5f2a576e8ab2ec403cc47856f311c9ed5ee89a2"
     },
     {
       "code": "ZUYAN-SF",
@@ -163,8 +163,8 @@
     {
       "code": "AOLAN-YY",
       "file": "baseline/AOLAN-YY.json",
-      "ruleCount": 3,
-      "fileHash": "58d0ef20ed11770f3b044984ea4e7bbbb2b4bb46f37c05eda8ddcf5a8785eea0"
+      "ruleCount": 2,
+      "fileHash": "984457c2805400603e210f8ab3925aa07a65e6dcf54bd5d00ec067e9f6842a5c"
     },
     {
       "code": "HRB-XK-YY",
@@ -175,8 +175,8 @@
     {
       "code": "SENHAI-YY",
       "file": "baseline/SENHAI-YY.json",
-      "ruleCount": 5,
-      "fileHash": "97a6dd32cf604a71e877cd65ff86eb6807d10fef5684cba097c86586bb35c2bc"
+      "ruleCount": 4,
+      "fileHash": "cdc261c5b6408524576d8567e2cd41e3515f7f0ece71ea09bbd9c90066b12287"
     },
     {
       "code": "ZY3-DIANLI",
@@ -199,26 +199,56 @@
     {
       "code": "ERYY-SB",
       "file": "baseline/ERYY-SB.json",
-      "ruleCount": 3,
-      "fileHash": "850c3abd19ae854b694293d6bf3d44601945b2b1b41cdb8fee674223ad1b0309"
+      "ruleCount": 4,
+      "fileHash": "29a79f515ed878a85969f91fce8750f5357ce1167d421d0b14ea7d1f1e4a76f1"
     },
     {
       "code": "SHENG-YY-NG",
       "file": "baseline/SHENG-YY-NG.json",
-      "ruleCount": 12,
-      "fileHash": "bbc900de898e06d9227017078470cf6039dde07ed4de21ce01c84bacb6468c23"
+      "ruleCount": 14,
+      "fileHash": "2cd1d2b71ab54ddc5515206c48acfb8dfe22e553b443bf2153a40bcb0ca1c4bc"
     },
     {
       "code": "SHENG-YY-XF",
       "file": "baseline/SHENG-YY-XF.json",
-      "ruleCount": 8,
-      "fileHash": "cd4b0475d45ab00e143dc13fe18de5fb4587d3c97a56d4525f404b554bfa9d0c"
+      "ruleCount": 12,
+      "fileHash": "9630f2f540cc6773ecec93cb795ba4ff1d581977e556d50ed7c8876c770e8d5c"
     },
     {
       "code": "HRB-HIT",
       "file": "baseline/HRB-HIT.json",
       "ruleCount": 8,
       "fileHash": "06a12e4cb5532743d56633951fa6a673068b16522dd14f52116c69fea7b74883"
+    },
+    {
+      "code": "DIANJI-YY",
+      "file": "baseline/DIANJI-YY.json",
+      "ruleCount": 10,
+      "fileHash": "135040a39260dc2076232cf4e6add114f5e31bb4767cd5d54e4a7f04f48a545c"
+    },
+    {
+      "code": "WUCHANG-RM",
+      "file": "baseline/WUCHANG-RM.json",
+      "ruleCount": 2,
+      "fileHash": "6d4e122c22958a3aab38020f9e4cd9b6438cb80e08e551fba06dde85a0ed9d63"
+    },
+    {
+      "code": "JINGHUA-SD",
+      "file": "baseline/JINGHUA-SD.json",
+      "ruleCount": 2,
+      "fileHash": "d3fb8f904410774816242da10bd07e7263ee8a2bfbbe1d90156c9b54d80e749a"
+    },
+    {
+      "code": "HRB-HSZ",
+      "file": "baseline/HRB-HSZ.json",
+      "ruleCount": 4,
+      "fileHash": "4efe8bd39885011187a1ea0011400bc7900b54dd71b49390289981c7a5483c89"
+    },
+    {
+      "code": "HRB-2ND",
+      "file": "baseline/HRB-2ND.json",
+      "ruleCount": 2,
+      "fileHash": "ca04969127e7bcb4c67d02049d49b8318dec1aad763f5ec11f5baec58d54121e"
     },
     {
       "code": "ZYY-D1",

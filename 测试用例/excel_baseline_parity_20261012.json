@@ -1,0 +1,342 @@
+{
+  "source_excel": "docs/source/特殊收费(1).xlsx",
+  "ok": true,
+  "unmapped_hospitals": [],
+  "errors": [],
+  "hospitals": [
+    {
+      "code": "BINGCHENG-YM",
+      "name": "冰城医美",
+      "excel_rows": 3,
+      "baseline_rules": 6,
+      "ok": true,
+      "missing": []
+    },
+    {
+      "code": "GUOYAO-2",
+      "name": "国药二院区",
+      "excel_rows": 0,
+      "baseline_rules": 0,
+      "ok": true,
+      "missing": []
+    },
+    {
+      "code": "FNN-YY",
+      "name": "方南南",
+      "excel_rows": 8,
+      "baseline_rules": 8,
+      "ok": true,
+      "missing": []
+    },
+    {
+      "code": "NEAU-YY",
+      "name": "东北农大",
+      "excel_rows": 8,
+      "baseline_rules": 8,
+      "ok": true,
+      "missing": []
+    },
+    {
+      "code": "HRB-WY",
+      "name": "市五院主院区",
+      "excel_rows": 8,
+      "baseline_rules": 8,
+      "ok": true,
+      "missing": []
+    },
+    {
+      "code": "HRB-SD-MB",
+      "name": "松电慢病",
+      "excel_rows": 2,
+      "baseline_rules": 2,
+      "ok": true,
+      "missing": []
+    },
+    {
+      "code": "HRB-HTFH",
+      "name": "航天风华",
+      "excel_rows": 2,
+      "baseline_rules": 2,
+      "ok": true,
+      "missing": []
+    },
+    {
+      "code": "HRB-WY-EM",
+      "name": "市五院二门诊",
+      "excel_rows": 1,
+      "baseline_rules": 3,
+      "ok": true,
+      "missing": []
+    },
+    {
+      "code": "JIUZHOU-FK",
+      "name": "九州",
+      "excel_rows": 1,
+      "baseline_rules": 1,
+      "ok": true,
+      "missing": []
+    },
+    {
+      "code": "BOSHANG-YY",
+      "name": "博尚",
+      "excel_rows": 3,
+      "baseline_rules": 3,
+      "ok": true,
+      "missing": []
+    },
+    {
+      "code": "HAIYUAN-SB",
+      "name": "海员松北",
+      "excel_rows": 2,
+      "baseline_rules": 2,
+      "ok": true,
+      "missing": []
+    },
+    {
+      "code": "HLJ-FY-RK",
+      "name": "省妇幼人口",
+      "excel_rows": 34,
+      "baseline_rules": 34,
+      "ok": true,
+      "missing": []
+    },
+    {
+      "code": "ZUYAN-NG",
+      "name": "祖研南岗",
+      "excel_rows": 2,
+      "baseline_rules": 2,
+      "ok": true,
+      "missing": []
+    },
+    {
+      "code": "SHKF-YY",
+      "name": "社会康复",
+      "excel_rows": 14,
+      "baseline_rules": 14,
+      "ok": true,
+      "missing": []
+    },
+    {
+      "code": "DL-FUCHAN",
+      "name": "道里妇幼",
+      "excel_rows": 4,
+      "baseline_rules": 4,
+      "ok": true,
+      "missing": []
+    },
+    {
+      "code": "CHUNYU-YL",
+      "name": "春语医美",
+      "excel_rows": 2,
+      "baseline_rules": 4,
+      "ok": true,
+      "missing": []
+    },
+    {
+      "code": "HL-ZGH",
+      "name": "总工会",
+      "excel_rows": 5,
+      "baseline_rules": 5,
+      "ok": true,
+      "missing": []
+    },
+    {
+      "code": "JZSW-BIO",
+      "name": "基准生物",
+      "excel_rows": 2,
+      "baseline_rules": 1,
+      "ok": true,
+      "missing": []
+    },
+    {
+      "code": "SUOFEI-YL",
+      "name": "索菲医美",
+      "excel_rows": 1,
+      "baseline_rules": 1,
+      "ok": true,
+      "missing": []
+    },
+    {
+      "code": "HLJ-JYGLJ-YY",
+      "name": "省监狱管理局",
+      "excel_rows": 2,
+      "baseline_rules": 4,
+      "ok": true,
+      "missing": []
+    },
+    {
+      "code": "HULAN-TCM",
+      "name": "呼兰中医",
+      "excel_rows": 5,
+      "baseline_rules": 6,
+      "ok": true,
+      "missing": []
+    },
+    {
+      "code": "PFQ-RM",
+      "name": "平房区人民",
+      "excel_rows": 2,
+      "baseline_rules": 2,
+      "ok": true,
+      "missing": []
+    },
+    {
+      "code": "HULAN-RM",
+      "name": "呼兰区人民",
+      "excel_rows": 2,
+      "baseline_rules": 2,
+      "ok": true,
+      "missing": []
+    },
+    {
+      "code": "XINFA-HSZ",
+      "name": "新发红十字",
+      "excel_rows": 3,
+      "baseline_rules": 3,
+      "ok": true,
+      "missing": []
+    },
+    {
+      "code": "YUANDONG-XN",
+      "name": "远东心脑血管",
+      "excel_rows": 2,
+      "baseline_rules": 2,
+      "ok": true,
+      "missing": []
+    },
+    {
+      "code": "ZUYAN-SF",
+      "name": "祖研三辅",
+      "excel_rows": 2,
+      "baseline_rules": 2,
+      "ok": true,
+      "missing": []
+    },
+    {
+      "code": "AOLAN-YY",
+      "name": "奥兰医院",
+      "excel_rows": 2,
+      "baseline_rules": 2,
+      "ok": true,
+      "missing": []
+    },
+    {
+      "code": "HRB-XK-YY",
+      "name": "胸科医院",
+      "excel_rows": 2,
+      "baseline_rules": 2,
+      "ok": true,
+      "missing": []
+    },
+    {
+      "code": "SENHAI-YY",
+      "name": "森海医院",
+      "excel_rows": 4,
+      "baseline_rules": 4,
+      "ok": true,
+      "missing": []
+    },
+    {
+      "code": "ZY3-DIANLI",
+      "name": "中医三院电力",
+      "excel_rows": 6,
+      "baseline_rules": 6,
+      "ok": true,
+      "missing": []
+    },
+    {
+      "code": "QILUNJI-YY",
+      "name": "汽轮机医院",
+      "excel_rows": 1,
+      "baseline_rules": 1,
+      "ok": true,
+      "missing": []
+    },
+    {
+      "code": "XIEDA-YL",
+      "name": "协大医美",
+      "excel_rows": 3,
+      "baseline_rules": 6,
+      "ok": true,
+      "missing": []
+    },
+    {
+      "code": "ERYY-SB",
+      "name": "省二松北",
+      "excel_rows": 4,
+      "baseline_rules": 4,
+      "ok": true,
+      "missing": []
+    },
+    {
+      "code": "SHENG-YY-NG",
+      "name": "省医院南岗",
+      "excel_rows": 11,
+      "baseline_rules": 14,
+      "ok": true,
+      "missing": []
+    },
+    {
+      "code": "SHENG-YY-XF",
+      "name": "省医院香坊",
+      "excel_rows": 11,
+      "baseline_rules": 12,
+      "ok": true,
+      "missing": []
+    },
+    {
+      "code": "HRB-HIT",
+      "name": "哈工大",
+      "excel_rows": 3,
+      "baseline_rules": 8,
+      "ok": true,
+      "missing": []
+    },
+    {
+      "code": "DIANJI-YY",
+      "name": "电机厂",
+      "excel_rows": 6,
+      "baseline_rules": 10,
+      "ok": true,
+      "missing": []
+    },
+    {
+      "code": "WUCHANG-RM",
+      "name": "五常市人民医院",
+      "excel_rows": 2,
+      "baseline_rules": 2,
+      "ok": true,
+      "missing": []
+    },
+    {
+      "code": "JINGHUA-SD",
+      "name": "菁华上德",
+      "excel_rows": 2,
+      "baseline_rules": 2,
+      "ok": true,
+      "missing": []
+    },
+    {
+      "code": "HRB-HSZ",
+      "name": "哈尔滨红十字医院",
+      "excel_rows": 7,
+      "baseline_rules": 4,
+      "ok": true,
+      "missing": []
+    },
+    {
+      "code": "HRB-2ND",
+      "name": "哈尔滨市第二医院",
+      "excel_rows": 2,
+      "baseline_rules": 2,
+      "ok": true,
+      "missing": []
+    }
+  ],
+  "summary": {
+    "total": 41,
+    "pass": 41,
+    "fail": 0,
+    "excel_rows": 191
+  }
+}

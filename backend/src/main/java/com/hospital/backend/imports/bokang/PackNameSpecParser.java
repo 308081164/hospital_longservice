@@ -304,6 +304,19 @@ public final class PackNameSpecParser {
             if (next == '°' || next == '度' || next == '号') {
                 return false;
             }
+            // 4.5号：小数点挡住了紧挨着的「号」，整段仍是型号，不是件数。
+            if (next == '.') {
+                int cursor = digitEnd + 1;
+                while (cursor < text.length() && Character.isDigit(text.charAt(cursor))) {
+                    cursor++;
+                }
+                if (cursor < text.length()) {
+                    char afterDecimal = text.charAt(cursor);
+                    if (afterDecimal == '号' || afterDecimal == '度' || afterDecimal == '°') {
+                        return false;
+                    }
+                }
+            }
         }
         if (namePart.length() == 1 && namePart.chars().allMatch(ch -> ch >= 'a' && ch <= 'z' || ch >= 'A' && ch <= 'Z')) {
             String digits = compactMatcher.group(2);
@@ -423,12 +436,16 @@ public final class PackNameSpecParser {
         }
         String normalized = text.replace("×", "*").replace("x", "*").replace("X", "*");
         Matcher mm = BAG_SIZE_MM.matcher(normalized);
-        if (!mm.find()) {
-            return java.util.Optional.empty();
+        while (mm.find()) {
+            int end = mm.end(2);
+            if (end < normalized.length() && normalized.charAt(end) == '.') {
+                continue;
+            }
+            return java.util.Optional.of(new MmSize(
+                    Integer.parseInt(mm.group(1)),
+                    Integer.parseInt(mm.group(2))));
         }
-        return java.util.Optional.of(new MmSize(
-                Integer.parseInt(mm.group(1)),
-                Integer.parseInt(mm.group(2))));
+        return java.util.Optional.empty();
     }
 
     /** 从类型字段推断包材类别（纸塑袋/无纺布/棉/敷料）。 */

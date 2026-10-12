@@ -305,6 +305,7 @@ export function blocksPricingFromBillingNotes(
 
 /** 字段核对/校验异常时在数值后展示红叹号（不阻断计价结果展示）。 */
 export function shouldShowValidationIndicator(row: Record<string, unknown>): boolean {
+  if (row['status'] === 'unchanged') return false
   const ctx = parseReconciliationBillingContext(row)
   if (ctx.hasFieldConsistencyIssues || ctx.hasBlockingValidationIssues) return true
   // 规则单价与原单价不一致、或未命中规则需人工核验时展示告警
@@ -326,6 +327,17 @@ export function validationIndicatorMessages(row: Record<string, unknown>): strin
   }
   for (const item of ctx.billingValidationViolations) {
     if (item.severity === 'error' && item.message) messages.push(item.message)
+  }
+  const unitPrice = toNumber(row.unitPrice ?? row.unit_price)
+  const expectedUnitPrice = toNumber(row.expectedUnitPrice ?? row.expected_unit_price)
+  if (
+    unitPrice != null &&
+    expectedUnitPrice != null &&
+    Math.abs(unitPrice - expectedUnitPrice) > 0.001
+  ) {
+    messages.push(
+      `规则单价 ${expectedUnitPrice.toFixed(2)} 元与原单价 ${unitPrice.toFixed(2)} 元不一致`
+    )
   }
   return messages
 }
@@ -476,9 +488,20 @@ export function fieldConsistencyRowClass(row: Record<string, unknown>): string {
   // 人工标记「无需修改」的行视为已确认，不再做整行高亮
   if (row['status'] === 'unchanged') return ''
   const ctx = parseReconciliationBillingContext(row)
-  return ctx.hasBlockingValidationIssues || ctx.hasFieldConsistencyIssues
-    ? 'field-consistency-row'
-    : ''
+  if (ctx.hasBlockingValidationIssues || ctx.hasFieldConsistencyIssues) {
+    return 'field-consistency-row'
+  }
+  const unitPrice = toNumber(row.unitPrice ?? row.unit_price)
+  const expectedUnitPrice = toNumber(row.expectedUnitPrice ?? row.expected_unit_price)
+  if (
+    (row['status'] === 'corrected' || row['status'] === 'warning') &&
+    unitPrice != null &&
+    expectedUnitPrice != null &&
+    Math.abs(unitPrice - expectedUnitPrice) > 0.001
+  ) {
+    return 'price-diff-row'
+  }
+  return ''
 }
 
 export function parseReconciliationBillingContext(

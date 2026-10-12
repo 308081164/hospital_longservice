@@ -96,6 +96,7 @@ class PackNameSpecParserTest {
                 Arguments.of("全冠套装(针-8盒-1)/W9050", 9),
                 // 外套有连字符时括号内规格区间仍忽略
                 Arguments.of("扩棒（3-5.5号）-6/z1526", 6),
+                Arguments.of("扩镜4.5号-1", 1),
                 // 计数与计价隔离：盒/筐/盘 token 一律参与斜杠前件数累加
                 Arguments.of("针7（盒1）", 8),
                 Arguments.of("针7盒1", 8),

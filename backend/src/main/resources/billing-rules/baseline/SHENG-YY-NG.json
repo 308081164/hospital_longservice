@@ -6,6 +6,52 @@
   "productRules": [
     {
       "ruleType": "PRICE_PER_INSTRUMENT",
+      "name": "省医院南岗双<3按件5.5加列出的袋",
+      "priority": 10,
+      "price": 5.5,
+      "maxInstrumentCount": 2,
+      "conditionsJson": "[{\"field\": \"bagAddon\", \"value\": \"all\"}, {\"field\": \"capDoubleBag\", \"value\": true}]",
+      "keywords": [
+        "双@contains"
+      ],
+      "skipPackaging": false,
+      "skipDiscount": true,
+      "isActive": true,
+      "matchMode": "first",
+      "keywordMatchMode": "contains",
+      "acceptedTypes": [
+        "额外包（纸塑袋）"
+      ],
+      "excludeKeywords": [
+        "双信封",
+        "信封"
+      ]
+    },
+    {
+      "ruleType": "PRICE_PER_INSTRUMENT",
+      "name": "省医院南岗双≥3按件5.5不加袋",
+      "priority": 11,
+      "price": 5.5,
+      "minInstrumentCount": 3,
+      "conditionsJson": "[{\"field\": \"bagAddon\", \"value\": \"none\"}]",
+      "keywords": [
+        "双@contains"
+      ],
+      "skipPackaging": false,
+      "skipDiscount": true,
+      "isActive": true,
+      "matchMode": "first",
+      "keywordMatchMode": "contains",
+      "acceptedTypes": [
+        "额外包（纸塑袋）"
+      ],
+      "excludeKeywords": [
+        "双信封",
+        "信封"
+      ]
+    },
+    {
+      "ruleType": "PRICE_PER_INSTRUMENT",
       "name": "省医院南岗门皮手术包按件5.5",
       "priority": 10,
       "price": 5.5,
@@ -163,55 +209,56 @@
     },
     {
       "ruleType": "PRICE_PER_INSTRUMENT",
-      "name": "省医院南岗双≥3按件5.5免包材自动",
-      "priority": 9,
+      "name": "省医院南岗棉布纸塑<3按件5.5含包材封顶",
+      "priority": 80,
       "price": 5.5,
-      "keywords": [
-        "/双"
-      ],
-      "minInstrumentCount": 3,
-      "skipPackaging": true,
-      "skipDiscount": true,
-      "isActive": true,
-      "matchMode": "first",
-      "acceptedTypes": [
-        "额外包（纸塑袋）"
-      ]
-    },
-    {
-      "ruleType": "PRICE_PER_INSTRUMENT",
-      "name": "省医院南岗双<3按件5.5含包材",
-      "priority": 10,
-      "price": 5.5,
-      "keywords": [
-        "/双"
+      "keywords": [],
+      "materials": [
+        "纸塑袋"
       ],
       "maxInstrumentCount": 2,
       "skipPackaging": false,
       "skipDiscount": true,
       "isActive": true,
       "matchMode": "first",
-      "conditionsJson": "[{\"field\":\"manualReview\",\"value\":true}]",
+      "keywordMatchMode": "contains",
+      "conditionsJson": "[{\"field\": \"bagAddon\", \"value\": \"all\"}, {\"field\": \"capDoubleBag\", \"value\": true}]",
       "acceptedTypes": [
-        "额外包（纸塑袋）"
+        "额外包（棉布包装）"
       ]
     },
     {
-      "ruleType": "PRICE_PER_INSTRUMENT",
-      "name": "省医院南岗双≥3按件5.5免包材",
-      "priority": 11,
-      "price": 5.5,
-      "keywords": [
-        "/双"
+      "ruleType": "FIXED_PRICE",
+      "name": "省医院南岗棉布无纺布<3固定16.5",
+      "priority": 81,
+      "price": 16.5,
+      "keywords": [],
+      "skipPackaging": true,
+      "skipDiscount": true,
+      "isActive": true,
+      "matchMode": "first",
+      "acceptedTypes": [
+        "额外包（棉布包装）"
       ],
+      "materials": [
+        "无纺布"
+      ],
+      "maxInstrumentCount": 2,
+      "keywordMatchMode": "contains"
+    },
+    {
+      "ruleType": "PRICE_PER_INSTRUMENT",
+      "name": "省医院南岗棉布≥3按件5.5",
+      "priority": 82,
+      "price": 5.5,
+      "keywords": [],
       "minInstrumentCount": 3,
       "skipPackaging": true,
       "skipDiscount": true,
       "isActive": true,
       "matchMode": "first",
-      "conditionsJson": "[{\"field\":\"manualReview\",\"value\":true}]",
       "acceptedTypes": [
-        "额外包（纸塑袋）"
+        "额外包（棉布包装）"
       ]
     }
   ]

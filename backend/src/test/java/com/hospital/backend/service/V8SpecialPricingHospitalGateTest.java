@@ -24,7 +24,7 @@ class V8SpecialPricingHospitalGateTest {
 
     private static final List<V8Hospital> V8_HOSPITALS = List.of(
             new V8Hospital("BINGCHENG-YM", "冰城医美", true),
-            new V8Hospital("GUOYAO-2", "电机厂", true),
+            new V8Hospital("DIANJI-YY", "电机厂", true),
             new V8Hospital("FNN-YY", "方南南", false),
             new V8Hospital("NEAU-YY", "东北农大", false),
             new V8Hospital("HRB-HEU", "工程大学", false),

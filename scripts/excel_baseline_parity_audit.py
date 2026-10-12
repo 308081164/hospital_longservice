@@ -45,7 +45,15 @@ EXTRA_HOSPITAL_TO_CODE: dict[str, str] = {
     "黑龙江省医院（南岗院区）": "SHENG-YY-NG",
     "黑龙江省医院（香坊院区）": "SHENG-YY-XF",
     "哈尔滨工业大学医院": "HRB-HIT",
+    "五常市人民医院": "WUCHANG-RM",
+    "黑龙江菁华上德生殖妇产医院": "JINGHUA-SD",
+    "哈尔滨红十字医院": "HRB-HSZ",
+    "哈尔滨市第二医院": "HRB-2ND",
 }
+
+
+# 新表没有对应段落、但仍保留客户档案的编码
+OUTSIDE_SHEET_CODES = {"GUOYAO-2"}
 
 
 def hospital_code(name: str) -> str | None:
@@ -115,6 +123,12 @@ def rule_covers_keyword(rule: dict, keyword: str, mode: str) -> bool:
 def find_coverage(rules: list[dict], keyword: str | None, mode: str, pack_name: str) -> bool:
     if mode == "generic":
         return True
+    text = pack_name or ""
+    active = [r for r in rules if r.get("isActive") is not False]
+    if "和名字无关" in text:
+        return any("棉布" in (r.get("name") or "") for r in active)
+    if "和包名称无关" in text:
+        return any("一件一包" in (r.get("name") or "") for r in active)
     if not keyword and mode == "exact":
         keyword = pack_name
     if not keyword:
@@ -213,8 +227,8 @@ def audit(xlsx: Path) -> dict:
                 missing.append(
                     f"row{er['row']} [{er.get('item')}] {er.get('pack_name')} | {er.get('rule')[:60]}"
                 )
-        ok = not missing and code in by_code
-        if code not in by_code:
+        ok = not missing and (code in by_code or code in OUTSIDE_SHEET_CODES)
+        if code not in by_code and code not in OUTSIDE_SHEET_CODES:
             errors.append(f"{code}: Excel 无对应段落")
         if missing:
             errors.extend([f"{code}: 缺失覆盖 — {m}" for m in missing])
@@ -224,7 +238,7 @@ def audit(xlsx: Path) -> dict:
                 "name": STRICT_BY_CODE[code].label,
                 "excel_rows": len(excel_for),
                 "baseline_rules": len([r for r in rules if r.get("isActive") is not False]),
-                "ok": ok and bool(excel_for),
+                "ok": code in OUTSIDE_SHEET_CODES or (ok and bool(excel_for)),
                 "missing": missing,
             }
         )

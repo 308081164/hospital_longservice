@@ -540,11 +540,13 @@
     background-color: #e1f3d8 !important;
   }
 
-  .reconciliation-data-table :deep(.field-consistency-row td.el-table__cell) {
+  .reconciliation-data-table :deep(.field-consistency-row td.el-table__cell),
+  .reconciliation-data-table :deep(.price-diff-row td.el-table__cell) {
     background-color: #fff7f7 !important;
   }
 
-  .reconciliation-data-table :deep(.field-consistency-row:hover td.el-table__cell) {
+  .reconciliation-data-table :deep(.field-consistency-row:hover td.el-table__cell),
+  .reconciliation-data-table :deep(.price-diff-row:hover td.el-table__cell) {
     background-color: #ffeded !important;
   }
 
@@ -571,7 +573,9 @@
   }
 
   .reconciliation-data-table :deep(.field-consistency-row.el-table__row--striped td.el-table__cell),
-  .reconciliation-data-table :deep(.field-consistency-row td.el-table__cell) {
+  .reconciliation-data-table :deep(.field-consistency-row td.el-table__cell),
+  .reconciliation-data-table :deep(.price-diff-row.el-table__row--striped td.el-table__cell),
+  .reconciliation-data-table :deep(.price-diff-row td.el-table__cell) {
     background-color: #fff7f7 !important;
   }
 

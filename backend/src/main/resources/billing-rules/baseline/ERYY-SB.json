@@ -6,39 +6,38 @@
   "productRules": [
     {
       "ruleType": "PRICE_PER_INSTRUMENT",
-      "name": "省二松北双<3按件5.5含包材",
+      "name": "省二松北双<3按件5.5加列出的袋",
       "priority": 10,
       "price": 5.5,
-      "keywords": [
-        "/双"
-      ],
       "maxInstrumentCount": 2,
+      "conditionsJson": "[{\"field\": \"bagAddon\", \"value\": \"all\"}]",
+      "keywords": [
+        "双@contains"
+      ],
       "skipPackaging": false,
       "skipDiscount": true,
       "isActive": true,
       "matchMode": "first",
-      "conditionsJson": "[{\"field\":\"manualReview\",\"value\":true}]",
+      "keywordMatchMode": "contains",
       "acceptedTypes": [
         "额外包（纸塑袋）"
       ]
     },
     {
       "ruleType": "PRICE_PER_INSTRUMENT",
-      "name": "省二松北双≥3按件5.5外层袋",
+      "name": "省二松北双≥3按件5.5仅外层袋",
       "priority": 11,
       "price": 5.5,
-      "keywords": [
-        "/双"
-      ],
-      "materials": [
-        "纸塑袋"
-      ],
       "minInstrumentCount": 3,
+      "conditionsJson": "[{\"field\": \"bagAddon\", \"value\": \"outer\"}]",
+      "keywords": [
+        "双@contains"
+      ],
       "skipPackaging": false,
       "skipDiscount": true,
       "isActive": true,
       "matchMode": "first",
-      "conditionsJson": "[{\"field\":\"manualReview\",\"value\":true}]",
+      "keywordMatchMode": "contains",
       "acceptedTypes": [
         "额外包（纸塑袋）"
       ]
@@ -65,6 +64,23 @@
       "matchMode": "first",
       "acceptedTypes": [
         "额外包（纸塑袋）"
+      ]
+    },
+    {
+      "ruleType": "PRICE_PER_INSTRUMENT",
+      "name": "省二松北小腔包按件5.5加5元",
+      "priority": 20,
+      "price": 5.5,
+      "keywords": [
+        "小腔包"
+      ],
+      "skipPackaging": true,
+      "skipDiscount": true,
+      "isActive": true,
+      "matchMode": "first",
+      "conditionsJson": "[{\"field\": \"flatAddon\", \"value\": 5}]",
+      "acceptedTypes": [
+        "器械包"
       ]
     }
   ]

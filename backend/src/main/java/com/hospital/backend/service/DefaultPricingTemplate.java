@@ -132,6 +132,13 @@ public final class DefaultPricingTemplate {
                                 "price", 300.0,
                                 "skipPackaging", true,
                                 "skipHospitalDiscount", true
+                        ),
+                        Map.of(
+                                "name", "缝合针按1件5.5",
+                                "keywords", List.of("缝合针@contains"),
+                                "price", 5.5,
+                                "skipPackaging", false,
+                                "skipHospitalDiscount", false
                         )
                 ),
                 "foldRules", genericSmallItemFoldRules(),

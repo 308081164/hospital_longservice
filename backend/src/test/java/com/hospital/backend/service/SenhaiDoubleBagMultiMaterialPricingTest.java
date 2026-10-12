@@ -47,7 +47,7 @@ class SenhaiDoubleBagMultiMaterialPricingTest {
         ));
 
         assertThat(result.pricingRule).contains("森海双<3");
-        assertThat(result.expectedUnitPrice).isCloseTo(16.5, within(0.001));
+        assertThat(result.expectedUnitPrice).isCloseTo(8.0, within(0.001));
         assertThat(result.pricingPath).isEqualTo("fixed");
     }
 

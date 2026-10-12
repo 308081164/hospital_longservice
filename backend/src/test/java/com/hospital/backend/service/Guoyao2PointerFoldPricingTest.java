@@ -16,7 +16,7 @@ import static org.assertj.core.api.Assertions.assertThat;
  */
 class Guoyao2PointerFoldPricingTest {
 
-    private static final String HOSPITAL = "国药总医院第二院区";
+    private static final String HOSPITAL = "电机厂医院";
     private static final String DEPT = "手术室";
     private static final String TYPE = "额外包(纸塑袋)";
     private static final String MATERIAL = "高温纸塑袋75*370";
@@ -83,11 +83,11 @@ class Guoyao2PointerFoldPricingTest {
 
     @Test
     void unrelatedPackOnHybrid_stillShowsHybridMissNote() throws Exception {
-        PricingEngine engine = engineForGuoyao2();
+        PricingEngine engine = new PricingEngine(RuleFidelityTestSupport.compileForCustomerCode("GUOYAO-2"));
         PricingEngine.ProcessedResult result = engine.processRow(Map.of(
-                "hospitalName", HOSPITAL,
+                "hospitalName", "国药总医院第二院区",
                 "department", DEPT,
-                "type", "高温纸塑袋75*200",
+                "type", "额外包（纸塑袋）",
                 "packName", "咬针器-1/W6050",
                 "packageMaterial", "高温纸塑袋75*200",
                 "instrumentCount", 1,
@@ -115,13 +115,13 @@ class Guoyao2PointerFoldPricingTest {
     }
 
     private static PricingEngine engineForGuoyao2() throws Exception {
-        JsonNode rules = RuleFidelityTestSupport.compileForCustomerCode("GUOYAO-2");
+        JsonNode rules = RuleFidelityTestSupport.compileForCustomerCode("DIANJI-YY");
         return new PricingEngine(rules);
     }
 
     /** 模拟生产 FOLD 规则 inactive：从编译结果中移除指针 FOLD 规则。 */
     private static PricingEngine engineWithoutPointerFoldRules() throws Exception {
-        ObjectNode compiled = RuleFidelityTestSupport.compileForCustomerCode("GUOYAO-2").deepCopy();
+        ObjectNode compiled = RuleFidelityTestSupport.compileForCustomerCode("DIANJI-YY").deepCopy();
         JsonNode specialRules = compiled.path("specialRules");
         if (!(specialRules instanceof ObjectNode specialRulesNode)) {
             return new PricingEngine(compiled);

@@ -284,4 +284,28 @@ assertEqual(
   'no zero unit price warning when billingNotes absent'
 )
 
+const priceOnlyRow = {
+  status: 'corrected',
+  unitPrice: 21,
+  expectedUnitPrice: 21.0,
+  billingNotes: null
+}
+priceOnlyRow.unitPrice = 30
+priceOnlyRow.expectedUnitPrice = 21
+const priceMessages = validationIndicatorMessages(priceOnlyRow)
+assertTrue(
+  priceMessages.some((message) => message.includes('规则单价 21.00') && message.includes('原单价 30.00')),
+  'price-only tooltip states the final unit price gap'
+)
+assertTrue(
+  priceMessages.every((message) => !message.includes('字段核对未通过') && !message.includes('5×2')),
+  'price-only tooltip does not pretend to be a field-check failure'
+)
+assertEqual(fieldConsistencyRowClass(priceOnlyRow), 'price-diff-row', 'corrected price diff keeps row highlight')
+assertEqual(
+  fieldConsistencyRowClass({ ...priceOnlyRow, status: 'unchanged' }),
+  '',
+  'manual unchanged clears highlight'
+)
+
 console.log('reconciliationBillingNotes.test.ts: all assertions passed')

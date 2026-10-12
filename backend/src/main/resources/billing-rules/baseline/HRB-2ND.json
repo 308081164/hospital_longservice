@@ -1,0 +1,40 @@
+{
+  "customerCode": "HRB-2ND",
+  "customerName": "哈尔滨市第二医院",
+  "billingEnabled": true,
+  "billingPricingMode": "hybrid",
+  "productRules": [
+    {
+      "ruleType": "FIXED_PRICE",
+      "name": "市二院分娩消毒巾固定15",
+      "priority": 10,
+      "price": 15.0,
+      "keywords": [
+        "分娩-消毒巾/Z3044"
+      ],
+      "skipPackaging": true,
+      "skipDiscount": true,
+      "isActive": true,
+      "matchMode": "first",
+      "acceptedTypes": [
+        "敷料包（纸塑袋）"
+      ]
+    },
+    {
+      "ruleType": "FIXED_PRICE",
+      "name": "市二院外来仅消毒0元",
+      "priority": 11,
+      "price": 0.0,
+      "keywords": [
+        "市二院外来@contains"
+      ],
+      "skipPackaging": true,
+      "skipDiscount": true,
+      "isActive": true,
+      "matchMode": "first",
+      "acceptedTypes": [
+        "额外包（仅消毒）"
+      ]
+    }
+  ]
+}

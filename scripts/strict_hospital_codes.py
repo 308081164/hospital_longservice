@@ -1,5 +1,8 @@
 #!/usr/bin/env python3
-"""36 家特殊计价医院权威清单（路径 A / manifest / Java STRICT_KEEP_CODES 须一致，与特殊收费 Excel 各院段落一一对应）。"""
+"""41 家特殊计价医院权威清单（路径 A / manifest / Java STRICT_KEEP_CODES 须一致）。
+
+国药总医院第二院区（GUOYAO-2）不在 2026-10-12 特殊收费表内，保留客户、规则已清空，电机厂见 DIANJI-YY。
+"""
 
 from __future__ import annotations
 
@@ -53,6 +56,11 @@ STRICT_KEEP_CODES: list[str] = [
     "SHENG-YY-NG",
     "SHENG-YY-XF",
     "HRB-HIT",
+    "DIANJI-YY",
+    "WUCHANG-RM",
+    "JINGHUA-SD",
+    "HRB-HSZ",
+    "HRB-2ND",
 ]
 
 # 中医附一：独立价表 docs/source/附一收费标准.xlsx（非特殊收费 Excel 32 家）
@@ -63,7 +71,7 @@ MANIFEST_BASELINE_CODES: list[str] = list(dict.fromkeys([*STRICT_KEEP_CODES, *FU
 
 STRICT_HOSPITALS: list[StrictHospital] = [
     StrictHospital("BINGCHENG-YM", "冰城医美", "哈尔滨冰城医疗美容医院", True),
-    StrictHospital("GUOYAO-2", "电机厂", "国药总医院第二院区", True),
+    StrictHospital("GUOYAO-2", "国药二院区", "国药总医院第二院区", False, "新表无此院，电机厂规则已迁至 DIANJI-YY"),
     StrictHospital("FNN-YY", "方南南", "方南南医院", True),
     StrictHospital("NEAU-YY", "东北农大", "东北农业大学", True),
     StrictHospital("HRB-WY", "市五院主院区", "哈尔滨市第五医院", False, "ground truth 陈旧待更新"),
@@ -98,6 +106,11 @@ STRICT_HOSPITALS: list[StrictHospital] = [
     StrictHospital("SHENG-YY-NG", "省医院南岗", "黑龙江省医院（南岗院区）", True),
     StrictHospital("SHENG-YY-XF", "省医院香坊", "黑龙江省医院（香坊院区）", True),
     StrictHospital("HRB-HIT", "哈工大", "哈尔滨工业大学医院", True),
+    StrictHospital("DIANJI-YY", "电机厂", "电机厂医院", False, "新表引入，测试材料待补"),
+    StrictHospital("WUCHANG-RM", "五常市人民医院", "五常市人民医院", False, "新表引入，测试材料待补"),
+    StrictHospital("JINGHUA-SD", "菁华上德", "黑龙江菁华上德生殖妇产医院", False, "新表引入，测试材料待补"),
+    StrictHospital("HRB-HSZ", "哈尔滨红十字医院", "哈尔滨红十字医院", False, "新表引入，测试材料待补"),
+    StrictHospital("HRB-2ND", "哈尔滨市第二医院", "哈尔滨市第二医院", False, "新表引入，测试材料待补"),
 ]
 
 STRICT_BY_CODE = {h.code: h for h in STRICT_HOSPITALS}

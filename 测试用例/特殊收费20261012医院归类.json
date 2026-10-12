@@ -1,0 +1,837 @@
+{
+  "source": "docs/source/特殊收费(1).xlsx",
+  "excelHospitalCount": 41,
+  "note": "表内医院段落 41。协大名称单元格含「备注：同冰城医美」，不另计医院。计划稿「约 40」是估算。",
+  "new": [
+    {
+      "hospital": "电机厂医院",
+      "code": "DIANJI-YY"
+    },
+    {
+      "hospital": "五常市人民医院",
+      "code": "WUCHANG-RM"
+    },
+    {
+      "hospital": "黑龙江菁华上德生殖妇产医院",
+      "code": "JINGHUA-SD"
+    },
+    {
+      "hospital": "哈尔滨红十字医院",
+      "code": "HRB-HSZ"
+    },
+    {
+      "hospital": "哈尔滨市第二医院",
+      "code": "HRB-2ND"
+    }
+  ],
+  "changed": [
+    {
+      "hospital": "黑龙江省第二医院（松北区）",
+      "code": "ERYY-SB",
+      "reason": "双改为不封顶且满3件只加外层，去掉人工核对，补小腔包"
+    },
+    {
+      "hospital": "黑龙江省医院（南岗院区）",
+      "code": "SHENG-YY-NG",
+      "reason": "双按该院16.5封顶，补棉布包类型条款"
+    },
+    {
+      "hospital": "黑龙江省医院（香坊院区）",
+      "code": "SHENG-YY-XF",
+      "reason": "双按该院16.5封顶，补棉布包类型与硬质容器盒"
+    },
+    {
+      "hospital": "黑龙江省远东心脑血管医院",
+      "code": "YUANDONG-XN",
+      "reason": "双改为列出的袋且满3件不加袋，去掉人工核对"
+    },
+    {
+      "hospital": "奥兰医院",
+      "code": "AOLAN-YY",
+      "reason": "双改为列出的袋且满3件不加袋，去掉人工核对"
+    },
+    {
+      "hospital": "哈尔滨森海医院",
+      "code": "SENHAI-YY",
+      "reason": "双改为16.5封顶且满3件不加袋，去掉人工核对"
+    }
+  ],
+  "unchangedFingerprints": {
+    "BINGCHENG-YM": {
+      "count": 6,
+      "keywords": [
+        [
+          "整形手术包",
+          "整形包"
+        ],
+        [
+          "整形手术包",
+          "整形包"
+        ],
+        [
+          "环钻包"
+        ],
+        [
+          "环钻包"
+        ],
+        [
+          "脂充包"
+        ],
+        [
+          "脂充包"
+        ]
+      ]
+    },
+    "BOSHANG-YY": {
+      "count": 3,
+      "keywords": [
+        [
+          "旋切器1胶帽4/Z2045",
+          "旋切器1胶帽4"
+        ],
+        [
+          "旋切器1戳卡1胶帽4/Z2045",
+          "旋切器1戳卡1胶帽4"
+        ],
+        [
+          "旋切器1线1胶帽4/Z2045",
+          "旋切器1线1胶帽4"
+        ]
+      ]
+    },
+    "CHUNYU-YL": {
+      "count": 4,
+      "keywords": [
+        [
+          "塑料管@contains"
+        ],
+        [
+          "管子@contains"
+        ],
+        [
+          "塑料管@contains"
+        ],
+        [
+          "管子@contains"
+        ]
+      ]
+    },
+    "DL-FUCHAN": {
+      "count": 4,
+      "keywords": [
+        [
+          "棉花针@contains"
+        ],
+        [
+          "棉花针@contains"
+        ],
+        [
+          "洗髓针@contains"
+        ],
+        [
+          "洗髓针@contains"
+        ]
+      ]
+    },
+    "FNN-YY": {
+      "count": 8,
+      "keywords": [
+        [
+          "P钻@contains"
+        ],
+        [
+          "光滑针@contains"
+        ],
+        [
+          "机扩针@contains"
+        ],
+        [
+          "根管锉@contains"
+        ],
+        [
+          "P钻@contains"
+        ],
+        [
+          "光滑针@contains"
+        ],
+        [
+          "机扩针@contains"
+        ],
+        [
+          "根管锉@contains"
+        ]
+      ]
+    },
+    "HAIYUAN-SB": {
+      "count": 2,
+      "keywords": [
+        [
+          "胶帽@contains"
+        ],
+        [
+          "胶帽@contains"
+        ]
+      ]
+    },
+    "HL-ZGH": {
+      "count": 5,
+      "keywords": [
+        [
+          "12°镜头-1/Z2060"
+        ],
+        [
+          "30°镜头，镜鞘-2（带转换帽）/Z2060"
+        ],
+        [
+          "检查镜-2/Z2060"
+        ],
+        [
+          "宫腔检查镜30度-2件/Z2060"
+        ],
+        [
+          "沈大12度镜头-1（新）/Z2060"
+        ]
+      ]
+    },
+    "HLJ-FY-RK": {
+      "count": 34,
+      "keywords": [
+        [
+          "0°膀胱镜-1",
+          "0°膀胱镜"
+        ],
+        [
+          "30°膀胱镜-1",
+          "30°膀胱镜"
+        ],
+        [
+          "单极电切镜"
+        ],
+        [
+          "宫腔镜检查新"
+        ],
+        [
+          "新腹腔镜镜头"
+        ],
+        [
+          "密封胶圈@contains"
+        ],
+        [
+          "密封胶圈@contains"
+        ],
+        [
+          "水管膜片@contains"
+        ],
+        [
+          "水管膜片@contains"
+        ],
+        [
+          "密封件@contains"
+        ],
+        [
+          "密封件@contains"
+        ],
+        [
+          "垫片@contains"
+        ],
+        [
+          "垫片@contains"
+        ],
+        [
+          "加长锉@contains"
+        ],
+        [
+          "加长锉@contains"
+        ],
+        [
+          "彩色锉@contains"
+        ],
+        [
+          "彩色锉@contains"
+        ],
+        [
+          "手扩锉@contains"
+        ],
+        [
+          "手扩锉@contains"
+        ],
+        [
+          "机扩针@contains"
+        ],
+        [
+          "机扩针@contains"
+        ],
+        [
+          "机扩锉@contains"
+        ],
+        [
+          "机扩锉@contains"
+        ],
+        [
+          "根管锉@contains"
+        ],
+        [
+          "根管锉@contains"
+        ],
+        [
+          "洗髓针@contains"
+        ],
+        [
+          "洗髓针@contains"
+        ],
+        [
+          "荡洗针@contains"
+        ],
+        [
+          "荡洗针@contains"
+        ],
+        [
+          "针类组件@contains"
+        ],
+        [
+          "针类组件@contains"
+        ],
+        [
+          "针包@contains"
+        ],
+        [
+          "针多少盒1@needle_box"
+        ],
+        [
+          "针多少盒1@needle_box"
+        ]
+      ]
+    },
+    "HLJ-JYGLJ-YY": {
+      "count": 4,
+      "keywords": [
+        [
+          "密封件@contains"
+        ],
+        [
+          "密封胶圈@contains"
+        ],
+        [
+          "密封件@contains"
+        ],
+        [
+          "密封胶圈@contains"
+        ]
+      ]
+    },
+    "HRB-HIT": {
+      "count": 8,
+      "keywords": [
+        [
+          "换药碗-1",
+          "换药器-1"
+        ],
+        [
+          "换药碗-2",
+          "换药器-2"
+        ],
+        [
+          "种植盒-23件"
+        ],
+        [
+          "棉球（不带线）",
+          "棉球(不带线)"
+        ],
+        [
+          "胆囊包10件",
+          "胆囊包-10件"
+        ],
+        [
+          "针架1针@contains",
+          "针架-1针@contains"
+        ],
+        [
+          "针架1针@contains",
+          "针架-1针@contains"
+        ],
+        [
+          "克氏针48钢丝4/W6050"
+        ]
+      ]
+    },
+    "HRB-HTFH": {
+      "count": 2,
+      "keywords": [
+        [
+          "镍钛锉@contains"
+        ],
+        [
+          "镍钛锉@contains"
+        ]
+      ]
+    },
+    "HRB-SD-MB": {
+      "count": 2,
+      "keywords": [
+        [
+          "机扩针@contains"
+        ],
+        [
+          "机扩针@contains"
+        ]
+      ]
+    },
+    "HRB-WY-EM": {
+      "count": 3,
+      "keywords": [
+        [
+          "驱血带/W12050",
+          "驱血带/W15050",
+          "驱血带/W120",
+          "驱血带/W150"
+        ],
+        [
+          "驱血带/W6050",
+          "驱血带/W6070",
+          "驱血带/W7060",
+          "驱血带/W7070",
+          "驱血带/W50",
+          "驱血带/W60",
+          "驱血带/W70"
+        ],
+        [
+          "驱血带/W9050",
+          "驱血带/W9060",
+          "驱血带/W90"
+        ]
+      ]
+    },
+    "HRB-WY": {
+      "count": 8,
+      "keywords": [
+        [
+          "上肢止血带"
+        ],
+        [
+          "下肢止血带"
+        ],
+        [
+          "妇产科布袋"
+        ],
+        [
+          "妇产科纱条"
+        ],
+        [
+          "小布袋"
+        ],
+        [
+          "手套"
+        ],
+        [
+          "纱布"
+        ],
+        [
+          "驱血带"
+        ]
+      ]
+    },
+    "HRB-XK-YY": {
+      "count": 2,
+      "keywords": [
+        [
+          "小件@contains"
+        ],
+        [
+          "手术衣（打包好的）/W9050"
+        ]
+      ]
+    },
+    "HULAN-RM": {
+      "count": 2,
+      "keywords": [
+        [
+          "棉花针@contains"
+        ],
+        [
+          "棉花针@contains"
+        ]
+      ]
+    },
+    "HULAN-TCM": {
+      "count": 6,
+      "keywords": [
+        [
+          "外科包"
+        ],
+        [
+          "外科包"
+        ],
+        [
+          "胶帽@contains"
+        ],
+        [
+          "胶帽@contains"
+        ],
+        [
+          "铂康-阑尾包"
+        ],
+        [
+          "铂康-阑尾包"
+        ]
+      ]
+    },
+    "JIUZHOU-FK": {
+      "count": 1,
+      "keywords": [
+        [
+          "方盘"
+        ]
+      ]
+    },
+    "JZSW-BIO": {
+      "count": 1,
+      "keywords": [
+        [
+          "氩氦刀"
+        ]
+      ]
+    },
+    "NEAU-YY": {
+      "count": 8,
+      "keywords": [
+        [
+          "机锉@contains"
+        ],
+        [
+          "根管针@contains"
+        ],
+        [
+          "根管锉@contains"
+        ],
+        [
+          "牙探针@contains"
+        ],
+        [
+          "机锉@contains"
+        ],
+        [
+          "根管针@contains"
+        ],
+        [
+          "根管锉@contains"
+        ],
+        [
+          "牙探针@contains"
+        ]
+      ]
+    },
+    "PFQ-RM": {
+      "count": 2,
+      "keywords": [
+        [
+          "针盒1针多少@needle_box"
+        ],
+        [
+          "针盒1针多少@needle_box"
+        ]
+      ]
+    },
+    "QILUNJI-YY": {
+      "count": 1,
+      "keywords": [
+        [
+          "30度镜@contains",
+          "10mm@contains",
+          "10毫米30度镜@contains"
+        ]
+      ]
+    },
+    "SHKF-YY": {
+      "count": 14,
+      "keywords": [
+        [
+          "ITI种植盒-32件盒1/W12050"
+        ],
+        [
+          "内提工具盒10件盒1/W6050"
+        ],
+        [
+          "大车针盒-1/Z1526"
+        ],
+        [
+          "抛光车针盒6件盒1/Z1026"
+        ],
+        [
+          "梁光强器械盒-21件盒1/W6050"
+        ],
+        [
+          "梁光强器械盒（粉）10件盒1/Z2030"
+        ],
+        [
+          "环切器械盒-14件盒1/Z2032"
+        ],
+        [
+          "登腾种植盒-34件盒1/W6050"
+        ],
+        [
+          "登腾种植盒-36件盒1/W6050"
+        ],
+        [
+          "百诺工具盒-19件盒1/W6050"
+        ],
+        [
+          "种植盒-14件盒1/W6050"
+        ],
+        [
+          "种植盒（蓝白）12件 盒1/Z2032",
+          "种植盒（蓝白）12件盒1/Z2032"
+        ],
+        [
+          "种植盒（金属）12件盒1/Z2032",
+          "种植盒（金属）12件 盒1/Z2032"
+        ],
+        [
+          "种植盒（黄绿）8件盒1/Z2032",
+          "种植盒（黄绿）8件 盒1/Z2032"
+        ]
+      ]
+    },
+    "SUOFEI-YL": {
+      "count": 1,
+      "keywords": [
+        [
+          "面吸针"
+        ]
+      ]
+    },
+    "XIEDA-YL": {
+      "count": 6,
+      "keywords": [
+        [
+          "整形手术包",
+          "整形包"
+        ],
+        [
+          "整形手术包",
+          "整形包"
+        ],
+        [
+          "环钻包"
+        ],
+        [
+          "环钻包"
+        ],
+        [
+          "脂充包"
+        ],
+        [
+          "脂充包"
+        ]
+      ]
+    },
+    "XINFA-HSZ": {
+      "count": 3,
+      "keywords": [
+        [
+          "胶帽@contains"
+        ],
+        [
+          "胶帽@contains"
+        ],
+        [
+          "转换器1胶帽@contains"
+        ]
+      ]
+    },
+    "ZUYAN-NG": {
+      "count": 2,
+      "keywords": [
+        [
+          "排针@contains"
+        ],
+        [
+          "排针@contains"
+        ]
+      ]
+    },
+    "ZUYAN-SF": {
+      "count": 2,
+      "keywords": [
+        [
+          "美容科排针@contains"
+        ],
+        [
+          "美容科排针@contains"
+        ]
+      ]
+    },
+    "ZY3-DIANLI": {
+      "count": 6,
+      "keywords": [
+        [
+          "抛光杯@contains"
+        ],
+        [
+          "成型片@contains"
+        ],
+        [
+          "成型片@contains"
+        ],
+        [
+          "抛光杯@contains"
+        ],
+        [
+          "小件盒-\\d+件@regex"
+        ],
+        [
+          "骨牵引包"
+        ]
+      ]
+    },
+    "ZYY-D1": {
+      "count": 32,
+      "keywords": [
+        [
+          "30°腹腔镜",
+          "30度腹腔镜"
+        ],
+        [
+          "张景欣特器"
+        ],
+        [
+          "王树人特器-26"
+        ],
+        [
+          "换药包(120布)",
+          "换药包120"
+        ],
+        [
+          "孔巾包"
+        ],
+        [
+          "腔镜包"
+        ],
+        [
+          "辅料包"
+        ],
+        [
+          "球内注药"
+        ],
+        [
+          "冲洗头-120"
+        ],
+        [
+          "冲洗头-79"
+        ],
+        [
+          "冲洗头-82"
+        ],
+        [
+          "橄榄头-102"
+        ],
+        [
+          "橄榄头"
+        ],
+        [
+          "冲洗头"
+        ],
+        [
+          "低温灭菌（套）5件",
+          "低温灭菌(套)5件"
+        ],
+        [
+          "低温灭菌（套）10件",
+          "低温灭菌 (套)10件"
+        ],
+        [
+          "低温灭菌（套）20件",
+          "低温灭菌 (套)20件"
+        ],
+        [
+          "保温杯-1Z2044"
+        ],
+        [
+          "20cm*20cm",
+          "20×20"
+        ],
+        [
+          "长15cm*宽10cm",
+          "大 （20cm*20cm*15cm）",
+          "20cm*20cm*15cm"
+        ],
+        [
+          "敷料大（30cm*30cm*50cm）"
+        ],
+        [
+          "敷料小（20cm*20cm*15cm）"
+        ],
+        [
+          "敷料中（20cm*20cm*30cm）"
+        ],
+        [
+          "外来"
+        ],
+        [
+          "钉盒"
+        ],
+        [
+          "生物监测"
+        ],
+        [
+          "换药包(120布)"
+        ],
+        [
+          "换药包(120布)"
+        ],
+        [
+          "工字帽@contains",
+          "胶帽@contains"
+        ],
+        [
+          "工字帽@contains",
+          "胶帽@contains"
+        ],
+        [
+          "橄榄头@contains"
+        ],
+        [
+          "橄榄头@contains"
+        ]
+      ]
+    }
+  },
+  "outsideSheet": [
+    {
+      "hospital": "国药总医院第二院区",
+      "code": "GUOYAO-2",
+      "reason": "新表无此院。原文件里的电机厂规则已拆到 DIANJI-YY，国药自身没有可保留的规则。"
+    }
+  ],
+  "unchangedCodes": [
+    "BINGCHENG-YM",
+    "BOSHANG-YY",
+    "CHUNYU-YL",
+    "DL-FUCHAN",
+    "FNN-YY",
+    "HAIYUAN-SB",
+    "HL-ZGH",
+    "HLJ-FY-RK",
+    "HLJ-JYGLJ-YY",
+    "HRB-HIT",
+    "HRB-HTFH",
+    "HRB-SD-MB",
+    "HRB-WY",
+    "HRB-WY-EM",
+    "HRB-XK-YY",
+    "HULAN-RM",
+    "HULAN-TCM",
+    "JIUZHOU-FK",
+    "JZSW-BIO",
+    "NEAU-YY",
+    "PFQ-RM",
+    "QILUNJI-YY",
+    "SHKF-YY",
+    "SUOFEI-YL",
+    "XIEDA-YL",
+    "XINFA-HSZ",
+    "ZUYAN-NG",
+    "ZUYAN-SF",
+    "ZY3-DIANLI",
+    "ZYY-D1"
+  ]
+}

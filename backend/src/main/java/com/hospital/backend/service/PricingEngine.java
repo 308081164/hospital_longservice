@@ -173,14 +173,22 @@ public class PricingEngine {
 
 
         // 袋尺寸检测（带缓存）。部分特例规则需要先知道袋型，例如“20cm 以下 5 件算 1 件”。
+        List<String> materialSegments = splitPackageMaterialSegments(packageMaterial);
+        boolean twoListedBags = materialSegments.size() >= 2
+                && DoubleBagWidths.widthMm(materialSegments.get(0)) > 0
+                && DoubleBagWidths.widthMm(materialSegments.get(1)) > 0;
         boolean doubleMarkInNameEarly = DOUBLE_BAG_MARK.matcher(packName).find();
-        boolean isDoubleEarly = doubleMarkInNameEarly || packageMaterial.contains("双层袋");
+        boolean isDoubleEarly = doubleMarkInNameEarly || packageMaterial.contains("双层袋") || twoListedBags;
         int bagSize;
         int zBagSize;
+        int outerWidthMm = 0;
+        int innerWidthMm = 0;
         if (isDoubleEarly) {
             DoubleBagSizes doubleBagSizes = resolveDoubleBagSizes(packageMaterial, packName);
             bagSize = doubleBagSizes.outerSize();
             zBagSize = doubleBagSizes.innerSize();
+            outerWidthMm = doubleBagSizes.outerWidthMm();
+            innerWidthMm = doubleBagSizes.innerWidthMm();
         } else {
             bagSize = detectBagSize(packageMaterial + packName);
             zBagSize = 0;
@@ -318,6 +326,8 @@ public class PricingEngine {
                 }
                 notes.add(PRICING_ALERT_PREFIX
                         + buildManualReviewAlert(specialPrice.ruleName, expectedUnitPrice));
+                skipPackaging = true;
+                skipHospitalDiscount = true;
             }
         } else if (preserveOriginalOnMiss) {
             Double forcedPrice = computeForceHighTempUnitPrice(forceHighTempPerItem, materialBillingCount);
@@ -578,7 +588,27 @@ public class PricingEngine {
             notes.add("小件器械超过 10 件，按客户标准不加袋子钱。");
         }
 
-        if (specialPrice != null && !skipPackaging && isPaperPlastic && !isLowTemp && expectedUnitPrice != null) {
+        if (specialPrice != null && specialPrice.bagAddon != null && !specialPrice.bagAddon.isBlank()
+                && isPaperPlastic && !isLowTemp && expectedUnitPrice != null && !skipPackaging) {
+            Double configured = configuredBagAddon(specialPrice.bagAddon, bagSize, zBagSize);
+            if (configured != null && configured > 0) {
+                expectedUnitPrice = round(expectedUnitPrice + configured);
+                pricingRule = pricingRule + " + 纸塑袋费";
+                notes.add(configuredBagNote(
+                        specialPrice.bagAddon, bagSize, zBagSize, outerWidthMm, innerWidthMm, configured));
+            } else if ("none".equalsIgnoreCase(specialPrice.bagAddon)) {
+                notes.add("按规则不计额外袋费。");
+            }
+            if (specialPrice.capDoubleBag && expectedUnitPrice != null) {
+                double capPrice = rules.path("highTemperature").path("paperPlastic").path("minCharge").asDouble(16.5);
+                if (expectedUnitPrice > capPrice) {
+                    notes.add("双层纸塑袋按件计价含包材，封顶 " + fmt(capPrice) + " 元（原计 "
+                            + fmt(expectedUnitPrice) + " 元）。");
+                    expectedUnitPrice = round(capPrice);
+                }
+            }
+            skipPackaging = true;
+        } else if (specialPrice != null && !skipPackaging && isPaperPlastic && !isLowTemp && expectedUnitPrice != null) {
             Double bagAddon = computeHighTempBagAddon(bagSize, zBagSize, isDouble, perPackRawInstrumentCount);
             if (bagAddon != null && bagAddon > 0) {
                 expectedUnitPrice = round(expectedUnitPrice + bagAddon);
@@ -722,6 +752,7 @@ public class PricingEngine {
         result.status = status;
         result.pricingRule = pricingRule;
         result.notes = notes;
+        result.skipHospitalDiscount = skipHospitalDiscount;
         result.matchedRuleId = matchedRuleId;
         result.pricingPath = resolveEffectivePricingPath(
                 specialPrice, pricingRule, appliedSpecialFoldRule && foldFlatPackPrice != null);
@@ -1200,6 +1231,12 @@ public class PricingEngine {
         result.skipPackaging = rule.path("skipPackaging").asBoolean(false);
         result.skipHospitalDiscount = rule.path("skipHospitalDiscount").asBoolean(false);
         result.manualReview = rule.path("manualReview").asBoolean(false);
+        result.bagAddon = conditionText(rule, "bagAddon");
+        result.capDoubleBag = conditionFlag(rule, "capDoubleBag");
+        result.flatAddon = conditionNumber(rule, "flatAddon");
+        if (result.flatAddon > 0) {
+            result.price = round(result.price + result.flatAddon);
+        }
         result.note = result.ruleName + computation.noteSuffix();
         if (result.anyPriceMode) {
             result.note += "（多报价候选：" + formatPriceList(acceptedPrices) + "）";
@@ -1610,7 +1647,7 @@ public class PricingEngine {
         return null;
     }
 
-    private record DoubleBagSizes(int outerSize, int innerSize) {}
+    private record DoubleBagSizes(int outerSize, int innerSize, int outerWidthMm, int innerWidthMm) {}
 
     /**
      * 双层袋尺寸：包装材料列可列出两层袋规（中文/英文逗号分隔）；否则沿用包名 /双 后尺寸或外层兜底。
@@ -1618,22 +1655,31 @@ public class PricingEngine {
     private DoubleBagSizes resolveDoubleBagSizes(String packageMaterial, String packName) {
         List<String> segments = splitPackageMaterialSegments(packageMaterial);
         if (segments.size() >= 2) {
-            int outer = detectBagSize(segments.get(0));
-            int inner = detectBagSize(segments.get(1));
+            DoubleBagWidths.Pair widths = DoubleBagWidths.order(segments.get(0), segments.get(1));
+            String outerSegment = DoubleBagWidths.widthMm(segments.get(1)) > DoubleBagWidths.widthMm(segments.get(0))
+                    ? segments.get(1) : segments.get(0);
+            String innerSegment = outerSegment == segments.get(0) ? segments.get(1) : segments.get(0);
+            int outer = detectBagSize(outerSegment);
+            int inner = detectBagSize(innerSegment);
             if (outer <= 0) {
                 outer = detectBagSize(packageMaterial + packName);
             }
             if (inner <= 0) {
-                inner = outer;
+                inner = 0;
             }
-            return new DoubleBagSizes(outer, inner);
+            return new DoubleBagSizes(outer, inner, widths.outerWidthMm(), widths.innerWidthMm());
         }
         int outer = detectBagSize(packageMaterial + packName);
-        int inner = DOUBLE_BAG_MARK.matcher(packName).find() ? extractSizeAfterDouble(packName) : 0;
-        if (inner <= 0) {
-            inner = outer;
+        int inner = 0;
+        boolean materialListsBag = !segments.isEmpty() && DoubleBagWidths.widthMm(segments.get(0)) > 0;
+        if (!materialListsBag && DOUBLE_BAG_MARK.matcher(packName == null ? "" : packName).find()) {
+            inner = extractSizeAfterDouble(packName);
         }
-        return new DoubleBagSizes(outer, inner);
+        if (inner > 0 && inner == outer) {
+            inner = 0;
+        }
+        int outerWidthMm = materialListsBag ? DoubleBagWidths.widthMm(segments.get(0)) : 0;
+        return new DoubleBagSizes(outer, inner, outerWidthMm, 0);
     }
 
     private static List<String> splitPackageMaterialSegments(String packageMaterial) {
@@ -2168,11 +2214,114 @@ public class PricingEngine {
         return cottonOuter != null ? cottonOuter : bagFee1;
     }
 
+    private static String conditionText(JsonNode rule, String field) {
+        JsonNode conditions = rule.path("conditions");
+        if (conditions.isArray()) {
+            for (JsonNode condition : conditions) {
+                if (field.equalsIgnoreCase(condition.path("field").asText(""))) {
+                    JsonNode value = condition.get("value");
+                    return value == null || value.isNull() ? "" : value.asText("");
+                }
+            }
+        }
+        return rule.path(field).asText("");
+    }
+
+    private static boolean conditionFlag(JsonNode rule, String field) {
+        JsonNode conditions = rule.path("conditions");
+        if (conditions.isArray()) {
+            for (JsonNode condition : conditions) {
+                if (field.equalsIgnoreCase(condition.path("field").asText(""))) {
+                    return condition.path("value").asBoolean(false);
+                }
+            }
+        }
+        return rule.path(field).asBoolean(false);
+    }
+
+    private static double conditionNumber(JsonNode rule, String field) {
+        JsonNode conditions = rule.path("conditions");
+        if (conditions.isArray()) {
+            for (JsonNode condition : conditions) {
+                if (field.equalsIgnoreCase(condition.path("field").asText(""))) {
+                    return condition.path("value").asDouble(0);
+                }
+            }
+        }
+        return rule.path(field).asDouble(0);
+    }
+
+    private Double configuredBagAddon(String mode, int outerSize, int innerSize) {
+        if (mode == null || mode.isBlank() || "none".equalsIgnoreCase(mode)) {
+            return 0.0;
+        }
+        if ("outer".equalsIgnoreCase(mode)) {
+            return bagStandardPrice(outerSize);
+        }
+        if ("inner".equalsIgnoreCase(mode)) {
+            int size = innerSize > 0 ? innerSize : outerSize;
+            return bagStandardPrice(size);
+        }
+        double total = 0;
+        Double outer = bagStandardPrice(outerSize);
+        if (outer != null) {
+            total += outer;
+        }
+        if (innerSize > 0) {
+            Double inner = bagStandardPrice(innerSize);
+            if (inner != null) {
+                total += inner;
+            }
+        }
+        return total;
+    }
+
+    private String configuredBagNote(
+            String mode, int outerSize, int innerSize, int outerWidthMm, int innerWidthMm, double fee) {
+        String outerLabel = bagCmLabel(outerSize, outerWidthMm);
+        String innerLabel = bagCmLabel(innerSize, innerWidthMm);
+        if ("outer".equalsIgnoreCase(mode)) {
+            return "按规则只加较宽外层纸塑袋标准包材 " + outerLabel + "，" + fmt(fee) + " 元。";
+        }
+        if ("inner".equalsIgnoreCase(mode)) {
+            return "按规则只加内层纸塑袋标准包材 " + innerLabel + "，" + fmt(fee) + " 元。";
+        }
+        if (innerSize > 0 || innerWidthMm > 0) {
+            return "按规则加列出的全部纸塑袋标准包材，外层 " + outerLabel + " + 内层 " + innerLabel
+                    + "，合计 " + fmt(fee) + " 元。";
+        }
+        return "材料列只有一只袋子，标准包材按 " + outerLabel + " 计 " + fmt(fee) + " 元，不复制第二只。";
+    }
+
+    /** 宽度毫米换算厘米；75mm 显示 7.5cm，不按计价档位四舍五入。 */
+    private static String bagCmLabel(int sizeCm, int widthMm) {
+        if (widthMm > 0) {
+            double cm = widthMm / 10.0;
+            if (Math.abs(cm - Math.rint(cm)) > 0.05) {
+                return String.format(java.util.Locale.ROOT, "%.1fcm", cm);
+            }
+            return ((int) Math.rint(cm)) + "cm";
+        }
+        return sizeCm + "cm";
+    }
+
+    private Double bagStandardPrice(int bagSizeCm) {
+        if (bagSizeCm <= 0) {
+            return null;
+        }
+        int effective = bagSizeCm > 25 ? 25 : bagSizeCm;
+        JsonNode bagConfig = findBagConfig(effective, rules.path("highTemperature").path("paperPlastic").path("bagSizes"));
+        if (bagConfig == null) {
+            return null;
+        }
+        return bagConfig.path("price").asDouble();
+    }
+
     private static boolean isHrb2ndHospital(String hospitalName) {
         if (hospitalName == null || hospitalName.isBlank()) {
             return false;
         }
-        return hospitalName.contains("第二医院") || hospitalName.contains("市二院");
+        return hospitalName.contains("哈尔滨市第二医院") || hospitalName.contains("市二院");
     }
 
     private double defaultDressingPackPrice() {
@@ -2499,6 +2648,7 @@ public class PricingEngine {
         public Double matchedPriceOption;
         /** 实际计价路径：fixed=客户校正/固定价，standard=标准灭菌阶梯，preserve=保留原价 */
         public String pricingPath;
+        public boolean skipHospitalDiscount;
         public Map<String, Object> billingNotes;
     }
 
@@ -2526,6 +2676,9 @@ public class PricingEngine {
         boolean skipPackaging;
         boolean skipHospitalDiscount;
         boolean manualReview;
+        String bagAddon;
+        boolean capDoubleBag;
+        double flatAddon;
         Long ruleId;
         boolean anyPriceMode;
         List<Double> acceptedPrices = List.of();

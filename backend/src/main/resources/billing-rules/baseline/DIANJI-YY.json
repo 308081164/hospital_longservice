@@ -1,0 +1,214 @@
+{
+  "customerCode": "DIANJI-YY",
+  "customerName": "电机厂医院",
+  "billingEnabled": true,
+  "billingPricingMode": "hybrid",
+  "productRules": [
+    {
+      "ruleType": "PRICE_PER_INSTRUMENT",
+      "name": "电机厂双<3按件5.5加列出的袋",
+      "priority": 10,
+      "price": 5.5,
+      "maxInstrumentCount": 2,
+      "conditionsJson": "[{\"field\": \"bagAddon\", \"value\": \"all\"}]",
+      "keywords": [
+        "双@contains"
+      ],
+      "skipPackaging": false,
+      "skipDiscount": true,
+      "isActive": true,
+      "matchMode": "first",
+      "keywordMatchMode": "contains",
+      "acceptedTypes": [
+        "额外包（纸塑袋）"
+      ]
+    },
+    {
+      "ruleType": "PRICE_PER_INSTRUMENT",
+      "name": "电机厂双≥3按件5.5仅内层袋",
+      "priority": 11,
+      "price": 5.5,
+      "minInstrumentCount": 3,
+      "conditionsJson": "[{\"field\": \"bagAddon\", \"value\": \"inner\"}]",
+      "keywords": [
+        "双@contains"
+      ],
+      "skipPackaging": false,
+      "skipDiscount": true,
+      "isActive": true,
+      "matchMode": "first",
+      "keywordMatchMode": "contains",
+      "acceptedTypes": [
+        "额外包（纸塑袋）"
+      ]
+    },
+    {
+      "ruleType": "FOLD",
+      "name": "电机厂指针5合1含包材",
+      "priority": 14,
+      "keywords": [
+        "指针@contains"
+      ],
+      "threshold": 5,
+      "foldRatio": 5,
+      "maxInstrumentCount": 10,
+      "skipPackaging": false,
+      "isActive": true,
+      "matchMode": "first",
+      "skipDiscount": false,
+      "keywordMatchMode": "exact_token",
+      "price": 5.5,
+      "acceptedTypes": [
+        "额外包（纸塑袋）"
+      ]
+    },
+    {
+      "ruleType": "FOLD",
+      "name": "电机厂指针5合1免包材",
+      "priority": 15,
+      "keywords": [
+        "指针@contains"
+      ],
+      "threshold": 5,
+      "foldRatio": 5,
+      "minInstrumentCount": 11,
+      "skipPackaging": true,
+      "isActive": true,
+      "matchMode": "first",
+      "skipDiscount": false,
+      "keywordMatchMode": "exact_token",
+      "price": 5.5,
+      "acceptedTypes": [
+        "额外包（纸塑袋）"
+      ]
+    },
+    {
+      "ruleType": "FIXED_PRICE",
+      "name": "电机厂棉球W120150固定35",
+      "priority": 30,
+      "price": 35.0,
+      "keywords": [
+        "棉球/W12050",
+        "棉球/W15050",
+        "棉球-W12050",
+        "棉球-W15050"
+      ],
+      "skipPackaging": true,
+      "skipDiscount": true,
+      "isActive": true,
+      "matchMode": "first",
+      "keywordMatchMode": "contains",
+      "acceptedTypes": [
+        "敷料包（无纺布）"
+      ]
+    },
+    {
+      "ruleType": "FIXED_PRICE",
+      "name": "电机厂棉球W605070固定25",
+      "priority": 30,
+      "price": 25.0,
+      "keywords": [
+        "棉球/W6050",
+        "棉球/W6070",
+        "棉球/W7060",
+        "棉球/W7070",
+        "棉球-W6050",
+        "棉球-W6070",
+        "棉球-W7060",
+        "棉球-W7070"
+      ],
+      "skipPackaging": true,
+      "skipDiscount": true,
+      "isActive": true,
+      "matchMode": "first",
+      "keywordMatchMode": "contains",
+      "acceptedTypes": [
+        "敷料包（无纺布）"
+      ]
+    },
+    {
+      "ruleType": "FIXED_PRICE",
+      "name": "电机厂棉球W9050固定30",
+      "priority": 30,
+      "price": 30.0,
+      "keywords": [
+        "棉球/W9050",
+        "棉球/W9060",
+        "棉球-W9050",
+        "棉球-W9060"
+      ],
+      "skipPackaging": true,
+      "skipDiscount": true,
+      "isActive": true,
+      "matchMode": "first",
+      "keywordMatchMode": "contains",
+      "acceptedTypes": [
+        "敷料包（无纺布）"
+      ]
+    },
+    {
+      "ruleType": "FIXED_PRICE",
+      "name": "电机厂纱布W120150固定35",
+      "priority": 30,
+      "price": 35.0,
+      "keywords": [
+        "纱布/W12050",
+        "纱布/W15050",
+        "纱布-W12050",
+        "纱布-W15050"
+      ],
+      "skipPackaging": true,
+      "skipDiscount": true,
+      "isActive": true,
+      "matchMode": "first",
+      "keywordMatchMode": "contains",
+      "acceptedTypes": [
+        "敷料包（无纺布）"
+      ]
+    },
+    {
+      "ruleType": "FIXED_PRICE",
+      "name": "电机厂纱布W605070固定25",
+      "priority": 30,
+      "price": 25.0,
+      "keywords": [
+        "纱布/W6050",
+        "纱布/W6070",
+        "纱布/W7060",
+        "纱布/W7070",
+        "纱布-W6050",
+        "纱布-W6070",
+        "纱布-W7060",
+        "纱布-W7070"
+      ],
+      "skipPackaging": true,
+      "skipDiscount": true,
+      "isActive": true,
+      "matchMode": "first",
+      "keywordMatchMode": "contains",
+      "acceptedTypes": [
+        "敷料包（无纺布）"
+      ]
+    },
+    {
+      "ruleType": "FIXED_PRICE",
+      "name": "电机厂纱布W9050固定30",
+      "priority": 30,
+      "price": 30.0,
+      "keywords": [
+        "纱布/W9050",
+        "纱布/W9060",
+        "纱布-W9050",
+        "纱布-W9060"
+      ],
+      "skipPackaging": true,
+      "skipDiscount": true,
+      "isActive": true,
+      "matchMode": "first",
+      "keywordMatchMode": "contains",
+      "acceptedTypes": [
+        "敷料包（无纺布）"
+      ]
+    }
+  ]
+}

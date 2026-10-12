@@ -37,10 +37,10 @@ class RuleFidelityRegressionTest {
 
     @Test
     void guoyao2PointerTenFoldWithBagMatchesCustomerRule() throws Exception {
-        JsonNode rules = RuleFidelityTestSupport.compileForCustomerCode("GUOYAO-2");
+        JsonNode rules = RuleFidelityTestSupport.compileForCustomerCode("DIANJI-YY");
         PricingEngine engine = new PricingEngine(rules);
         PricingEngine.ProcessedResult result = engine.processRow(Map.of(
-                "hospitalName", "国药总医院第二院区",
+                "hospitalName", "电机厂医院",
                 "department", "手术室",
                 "type", "额外包(纸塑袋)",
                 "packName", "指针-10/z7537",
@@ -59,10 +59,10 @@ class RuleFidelityRegressionTest {
 
     @Test
     void guoyao2PointerTwelveFoldWithoutBagMatchesCustomerRule() throws Exception {
-        JsonNode rules = RuleFidelityTestSupport.compileForCustomerCode("GUOYAO-2");
+        JsonNode rules = RuleFidelityTestSupport.compileForCustomerCode("DIANJI-YY");
         PricingEngine engine = new PricingEngine(rules);
         PricingEngine.ProcessedResult result = engine.processRow(Map.of(
-                "hospitalName", "国药总医院第二院区",
+                "hospitalName", "电机厂医院",
                 "department", "手术室",
                 "type", "额外包(纸塑袋)",
                 "packName", "指针-12/z7537",
@@ -138,13 +138,11 @@ class RuleFidelityRegressionTest {
     }
 
     @Test
-    void guoyao2ShuangzhisuFixedPriceMatchesByContains() throws Exception {
-        JsonNode rules = RuleFidelityTestSupport.compileForCustomerCode("GUOYAO-2");
+    void dianjiDoubleBagContainsMatchPricesListedBag() throws Exception {
+        JsonNode rules = RuleFidelityTestSupport.compileForCustomerCode("DIANJI-YY");
         PricingEngine engine = new PricingEngine(rules);
-        // 「双纸塑」以词中形态出现（后邻 CJK「袋」）：exact_token 永不命中，contains 包含语义命中。
-        // 规则已标记 manualReview：命中后保留账单原价供人工核对，不强制套用规则价 8 元。
         PricingEngine.ProcessedResult result = engine.processRow(Map.of(
-                "hospitalName", "国药总医院第二院区",
+                "hospitalName", "电机厂医院",
                 "department", "手术室",
                 "type", "额外包(纸塑袋)",
                 "packName", "双纸塑袋-1/Z1526",
@@ -154,21 +152,18 @@ class RuleFidelityRegressionTest {
                 "unitPrice", 16.5,
                 "totalPrice", 16.5
         ));
-        assertThat(result.expectedUnitPrice).isEqualTo(16.5);
-        assertThat(result.pricingRule).contains("电机厂包名带双");
-        assertThat(result.pricingPath).isEqualTo("preserve");
-        assertThat(result.status).isEqualTo("warning");
-        assertThat(result.notes).anyMatch(note -> note.contains("需人工核对"));
-        assertThat(result.billingNotes).isNotNull();
-        assertThat(result.billingNotes.get("manualReview")).isEqualTo(true);
+        assertThat(result.expectedUnitPrice).isEqualTo(11.0);
+        assertThat(result.pricingRule).contains("电机厂双<3");
+        assertThat(result.pricingPath).isEqualTo("fixed");
+        assertThat(result.notes).noneMatch(note -> note.contains("需人工核对") || note.contains("已按账单原价"));
     }
 
     @Test
     void guoyao2ShuangzhisuFixedPriceDoesNotHitPlainPaperPlasticRows() throws Exception {
-        JsonNode rules = RuleFidelityTestSupport.compileForCustomerCode("GUOYAO-2");
+        JsonNode rules = RuleFidelityTestSupport.compileForCustomerCode("DIANJI-YY");
         PricingEngine engine = new PricingEngine(rules);
         PricingEngine.ProcessedResult result = engine.processRow(Map.of(
-                "hospitalName", "国药总医院第二院区",
+                "hospitalName", "电机厂医院",
                 "department", "手术室",
                 "type", "额外包(纸塑袋)",
                 "packName", "止血钳-1/Z1029",

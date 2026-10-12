@@ -1,9 +1,9 @@
 {
   "version": 1,
-  "generated_at": "2026-10-09T08:54:05Z",
-  "manifest_hash": "fde77f495f1a275c9fd90934e418728b92e15776f86105067d7bcc1e48e4b614",
-  "billing_enabled_count": 37,
-  "active_billing_enabled_count": 37,
+  "generated_at": "2026-10-12T03:08:57Z",
+  "manifest_hash": "8e6f715c3c78a764a2b8c54e5c246097409f504503a60c38126fcfba315c9cc9",
+  "billing_enabled_count": 42,
+  "active_billing_enabled_count": 42,
   "customers": {
     "BINGCHENG-YM": {
       "code": "BINGCHENG-YM",
@@ -136,644 +136,9 @@
       "standardPricingOverride": null,
       "billingEnabled": true,
       "billingPolicies": null,
-      "productRules": [
-        {
-          "ruleType": "FIXED_PRICE",
-          "name": "电机厂包名带双",
-          "priority": 10,
-          "price": 8.0,
-          "keywords": [
-            "双@contains"
-          ],
-          "excludeKeywords": [
-            "/双"
-          ],
-          "skipPackaging": true,
-          "skipDiscount": true,
-          "isActive": true,
-          "matchMode": "first",
-          "keywordMatchMode": "contains",
-          "conditionsJson": "[{\"field\":\"manualReview\",\"value\":true}]",
-          "acceptedTypes": [
-            "额外包（纸塑袋）"
-          ]
-        },
-        {
-          "ruleType": "PRICE_PER_INSTRUMENT",
-          "name": "电机厂双按件5.5外层袋",
-          "priority": 11,
-          "price": 5.5,
-          "keywords": [
-            "/双"
-          ],
-          "materials": [
-            "纸塑袋"
-          ],
-          "temperature": "HT",
-          "maxInstrumentCount": 2,
-          "skipPackaging": false,
-          "skipDiscount": true,
-          "isActive": true,
-          "matchMode": "first",
-          "keywordMatchMode": "contains",
-          "conditionsJson": "[{\"field\":\"manualReview\",\"value\":true}]",
-          "acceptedTypes": [
-            "额外包（纸塑袋）"
-          ]
-        },
-        {
-          "ruleType": "PRICE_PER_INSTRUMENT",
-          "name": "电机厂双按件5.5内层袋",
-          "priority": 12,
-          "price": 5.5,
-          "keywords": [
-            "/双"
-          ],
-          "materials": [
-            "纸塑袋"
-          ],
-          "temperature": "HT",
-          "minInstrumentCount": 3,
-          "skipPackaging": false,
-          "skipDiscount": true,
-          "isActive": true,
-          "matchMode": "first",
-          "keywordMatchMode": "contains",
-          "conditionsJson": "[{\"field\":\"manualReview\",\"value\":true}]",
-          "acceptedTypes": [
-            "额外包（纸塑袋）"
-          ]
-        },
-        {
-          "ruleType": "FOLD",
-          "name": "电机厂指针5合1含包材",
-          "priority": 14,
-          "keywords": [
-            "指针@contains"
-          ],
-          "threshold": 5,
-          "foldRatio": 5,
-          "maxInstrumentCount": 10,
-          "skipPackaging": false,
-          "isActive": true,
-          "matchMode": "first",
-          "skipDiscount": false,
-          "keywordMatchMode": "exact_token",
-          "price": 5.5,
-          "acceptedTypes": [
-            "额外包（纸塑袋）"
-          ]
-        },
-        {
-          "ruleType": "FOLD",
-          "name": "电机厂指针5合1免包材",
-          "priority": 15,
-          "keywords": [
-            "指针@contains"
-          ],
-          "threshold": 5,
-          "foldRatio": 5,
-          "minInstrumentCount": 11,
-          "skipPackaging": true,
-          "isActive": true,
-          "matchMode": "first",
-          "skipDiscount": false,
-          "keywordMatchMode": "exact_token",
-          "price": 5.5,
-          "acceptedTypes": [
-            "额外包（纸塑袋）"
-          ]
-        },
-        {
-          "ruleType": "PRICE_PER_INSTRUMENT",
-          "name": "电机厂双按件5.5免包材自动",
-          "priority": 8,
-          "price": 5.5,
-          "keywords": [
-            "/双"
-          ],
-          "minInstrumentCount": 3,
-          "skipPackaging": true,
-          "skipDiscount": true,
-          "isActive": true,
-          "matchMode": "first",
-          "keywordMatchMode": "contains",
-          "acceptedTypes": [
-            "额外包（纸塑袋）"
-          ]
-        },
-        {
-          "ruleType": "EXTRA_FEE",
-          "name": "电机厂双内层纸塑袋加价2.5自动",
-          "priority": 8,
-          "fee": 2.5,
-          "keywords": [
-            "/双"
-          ],
-          "minInstrumentCount": 3,
-          "skipPackaging": true,
-          "skipDiscount": true,
-          "isActive": true,
-          "matchMode": "first",
-          "keywordMatchMode": "contains",
-          "acceptedTypes": [
-            "额外包（纸塑袋）"
-          ]
-        },
-        {
-          "ruleType": "PRICE_PER_INSTRUMENT",
-          "name": "电机厂双按件5.5含外层袋",
-          "priority": 20,
-          "price": 5.5,
-          "keywords": [
-            "/双"
-          ],
-          "maxInstrumentCount": 2,
-          "skipPackaging": false,
-          "skipDiscount": true,
-          "isActive": true,
-          "matchMode": "first",
-          "keywordMatchMode": "contains",
-          "conditionsJson": "[{\"field\":\"manualReview\",\"value\":true}]",
-          "acceptedTypes": [
-            "额外包（纸塑袋）"
-          ]
-        },
-        {
-          "ruleType": "PRICE_PER_INSTRUMENT",
-          "name": "电机厂双按件5.5免包材",
-          "priority": 21,
-          "price": 5.5,
-          "keywords": [
-            "/双"
-          ],
-          "minInstrumentCount": 3,
-          "skipPackaging": true,
-          "skipDiscount": true,
-          "isActive": true,
-          "matchMode": "first",
-          "keywordMatchMode": "contains",
-          "conditionsJson": "[{\"field\":\"manualReview\",\"value\":true}]",
-          "acceptedTypes": [
-            "额外包（纸塑袋）"
-          ]
-        },
-        {
-          "ruleType": "EXTRA_FEE",
-          "name": "电机厂双内层纸塑袋加价2.5",
-          "priority": 22,
-          "fee": 2.5,
-          "keywords": [
-            "/双"
-          ],
-          "minInstrumentCount": 3,
-          "skipPackaging": true,
-          "skipDiscount": true,
-          "isActive": true,
-          "matchMode": "first",
-          "keywordMatchMode": "contains",
-          "conditionsJson": "[{\"field\":\"manualReview\",\"value\":true}]",
-          "acceptedTypes": [
-            "额外包（纸塑袋）"
-          ]
-        },
-        {
-          "ruleType": "PRICE_PER_INSTRUMENT",
-          "name": "电机厂包名带双-人工核对",
-          "priority": 25,
-          "price": 5.5,
-          "keywords": [
-            "双@contains"
-          ],
-          "skipPackaging": false,
-          "skipDiscount": true,
-          "isActive": true,
-          "matchMode": "first",
-          "keywordMatchMode": "exact_token",
-          "conditionsJson": "[{\"field\":\"manualReview\",\"value\":true}]",
-          "acceptedTypes": [
-            "额外包（纸塑袋）"
-          ]
-        },
-        {
-          "ruleType": "FIXED_PRICE",
-          "name": "电机厂敷料W120150固定35棉球_W12050",
-          "priority": 30,
-          "price": 35.0,
-          "keywords": [
-            "棉球/W12050",
-            "棉球-W12050"
-          ],
-          "skipPackaging": true,
-          "skipDiscount": true,
-          "isActive": true,
-          "matchMode": "first",
-          "keywordMatchMode": "contains",
-          "acceptedTypes": [
-            "敷料包（无纺布）"
-          ]
-        },
-        {
-          "ruleType": "FIXED_PRICE",
-          "name": "电机厂敷料W120150固定35棉球_W15050",
-          "priority": 30,
-          "price": 35.0,
-          "keywords": [
-            "棉球/W15050",
-            "棉球-W15050"
-          ],
-          "skipPackaging": true,
-          "skipDiscount": true,
-          "isActive": true,
-          "matchMode": "first",
-          "keywordMatchMode": "contains",
-          "acceptedTypes": [
-            "敷料包（无纺布）"
-          ]
-        },
-        {
-          "ruleType": "FIXED_PRICE",
-          "name": "电机厂敷料W120150固定35纱布_W12050",
-          "priority": 30,
-          "price": 35.0,
-          "keywords": [
-            "纱布/W12050",
-            "纱布-W12050"
-          ],
-          "skipPackaging": true,
-          "skipDiscount": true,
-          "isActive": true,
-          "matchMode": "first",
-          "keywordMatchMode": "contains",
-          "acceptedTypes": [
-            "敷料包（无纺布）"
-          ]
-        },
-        {
-          "ruleType": "FIXED_PRICE",
-          "name": "电机厂敷料W120150固定35纱布_W15050",
-          "priority": 30,
-          "price": 35.0,
-          "keywords": [
-            "纱布/W15050",
-            "纱布-W15050"
-          ],
-          "skipPackaging": true,
-          "skipDiscount": true,
-          "isActive": true,
-          "matchMode": "first",
-          "keywordMatchMode": "contains",
-          "acceptedTypes": [
-            "敷料包（无纺布）"
-          ]
-        },
-        {
-          "ruleType": "FIXED_PRICE",
-          "name": "电机厂敷料W605070固定25棉球_W6050",
-          "priority": 30,
-          "price": 25.0,
-          "keywords": [
-            "棉球/W6050",
-            "棉球-W6050"
-          ],
-          "skipPackaging": true,
-          "skipDiscount": true,
-          "isActive": true,
-          "matchMode": "first",
-          "keywordMatchMode": "contains",
-          "acceptedTypes": [
-            "敷料包（无纺布）"
-          ]
-        },
-        {
-          "ruleType": "FIXED_PRICE",
-          "name": "电机厂敷料W605070固定25棉球_W6070",
-          "priority": 30,
-          "price": 25.0,
-          "keywords": [
-            "棉球/W6070",
-            "棉球-W6070"
-          ],
-          "skipPackaging": true,
-          "skipDiscount": true,
-          "isActive": true,
-          "matchMode": "first",
-          "keywordMatchMode": "contains",
-          "acceptedTypes": [
-            "敷料包（无纺布）"
-          ]
-        },
-        {
-          "ruleType": "FIXED_PRICE",
-          "name": "电机厂敷料W605070固定25棉球_W7060",
-          "priority": 30,
-          "price": 25.0,
-          "keywords": [
-            "棉球/W7060",
-            "棉球-W7060"
-          ],
-          "skipPackaging": true,
-          "skipDiscount": true,
-          "isActive": true,
-          "matchMode": "first",
-          "keywordMatchMode": "contains",
-          "acceptedTypes": [
-            "敷料包（无纺布）"
-          ]
-        },
-        {
-          "ruleType": "FIXED_PRICE",
-          "name": "电机厂敷料W605070固定25棉球_W7070",
-          "priority": 30,
-          "price": 25.0,
-          "keywords": [
-            "棉球/W7070",
-            "棉球-W7070"
-          ],
-          "skipPackaging": true,
-          "skipDiscount": true,
-          "isActive": true,
-          "matchMode": "first",
-          "keywordMatchMode": "contains",
-          "acceptedTypes": [
-            "敷料包（无纺布）"
-          ]
-        },
-        {
-          "ruleType": "FIXED_PRICE",
-          "name": "电机厂敷料W605070固定25纱布_W6050",
-          "priority": 30,
-          "price": 25.0,
-          "keywords": [
-            "纱布/W6050",
-            "纱布-W6050"
-          ],
-          "skipPackaging": true,
-          "skipDiscount": true,
-          "isActive": true,
-          "matchMode": "first",
-          "keywordMatchMode": "contains",
-          "acceptedTypes": [
-            "敷料包（无纺布）"
-          ]
-        },
-        {
-          "ruleType": "FIXED_PRICE",
-          "name": "电机厂敷料W605070固定25纱布_W6070",
-          "priority": 30,
-          "price": 25.0,
-          "keywords": [
-            "纱布/W6070",
-            "纱布-W6070"
-          ],
-          "skipPackaging": true,
-          "skipDiscount": true,
-          "isActive": true,
-          "matchMode": "first",
-          "keywordMatchMode": "contains",
-          "acceptedTypes": [
-            "敷料包（无纺布）"
-          ]
-        },
-        {
-          "ruleType": "FIXED_PRICE",
-          "name": "电机厂敷料W605070固定25纱布_W7060",
-          "priority": 30,
-          "price": 25.0,
-          "keywords": [
-            "纱布/W7060",
-            "纱布-W7060"
-          ],
-          "skipPackaging": true,
-          "skipDiscount": true,
-          "isActive": true,
-          "matchMode": "first",
-          "keywordMatchMode": "contains",
-          "acceptedTypes": [
-            "敷料包（无纺布）"
-          ]
-        },
-        {
-          "ruleType": "FIXED_PRICE",
-          "name": "电机厂敷料W605070固定25纱布_W7070",
-          "priority": 30,
-          "price": 25.0,
-          "keywords": [
-            "纱布/W7070",
-            "纱布-W7070"
-          ],
-          "skipPackaging": true,
-          "skipDiscount": true,
-          "isActive": true,
-          "matchMode": "first",
-          "keywordMatchMode": "contains",
-          "acceptedTypes": [
-            "敷料包（无纺布）"
-          ]
-        },
-        {
-          "ruleType": "FIXED_PRICE",
-          "name": "电机厂敷料W9050固定30棉球_W9050",
-          "priority": 30,
-          "price": 30.0,
-          "keywords": [
-            "棉球/W9050",
-            "棉球-W9050"
-          ],
-          "skipPackaging": true,
-          "skipDiscount": true,
-          "isActive": true,
-          "matchMode": "first",
-          "keywordMatchMode": "contains",
-          "acceptedTypes": [
-            "敷料包（无纺布）"
-          ]
-        },
-        {
-          "ruleType": "FIXED_PRICE",
-          "name": "电机厂敷料W9050固定30棉球_W9060",
-          "priority": 30,
-          "price": 30.0,
-          "keywords": [
-            "棉球/W9060",
-            "棉球-W9060"
-          ],
-          "skipPackaging": true,
-          "skipDiscount": true,
-          "isActive": true,
-          "matchMode": "first",
-          "keywordMatchMode": "contains",
-          "acceptedTypes": [
-            "敷料包（无纺布）"
-          ]
-        },
-        {
-          "ruleType": "FIXED_PRICE",
-          "name": "电机厂敷料W9050固定30纱布_W9050",
-          "priority": 30,
-          "price": 30.0,
-          "keywords": [
-            "纱布/W9050",
-            "纱布-W9050"
-          ],
-          "skipPackaging": true,
-          "skipDiscount": true,
-          "isActive": true,
-          "matchMode": "first",
-          "keywordMatchMode": "contains",
-          "acceptedTypes": [
-            "敷料包（无纺布）"
-          ]
-        },
-        {
-          "ruleType": "FIXED_PRICE",
-          "name": "电机厂敷料W9050固定30纱布_W9060",
-          "priority": 30,
-          "price": 30.0,
-          "keywords": [
-            "纱布/W9060",
-            "纱布-W9060"
-          ],
-          "skipPackaging": true,
-          "skipDiscount": true,
-          "isActive": true,
-          "matchMode": "first",
-          "keywordMatchMode": "contains",
-          "acceptedTypes": [
-            "敷料包（无纺布）"
-          ]
-        },
-        {
-          "ruleType": "FIXED_PRICE",
-          "name": "电机厂棉球W120150固定35",
-          "priority": 30,
-          "price": 35.0,
-          "keywords": [
-            "棉球/W12050",
-            "棉球/W15050",
-            "棉球-W12050",
-            "棉球-W15050"
-          ],
-          "skipPackaging": true,
-          "skipDiscount": true,
-          "isActive": true,
-          "matchMode": "first",
-          "keywordMatchMode": "contains",
-          "acceptedTypes": [
-            "敷料包（无纺布）"
-          ]
-        },
-        {
-          "ruleType": "FIXED_PRICE",
-          "name": "电机厂棉球W605070固定25",
-          "priority": 30,
-          "price": 25.0,
-          "keywords": [
-            "棉球/W6050",
-            "棉球/W6070",
-            "棉球/W7060",
-            "棉球/W7070",
-            "棉球-W6050",
-            "棉球-W6070",
-            "棉球-W7060",
-            "棉球-W7070"
-          ],
-          "skipPackaging": true,
-          "skipDiscount": true,
-          "isActive": true,
-          "matchMode": "first",
-          "keywordMatchMode": "contains",
-          "acceptedTypes": [
-            "敷料包（无纺布）"
-          ]
-        },
-        {
-          "ruleType": "FIXED_PRICE",
-          "name": "电机厂棉球W9050固定30",
-          "priority": 30,
-          "price": 30.0,
-          "keywords": [
-            "棉球/W9050",
-            "棉球/W9060",
-            "棉球-W9050",
-            "棉球-W9060"
-          ],
-          "skipPackaging": true,
-          "skipDiscount": true,
-          "isActive": true,
-          "matchMode": "first",
-          "keywordMatchMode": "contains",
-          "acceptedTypes": [
-            "敷料包（无纺布）"
-          ]
-        },
-        {
-          "ruleType": "FIXED_PRICE",
-          "name": "电机厂纱布W120150固定35",
-          "priority": 30,
-          "price": 35.0,
-          "keywords": [
-            "纱布/W12050",
-            "纱布/W15050",
-            "纱布-W12050",
-            "纱布-W15050"
-          ],
-          "skipPackaging": true,
-          "skipDiscount": true,
-          "isActive": true,
-          "matchMode": "first",
-          "keywordMatchMode": "contains",
-          "acceptedTypes": [
-            "敷料包（无纺布）"
-          ]
-        },
-        {
-          "ruleType": "FIXED_PRICE",
-          "name": "电机厂纱布W605070固定25",
-          "priority": 30,
-          "price": 25.0,
-          "keywords": [
-            "纱布/W6050",
-            "纱布/W6070",
-            "纱布/W7060",
-            "纱布/W7070",
-            "纱布-W6050",
-            "纱布-W6070",
-            "纱布-W7060",
-            "纱布-W7070"
-          ],
-          "skipPackaging": true,
-          "skipDiscount": true,
-          "isActive": true,
-          "matchMode": "first",
-          "keywordMatchMode": "contains",
-          "acceptedTypes": [
-            "敷料包（无纺布）"
-          ]
-        },
-        {
-          "ruleType": "FIXED_PRICE",
-          "name": "电机厂纱布W9050固定30",
-          "priority": 30,
-          "price": 30.0,
-          "keywords": [
-            "纱布/W9050",
-            "纱布/W9060",
-            "纱布-W9050",
-            "纱布-W9060"
-          ],
-          "skipPackaging": true,
-          "skipDiscount": true,
-          "isActive": true,
-          "matchMode": "first",
-          "keywordMatchMode": "contains",
-          "acceptedTypes": [
-            "敷料包（无纺布）"
-          ]
-        }
-      ],
-      "rule_count": 33,
-      "active_rule_count": 33
+      "productRules": [],
+      "rule_count": 0,
+      "active_rule_count": 0
     },
     "FNN-YY": {
       "code": "FNN-YY",
@@ -3278,60 +2643,45 @@
       "productRules": [
         {
           "ruleType": "PRICE_PER_INSTRUMENT",
-          "name": "远东双≥3按件5.5免包材自动",
-          "priority": 9,
-          "price": 5.5,
-          "keywords": [
-            "/双"
-          ],
-          "minInstrumentCount": 3,
-          "skipPackaging": true,
-          "skipDiscount": true,
-          "isActive": true,
-          "matchMode": "first",
-          "acceptedTypes": [
-            "额外包（纸塑袋）"
-          ]
-        },
-        {
-          "ruleType": "PRICE_PER_INSTRUMENT",
-          "name": "远东双<3按件5.5含包材",
+          "name": "远东双<3按件5.5加列出的袋",
           "priority": 10,
           "price": 5.5,
-          "keywords": [
-            "/双"
-          ],
           "maxInstrumentCount": 2,
+          "conditionsJson": "[{\"field\": \"bagAddon\", \"value\": \"all\"}]",
+          "keywords": [
+            "双@contains"
+          ],
           "skipPackaging": false,
           "skipDiscount": true,
           "isActive": true,
           "matchMode": "first",
-          "conditionsJson": "[{\"field\":\"manualReview\",\"value\":true}]",
+          "keywordMatchMode": "contains",
           "acceptedTypes": [
             "额外包（纸塑袋）"
           ]
         },
         {
           "ruleType": "PRICE_PER_INSTRUMENT",
-          "name": "远东双≥3按件5.5免包材",
+          "name": "远东双≥3按件5.5不加袋",
           "priority": 11,
           "price": 5.5,
-          "keywords": [
-            "/双"
-          ],
           "minInstrumentCount": 3,
-          "skipPackaging": true,
+          "conditionsJson": "[{\"field\": \"bagAddon\", \"value\": \"none\"}]",
+          "keywords": [
+            "双@contains"
+          ],
+          "skipPackaging": false,
           "skipDiscount": true,
           "isActive": true,
           "matchMode": "first",
-          "conditionsJson": "[{\"field\":\"manualReview\",\"value\":true}]",
+          "keywordMatchMode": "contains",
           "acceptedTypes": [
             "额外包（纸塑袋）"
           ]
         }
       ],
-      "rule_count": 3,
-      "active_rule_count": 3
+      "rule_count": 2,
+      "active_rule_count": 2
     },
     "ZUYAN-SF": {
       "code": "ZUYAN-SF",
@@ -3388,60 +2738,45 @@
       "productRules": [
         {
           "ruleType": "PRICE_PER_INSTRUMENT",
-          "name": "奥兰双≥3按件5.5免包材自动",
-          "priority": 9,
-          "price": 5.5,
-          "keywords": [
-            "/双"
-          ],
-          "minInstrumentCount": 3,
-          "skipPackaging": true,
-          "skipDiscount": true,
-          "isActive": true,
-          "matchMode": "first",
-          "acceptedTypes": [
-            "额外包（纸塑袋）"
-          ]
-        },
-        {
-          "ruleType": "PRICE_PER_INSTRUMENT",
-          "name": "奥兰双<3按件5.5含包材",
+          "name": "奥兰双<3按件5.5加列出的袋",
           "priority": 10,
           "price": 5.5,
-          "keywords": [
-            "/双"
-          ],
           "maxInstrumentCount": 2,
+          "conditionsJson": "[{\"field\": \"bagAddon\", \"value\": \"all\"}]",
+          "keywords": [
+            "双@contains"
+          ],
           "skipPackaging": false,
           "skipDiscount": true,
           "isActive": true,
           "matchMode": "first",
-          "conditionsJson": "[{\"field\":\"manualReview\",\"value\":true}]",
+          "keywordMatchMode": "contains",
           "acceptedTypes": [
             "额外包（纸塑袋）"
           ]
         },
         {
           "ruleType": "PRICE_PER_INSTRUMENT",
-          "name": "奥兰双≥3按件5.5免包材",
+          "name": "奥兰双≥3按件5.5不加袋",
           "priority": 11,
           "price": 5.5,
-          "keywords": [
-            "/双"
-          ],
           "minInstrumentCount": 3,
-          "skipPackaging": true,
+          "conditionsJson": "[{\"field\": \"bagAddon\", \"value\": \"none\"}]",
+          "keywords": [
+            "双@contains"
+          ],
+          "skipPackaging": false,
           "skipDiscount": true,
           "isActive": true,
           "matchMode": "first",
-          "conditionsJson": "[{\"field\":\"manualReview\",\"value\":true}]",
+          "keywordMatchMode": "contains",
           "acceptedTypes": [
             "额外包（纸塑袋）"
           ]
         }
       ],
-      "rule_count": 3,
-      "active_rule_count": 3
+      "rule_count": 2,
+      "active_rule_count": 2
     },
     "HRB-XK-YY": {
       "code": "HRB-XK-YY",
@@ -3497,52 +2832,38 @@
       "productRules": [
         {
           "ruleType": "PRICE_PER_INSTRUMENT",
-          "name": "森海双≥3按件5.5免包材自动",
-          "priority": 9,
-          "price": 5.5,
-          "keywords": [
-            "/双"
-          ],
-          "minInstrumentCount": 3,
-          "skipPackaging": true,
-          "skipDiscount": true,
-          "isActive": true,
-          "matchMode": "first",
-          "acceptedTypes": [
-            "额外包（纸塑袋）"
-          ]
-        },
-        {
-          "ruleType": "PRICE_PER_INSTRUMENT",
-          "name": "森海双<3按件5.5含包材",
+          "name": "森海双<3按件5.5加列出的袋",
           "priority": 10,
           "price": 5.5,
-          "keywords": [
-            "/双"
-          ],
           "maxInstrumentCount": 2,
+          "conditionsJson": "[{\"field\": \"bagAddon\", \"value\": \"all\"}, {\"field\": \"capDoubleBag\", \"value\": true}]",
+          "keywords": [
+            "双@contains"
+          ],
           "skipPackaging": false,
           "skipDiscount": true,
           "isActive": true,
           "matchMode": "first",
+          "keywordMatchMode": "contains",
           "acceptedTypes": [
             "额外包（纸塑袋）"
           ]
         },
         {
           "ruleType": "PRICE_PER_INSTRUMENT",
-          "name": "森海双≥3按件5.5免包材",
+          "name": "森海双≥3按件5.5不加袋",
           "priority": 11,
           "price": 5.5,
-          "keywords": [
-            "/双"
-          ],
           "minInstrumentCount": 3,
-          "skipPackaging": true,
+          "conditionsJson": "[{\"field\": \"bagAddon\", \"value\": \"none\"}]",
+          "keywords": [
+            "双@contains"
+          ],
+          "skipPackaging": false,
           "skipDiscount": true,
-          "isActive": false,
+          "isActive": true,
           "matchMode": "first",
-          "conditionsJson": "[{\"field\":\"manualReview\",\"value\":true}]",
+          "keywordMatchMode": "contains",
           "acceptedTypes": [
             "额外包（纸塑袋）"
           ]
@@ -3587,7 +2908,7 @@
           ]
         }
       ],
-      "rule_count": 5,
+      "rule_count": 4,
       "active_rule_count": 4
     },
     "ZY3-DIANLI": {
@@ -3886,39 +3207,38 @@
       "productRules": [
         {
           "ruleType": "PRICE_PER_INSTRUMENT",
-          "name": "省二松北双<3按件5.5含包材",
+          "name": "省二松北双<3按件5.5加列出的袋",
           "priority": 10,
           "price": 5.5,
-          "keywords": [
-            "/双"
-          ],
           "maxInstrumentCount": 2,
+          "conditionsJson": "[{\"field\": \"bagAddon\", \"value\": \"all\"}]",
+          "keywords": [
+            "双@contains"
+          ],
           "skipPackaging": false,
           "skipDiscount": true,
           "isActive": true,
           "matchMode": "first",
-          "conditionsJson": "[{\"field\":\"manualReview\",\"value\":true}]",
+          "keywordMatchMode": "contains",
           "acceptedTypes": [
             "额外包（纸塑袋）"
           ]
         },
         {
           "ruleType": "PRICE_PER_INSTRUMENT",
-          "name": "省二松北双≥3按件5.5外层袋",
+          "name": "省二松北双≥3按件5.5仅外层袋",
           "priority": 11,
           "price": 5.5,
-          "keywords": [
-            "/双"
-          ],
-          "materials": [
-            "纸塑袋"
-          ],
           "minInstrumentCount": 3,
+          "conditionsJson": "[{\"field\": \"bagAddon\", \"value\": \"outer\"}]",
+          "keywords": [
+            "双@contains"
+          ],
           "skipPackaging": false,
           "skipDiscount": true,
           "isActive": true,
           "matchMode": "first",
-          "conditionsJson": "[{\"field\":\"manualReview\",\"value\":true}]",
+          "keywordMatchMode": "contains",
           "acceptedTypes": [
             "额外包（纸塑袋）"
           ]
@@ -3946,10 +3266,27 @@
           "acceptedTypes": [
             "额外包（纸塑袋）"
           ]
+        },
+        {
+          "ruleType": "PRICE_PER_INSTRUMENT",
+          "name": "省二松北小腔包按件5.5加5元",
+          "priority": 20,
+          "price": 5.5,
+          "keywords": [
+            "小腔包"
+          ],
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": true,
+          "matchMode": "first",
+          "conditionsJson": "[{\"field\": \"flatAddon\", \"value\": 5}]",
+          "acceptedTypes": [
+            "器械包"
+          ]
         }
       ],
-      "rule_count": 3,
-      "active_rule_count": 3
+      "rule_count": 4,
+      "active_rule_count": 4
     },
     "SHENG-YY-NG": {
       "code": "SHENG-YY-NG",
@@ -3960,6 +3297,52 @@
       "billingEnabled": true,
       "billingPolicies": null,
       "productRules": [
+        {
+          "ruleType": "PRICE_PER_INSTRUMENT",
+          "name": "省医院南岗双<3按件5.5加列出的袋",
+          "priority": 10,
+          "price": 5.5,
+          "maxInstrumentCount": 2,
+          "conditionsJson": "[{\"field\": \"bagAddon\", \"value\": \"all\"}, {\"field\": \"capDoubleBag\", \"value\": true}]",
+          "keywords": [
+            "双@contains"
+          ],
+          "skipPackaging": false,
+          "skipDiscount": true,
+          "isActive": true,
+          "matchMode": "first",
+          "keywordMatchMode": "contains",
+          "acceptedTypes": [
+            "额外包（纸塑袋）"
+          ],
+          "excludeKeywords": [
+            "双信封",
+            "信封"
+          ]
+        },
+        {
+          "ruleType": "PRICE_PER_INSTRUMENT",
+          "name": "省医院南岗双≥3按件5.5不加袋",
+          "priority": 11,
+          "price": 5.5,
+          "minInstrumentCount": 3,
+          "conditionsJson": "[{\"field\": \"bagAddon\", \"value\": \"none\"}]",
+          "keywords": [
+            "双@contains"
+          ],
+          "skipPackaging": false,
+          "skipDiscount": true,
+          "isActive": true,
+          "matchMode": "first",
+          "keywordMatchMode": "contains",
+          "acceptedTypes": [
+            "额外包（纸塑袋）"
+          ],
+          "excludeKeywords": [
+            "双信封",
+            "信封"
+          ]
+        },
         {
           "ruleType": "PRICE_PER_INSTRUMENT",
           "name": "省医院南岗门皮手术包按件5.5",
@@ -4119,60 +3502,61 @@
         },
         {
           "ruleType": "PRICE_PER_INSTRUMENT",
-          "name": "省医院南岗双≥3按件5.5免包材自动",
-          "priority": 9,
+          "name": "省医院南岗棉布纸塑<3按件5.5含包材封顶",
+          "priority": 80,
           "price": 5.5,
-          "keywords": [
-            "/双"
-          ],
-          "minInstrumentCount": 3,
-          "skipPackaging": true,
-          "skipDiscount": true,
-          "isActive": true,
-          "matchMode": "first",
-          "acceptedTypes": [
-            "额外包（纸塑袋）"
-          ]
-        },
-        {
-          "ruleType": "PRICE_PER_INSTRUMENT",
-          "name": "省医院南岗双<3按件5.5含包材",
-          "priority": 10,
-          "price": 5.5,
-          "keywords": [
-            "/双"
+          "keywords": [],
+          "materials": [
+            "纸塑袋"
           ],
           "maxInstrumentCount": 2,
           "skipPackaging": false,
           "skipDiscount": true,
           "isActive": true,
           "matchMode": "first",
-          "conditionsJson": "[{\"field\":\"manualReview\",\"value\":true}]",
+          "keywordMatchMode": "contains",
+          "conditionsJson": "[{\"field\": \"bagAddon\", \"value\": \"all\"}, {\"field\": \"capDoubleBag\", \"value\": true}]",
           "acceptedTypes": [
-            "额外包（纸塑袋）"
+            "额外包（棉布包装）"
           ]
         },
         {
-          "ruleType": "PRICE_PER_INSTRUMENT",
-          "name": "省医院南岗双≥3按件5.5免包材",
-          "priority": 11,
-          "price": 5.5,
-          "keywords": [
-            "/双"
+          "ruleType": "FIXED_PRICE",
+          "name": "省医院南岗棉布无纺布<3固定16.5",
+          "priority": 81,
+          "price": 16.5,
+          "keywords": [],
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": true,
+          "matchMode": "first",
+          "acceptedTypes": [
+            "额外包（棉布包装）"
           ],
+          "materials": [
+            "无纺布"
+          ],
+          "maxInstrumentCount": 2,
+          "keywordMatchMode": "contains"
+        },
+        {
+          "ruleType": "PRICE_PER_INSTRUMENT",
+          "name": "省医院南岗棉布≥3按件5.5",
+          "priority": 82,
+          "price": 5.5,
+          "keywords": [],
           "minInstrumentCount": 3,
           "skipPackaging": true,
           "skipDiscount": true,
           "isActive": true,
           "matchMode": "first",
-          "conditionsJson": "[{\"field\":\"manualReview\",\"value\":true}]",
           "acceptedTypes": [
-            "额外包（纸塑袋）"
+            "额外包（棉布包装）"
           ]
         }
       ],
-      "rule_count": 12,
-      "active_rule_count": 12
+      "rule_count": 14,
+      "active_rule_count": 14
     },
     "SHENG-YY-XF": {
       "code": "SHENG-YY-XF",
@@ -4185,37 +3569,48 @@
       "productRules": [
         {
           "ruleType": "PRICE_PER_INSTRUMENT",
-          "name": "省医院香坊双≥3按件5.5免包材",
-          "priority": 9,
-          "price": 5.5,
-          "keywords": [
-            "/双"
-          ],
-          "minInstrumentCount": 3,
-          "skipPackaging": true,
-          "skipDiscount": true,
-          "isActive": true,
-          "matchMode": "first",
-          "acceptedTypes": [
-            "额外包（纸塑袋）"
-          ]
-        },
-        {
-          "ruleType": "PRICE_PER_INSTRUMENT",
-          "name": "省医院香坊双<3按件5.5含包材",
+          "name": "省医院香坊双<3按件5.5加列出的袋",
           "priority": 10,
           "price": 5.5,
-          "keywords": [
-            "/双"
-          ],
           "maxInstrumentCount": 2,
+          "conditionsJson": "[{\"field\": \"bagAddon\", \"value\": \"all\"}, {\"field\": \"capDoubleBag\", \"value\": true}]",
+          "keywords": [
+            "双@contains"
+          ],
           "skipPackaging": false,
           "skipDiscount": true,
           "isActive": true,
           "matchMode": "first",
-          "conditionsJson": "[{\"field\":\"manualReview\",\"value\":true}]",
+          "keywordMatchMode": "contains",
           "acceptedTypes": [
             "额外包（纸塑袋）"
+          ],
+          "excludeKeywords": [
+            "双信封",
+            "信封"
+          ]
+        },
+        {
+          "ruleType": "PRICE_PER_INSTRUMENT",
+          "name": "省医院香坊双≥3按件5.5不加袋",
+          "priority": 11,
+          "price": 5.5,
+          "minInstrumentCount": 3,
+          "conditionsJson": "[{\"field\": \"bagAddon\", \"value\": \"none\"}]",
+          "keywords": [
+            "双@contains"
+          ],
+          "skipPackaging": false,
+          "skipDiscount": true,
+          "isActive": true,
+          "matchMode": "first",
+          "keywordMatchMode": "contains",
+          "acceptedTypes": [
+            "额外包（纸塑袋）"
+          ],
+          "excludeKeywords": [
+            "双信封",
+            "信封"
           ]
         },
         {
@@ -4313,10 +3708,80 @@
           "acceptedTypes": [
             "额外包低温等离子"
           ]
+        },
+        {
+          "ruleType": "PRICE_PER_INSTRUMENT",
+          "name": "省医院香坊棉布纸塑<3按件5.5含包材封顶",
+          "priority": 80,
+          "price": 5.5,
+          "keywords": [],
+          "materials": [
+            "纸塑袋"
+          ],
+          "maxInstrumentCount": 2,
+          "skipPackaging": false,
+          "skipDiscount": true,
+          "isActive": true,
+          "matchMode": "first",
+          "keywordMatchMode": "contains",
+          "conditionsJson": "[{\"field\": \"bagAddon\", \"value\": \"all\"}, {\"field\": \"capDoubleBag\", \"value\": true}]",
+          "acceptedTypes": [
+            "额外包（棉布包装）"
+          ]
+        },
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "省医院香坊棉布无纺布<3固定16.5",
+          "priority": 81,
+          "price": 16.5,
+          "keywords": [],
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": true,
+          "matchMode": "first",
+          "acceptedTypes": [
+            "额外包（棉布包装）"
+          ],
+          "materials": [
+            "无纺布"
+          ],
+          "maxInstrumentCount": 2,
+          "keywordMatchMode": "contains"
+        },
+        {
+          "ruleType": "PRICE_PER_INSTRUMENT",
+          "name": "省医院香坊棉布≥3按件5.5",
+          "priority": 82,
+          "price": 5.5,
+          "keywords": [],
+          "minInstrumentCount": 3,
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": true,
+          "matchMode": "first",
+          "acceptedTypes": [
+            "额外包（棉布包装）"
+          ]
+        },
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "省医院香坊硬质容器盒固定16.5",
+          "priority": 18,
+          "price": 16.5,
+          "keywords": [
+            "硬质容器盒-1"
+          ],
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": true,
+          "matchMode": "first",
+          "acceptedTypes": [
+            "单包装包"
+          ]
         }
       ],
-      "rule_count": 8,
-      "active_rule_count": 8
+      "rule_count": 12,
+      "active_rule_count": 12
     },
     "HRB-HIT": {
       "code": "HRB-HIT",
@@ -4480,6 +3945,462 @@
       ],
       "rule_count": 8,
       "active_rule_count": 8
+    },
+    "DIANJI-YY": {
+      "code": "DIANJI-YY",
+      "name": "电机厂医院",
+      "status": null,
+      "billingPricingMode": "hybrid",
+      "standardPricingOverride": null,
+      "billingEnabled": true,
+      "billingPolicies": null,
+      "productRules": [
+        {
+          "ruleType": "PRICE_PER_INSTRUMENT",
+          "name": "电机厂双<3按件5.5加列出的袋",
+          "priority": 10,
+          "price": 5.5,
+          "maxInstrumentCount": 2,
+          "conditionsJson": "[{\"field\": \"bagAddon\", \"value\": \"all\"}]",
+          "keywords": [
+            "双@contains"
+          ],
+          "skipPackaging": false,
+          "skipDiscount": true,
+          "isActive": true,
+          "matchMode": "first",
+          "keywordMatchMode": "contains",
+          "acceptedTypes": [
+            "额外包（纸塑袋）"
+          ]
+        },
+        {
+          "ruleType": "PRICE_PER_INSTRUMENT",
+          "name": "电机厂双≥3按件5.5仅内层袋",
+          "priority": 11,
+          "price": 5.5,
+          "minInstrumentCount": 3,
+          "conditionsJson": "[{\"field\": \"bagAddon\", \"value\": \"inner\"}]",
+          "keywords": [
+            "双@contains"
+          ],
+          "skipPackaging": false,
+          "skipDiscount": true,
+          "isActive": true,
+          "matchMode": "first",
+          "keywordMatchMode": "contains",
+          "acceptedTypes": [
+            "额外包（纸塑袋）"
+          ]
+        },
+        {
+          "ruleType": "FOLD",
+          "name": "电机厂指针5合1含包材",
+          "priority": 14,
+          "keywords": [
+            "指针@contains"
+          ],
+          "threshold": 5,
+          "foldRatio": 5,
+          "maxInstrumentCount": 10,
+          "skipPackaging": false,
+          "isActive": true,
+          "matchMode": "first",
+          "skipDiscount": false,
+          "keywordMatchMode": "exact_token",
+          "price": 5.5,
+          "acceptedTypes": [
+            "额外包（纸塑袋）"
+          ]
+        },
+        {
+          "ruleType": "FOLD",
+          "name": "电机厂指针5合1免包材",
+          "priority": 15,
+          "keywords": [
+            "指针@contains"
+          ],
+          "threshold": 5,
+          "foldRatio": 5,
+          "minInstrumentCount": 11,
+          "skipPackaging": true,
+          "isActive": true,
+          "matchMode": "first",
+          "skipDiscount": false,
+          "keywordMatchMode": "exact_token",
+          "price": 5.5,
+          "acceptedTypes": [
+            "额外包（纸塑袋）"
+          ]
+        },
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "电机厂棉球W120150固定35",
+          "priority": 30,
+          "price": 35.0,
+          "keywords": [
+            "棉球/W12050",
+            "棉球/W15050",
+            "棉球-W12050",
+            "棉球-W15050"
+          ],
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": true,
+          "matchMode": "first",
+          "keywordMatchMode": "contains",
+          "acceptedTypes": [
+            "敷料包（无纺布）"
+          ]
+        },
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "电机厂棉球W605070固定25",
+          "priority": 30,
+          "price": 25.0,
+          "keywords": [
+            "棉球/W6050",
+            "棉球/W6070",
+            "棉球/W7060",
+            "棉球/W7070",
+            "棉球-W6050",
+            "棉球-W6070",
+            "棉球-W7060",
+            "棉球-W7070"
+          ],
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": true,
+          "matchMode": "first",
+          "keywordMatchMode": "contains",
+          "acceptedTypes": [
+            "敷料包（无纺布）"
+          ]
+        },
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "电机厂棉球W9050固定30",
+          "priority": 30,
+          "price": 30.0,
+          "keywords": [
+            "棉球/W9050",
+            "棉球/W9060",
+            "棉球-W9050",
+            "棉球-W9060"
+          ],
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": true,
+          "matchMode": "first",
+          "keywordMatchMode": "contains",
+          "acceptedTypes": [
+            "敷料包（无纺布）"
+          ]
+        },
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "电机厂纱布W120150固定35",
+          "priority": 30,
+          "price": 35.0,
+          "keywords": [
+            "纱布/W12050",
+            "纱布/W15050",
+            "纱布-W12050",
+            "纱布-W15050"
+          ],
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": true,
+          "matchMode": "first",
+          "keywordMatchMode": "contains",
+          "acceptedTypes": [
+            "敷料包（无纺布）"
+          ]
+        },
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "电机厂纱布W605070固定25",
+          "priority": 30,
+          "price": 25.0,
+          "keywords": [
+            "纱布/W6050",
+            "纱布/W6070",
+            "纱布/W7060",
+            "纱布/W7070",
+            "纱布-W6050",
+            "纱布-W6070",
+            "纱布-W7060",
+            "纱布-W7070"
+          ],
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": true,
+          "matchMode": "first",
+          "keywordMatchMode": "contains",
+          "acceptedTypes": [
+            "敷料包（无纺布）"
+          ]
+        },
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "电机厂纱布W9050固定30",
+          "priority": 30,
+          "price": 30.0,
+          "keywords": [
+            "纱布/W9050",
+            "纱布/W9060",
+            "纱布-W9050",
+            "纱布-W9060"
+          ],
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": true,
+          "matchMode": "first",
+          "keywordMatchMode": "contains",
+          "acceptedTypes": [
+            "敷料包（无纺布）"
+          ]
+        }
+      ],
+      "rule_count": 10,
+      "active_rule_count": 10
+    },
+    "WUCHANG-RM": {
+      "code": "WUCHANG-RM",
+      "name": "五常市人民医院",
+      "status": null,
+      "billingPricingMode": "hybrid",
+      "standardPricingOverride": null,
+      "billingEnabled": true,
+      "billingPolicies": null,
+      "productRules": [
+        {
+          "ruleType": "FOLD",
+          "name": "五常骨元针≤10含包材",
+          "priority": 14,
+          "keywords": [
+            "骨元针@contains"
+          ],
+          "threshold": 5,
+          "foldRatio": 5,
+          "price": 5.5,
+          "maxInstrumentCount": 10,
+          "skipPackaging": false,
+          "skipDiscount": false,
+          "isActive": true,
+          "matchMode": "first",
+          "keywordMatchMode": "contains",
+          "acceptedTypes": [
+            "额外包（纸塑袋）"
+          ]
+        },
+        {
+          "ruleType": "FOLD",
+          "name": "五常骨元针>10免包材",
+          "priority": 15,
+          "keywords": [
+            "骨元针@contains"
+          ],
+          "threshold": 5,
+          "foldRatio": 5,
+          "price": 5.5,
+          "minInstrumentCount": 11,
+          "skipPackaging": true,
+          "skipDiscount": false,
+          "isActive": true,
+          "matchMode": "first",
+          "keywordMatchMode": "contains",
+          "acceptedTypes": [
+            "额外包（纸塑袋）"
+          ]
+        }
+      ],
+      "rule_count": 2,
+      "active_rule_count": 2
+    },
+    "JINGHUA-SD": {
+      "code": "JINGHUA-SD",
+      "name": "黑龙江菁华上德生殖妇产医院",
+      "status": null,
+      "billingPricingMode": "hybrid",
+      "standardPricingOverride": null,
+      "billingEnabled": true,
+      "billingPolicies": null,
+      "productRules": [
+        {
+          "ruleType": "FOLD",
+          "name": "菁华胶帽≤5按1件含包材",
+          "priority": 12,
+          "keywords": [
+            "胶帽@contains"
+          ],
+          "threshold": 5,
+          "foldRatio": 5,
+          "maxInstrumentCount": 5,
+          "temperature": "LT",
+          "skipPackaging": false,
+          "skipDiscount": false,
+          "isActive": true,
+          "matchMode": "first",
+          "keywordMatchMode": "contains",
+          "acceptedTypes": [
+            "额外包低温等离子"
+          ]
+        },
+        {
+          "ruleType": "FOLD",
+          "name": "菁华胶帽>5折算22",
+          "priority": 13,
+          "keywords": [
+            "胶帽@contains"
+          ],
+          "threshold": 5,
+          "foldRatio": 5,
+          "price": 22.0,
+          "minInstrumentCount": 6,
+          "temperature": "LT",
+          "skipPackaging": true,
+          "skipDiscount": false,
+          "isActive": true,
+          "matchMode": "first",
+          "keywordMatchMode": "contains",
+          "acceptedTypes": [
+            "额外包低温等离子"
+          ]
+        }
+      ],
+      "rule_count": 2,
+      "active_rule_count": 2
+    },
+    "HRB-HSZ": {
+      "code": "HRB-HSZ",
+      "name": "哈尔滨红十字医院",
+      "status": null,
+      "billingPricingMode": "hybrid",
+      "standardPricingOverride": null,
+      "billingEnabled": true,
+      "billingPolicies": null,
+      "productRules": [
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "红十字一件一包固定22",
+          "priority": 8,
+          "price": 22.0,
+          "keywords": [],
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": true,
+          "matchMode": "first",
+          "acceptedTypes": [
+            "额外包低温等离子",
+            "额外包（ETO）",
+            "单包装（低温老肯）",
+            "单包装（EO）"
+          ],
+          "maxInstrumentCount": 1
+        },
+        {
+          "ruleType": "PRICE_PER_INSTRUMENT",
+          "name": "红十字双<3按件5.5加列出的袋",
+          "priority": 10,
+          "price": 5.5,
+          "maxInstrumentCount": 2,
+          "conditionsJson": "[{\"field\": \"bagAddon\", \"value\": \"all\"}, {\"field\": \"capDoubleBag\", \"value\": true}]",
+          "keywords": [
+            "双@contains"
+          ],
+          "skipPackaging": false,
+          "skipDiscount": true,
+          "isActive": true,
+          "matchMode": "first",
+          "keywordMatchMode": "contains",
+          "acceptedTypes": [
+            "额外包（纸塑袋）"
+          ]
+        },
+        {
+          "ruleType": "PRICE_PER_INSTRUMENT",
+          "name": "红十字双≥3按件5.5不加袋",
+          "priority": 11,
+          "price": 5.5,
+          "minInstrumentCount": 3,
+          "conditionsJson": "[{\"field\": \"bagAddon\", \"value\": \"none\"}]",
+          "keywords": [
+            "双@contains"
+          ],
+          "skipPackaging": false,
+          "skipDiscount": true,
+          "isActive": true,
+          "matchMode": "first",
+          "keywordMatchMode": "contains",
+          "acceptedTypes": [
+            "额外包（纸塑袋）"
+          ]
+        },
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "红十字针盒固定16.5",
+          "priority": 20,
+          "price": 16.5,
+          "keywords": [
+            "针盒-1/W6050"
+          ],
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": true,
+          "matchMode": "first",
+          "acceptedTypes": [
+            "敷料包（无纺布）"
+          ]
+        }
+      ],
+      "rule_count": 4,
+      "active_rule_count": 4
+    },
+    "HRB-2ND": {
+      "code": "HRB-2ND",
+      "name": "哈尔滨市第二医院",
+      "status": null,
+      "billingPricingMode": "hybrid",
+      "standardPricingOverride": null,
+      "billingEnabled": true,
+      "billingPolicies": null,
+      "productRules": [
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "市二院分娩消毒巾固定15",
+          "priority": 10,
+          "price": 15.0,
+          "keywords": [
+            "分娩-消毒巾/Z3044"
+          ],
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": true,
+          "matchMode": "first",
+          "acceptedTypes": [
+            "敷料包（纸塑袋）"
+          ]
+        },
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "市二院外来仅消毒0元",
+          "priority": 11,
+          "price": 0.0,
+          "keywords": [
+            "市二院外来@contains"
+          ],
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": true,
+          "matchMode": "first",
+          "acceptedTypes": [
+            "额外包（仅消毒）"
+          ]
+        }
+      ],
+      "rule_count": 2,
+      "active_rule_count": 2
     },
     "ZYY-D1": {
       "code": "ZYY-D1",

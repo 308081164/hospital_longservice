@@ -31,6 +31,9 @@ public final class BillRowFieldConsistencyValidator {
         List<Violation> violations = new ArrayList<>();
         int normalizedPackCount = Math.max(1, packCount);
 
+        if (type != null && type.contains("敷料包")) {
+            return violations;
+        }
         Optional<MmSize> packNameSize = PackNameSpecParser.extractMmSize(packName);
         Optional<MmSize> materialSize = PackNameSpecParser.extractMmSize(packageMaterial);
         if (packNameSize.isPresent() && materialSize.isPresent()) {

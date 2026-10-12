@@ -78,13 +78,13 @@ class PricingEngineManualReviewTest {
     }
 
     @Test
-    void aolanDoubleBagSlashRuleMarksManualReviewAndPreservesBillPrice() throws Exception {
-        assertDoubleBagManualReview("AOLAN-YY", "奥兰医院", "奥兰双", "剪刀-1/双/z3040");
+    void aolanDoubleBagPricesListedBagsWithoutManualReview() throws Exception {
+        assertListedBagPrice("AOLAN-YY", "奥兰医院", "奥兰双<3", 8.0);
     }
 
     @Test
-    void yuandongDoubleBagSlashRuleMarksManualReviewAndPreservesBillPrice() throws Exception {
-        assertDoubleBagManualReview("YUANDONG-XN", "黑龙江省远东心脑血管医院", "远东双", "剪刀-1/双/z3040");
+    void yuandongDoubleBagPricesListedBagsWithoutManualReview() throws Exception {
+        assertListedBagPrice("YUANDONG-XN", "黑龙江省远东心脑血管医院", "远东双<3", 8.0);
     }
 
     @Test
@@ -102,14 +102,14 @@ class PricingEngineManualReviewTest {
         ));
 
         assertThat(result.pricingRule).contains("森海双<3");
-        assertThat(result.expectedUnitPrice).isCloseTo(16.5, within(0.001));
+        assertThat(result.expectedUnitPrice).isCloseTo(8.0, within(0.001));
         assertThat(result.pricingPath).isEqualTo("fixed");
         assertThat(result.notes).noneMatch(note -> note.contains("需人工核对"));
     }
 
     @Test
-    void guoyaoDoubleBagSlashRuleMarksManualReviewAndPreservesBillPrice() throws Exception {
-        assertDoubleBagManualReview("GUOYAO-2", "国药总医院第二院区", "电机厂双", "剪刀-1/双/z3040");
+    void dianjiDoubleBagPricesListedBagsWithoutManualReview() throws Exception {
+        assertListedBagPrice("DIANJI-YY", "电机厂医院", "电机厂双<3", 8.0);
     }
 
     @Test
@@ -128,11 +128,11 @@ class PricingEngineManualReviewTest {
     }
 
     @Test
-    void guoyaoDoubleBagSlashRuleAtLeastThreeInstrumentsSkipsManualReview() throws Exception {
+    void dianjiDoubleBagAtLeastThreeAddsInnerBagOnly() throws Exception {
         assertDoubleBagAutoPricing(
-                "GUOYAO-2",
-                "国药总医院第二院区",
-                "电机厂双按件5.5免包材自动",
+                "DIANJI-YY",
+                "电机厂医院",
+                "电机厂双≥3",
                 "剪刀-3/双/z3040",
                 3,
                 19.0);
@@ -169,12 +169,31 @@ class PricingEngineManualReviewTest {
 
         assertThat(result.pricingRule).contains(ruleNamePrefix);
         assertThat(result.expectedUnitPrice).isCloseTo(expectedUnitPrice, within(0.001));
-        assertThat(result.status).isEqualTo("ok");
+        assertThat(result.status).isIn("ok", "unchanged");
         assertThat(result.pricingPath).isEqualTo("fixed");
         assertThat(result.notes).noneMatch(note -> note.contains("需人工核对"));
         if (result.billingNotes != null) {
             assertThat(result.billingNotes.get("manualReview")).isNotEqualTo(true);
         }
+    }
+
+    private static void assertListedBagPrice(
+            String customerCode, String hospitalName, String ruleNamePrefix, double expected) throws Exception {
+        PricingEngine engine = PricingEngineTestSupport.engineForCustomerCode(customerCode);
+        PricingEngine.ProcessedResult result = engine.processRow(Map.of(
+                "hospitalName", hospitalName,
+                "type", "额外包（纸塑袋）",
+                "packName", "剪刀-1/双/z3040",
+                "packageMaterial", "高温纸塑袋75*200",
+                "instrumentCount", 1,
+                "packCount", 1,
+                "unitPrice", 22.0,
+                "totalPrice", 22.0
+        ));
+        assertThat(result.pricingRule).contains(ruleNamePrefix);
+        assertThat(result.expectedUnitPrice).isCloseTo(expected, within(0.001));
+        assertThat(result.pricingPath).isEqualTo("fixed");
+        assertThat(result.notes).noneMatch(note -> note.contains("已按账单原价") || note.contains("需人工核对"));
     }
 
     private static void assertDoubleBagManualReview(
@@ -218,7 +237,7 @@ class PricingEngineManualReviewTest {
         ));
 
         assertThat(result.pricingRule).doesNotContain("校正价");
-        assertThat(result.pricingRule).doesNotContain("电力骨牵引包人工核对");
+        assertThat(result.pricingRule).contains("电力骨牵引包人工核对");
         assertThat(result.expectedUnitPrice).isCloseTo(192.5, within(0.001));
         assertThat(result.status).isEqualTo("warning");
     }

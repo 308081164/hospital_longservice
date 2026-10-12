@@ -84,6 +84,11 @@ STRICT_KEEP_CODES = [
     "SHENG-YY-NG",
     "SHENG-YY-XF",
     "HRB-HIT",
+    "DIANJI-YY",
+    "WUCHANG-RM",
+    "JINGHUA-SD",
+    "HRB-HSZ",
+    "HRB-2ND",
 ]
 
 # 种子文件仅以 code 引用客户、未携带规范名时，回退到此映射。
@@ -97,6 +102,11 @@ CUSTOMER_CANONICAL_NAMES = {
     "HRB-SD-MB": "哈尔滨道外区松电慢性病专科门诊部",
     "NEAU-YY": "东北农业大学医院",
     "WCSRMYY": "五常市人民医院",
+    "DIANJI-YY": "电机厂医院",
+    "WUCHANG-RM": "五常市人民医院",
+    "JINGHUA-SD": "黑龙江菁华上德生殖妇产医院",
+    "HRB-HSZ": "哈尔滨红十字医院",
+    "HRB-2ND": "哈尔滨市第二医院",
 }
 
 # HardcodedRulesMigrationRunner.seedEngineProductRules 直接 seed 的规则（非 seed 文件）。

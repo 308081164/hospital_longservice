@@ -1,0 +1,49 @@
+{
+  "customerCode": "JINGHUA-SD",
+  "customerName": "黑龙江菁华上德生殖妇产医院",
+  "billingEnabled": true,
+  "billingPricingMode": "hybrid",
+  "productRules": [
+    {
+      "ruleType": "FOLD",
+      "name": "菁华胶帽≤5按1件含包材",
+      "priority": 12,
+      "keywords": [
+        "胶帽@contains"
+      ],
+      "threshold": 5,
+      "foldRatio": 5,
+      "maxInstrumentCount": 5,
+      "temperature": "LT",
+      "skipPackaging": false,
+      "skipDiscount": false,
+      "isActive": true,
+      "matchMode": "first",
+      "keywordMatchMode": "contains",
+      "acceptedTypes": [
+        "额外包低温等离子"
+      ]
+    },
+    {
+      "ruleType": "FOLD",
+      "name": "菁华胶帽>5折算22",
+      "priority": 13,
+      "keywords": [
+        "胶帽@contains"
+      ],
+      "threshold": 5,
+      "foldRatio": 5,
+      "price": 22.0,
+      "minInstrumentCount": 6,
+      "temperature": "LT",
+      "skipPackaging": true,
+      "skipDiscount": false,
+      "isActive": true,
+      "matchMode": "first",
+      "keywordMatchMode": "contains",
+      "acceptedTypes": [
+        "额外包低温等离子"
+      ]
+    }
+  ]
+}

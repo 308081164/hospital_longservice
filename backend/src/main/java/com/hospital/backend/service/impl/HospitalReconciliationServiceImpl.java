@@ -2498,7 +2498,7 @@ public class HospitalReconciliationServiceImpl implements HospitalReconciliation
                 String sn = (String) row.get("sheetName");
                 if (sn == null) continue;
                 sheetRowCounts.merge(sn, 1, Integer::sum);
-                if ("warning".equals(row.get("status"))) {
+                if (countsTowardSheetIssue(row.get("status"))) {
                     sheetWarningCounts.merge(sn, 1, Integer::sum);
                 }
             }
@@ -2586,7 +2586,22 @@ public class HospitalReconciliationServiceImpl implements HospitalReconciliation
         double originalTotal = totalPrice != null ? totalPrice : 0.0;
         double difference = Math.round((correctedTotal - originalTotal) * 100.0) / 100.0;
         rowMap.put("difference", difference);
-        rowMap.put("status", Math.abs(difference) > 0.001 ? "corrected" : "unchanged");
+        boolean fieldIssue = false;
+        Object notes = rowMap.get("notes");
+        if (notes instanceof List<?> noteList) {
+            for (Object note : noteList) {
+                if (note != null && String.valueOf(note).startsWith("【字段核对】")
+                        && !String.valueOf(note).startsWith("【字段核对】规则单价")) {
+                    fieldIssue = true;
+                    break;
+                }
+            }
+        }
+        if (fieldIssue) {
+            rowMap.put("status", "warning");
+        } else {
+            rowMap.put("status", Math.abs(difference) > 0.001 ? "corrected" : "unchanged");
+        }
     }
 
     private void applySummaryFromRows(HospitalReconciliationJob job, List<Map<String, Object>> rows) {
@@ -2720,6 +2735,10 @@ public class HospitalReconciliationServiceImpl implements HospitalReconciliation
         return newJob;
     }
 
+    static boolean countsTowardSheetIssue(Object status) {
+        return "warning".equals(status) || "corrected".equals(status);
+    }
+
     private void computeSheetStats(HospitalReconciliationJob job, List<Map<String, Object>> rows) {
         List<String> names = new ArrayList<>();
         Map<String, Integer> rowCounts = new LinkedHashMap<>();
@@ -2730,7 +2749,7 @@ public class HospitalReconciliationServiceImpl implements HospitalReconciliation
             if (sn == null) continue;
             if (!rowCounts.containsKey(sn)) names.add(sn);
             rowCounts.merge(sn, 1, Integer::sum);
-            if ("warning".equals(row.get("status"))) {
+            if (countsTowardSheetIssue(row.get("status"))) {
                 warningCounts.merge(sn, 1, Integer::sum);
             }
         }

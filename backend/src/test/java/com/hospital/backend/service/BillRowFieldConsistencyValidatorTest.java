@@ -382,4 +382,43 @@ class BillRowFieldConsistencyValidatorTest {
             assertThat(violations).as(packName).isEmpty();
         }
     }
+
+    @Test
+    void decimalModelHaoIsNotPieceCount() {
+        assertThat(PackNameSpecParser.extractTotalPieceCountFromPackName("扩镜4.5号-1")).isEqualTo(1);
+        List<BillRowFieldConsistencyValidator.Violation> violations =
+                BillRowFieldConsistencyValidator.validate(
+                        "额外包(纸塑袋)",
+                        "扩镜4.5号-1/Z7526",
+                        "高温纸塑袋75*200",
+                        2,
+                        2);
+        assertThat(violations).isEmpty();
+    }
+
+    @Test
+    void decimalMillimeterSizeIsNotBagSize() {
+        assertThat(PackNameSpecParser.extractMmSize("卵泡仪270*2.5")).isEmpty();
+        List<BillRowFieldConsistencyValidator.Violation> violations =
+                BillRowFieldConsistencyValidator.validate(
+                        "额外包(纸塑袋)",
+                        "卵泡仪270*2.5",
+                        "高温纸塑袋75*340",
+                        1,
+                        1);
+        assertThat(violations)
+                .noneMatch(v -> BillRowFieldConsistencyValidator.CODE_BAG_SIZE_MISMATCH.equals(v.code()));
+    }
+
+    @Test
+    void dressingPackSkipsMaterialCheck() {
+        List<BillRowFieldConsistencyValidator.Violation> violations =
+                BillRowFieldConsistencyValidator.validate(
+                        "敷料包(纸塑袋)",
+                        "分娩-消毒巾/Z3044",
+                        "高温纸塑袋75*200",
+                        9,
+                        1);
+        assertThat(violations).isEmpty();
+    }
 }

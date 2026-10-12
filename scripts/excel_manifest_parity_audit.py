@@ -16,7 +16,7 @@ ROOT = Path(__file__).resolve().parents[1]
 MANIFEST_PATH = ROOT / "backend/src/main/resources/billing-seeds/billing-rules-manifest.json"
 
 sys.path.insert(0, str(ROOT / "scripts"))
-from strict_hospital_codes import STRICT_KEEP_CODES  # noqa: E402
+from strict_hospital_codes import FUYI_BASELINE_CODES, STRICT_KEEP_CODES  # noqa: E402
 
 
 def check_manifest_customers() -> list[str]:
@@ -25,15 +25,16 @@ def check_manifest_customers() -> list[str]:
     customers = manifest.get("customers") or {}
     manifest_codes = set(customers.keys())
     expected = set(STRICT_KEEP_CODES)
+    allowed_extra = set(FUYI_BASELINE_CODES)
     missing = expected - manifest_codes
-    extra = manifest_codes - expected
+    extra = manifest_codes - expected - allowed_extra
     if missing:
         errors.append(f"manifest 缺失客户: {sorted(missing)}")
     if extra:
         errors.append(f"manifest 多余客户: {sorted(extra)}")
     for code in STRICT_KEEP_CODES:
         rules = customers.get(code, {}).get("productRules") or []
-        if not rules:
+        if not rules and code not in {"GUOYAO-2"}:
             errors.append(f"{code} 无 productRules")
     return errors
 
