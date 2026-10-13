@@ -3,6 +3,8 @@ import {
   extractStandardHospitalNameFromMatrix,
   inferHospitalNameFromFileName,
   resolveHospitalNameFromColumnASummary,
+  resolveHospitalNameFromDeliveryDateColumn,
+  matchesCustomerArchive,
   isDateRangeText,
   isLikelyDepartmentName,
   isPlaceholderHospitalName,
@@ -189,6 +191,84 @@ assertEqual(
   ),
   '哈尔滨红十字妇产医院',
   'column A summary row is the hospital when D8/D9 is empty'
+)
+
+assertTrue(isValidHospitalName('晟龄中西医结合诊所'), 'clinic name is an institution')
+assertTrue(isValidHospitalName('哈尔滨道外区松电慢性病专科门诊部'), 'outpatient institution kept whole')
+assertTrue(isValidHospitalName('五常市人民卫生院'), 'health center institution')
+assertTrue(!isValidHospitalName('门诊部'), 'bare outpatient dept is not a hospital')
+assertTrue(!isValidHospitalName('中西医科'), 'department is not a hospital')
+assertEqual(
+  resolveHospitalNameFromColumnD(
+    [
+      [],
+      [],
+      [],
+      [],
+      [],
+      [],
+      [],
+      ['', '', '', '发货日期', '发货单号', '类型', '', '包名', '', '', '包装材料', '包数', '器械数', '单价', '总价'],
+      ['', '', '', '晟龄中西医结合诊所']
+    ],
+    7
+  ),
+  '晟龄中西医结合诊所',
+  'D9 clinic name is accepted'
+)
+assertEqual(
+  resolveReconciliationHospitalName({
+    fileName: 'HEBDeliveryNoteSummaryWithPackingMeterial.xlsx',
+    currentName: '',
+    sheetHospitalDisplayNames: ['晟龄中西医结合诊所']
+  }),
+  '晟龄中西医结合诊所',
+  'sheet clinic name beats english filename'
+)
+assertEqual(
+  resolveHospitalNameFromDeliveryDateColumn(
+    [
+      ['', '发货日期', '发货单号', '类型', '包名', '包装材料', '包数', '器械数', '单价', '总价'],
+      ['', '晟龄中西医结合诊所', '', '', '', '', 6, 33, 181, 213.5],
+      ['', '中西医科', '', '', '', '', 6, 33, 181, 213.5],
+      ['', '2026-09-14', '1637674', '额外包(纸塑袋)', '镊子缸-2/Z2530', '高温纸塑袋250*300', 2, 4, 16.5, 33]
+    ],
+    0
+  ),
+  '晟龄中西医结合诊所',
+  'clinic name in delivery-date column when table does not start at column D'
+)
+assertEqual(
+  resolveHospitalNameFromDeliveryDateColumn(
+    [
+      ['发货日期', '发货单号', '类型', '包名', '包装材料', '包数', '器械数', '单价', '总价'],
+      ['门诊部'],
+      ['哈尔滨道外区松电慢性病专科门诊部']
+    ],
+    0
+  ),
+  '哈尔滨道外区松电慢性病专科门诊部',
+  'skip bare outpatient dept and keep the institution name'
+)
+assertTrue(
+  matchesCustomerArchive('晟龄中西医结合诊所', [
+    { canonical_name: '其他医院' },
+    { canonicalName: '晟龄中西医结合诊所' }
+  ]),
+  'archive canonical name matches'
+)
+assertTrue(
+  !matchesCustomerArchive('晟龄中西医结合诊所', [{ canonicalName: '哈尔滨市第二医院' }]),
+  'unknown clinic is not in the archive'
+)
+assertTrue(
+  matchesCustomerArchive('松电慢性病专科门诊部', [
+    {
+      canonicalName: '哈尔滨道外区松电慢性病专科门诊部',
+      aliases: [{ alias: '松电慢性病专科门诊部', isActive: true }]
+    }
+  ]),
+  'archive alias matches'
 )
 
 console.log('reconciliationHospitalName tests passed')

@@ -134,6 +134,8 @@
     selectedSheetFilter: string | null
     /** 识别出的医院全称（Excel 内容优先），用于文件条头部展示 */
     hospitalName?: string
+    /** 表内机构名在客户档案中没有规范名或别名 */
+    customerUnmatched?: boolean
     processedRows: Record<string, unknown>[]
     onlyShowAbnormal: boolean
     anomalyCategoryFilters: ReconciliationAnomalyCategory[]

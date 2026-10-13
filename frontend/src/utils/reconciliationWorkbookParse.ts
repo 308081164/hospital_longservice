@@ -1,7 +1,8 @@
 import * as XLSX from 'xlsx'
 import {
   extractStandardHospitalNameFromMatrix,
-  resolveHospitalNameFromColumnASummary
+  resolveHospitalNameFromColumnASummary,
+  resolveHospitalNameFromDeliveryDateColumn
 } from './reconciliationHospitalName'
 
 /** 对账页上传预览使用的清洗开关（与计费规则 cleaning 同构）。 */
@@ -163,6 +164,7 @@ function findDateRangeText(rows: unknown[][]): string {
 function resolveSheetHospitalDisplayName(matrix: unknown[][], headerRowIndex: number): string {
   return (
     extractStandardHospitalNameFromMatrix(matrix, headerRowIndex) ||
+    resolveHospitalNameFromDeliveryDateColumn(matrix, headerRowIndex) ||
     resolveHospitalNameFromColumnASummary(matrix, headerRowIndex)
   )
 }

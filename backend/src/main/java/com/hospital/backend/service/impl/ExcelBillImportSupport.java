@@ -151,10 +151,33 @@ final class ExcelBillImportSupport {
             out.add(fromD);
             return;
         }
+        String fromDeliveryColumn = resolveHospitalNameFromDeliveryDateColumn(matrix, headerRowIndex);
+        if (!fromDeliveryColumn.isBlank()) {
+            out.add(fromDeliveryColumn);
+            return;
+        }
         String fromSummaryColA = resolveHospitalNameFromColumnASummaryRows(matrix, headerRowIndex);
         if (!fromSummaryColA.isBlank()) {
             out.add(fromSummaryColA);
         }
+    }
+
+    /**
+     * 机构全称：含「医院」，或以诊所 / 门诊部 / 卫生院 / 卫生服务中心结尾。
+     * 单独的「门诊部」不算。与前端 isValidHospitalName 保持一致。
+     */
+    static boolean isRecognizedInstitutionName(String name) {
+        if (name == null || name.isBlank()) {
+            return false;
+        }
+        String trimmed = name.trim();
+        if (trimmed.contains("医院")) {
+            return true;
+        }
+        if (trimmed.endsWith("卫生服务中心") || trimmed.endsWith("卫生院") || trimmed.endsWith("诊所")) {
+            return true;
+        }
+        return trimmed.endsWith("门诊部") && !"门诊部".equals(trimmed);
     }
 
     static boolean isLikelyHospitalDisplayName(String name) {
@@ -162,7 +185,7 @@ final class ExcelBillImportSupport {
             return false;
         }
         String trimmed = name.trim();
-        if (!trimmed.contains("医院")) {
+        if (!isRecognizedInstitutionName(trimmed)) {
             return false;
         }
         if (trimmed.contains("发货单汇总表") || isDateRangeText(trimmed)) {
@@ -232,6 +255,47 @@ final class ExcelBillImportSupport {
             return colA.trim();
         }
         return "";
+    }
+
+    /**
+     * 表头下一行起，沿「发货日期」列找没有单号、类型、包名的机构汇总带。
+     * 左边距不是固定 3 列时，诊所名不会落在 D9。
+     */
+    static String resolveHospitalNameFromDeliveryDateColumn(List<List<Object>> matrix, int headerRowIndex) {
+        if (headerRowIndex < 0 || headerRowIndex >= matrix.size()) {
+            return "";
+        }
+        Map<String, Integer> headerMap = buildHeaderMap(matrix.get(headerRowIndex));
+        Integer dateCol = headerMap.get(normalizeCellText("发货日期"));
+        if (dateCol == null) {
+            return "";
+        }
+        Integer orderCol = headerMap.get(normalizeCellText("发货单号"));
+        Integer typeCol = headerMap.get(normalizeCellText("类型"));
+        if (typeCol == null) {
+            typeCol = headerMap.get(normalizeCellText("基本类型"));
+        }
+        Integer packCol = headerMap.get(normalizeCellText("包名"));
+        for (int r = headerRowIndex + 1; r < matrix.size(); r++) {
+            List<Object> row = matrix.get(r);
+            if (!sanitizeStr(cellAt(row, orderCol)).isEmpty()
+                    || !sanitizeStr(cellAt(row, typeCol)).isEmpty()
+                    || !sanitizeStr(cellAt(row, packCol)).isEmpty()) {
+                continue;
+            }
+            String dateText = sanitizeStr(cellAt(row, dateCol));
+            if (isLikelyHospitalDisplayName(dateText)) {
+                return dateText.trim();
+            }
+        }
+        return "";
+    }
+
+    private static Object cellAt(List<Object> row, Integer column) {
+        if (row == null || column == null || column < 0 || column >= row.size()) {
+            return null;
+        }
+        return row.get(column);
     }
 
     private static String readColumnDCell(List<List<Object>> matrix, int rowIndex) {
@@ -338,7 +402,8 @@ final class ExcelBillImportSupport {
         if (deliveryText == null || deliveryText.isBlank()) {
             return false;
         }
-        return deliveryText.contains("医院") || deliveryText.contains("中心");
+        String trimmed = deliveryText.trim();
+        return trimmed.contains("医院") || trimmed.contains("中心") || isRecognizedInstitutionName(trimmed);
     }
 
     static boolean isInlineDepartmentMarkerRow(String deliveryText, String orderNo, String type, String packName) {

@@ -10,6 +10,8 @@ const DATE_RANGE_TEXT_PATTERN =
 
 const HEADER_FIELD_PATTERN = /^发货日期$/
 const PURE_NUMBER_PATTERN = /^[\d.]+$/
+/** 不含「医院」二字、但仍是机构全称的后缀。单独的「门诊部」是科室，不在此列。 */
+const INSTITUTION_SUFFIX_PATTERN = /(诊所|门诊部|卫生院|卫生服务中心)$/
 
 const FILE_BILL_SUFFIX_PATTERN = /(账单|结款函|汇总|发货单|明细|对账).*$/
 const FILE_MONTH_SUFFIX_PATTERN = /\d{1,2}月.*$/
@@ -44,14 +46,19 @@ export function isDateRangeText(name?: string | null): boolean {
   return DATE_RANGE_TEXT_PATTERN.test(trimmed)
 }
 
-/** 铂康标准账单 D8/D9 医院名校验：必须含「医院」，拒绝日期/数字/表头字段/科室名。 */
+/**
+ * 机构全称：含「医院」，或以诊所 / 门诊部 / 卫生院 / 卫生服务中心结尾。
+ * 单独的「门诊部」「中西医科」以及「内镜中心」等科室名仍然拒绝。
+ */
 export function isValidHospitalName(name?: string | null): boolean {
   const trimmed = (name ?? '').trim()
-  if (!trimmed || !trimmed.includes('医院')) return false
+  if (!trimmed) return false
   if (isLikelyDepartmentName(trimmed) || isDateRangeText(trimmed)) return false
   if (trimmed.includes('发货单汇总表') || HEADER_FIELD_PATTERN.test(trimmed)) return false
   if (PURE_NUMBER_PATTERN.test(trimmed)) return false
-  return true
+  if (trimmed.includes('医院') && trimmed.includes('至')) return false
+  if (trimmed.includes('医院')) return true
+  return INSTITUTION_SUFFIX_PATTERN.test(trimmed)
 }
 
 export function isLikelyHospitalName(name?: string | null): boolean {
@@ -77,8 +84,42 @@ export function resolveHospitalNameFromColumnD(
 }
 
 /**
+ * 表头下一行起，沿「发货日期」列找机构汇总带。
+ * 只接受没有发货单号、类型、包名的行，避免把正文里的「医院」当成机构名。
+ * 左边距不是 3 列时，诊所名不会落在固定的 D9。
+ */
+export function resolveHospitalNameFromDeliveryDateColumn(
+  matrix: unknown[][],
+  headerRowIndex: number
+): string {
+  if (headerRowIndex < 0 || headerRowIndex >= matrix.length) return ''
+  const headerMap = new Map<string, number>()
+  ;(matrix[headerRowIndex] ?? []).forEach((cell, index) => {
+    const key = String(cell ?? '')
+      .replace(/\s+/g, '')
+      .trim()
+    if (key && !headerMap.has(key)) headerMap.set(key, index)
+  })
+  const dateCol = headerMap.get('发货日期')
+  if (dateCol === undefined) return ''
+  const orderCol = headerMap.get('发货单号')
+  const typeCol = headerMap.get('类型') ?? headerMap.get('基本类型')
+  const packCol = headerMap.get('包名')
+  const cellText = (row: unknown[], col: number | undefined) =>
+    col === undefined ? '' : String(row[col] ?? '').trim()
+
+  for (let i = headerRowIndex + 1; i < matrix.length; i += 1) {
+    const row = matrix[i] ?? []
+    if (cellText(row, orderCol) || cellText(row, typeCol) || cellText(row, packCol)) continue
+    const text = cellText(row, dateCol)
+    if (isValidHospitalName(text)) return text
+  }
+  return ''
+}
+
+/**
  * 合并单 sheet（发货单汇总表）：医院全称在表头之后的 A 列汇总行，D8/D9 为空。
- * 只接受含「医院」的单元格，科室行（如 ICU病房）会被跳过。
+ * 科室行（如 ICU病房、单独的门诊部）会被跳过。
  */
 export function resolveHospitalNameFromColumnASummary(
   matrix: unknown[][],
@@ -194,6 +235,27 @@ export function resolveHospitalBadgeName(options: {
   if (fromFile) return fromFile
 
   return resolved || stored || ''
+}
+
+/** 表内机构名是否已在客户档案（规范名或别名完全一致）。 */
+export function matchesCustomerArchive(
+  name: string | null | undefined,
+  customers: Array<{
+    canonicalName?: string | null
+    canonical_name?: string | null
+    aliases?: Array<{ alias?: string | null; isActive?: boolean | null }> | null
+  }>
+): boolean {
+  const target = (name ?? '').trim()
+  if (!target || !isValidHospitalName(target)) return false
+  return customers.some((customer) => {
+    const canonical = (customer.canonicalName ?? customer.canonical_name ?? '').trim()
+    if (canonical && canonical === target) return true
+    return (customer.aliases ?? []).some((alias) => {
+      if (alias.isActive === false) return false
+      return (alias.alias ?? '').trim() === target
+    })
+  })
 }
 
 export function displayHospitalNameForJob(

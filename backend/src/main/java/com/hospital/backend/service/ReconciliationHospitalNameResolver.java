@@ -134,16 +134,34 @@ public class ReconciliationHospitalNameResolver {
             return false;
         }
         String trimmed = name.trim();
-        if (!trimmed.contains("医院")) {
+        if (!isRecognizedInstitutionName(trimmed)) {
             return false;
         }
         if (trimmed.contains("发货单汇总表") || isDateRangeText(trimmed)) {
+            return false;
+        }
+        if (trimmed.contains("医院") && trimmed.contains("至")) {
             return false;
         }
         if (trimmed.matches("^[\\d.]+$") || "发货日期".equals(trimmed)) {
             return false;
         }
         return true;
+    }
+
+    /** 与 ExcelBillImportSupport、前端 isValidHospitalName 同一套机构后缀。 */
+    static boolean isRecognizedInstitutionName(String trimmed) {
+        if (trimmed == null || trimmed.isBlank()) {
+            return false;
+        }
+        String name = trimmed.trim();
+        if (name.contains("医院")) {
+            return true;
+        }
+        if (name.endsWith("卫生服务中心") || name.endsWith("卫生院") || name.endsWith("诊所")) {
+            return true;
+        }
+        return name.endsWith("门诊部") && !"门诊部".equals(name);
     }
 
     public boolean isDateRangeText(String name) {

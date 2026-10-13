@@ -16,6 +16,13 @@
           </span>
         </ElTooltip>
         <ElTooltip
+          v-if="customerUnmatched"
+          content="客户档案里没有这个名称。单价仍按标准规则计算；需要这家机构的特色计价时，请先建档或添加别名。"
+          placement="top"
+        >
+          <span class="file-strip__unmatched">未匹配到客户档案</span>
+        </ElTooltip>
+        <ElTooltip
           v-if="ruleLabel"
           :content="ruleTooltip"
           placement="top"
@@ -411,6 +418,11 @@
     })
   )
 
+  const customerUnmatched = computed(() => {
+    if (props.entry.customerUnmatched) return true
+    return (props.versionItem?.reviewComment ?? '').includes('系统客户档案未收录')
+  })
+
   const canExportPerm = computed(() => canExport.value)
 
   const anomalyCategoryOptions = computed<AnomalyCategoryOption[]>(() =>
@@ -553,6 +565,16 @@
   .file-strip__hospital-icon {
     flex-shrink: 0;
     font-size: 13px;
+  }
+
+  .file-strip__unmatched {
+    flex-shrink: 0;
+    padding: 1px 8px;
+    font-size: 12px;
+    color: var(--el-color-warning-dark-2, #b88230);
+    background: var(--el-color-warning-light-9, #fdf6ec);
+    border: 1px solid var(--el-color-warning-light-5, #f3d19e);
+    border-radius: 4px;
   }
 
   .file-strip__meta {

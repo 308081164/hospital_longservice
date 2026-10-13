@@ -112,6 +112,25 @@ class ReconciliationHospitalNameResolverTest {
         assertThat(resolver.isDateRangeText("从:2026/6/1 00:00:00 至: 2026/6/30 23:59:59.999")).isTrue();
         assertThat(resolver.isLikelyHospitalName("从:2026/6/1 00:00:00 至: 2026/6/30 23:59:59.999")).isFalse();
         assertThat(resolver.isLikelyHospitalName("哈尔滨谋大医院")).isTrue();
+        assertThat(resolver.isLikelyHospitalName("晟龄中西医结合诊所")).isTrue();
+        assertThat(resolver.isLikelyHospitalName("哈尔滨道外区松电慢性病专科门诊部")).isTrue();
+        assertThat(resolver.isLikelyHospitalName("门诊部")).isFalse();
+        assertThat(resolver.isLikelyHospitalName("静配中心")).isFalse();
+        assertThat(resolver.isLikelyHospitalName("中西医科")).isFalse();
+    }
+
+    @Test
+    void keepsClinicNameFromSheetInsteadOfEnglishFileName() {
+        when(customerMapper.selectAll()).thenReturn(List.of());
+        when(customerAliasMapper.selectAllActive()).thenReturn(List.of());
+
+        String resolved = resolver.resolve(
+                "",
+                "HEBDeliveryNoteSummaryWithPackingMeterial.xlsx",
+                List.of("晟龄中西医结合诊所"),
+                List.of("发货单汇总表-显示包装材料"));
+
+        assertThat(resolved).isEqualTo("晟龄中西医结合诊所");
     }
 
     @Test

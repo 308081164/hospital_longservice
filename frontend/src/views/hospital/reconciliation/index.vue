@@ -228,6 +228,8 @@
     status: EntryStatus
     errorMessage: string
     hospitalName: string
+    /** 表内机构名尚未进入客户档案 */
+    customerUnmatched: boolean
     /** 该文件匹配到的计费规则（按医院名称解析），null 时使用全局 activeRule */
     rule: Api.Hospital.PricingRuleRecord | null
     savedJobId: number | null
@@ -641,8 +643,10 @@
   import {
     isPlaceholderHospitalName,
     isValidHospitalName,
+    matchesCustomerArchive,
     resolveHospitalBadgeName
   } from '@/utils/reconciliationHospitalName'
+  import { listCustomers } from '@/api/master-data/customersApi'
   import {
     isCustomerSpecificPricingRule,
     isGeneralPricingRule
@@ -1165,6 +1169,7 @@
       status: 'pending',
       errorMessage: '',
       hospitalName: '',
+      customerUnmatched: false,
       rule: null,
       savedJobId: null,
       processingProgress: 0,
@@ -1236,6 +1241,30 @@
     }
   }
 
+  let customerArchivePromise: Promise<Api.MasterData.CustomerRecord[]> | null = null
+
+  function loadCustomerArchive() {
+    if (!customerArchivePromise) {
+      customerArchivePromise = listCustomers().catch(() => {
+        customerArchivePromise = null
+        return [] as Api.MasterData.CustomerRecord[]
+      })
+    }
+    return customerArchivePromise
+  }
+
+  /** 档案接口失败时不提示，避免把网络错误显示成「未建档」。 */
+  async function isCustomerUnmatched(hospitalName: string) {
+    if (!isValidHospitalName(hospitalName)) return false
+    try {
+      const customers = await loadCustomerArchive()
+      if (customers.length === 0 && customerArchivePromise === null) return false
+      return !matchesCustomerArchive(hospitalName, customers)
+    } catch {
+      return false
+    }
+  }
+
   /** 根据条目的医院名称解析匹配的计费规则 */
   async function resolveEntryRule(entry: UploadEntry) {
     const badgeName = resolveHospitalBadgeName({
@@ -1304,6 +1333,7 @@
         hospitalName: entry.hospitalName,
         sheetHospitalDisplayNames: workbook.sheetMetas.map((meta) => meta.hospitalDisplayName)
       })
+      entry.customerUnmatched = await isCustomerUnmatched(entry.hospitalName)
       entry.status = 'parsed'
     } catch (error) {
       entry.status = 'error'
