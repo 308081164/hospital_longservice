@@ -1,7 +1,7 @@
 {
   "version": 1,
-  "generated_at": "2026-10-12T03:08:57Z",
-  "manifest_hash": "8e6f715c3c78a764a2b8c54e5c246097409f504503a60c38126fcfba315c9cc9",
+  "generated_at": "2026-10-13T07:47:54Z",
+  "manifest_hash": "2b32fd612afaae33fa93520b6d5da5acb830be3c39f33e597e2c70c59a518621",
   "billing_enabled_count": 42,
   "active_billing_enabled_count": 42,
   "customers": {
@@ -3216,7 +3216,7 @@
             "双@contains"
           ],
           "skipPackaging": false,
-          "skipDiscount": true,
+          "skipDiscount": false,
           "isActive": true,
           "matchMode": "first",
           "keywordMatchMode": "contains",
@@ -3235,7 +3235,7 @@
             "双@contains"
           ],
           "skipPackaging": false,
-          "skipDiscount": true,
+          "skipDiscount": false,
           "isActive": true,
           "matchMode": "first",
           "keywordMatchMode": "contains",
@@ -3276,7 +3276,7 @@
             "小腔包"
           ],
           "skipPackaging": true,
-          "skipDiscount": true,
+          "skipDiscount": false,
           "isActive": true,
           "matchMode": "first",
           "conditionsJson": "[{\"field\": \"flatAddon\", \"value\": 5}]",
