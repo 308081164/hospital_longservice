@@ -641,8 +641,8 @@
     updateHospitalReconciliationRows
   } from '@/api/hospital/reconciliationsApi'
   import {
+    isAcceptableFixedCellHospitalName,
     isPlaceholderHospitalName,
-    isValidHospitalName,
     matchesCustomerArchive,
     resolveHospitalBadgeName
   } from '@/utils/reconciliationHospitalName'
@@ -1255,7 +1255,7 @@
 
   /** 档案接口失败时不提示，避免把网络错误显示成「未建档」。 */
   async function isCustomerUnmatched(hospitalName: string) {
-    if (!isValidHospitalName(hospitalName)) return false
+    if (!isAcceptableFixedCellHospitalName(hospitalName)) return false
     try {
       const customers = await loadCustomerArchive()
       if (customers.length === 0 && customerArchivePromise === null) return false
@@ -1437,7 +1437,7 @@
     entry.savedJobId = saved.id
     const savedName = (saved.hospitalName ?? '').trim()
     // 保存后以服务端解析名为准。表头 D9「南岗区」不能盖过已落库的「南岗院区」。
-    entry.hospitalName = isValidHospitalName(savedName)
+    entry.hospitalName = isAcceptableFixedCellHospitalName(savedName)
       ? savedName
       : resolveHospitalBadgeName({
           hospitalName: isPlaceholderHospitalName(saved.hospitalName)

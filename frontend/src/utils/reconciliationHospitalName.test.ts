@@ -5,6 +5,7 @@ import {
   resolveHospitalNameFromColumnASummary,
   resolveHospitalNameFromDeliveryDateColumn,
   matchesCustomerArchive,
+  isAcceptableFixedCellHospitalName,
   isDateRangeText,
   isLikelyDepartmentName,
   isPlaceholderHospitalName,
@@ -216,6 +217,46 @@ assertEqual(
   '晟龄中西医结合诊所',
   'D9 clinic name is accepted'
 )
+const fixedCellNames = [
+  '黑龙江东大肛肠',
+  '慧鑫综合门诊',
+  '铭顺口腔门诊',
+  '索菲医疗美容门诊',
+  '正壮堂中医门诊',
+  '方南南口腔',
+  '哈尔滨东桉医疗美容有限公司',
+  '靓范颜医疗美容',
+  '哈市第二社会福利院',
+  '星面孔慕悦医疗美容（哈西店）',
+  '秀妍汇医疗美容（香坊区）',
+  '伊凯丽医疗美容门诊',
+  '悦禾荟综合门诊',
+  '云科健康医疗'
+]
+for (const name of fixedCellNames) {
+  const matrix: unknown[][] = Array.from({ length: 10 }, () => [])
+  matrix[8] = ['', '', '', name]
+  assertEqual(resolveHospitalNameFromColumnD(matrix, 7), name, `D9 kept without suffix filter: ${name}`)
+  assertTrue(isAcceptableFixedCellHospitalName(name), `fixed cell accepts ${name}`)
+}
+assertEqual(
+  resolveReconciliationHospitalName({
+    fileName: '省医院香坊.xlsx',
+    currentName: '',
+    sheetHospitalDisplayNames: ['慧鑫综合门诊']
+  }),
+  '慧鑫综合门诊',
+  'D9 outpatient name beats filename that contains 医院'
+)
+const headerOnD9: unknown[][] = Array.from({ length: 10 }, () => [])
+headerOnD9[7] = ['', '', '', '方南南口腔']
+headerOnD9[8] = ['发货日期', '发货单号', '类型', '包名']
+assertEqual(
+  resolveHospitalNameFromColumnD(headerOnD9, 8),
+  '方南南口腔',
+  'D9 header label 包名 is skipped and D8 name is kept'
+)
+
 assertEqual(
   resolveReconciliationHospitalName({
     fileName: 'HEBDeliveryNoteSummaryWithPackingMeterial.xlsx',

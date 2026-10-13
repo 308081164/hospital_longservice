@@ -225,17 +225,56 @@ final class ExcelBillImportSupport {
         return "";
     }
 
-    /** 铂康标准账单：医院全称仅在 D8 或 D9（二选一），D9 优先。 */
+    /** 铂康标准账单：医院全称仅在 D8 或 D9（二选一），D9 优先。这两格不套机构后缀。 */
     static String resolveHospitalNameFromColumnD(List<List<Object>> matrix, int headerRowIndex) {
         String d9 = readColumnDCell(matrix, 8);
-        if (isLikelyHospitalDisplayName(d9)) {
+        if (isAcceptableFixedCellHospitalName(d9)) {
             return d9.trim();
         }
         String d8 = readColumnDCell(matrix, 7);
-        if (isLikelyHospitalDisplayName(d8)) {
+        if (isAcceptableFixedCellHospitalName(d8)) {
             return d8.trim();
         }
         return "";
+    }
+
+    /**
+     * D8/D9 固定格原样采用，不要求带「医院 / 诊所 / 门诊部」。
+     * 仍排除空值、表头列名、日期区间、纯数字和单独的科室名。
+     */
+    static boolean isAcceptableFixedCellHospitalName(String name) {
+        if (name == null || name.isBlank()) {
+            return false;
+        }
+        String trimmed = name.trim();
+        if (isDateRangeText(trimmed) || trimmed.contains("发货单汇总表")) {
+            return false;
+        }
+        if (trimmed.contains("医院") && trimmed.contains("至")) {
+            return false;
+        }
+        if (trimmed.matches("^[\\d.]+$") || FIXED_CELL_HEADER_LABELS.contains(trimmed)) {
+            return false;
+        }
+        return !isBareDepartmentName(trimmed);
+    }
+
+    private static final java.util.Set<String> FIXED_CELL_HEADER_LABELS = java.util.Set.of(
+            "发货日期", "发货单号", "类型", "基本类型", "包名", "包装材料",
+            "包数", "器械数", "单价", "总价", "科室", "包类别号", "灭菌日期");
+
+    private static final java.util.regex.Pattern BARE_DEPARTMENT_NAME = java.util.regex.Pattern.compile(
+            "^(手术室|门诊部|门诊|供应室|消毒供应|内镜中心|产房|病区|病房|ICU|供应中心|消毒中心"
+                    + "|美容科|骨科|内科|外科|妇科|产科|儿科|眼科|耳鼻喉|口腔科|康复科|急诊科|麻醉科"
+                    + "|输血科|病理科|检验科|放射科|超声科|药剂科|营养科|中医科|皮肤科|精神科|肿瘤科"
+                    + "|透析室|导管室|介入室|胃镜室|换药室|处置室|治疗室|护士站|静配中心|息肉中心|体检中心"
+                    + "|伤口造口门诊)([（(].*[）)])?$");
+
+    private static boolean isBareDepartmentName(String trimmed) {
+        if (BARE_DEPARTMENT_NAME.matcher(trimmed).matches()) {
+            return true;
+        }
+        return trimmed.length() <= 8 && trimmed.endsWith("科");
     }
 
     /**

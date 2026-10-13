@@ -120,6 +120,19 @@ class ReconciliationHospitalNameResolverTest {
     }
 
     @Test
+    void keepsOutpatientNameFromD9OverFileNameContainingHospital() {
+        when(customerMapper.selectAll()).thenReturn(List.of());
+        when(customerAliasMapper.selectAllActive()).thenReturn(List.of());
+
+        String resolved = resolver.resolve(
+                "",
+                "省医院香坊.xlsx",
+                List.of("慧鑫综合门诊"));
+
+        assertThat(resolved).isEqualTo("慧鑫综合门诊");
+    }
+
+    @Test
     void keepsClinicNameFromSheetInsteadOfEnglishFileName() {
         when(customerMapper.selectAll()).thenReturn(List.of());
         when(customerAliasMapper.selectAllActive()).thenReturn(List.of());
@@ -154,7 +167,6 @@ class ReconciliationHospitalNameResolverTest {
         customer.setCanonicalName("黑龙江省医院（香坊院区）");
 
         when(customerMapper.selectAll()).thenReturn(List.of(customer));
-        when(customerAliasMapper.selectAllActive()).thenReturn(List.of());
 
         String resolved = resolver.resolve(
                 "省医院香坊",

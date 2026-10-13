@@ -10,6 +10,22 @@ const DATE_RANGE_TEXT_PATTERN =
 
 const HEADER_FIELD_PATTERN = /^发货日期$/
 const PURE_NUMBER_PATTERN = /^[\d.]+$/
+/** D8/D9 若正好落在表头行，这些列名不是医院。 */
+const FIXED_CELL_HEADER_LABELS = new Set([
+  '发货日期',
+  '发货单号',
+  '类型',
+  '基本类型',
+  '包名',
+  '包装材料',
+  '包数',
+  '器械数',
+  '单价',
+  '总价',
+  '科室',
+  '包类别号',
+  '灭菌日期'
+])
 /** 不含「医院」二字、但仍是机构全称的后缀。单独的「门诊部」是科室，不在此列。 */
 const INSTITUTION_SUFFIX_PATTERN = /(诊所|门诊部|卫生院|卫生服务中心)$/
 
@@ -65,6 +81,20 @@ export function isLikelyHospitalName(name?: string | null): boolean {
   return isValidHospitalName(name)
 }
 
+/**
+ * D8/D9 固定格：单元格里写什么就用什么。
+ * 不要求带「医院 / 诊所 / 门诊部」。仍排除空值、表头列名、日期区间和纯数字。
+ */
+export function isAcceptableFixedCellHospitalName(name?: string | null): boolean {
+  const trimmed = (name ?? '').trim()
+  if (!trimmed) return false
+  if (isLikelyDepartmentName(trimmed) || isDateRangeText(trimmed)) return false
+  if (trimmed.includes('发货单汇总表') || FIXED_CELL_HEADER_LABELS.has(trimmed)) return false
+  if (PURE_NUMBER_PATTERN.test(trimmed)) return false
+  if (trimmed.includes('医院') && trimmed.includes('至')) return false
+  return true
+}
+
 function readColumnDCell(matrix: unknown[][], rowIndex: number): string {
   if (rowIndex < 0 || rowIndex >= matrix.length) return ''
   const row = matrix[rowIndex]
@@ -77,9 +107,9 @@ export function resolveHospitalNameFromColumnD(
   _headerRowIndex?: number
 ): string {
   const d9 = readColumnDCell(matrix, EXCEL_D9_ROW_INDEX)
-  if (isValidHospitalName(d9)) return d9
+  if (isAcceptableFixedCellHospitalName(d9)) return d9
   const d8 = readColumnDCell(matrix, EXCEL_D8_ROW_INDEX)
-  if (isValidHospitalName(d8)) return d8
+  if (isAcceptableFixedCellHospitalName(d8)) return d8
   return ''
 }
 
@@ -199,7 +229,7 @@ export function resolveReconciliationHospitalName(options: {
 }): string {
   const sheetName = (options.sheetHospitalDisplayNames ?? [])
     .map((name) => (name ?? '').trim())
-    .find((name) => isValidHospitalName(name))
+    .find((name) => isAcceptableFixedCellHospitalName(name))
   // 文件名「省医院香坊」也含「医院」，不能盖过表内 D8/D9 的院区全称。
   if (sheetName) return sheetName
 
@@ -247,7 +277,7 @@ export function matchesCustomerArchive(
   }>
 ): boolean {
   const target = (name ?? '').trim()
-  if (!target || !isValidHospitalName(target)) return false
+  if (!target || !isAcceptableFixedCellHospitalName(target)) return false
   return customers.some((customer) => {
     const canonical = (customer.canonicalName ?? customer.canonical_name ?? '').trim()
     if (canonical && canonical === target) return true

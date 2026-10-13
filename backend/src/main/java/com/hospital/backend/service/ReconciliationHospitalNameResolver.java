@@ -23,7 +23,8 @@ public class ReconciliationHospitalNameResolver {
             "^(手术室|门诊部|门诊$|供应室|消毒供应|内镜中心|产房|病区|病房|ICU|供应中心|消毒中心"
                     + "|美容科|骨科|内科|外科|妇科|产科|儿科|眼科|耳鼻喉|口腔科|康复科|急诊科|麻醉科"
                     + "|输血科|病理科|检验科|放射科|超声科|药剂科|营养科|中医科|皮肤科|精神科|肿瘤科"
-                    + "|透析室|导管室|介入室|胃镜室|换药室|处置室|治疗室|护士站)([（(].*[）)])?$");
+                    + "|透析室|导管室|介入室|胃镜室|换药室|处置室|治疗室|护士站|静配中心|息肉中心|体检中心"
+                    + "|伤口造口门诊)([（(].*[）)])?$");
 
     private static final Pattern HOSPITAL_SUFFIX = Pattern.compile(
             "(医院|诊所|集团|中心|卫生院|卫生服务中心|医疗美容|妇产医院|肛肠医院)$");
@@ -34,6 +35,9 @@ public class ReconciliationHospitalNameResolver {
     private static final Pattern FILE_BILL_SUFFIX = Pattern.compile("(账单|结款函|汇总|发货单|明细|对账).*$");
     private static final Pattern FILE_MONTH_SUFFIX = Pattern.compile("\\d{1,2}月.*$");
     private static final Pattern FILE_YEAR_PREFIX = Pattern.compile("^\\d{4}[\\s_-]?");
+    private static final Set<String> FIXED_CELL_HEADER_LABELS = Set.of(
+            "发货日期", "发货单号", "类型", "基本类型", "包名", "包装材料",
+            "包数", "器械数", "单价", "总价", "科室", "包类别号", "灭菌日期");
 
     private final CustomerResolver customerResolver;
     private final ClerkRuleIndex clerkRuleIndex;
@@ -51,6 +55,18 @@ public class ReconciliationHospitalNameResolver {
             String sourceFileName,
             List<String> sheetHospitalNames,
             List<String> headerAreaTexts) {
+        String sheetName = firstAcceptableSheetName(sheetHospitalNames);
+        if (sheetName != null) {
+            Optional<Customer> sheetCustomer = customerResolver.resolveByName(sheetName);
+            if (sheetCustomer.isPresent()) {
+                return sheetCustomer.get().getCanonicalName();
+            }
+            String sheetClerkName = clerkRuleIndex.canonicalCustomerName(sheetName);
+            if (sheetClerkName != null && !sheetClerkName.isBlank()) {
+                return sheetClerkName;
+            }
+            return sheetName;
+        }
         List<String> candidates = buildCandidates(hospitalNameParam, sourceFileName, sheetHospitalNames, headerAreaTexts);
         Customer bestHospitalCustomer = null;
         int bestHospitalSourceLength = -1;
@@ -127,6 +143,36 @@ public class ReconciliationHospitalNameResolver {
                     .ifPresent(customer -> names.add(customer.getCanonicalName()));
         }
         return new ArrayList<>(names);
+    }
+
+    /**
+     * 表内 D8/D9 读到的名字：不要求「医院 / 诊所 / 门诊部」后缀。
+     * 空值、表头列名、日期区间、纯数字和单独科室名仍然排除。
+     */
+    public boolean isAcceptableFixedCellHospitalName(String name) {
+        if (name == null || name.isBlank() || isLikelyDepartmentName(name) || isDateRangeText(name)) {
+            return false;
+        }
+        String trimmed = name.trim();
+        if (trimmed.contains("发货单汇总表") || FIXED_CELL_HEADER_LABELS.contains(trimmed)) {
+            return false;
+        }
+        if (trimmed.contains("医院") && trimmed.contains("至")) {
+            return false;
+        }
+        return !trimmed.matches("^[\\d.]+$");
+    }
+
+    private String firstAcceptableSheetName(List<String> sheetHospitalNames) {
+        if (sheetHospitalNames == null) {
+            return null;
+        }
+        for (String name : sheetHospitalNames) {
+            if (isAcceptableFixedCellHospitalName(name)) {
+                return name.trim();
+            }
+        }
+        return null;
     }
 
     public boolean isLikelyHospitalName(String name) {

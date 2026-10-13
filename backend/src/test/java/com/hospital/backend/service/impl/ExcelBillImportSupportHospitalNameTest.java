@@ -180,6 +180,56 @@ class ExcelBillImportSupportHospitalNameTest {
     }
 
     @Test
+    void keepsD9NameWithoutInstitutionSuffix() throws Exception {
+        for (String name : java.util.List.of(
+                "黑龙江东大肛肠",
+                "慧鑫综合门诊",
+                "方南南口腔",
+                "哈尔滨东桉医疗美容有限公司",
+                "哈市第二社会福利院",
+                "云科健康医疗")) {
+            try (XSSFWorkbook wb = new XSSFWorkbook()) {
+                Sheet sheet = wb.createSheet("账单");
+                Row header = sheet.createRow(7);
+                header.createCell(0).setCellValue("发货日期");
+                header.createCell(1).setCellValue("发货单号");
+                header.createCell(4).setCellValue("包名");
+                header.createCell(8).setCellValue("单价");
+                header.createCell(9).setCellValue("总价");
+                sheet.createRow(8).createCell(3).setCellValue(name);
+
+                ByteArrayOutputStream bos = new ByteArrayOutputStream();
+                wb.write(bos);
+
+                assertThat(ExcelBillImportSupport.extractHospitalDisplayNames(bos.toByteArray()))
+                        .as(name)
+                        .containsExactly(name);
+            }
+        }
+    }
+
+    @Test
+    void skipsHeaderLabelInD9AndReadsD8() throws Exception {
+        try (XSSFWorkbook wb = new XSSFWorkbook()) {
+            Sheet sheet = wb.createSheet("账单");
+            sheet.createRow(7).createCell(3).setCellValue("方南南口腔");
+            Row header = sheet.createRow(8);
+            header.createCell(0).setCellValue("发货日期");
+            header.createCell(1).setCellValue("发货单号");
+            header.createCell(2).setCellValue("类型");
+            header.createCell(3).setCellValue("包名");
+            header.createCell(8).setCellValue("单价");
+            header.createCell(9).setCellValue("总价");
+
+            ByteArrayOutputStream bos = new ByteArrayOutputStream();
+            wb.write(bos);
+
+            assertThat(ExcelBillImportSupport.extractHospitalDisplayNames(bos.toByteArray()))
+                    .containsExactly("方南南口腔");
+        }
+    }
+
+    @Test
     void doesNotTreatBareOutpatientDepartmentAsHospital() throws Exception {
         try (XSSFWorkbook wb = new XSSFWorkbook()) {
             Sheet sheet = wb.createSheet("账单");
