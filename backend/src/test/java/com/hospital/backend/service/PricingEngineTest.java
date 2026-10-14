@@ -68,6 +68,39 @@ class PricingEngineTest {
     }
 
     @Test
+    void sutureNeedleGaugeInPackNameDoesNotForceBagSizeWarning() {
+        PricingEngine.ProcessedResult plain = engine.processRow(row(
+                "测试医院",
+                "额外包(纸塑袋)",
+                "O缝合针(7*17)/Z7520",
+                "高温纸塑袋 75*200",
+                1,
+                1,
+                8.0,
+                8.0
+        ));
+        assertThat(plain.expectedUnitPrice).isEqualTo(8.0);
+        assertThat(plain.status).isEqualTo("unchanged");
+        assertThat(plain.notes).noneMatch(note -> note != null && note.contains("包名尺寸"));
+        assertThat(plain.pricingRule).doesNotContain("(双)");
+
+        PricingEngine.ProcessedResult withPieceAndStar = engine.processRow(row(
+                "测试医院",
+                "额外包(纸塑袋)",
+                "O缝合针(10*28)-1/Z7520",
+                "高温纸塑袋 75*200*",
+                1,
+                1,
+                8.0,
+                8.0
+        ));
+        assertThat(withPieceAndStar.expectedUnitPrice).isEqualTo(8.0);
+        assertThat(withPieceAndStar.status).isEqualTo("unchanged");
+        assertThat(withPieceAndStar.notes).noneMatch(note -> note != null && note.contains("包名尺寸"));
+        assertThat(withPieceAndStar.pricingRule).doesNotContain("(双)");
+    }
+
+    @Test
     void materialClassMismatchUsesPackageMaterialForPaperPlasticPricing() {
         PricingEngine.ProcessedResult result = engine.processRow(row(
                 "博尚医院",

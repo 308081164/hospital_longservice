@@ -411,6 +411,40 @@ class BillRowFieldConsistencyValidatorTest {
     }
 
     @Test
+    void sutureNeedleGaugeInParenthesesIsNotBagSize() {
+        assertThat(PackNameSpecParser.extractMmSize("O缝合针(7*17)/Z7520")).isEmpty();
+        assertThat(PackNameSpecParser.extractMmSize("高温纸塑袋 75*200"))
+                .contains(new PackNameSpecParser.MmSize(75, 200));
+
+        List<BillRowFieldConsistencyValidator.Violation> violations =
+                BillRowFieldConsistencyValidator.validate(
+                        "额外包(纸塑袋)",
+                        "O缝合针(7*17)/Z7520",
+                        "高温纸塑袋 75*200",
+                        1,
+                        1);
+
+        assertThat(violations).isEmpty();
+    }
+
+    @Test
+    void sutureNeedleGaugeWithPieceSuffixAndTrailingStarIsNotBagSize() {
+        assertThat(PackNameSpecParser.extractMmSize("O缝合针(10*28)-1/Z7520")).isEmpty();
+        assertThat(PackNameSpecParser.extractMmSize("高温纸塑袋 75*200*"))
+                .contains(new PackNameSpecParser.MmSize(75, 200));
+
+        List<BillRowFieldConsistencyValidator.Violation> violations =
+                BillRowFieldConsistencyValidator.validate(
+                        "额外包(纸塑袋)",
+                        "O缝合针(10*28)-1/Z7520",
+                        "高温纸塑袋 75*200*",
+                        1,
+                        1);
+
+        assertThat(violations).isEmpty();
+    }
+
+    @Test
     void dressingPackSkipsMaterialCheck() {
         List<BillRowFieldConsistencyValidator.Violation> violations =
                 BillRowFieldConsistencyValidator.validate(

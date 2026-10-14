@@ -51,6 +51,11 @@ public final class PackNameSpecParser {
     private static final Pattern PRODUCT_MODEL_TOKEN =
             Pattern.compile("\\d+[A-Za-z][A-Za-z0-9]*\\d{3,}|[A-Za-z][A-Za-z0-9]*\\d{4,}");
     private static final Pattern BAG_SIZE_MM = Pattern.compile("(\\d+)\\s*[*×xX]\\s*(\\d+)");
+    /**
+     * 袋规宽度下限（毫米）。小于该值的 {@code 数字*数字}（含括号内针规 7*17、10*28）不是袋尺寸。
+     * 与 {@link #parseBagMaterial} 及计价侧「宽度 ≥ 50 才认袋规」一致。
+     */
+    private static final int MIN_BAG_WIDTH_MM = 50;
 
     private PackNameSpecParser() {}
 
@@ -429,7 +434,11 @@ public final class PackNameSpecParser {
         return packName.trim();
     }
 
-    /** 从任意文本提取首个 mm 尺寸（如 75*200）。 */
+    /**
+     * 从文本提取首个袋规 mm 尺寸（如 75*200）。
+     * 小数乘号（如 270*2.5）和宽度不足 {@code MIN_BAG_WIDTH_MM} 的乘号不当袋规；
+     * 括号不剥除，括号内的大尺寸（宽度 ≥ 50）仍可与材料列比较。
+     */
     public static java.util.Optional<MmSize> extractMmSize(String text) {
         if (text == null || text.isBlank()) {
             return java.util.Optional.empty();
@@ -441,9 +450,11 @@ public final class PackNameSpecParser {
             if (end < normalized.length() && normalized.charAt(end) == '.') {
                 continue;
             }
-            return java.util.Optional.of(new MmSize(
-                    Integer.parseInt(mm.group(1)),
-                    Integer.parseInt(mm.group(2))));
+            int width = Integer.parseInt(mm.group(1));
+            if (width < MIN_BAG_WIDTH_MM) {
+                continue;
+            }
+            return java.util.Optional.of(new MmSize(width, Integer.parseInt(mm.group(2))));
         }
         return java.util.Optional.empty();
     }
@@ -514,7 +525,7 @@ public final class PackNameSpecParser {
         if (mm.find()) {
             int w = Integer.parseInt(mm.group(1));
             int h = Integer.parseInt(mm.group(2));
-            if (w >= 50) {
+            if (w >= MIN_BAG_WIDTH_MM) {
                 info.widthMm = w;
                 info.heightMm = h;
                 info.sizeLabel = (w / 10) + "cm";
