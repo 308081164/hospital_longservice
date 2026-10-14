@@ -138,14 +138,14 @@ class RuleFidelityRegressionTest {
     }
 
     @Test
-    void dianjiDoubleBagContainsMatchPricesListedBag() throws Exception {
+    void dianjiSlashDoubleBagPricesListedBag() throws Exception {
         JsonNode rules = RuleFidelityTestSupport.compileForCustomerCode("DIANJI-YY");
         PricingEngine engine = new PricingEngine(rules);
         PricingEngine.ProcessedResult result = engine.processRow(Map.of(
                 "hospitalName", "电机厂医院",
                 "department", "手术室",
                 "type", "额外包(纸塑袋)",
-                "packName", "双纸塑袋-1/Z1526",
+                "packName", "止血钳-1/双/Z1526",
                 "packageMaterial", "高温纸塑袋150*260",
                 "instrumentCount", 1,
                 "packCount", 1,
@@ -156,6 +156,19 @@ class RuleFidelityRegressionTest {
         assertThat(result.pricingRule).contains("电机厂双<3");
         assertThat(result.pricingPath).isEqualTo("fixed");
         assertThat(result.notes).noneMatch(note -> note.contains("需人工核对") || note.contains("已按账单原价"));
+
+        PricingEngine.ProcessedResult bareDoubleWord = engine.processRow(Map.of(
+                "hospitalName", "电机厂医院",
+                "department", "手术室",
+                "type", "额外包(纸塑袋)",
+                "packName", "双纸塑袋-1/Z1526",
+                "packageMaterial", "高温纸塑袋150*260",
+                "instrumentCount", 1,
+                "packCount", 1,
+                "unitPrice", 16.5,
+                "totalPrice", 16.5
+        ));
+        assertThat(bareDoubleWord.pricingRule).doesNotContain("电机厂双");
     }
 
     @Test
