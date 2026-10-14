@@ -1,6 +1,6 @@
 {
-  "baseline_hash": "d60b536f73eb5a96d1999d4dfd746003284555a60003ee0a10689d71132c9700",
-  "generated_at": "2026-10-13T07:47:54Z",
+  "baseline_hash": "13a51194871dd3946ab4dc731623cd856e22382ecdf88e10a939a8d2f1e873c3",
+  "generated_at": "2026-10-14T03:00:10Z",
   "source": "billing-rules-manifest@01836c66115726ff7229db58f16020cb6e65f7069beee13551669c1031fd7764",
   "customer_count": 42,
   "customers": [
@@ -152,7 +152,7 @@
       "code": "YUANDONG-XN",
       "file": "baseline/YUANDONG-XN.json",
       "ruleCount": 2,
-      "fileHash": "05cd2ff54a695a1c39dbbcebe5f2a576e8ab2ec403cc47856f311c9ed5ee89a2"
+      "fileHash": "4e20fe23383dfd8f9e05e7e60d24094f208a81e3552d6a495fafb78a85cd0505"
     },
     {
       "code": "ZUYAN-SF",
@@ -164,7 +164,7 @@
       "code": "AOLAN-YY",
       "file": "baseline/AOLAN-YY.json",
       "ruleCount": 2,
-      "fileHash": "984457c2805400603e210f8ab3925aa07a65e6dcf54bd5d00ec067e9f6842a5c"
+      "fileHash": "66485b0094467f491118eaebbf831a5bfac8b6186ad1c63cbae3eea6991fbb73"
     },
     {
       "code": "HRB-XK-YY",
@@ -176,7 +176,7 @@
       "code": "SENHAI-YY",
       "file": "baseline/SENHAI-YY.json",
       "ruleCount": 4,
-      "fileHash": "cdc261c5b6408524576d8567e2cd41e3515f7f0ece71ea09bbd9c90066b12287"
+      "fileHash": "7bd1939a3ed188b05a53b2a900d2c3db1eda0048b3ab6aa454a0c0bb5e18b512"
     },
     {
       "code": "ZY3-DIANLI",
@@ -200,19 +200,19 @@
       "code": "ERYY-SB",
       "file": "baseline/ERYY-SB.json",
       "ruleCount": 4,
-      "fileHash": "1a60c087eab8bea9c3d9623a7a68837ef1da834c0ec0199d95882d7264b5b1cc"
+      "fileHash": "33374e8ae265d7febf5ce31d1d87d89b3470d0577bb69f5fae59a686d8c1010e"
     },
     {
       "code": "SHENG-YY-NG",
       "file": "baseline/SHENG-YY-NG.json",
       "ruleCount": 14,
-      "fileHash": "2cd1d2b71ab54ddc5515206c48acfb8dfe22e553b443bf2153a40bcb0ca1c4bc"
+      "fileHash": "b1f8a65461788ee812e96095a9d52f39d3c488918331b9e72f3eec8d58351c20"
     },
     {
       "code": "SHENG-YY-XF",
       "file": "baseline/SHENG-YY-XF.json",
       "ruleCount": 12,
-      "fileHash": "9630f2f540cc6773ecec93cb795ba4ff1d581977e556d50ed7c8876c770e8d5c"
+      "fileHash": "ce6432234548b3c7f95ce6bdcc3dd0b8941e80cb8f46f83af61d4cdf92616de8"
     },
     {
       "code": "HRB-HIT",
@@ -224,7 +224,7 @@
       "code": "DIANJI-YY",
       "file": "baseline/DIANJI-YY.json",
       "ruleCount": 10,
-      "fileHash": "135040a39260dc2076232cf4e6add114f5e31bb4767cd5d54e4a7f04f48a545c"
+      "fileHash": "b10c780a01212f1e072bb2060ffbfac5291933a1fae696b3cceff7c8e1aae259"
     },
     {
       "code": "WUCHANG-RM",
@@ -242,7 +242,7 @@
       "code": "HRB-HSZ",
       "file": "baseline/HRB-HSZ.json",
       "ruleCount": 4,
-      "fileHash": "4efe8bd39885011187a1ea0011400bc7900b54dd71b49390289981c7a5483c89"
+      "fileHash": "98949e820c1ca805b1a942863e151e561bceaa35c560538f3d544f473e101a37"
     },
     {
       "code": "HRB-2ND",

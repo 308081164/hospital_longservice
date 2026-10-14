@@ -38,8 +38,26 @@ class BillColumnLayoutTest {
         assertThat(BillColumnLayout.fromKey(null)).isEqualTo(BillColumnLayout.STANDARD_8COL);
         assertThat(BillColumnLayout.fromKey("")).isEqualTo(BillColumnLayout.STANDARD_8COL);
         assertThat(BillColumnLayout.fromKey("standard_8col")).isEqualTo(BillColumnLayout.STANDARD_8COL);
+        assertThat(BillColumnLayout.fromKey("standard_with_instrument"))
+                .isEqualTo(BillColumnLayout.STANDARD_WITH_INSTRUMENT);
         assertThat(BillColumnLayout.fromKey("fuyi_extended_11col")).isEqualTo(BillColumnLayout.FUYI_EXTENDED_11COL);
         assertThat(BillColumnLayout.fromKey("unknown")).isEqualTo(BillColumnLayout.STANDARD_8COL);
+    }
+
+    @Test
+    void instrumentLayoutInsertsCountBetweenPackAndUnitPrice() {
+        BillColumnLayout layout = BillColumnLayout.STANDARD_WITH_INSTRUMENT;
+        assertThat(layout.getHeaders()).containsExactly(
+                "发货日期", "发货单号", "类型", "包类别号", "包名", "包数", "器械数", "单价", "总价");
+        assertThat(layout.getMaxColIndex()).isEqualTo(11);
+        assertThat(layout.maxColLetter()).isEqualTo("L");
+        assertThat(layout.packCountColIndex()).isEqualTo(8);
+        assertThat(layout.dataColumnIndex("器械数")).isEqualTo(9);
+        assertThat(layout.unitPriceColIndex()).isEqualTo(10);
+        assertThat(layout.totalPriceColIndex()).isEqualTo(11);
+        assertThat(layout.showsInstrumentCount()).isTrue();
+        assertThat(layout.isExtended()).isFalse();
+        assertThat(BillColumnLayout.STANDARD_8COL.showsInstrumentCount()).isFalse();
     }
 
     @Test

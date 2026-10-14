@@ -118,17 +118,22 @@ class CustomerFeedback20261012Test {
     }
 
     @Test
-    void skipDiscountBlocksOrchestratorDiscount() {
+    void specialPriceStillGetsClerkDiscountAndClerkFixedPriceDoesNot() {
         ObjectNode clerk = JsonUtils.getObjectMapper().createObjectNode();
         clerk.putArray("clerkRules");
         clerk.putArray("billingPolicies").add(discount("五折", 0.5));
         PricingEngine skipEngine = stubEngine(10.0, true);
-        PricingEngine discountEngine = stubEngine(10.0, false);
         Map<String, Object> row = bill("普通包", "额外包(纸塑袋)", "高温纸塑袋75*200", 1, 1, 10.0);
-        PricingEngine.ProcessedResult skipped = orchestrator.processRow(row, skipEngine, clerk, "AOLAN-YY", Set.of());
-        PricingEngine.ProcessedResult discounted = orchestrator.processRow(row, discountEngine, clerk, "AOLAN-YY", Set.of());
-        assertThat(skipped.expectedUnitPrice).isCloseTo(10.0, within(0.001));
-        assertThat(discounted.expectedUnitPrice).isCloseTo(5.0, within(0.001));
+        PricingEngine.ProcessedResult special = orchestrator.processRow(row, skipEngine, clerk, "AOLAN-YY", Set.of());
+        assertThat(special.expectedUnitPrice).isCloseTo(5.0, within(0.001));
+        assertThat(special.notes).anyMatch(note -> note.contains("导出阶段折扣：五折，单价 5.00"));
+
+        ObjectNode clerkFixed = clerkPrice("普通包", 8.0);
+        clerkFixed.putArray("billingPolicies").add(discount("五折", 0.5));
+        PricingEngine.ProcessedResult fixed = orchestrator.processRow(row, skipEngine, clerkFixed, "AOLAN-YY", Set.of());
+        assertThat(fixed.expectedUnitPrice).isCloseTo(8.0, within(0.001));
+        assertThat(fixed.pricingRule).contains("内勤计价");
+        assertThat(fixed.notes).noneMatch(note -> note.contains("导出阶段折扣"));
     }
 
     @Test
@@ -211,7 +216,7 @@ class CustomerFeedback20261012Test {
         rule.put("price", 5.5);
         rule.put("pricePerInstrument", true);
         rule.put("maxInstrumentCount", maxCount);
-        rule.putArray("keywords").add("双@contains");
+        rule.putArray("keywords").add("/双@contains").add("/(双)@contains").add("/（双）@contains");
         ArrayNode conditions = rule.putArray("conditions");
         conditions.addObject().put("field", "bagAddon").put("value", bagAddon);
         if (cap) {

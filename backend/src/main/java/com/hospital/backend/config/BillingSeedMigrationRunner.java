@@ -58,6 +58,8 @@ public class BillingSeedMigrationRunner implements CommandLineRunner {
     /** 省二院南岗/松北文件名别名（对账徽章 filename 兜底） */
     private static final String ERYY_FILENAME_ALIAS_MARKER = "billing_seed_erreyy_filename_alias_20260928_v1";
     private static final String BILL_DISCOUNT_ALIAS_MARKER = "billing_seed_bill_discount_alias_20261010_v1";
+    /** 账单写法「哈尔滨红十字妇产医院」比档案少一个「市」，种子别名此前没有落到这条客户上。 */
+    private static final String HRB_HSZ_BILL_ALIAS_MARKER = "billing_seed_hrb_hsz_bill_alias_20261014_v1";
 
     /** 最终保留的特殊计价客户 code（与 scripts/strict_hospital_codes.py STRICT_KEEP_CODES 一致） */
     private static final java.util.List<String> STRICT_KEEP_CODES = java.util.List.of(
@@ -297,6 +299,11 @@ public class BillingSeedMigrationRunner implements CommandLineRunner {
             insertMarker(BILL_DISCOUNT_ALIAS_MARKER, "省二/省医院账单折扣：文件名短称与南岗区/松北区别名");
             log.info("Bill discount hospital aliases applied.");
         }
+        if (sysSettingMapper.countByKey(HRB_HSZ_BILL_ALIAS_MARKER) == 0) {
+            ensureHrbHszBillAliases();
+            insertMarker(HRB_HSZ_BILL_ALIAS_MARKER, "红十字妇产账单少「市」的写法落到 HRB-HSZ");
+            log.info("HRB-HSZ bill name aliases applied.");
+        }
     }
 
     private void ensureEreryyFilenameAliases() {
@@ -304,6 +311,31 @@ public class BillingSeedMigrationRunner implements CommandLineRunner {
         ensureAliasForCustomer("ERYY-NG", "黑龙江省第二医院（南岗区）", "exact");
         ensureAliasForCustomer("ERYY-SB", "省二院松北", "exact");
         ensureAliasForCustomer("ERYY-SB", "黑龙江省第二医院（松北区）", "exact");
+    }
+
+    /**
+     * 档案里没有「红十字妇产」时，账单全称对不上 HRB-HSZ，特色价不会套上。
+     * 规范名用种子档案的「哈尔滨市红十字妇产医院」，不改计费基线 customerName。
+     */
+    private void ensureHrbHszBillAliases() {
+        Customer customer = customerMapper.selectByCode("HRB-HSZ");
+        if (customer == null) {
+            log.warn("Skip HRB-HSZ bill alias (customer missing)");
+            return;
+        }
+        String canonical = customer.getCanonicalName() == null ? "" : customer.getCanonicalName().trim();
+        if (canonical.isEmpty() || "哈尔滨红十字医院".equals(canonical)) {
+            jdbcTemplate.update(
+                    "UPDATE customer SET canonical_name = ? WHERE id = ?",
+                    "哈尔滨市红十字妇产医院",
+                    customer.getId());
+            log.info("HRB-HSZ canonical name aligned to 哈尔滨市红十字妇产医院");
+        }
+        Long customerId = customer.getId();
+        ensureCustomerAliasExact(customerId, "红十字妇产", "contains", "hsz_bill_alias", 100);
+        ensureCustomerAliasExact(customerId, "哈尔滨红十字妇产医院", "contains", "hsz_bill_alias", 50);
+        ensureCustomerAliasExact(customerId, "哈尔滨市红十字妇产医院", "exact", "hsz_bill_alias", 10);
+        ensureCustomerAliasExact(customerId, "哈尔滨红十字医院", "exact", "hsz_bill_alias", 100);
     }
 
     /** 导入文件名是「省医院南岗」这类短称时，仍能落到带账单折扣的客户。 */

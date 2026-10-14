@@ -10,6 +10,9 @@ const DATE_RANGE_TEXT_PATTERN =
 
 const HEADER_FIELD_PATTERN = /^发货日期$/
 const PURE_NUMBER_PATTERN = /^[\d.]+$/
+/** 基本类型列的包类名。空行被抽掉后会落到 D8/D9，不能当成医院。 */
+const PACK_CATEGORY_NAME_PATTERN =
+  /^(额外包|器械包|敷料包|单包装包)([（(][^）)]*[）)])?$/
 /** D8/D9 若正好落在表头行，这些列名不是医院。 */
 const FIXED_CELL_HEADER_LABELS = new Set([
   '发货日期',
@@ -48,7 +51,23 @@ export function isLikelyDepartmentName(name?: string | null): boolean {
   if (trimmed.length <= 8 && /科$/.test(trimmed) && !HOSPITAL_NAME_PATTERN.test(trimmed)) {
     return true
   }
+  // 「生殖中心」这类短名称是科室。卫生服务中心、带「医院」的机构全称不是。
+  if (
+    trimmed.endsWith('中心') &&
+    !trimmed.endsWith('卫生服务中心') &&
+    !trimmed.includes('医院') &&
+    trimmed.length <= 8
+  ) {
+    return true
+  }
   return false
+}
+
+/** 基本类型：额外包、器械包、敷料包、单包装包，以及带括号的写法。 */
+export function isPackCategoryName(name?: string | null): boolean {
+  const trimmed = (name ?? '').trim()
+  if (!trimmed) return false
+  return PACK_CATEGORY_NAME_PATTERN.test(trimmed)
 }
 
 export function isPlaceholderHospitalName(name?: string | null): boolean {
@@ -90,6 +109,7 @@ export function isAcceptableFixedCellHospitalName(name?: string | null): boolean
   if (!trimmed) return false
   if (isLikelyDepartmentName(trimmed) || isDateRangeText(trimmed)) return false
   if (trimmed.includes('发货单汇总表') || FIXED_CELL_HEADER_LABELS.has(trimmed)) return false
+  if (isPackCategoryName(trimmed)) return false
   if (PURE_NUMBER_PATTERN.test(trimmed)) return false
   if (trimmed.includes('医院') && trimmed.includes('至')) return false
   return true
@@ -101,16 +121,83 @@ function readColumnDCell(matrix: unknown[][], rowIndex: number): string {
   return String(row?.[STANDARD_HOSPITAL_NAME_COLUMN] ?? '').trim()
 }
 
-/** 铂康标准账单：医院全称仅在 D8 或 D9（二选一），D9 优先。 */
+function normalizedHeaderKey(value: unknown): string {
+  const key = String(value ?? '')
+    .replace(/\s+/g, '')
+    .trim()
+  if (key === '器械数量' || key === '单包内器械数量/把') return '器械数'
+  return key
+}
+
+function headerColumnIndex(header: unknown[], name: string): number {
+  return header.findIndex((cell) => normalizedHeaderKey(cell) === name)
+}
+
+function rowCellText(row: unknown[] | undefined, index: number): string {
+  if (!row || index < 0) return ''
+  return String(row[index] ?? '').trim()
+}
+
+function looksLikeDeliveryDate(value: string): boolean {
+  if (!value) return false
+  if (/^\d+(\.\d+)?$/.test(value)) {
+    const numeric = Number(value)
+    return numeric > 40000 && numeric < 60000
+  }
+  return /\d{4}[/-]\d{1,2}[/-]\d{1,2}/.test(value)
+}
+
+/**
+ * D8/D9 若已经落在明细上（有发货单号，或发货日期列是日期），这是空行被抽掉后的错位，不能当医院名。
+ * 表头下一行只有机构名、没有单号和日期的汇总行仍然保留。
+ */
+function isFixedCellOnDetailRow(
+  matrix: unknown[][],
+  rowIndex: number,
+  headerRowIndex: number
+): boolean {
+  if (headerRowIndex < 0 || rowIndex <= headerRowIndex || rowIndex >= matrix.length) return false
+  const header = matrix[headerRowIndex] ?? []
+  const row = matrix[rowIndex] ?? []
+  if (rowCellText(row, headerColumnIndex(header, '发货单号'))) return true
+  return looksLikeDeliveryDate(rowCellText(row, headerColumnIndex(header, '发货日期')))
+}
+
+/** 铂康标准账单：医院全称仅在 D8 或 D9（二选一），D9 优先。错位到明细或包类型的格子放弃。 */
 export function resolveHospitalNameFromColumnD(
   matrix: unknown[][],
-  _headerRowIndex?: number
+  headerRowIndex = -1
 ): string {
   const d9 = readColumnDCell(matrix, EXCEL_D9_ROW_INDEX)
-  if (isAcceptableFixedCellHospitalName(d9)) return d9
+  if (
+    isAcceptableFixedCellHospitalName(d9) &&
+    !isFixedCellOnDetailRow(matrix, EXCEL_D9_ROW_INDEX, headerRowIndex)
+  ) {
+    return d9
+  }
   const d8 = readColumnDCell(matrix, EXCEL_D8_ROW_INDEX)
-  if (isAcceptableFixedCellHospitalName(d8)) return d8
+  if (
+    isAcceptableFixedCellHospitalName(d8) &&
+    !isFixedCellOnDetailRow(matrix, EXCEL_D8_ROW_INDEX, headerRowIndex)
+  ) {
+    return d8
+  }
   return ''
+}
+
+/**
+ * 表内医院名：合格的 D8/D9 优先。
+ * 空行错位或「额外包」这类包类型被丢掉之后，用发货日期列 / A 列医院汇总行。
+ */
+export function resolveWorkbookHospitalDisplayName(
+  matrix: unknown[][],
+  headerRowIndex: number
+): string {
+  return (
+    resolveHospitalNameFromColumnD(matrix, headerRowIndex) ||
+    resolveHospitalNameFromDeliveryDateColumn(matrix, headerRowIndex) ||
+    resolveHospitalNameFromColumnASummary(matrix, headerRowIndex)
+  )
 }
 
 /**

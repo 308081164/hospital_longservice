@@ -73,6 +73,7 @@ public class ClerkExportLayoutMerger {
                         columnLayout = fromClerk;
                     }
                 }
+                columnLayout = layoutForKeepColumns(columnLayout, params.path("keepColumns"));
             }
         }
         return new LayoutSettings(billLayout, d8, columnLayout);
@@ -118,6 +119,12 @@ public class ClerkExportLayoutMerger {
                     request.setBillColumnLayout(fromClerk.getKey());
                 }
             }
+            BillColumnLayout kept = layoutForKeepColumns(
+                    BillColumnLayout.fromKey(request.getBillColumnLayout()),
+                    params.path("keepColumns"));
+            if (kept != null && kept.showsInstrumentCount() && !kept.isExtended()) {
+                request.setBillColumnLayout(kept.getKey());
+            }
             if (params.has("removeColumns") && params.get("removeColumns").isArray()) {
                 for (JsonNode col : params.get("removeColumns")) {
                     request.addClerkRemoveColumn(col.asText());
@@ -154,6 +161,32 @@ public class ClerkExportLayoutMerger {
                 }
             }
         }
+    }
+
+    /**
+     * 内勤「保留导出列」只点了器械数、没有同时要求包装材料时，在标准 8 列上插入器械数。
+     * 同时要求包装材料的医院仍走原布局，避免只补出半列。
+     */
+    public static BillColumnLayout layoutForKeepColumns(BillColumnLayout current, JsonNode keepColumns) {
+        BillColumnLayout base = current != null ? current : BillColumnLayout.STANDARD_8COL;
+        if (base.isExtended() || keepColumns == null || !keepColumns.isArray()) {
+            return base;
+        }
+        boolean instrument = false;
+        boolean material = false;
+        for (JsonNode col : keepColumns) {
+            String text = col.asText("").replace(" ", "");
+            if (text.contains("包装材料")) {
+                material = true;
+            }
+            if ("器械数".equals(text) || "器械数量".equals(text) || text.contains("单包内器械数量")) {
+                instrument = true;
+            }
+        }
+        if (instrument && !material) {
+            return BillColumnLayout.STANDARD_WITH_INSTRUMENT;
+        }
+        return base;
     }
 
     private Optional<String> resolveCustomerCode(String hospitalName) {

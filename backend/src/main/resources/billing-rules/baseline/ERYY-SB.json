@@ -12,7 +12,9 @@
       "maxInstrumentCount": 2,
       "conditionsJson": "[{\"field\": \"bagAddon\", \"value\": \"all\"}]",
       "keywords": [
-        "双@contains"
+        "/双@contains",
+        "/(双)@contains",
+        "/（双）@contains"
       ],
       "skipPackaging": false,
       "skipDiscount": false,
@@ -31,7 +33,9 @@
       "minInstrumentCount": 3,
       "conditionsJson": "[{\"field\": \"bagAddon\", \"value\": \"outer\"}]",
       "keywords": [
-        "双@contains"
+        "/双@contains",
+        "/(双)@contains",
+        "/（双）@contains"
       ],
       "skipPackaging": false,
       "skipDiscount": false,

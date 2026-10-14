@@ -6,6 +6,7 @@ import {
   resolveHospitalNameFromDeliveryDateColumn,
   matchesCustomerArchive,
   isAcceptableFixedCellHospitalName,
+  isPackCategoryName,
   isDateRangeText,
   isLikelyDepartmentName,
   isPlaceholderHospitalName,
@@ -13,7 +14,8 @@ import {
   pickBestHospitalDisplayName,
   resolveHospitalBadgeName,
   resolveHospitalNameFromColumnD,
-  resolveReconciliationHospitalName
+  resolveReconciliationHospitalName,
+  resolveWorkbookHospitalDisplayName
 } from './reconciliationHospitalName.ts'
 
 function assertEqual(actual: unknown, expected: unknown, message: string) {
@@ -310,6 +312,66 @@ assertTrue(
     }
   ]),
   'archive alias matches'
+)
+
+assertTrue(!isAcceptableFixedCellHospitalName('额外包'), 'pack category is not a hospital name')
+assertTrue(isPackCategoryName('额外包(ETO)'), 'pack category with halfwidth paren')
+assertTrue(isPackCategoryName('敷料包（无纺布）'), 'pack category with fullwidth paren')
+assertTrue(isPackCategoryName('器械包'), 'instrument pack category')
+assertTrue(isPackCategoryName('单包装包'), 'single pack category')
+assertTrue(!isValidHospitalName('生殖中心'), 'short center is not a hospital')
+assertTrue(isLikelyDepartmentName('生殖中心'), '生殖中心 is a department')
+assertTrue(isLikelyDepartmentName('美容科（朝鲜医院）'), 'parenthetical hospital is still a department')
+assertTrue(isValidHospitalName('哈尔滨红十字妇产医院'), 'full institution name kept')
+
+const compressedRedCross: unknown[][] = [
+  ['', '发货单汇总表-显示包装材料'],
+  ['', '从:2026/5/1 至: 2026/10/13'],
+  ['', '', '', '', '', '', '', '', '包数合计:21854'],
+  ['', '', '', '', '', '', '', '', '', '', '', '', '处理费用合计:1'],
+  ['发货日期', '', '发货单号', '基本类型', '类型', '', '包名', '', '', '包装材料', '包数', '', '', '器械数', '单价', '总价'],
+  ['哈尔滨红十字妇产医院'],
+  ['ICU病房'],
+  ['2026-05-07', '', '1600711', '额外包', '额外包(ETO)', '', '湿化瓶-1/Z3032'],
+  ['2026-05-09', '', '1601564', '额外包', '额外包(ETO)', '', '呼吸机湿化瓶-1/Z3032']
+]
+assertEqual(
+  resolveHospitalNameFromColumnD(compressedRedCross, 4),
+  '',
+  'shifted D8/D9 on 额外包 is discarded'
+)
+assertEqual(
+  resolveWorkbookHospitalDisplayName(compressedRedCross, 4),
+  '哈尔滨红十字妇产医院',
+  'column A hospital wins after blank rows shift D8 onto 额外包'
+)
+
+const packTypeBeforeHeader: unknown[][] = Array.from({ length: 14 }, () => [])
+packTypeBeforeHeader[7] = ['', '', '', '额外包']
+packTypeBeforeHeader[11] = [
+  '发货日期',
+  '',
+  '发货单号',
+  '基本类型',
+  '类型',
+  '',
+  '包名',
+  '',
+  '',
+  '包装材料',
+  '包数',
+  '',
+  '',
+  '器械数',
+  '单价',
+  '总价'
+]
+packTypeBeforeHeader[12] = ['哈尔滨红十字妇产医院']
+packTypeBeforeHeader[13] = ['ICU病房']
+assertEqual(
+  resolveWorkbookHospitalDisplayName(packTypeBeforeHeader, 11),
+  '哈尔滨红十字妇产医院',
+  'D8 pack category does not override the A column hospital summary'
 )
 
 console.log('reconciliationHospitalName tests passed')

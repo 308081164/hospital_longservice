@@ -1,7 +1,7 @@
 {
   "version": 1,
-  "generated_at": "2026-10-13T07:47:54Z",
-  "manifest_hash": "2b32fd612afaae33fa93520b6d5da5acb830be3c39f33e597e2c70c59a518621",
+  "generated_at": "2026-10-14T03:00:10Z",
+  "manifest_hash": "a663f7a4b93c28ef913bd40fcb953e19b688cff2c0becc0f625c41ab2b8a6f71",
   "billing_enabled_count": 42,
   "active_billing_enabled_count": 42,
   "customers": {
@@ -2649,7 +2649,9 @@
           "maxInstrumentCount": 2,
           "conditionsJson": "[{\"field\": \"bagAddon\", \"value\": \"all\"}]",
           "keywords": [
-            "双@contains"
+            "/双@contains",
+            "/(双)@contains",
+            "/（双）@contains"
           ],
           "skipPackaging": false,
           "skipDiscount": true,
@@ -2668,7 +2670,9 @@
           "minInstrumentCount": 3,
           "conditionsJson": "[{\"field\": \"bagAddon\", \"value\": \"none\"}]",
           "keywords": [
-            "双@contains"
+            "/双@contains",
+            "/(双)@contains",
+            "/（双）@contains"
           ],
           "skipPackaging": false,
           "skipDiscount": true,
@@ -2744,7 +2748,9 @@
           "maxInstrumentCount": 2,
           "conditionsJson": "[{\"field\": \"bagAddon\", \"value\": \"all\"}]",
           "keywords": [
-            "双@contains"
+            "/双@contains",
+            "/(双)@contains",
+            "/（双）@contains"
           ],
           "skipPackaging": false,
           "skipDiscount": true,
@@ -2763,7 +2769,9 @@
           "minInstrumentCount": 3,
           "conditionsJson": "[{\"field\": \"bagAddon\", \"value\": \"none\"}]",
           "keywords": [
-            "双@contains"
+            "/双@contains",
+            "/(双)@contains",
+            "/（双）@contains"
           ],
           "skipPackaging": false,
           "skipDiscount": true,
@@ -2838,7 +2846,9 @@
           "maxInstrumentCount": 2,
           "conditionsJson": "[{\"field\": \"bagAddon\", \"value\": \"all\"}, {\"field\": \"capDoubleBag\", \"value\": true}]",
           "keywords": [
-            "双@contains"
+            "/双@contains",
+            "/(双)@contains",
+            "/（双）@contains"
           ],
           "skipPackaging": false,
           "skipDiscount": true,
@@ -2857,7 +2867,9 @@
           "minInstrumentCount": 3,
           "conditionsJson": "[{\"field\": \"bagAddon\", \"value\": \"none\"}]",
           "keywords": [
-            "双@contains"
+            "/双@contains",
+            "/(双)@contains",
+            "/（双）@contains"
           ],
           "skipPackaging": false,
           "skipDiscount": true,
@@ -3213,7 +3225,9 @@
           "maxInstrumentCount": 2,
           "conditionsJson": "[{\"field\": \"bagAddon\", \"value\": \"all\"}]",
           "keywords": [
-            "双@contains"
+            "/双@contains",
+            "/(双)@contains",
+            "/（双）@contains"
           ],
           "skipPackaging": false,
           "skipDiscount": false,
@@ -3232,7 +3246,9 @@
           "minInstrumentCount": 3,
           "conditionsJson": "[{\"field\": \"bagAddon\", \"value\": \"outer\"}]",
           "keywords": [
-            "双@contains"
+            "/双@contains",
+            "/(双)@contains",
+            "/（双）@contains"
           ],
           "skipPackaging": false,
           "skipDiscount": false,
@@ -3305,7 +3321,9 @@
           "maxInstrumentCount": 2,
           "conditionsJson": "[{\"field\": \"bagAddon\", \"value\": \"all\"}, {\"field\": \"capDoubleBag\", \"value\": true}]",
           "keywords": [
-            "双@contains"
+            "/双@contains",
+            "/(双)@contains",
+            "/（双）@contains"
           ],
           "skipPackaging": false,
           "skipDiscount": true,
@@ -3328,7 +3346,9 @@
           "minInstrumentCount": 3,
           "conditionsJson": "[{\"field\": \"bagAddon\", \"value\": \"none\"}]",
           "keywords": [
-            "双@contains"
+            "/双@contains",
+            "/(双)@contains",
+            "/（双）@contains"
           ],
           "skipPackaging": false,
           "skipDiscount": true,
@@ -3575,7 +3595,9 @@
           "maxInstrumentCount": 2,
           "conditionsJson": "[{\"field\": \"bagAddon\", \"value\": \"all\"}, {\"field\": \"capDoubleBag\", \"value\": true}]",
           "keywords": [
-            "双@contains"
+            "/双@contains",
+            "/(双)@contains",
+            "/（双）@contains"
           ],
           "skipPackaging": false,
           "skipDiscount": true,
@@ -3598,7 +3620,9 @@
           "minInstrumentCount": 3,
           "conditionsJson": "[{\"field\": \"bagAddon\", \"value\": \"none\"}]",
           "keywords": [
-            "双@contains"
+            "/双@contains",
+            "/(双)@contains",
+            "/（双）@contains"
           ],
           "skipPackaging": false,
           "skipDiscount": true,
@@ -3963,7 +3987,9 @@
           "maxInstrumentCount": 2,
           "conditionsJson": "[{\"field\": \"bagAddon\", \"value\": \"all\"}]",
           "keywords": [
-            "双@contains"
+            "/双@contains",
+            "/(双)@contains",
+            "/（双）@contains"
           ],
           "skipPackaging": false,
           "skipDiscount": true,
@@ -3982,7 +4008,9 @@
           "minInstrumentCount": 3,
           "conditionsJson": "[{\"field\": \"bagAddon\", \"value\": \"inner\"}]",
           "keywords": [
-            "双@contains"
+            "/双@contains",
+            "/(双)@contains",
+            "/（双）@contains"
           ],
           "skipPackaging": false,
           "skipDiscount": true,
@@ -4307,7 +4335,9 @@
           "maxInstrumentCount": 2,
           "conditionsJson": "[{\"field\": \"bagAddon\", \"value\": \"all\"}, {\"field\": \"capDoubleBag\", \"value\": true}]",
           "keywords": [
-            "双@contains"
+            "/双@contains",
+            "/(双)@contains",
+            "/（双）@contains"
           ],
           "skipPackaging": false,
           "skipDiscount": true,
@@ -4326,7 +4356,9 @@
           "minInstrumentCount": 3,
           "conditionsJson": "[{\"field\": \"bagAddon\", \"value\": \"none\"}]",
           "keywords": [
-            "双@contains"
+            "/双@contains",
+            "/(双)@contains",
+            "/（双）@contains"
           ],
           "skipPackaging": false,
           "skipDiscount": true,

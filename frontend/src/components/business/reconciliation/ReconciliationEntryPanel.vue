@@ -146,6 +146,8 @@
     displayPageSize: number
     displayTotal: number
     savedSheetWarningCounts?: Record<string, number> | null
+    /** 保存后各科室行数。顶部标签用它替换解析阶段的工作表名。 */
+    savedSheetRowCounts?: Record<string, number> | null
     workbook: {
       previews: Array<{ name: string; dataRows: number; headerRowIndex: number }>
       sheetMetas?: Array<{ hospitalDisplayName: string }>

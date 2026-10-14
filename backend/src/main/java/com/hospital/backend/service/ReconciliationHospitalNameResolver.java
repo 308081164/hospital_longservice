@@ -73,7 +73,7 @@ public class ReconciliationHospitalNameResolver {
         String bestUnresolvedHospital = null;
         Customer shortNameCustomer = null;
         for (String candidate : candidates) {
-            if (isLikelyDepartmentName(candidate) || isDateRangeText(candidate)) {
+            if (skipNameCandidate(candidate)) {
                 continue;
             }
             Optional<Customer> customer = customerResolver.resolveByName(candidate);
@@ -107,7 +107,7 @@ public class ReconciliationHospitalNameResolver {
         }
 
         for (String candidate : candidates) {
-            if (isLikelyDepartmentName(candidate) || isDateRangeText(candidate)) {
+            if (skipNameCandidate(candidate)) {
                 continue;
             }
             String clerkCanonical = clerkRuleIndex.canonicalCustomerName(candidate);
@@ -117,7 +117,7 @@ public class ReconciliationHospitalNameResolver {
         }
 
         for (String candidate : candidates) {
-            if (isLikelyDepartmentName(candidate) || isDateRangeText(candidate)) {
+            if (skipNameCandidate(candidate)) {
                 continue;
             }
             if (candidate != null && !candidate.isBlank() && !candidate.contains("发货单汇总表")) {
@@ -155,6 +155,9 @@ public class ReconciliationHospitalNameResolver {
         }
         String trimmed = name.trim();
         if (trimmed.contains("发货单汇总表") || FIXED_CELL_HEADER_LABELS.contains(trimmed)) {
+            return false;
+        }
+        if (isPackCategoryName(trimmed)) {
             return false;
         }
         if (trimmed.contains("医院") && trimmed.contains("至")) {
@@ -225,10 +228,27 @@ public class ReconciliationHospitalNameResolver {
         if (DEPARTMENT_NAME.matcher(trimmed).matches()) {
             return true;
         }
-        return trimmed.length() <= 8
+        if (trimmed.length() <= 8
                 && trimmed.endsWith("科")
-                && !HOSPITAL_SUFFIX.matcher(trimmed).find();
+                && !HOSPITAL_SUFFIX.matcher(trimmed).find()) {
+            return true;
+        }
+        return trimmed.endsWith("中心")
+                && !trimmed.endsWith("卫生服务中心")
+                && !trimmed.contains("医院")
+                && trimmed.length() <= 8;
     }
+
+    /** 与 Excel 解析一致：基本类型不能当成医院名。 */
+    public boolean isPackCategoryName(String name) {
+        if (name == null || name.isBlank()) {
+            return false;
+        }
+        return PACK_CATEGORY_NAME.matcher(name.trim()).matches();
+    }
+
+    private static final Pattern PACK_CATEGORY_NAME = Pattern.compile(
+            "^(额外包|器械包|敷料包|单包装包)([（(][^）)]*[）)])?$");
 
     public String inferFromFileName(String sourceFileName) {
         if (sourceFileName == null || sourceFileName.isBlank()) {
@@ -272,6 +292,10 @@ public class ReconciliationHospitalNameResolver {
         }
         addCandidate(ordered, hospitalNameParam);
         return new ArrayList<>(ordered);
+    }
+
+    private boolean skipNameCandidate(String candidate) {
+        return isLikelyDepartmentName(candidate) || isDateRangeText(candidate) || isPackCategoryName(candidate);
     }
 
     private static void addCandidate(Set<String> ordered, String value) {

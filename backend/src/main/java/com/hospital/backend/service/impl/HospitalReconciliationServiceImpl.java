@@ -2876,7 +2876,7 @@ public class HospitalReconciliationServiceImpl implements HospitalReconciliation
                 BillColumnLayout columnLayout = layoutSettings.billColumnLayout();
                 boolean deptSplit = billExportLayoutResolver.useDeptSplitWorkbook(
                         layoutSettings.billLayout(), distinctSheets, exportRowCount);
-                if (columnLayout.isExtended()
+                if (columnLayout.showsInstrumentCount()
                         || billExportLayoutResolver.preferProgrammaticTemplate(layoutSettings.billLayout(), exportRowCount)) {
                     log.info("generateBillExportBytes: {} rows → programmatic template master (layout={})",
                             exportRowCount, columnLayout.getKey());
@@ -3129,13 +3129,9 @@ public class HospitalReconciliationServiceImpl implements HospitalReconciliation
         d10Cell.setCellStyle(summaryLabelStyle);
         for (int c = 4; c <= 7; c++) { XSSFCell ec = row10.createCell(c); ec.setCellStyle(summaryLabelStyle); }
         { XSSFCell ec = row10.createCell(columnLayout.packCountColIndex()); ec.setCellStyle(summaryValStyle); }
-        if (columnLayout.isExtended()) {
-            for (int c = columnLayout.packCountColIndex() + 1; c < columnLayout.totalPriceColIndex(); c++) {
-                XSSFCell ec = row10.createCell(c);
-                ec.setCellStyle(emptyStyle);
-            }
-        } else {
-            { XSSFCell ec = row10.createCell(9); ec.setCellStyle(emptyStyle); }
+        for (int c = columnLayout.packCountColIndex() + 1; c < columnLayout.totalPriceColIndex(); c++) {
+            XSSFCell ec = row10.createCell(c);
+            ec.setCellStyle(emptyStyle);
         }
         { XSSFCell ec = row10.createCell(columnLayout.totalPriceColIndex()); ec.setCellStyle(summaryValStyle); }
 
@@ -3557,9 +3553,11 @@ public class HospitalReconciliationServiceImpl implements HospitalReconciliation
                     }
                 }
 
-                // 隐藏导出不需要的列：标准布局隐藏器械数；附一 11 列保持可见
-                if (instrumentCountCol != null && instrumentCountCol >= 0 && !columnLayout.isExtended()) {
+                // 标准 8 列隐藏器械数。布局本身含器械数量列时保持可见。
+                if (instrumentCountCol != null && instrumentCountCol >= 0 && !columnLayout.showsInstrumentCount()) {
                     sheet.setColumnHidden(instrumentCountCol, true);
+                } else if (instrumentCountCol != null && instrumentCountCol >= 0) {
+                    sheet.setColumnHidden(instrumentCountCol, false);
                 }
                 // 总价列（K列）适当收窄
                 if (totalPriceCol != null && totalPriceCol >= 0) {
@@ -4313,9 +4311,11 @@ public class HospitalReconciliationServiceImpl implements HospitalReconciliation
             }
         }
 
-        // ===== 第十四步：合并模式下隐藏器械数列，包装材料列保持可见 =====
-        if (combinedMode) {
-            if (instCountCol != null) sheet.setColumnHidden(instCountCol, true);
+        // 合并模式的标准 8 列隐藏器械数。布局要求保留时不隐藏。
+        if (combinedMode && instCountCol != null && !layout.showsInstrumentCount()) {
+            sheet.setColumnHidden(instCountCol, true);
+        } else if (instCountCol != null && layout.showsInstrumentCount()) {
+            sheet.setColumnHidden(instCountCol, false);
         }
         // 总价列（K列）适当收窄
         if (totalPriceCol != null) {

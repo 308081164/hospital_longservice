@@ -209,10 +209,13 @@ public class PricingEngine {
                 .orElse(false);
         boolean doubleMarkInName = doubleMarkInNameEarly;
         boolean isDouble = isDoubleEarly;
+        // /双 规则不在折算前锁死件数：其它特色规则仍可先命中；没有其它特色规则时，
+        // 先走通用小件折算，再用折算后的件数套双层袋公式。
         SpecialPriceResult preMatchedSpecialPrice = zeroPriceOverride != null
                 ? zeroPriceOverride
                 : findSpecialFixedPrice(
-                        row, bagSize, effectiveCount, matchedProductId, matchedVariantId, false, 0, 0);
+                        row, bagSize, effectiveCount, matchedProductId, matchedVariantId,
+                        false, 0, 0, true);
         if (preMatchedSpecialPrice == null) {
             preMatchedSpecialPrice = resolveProductPublicPrice(structuredMatch, unitPrice);
         }
@@ -306,7 +309,7 @@ public class PricingEngine {
                 ? preMatchedSpecialPrice
                 : findSpecialFixedPrice(
                         row, bagSize, effectiveCount, matchedProductId, matchedVariantId,
-                        appliedSpecialFoldRule, perPackRawInstrumentCount, foldMinInstrumentCount);
+                        appliedSpecialFoldRule, perPackRawInstrumentCount, foldMinInstrumentCount, false);
 
         // ---- 特殊类型优先处理 ----
         if (specialPrice != null) {
@@ -541,7 +544,11 @@ public class PricingEngine {
             }
         }
         if (appliedSpecialFoldRule && foldMatchedRuleName != null && !foldMatchedRuleName.isBlank()) {
-            pricingRule = foldMatchedRuleName;
+            if (specialPrice == null) {
+                pricingRule = foldMatchedRuleName;
+            } else if (pricingRule == null || !pricingRule.contains(foldMatchedRuleName)) {
+                pricingRule = foldMatchedRuleName + " + " + pricingRule;
+            }
         }
         if (appliedSpecialFoldRule && foldFlatPackPrice != null) {
             expectedUnitPrice = foldFlatPackPrice;
@@ -1105,10 +1112,36 @@ public class PricingEngine {
                                    Double unitPriceOverride, Long ruleId, String ruleName,
                                    boolean hasExtraCount, int minInstrumentCount, Double flatPackPrice) {}
 
+    /**
+     * 关键词只有 /双、/(双)、/（双）的规则。这类规则改用折算后的件数，不在折算前独占本行。
+     */
+    static boolean isSlashDoubleBagRule(JsonNode rule) {
+        JsonNode keywords = rule.path("keywords");
+        if (!keywords.isArray() || keywords.isEmpty()) {
+            return false;
+        }
+        for (JsonNode kw : keywords) {
+            if (!isPureSlashDoubleBagKeyword(kw.asText(""))) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    private static boolean isPureSlashDoubleBagKeyword(String raw) {
+        if (raw == null) {
+            return false;
+        }
+        int at = raw.indexOf('@');
+        String bare = (at >= 0 ? raw.substring(0, at) : raw).trim();
+        return "/双".equals(bare) || "/(双)".equals(bare) || "/（双）".equals(bare);
+    }
+
     private SpecialPriceResult findSpecialFixedPrice(
             Map<String, Object> row, int bagSize, int effectiveCount,
             Long matchedProductId, Long matchedVariantId,
-            boolean appliedSpecialFoldRule, int rawPerPackInstrumentCount, int foldMinInstrumentCount) {
+            boolean appliedSpecialFoldRule, int rawPerPackInstrumentCount, int foldMinInstrumentCount,
+            boolean deferSlashDoubleBagRules) {
         String combined = combinedText(row);
         String hospitalName = str(row, "hospitalName");
         Double unitPrice = doubleOrNull(row, "unitPrice");
@@ -1120,6 +1153,9 @@ public class PricingEngine {
         SpecialPriceResult unitPriceMatch = null;
         SpecialPriceResult anyPriceAcceptedMatch = null;
         for (JsonNode rule : fixedPrices) {
+            if (deferSlashDoubleBagRules && isSlashDoubleBagRule(rule)) {
+                continue;
+            }
             if (appliedSpecialFoldRule && foldMinInstrumentCount > 0
                     && rawPerPackInstrumentCount >= foldMinInstrumentCount) {
                 int maxCount = rule.path("maxInstrumentCount").asInt(Integer.MAX_VALUE);

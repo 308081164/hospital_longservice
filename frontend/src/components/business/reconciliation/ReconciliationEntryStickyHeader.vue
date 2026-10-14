@@ -66,7 +66,7 @@
           {{ t('reconciliation.upload.allSheets') }}
         </button>
         <button
-          v-for="sheet in entry.workbook.previews"
+          v-for="sheet in sheetTabs"
           :key="sheet.name"
           type="button"
           role="tab"
@@ -408,6 +408,35 @@
   const { formatNumber, formatSignedNumber } = useReconciliationTableColumns()
   const { canReviewReconciliation, canExport } = useBillingPermission()
   const actions = inject(reconciliationJobActionsKey, null)
+
+  /**
+   * 保存前用解析出的科室预览。保存后若后端科室集合不同，改用 sheetName 分组，
+   * 否则点英文工作表名会把已经按科室拆开的明细筛空。
+   */
+  const sheetTabs = computed(() => {
+    const previews = props.entry.workbook?.previews ?? []
+    const saved = props.entry.savedSheetRowCounts
+    if (!props.entry.savedJobId || !saved || Object.keys(saved).length === 0) {
+      return previews
+    }
+    const savedNames = Object.keys(saved)
+    const previewNames = previews.map((item) => item.name)
+    const sameSet =
+      previewNames.length === savedNames.length &&
+      previewNames.every((name) => Object.prototype.hasOwnProperty.call(saved, name))
+    if (sameSet) {
+      return previews.map((item) => ({
+        ...item,
+        dataRows: saved[item.name] ?? item.dataRows
+      }))
+    }
+    const headerRowIndex = previews[0]?.headerRowIndex ?? 0
+    return savedNames.map((name) => ({
+      name,
+      dataRows: saved[name] ?? 0,
+      headerRowIndex
+    }))
+  })
 
   const hospitalDisplayName = computed(() =>
     resolveHospitalBadgeName({

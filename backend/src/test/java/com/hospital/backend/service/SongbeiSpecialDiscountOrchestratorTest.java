@@ -14,7 +14,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.within;
 
 /**
- * 松北特色公式价算完后仍走内勤「标准价七折」。一口价「钉≥10 固定 50」保持不打折。
+ * 松北特色公式价算完后仍走内勤「标准价七折」。内勤一口价不再打折；特色一口价同样乘七折。
  */
 class SongbeiSpecialDiscountOrchestratorTest {
 
@@ -35,9 +35,9 @@ class SongbeiSpecialDiscountOrchestratorTest {
     }
 
     @Test
-    void boneCuretteSpecialFormulaThenSeventyPercentMatchesBill() {
+    void slashDoubleBagSpecialFormulaThenSeventyPercentMatchesBill() {
         Map<String, Object> row = row(
-                "骨刮匙（双头）-1/Z7530",
+                "骨刮匙-1/双/Z7530",
                 "额外包（纸塑袋）",
                 "高温纸塑袋75*100",
                 4,
@@ -117,19 +117,80 @@ class SongbeiSpecialDiscountOrchestratorTest {
     }
 
     @Test
-    void nailFixedPriceStaysFiftyWithoutClerkDiscount() {
+    void doubleHeadNameDoesNotMatchDoubleBagRule() {
+        Map<String, Object> row = row(
+                "骨刮匙（双头）-1/Z7530",
+                "额外包（纸塑袋）",
+                "高温纸塑袋75*100",
+                4,
+                4,
+                5.60,
+                22.40);
+        PricingEngine.ProcessedResult result = price(row);
+        assertThat(result.pricingRule).doesNotContain("双<3");
+        assertThat(result.expectedUnitPrice).isCloseTo(5.60, within(0.001));
+        assertThat(result.notes).anyMatch(note -> note.contains("导出阶段折扣：标准价七折"));
+    }
+
+    @Test
+    void kirschnerNeedleFoldsBeforeDoubleBagThenSeventyPercent() {
+        Map<String, Object> row = row(
+                "克氏针1.2-1/双Z7530",
+                "额外包（纸塑袋）",
+                "高温纸塑袋75*200,高温纸塑袋100*350",
+                2,
+                1,
+                7.35,
+                7.35);
+        PricingEngine.ProcessedResult engineOnly = engine.processRow(row);
+        assertThat(engineOnly.expectedUnitPrice).isCloseTo(10.50, within(0.001));
+        assertThat(engineOnly.pricingRule).contains("省二松北双<3");
+        assertThat(engineOnly.pricingRule).contains("通用小件5合1");
+        assertThat(engineOnly.notes).anyMatch(note -> note.contains("折算为 1 件"));
+
+        PricingEngine.ProcessedResult result = price(row);
+        assertThat(result.expectedUnitPrice).isCloseTo(7.35, within(0.001));
+        assertThat(result.notes).anyMatch(note -> note.contains("导出阶段折扣：标准价七折，单价 7.35"));
+        assertThat(((Number) result.billingNotes.get("priceBeforeDiscount")).doubleValue())
+                .isCloseTo(10.50, within(0.001));
+    }
+
+    @Test
+    void parenthesizedSlashDoubleStillMatches() {
+        for (String packName : java.util.List.of("剪刀-1/(双)", "剪刀-1/（双）")) {
+            Map<String, Object> row = row(
+                    packName,
+                    "额外包（纸塑袋）",
+                    "高温纸塑袋100*200",
+                    1,
+                    1,
+                    5.60,
+                    5.60);
+            PricingEngine.ProcessedResult engineOnly = engine.processRow(row);
+            assertThat(engineOnly.pricingRule).as(packName).contains("省二松北双<3");
+        }
+    }
+
+    @Test
+    void nailFixedPriceThenSeventyPercent() {
         Map<String, Object> row = row(
                 "接骨钉-12",
                 "额外包（纸塑袋）",
                 "高温纸塑袋100*200",
                 12,
                 1,
-                50.0,
-                50.0);
+                35.0,
+                35.0);
+        PricingEngine.ProcessedResult engineOnly = engine.processRow(row);
+        assertThat(engineOnly.expectedUnitPrice).isCloseTo(50.0, within(0.001));
+        assertThat(engineOnly.pricingRule).contains("钉≥10固定50");
+
         PricingEngine.ProcessedResult result = price(row);
         assertThat(result.pricingRule).contains("钉≥10固定50");
-        assertThat(result.expectedUnitPrice).isCloseTo(50.0, within(0.001));
-        assertThat(result.notes).noneMatch(note -> note.contains("导出阶段折扣"));
+        assertThat(result.expectedUnitPrice).isCloseTo(35.0, within(0.001));
+        assertThat(((Number) result.billingNotes.get("priceBeforeDiscount")).doubleValue())
+                .isCloseTo(50.0, within(0.001));
+        assertThat(result.notes).anyMatch(note -> note.contains("导出阶段折扣：标准价七折，单价 35.00"));
         assertThat(result.status).isEqualTo("unchanged");
     }
 

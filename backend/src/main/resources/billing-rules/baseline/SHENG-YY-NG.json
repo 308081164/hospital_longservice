@@ -12,7 +12,9 @@
       "maxInstrumentCount": 2,
       "conditionsJson": "[{\"field\": \"bagAddon\", \"value\": \"all\"}, {\"field\": \"capDoubleBag\", \"value\": true}]",
       "keywords": [
-        "双@contains"
+        "/双@contains",
+        "/(双)@contains",
+        "/（双）@contains"
       ],
       "skipPackaging": false,
       "skipDiscount": true,
@@ -35,7 +37,9 @@
       "minInstrumentCount": 3,
       "conditionsJson": "[{\"field\": \"bagAddon\", \"value\": \"none\"}]",
       "keywords": [
-        "双@contains"
+        "/双@contains",
+        "/(双)@contains",
+        "/（双）@contains"
       ],
       "skipPackaging": false,
       "skipDiscount": true,

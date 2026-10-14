@@ -59,6 +59,48 @@ class ShengYyNgClerkDiscountOrchestratorTest {
     }
 
     @Test
+    void surgeryPackSpecialPriceThenSixtyPercent() {
+        Map<String, Object> row = new HashMap<>();
+        row.put("hospitalName", HOSPITAL);
+        row.put("packName", "手术包-6件（双信封包装！）");
+        row.put("type", "器械包（ZSD）");
+        row.put("packageMaterial", "双信封");
+        row.put("instrumentCount", 6);
+        row.put("packCount", 1);
+        row.put("unitPrice", 21.83);
+        row.put("totalPrice", 21.83);
+
+        PricingEngine.ProcessedResult engineOnly = pricingEngine.processRow(row);
+        assertThat(engineOnly.expectedUnitPrice).isCloseTo(36.38, offset(0.02));
+        assertThat(engineOnly.pricingRule).contains("手术包6件");
+
+        PricingEngine.ProcessedResult result = orchestrator.processRow(
+                row, pricingEngine, clerkCompiled, "SHENG-YY-NG", Set.of());
+        assertThat(result.expectedUnitPrice).isCloseTo(21.83, offset(0.02));
+        assertThat(result.billingNotes.get("clerkDiscountRuleName")).isEqualTo("标准价六折");
+        assertThat(result.notes).anyMatch(note -> note.contains("导出阶段折扣：标准价六折"));
+    }
+
+    @Test
+    void doubleHeadCuretteDoesNotUseDoubleBagRuleButStillGetsSixtyPercent() {
+        Map<String, Object> row = new HashMap<>();
+        row.put("hospitalName", HOSPITAL);
+        row.put("packName", "双头挖勺-1/Z7526");
+        row.put("type", "额外包（纸塑袋）");
+        row.put("packageMaterial", "高温纸塑袋100*200");
+        row.put("instrumentCount", 1);
+        row.put("packCount", 1);
+        row.put("unitPrice", 4.80);
+        row.put("totalPrice", 4.80);
+
+        PricingEngine.ProcessedResult result = orchestrator.processRow(
+                row, pricingEngine, clerkCompiled, "SHENG-YY-NG", Set.of());
+        assertThat(result.pricingRule).doesNotContain("双<3");
+        assertThat(result.expectedUnitPrice).isCloseTo(4.80, offset(0.02));
+        assertThat(result.notes).anyMatch(note -> note.contains("导出阶段折扣：标准价六折"));
+    }
+
+    @Test
     void clerkIndexResolvesCustomerCodeWhenNameMatchesBaseline() {
         ClerkRuleIndex index = new ClerkRuleIndex();
         assertThat(index.resolveCustomerCodeByHospitalName(HOSPITAL)).isEqualTo("SHENG-YY-NG");

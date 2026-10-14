@@ -225,17 +225,33 @@ final class ExcelBillImportSupport {
         return "";
     }
 
-    /** 铂康标准账单：医院全称仅在 D8 或 D9（二选一），D9 优先。这两格不套机构后缀。 */
+    /** 铂康标准账单：医院全称仅在 D8 或 D9（二选一），D9 优先。包类型和落到明细上的格子放弃。 */
     static String resolveHospitalNameFromColumnD(List<List<Object>> matrix, int headerRowIndex) {
         String d9 = readColumnDCell(matrix, 8);
-        if (isAcceptableFixedCellHospitalName(d9)) {
+        if (isAcceptableFixedCellHospitalName(d9) && !isFixedCellOnDetailRow(matrix, 8, headerRowIndex)) {
             return d9.trim();
         }
         String d8 = readColumnDCell(matrix, 7);
-        if (isAcceptableFixedCellHospitalName(d8)) {
+        if (isAcceptableFixedCellHospitalName(d8) && !isFixedCellOnDetailRow(matrix, 7, headerRowIndex)) {
             return d8.trim();
         }
         return "";
+    }
+
+    /**
+     * D8/D9 已经落在明细上（有发货单号，或发货日期列是日期）时，是空行错位，不能当医院名。
+     */
+    private static boolean isFixedCellOnDetailRow(
+            List<List<Object>> matrix, int rowIndex, int headerRowIndex) {
+        if (headerRowIndex < 0 || rowIndex <= headerRowIndex || rowIndex >= matrix.size()) {
+            return false;
+        }
+        Map<String, Integer> headerMap = buildHeaderMap(matrix.get(headerRowIndex));
+        List<Object> row = matrix.get(rowIndex);
+        if (!sanitizeStr(cellAt(row, headerMap.get(normalizeCellText("发货单号")))).isEmpty()) {
+            return true;
+        }
+        return hasDeliveryDate(cellAt(row, headerMap.get(normalizeCellText("发货日期"))));
     }
 
     /**
@@ -256,8 +272,22 @@ final class ExcelBillImportSupport {
         if (trimmed.matches("^[\\d.]+$") || FIXED_CELL_HEADER_LABELS.contains(trimmed)) {
             return false;
         }
-        return !isBareDepartmentName(trimmed);
+        if (isPackCategoryName(trimmed)) {
+            return false;
+        }
+        return !isDepartmentSectionTitle(trimmed);
     }
+
+    /** 与前端 isPackCategoryName 一致：基本类型不能当成医院名。 */
+    static boolean isPackCategoryName(String name) {
+        if (name == null || name.isBlank()) {
+            return false;
+        }
+        return PACK_CATEGORY_NAME.matcher(name.trim()).matches();
+    }
+
+    private static final java.util.regex.Pattern PACK_CATEGORY_NAME = java.util.regex.Pattern.compile(
+            "^(额外包|器械包|敷料包|单包装包)([（(][^）)]*[）)])?$");
 
     private static final java.util.Set<String> FIXED_CELL_HEADER_LABELS = java.util.Set.of(
             "发货日期", "发货单号", "类型", "基本类型", "包名", "包装材料",
@@ -442,7 +472,27 @@ final class ExcelBillImportSupport {
             return false;
         }
         String trimmed = deliveryText.trim();
+        if (isDepartmentSectionTitle(trimmed)) {
+            return false;
+        }
         return trimmed.contains("医院") || trimmed.contains("中心") || isRecognizedInstitutionName(trimmed);
+    }
+
+    /**
+     * 含「医院 / 中心」但仍是科室标题：美容科（朝鲜医院）、生殖中心、内镜中心。
+     * 整行机构全称（哈尔滨红十字妇产医院）不是科室。
+     */
+    static boolean isDepartmentSectionTitle(String trimmed) {
+        if (trimmed == null || trimmed.isBlank()) {
+            return false;
+        }
+        if (isBareDepartmentName(trimmed)) {
+            return true;
+        }
+        return trimmed.endsWith("中心")
+                && !trimmed.endsWith("卫生服务中心")
+                && !trimmed.contains("医院")
+                && trimmed.length() <= 8;
     }
 
     static boolean isInlineDepartmentMarkerRow(String deliveryText, String orderNo, String type, String packName) {

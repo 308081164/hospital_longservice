@@ -20,7 +20,8 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- * 对账三层计价编排：内勤账单价 &gt; 客服计价（特色/标准）&gt; 内勤导出折扣。
+ * 对账三层计价编排：内勤一口价 &gt; 客服计价（特色/标准）&gt; 内勤导出折扣。
+ * 内勤一口价是最终单价，不再乘折扣。特色价和标准价都乘内勤折扣，不受规则 skipDiscount 影响。
  */
 @Component
 @RequiredArgsConstructor
@@ -91,10 +92,10 @@ public class ReconciliationPricingOrchestrator {
         String clerkDiscountRuleName = null;
         Double priceAfterDiscount = result.expectedUnitPrice;
         if (!clerkDiscountDisabled
+                && clerkPrice.isEmpty()
                 && clerkCompiled != null
                 && result.expectedUnitPrice != null
-                && result.expectedUnitPrice > 0
-                && !result.skipHospitalDiscount) {
+                && result.expectedUnitPrice > 0) {
             double preDiscountUnit = result.expectedUnitPrice;
             BillRowItem discountRow = toBillRowItem(rowMap);
             discountRow.setOriginal(null);

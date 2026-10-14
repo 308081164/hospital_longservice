@@ -203,6 +203,46 @@ class ReconciliationHospitalNameResolverTest {
     }
 
     @Test
+    void mapsRedCrossBillNameViaExistingContainsAlias() {
+        Customer customer = new Customer();
+        customer.setId(7L);
+        customer.setCanonicalName("哈尔滨市红十字妇产医院");
+
+        CustomerAlias alias = new CustomerAlias();
+        alias.setCustomerId(7L);
+        alias.setAlias("红十字妇产");
+        alias.setMatchType("contains");
+        alias.setPriority(10);
+        alias.setIsActive(true);
+
+        when(customerMapper.selectAll()).thenReturn(List.of(customer));
+        when(customerAliasMapper.selectAllActive()).thenReturn(List.of(alias));
+        when(customerMapper.selectById(7L)).thenReturn(customer);
+
+        String resolved = resolver.resolve(
+                "额外包",
+                "红十字 (2).xlsx",
+                List.of("哈尔滨红十字妇产医院"));
+
+        assertThat(resolved).isEqualTo("哈尔滨市红十字妇产医院");
+    }
+
+    @Test
+    void doesNotKeepPackCategoryAsHospitalName() {
+        when(customerMapper.selectAll()).thenReturn(List.of());
+        when(customerAliasMapper.selectAllActive()).thenReturn(List.of());
+
+        String resolved = resolver.resolve("额外包", "红十字 (2).xlsx", List.of("额外包"));
+
+        assertThat(resolved).isNotEqualTo("额外包");
+        assertThat(resolver.isAcceptableFixedCellHospitalName("额外包")).isFalse();
+        assertThat(resolver.isPackCategoryName("器械包")).isTrue();
+        assertThat(resolver.isLikelyDepartmentName("生殖中心")).isTrue();
+        assertThat(resolver.isLikelyDepartmentName("美容科（朝鲜医院）")).isTrue();
+        assertThat(resolver.isLikelyHospitalName("哈尔滨红十字妇产医院")).isTrue();
+    }
+
+    @Test
     void doesNotMapVictoriaBillToHrbWyViaWeakHeaderAlias() {
         when(customerMapper.selectAll()).thenReturn(List.of());
         when(customerAliasMapper.selectAllActive()).thenReturn(List.of());

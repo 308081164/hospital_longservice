@@ -1,8 +1,8 @@
 import * as XLSX from 'xlsx'
 import {
-  extractStandardHospitalNameFromMatrix,
-  resolveHospitalNameFromColumnASummary,
-  resolveHospitalNameFromDeliveryDateColumn
+  isLikelyDepartmentName,
+  isValidHospitalName,
+  resolveWorkbookHospitalDisplayName
 } from './reconciliationHospitalName'
 
 /** 对账页上传预览使用的清洗开关（与计费规则 cleaning 同构）。 */
@@ -162,11 +162,39 @@ function findDateRangeText(rows: unknown[][]): string {
 }
 
 function resolveSheetHospitalDisplayName(matrix: unknown[][], headerRowIndex: number): string {
-  return (
-    extractStandardHospitalNameFromMatrix(matrix, headerRowIndex) ||
-    resolveHospitalNameFromDeliveryDateColumn(matrix, headerRowIndex) ||
-    resolveHospitalNameFromColumnASummary(matrix, headerRowIndex)
-  )
+  return resolveWorkbookHospitalDisplayName(matrix, headerRowIndex)
+}
+
+/**
+ * 整行就是机构全称时是医院汇总。
+ * 「美容科（朝鲜医院）」「生殖中心」虽带医院/中心，仍是科室标题。
+ */
+export function isHospitalSummaryRow(deliveryText?: string | null): boolean {
+  const trimmed = (deliveryText ?? '').trim()
+  if (!trimmed) return false
+  if (isLikelyDepartmentName(trimmed)) return false
+  return trimmed.includes('医院') || trimmed.includes('中心') || isValidHospitalName(trimmed)
+}
+
+export function isInlineDepartmentMarkerRow(
+  deliveryText: string,
+  orderNo: string,
+  type: string,
+  packName: string
+): boolean {
+  const trimmed = deliveryText.trim()
+  if (!trimmed || isExcelDateNumber(deliveryText) || /\d{4}[/-]\d{1,2}[/-]\d{1,2}/.test(trimmed)) {
+    return false
+  }
+  if (isHospitalSummaryRow(trimmed)) return false
+  if (orderNo || type || packName) return false
+  return true
+}
+
+function isCombinedImportSheet(sheetName: string, headerMap: Map<string, number>): boolean {
+  const normalized = sheetName.replace(/\s+/g, '')
+  if (normalized === '账单' || normalized === '合计' || normalized.includes('汇总')) return true
+  return headerMap.has('基本类型')
 }
 
 function extractSheetTemplateMeta(
@@ -211,9 +239,12 @@ function extractHospitalRows(
   rules: ReconciliationWorkbookParseRules
 ): HospitalRow[] {
   const rows: HospitalRow[] = []
+  const combinedSheet = isCombinedImportSheet(sheetName, headerMap)
+  let currentDept = sheetName
   for (let i = headerRowIndex + 1; i < matrix.length; i += 1) {
     const row = matrix[i] ?? []
     const deliveryDateRaw = getCell(row, headerMap, '发货日期') as string | number | null
+    const deliveryText = sanitizeCellText(deliveryDateRaw)
     const orderNo = sanitizeCellText(getCell(row, headerMap, '发货单号'))
     const type = sanitizeCellText(getCell(row, headerMap, '类型'))
     const categoryNo = sanitizeCellText(getCell(row, headerMap, '包类别号'))
@@ -230,10 +261,15 @@ function extractHospitalRows(
     const unitPrice = toNumber(getCell(row, headerMap, '单价'))
     const totalPrice = toNumber(getCell(row, headerMap, '总价'))
 
+    if (isHospitalSummaryRow(deliveryText)) continue
+    if (combinedSheet && isInlineDepartmentMarkerRow(deliveryText, orderNo, type, packName)) {
+      currentDept = deliveryText
+      continue
+    }
     if (!isDetailRow({ deliveryDateRaw, orderNo, type, packName, packageMaterial }, rules)) continue
 
     rows.push({
-      sheetName,
+      sheetName: combinedSheet ? currentDept : sheetName,
       rowNumber: i + 1,
       deliveryDateRaw,
       deliveryDate: formatExcelDate(deliveryDateRaw),
@@ -283,7 +319,7 @@ export async function readHospitalWorkbook(
     const rawMatrix = XLSX.utils.sheet_to_json<(string | number)[]>(worksheet, {
       header: 1,
       defval: '',
-      blankrows: false,
+      blankrows: true,
       raw: true
     })
     const matrix = rules.cleaning.removeFirstRow ? rawMatrix.slice(1) : rawMatrix
@@ -295,12 +331,30 @@ export async function readHospitalWorkbook(
     const sheetRows = extractHospitalRows(sheetName, matrix, headerRowIndex, headerMap, rules)
     sheetMetas.push(extractSheetTemplateMeta(sheetName, matrix, headerRowIndex))
 
-    previews.push({
-      name: sheetName,
-      totalRows: matrix.length,
-      dataRows: sheetRows.length,
-      headerRowIndex
-    })
+    const departmentCounts = new Map<string, number>()
+    for (const row of sheetRows) {
+      departmentCounts.set(row.sheetName, (departmentCounts.get(row.sheetName) ?? 0) + 1)
+    }
+    const splitByDepartment =
+      departmentCounts.size > 1 ||
+      (departmentCounts.size === 1 && !departmentCounts.has(sheetName))
+    if (splitByDepartment) {
+      for (const [name, dataRows] of departmentCounts) {
+        previews.push({
+          name,
+          totalRows: matrix.length,
+          dataRows,
+          headerRowIndex
+        })
+      }
+    } else {
+      previews.push({
+        name: sheetName,
+        totalRows: matrix.length,
+        dataRows: sheetRows.length,
+        headerRowIndex
+      })
+    }
     rows.push(...sheetRows)
   }
 
