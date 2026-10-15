@@ -5,6 +5,9 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.hospital.backend.config.ClerkRuleIndex;
 import org.junit.jupiter.api.Test;
 
+import java.util.List;
+import java.util.Map;
+
 import static org.assertj.core.api.Assertions.assertThat;
 
 class ClerkRuleCompilerTest {
@@ -268,5 +271,57 @@ class ClerkRuleCompilerTest {
             }
         }
         assertThat(hasZhengxingPack).isTrue();
+    }
+
+    @Test
+    void compilesManualLogisticsBaselines() {
+        List<Map<String, Object>> twoDays = List.of(
+                Map.of("deliveryDate", "2026-06-01"),
+                Map.of("deliveryDate", "2026-06-02"));
+
+        ObjectNode shantun = compiler.compileForCustomer("SHANTUN-RM");
+        assertThat(shantun).isNotNull();
+        assertThat(logisticsParam(shantun, "feePerTrip")).isEqualTo(0.0);
+        assertThat(hasDiscountPolicy(shantun)).isFalse();
+        assertThat(LogisticsFeeCalculator.compute(shantun, twoDays))
+                .get()
+                .extracting(LogisticsFeeCalculator.Result::totalFee)
+                .isEqualTo(0.0);
+
+        ObjectNode xinzhongxin = compiler.compileForCustomer("XZX-YY");
+        assertThat(xinzhongxin).isNotNull();
+        assertThat(logisticsParam(xinzhongxin, "feePerTrip")).isEqualTo(37.5);
+        assertThat(hasDiscountPolicy(xinzhongxin)).isFalse();
+        assertThat(LogisticsFeeCalculator.compute(xinzhongxin, twoDays))
+                .get()
+                .extracting(LogisticsFeeCalculator.Result::totalFee)
+                .isEqualTo(75.0);
+
+        ObjectNode lizengliang = compiler.compileForCustomer("LZL-KQ");
+        assertThat(lizengliang).isNotNull();
+        assertThat(logisticsParam(lizengliang, "settlementLogisticsAmountOverride")).isEqualTo(350.0);
+        assertThat(hasDiscountPolicy(lizengliang)).isFalse();
+        assertThat(LogisticsFeeCalculator.compute(lizengliang, twoDays))
+                .get()
+                .extracting(LogisticsFeeCalculator.Result::totalFee)
+                .isEqualTo(350.0);
+    }
+
+    private static double logisticsParam(ObjectNode compiled, String field) {
+        for (JsonNode policy : compiled.path("billingPolicies")) {
+            if ("LOGISTICS".equals(policy.path("policyType").asText())) {
+                return policy.path("params").path(field).asDouble();
+            }
+        }
+        throw new AssertionError("missing LOGISTICS policy");
+    }
+
+    private static boolean hasDiscountPolicy(ObjectNode compiled) {
+        for (JsonNode policy : compiled.path("billingPolicies")) {
+            if ("DISCOUNT".equals(policy.path("policyType").asText())) {
+                return true;
+            }
+        }
+        return false;
     }
 }

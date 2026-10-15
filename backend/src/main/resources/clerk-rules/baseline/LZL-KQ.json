@@ -1,0 +1,22 @@
+{
+  "customerCode": "LZL-KQ",
+  "customerName": "哈尔滨市南岗区黎增亮口腔科诊所",
+  "sourceVersion": "手工补录-20261015",
+  "notes": "内勤结款函手工补录 · 哈尔滨市南岗区黎增亮口腔科诊所",
+  "attachmentRefs": [],
+  "rules": [
+    {
+      "ruleType": "LOGISTICS_FEE",
+      "name": "固定物流费",
+      "stage": "settlement",
+      "isActive": true,
+      "params": {
+        "feePerTrip": 350.0,
+        "settlementLogisticsAmountOverride": 350.0
+      },
+      "sourceText": "物流费固定350元",
+      "sourceRef": "manual:结款函#LZL-KQ",
+      "priority": 100
+    }
+  ]
+}

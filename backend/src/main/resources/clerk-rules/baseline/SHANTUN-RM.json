@@ -1,0 +1,21 @@
+{
+  "customerCode": "SHANTUN-RM",
+  "customerName": "黑龙江省山河屯林区人民医院",
+  "sourceVersion": "手工补录-20261015",
+  "notes": "内勤结款函手工补录 · 黑龙江省山河屯林区人民医院",
+  "attachmentRefs": [],
+  "rules": [
+    {
+      "ruleType": "LOGISTICS_WAIVE",
+      "name": "不收物流费",
+      "stage": "settlement",
+      "isActive": true,
+      "params": {
+        "feePerTrip": 0
+      },
+      "sourceText": "没有物流费",
+      "sourceRef": "manual:结款函#SHANTUN-RM",
+      "priority": 100
+    }
+  ]
+}

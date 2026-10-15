@@ -1,0 +1,21 @@
+{
+  "customerCode": "XZX-YY",
+  "customerName": "新中新医院",
+  "sourceVersion": "手工补录-20261015",
+  "notes": "内勤结款函手工补录 · 新中新医院",
+  "attachmentRefs": [],
+  "rules": [
+    {
+      "ruleType": "LOGISTICS_FEE",
+      "name": "物流费七五折",
+      "stage": "settlement",
+      "isActive": true,
+      "params": {
+        "feePerTrip": 37.5
+      },
+      "sourceText": "物流费75折（只折物流费；默认单价50元/次×0.75）",
+      "sourceRef": "manual:结款函#XZX-YY",
+      "priority": 100
+    }
+  ]
+}
