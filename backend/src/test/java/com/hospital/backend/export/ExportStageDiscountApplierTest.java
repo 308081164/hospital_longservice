@@ -245,6 +245,51 @@ class ExportStageDiscountApplierTest {
         return rules;
     }
 
+    @Test
+    void rateDiscountKeepsUnroundedUnitForTheLineTotal() {
+        ObjectNode rules = rateRules(0.6);
+        BillRowItem three = pricedRow(36.38, 3);
+        BillRowItem four = pricedRow(36.38, 4);
+        List<BillRowItem> result = applier.apply(rules, List.of(three, four));
+
+        assertThat(result.get(0).getUnitPrice()).isEqualTo(21.83);
+        assertThat(result.get(0).getExpectedUnitPrice()).isEqualTo(21.83);
+        assertThat(result.get(0).getCorrectedTotalPrice()).isEqualTo(65.48);
+        assertThat(result.get(0).getUnroundedUnitPrice()).isNotNull();
+        assertThat(result.get(1).getUnitPrice()).isEqualTo(21.83);
+        assertThat(result.get(1).getCorrectedTotalPrice()).isEqualTo(87.31);
+    }
+
+    @Test
+    void exactCentDiscountDoesNotKeepAnExtraFraction() {
+        ObjectNode rules = rateRules(0.6);
+        BillRowItem row = pricedRow(10.0, 3);
+        List<BillRowItem> result = applier.apply(rules, List.of(row));
+        assertThat(result.get(0).getUnitPrice()).isEqualTo(6.0);
+        assertThat(result.get(0).getCorrectedTotalPrice()).isEqualTo(18.0);
+        assertThat(result.get(0).getUnroundedUnitPrice()).isNull();
+    }
+
+    private ObjectNode rateRules(double rate) {
+        ObjectNode rules = mapper.createObjectNode();
+        ArrayNode policies = rules.putArray("billingPolicies");
+        ObjectNode policy = policies.addObject();
+        policy.put("policyType", "DISCOUNT");
+        policy.put("name", "标准价六折");
+        policy.putObject("scope").put("temperature", "ANY");
+        ObjectNode params = policy.putObject("params");
+        params.put("applyStage", "export_only");
+        params.put("rate", rate);
+        return rules;
+    }
+
+    private static BillRowItem pricedRow(double unitPrice, int packCount) {
+        BillRowItem item = row(1, unitPrice);
+        item.setPackCount(packCount);
+        item.setTotalPrice(unitPrice);
+        return item;
+    }
+
     private static BillRowItem row(int instruments, double unitPrice) {
         BillRowItem item = new BillRowItem();
         item.setInstrumentCount(instruments);

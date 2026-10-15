@@ -36,6 +36,11 @@ public class BillRowItem {
 
     private Double expectedUnitPrice;
 
+    /**
+     * 折扣后、收到分之前的单价。总价用它乘包数再收分；单价列仍用 {@link #expectedUnitPrice}。
+     */
+    private Double unroundedUnitPrice;
+
     private Double correctedTotalPrice;
 
     private Double difference;

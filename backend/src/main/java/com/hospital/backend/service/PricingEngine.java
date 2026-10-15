@@ -2675,6 +2675,8 @@ public class PricingEngine {
 
     public static class ProcessedResult {
         public Double expectedUnitPrice;
+        /** 折扣后未收到分的单价。为空时总价仍用 {@link #expectedUnitPrice}。 */
+        public Double unroundedUnitPrice;
         public Double correctedTotalPrice;
         public Double difference;
         public String status = "unchanged";

@@ -5,6 +5,9 @@ import com.hospital.backend.dto.request.hospital.BillRowItem;
 import com.hospital.backend.service.BillingConditionEvaluator;
 import com.hospital.backend.service.BillingPolicyApplier;
 import com.hospital.backend.service.ClerkBillPriceRuleApplier;
+import com.hospital.backend.service.PreciseLineAmount;
+
+import java.math.BigDecimal;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
@@ -18,7 +21,12 @@ import java.util.Set;
 @Component
 public class ExportStageDiscountApplier {
 
-    public record ClerkDiscountHit(String ruleName, double unitPriceBefore, double unitPriceAfter, JsonNode policy) {}
+    public record ClerkDiscountHit(
+            String ruleName,
+            double unitPriceBefore,
+            double unitPriceAfter,
+            Double unroundedUnitPrice,
+            JsonNode policy) {}
 
     public List<BillRowItem> apply(JsonNode compiledRules, List<BillRowItem> rows) {
         if (compiledRules == null || rows == null || rows.isEmpty()) {
@@ -103,6 +111,8 @@ public class ExportStageDiscountApplier {
             List<BillingPolicyApplier.PieceTierDiscount> tiers =
                     BillingPolicyApplier.parsePieceTierDiscounts(params);
             double discounted;
+            int packCount = row.getPackCount() != null ? Math.max(1, row.getPackCount()) : 1;
+            row.setUnroundedUnitPrice(null);
             if (!tiers.isEmpty()) {
                 discounted = BillingPolicyApplier.applyPieceTierRate(baseUnit, billingPieces, tiers);
             } else {
@@ -110,13 +120,16 @@ public class ExportStageDiscountApplier {
                 if (Double.isNaN(rate) || rate <= 0 || rate >= 1.0) {
                     continue;
                 }
-                discounted = BillingPolicyApplier.round(baseUnit * rate);
+                BigDecimal precise = PreciseLineAmount.multiplyRate(baseUnit, rate);
+                discounted = PreciseLineAmount.round2(precise);
+                row.setUnroundedUnitPrice(PreciseLineAmount.keepIfTotalDiffers(precise, packCount));
             }
 
             if (billingPieces > 1) {
                 Double overridePrice = resolveFixedPriceOverride(params, baseUnit);
                 if (overridePrice != null) {
                     discounted = overridePrice;
+                    row.setUnroundedUnitPrice(null);
                 }
             }
 
@@ -130,7 +143,7 @@ public class ExportStageDiscountApplier {
 
     private void applyExportPrice(BillRowItem row, double discounted, JsonNode policy) {
         int packCount = row.getPackCount() != null ? Math.max(1, row.getPackCount()) : 1;
-        double total = BillingPolicyApplier.round(discounted * packCount);
+        double total = PreciseLineAmount.correctedTotal(discounted, row.getUnroundedUnitPrice(), packCount);
         row.setTotalPrice(total);
         row.setCorrectedTotalPrice(total);
         row.setDifference(0.0);
@@ -251,7 +264,8 @@ public class ExportStageDiscountApplier {
                     ? discounted.getExpectedUnitPrice()
                     : discounted.getUnitPrice() != null ? discounted.getUnitPrice() : before;
             if (Math.abs(after - before) > 0.001) {
-                return Optional.of(new ClerkDiscountHit(policyName, before, after, policy));
+                return Optional.of(new ClerkDiscountHit(
+                        policyName, before, after, discounted.getUnroundedUnitPrice(), policy));
             }
         }
         return Optional.empty();
@@ -267,6 +281,7 @@ public class ExportStageDiscountApplier {
         copy.setUnitPrice(source.getUnitPrice());
         copy.setTotalPrice(source.getTotalPrice());
         copy.setExpectedUnitPrice(source.getExpectedUnitPrice());
+        copy.setUnroundedUnitPrice(source.getUnroundedUnitPrice());
         copy.setCorrectedTotalPrice(source.getCorrectedTotalPrice());
         copy.setNotes(source.getNotes() != null ? new ArrayList<>(source.getNotes()) : null);
         copy.setOriginal(source.getOriginal());

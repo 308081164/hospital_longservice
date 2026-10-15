@@ -14,9 +14,29 @@ export function hasUnitPriceMismatch(row: Record<string, unknown>): boolean {
   return Math.abs(unitPrice - expectedUnitPrice) > PRICE_TOLERANCE
 }
 
-/** 按规则单价推算的修正总价。 */
+/** 折扣后未收到分的单价。没有这份数时，总价仍用已收到分的规则单价。 */
+function unroundedUnitPrice(row: Record<string, unknown>): number | null {
+  const direct = toNumber(row.unroundedUnitPrice ?? row.unrounded_unit_price)
+  if (direct != null) return direct
+  const notes = row.billingNotes ?? row.billing_notes
+  if (notes && typeof notes === 'object') {
+    return toNumber((notes as Record<string, unknown>).unroundedUnitPrice)
+  }
+  if (typeof notes === 'string' && notes.trim()) {
+    try {
+      const parsed = JSON.parse(notes) as Record<string, unknown>
+      return toNumber(parsed.unroundedUnitPrice)
+    } catch {
+      return null
+    }
+  }
+  return null
+}
+
+/** 按未收分单价 × 包数再收到分；没有未收分单价时用规则单价。 */
 export function expectedCorrectedTotal(row: Record<string, unknown>): number | null {
-  const expectedUnitPrice = toNumber(row.expectedUnitPrice ?? row.expected_unit_price)
+  const expectedUnitPrice = unroundedUnitPrice(row)
+    ?? toNumber(row.expectedUnitPrice ?? row.expected_unit_price)
   if (expectedUnitPrice == null) return null
   const packCount = Math.max(1, toNumber(row.packCount ?? row.pack_count) ?? 1)
   return Math.round(expectedUnitPrice * packCount * 100) / 100

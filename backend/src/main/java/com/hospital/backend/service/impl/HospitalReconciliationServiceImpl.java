@@ -24,6 +24,7 @@ import com.hospital.backend.service.ExternalInstrumentService;
 import com.hospital.backend.service.HospitalReconciliationService;
 import com.hospital.backend.service.ClerkCompiledRulesResolver;
 import com.hospital.backend.service.ClerkRuleCompiler;
+import com.hospital.backend.service.PreciseLineAmount;
 import com.hospital.backend.service.ReconciliationPricingOrchestrator;
 import com.hospital.backend.service.ClerkExportLayoutMerger;
 import com.hospital.backend.service.ClerkSettlementRequestEnricher;
@@ -2579,7 +2580,10 @@ public class HospitalReconciliationServiceImpl implements HospitalReconciliation
         }
 
         int packCount = Math.max(safeGetInt(rowMap, "packCount", 1), 1);
-        double correctedTotal = Math.round(pr.expectedUnitPrice * packCount * 100.0) / 100.0;
+        Double unrounded = pr.unroundedUnitPrice != null
+                ? pr.unroundedUnitPrice
+                : PreciseLineAmount.readNote(pr.billingNotes);
+        double correctedTotal = PreciseLineAmount.correctedTotal(pr.expectedUnitPrice, unrounded, packCount);
         rowMap.put("correctedTotalPrice", correctedTotal);
 
         Double totalPrice = safeGetDoubleObj(rowMap, "totalPrice");

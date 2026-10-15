@@ -2,6 +2,7 @@ package com.hospital.backend.export;
 
 import com.hospital.backend.dto.request.hospital.BillRowItem;
 import com.hospital.backend.entity.HospitalReconciliationRow;
+import com.hospital.backend.service.PreciseLineAmount;
 
 /**
  * 账单导出单价/总价解析：优先使用计价引擎修正结果，避免 export 回退到原始账单单价（D2/D5）。
@@ -35,7 +36,8 @@ public final class BillExportPriceResolver {
                 row.getUnitPrice(),
                 row.getPackCount(),
                 row.getCorrectedTotalPrice(),
-                row.getTotalPrice());
+                row.getTotalPrice(),
+                row.getUnroundedUnitPrice());
     }
 
     /**
@@ -78,7 +80,8 @@ public final class BillExportPriceResolver {
                 row.getUnitPrice(),
                 row.getPackCount(),
                 row.getCorrectedTotalPrice(),
-                row.getTotalPrice());
+                row.getTotalPrice(),
+                PreciseLineAmount.readNote(row.getBillingNotes()));
         if (fromExpected != null) {
             return fromExpected;
         }
@@ -120,7 +123,8 @@ public final class BillExportPriceResolver {
                                      Double unitPrice,
                                      Integer packCount,
                                      Double correctedTotalPrice,
-                                     Double totalPrice) {
+                                     Double totalPrice,
+                                     Double unroundedUnitPrice) {
         if (expectedUnitPrice == null) {
             if (correctedTotalPrice != null) {
                 return correctedTotalPrice;
@@ -128,7 +132,7 @@ public final class BillExportPriceResolver {
             return totalPrice;
         }
         int packs = packCount != null ? Math.max(1, packCount) : 1;
-        Double recomputed = round(expectedUnitPrice * packs);
+        Double recomputed = PreciseLineAmount.correctedTotal(expectedUnitPrice, unroundedUnitPrice, packs);
         if (correctedTotalPrice == null) {
             return recomputed;
         }

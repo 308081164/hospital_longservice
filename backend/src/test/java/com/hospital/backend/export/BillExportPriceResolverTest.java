@@ -183,4 +183,24 @@ class BillExportPriceResolverTest {
         assertThat(BillExportPriceResolver.resolvePerPiecePrice(row)).isEqualTo(30.4);
         assertThat(BillExportPriceResolver.resolveUnitPrice(row)).isEqualTo(30.4);
     }
+
+    @Test
+    void exportTotalUsesUnroundedUnitInsteadOfDisplayedCents() {
+        HospitalReconciliationRow row = new HospitalReconciliationRow();
+        row.setPackCount(3);
+        row.setUnitPrice(21.83);
+        row.setExpectedUnitPrice(21.83);
+        row.setTotalPrice(65.48);
+        row.setCorrectedTotalPrice(65.48);
+        row.setBillingNotes("{\"unroundedUnitPrice\":21.828}");
+
+        assertThat(BillExportPriceResolver.resolveTotalPrice(row)).isEqualTo(65.48);
+        assertThat(BillExportPriceResolver.resolveUnitPrice(row)).isCloseTo(21.83, offset(0.001));
+
+        row.setPackCount(4);
+        row.setTotalPrice(87.31);
+        row.setCorrectedTotalPrice(87.31);
+        assertThat(BillExportPriceResolver.resolveTotalPrice(row)).isEqualTo(87.31);
+        assertThat(BillExportPriceResolver.resolveUnitPrice(row)).isCloseTo(21.83, offset(0.001));
+    }
 }

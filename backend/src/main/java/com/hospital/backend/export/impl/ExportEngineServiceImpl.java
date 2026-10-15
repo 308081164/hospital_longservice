@@ -27,6 +27,7 @@ import com.hospital.backend.export.model.ResolvedExportTemplate;
 import com.hospital.backend.export.strategy.ExportStrategy;
 import com.hospital.backend.export.strategy.ExportStrategyRegistry;
 import com.hospital.backend.export.SettlementPeriodFormatter;
+import com.hospital.backend.service.PreciseLineAmount;
 import com.hospital.backend.export.SettlementPeriodResolver;
 import com.hospital.backend.export.SettlementTemplateFiller;
 import com.hospital.backend.mapper.HospitalReconciliationExportLogMapper;
@@ -509,7 +510,8 @@ public class ExportEngineServiceImpl implements ExportEngineService {
             return false;
         }
         int packs = row.getPackCount() != null ? Math.max(1, row.getPackCount()) : 1;
-        double expectedTotal = Math.round(expected * packs * 100.0) / 100.0;
+        Double unrounded = PreciseLineAmount.readNote(row.getBillingNotes());
+        double expectedTotal = PreciseLineAmount.correctedTotal(expected, unrounded, packs);
         Double corrected = row.getCorrectedTotalPrice();
         Double total = row.getTotalPrice();
         if (corrected == null) {

@@ -110,6 +110,7 @@ public class ReconciliationPricingOrchestrator {
                 clerkDiscountRuleName = applied.ruleName();
                 priceAfterDiscount = applied.unitPriceAfter();
                 result.expectedUnitPrice = priceAfterDiscount;
+                result.unroundedUnitPrice = applied.unroundedUnitPrice();
                 calculationSteps.add("内勤折扣："
                         + (clerkDiscountRuleName != null ? clerkDiscountRuleName : "已应用"));
                 if (result.notes == null) {
@@ -139,6 +140,9 @@ public class ReconciliationPricingOrchestrator {
         }
         if (priceAfterDiscount != null) {
             billingNotes.put("priceAfterDiscount", priceAfterDiscount);
+        }
+        if (result.unroundedUnitPrice != null) {
+            billingNotes.put(PreciseLineAmount.NOTE_KEY, result.unroundedUnitPrice);
         }
         billingNotes.put("calculationSteps", calculationSteps);
         appendDisabledCategoryMessages(billingNotes, disabledCategories);
@@ -369,7 +373,8 @@ public class ReconciliationPricingOrchestrator {
             return;
         }
         int packs = Math.max(intVal(rowMap, "packCount", 1), 1);
-        double correctedTotal = round2(result.expectedUnitPrice * packs);
+        double correctedTotal = PreciseLineAmount.correctedTotal(
+                result.expectedUnitPrice, result.unroundedUnitPrice, packs);
         result.correctedTotalPrice = correctedTotal;
         Double totalPrice = doubleVal(rowMap, "totalPrice");
         double originalTotal = totalPrice != null ? totalPrice : 0.0;

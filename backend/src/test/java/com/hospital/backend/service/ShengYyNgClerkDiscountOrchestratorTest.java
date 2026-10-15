@@ -82,6 +82,36 @@ class ShengYyNgClerkDiscountOrchestratorTest {
     }
 
     @Test
+    void surgeryPackTotalRoundsAfterMultiplyingTheUnroundedUnit() {
+        assertSurgeryPackTotal(3, 18, 65.48);
+        assertSurgeryPackTotal(4, 24, 87.31);
+    }
+
+    private void assertSurgeryPackTotal(int packCount, int instrumentCount, double billTotal) {
+        Map<String, Object> row = new HashMap<>();
+        row.put("hospitalName", HOSPITAL);
+        row.put("packName", "手术包-6件（双信封包装！）");
+        row.put("type", "器械包（ZSD）");
+        row.put("packageMaterial", "双信封");
+        row.put("instrumentCount", instrumentCount);
+        row.put("packCount", packCount);
+        row.put("unitPrice", 21.83);
+        row.put("totalPrice", billTotal);
+
+        PricingEngine.ProcessedResult engineOnly = pricingEngine.processRow(row);
+        assertThat(engineOnly.expectedUnitPrice).isCloseTo(36.38, offset(0.001));
+
+        PricingEngine.ProcessedResult result = orchestrator.processRow(
+                row, pricingEngine, clerkCompiled, "SHENG-YY-NG", Set.of());
+        assertThat(result.expectedUnitPrice).isCloseTo(21.83, offset(0.001));
+        assertThat(result.unroundedUnitPrice).isNotNull();
+        assertThat(result.correctedTotalPrice).isCloseTo(billTotal, offset(0.001));
+        assertThat(result.difference).isCloseTo(0.0, offset(0.001));
+        assertThat(((Number) result.billingNotes.get("unroundedUnitPrice")).doubleValue())
+                .isCloseTo(result.unroundedUnitPrice, offset(0.0001));
+    }
+
+    @Test
     void doubleHeadCuretteDoesNotUseDoubleBagRuleButStillGetsSixtyPercent() {
         Map<String, Object> row = new HashMap<>();
         row.put("hospitalName", HOSPITAL);
