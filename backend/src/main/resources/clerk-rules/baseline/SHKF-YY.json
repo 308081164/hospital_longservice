@@ -14,7 +14,7 @@
         "rate": 0.75,
         "target": "sterilize"
       },
-      "sourceText": "75折",
+      "sourceText": "结款函金额为账单金额的7.5折",
       "sourceRef": "excel:结款函#SHKF-YY",
       "priority": 100
     }

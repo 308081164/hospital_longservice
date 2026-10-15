@@ -14,7 +14,7 @@
         "rate": 0.75,
         "target": "sterilize"
       },
-      "sourceText": "75折",
+      "sourceText": "结款函费用体现为灭菌账单金额的75折",
       "sourceRef": "excel:结款函#DONGDA-GC",
       "priority": 100
     }
