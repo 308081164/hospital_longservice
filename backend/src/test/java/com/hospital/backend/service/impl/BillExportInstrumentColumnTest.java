@@ -30,7 +30,11 @@ class BillExportInstrumentColumnTest {
         assertThat(layoutFromCompiled(dianli)).isEqualTo(BillColumnLayout.STANDARD_WITH_INSTRUMENT);
 
         ObjectNode huaxia = compiler.compileForCustomer("HUAXIA-EYE");
-        assertThat(layoutFromCompiled(huaxia)).isEqualTo(BillColumnLayout.STANDARD_8COL);
+        assertThat(layoutFromCompiled(huaxia))
+                .isEqualTo(BillColumnLayout.STANDARD_WITH_MATERIAL_AND_INSTRUMENT);
+        ObjectNode nangang = compiler.compileForCustomer("NG-FUCHAN");
+        assertThat(layoutFromCompiled(nangang))
+                .isEqualTo(BillColumnLayout.STANDARD_WITH_MATERIAL_AND_INSTRUMENT);
     }
 
     @Test
@@ -80,6 +84,58 @@ class BillExportInstrumentColumnTest {
             assertThat(data.getCell(9).getNumericCellValue()).isEqualTo(9.0);
             assertThat(data.getCell(10).getNumericCellValue()).isEqualTo(8.0);
             assertThat(data.getCell(11).getNumericCellValue()).isEqualTo(72.0);
+        }
+    }
+
+    @Test
+    void programmaticSheetKeepsMaterialAndInstrumentWithoutPerPiecePrice() throws Exception {
+        HospitalReconciliationServiceImpl service = BillExportFuyiLayoutTest.newServiceWithNullDependencies();
+        Method writeSheet = HospitalReconciliationServiceImpl.class.getDeclaredMethod(
+                "writeSheetFromTemplate",
+                XSSFWorkbook.class,
+                XSSFSheet.class,
+                String.class,
+                List.class,
+                Map.class,
+                boolean.class,
+                BillColumnLayout.class);
+        writeSheet.setAccessible(true);
+
+        BillRowItem row = new BillRowItem();
+        row.setSheetName("妇科");
+        row.setPackName("阴式包");
+        row.setType("器械包");
+        row.setPackageMaterial("高温无纺布");
+        row.setPackCount(1);
+        row.setInstrumentCount(43);
+        row.setUnitPrice(170.5);
+        row.setTotalPrice(170.5);
+        row.setExpectedUnitPrice(170.5);
+        row.setCorrectedTotalPrice(170.5);
+
+        BillSheetMeta meta = new BillSheetMeta();
+        meta.setSheetName("妇科");
+        meta.setHospitalDisplayName("南岗区妇产医院");
+
+        BillColumnLayout layout = BillColumnLayout.STANDARD_WITH_MATERIAL_AND_INSTRUMENT;
+        try (XSSFWorkbook workbook = HospitalReconciliationServiceImpl.createProgrammaticBillTemplateWorkbook(layout)) {
+            writeSheet.invoke(service, workbook, workbook.getSheetAt(0), "妇科",
+                    List.of(row), Map.of("妇科", meta), true, layout);
+
+            XSSFSheet sheet = workbook.getSheetAt(0);
+            Row header = sheet.getRow(8);
+            assertThat(header.getCell(8).getStringCellValue()).isEqualTo("包数");
+            assertThat(header.getCell(9).getStringCellValue()).isEqualTo("包装材料");
+            assertThat(header.getCell(10).getStringCellValue()).isEqualTo("器械数");
+            assertThat(header.getCell(11).getStringCellValue()).isEqualTo("单价");
+            assertThat(header.getCell(12).getStringCellValue()).isEqualTo("总价");
+            assertThat(header.getCell(13)).isNull();
+
+            Row data = sheet.getRow(10);
+            assertThat(data.getCell(9).getStringCellValue()).isEqualTo("高温无纺布");
+            assertThat(data.getCell(10).getNumericCellValue()).isEqualTo(43.0);
+            assertThat(data.getCell(11).getNumericCellValue()).isEqualTo(170.5);
+            assertThat(data.getCell(12).getNumericCellValue()).isEqualTo(170.5);
         }
     }
 

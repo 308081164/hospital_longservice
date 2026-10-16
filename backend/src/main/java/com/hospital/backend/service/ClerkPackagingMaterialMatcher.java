@@ -11,6 +11,10 @@ final class ClerkPackagingMaterialMatcher {
     private static final int[] STANDARD_BAG_CM = {10, 15, 20, 25};
     private static final Pattern DIMENSION = Pattern.compile("(\\d+)\\s*[*×xX]\\s*\\d+");
     private static final Pattern CM_SUFFIX = Pattern.compile("(\\d+)\\s*cm", Pattern.CASE_INSENSITIVE);
+    private static final Pattern WIDTH_LESS_THAN = Pattern.compile(
+            "(?:＜|<|小于)\\s*(\\d+)\\s*cm", Pattern.CASE_INSENSITIVE);
+    private static final Pattern WIDTH_AT_LEAST = Pattern.compile(
+            "(?:≥|>=|＞=|大于等于)\\s*(\\d+)\\s*cm", Pattern.CASE_INSENSITIVE);
 
     private ClerkPackagingMaterialMatcher() {
     }
@@ -28,6 +32,14 @@ final class ClerkPackagingMaterialMatcher {
         String normActual = normalize(actual);
         if (normActual.contains(normExpected)) {
             return true;
+        }
+        WidthBand band = parseWidthBand(normExpected);
+        if (band != null) {
+            int widthCm = rawWidthCm(actual);
+            if (widthCm <= 0) {
+                return false;
+            }
+            return band.lessThan ? widthCm < band.cm : widthCm >= band.cm;
         }
         Integer expectedCm = parseCmSuffix(expected);
         if (expectedCm != null) {
@@ -73,6 +85,44 @@ final class ClerkPackagingMaterialMatcher {
             return Integer.parseInt(m.group(1));
         }
         return null;
+    }
+
+    private record WidthBand(int cm, boolean lessThan) {}
+
+    /** 纸塑袋＜20cm / ≥20cm 按实际袋宽分档，不把不等式里的厘米数当成相等档。 */
+    private static WidthBand parseWidthBand(String expected) {
+        if (expected == null || expected.isBlank()) {
+            return null;
+        }
+        Matcher less = WIDTH_LESS_THAN.matcher(expected);
+        if (less.find()) {
+            return new WidthBand(Integer.parseInt(less.group(1)), true);
+        }
+        Matcher atLeast = WIDTH_AT_LEAST.matcher(expected);
+        if (atLeast.find()) {
+            return new WidthBand(Integer.parseInt(atLeast.group(1)), false);
+        }
+        return null;
+    }
+
+    /** 宽*长的第一段是毫米时换成厘米；已经写着 Ncm 的用那个数。不做向上取整。 */
+    private static int rawWidthCm(String material) {
+        if (material == null || material.isBlank()) {
+            return 0;
+        }
+        String key = normalize(material);
+        Matcher mm = DIMENSION.matcher(key);
+        if (mm.find()) {
+            int firstNum = Integer.parseInt(mm.group(1));
+            if (firstNum >= 50) {
+                return firstNum / 10;
+            }
+        }
+        Matcher cm = CM_SUFFIX.matcher(key);
+        if (cm.find()) {
+            return Integer.parseInt(cm.group(1));
+        }
+        return 0;
     }
 
     private static int findExactBagSize(int cmSize) {

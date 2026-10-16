@@ -114,7 +114,7 @@ public class ProductMatchServiceImpl implements ProductMatchService {
                 if (variant != null) {
                     Product product = findProduct(variant.getProductId());
                     ProductCategory category = product != null ? cachedCategories.get(product.getCategoryId()) : null;
-                    if (product != null && category != null) {
+                    if (product != null && category != null && !isRetiredPlantingBox(product)) {
                         return Optional.of(buildVariantResponse(product, category, variant, rule.getId(), "variant_rule"));
                     }
                 }
@@ -128,7 +128,7 @@ public class ProductMatchServiceImpl implements ProductMatchService {
             if (byCategory != null) {
                 Product product = findProduct(byCategory.getProductId());
                 ProductCategory category = product != null ? cachedCategories.get(product.getCategoryId()) : null;
-                if (product != null && category != null) {
+                if (product != null && category != null && !isRetiredPlantingBox(product)) {
                     return Optional.of(buildVariantResponse(product, category, byCategory, null, "category_no"));
                 }
             }
@@ -143,7 +143,7 @@ public class ProductMatchServiceImpl implements ProductMatchService {
             if (fp.equals(variant.getSpecFingerprint())) {
                 Product product = findProduct(variant.getProductId());
                 ProductCategory category = product != null ? cachedCategories.get(product.getCategoryId()) : null;
-                if (product != null && category != null) {
+                if (product != null && category != null && !isRetiredPlantingBox(product)) {
                     return Optional.of(buildVariantResponse(product, category, variant, null, "fingerprint"));
                 }
             }
@@ -151,6 +151,9 @@ public class ProductMatchServiceImpl implements ProductMatchService {
 
         // 3. 别名 + 族级规则
         for (Product product : cachedProducts) {
+            if (isRetiredPlantingBox(product)) {
+                continue;
+            }
             ProductCategory category = cachedCategories.get(product.getCategoryId());
             if (category == null) {
                 continue;
@@ -251,6 +254,16 @@ public class ProductMatchServiceImpl implements ProductMatchService {
                 .matchedAlias(alias)
                 .source(source)
                 .build();
+    }
+
+    /** 全局产品「包名包含种植盒 → SMALL_ITEM」已停用，已落库的同名产品也不再命中。 */
+    static boolean isRetiredPlantingBox(Product product) {
+        if (product == null) {
+            return false;
+        }
+        String name = product.getName() == null ? "" : product.getName().trim();
+        String sku = product.getSkuCode() == null ? "" : product.getSkuCode().trim();
+        return "种植盒".equals(name) || "SMALL-种植盒".equals(sku);
     }
 
     private boolean evaluateRule(ProductMatchRule rule, Map<String, Object> row) {

@@ -1,0 +1,199 @@
+package com.hospital.backend.service;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ArrayNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.hospital.backend.config.ClerkRuleIndex;
+import com.hospital.backend.export.ExportStageDiscountApplier;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
+import org.assertj.core.data.Offset;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.data.Offset.offset;
+
+/**
+ * 2026-10-16 客户反馈：种植盒不折小件、华夏按单包满 3 把、南岗妇产固定价。
+ */
+class CustomerFeedback20261016PricingTest {
+
+    private static final Offset<Double> CENT = offset(0.001);
+    private static final ObjectMapper MAPPER = new ObjectMapper();
+
+    private ReconciliationPricingOrchestrator orchestrator;
+    private PricingEngine standardEngine;
+    private ClerkRuleCompiler compiler;
+
+    @BeforeEach
+    void setUp() {
+        orchestrator = new ReconciliationPricingOrchestrator(
+                new ClerkBillPriceRuleApplier(),
+                new ExportStageDiscountApplier());
+        standardEngine = new PricingEngine(MAPPER.valueToTree(DefaultPricingTemplate.buildRulesMap()));
+        compiler = new ClerkRuleCompiler(new ClerkRuleIndex());
+    }
+
+    @Test
+    void genericFoldWordsStayEightAndPlantingBoxIsExcluded() {
+        assertThat(DefaultPricingTemplate.genericSmallItemFoldKeywords())
+                .containsExactly("克氏针", "银质针", "内热针", "车针", "拔髓针", "扩大针", "根扩针", "卷棉子");
+
+        ObjectNode needle = MAPPER.createObjectNode();
+        needle.putArray("keywords").add("克氏针").add("种植盒").add("车针");
+        ArrayNode configs = needle.putArray("keywordConfigs");
+        ObjectNode planting = configs.addObject();
+        planting.put("keyword", "种植盒");
+        planting.put("matchMode", "contains");
+        ArrayNode effective = PricingEngine.effectiveNeedleKeywords(needle);
+        assertThat(effective).extracting(node -> node.asText()).contains("克氏针", "车针").doesNotContain("种植盒");
+    }
+
+    @Test
+    void plantingBoxBillsByActualPiecesEvenIfFoldKeywordIsPresent() {
+        ObjectNode rules = (ObjectNode) MAPPER.valueToTree(DefaultPricingTemplate.buildRulesMap());
+        ObjectNode needle = (ObjectNode) rules.path("needle");
+        ((ArrayNode) needle.path("keywords")).add("种植盒");
+        ObjectNode cfg = needle.putArray("keywordConfigs").addObject();
+        cfg.put("keyword", "种植盒");
+        cfg.put("matchMode", "contains");
+        PricingEngine engine = new PricingEngine(rules);
+
+        PricingEngine.ProcessedResult twoPacks = engine.processRow(nonWoven(
+                "ITI种植盒-31件", 64, 2, 176.0, 352.0));
+        assertThat(twoPacks.expectedUnitPrice).isCloseTo(176.0, CENT);
+        assertThat(twoPacks.correctedTotalPrice).isCloseTo(352.0, CENT);
+        assertThat(joined(twoPacks)).doesNotContain("折算");
+
+        PricingEngine.ProcessedResult thirtyOne = engine.processRow(nonWoven(
+                "DT种植盒-30件", 31, 1, 170.5, 170.5));
+        assertThat(thirtyOne.expectedUnitPrice).isCloseTo(170.5, CENT);
+
+        PricingEngine.ProcessedResult thirtyTwo = engine.processRow(nonWoven(
+                "DT种植盒-31件", 32, 1, 176.0, 176.0));
+        assertThat(thirtyTwo.expectedUnitPrice).isCloseTo(176.0, CENT);
+        assertThat(thirtyTwo.correctedTotalPrice).isCloseTo(176.0, CENT);
+    }
+
+    @Test
+    void huaxiaThresholdUsesPiecesPerPack() {
+        ObjectNode clerk = compiler.compileForCustomer("HUAXIA-EYE");
+
+        PricingEngine.ProcessedResult tray = orchestrator.processRow(
+                paper("弯盘-2", "高温纸塑袋200*250", 8, 4, 16.5, 66.0),
+                standardEngine, clerk, "HUAXIA-EYE", Set.of());
+        assertThat(tray.expectedUnitPrice).isCloseTo(16.5, CENT);
+        assertThat(tray.correctedTotalPrice).isCloseTo(66.0, CENT);
+        assertThat(tray.status).isEqualTo("unchanged");
+        assertThat(tray.pricingRule).doesNotContain("内勤计价");
+
+        PricingEngine.ProcessedResult sleeve = orchestrator.processRow(
+                paper("小钢套-1", "高温纸塑袋100*200", 5, 5, 8.0, 40.0),
+                standardEngine, clerk, "HUAXIA-EYE", Set.of());
+        assertThat(sleeve.expectedUnitPrice).isCloseTo(8.0, CENT);
+        assertThat(sleeve.correctedTotalPrice).isCloseTo(40.0, CENT);
+        assertThat(sleeve.status).isEqualTo("unchanged");
+
+        PricingEngine.ProcessedResult threePerPack = orchestrator.processRow(
+                paper("小钢杯-3", "高温纸塑袋200*250", 6, 2, 16.5, 33.0),
+                standardEngine, clerk, "HUAXIA-EYE", Set.of());
+        assertThat(threePerPack.expectedUnitPrice).isCloseTo(8.25, CENT);
+        assertThat(threePerPack.correctedTotalPrice).isCloseTo(16.5, CENT);
+        assertThat(threePerPack.difference).isCloseTo(-16.5, CENT);
+        assertThat(threePerPack.status).isEqualTo("warning");
+
+        PricingEngine.ProcessedResult alreadySpecial = orchestrator.processRow(
+                paper("小钢杯-3", "高温纸塑袋200*250", 6, 2, 8.25, 16.5),
+                standardEngine, clerk, "HUAXIA-EYE", Set.of());
+        assertThat(alreadySpecial.expectedUnitPrice).isCloseTo(8.25, CENT);
+        assertThat(alreadySpecial.status).isEqualTo("unchanged");
+    }
+
+    @Test
+    void nangangShortNameUsesExistingFixedPrices() {
+        ClerkRuleIndex index = new ClerkRuleIndex();
+        assertThat(index.resolveCustomerCodeByHospitalName("南岗区妇产医院")).isEqualTo("NG-FUCHAN");
+        assertThat(index.resolveCustomerCodeByHospitalName("哈尔滨市南岗区妇产医院")).isEqualTo("NG-FUCHAN");
+
+        ObjectNode clerk = compiler.compileForCustomer("NG-FUCHAN");
+
+        PricingEngine.ProcessedResult vaginal = orchestrator.processRow(
+                nonWoven("阴式包", 43, 1, 236.5, 236.5),
+                standardEngine, clerk, "NG-FUCHAN", Set.of());
+        assertThat(vaginal.expectedUnitPrice).isCloseTo(170.5, CENT);
+        assertThat(vaginal.correctedTotalPrice).isCloseTo(170.5, CENT);
+        assertThat(vaginal.difference).isCloseTo(-66.0, CENT);
+        assertThat(vaginal.status).isEqualTo("warning");
+
+        PricingEngine.ProcessedResult induction = orchestrator.processRow(
+                nonWoven("引产包", 33, 1, 181.5, 181.5),
+                standardEngine, clerk, "NG-FUCHAN", Set.of());
+        assertThat(induction.expectedUnitPrice).isCloseTo(160.0, CENT);
+        assertThat(induction.correctedTotalPrice).isCloseTo(160.0, CENT);
+        assertThat(induction.difference).isCloseTo(-21.5, CENT);
+        assertThat(induction.status).isEqualTo("warning");
+
+        PricingEngine.ProcessedResult embedded = orchestrator.processRow(
+                nonWoven("妇科阴式包", 12, 1, 66.0, 66.0),
+                standardEngine, clerk, "NG-FUCHAN", Set.of());
+        assertThat(embedded.expectedUnitPrice).isCloseTo(170.5, CENT);
+        assertThat(embedded.pricingRule).contains("阴式包");
+
+        PricingEngine.ProcessedResult smallBag = orchestrator.processRow(
+                dressing("敷料包（纸塑袋）", "高温纸塑袋100*200", 2.5),
+                standardEngine, clerk, "NG-FUCHAN", Set.of());
+        assertThat(smallBag.expectedUnitPrice).isCloseTo(2.3, CENT);
+        assertThat(smallBag.pricingRule).contains("纸塑袋＜20cm");
+
+        PricingEngine.ProcessedResult largeBag = orchestrator.processRow(
+                dressing("小敷料包（纸塑袋）", "高温纸塑袋200*250", 8.25),
+                standardEngine, clerk, "NG-FUCHAN", Set.of());
+        assertThat(largeBag.expectedUnitPrice).isCloseTo(4.0, CENT);
+        assertThat(largeBag.pricingRule).contains("纸塑袋≥20cm");
+    }
+
+    private static Map<String, Object> nonWoven(
+            String packName, int instrumentCount, int packCount, double unitPrice, double totalPrice) {
+        Map<String, Object> row = new HashMap<>();
+        row.put("hospitalName", "哈尔滨工业大学医院");
+        row.put("packName", packName);
+        row.put("type", "器械包");
+        row.put("packageMaterial", "高温无纺布");
+        row.put("instrumentCount", instrumentCount);
+        row.put("packCount", packCount);
+        row.put("unitPrice", unitPrice);
+        row.put("totalPrice", totalPrice);
+        return row;
+    }
+
+    private static Map<String, Object> paper(
+            String packName, String material, int instrumentCount, int packCount,
+            double unitPrice, double totalPrice) {
+        Map<String, Object> row = nonWoven(packName, instrumentCount, packCount, unitPrice, totalPrice);
+        row.put("type", "额外包(纸塑袋)");
+        row.put("packageMaterial", material);
+        row.put("hospitalName", "哈尔滨华夏眼科医院");
+        return row;
+    }
+
+    private static Map<String, Object> dressing(String packName, String material, double billUnit) {
+        Map<String, Object> row = new HashMap<>();
+        row.put("hospitalName", "南岗区妇产医院");
+        row.put("packName", packName);
+        row.put("type", "敷料包(纸塑袋)");
+        row.put("packageMaterial", material);
+        row.put("instrumentCount", 1);
+        row.put("packCount", 1);
+        row.put("unitPrice", billUnit);
+        row.put("totalPrice", billUnit);
+        return row;
+    }
+
+    private static String joined(PricingEngine.ProcessedResult result) {
+        return result.notes == null ? "" : String.join("\n", result.notes);
+    }
+}

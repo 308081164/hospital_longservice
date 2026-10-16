@@ -292,8 +292,6 @@ public class MasterDataInitializer implements CommandLineRunner {
                 rule("CONTAINS", "pack_name", "机扩针", null, null, 10));
         insertProduct(smallItemId, "克氏针", "SMALL-克氏针", 60,
                 rule("CONTAINS", "pack_name", "克氏针", null, null, 10));
-        insertProduct(smallItemId, "种植盒", "SMALL-种植盒", 70,
-                rule("CONTAINS", "pack_name", "种植盒", null, null, 10));
         insertProduct(smallItemId, "肖啸钻头", "SMALL-肖啸钻头", 80,
                 rule("CONTAINS", "pack_name", "肖啸钻头", null, null, 10));
 

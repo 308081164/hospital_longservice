@@ -2480,7 +2480,7 @@ public class PricingEngine {
     private SmallItemSplit findSmallItemSplit(String text, JsonNode keywords, String mode) {
         BillingConditionEvaluator.ExactTokenKeywordMatch match =
                 BillingConditionEvaluator.findKeywordByMode(text, keywords, mode);
-        if (match == null) {
+        if (match == null || isPlantingBoxFoldKeyword(match.keyword())) {
             return null;
         }
         SmallItemSplit split = new SmallItemSplit();
@@ -2505,7 +2505,7 @@ public class PricingEngine {
         if (configs.isArray()) {
             for (JsonNode cfg : configs) {
                 String kw = cfg.path("keyword").asText("").trim();
-                if (kw.isEmpty()) {
+                if (kw.isEmpty() || isPlantingBoxFoldKeyword(kw)) {
                     continue;
                 }
                 result.add(kw + needleMatchModeSuffix(cfg.path("matchMode").asText("")));
@@ -2517,7 +2517,7 @@ public class PricingEngine {
             for (JsonNode kwNode : keywords) {
                 for (BillingConditionEvaluator.ParsedKeyword pk
                         : BillingConditionEvaluator.parseKeywordList(kwNode.asText(""))) {
-                    if (pk.keyword().isBlank()) {
+                    if (pk.keyword().isBlank() || isPlantingBoxFoldKeyword(pk.keyword())) {
                         continue;
                     }
                     if (covered.add(BillingConditionEvaluator.normalizeMatchText(pk.keyword()).toLowerCase())) {
@@ -2527,6 +2527,19 @@ public class PricingEngine {
             }
         }
         return result;
+    }
+
+    /** 种植盒不参与通用小件 5 合 1。工大「种植盒-23件」仍走自己的按件规则。 */
+    static boolean isPlantingBoxFoldKeyword(String keyword) {
+        if (keyword == null || keyword.isBlank()) {
+            return false;
+        }
+        String raw = keyword.trim();
+        int at = raw.indexOf('@');
+        if (at >= 0) {
+            raw = raw.substring(0, at);
+        }
+        return "种植盒".equals(BillingConditionEvaluator.normalizeMatchText(raw));
     }
 
     /** 独立配置 matchMode 转关键词 @后缀；未设置或非法值返回空串（沿用全局默认匹配模式）。 */

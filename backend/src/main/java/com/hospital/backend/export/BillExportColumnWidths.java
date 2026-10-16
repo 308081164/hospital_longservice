@@ -53,6 +53,11 @@ public final class BillExportColumnWidths {
             sheet.setColumnWidth(11, widthUnits(12.0)); // L 单价（把）
             sheet.setColumnWidth(12, widthUnits(UNIT_PRICE_CHARS)); // M 单价
             sheet.setColumnWidth(13, widthUnits(12.0)); // N 总价
+        } else if (layout.showsPackageMaterial() && layout.showsInstrumentCount()) {
+            sheet.setColumnWidth(9, widthUnits(18.0));  // J 包装材料
+            sheet.setColumnWidth(10, widthUnits(12.0)); // K 器械数
+            sheet.setColumnWidth(11, widthUnits(UNIT_PRICE_CHARS)); // L 单价
+            sheet.setColumnWidth(12, widthUnits(12.0)); // M 总价
         } else if (layout.showsInstrumentCount()) {
             sheet.setColumnWidth(9, widthUnits(12.0)); // J 器械数
             sheet.setColumnWidth(10, widthUnits(UNIT_PRICE_CHARS)); // K 单价

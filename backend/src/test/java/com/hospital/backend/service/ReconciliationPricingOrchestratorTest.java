@@ -65,7 +65,7 @@ class ReconciliationPricingOrchestratorTest {
     }
 
     @Test
-    void appliesClerkDiscountAfterBasePrice() {
+    void clerkFixedPriceIsFinalAndMismatchIsWarning() {
         ObjectNode clerkCompiled = clerkWithPriceRule("整形包", 10.0);
         ArrayNode policies = clerkCompiled.putArray("billingPolicies");
         policies.add(discountPolicy("导出七五折", 0.75));
@@ -74,12 +74,12 @@ class ReconciliationPricingOrchestratorTest {
         PricingEngine.ProcessedResult result = orchestrator.processRow(
                 row, pricingEngine, clerkCompiled, "AOLAN-YY", Set.of());
 
-        assertThat(result.expectedUnitPrice).isEqualTo(7.5);
-        assertThat(result.billingNotes.get("clerkDiscountRuleName")).isEqualTo("导出七五折");
+        assertThat(result.expectedUnitPrice).isEqualTo(10.0);
+        assertThat(result.billingNotes.get("clerkDiscountRuleName")).isNull();
         assertThat(result.billingNotes.get("priceBeforeDiscount")).isEqualTo(10.0);
-        assertThat(result.billingNotes.get("priceAfterDiscount")).isEqualTo(7.5);
-        assertThat(result.correctedTotalPrice).isEqualTo(7.5);
-        assertThat(result.status).isEqualTo("corrected");
+        assertThat(result.correctedTotalPrice).isEqualTo(10.0);
+        assertThat(result.difference).isEqualTo(2.0);
+        assertThat(result.status).isEqualTo("warning");
     }
 
     @Test

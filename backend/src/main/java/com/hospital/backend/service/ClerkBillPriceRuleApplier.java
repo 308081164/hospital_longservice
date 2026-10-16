@@ -169,7 +169,7 @@ public class ClerkBillPriceRuleApplier {
         if (rangeExpr == null || rangeExpr.isBlank() || "N".equalsIgnoreCase(rangeExpr.trim())) {
             return true;
         }
-        int count = instrumentCount(row);
+        int count = perPackInstrumentCount(row);
         String normalized = rangeExpr.replace(" ", "").replace("＞", ">").replace("＜", "<");
         normalized = normalizeInstrumentRangeExpr(normalized);
         Matcher m = RANGE_PATTERN.matcher(normalized);
@@ -270,6 +270,15 @@ public class ClerkBillPriceRuleApplier {
             return row.getInstrumentCount();
         }
         return packCount(row);
+    }
+
+    /** 件数门槛按单包：器械数 / 包数。没有器械数时仍用原来的件数。 */
+    private static int perPackInstrumentCount(BillRowItem row) {
+        int packs = packCount(row);
+        if (row.getInstrumentCount() != null && row.getInstrumentCount() > 0) {
+            return row.getInstrumentCount() / packs;
+        }
+        return instrumentCount(row);
     }
 
     private static int packCount(BillRowItem row) {

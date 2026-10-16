@@ -44,9 +44,6 @@ public class ReconciliationPricingOrchestrator {
             Set<String> disabledCategories) {
         List<String> calculationSteps = new ArrayList<>();
         BillRowItem clerkRow = toBillRowItem(rowMap);
-        if (isDressingPack(stringVal(rowMap, "type"))) {
-            return preserveDressingOriginal(rowMap, calculationSteps);
-        }
         boolean clerkPriceDisabled = isCategoryDisabled(disabledCategories, CATEGORY_CLERK_PRICE);
         boolean clerkDiscountDisabled = isCategoryDisabled(disabledCategories, CATEGORY_CLERK_DISCOUNT);
 
@@ -54,6 +51,9 @@ public class ReconciliationPricingOrchestrator {
         if (!clerkPriceDisabled && clerkCompiled != null && customerCode != null) {
             clerkPrice = clerkBillPriceRuleApplier.findMatchingPriceRule(
                     clerkCompiled, clerkRow, customerCode, Set.of());
+        }
+        if (clerkPrice.isEmpty() && isDressingPack(stringVal(rowMap, "type"))) {
+            return preserveDressingOriginal(rowMap, calculationSteps);
         }
 
         PricingEngine.ProcessedResult result;
@@ -74,9 +74,7 @@ public class ReconciliationPricingOrchestrator {
             result.notes = new ArrayList<>();
             result.notes.add(String.format("内勤账单价规则「%s」，单价 %.2f", clerkRuleName, unitPrice));
             attachFieldValidation(result, rowMap);
-            if (hasFieldValidationIssue(result) && "unchanged".equals(result.status)) {
-                result.status = "warning";
-            }
+            syncClerkQuotedPrice(result, rowMap);
             pricingLayer = "clerk";
             calculationSteps.add("内勤计价命中：" + clerkRuleName);
             priceBeforeDiscount = unitPrice;
@@ -365,6 +363,31 @@ public class ReconciliationPricingOrchestrator {
 
     private static double round2(double value) {
         return Math.round(value * 100.0) / 100.0;
+    }
+
+    /**
+     * 内勤一口价和账单单价不一致时标 warning，并写出修正总价和差额。
+     * 与账单一致才是无需修改。
+     */
+    private static void syncClerkQuotedPrice(PricingEngine.ProcessedResult result, Map<String, Object> rowMap) {
+        if (result.expectedUnitPrice == null) {
+            return;
+        }
+        int packs = Math.max(intVal(rowMap, "packCount", 1), 1);
+        double correctedTotal = PreciseLineAmount.correctedTotal(
+                result.expectedUnitPrice, result.unroundedUnitPrice, packs);
+        result.correctedTotalPrice = correctedTotal;
+        Double totalPrice = doubleVal(rowMap, "totalPrice");
+        double originalTotal = totalPrice != null ? totalPrice : 0.0;
+        result.difference = round2(correctedTotal - originalTotal);
+        Double bill = doubleVal(rowMap, "unitPrice");
+        boolean unitDiffers = bill != null && Math.abs(result.expectedUnitPrice - bill) > 0.001;
+        boolean totalDiffers = Math.abs(result.difference) > 0.001;
+        if (unitDiffers || totalDiffers || hasFieldValidationIssue(result)) {
+            result.status = "warning";
+        } else {
+            result.status = "unchanged";
+        }
     }
 
     /** 内勤折扣改写规则单价后，同步修正总价/差额/状态（与 applyBatchCorrection 口径一致）。 */

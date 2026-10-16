@@ -46,6 +46,30 @@ public enum BillColumnLayout {
                     {"总价"},
             }),
 
+    /**
+     * 标准列再同时插入包装材料和器械数：包数与单价之间。
+     * 南岗妇产、华夏眼科等 keepColumns 两列都要的医院用这一档，不带附一的「单价（把）」。
+     */
+    STANDARD_WITH_MATERIAL_AND_INSTRUMENT(
+            "standard_with_material_and_instrument",
+            12,
+            new String[]{
+                    "发货日期", "发货单号", "类型", "包类别号", "包名", "包数",
+                    "包装材料", "器械数", "单价", "总价"
+            },
+            new String[][]{
+                    {"发货日期", "灭菌日期"},
+                    {"发货单号", "灭菌锅次"},
+                    {"类型"},
+                    {"包类别号", "病人ID"},
+                    {"包名", "器械名称"},
+                    {"包数"},
+                    {"包装材料"},
+                    {"器械数", "器械数量", "单包内器械数量/把"},
+                    {"单价"},
+                    {"总价"},
+            }),
+
     FUYI_EXTENDED_11COL(
             "fuyi_extended_11col",
             13,
@@ -69,6 +93,7 @@ public enum BillColumnLayout {
 
     public static final String KEY_STANDARD = "standard_8col";
     public static final String KEY_STANDARD_WITH_INSTRUMENT = "standard_with_instrument";
+    public static final String KEY_STANDARD_WITH_MATERIAL_AND_INSTRUMENT = "standard_with_material_and_instrument";
     public static final String KEY_FUYI_EXTENDED = "fuyi_extended_11col";
 
     private final String key;
@@ -118,6 +143,11 @@ public enum BillColumnLayout {
     public int unitPriceColIndex() {
         int idx = dataColumnIndex("单价");
         return idx >= 0 ? idx : 9;
+    }
+
+    /** 表头里有包装材料列。 */
+    public boolean showsPackageMaterial() {
+        return dataColumnIndex("包装材料") >= 0;
     }
 
     /** 表头里有器械数量列时，导出必须写出并保持可见。 */
@@ -178,6 +208,9 @@ public enum BillColumnLayout {
         }
         if (KEY_STANDARD_WITH_INSTRUMENT.equals(normalized)) {
             return STANDARD_WITH_INSTRUMENT;
+        }
+        if (KEY_STANDARD_WITH_MATERIAL_AND_INSTRUMENT.equals(normalized)) {
+            return STANDARD_WITH_MATERIAL_AND_INSTRUMENT;
         }
         return STANDARD_8COL;
     }

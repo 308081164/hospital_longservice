@@ -164,8 +164,8 @@ public class ClerkExportLayoutMerger {
     }
 
     /**
-     * 内勤「保留导出列」只点了器械数、没有同时要求包装材料时，在标准 8 列上插入器械数。
-     * 同时要求包装材料的医院仍走原布局，避免只补出半列。
+     * 只要器械数、不要包装材料：电力医院，在标准 8 列上插入器械数。
+     * 两列都要：南岗妇产、华夏眼科等，同时插入包装材料和器械数。
      */
     public static BillColumnLayout layoutForKeepColumns(BillColumnLayout current, JsonNode keepColumns) {
         BillColumnLayout base = current != null ? current : BillColumnLayout.STANDARD_8COL;
@@ -183,7 +183,10 @@ public class ClerkExportLayoutMerger {
                 instrument = true;
             }
         }
-        if (instrument && !material) {
+        if (instrument && material) {
+            return BillColumnLayout.STANDARD_WITH_MATERIAL_AND_INSTRUMENT;
+        }
+        if (instrument) {
             return BillColumnLayout.STANDARD_WITH_INSTRUMENT;
         }
         return base;
