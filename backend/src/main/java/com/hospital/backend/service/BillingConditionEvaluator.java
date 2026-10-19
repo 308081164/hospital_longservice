@@ -78,10 +78,18 @@ public final class BillingConditionEvaluator {
      * {@code 车针@exact}（或 @exact_token）强制精确 token 边界；不带后缀沿用 defaultMode。
      */
     public static boolean matchesKeywordsByMode(String text, JsonNode keywords, String defaultMode) {
+        return matchesKeywordsByMode(text, keywords, defaultMode, true);
+    }
+
+    /**
+     * @param countParentheticalContains {@code contains} 命中整段落在一对圆括号内时是否算命中。
+     *        全局特色规则和内勤排除词保持 {@code true}；内勤正向包名传 {@code false}。
+     */
+    public static boolean matchesKeywordsByMode(
+            String text, JsonNode keywords, String defaultMode, boolean countParentheticalContains) {
         if (keywords == null || !keywords.isArray() || keywords.isEmpty()) {
             return false;
         }
-        String normalizedText = normalizeMatchText(text).toLowerCase();
         for (JsonNode kw : keywords) {
             for (ParsedKeyword pk : parseKeywordList(kw.asText(""))) {
                 if (pk.keyword().isBlank()) {
@@ -94,7 +102,7 @@ public final class BillingConditionEvaluator {
                 } else if (KEYWORD_MATCH_REGEX.equalsIgnoreCase(mode)) {
                     hit = matchesKeywordRegex(text, pk.keyword());
                 } else if (KEYWORD_MATCH_CONTAINS.equalsIgnoreCase(mode)) {
-                    hit = matchesKeywordContains(text, pk.keyword());
+                    hit = matchesKeywordContains(text, pk.keyword(), countParentheticalContains);
                 } else {
                     hit = matchesKeywordExactToken(text, pk.keyword());
                 }
@@ -334,6 +342,14 @@ public final class BillingConditionEvaluator {
     }
 
     private static boolean matchesKeywordContains(String text, String keyword) {
+        return matchesKeywordContains(text, keyword, true);
+    }
+
+    /**
+     * @param countParenthetical 为 false 时，整段落在一对圆括号内的出现不算命中。
+     *        括号外仍有同词，或关键词本身带着括号，仍然算命中。
+     */
+    private static boolean matchesKeywordContains(String text, String keyword, boolean countParenthetical) {
         String normalizedText = normalizeMatchText(text).toLowerCase();
         String kwLower = normalizeMatchText(keyword).toLowerCase();
         if (kwLower.isBlank()) {
@@ -341,12 +357,45 @@ public final class BillingConditionEvaluator {
         }
         int idx = 0;
         while ((idx = normalizedText.indexOf(kwLower, idx)) != -1) {
-            if (!isAngleKeywordLeadingDigitBlocked(normalizedText, idx, keyword)) {
+            boolean parentheticalOnly = !countParenthetical
+                    && isEntirelyInsideParentheses(normalizedText, idx, idx + kwLower.length());
+            if (!parentheticalOnly && !isAngleKeywordLeadingDigitBlocked(normalizedText, idx, keyword)) {
                 return true;
             }
             idx += kwLower.length();
         }
         return false;
+    }
+
+    /** 命中区间的每个字符都还在尚未闭合的圆括号里。关键词自己带上括号时，起点深度为 0，不算在内。 */
+    static boolean isEntirelyInsideParentheses(String text, int start, int end) {
+        if (text == null || start < 0 || end > text.length() || start >= end) {
+            return false;
+        }
+        int depth = 0;
+        for (int i = 0; i < start; i++) {
+            depth = adjustParenthesisDepth(text.charAt(i), depth);
+        }
+        if (depth <= 0) {
+            return false;
+        }
+        for (int i = start; i < end; i++) {
+            depth = adjustParenthesisDepth(text.charAt(i), depth);
+            if (depth <= 0) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    private static int adjustParenthesisDepth(char c, int depth) {
+        if (c == '(') {
+            return depth + 1;
+        }
+        if (c == ')' && depth > 0) {
+            return depth - 1;
+        }
+        return depth;
     }
 
     public static boolean matchesKeywordsExactToken(String text, JsonNode keywords) {

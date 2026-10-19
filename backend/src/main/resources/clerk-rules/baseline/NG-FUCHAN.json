@@ -17,7 +17,7 @@
           "腹腔镜"
         ],
         "unitPrice": 170.5,
-        "unitPriceMode": "FIXED",
+        "unitPriceMode": "PER_PACK",
         "systemPrice": null,
         "systemPriceMode": "IGNORE",
         "packNameMatchMode": "contains"
@@ -36,7 +36,7 @@
           "宫腔镜"
         ],
         "unitPrice": 170.5,
-        "unitPriceMode": "FIXED",
+        "unitPriceMode": "PER_PACK",
         "systemPrice": null,
         "systemPriceMode": "IGNORE",
         "packNameMatchMode": "contains"
@@ -55,7 +55,7 @@
           "阴式包"
         ],
         "unitPrice": 170.5,
-        "unitPriceMode": "FIXED",
+        "unitPriceMode": "PER_PACK",
         "systemPrice": null,
         "systemPriceMode": "IGNORE",
         "packNameMatchMode": "contains"
@@ -74,7 +74,7 @@
           "引产包"
         ],
         "unitPrice": 160.0,
-        "unitPriceMode": "FIXED",
+        "unitPriceMode": "PER_PACK",
         "systemPrice": null,
         "systemPriceMode": "IGNORE",
         "packNameMatchMode": "contains"
@@ -93,7 +93,7 @@
           "妇科包"
         ],
         "unitPrice": 269.5,
-        "unitPriceMode": "FIXED",
+        "unitPriceMode": "PER_PACK",
         "systemPrice": null,
         "systemPriceMode": "IGNORE",
         "packNameMatchMode": "contains"
@@ -112,7 +112,7 @@
           "人流包"
         ],
         "unitPrice": 33.0,
-        "unitPriceMode": "FIXED",
+        "unitPriceMode": "PER_PACK",
         "systemPrice": null,
         "systemPriceMode": "IGNORE",
         "packNameMatchMode": "contains"
@@ -131,7 +131,7 @@
           "取环包"
         ],
         "unitPrice": 33.0,
-        "unitPriceMode": "FIXED",
+        "unitPriceMode": "PER_PACK",
         "systemPrice": null,
         "systemPriceMode": "IGNORE",
         "packNameMatchMode": "contains"
@@ -150,7 +150,7 @@
           "上环包"
         ],
         "unitPrice": 33.0,
-        "unitPriceMode": "FIXED",
+        "unitPriceMode": "PER_PACK",
         "systemPrice": null,
         "systemPriceMode": "IGNORE",
         "packNameMatchMode": "contains"
@@ -169,7 +169,7 @@
           "药流包"
         ],
         "unitPrice": 27.5,
-        "unitPriceMode": "FIXED",
+        "unitPriceMode": "PER_PACK",
         "systemPrice": null,
         "systemPriceMode": "IGNORE",
         "packNameMatchMode": "contains"
@@ -188,7 +188,7 @@
           "手术包（90布）"
         ],
         "unitPrice": 22.0,
-        "unitPriceMode": "FIXED",
+        "unitPriceMode": "PER_PACK",
         "systemPrice": null,
         "systemPriceMode": "IGNORE",
         "packNameMatchMode": "contains"
@@ -207,7 +207,7 @@
           "棉球缸"
         ],
         "unitPrice": 16.0,
-        "unitPriceMode": "FIXED",
+        "unitPriceMode": "PER_PACK",
         "systemPrice": null,
         "systemPriceMode": "IGNORE",
         "packNameMatchMode": "contains"
@@ -226,7 +226,7 @@
           "无菌缸"
         ],
         "unitPrice": 16.0,
-        "unitPriceMode": "FIXED",
+        "unitPriceMode": "PER_PACK",
         "systemPrice": null,
         "systemPriceMode": "IGNORE",
         "packNameMatchMode": "contains"
@@ -245,7 +245,7 @@
           "持物钳罐"
         ],
         "unitPrice": 18.0,
-        "unitPriceMode": "FIXED",
+        "unitPriceMode": "PER_PACK",
         "systemPrice": null,
         "systemPriceMode": "IGNORE",
         "packNameMatchMode": "contains"
@@ -264,7 +264,7 @@
           "拆线包"
         ],
         "unitPrice": 15.0,
-        "unitPriceMode": "FIXED",
+        "unitPriceMode": "PER_PACK",
         "systemPrice": null,
         "systemPriceMode": "IGNORE",
         "packNameMatchMode": "contains"
@@ -283,7 +283,7 @@
           "镊子缸"
         ],
         "unitPrice": 8.0,
-        "unitPriceMode": "FIXED",
+        "unitPriceMode": "PER_PACK",
         "systemPrice": null,
         "systemPriceMode": "IGNORE",
         "packNameMatchMode": "contains"
@@ -302,7 +302,7 @@
           "带架方盘"
         ],
         "unitPrice": 16.5,
-        "unitPriceMode": "FIXED",
+        "unitPriceMode": "PER_PACK",
         "systemPrice": null,
         "systemPriceMode": "IGNORE",
         "packNameMatchMode": "contains"
@@ -321,7 +321,7 @@
           "治疗盘"
         ],
         "unitPrice": 16.0,
-        "unitPriceMode": "FIXED",
+        "unitPriceMode": "PER_PACK",
         "systemPrice": null,
         "systemPriceMode": "IGNORE",
         "packNameMatchMode": "contains"
@@ -340,7 +340,7 @@
           "敷料包（纸塑袋）"
         ],
         "unitPrice": 2.3,
-        "unitPriceMode": "FIXED",
+        "unitPriceMode": "PER_PACK",
         "systemPrice": null,
         "systemPriceMode": "IGNORE",
         "packagingMaterial": "纸塑袋＜20cm",
@@ -360,7 +360,7 @@
           "敷料包（纸塑袋）"
         ],
         "unitPrice": 4.0,
-        "unitPriceMode": "FIXED",
+        "unitPriceMode": "PER_PACK",
         "systemPrice": null,
         "systemPriceMode": "IGNORE",
         "packagingMaterial": "纸塑袋≥20cm",

@@ -156,6 +156,67 @@ class CustomerFeedback20261016PricingTest {
         assertThat(largeBag.pricingRule).contains("纸塑袋≥20cm");
     }
 
+    @Test
+    void nangangRingRemovalPackIsUnitPriceNotRowTotal() {
+        ObjectNode clerk = compiler.compileForCustomer("NG-FUCHAN");
+        PricingEngine.ProcessedResult ring = orchestrator.processRow(
+                nonWoven("取环包（90布）", 12, 2, 33.0, 66.0),
+                standardEngine, clerk, "NG-FUCHAN", Set.of());
+        assertThat(ring.expectedUnitPrice).isCloseTo(33.0, CENT);
+        assertThat(ring.correctedTotalPrice).isCloseTo(66.0, CENT);
+        assertThat(ring.difference).isCloseTo(0.0, CENT);
+        assertThat(ring.pricingRule).contains("取环包");
+        assertThat(ring.expectedUnitPrice).isNotCloseTo(16.50, CENT);
+    }
+
+    @Test
+    void nangangParentheticalLaparoscopyDoesNotTakeTheFixedPrice() {
+        ObjectNode clerk = compiler.compileForCustomer("NG-FUCHAN");
+        PricingEngine.ProcessedResult inside = orchestrator.processRow(
+                nonWoven("盆2盘1杯1(腹腔镜里的)/w9050", 4, 1, 22.0, 22.0),
+                standardEngine, clerk, "NG-FUCHAN", Set.of());
+        assertThat(inside.expectedUnitPrice).isNotCloseTo(170.5, CENT);
+        assertThat(inside.pricingRule).doesNotContain("腹腔镜");
+        assertThat(inside.billingNotes.get("pricingLayer")).isNotEqualTo("clerk");
+    }
+
+    @Test
+    void nangangLaparoscopyOutsideParenthesesAndNamedPacksStayPerPack() {
+        ObjectNode clerk = compiler.compileForCustomer("NG-FUCHAN");
+
+        PricingEngine.ProcessedResult exact = orchestrator.processRow(
+                nonWoven("腹腔镜", 10, 1, 200.0, 200.0),
+                standardEngine, clerk, "NG-FUCHAN", Set.of());
+        assertThat(exact.expectedUnitPrice).isCloseTo(170.5, CENT);
+        assertThat(exact.pricingRule).contains("腹腔镜");
+
+        PricingEngine.ProcessedResult outside = orchestrator.processRow(
+                nonWoven("腹腔镜包", 8, 2, 170.5, 341.0),
+                standardEngine, clerk, "NG-FUCHAN", Set.of());
+        assertThat(outside.expectedUnitPrice).isCloseTo(170.5, CENT);
+        assertThat(outside.correctedTotalPrice).isCloseTo(341.0, CENT);
+        assertThat(outside.pricingRule).contains("腹腔镜");
+
+        PricingEngine.ProcessedResult prefixed = orchestrator.processRow(
+                nonWoven("妇科腹腔镜（备注）", 6, 1, 200.0, 200.0),
+                standardEngine, clerk, "NG-FUCHAN", Set.of());
+        assertThat(prefixed.expectedUnitPrice).isCloseTo(170.5, CENT);
+
+        PricingEngine.ProcessedResult vaginal = orchestrator.processRow(
+                nonWoven("阴式包", 12, 2, 170.5, 341.0),
+                standardEngine, clerk, "NG-FUCHAN", Set.of());
+        assertThat(vaginal.expectedUnitPrice).isCloseTo(170.5, CENT);
+        assertThat(vaginal.correctedTotalPrice).isCloseTo(341.0, CENT);
+        assertThat(vaginal.pricingRule).contains("阴式包");
+
+        PricingEngine.ProcessedResult induction = orchestrator.processRow(
+                nonWoven("引产包", 8, 2, 160.0, 320.0),
+                standardEngine, clerk, "NG-FUCHAN", Set.of());
+        assertThat(induction.expectedUnitPrice).isCloseTo(160.0, CENT);
+        assertThat(induction.correctedTotalPrice).isCloseTo(320.0, CENT);
+        assertThat(induction.pricingRule).contains("引产包");
+    }
+
     private static Map<String, Object> nonWoven(
             String packName, int instrumentCount, int packCount, double unitPrice, double totalPrice) {
         Map<String, Object> row = new HashMap<>();

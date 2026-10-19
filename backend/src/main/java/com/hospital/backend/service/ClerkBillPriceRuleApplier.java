@@ -150,7 +150,8 @@ public class ClerkBillPriceRuleApplier {
         }
         String matchMode = params.path("packNameMatchMode").asText(
                 BillingConditionEvaluator.KEYWORD_MATCH_EXACT_TOKEN);
-        return BillingConditionEvaluator.matchesKeywordsByMode(text, keywords, matchMode);
+        // 正向包含：整段只出现在圆括号里的不算命中。排除词仍走上面的子串包含。
+        return BillingConditionEvaluator.matchesKeywordsByMode(text, keywords, matchMode, false);
     }
 
     private boolean matchesPackaging(JsonNode packagingMaterial, String rowMaterial) {
