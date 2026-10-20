@@ -114,6 +114,35 @@ class CustomerFeedback20261016PricingTest {
     }
 
     @Test
+    void huaxiaHalfWidthNonwovenTypeMatchesFullWidthRule() {
+        ObjectNode clerk = compiler.compileForCustomer("HUAXIA-EYE");
+
+        // 规则库存全角「额外包（无纺布）」，账单半角。单包 18/2=9 件，满足 N≥3。
+        // PER_PIECE 用整行 18 把：2.75×18=49.50，再除以 2 包，规则单价 24.75。
+        Map<String, Object> halfWidth = nonWoven("ICL器械-8件（盒1）/W6050", 18, 2, 49.50, 99.0);
+        halfWidth.put("type", "额外包(无纺布)");
+        halfWidth.put("packageMaterial", "无纺布-60×60-50g");
+        halfWidth.put("hospitalName", "哈尔滨华夏眼科医院");
+        PricingEngine.ProcessedResult icl = orchestrator.processRow(
+                halfWidth, standardEngine, clerk, "HUAXIA-EYE", Set.of());
+        assertThat(icl.expectedUnitPrice).isCloseTo(24.75, CENT);
+        assertThat(icl.correctedTotalPrice).isCloseTo(49.50, CENT);
+        assertThat(icl.difference).isCloseTo(-49.50, CENT);
+        assertThat(icl.status).isEqualTo("warning");
+        assertThat(icl.pricingRule).contains("内勤计价");
+        assertThat(icl.billingNotes.get("pricingLayer")).isEqualTo("clerk");
+
+        // 反过来：账单全角，规则半角「额外包(纸塑袋)」。单包 3 件，单价仍是 2.75×6/2=8.25。
+        Map<String, Object> fullWidthPaper = paper("小钢杯-3", "高温纸塑袋200*250", 6, 2, 16.5, 33.0);
+        fullWidthPaper.put("type", "额外包（纸塑袋）");
+        PricingEngine.ProcessedResult paperPack = orchestrator.processRow(
+                fullWidthPaper, standardEngine, clerk, "HUAXIA-EYE", Set.of());
+        assertThat(paperPack.expectedUnitPrice).isCloseTo(8.25, CENT);
+        assertThat(paperPack.pricingRule).contains("内勤计价");
+        assertThat(paperPack.billingNotes.get("pricingLayer")).isEqualTo("clerk");
+    }
+
+    @Test
     void nangangShortNameUsesExistingFixedPrices() {
         ClerkRuleIndex index = new ClerkRuleIndex();
         assertThat(index.resolveCustomerCodeByHospitalName("南岗区妇产医院")).isEqualTo("NG-FUCHAN");
@@ -157,6 +186,58 @@ class CustomerFeedback20261016PricingTest {
     }
 
     @Test
+    void nangangGauzeAndCottonBallUsePerPackNamePrices() {
+        ObjectNode clerk = compiler.compileForCustomer("NG-FUCHAN");
+
+        PricingEngine.ProcessedResult gauzeCode = orchestrator.processRow(
+                nangangRow("纱布/Z1526", "", 5, 1, 2.5, 2.5),
+                standardEngine, clerk, "NG-FUCHAN", Set.of());
+        assertThat(gauzeCode.expectedUnitPrice).isCloseTo(2.3, CENT);
+        assertThat(gauzeCode.correctedTotalPrice).isCloseTo(2.3, CENT);
+        assertThat(gauzeCode.pricingRule).contains("纱布");
+        assertThat(gauzeCode.pricingRule).doesNotContain("散包");
+        assertThat(gauzeCode.billingNotes.get("pricingLayer")).isEqualTo("clerk");
+
+        PricingEngine.ProcessedResult gauzeLargeBag = orchestrator.processRow(
+                nangangRow("纱布", "高温纸塑袋200*250", 4, 2, 4.0, 8.0),
+                standardEngine, clerk, "NG-FUCHAN", Set.of());
+        assertThat(gauzeLargeBag.expectedUnitPrice).isCloseTo(2.3, CENT);
+        assertThat(gauzeLargeBag.correctedTotalPrice).isCloseTo(4.6, CENT);
+        assertThat(gauzeLargeBag.expectedUnitPrice).isNotCloseTo(1.15, CENT);
+        assertThat(gauzeLargeBag.pricingRule).contains("纱布");
+        assertThat(gauzeLargeBag.pricingRule).doesNotContain("纸塑袋");
+
+        PricingEngine.ProcessedResult cotton = orchestrator.processRow(
+                nangangRow("棉球", "", 3, 1, 8.0, 8.0),
+                standardEngine, clerk, "NG-FUCHAN", Set.of());
+        assertThat(cotton.expectedUnitPrice).isCloseTo(4.0, CENT);
+        assertThat(cotton.correctedTotalPrice).isCloseTo(4.0, CENT);
+        assertThat(cotton.pricingRule).isEqualTo("内勤计价：棉球");
+
+        PricingEngine.ProcessedResult cottonCode = orchestrator.processRow(
+                nangangRow("棉球/W6050", "无纺布", 6, 2, 8.0, 16.0),
+                standardEngine, clerk, "NG-FUCHAN", Set.of());
+        assertThat(cottonCode.expectedUnitPrice).isCloseTo(4.0, CENT);
+        assertThat(cottonCode.correctedTotalPrice).isCloseTo(8.0, CENT);
+        assertThat(cottonCode.pricingRule).isEqualTo("内勤计价：棉球");
+
+        PricingEngine.ProcessedResult jar = orchestrator.processRow(
+                nangangRow("棉球缸", "高温纸塑袋200*250", 1, 1, 16.0, 16.0),
+                standardEngine, clerk, "NG-FUCHAN", Set.of());
+        assertThat(jar.expectedUnitPrice).isCloseTo(16.0, CENT);
+        assertThat(jar.correctedTotalPrice).isCloseTo(16.0, CENT);
+        assertThat(jar.pricingRule).contains("棉球缸");
+        assertThat(jar.pricingRule).isNotEqualTo("内勤计价：棉球");
+
+        PricingEngine.ProcessedResult scatter = orchestrator.processRow(
+                nangangRow("弯盘", "高温无纺布", 1, 1, 5.0, 5.0),
+                standardEngine, clerk, "NG-FUCHAN", Set.of());
+        assertThat(scatter.expectedUnitPrice).isCloseTo(8.0, CENT);
+        assertThat(scatter.correctedTotalPrice).isCloseTo(8.0, CENT);
+        assertThat(scatter.pricingRule).contains("散包按把");
+    }
+
+    @Test
     void nangangRingRemovalPackIsUnitPriceNotRowTotal() {
         ObjectNode clerk = compiler.compileForCustomer("NG-FUCHAN");
         PricingEngine.ProcessedResult ring = orchestrator.processRow(
@@ -167,6 +248,13 @@ class CustomerFeedback20261016PricingTest {
         assertThat(ring.difference).isCloseTo(0.0, CENT);
         assertThat(ring.pricingRule).contains("取环包");
         assertThat(ring.expectedUnitPrice).isNotCloseTo(16.50, CENT);
+
+        PricingEngine.ProcessedResult halfWidth = orchestrator.processRow(
+                nonWoven("取环包(90布)", 12, 2, 33.0, 66.0),
+                standardEngine, clerk, "NG-FUCHAN", Set.of());
+        assertThat(halfWidth.expectedUnitPrice).isCloseTo(33.0, CENT);
+        assertThat(halfWidth.correctedTotalPrice).isCloseTo(66.0, CENT);
+        assertThat(halfWidth.pricingRule).contains("取环包");
     }
 
     @Test
@@ -178,6 +266,13 @@ class CustomerFeedback20261016PricingTest {
         assertThat(inside.expectedUnitPrice).isNotCloseTo(170.5, CENT);
         assertThat(inside.pricingRule).doesNotContain("腹腔镜");
         assertThat(inside.billingNotes.get("pricingLayer")).isNotEqualTo("clerk");
+
+        PricingEngine.ProcessedResult fullWidth = orchestrator.processRow(
+                nonWoven("盆2盘1杯1（腹腔镜里的）/w9050", 4, 1, 22.0, 22.0),
+                standardEngine, clerk, "NG-FUCHAN", Set.of());
+        assertThat(fullWidth.expectedUnitPrice).isNotCloseTo(170.5, CENT);
+        assertThat(fullWidth.pricingRule).doesNotContain("腹腔镜");
+        assertThat(fullWidth.billingNotes.get("pricingLayer")).isNotEqualTo("clerk");
     }
 
     @Test
@@ -238,6 +333,21 @@ class CustomerFeedback20261016PricingTest {
         row.put("type", "额外包(纸塑袋)");
         row.put("packageMaterial", material);
         row.put("hospitalName", "哈尔滨华夏眼科医院");
+        return row;
+    }
+
+    private static Map<String, Object> nangangRow(
+            String packName, String material, int instrumentCount, int packCount,
+            double unitPrice, double totalPrice) {
+        Map<String, Object> row = new HashMap<>();
+        row.put("hospitalName", "南岗区妇产医院");
+        row.put("packName", packName);
+        row.put("type", "器械包");
+        row.put("packageMaterial", material);
+        row.put("instrumentCount", instrumentCount);
+        row.put("packCount", packCount);
+        row.put("unitPrice", unitPrice);
+        row.put("totalPrice", totalPrice);
         return row;
     }
 

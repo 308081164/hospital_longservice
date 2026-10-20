@@ -332,6 +332,44 @@
     },
     {
       "ruleType": "PACK_NAME_PRICE",
+      "name": "纱布",
+      "stage": "bill_export",
+      "isActive": true,
+      "params": {
+        "packNameKeywords": [
+          "纱布"
+        ],
+        "unitPrice": 2.3,
+        "unitPriceMode": "PER_PACK",
+        "systemPrice": null,
+        "systemPriceMode": "IGNORE",
+        "packNameMatchMode": "contains"
+      },
+      "sourceText": "纱布  2.3",
+      "sourceRef": "manual:账单规则#NG-FUCHAN#纱布-20261019",
+      "priority": 27
+    },
+    {
+      "ruleType": "PACK_NAME_PRICE",
+      "name": "棉球",
+      "stage": "bill_export",
+      "isActive": true,
+      "params": {
+        "packNameKeywords": [
+          "棉球"
+        ],
+        "unitPrice": 4.0,
+        "unitPriceMode": "PER_PACK",
+        "systemPrice": null,
+        "systemPriceMode": "IGNORE",
+        "packNameMatchMode": "contains"
+      },
+      "sourceText": "棉球  4",
+      "sourceRef": "manual:账单规则#NG-FUCHAN#棉球-20261019",
+      "priority": 28
+    },
+    {
+      "ruleType": "PACK_NAME_PRICE",
       "name": "纸塑袋＜20cm",
       "stage": "bill_export",
       "isActive": true,
@@ -394,7 +432,9 @@
           "镊子缸",
           "带架方盘",
           "治疗盘",
-          "敷料包"
+          "敷料包",
+          "纱布",
+          "棉球"
         ],
         "unitPrice": 8.0,
         "unitPriceMode": "PER_PIECE",

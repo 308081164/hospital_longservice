@@ -301,8 +301,12 @@ public class ClerkBillPriceRuleApplier {
         return expr.replace("≥", ">=").replace("≤", "<=");
     }
 
+    /**
+     * 包类型比较与包名关键词、包含匹配共用同一套归一化。
+     * 账单和规则两侧都把全角圆括号折成半角，再去空白。
+     */
     private static String normalize(String text) {
-        return text == null ? "" : text.replaceAll("\\s+", "");
+        return BillingConditionEvaluator.normalizeMatchText(text);
     }
 
     private static double round2(double value) {
