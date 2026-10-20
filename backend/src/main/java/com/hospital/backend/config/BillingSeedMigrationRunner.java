@@ -60,6 +60,17 @@ public class BillingSeedMigrationRunner implements CommandLineRunner {
     private static final String BILL_DISCOUNT_ALIAS_MARKER = "billing_seed_bill_discount_alias_20261010_v1";
     /** 账单写法「哈尔滨红十字妇产医院」比档案少一个「市」，种子别名此前没有落到这条客户上。 */
     private static final String HRB_HSZ_BILL_ALIAS_MARKER = "billing_seed_hrb_hsz_bill_alias_20261014_v1";
+    /**
+     * 结款函合并只认客户档案编码。山河屯/新中新/黎增亮此前没有档案；
+     * 悦美芳华/工程大学/东大肛肠缺档时补档案。不写计价参数，也不打开特色账单。
+     */
+    private static final String CLERK_SETTLEMENT_CUSTOMERS_MARKER =
+            "billing_seed_clerk_settlement_customers_20261020_v1";
+    private static final String CLERK_SETTLEMENT_CUSTOMERS_FILE =
+            "billing-seeds/clerk-settlement-customers-20261020.json";
+    /** 不放进 STRICT_KEEP_CODES，避免 enableStrictCustomers 把结款函客户当成特殊计价。 */
+    private static final java.util.List<String> CLERK_SETTLEMENT_CUSTOMER_CODES = java.util.List.of(
+            "SHANTUN-RM", "XZX-YY", "LZL-KQ", "YUEMEI-FH", "HRB-HEU", "DONGDA-GC");
 
     /** 最终保留的特殊计价客户 code（与 scripts/strict_hospital_codes.py STRICT_KEEP_CODES 一致） */
     private static final java.util.List<String> STRICT_KEEP_CODES = java.util.List.of(
@@ -304,6 +315,13 @@ public class BillingSeedMigrationRunner implements CommandLineRunner {
             insertMarker(HRB_HSZ_BILL_ALIAS_MARKER, "红十字妇产账单少「市」的写法落到 HRB-HSZ");
             log.info("HRB-HSZ bill name aliases applied.");
         }
+        if (sysSettingMapper.countByKey(CLERK_SETTLEMENT_CUSTOMERS_MARKER) == 0) {
+            if (ensureClerkSettlementCustomers()) {
+                insertMarker(CLERK_SETTLEMENT_CUSTOMERS_MARKER,
+                        "结款函客户档案：山河屯/新中新/黎增亮，及缺档的悦美芳华/工程大学/东大肛肠");
+                log.info("Clerk settlement customers ensured.");
+            }
+        }
     }
 
     private void ensureEreryyFilenameAliases() {
@@ -376,20 +394,103 @@ public class BillingSeedMigrationRunner implements CommandLineRunner {
     private int deleteNonStrictCustomers() {
         // 先删无级联子表孤儿（billing/运营表引用 customer_id 但无外键），再删 customer（
         // customer_alias/customer_discount/customer_product_rule 有 ON DELETE CASCADE 自动级联）。
-        String staleIdsSubquery = "SELECT id FROM customer WHERE code NOT IN ("
-                + STRICT_KEEP_CODES.stream().map(c -> "'" + c + "'")
-                        .reduce((a, b) -> a + "," + b).orElse("")
-                + ")";
+        // 结款函客户不在特殊计价清单里，但清非 22 家时要留下，否则启动迁移刚写入的档案会被删掉。
+        java.util.List<String> kept = new java.util.ArrayList<>(STRICT_KEEP_CODES);
+        kept.addAll(CLERK_SETTLEMENT_CUSTOMER_CODES);
+        String keptSql = kept.stream().map(c -> "'" + c + "'").reduce((a, b) -> a + "," + b).orElse("''");
+        String staleIdsSubquery = "SELECT id FROM customer WHERE code NOT IN (" + keptSql + ")";
         for (String table : java.util.List.of(
                 "billing_rule_change_log", "customer_billing_policy", "customer_billing_rule_group",
                 "customer_group_member", "roster_entry", "department_entry", "physician_entry",
                 "external_instrument", "logistics_import", "logistics_card", "export_template")) {
             jdbcTemplate.update("DELETE FROM " + table + " WHERE customer_id IN (" + staleIdsSubquery + ")");
         }
-        return jdbcTemplate.update("DELETE FROM customer WHERE code NOT IN ("
-                + STRICT_KEEP_CODES.stream().map(c -> "'" + c + "'")
-                        .reduce((a, b) -> a + "," + b).orElse("")
-                + ")");
+        return jdbcTemplate.update("DELETE FROM customer WHERE code NOT IN (" + keptSql + ")");
+    }
+
+    /**
+     * 幂等补结款函客户。已有档案只补别名，不改 billingEnabled / 计价模式 / 规则。
+     * 历史东大肛肠编码 DD-DC 与内勤 baseline 的 DONGDA-GC 不是同一套，结款合并对不上。
+     */
+    private boolean ensureClerkSettlementCustomers() {
+        try {
+            alignDongdaLegacyCode();
+            ClassPathResource resource = new ClassPathResource(CLERK_SETTLEMENT_CUSTOMERS_FILE);
+            if (!resource.exists()) {
+                log.warn("Clerk settlement customer seed missing: {}", CLERK_SETTLEMENT_CUSTOMERS_FILE);
+                return false;
+            }
+            JsonNode root = JsonUtils.getObjectMapper().readTree(resource.getInputStream());
+            JsonNode profiles = root.path("profiles");
+            if (!profiles.isArray()) {
+                return false;
+            }
+            for (JsonNode profile : profiles) {
+                ensureSettlementCustomerIdentity(profile);
+            }
+            ensureAliasForExistingCustomer("SHKF-YY", "黑龙江省社会康复医院", 10);
+            ensureAliasForExistingCustomer("SHKF-YY", "社会康复医院", 20);
+            return true;
+        } catch (Exception e) {
+            log.error("Failed to ensure clerk settlement customers: {}", e.getMessage(), e);
+            return false;
+        }
+    }
+
+    private void alignDongdaLegacyCode() {
+        if (customerMapper.selectByCode("DONGDA-GC") != null) {
+            return;
+        }
+        Customer legacy = customerMapper.selectByCode("DD-DC");
+        if (legacy == null) {
+            return;
+        }
+        legacy.setCode("DONGDA-GC");
+        String canonical = legacy.getCanonicalName() == null ? "" : legacy.getCanonicalName().trim();
+        if (canonical.isEmpty() || "黑龙江东大肛肠".equals(canonical)) {
+            legacy.setCanonicalName("黑龙江东大肛肠医院");
+        }
+        customerMapper.updateById(legacy);
+        log.info("Aligned legacy customer DD-DC to DONGDA-GC");
+    }
+
+    private void ensureSettlementCustomerIdentity(JsonNode profile) {
+        String code = text(profile, "code");
+        String name = text(profile, "name");
+        if (code == null || name == null) {
+            return;
+        }
+        Customer customer = customerMapper.selectByCode(code);
+        if (customer == null) {
+            customer = new Customer();
+            customer.setCode(code);
+            customer.setCanonicalName(name);
+            customer.setStatus("active");
+            customer.setBillingEnabled(false);
+            customer.setBillingPricingMode("standard");
+            customer.setChargeDoubleBagWhenCapped(false);
+            customer.setNotes(text(profile, "notes"));
+            customerMapper.insert(customer);
+            log.info("Seeded clerk settlement customer: {}", code);
+        }
+        JsonNode aliases = profile.path("aliases");
+        if (!aliases.isArray()) {
+            return;
+        }
+        int priority = 10;
+        for (JsonNode aliasNode : aliases) {
+            ensureCustomerAliasExact(customer.getId(), aliasNode.asText(), "contains", "clerk_settle_v1", priority);
+            priority += 10;
+        }
+    }
+
+    private void ensureAliasForExistingCustomer(String code, String alias, int priority) {
+        Customer customer = customerMapper.selectByCode(code);
+        if (customer == null) {
+            log.warn("Skip clerk settlement alias {} → {} (customer missing)", alias, code);
+            return;
+        }
+        ensureCustomerAliasExact(customer.getId(), alias, "contains", "clerk_settle_v1", priority);
     }
 
     private boolean loadSeedClasspathFile(String file) {

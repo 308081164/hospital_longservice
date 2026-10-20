@@ -305,6 +305,75 @@ class ClerkRuleCompilerTest {
                 .get()
                 .extracting(LogisticsFeeCalculator.Result::totalFee)
                 .isEqualTo(350.0);
+
+        ObjectNode globalDefault = new com.fasterxml.jackson.databind.ObjectMapper().createObjectNode();
+        globalDefault.putObject("logistics").put("enabled", true);
+        assertThat(LogisticsFeeCalculator.compute(globalDefault, twoDays))
+                .get()
+                .extracting(LogisticsFeeCalculator.Result::feePerTrip, LogisticsFeeCalculator.Result::totalFee)
+                .containsExactly(50.0, 100.0);
+    }
+
+    @Test
+    void settlementLetterDiscountsKeepOriginalRatesAndDoNotChangeRowPrice() {
+        assertSettlementSterilizeRate("SHKF-YY", "黑龙江省社会康复医院", 0.75, 750.0);
+        assertSettlementSterilizeRate("HRB-HEU", "哈尔滨工程大学医院", 0.9, 900.0);
+        assertSettlementSterilizeRate("DONGDA-GC", "黑龙江东大肛肠医院", 0.75, 750.0);
+
+        ObjectNode yuemei = compiler.compileForCustomer("YUEMEI-FH");
+        assertThat(yuemei).isNotNull();
+        assertThat(hasDiscountPolicy(yuemei)).isFalse();
+        JsonNode monthly = monthlyPolicy(yuemei);
+        assertThat(monthly.path("params").path("minCharge").asDouble()).isEqualTo(1000.0);
+        assertThat(monthly.path("params").path("baseComponents"))
+                .extracting(JsonNode::asText)
+                .containsExactly("sterilize", "logistics");
+
+        double below = SettlementJobFieldsApplier.settlementMinChargeBase(600, 200.0, yuemei);
+        MonthlySettlementCalculator.Result low =
+                MonthlySettlementCalculator.compute(yuemei, below).orElseThrow();
+        assertThat(below).isEqualTo(800.0);
+        assertThat(low.adjustedTotal()).isEqualTo(1000.0);
+        assertThat(low.adjustment()).isEqualTo(200.0);
+
+        double above = SettlementJobFieldsApplier.settlementMinChargeBase(900, 200.0, yuemei);
+        MonthlySettlementCalculator.Result high =
+                MonthlySettlementCalculator.compute(yuemei, above).orElseThrow();
+        assertThat(above).isEqualTo(1100.0);
+        assertThat(high.adjustment()).isEqualTo(0.0);
+        assertThat(BillingPolicyApplier.applyBillDetailDiscounts(
+                yuemei, "高温", "治疗包", "无纺布", "悦美芳华医疗门诊医院", 33, 1, false, false))
+                .isNull();
+    }
+
+    private void assertSettlementSterilizeRate(String code, String hospitalName, double rate, double discounted) {
+        ObjectNode compiled = compiler.compileForCustomer(code);
+        assertThat(compiled).isNotNull();
+        JsonNode discount = null;
+        for (JsonNode policy : compiled.path("billingPolicies")) {
+            if ("DISCOUNT".equals(policy.path("policyType").asText())) {
+                discount = policy;
+            }
+        }
+        assertThat(discount).isNotNull();
+        assertThat(discount.path("params").path("rate").asDouble()).isEqualTo(rate);
+        assertThat(discount.path("params").path("applyStage").asText()).isEqualTo("settlement_only");
+        assertThat(discount.path("params").path("target").asText()).isEqualTo("sterilize");
+        assertThat(BillingPolicyApplier.applySettlementDiscount(
+                compiled, "高温", "治疗包", "无纺布", hospitalName, 1000).price())
+                .isEqualTo(discounted);
+        assertThat(BillingPolicyApplier.applyBillDetailDiscounts(
+                compiled, "高温", "治疗包", "无纺布", hospitalName, 100, 1, false, false))
+                .isNull();
+    }
+
+    private static JsonNode monthlyPolicy(ObjectNode compiled) {
+        for (JsonNode policy : compiled.path("billingPolicies")) {
+            if ("MONTHLY_SETTLEMENT".equals(policy.path("policyType").asText())) {
+                return policy;
+            }
+        }
+        throw new AssertionError("missing MONTHLY_SETTLEMENT policy");
     }
 
     private static double logisticsParam(ObjectNode compiled, String field) {

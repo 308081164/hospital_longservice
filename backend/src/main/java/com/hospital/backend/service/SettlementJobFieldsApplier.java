@@ -139,14 +139,54 @@ public class SettlementJobFieldsApplier {
             JsonNode compiledRules,
             List<Map<String, Object>> rows,
             double sterilizeTotal) {
-        double base = sterilizeTotal;
-        if (job.getLogisticsFee() != null) {
-            base += job.getLogisticsFee();
-        }
+        double base = settlementMinChargeBase(sterilizeTotal, job.getLogisticsFee(), compiledRules);
         if (isHulanTcmHospital(job.getHospitalName())) {
             base += sumSpecialPackTotalsFromMaps(rows);
         }
         return round2(base);
+    }
+
+    /**
+     * 低消基数。规则写了 baseComponents 就按清单加；没写时仍是灭菌费加物流费。
+     */
+    static double settlementMinChargeBase(double sterilizeTotal, Double logisticsFee, JsonNode compiledRules) {
+        java.util.Set<String> components = baseComponents(compiledRules);
+        double base = 0;
+        if (components.isEmpty() || components.contains("sterilize")) {
+            base += sterilizeTotal;
+        }
+        if ((components.isEmpty() || components.contains("logistics")) && logisticsFee != null) {
+            base += logisticsFee;
+        }
+        return round2(base);
+    }
+
+    private static java.util.Set<String> baseComponents(JsonNode compiledRules) {
+        java.util.Set<String> components = new java.util.LinkedHashSet<>();
+        if (compiledRules == null) {
+            return components;
+        }
+        JsonNode policies = compiledRules.path("billingPolicies");
+        if (!policies.isArray()) {
+            return components;
+        }
+        for (JsonNode policy : policies) {
+            if (!"MONTHLY_SETTLEMENT".equalsIgnoreCase(policy.path("policyType").asText())) {
+                continue;
+            }
+            JsonNode listed = policy.path("params").path("baseComponents");
+            if (!listed.isArray()) {
+                return components;
+            }
+            listed.forEach(node -> {
+                String text = node.asText("").trim();
+                if (!text.isEmpty()) {
+                    components.add(text);
+                }
+            });
+            return components;
+        }
+        return components;
     }
 
     private static boolean isHulanTcmHospital(String hospitalName) {

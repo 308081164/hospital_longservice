@@ -5,7 +5,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.hospital.backend.common.JsonUtils;
+import com.hospital.backend.config.ClerkRuleIndex;
 import com.hospital.backend.dto.request.hospital.BillRowItem;
+import com.hospital.backend.entity.Customer;
 import com.hospital.backend.dto.request.hospital.HospitalBillTemplateExportRequest;
 import com.hospital.backend.export.ExportFixedPriceApplier;
 import com.hospital.backend.export.ExportStageDiscountApplier;
@@ -37,6 +39,7 @@ public class ClerkRuleExportService {
     private final ClerkExportLayoutApplier clerkExportLayoutApplier;
     private final ClerkExportLayoutMerger clerkExportLayoutMerger;
     private final ClerkMonthlySupplementReportGenerator monthlySupplementReportGenerator;
+    private final ClerkRuleIndex clerkRuleIndex;
     private final CustomerResolver customerResolver;
 
     public List<BillRowItem> applyBillExportRules(
@@ -234,11 +237,50 @@ public class ClerkRuleExportService {
         return exportStageDiscountApplier.apply(legacyCompiled, rows);
     }
 
+    /**
+     * 结款合并先认客户档案编码。档案在、但编码不是内勤 baseline（如东大肛肠历史编码 DD-DC）时，
+     * 再用 baseline 医院名对齐到已有编码。没有客户档案则不挂规则。
+     */
     private String resolveCustomerCode(String hospitalName) {
         if (hospitalName == null || hospitalName.isBlank()) {
             return null;
         }
-        Optional<com.hospital.backend.entity.Customer> customer = customerResolver.resolveByName(hospitalName);
-        return customer.map(com.hospital.backend.entity.Customer::getCode).orElse(null);
+        Optional<Customer> customer = customerResolver.resolveByName(hospitalName);
+        if (customer.isEmpty()) {
+            return null;
+        }
+        String code = customer.get().getCode();
+        if (clerkRuleIndex.baselineForCustomer(code) != null) {
+            return code;
+        }
+        String aligned = alignClerkBaselineCode(hospitalName);
+        return aligned != null ? aligned : code;
+    }
+
+    private String alignClerkBaselineCode(String hospitalName) {
+        String exact = clerkRuleIndex.resolveCustomerCodeByHospitalName(hospitalName);
+        if (exact != null) {
+            return exact;
+        }
+        String trimmed = hospitalName.trim();
+        String found = null;
+        for (String code : clerkRuleIndex.customerCodes()) {
+            JsonNode baseline = clerkRuleIndex.baselineForCustomer(code);
+            if (baseline == null) {
+                continue;
+            }
+            String canonical = baseline.path("customerName").asText("").trim();
+            if (canonical.length() < 4 || trimmed.length() < 4) {
+                continue;
+            }
+            if (!trimmed.equals(canonical) && !trimmed.contains(canonical) && !canonical.contains(trimmed)) {
+                continue;
+            }
+            if (found != null) {
+                return null;
+            }
+            found = code;
+        }
+        return found;
     }
 }

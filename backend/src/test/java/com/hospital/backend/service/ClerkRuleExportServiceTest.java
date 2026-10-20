@@ -1,13 +1,92 @@
 package com.hospital.backend.service;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.hospital.backend.common.JsonUtils;
+import com.hospital.backend.config.ClerkRuleIndex;
+import com.hospital.backend.entity.Customer;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 class ClerkRuleExportServiceTest {
+
+    private CustomerResolver customerResolver;
+    private ClerkRuleExportService service;
+
+    @BeforeEach
+    void setUp() {
+        customerResolver = mock(CustomerResolver.class);
+        ClerkRuleIndex index = new ClerkRuleIndex();
+        service = new ClerkRuleExportService(
+                new ClerkRuleCompiler(index),
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                index,
+                customerResolver);
+    }
+
+    @Test
+    void settlementMergeUsesArchiveCodeForLogisticsFees() {
+        List<Map<String, Object>> twoDays = List.of(
+                Map.of("deliveryDate", "2026-06-01"),
+                Map.of("deliveryDate", "2026-06-02"));
+        ObjectNode legacy = JsonUtils.getObjectMapper().createObjectNode();
+        legacy.putObject("logistics").put("enabled", true).put("feePerTrip", 50);
+
+        when(customerResolver.resolveByName("无关医院")).thenReturn(Optional.empty());
+        JsonNode untouched = service.mergeCompiledForSettlement("无关医院", legacy);
+        assertThat(LogisticsFeeCalculator.compute(untouched, twoDays).orElseThrow().totalFee()).isEqualTo(100.0);
+
+        when(customerResolver.resolveByName("黑龙江省山河屯林区人民医院"))
+                .thenReturn(Optional.of(customer("SHANTUN-RM", "黑龙江省山河屯林区人民医院")));
+        JsonNode shantun = service.mergeCompiledForSettlement("黑龙江省山河屯林区人民医院", legacy);
+        assertThat(LogisticsFeeCalculator.compute(shantun, twoDays).orElseThrow().totalFee()).isEqualTo(0.0);
+
+        when(customerResolver.resolveByName("新中新医院"))
+                .thenReturn(Optional.of(customer("XZX-YY", "新中新医院")));
+        JsonNode xinzhongxin = service.mergeCompiledForSettlement("新中新医院", legacy);
+        assertThat(LogisticsFeeCalculator.compute(xinzhongxin, twoDays).orElseThrow().totalFee()).isEqualTo(75.0);
+
+        when(customerResolver.resolveByName("哈尔滨市南岗区黎增亮口腔科诊所"))
+                .thenReturn(Optional.of(customer("LZL-KQ", "哈尔滨市南岗区黎增亮口腔科诊所")));
+        JsonNode lizengliang = service.mergeCompiledForSettlement("哈尔滨市南岗区黎增亮口腔科诊所", legacy);
+        assertThat(LogisticsFeeCalculator.compute(lizengliang, twoDays).orElseThrow().totalFee()).isEqualTo(350.0);
+    }
+
+    @Test
+    void legacyDongdaCodeStillAppliesClerkSettlementDiscount() {
+        when(customerResolver.resolveByName("黑龙江东大肛肠医院"))
+                .thenReturn(Optional.of(customer("DD-DC", "黑龙江东大肛肠")));
+        when(customerResolver.resolveByName("黑龙江东大肛肠"))
+                .thenReturn(Optional.of(customer("DD-DC", "黑龙江东大肛肠")));
+
+        JsonNode fullName = service.mergeCompiledForSettlement(
+                "黑龙江东大肛肠医院", JsonUtils.getObjectMapper().createObjectNode());
+        JsonNode shortName = service.mergeCompiledForSettlement(
+                "黑龙江东大肛肠", JsonUtils.getObjectMapper().createObjectNode());
+
+        assertThat(BillingPolicyApplier.applySettlementDiscount(
+                fullName, "", "", "", "黑龙江东大肛肠医院", 1000).price()).isEqualTo(750.0);
+        assertThat(BillingPolicyApplier.applySettlementDiscount(
+                shortName, "", "", "", "黑龙江东大肛肠", 1000).price()).isEqualTo(750.0);
+        assertThat(BillingPolicyApplier.applyBillDetailDiscounts(
+                fullName, "高温", "治疗包", "无纺布", "黑龙江东大肛肠医院", 100, 1, false, false))
+                .isNull();
+    }
 
     @Test
     void mergeKeepsLegacyExportDiscountWhenClerkOnlyHasSettlementLogistics() {
@@ -45,6 +124,13 @@ class ClerkRuleExportServiceTest {
         ArrayNode policies = (ArrayNode) merged.path("billingPolicies");
         assertThat(policies).hasSize(1);
         assertThat(policies.get(0).path("params").path("rate").asDouble()).isEqualTo(0.8);
+    }
+
+    private static Customer customer(String code, String name) {
+        Customer customer = new Customer();
+        customer.setCode(code);
+        customer.setCanonicalName(name);
+        return customer;
     }
 
     private static ObjectNode discountPolicy(String applyStage, double rate, String name) {

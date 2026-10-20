@@ -16,6 +16,25 @@ class MonthlySettlementCalculatorTest {
     private static final ObjectMapper MAPPER = new ObjectMapper();
 
     @Test
+    void yuemeiMinChargeUsesSterilizePlusLogisticsAndStopsAtOneThousand() {
+        ObjectNode rules = rulesWithMonthlyPolicy(1000.0, null);
+        ObjectNode params = (ObjectNode) rules.path("billingPolicies").get(0).path("params");
+        params.putArray("baseComponents").add("sterilize").add("logistics");
+
+        double below = SettlementJobFieldsApplier.settlementMinChargeBase(600, 200.0, rules);
+        MonthlySettlementCalculator.Result low = MonthlySettlementCalculator.compute(rules, below).orElseThrow();
+        assertThat(below).isEqualTo(800.0);
+        assertThat(low.adjustedTotal()).isEqualTo(1000.0);
+        assertThat(low.adjustment()).isEqualTo(200.0);
+
+        double above = SettlementJobFieldsApplier.settlementMinChargeBase(900, 200.0, rules);
+        MonthlySettlementCalculator.Result high = MonthlySettlementCalculator.compute(rules, above).orElseThrow();
+        assertThat(above).isEqualTo(1100.0);
+        assertThat(high.adjustedTotal()).isEqualTo(1100.0);
+        assertThat(high.adjustment()).isEqualTo(0.0);
+    }
+
+    @Test
     void appliesMinChargeWhenSterilizeTotalBelowThreshold() throws Exception {
         ObjectNode rules = rulesWithMonthlyPolicy(8000.0, null);
         Optional<MonthlySettlementCalculator.Result> result =

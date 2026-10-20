@@ -12,6 +12,32 @@ import static org.assertj.core.api.Assertions.assertThat;
 class BillingSeedMigrationRunnerTest {
 
     @Test
+    void clerkSettlementCustomersUseExistingCodesWithoutPriceParams() throws Exception {
+        JsonNode root = JsonUtils.getObjectMapper().readTree(
+                new ClassPathResource("billing-seeds/clerk-settlement-customers-20261020.json").getInputStream());
+        assertThat(root.path("profiles")).hasSize(6);
+        assertThat(root.toString()).doesNotContain("feePerTrip", "minCharge", "productRules", "policies");
+        assertThat(profile(root, "SHANTUN-RM").path("name").asText()).isEqualTo("黑龙江省山河屯林区人民医院");
+        assertThat(profile(root, "XZX-YY").path("name").asText()).isEqualTo("新中新医院");
+        assertThat(profile(root, "LZL-KQ").path("name").asText()).isEqualTo("哈尔滨市南岗区黎增亮口腔科诊所");
+        assertThat(profile(root, "YUEMEI-FH").path("name").asText()).isEqualTo("悦美芳华医疗门诊医院");
+        assertThat(profile(root, "HRB-HEU").path("name").asText()).isEqualTo("哈尔滨工程大学医院");
+        assertThat(profile(root, "DONGDA-GC").path("name").asText()).isEqualTo("黑龙江东大肛肠医院");
+        assertThat(profile(root, "LZL-KQ").path("aliases"))
+                .extracting(JsonNode::asText)
+                .contains("哈尔滨市南岗区黎增亮口腔科诊所", "黎增亮口腔");
+    }
+
+    private static JsonNode profile(JsonNode root, String code) {
+        for (JsonNode profile : root.path("profiles")) {
+            if (code.equals(profile.path("code").asText())) {
+                return profile;
+            }
+        }
+        throw new AssertionError("missing profile " + code);
+    }
+
+    @Test
     void phase2SeedFileHasThreeProfiles() throws Exception {
         JsonNode root = JsonUtils.getObjectMapper().readTree(
                 new ClassPathResource("billing-seeds/phase2-policies.json").getInputStream());
