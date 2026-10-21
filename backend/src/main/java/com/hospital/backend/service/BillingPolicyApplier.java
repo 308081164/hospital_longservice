@@ -235,6 +235,27 @@ public final class BillingPolicyApplier {
         return tiers;
     }
 
+    static PieceTierDiscount findMatchedPieceTier(
+            List<PieceTierDiscount> tiers, int billingPieces, double basePrice) {
+        if (tiers == null || tiers.isEmpty()) {
+            return null;
+        }
+        for (PieceTierDiscount tier : tiers) {
+            if (billingPieces < tier.minPieces()) {
+                continue;
+            }
+            if (tier.maxPieces() != null && billingPieces > tier.maxPieces()) {
+                continue;
+            }
+            if (tier.originalUnitPriceEquals() != null
+                    && Math.abs(basePrice - tier.originalUnitPriceEquals()) > 0.001) {
+                continue;
+            }
+            return tier;
+        }
+        return null;
+    }
+
     private static JsonNode findScopedDiscountPolicy(
             JsonNode policies,
             String rowTemp,
@@ -255,7 +276,7 @@ public final class BillingPolicyApplier {
 
     /**
      * 返回同一 targetStage 下所有可叠加的折扣策略（按 priority 升序）。
-     * 若存在分温策略则仅返回分温命中项；否则返回全部 ANY 策略以便逐步叠乘（如附一 0.8×0.99）。
+     * 若存在分温策略则仅返回分温命中项；否则返回全部 ANY 策略以便逐步叠乘（如附一 0.8×0.999）。
      */
     private static List<JsonNode> findScopedDiscountPolicies(
             JsonNode policies,
@@ -329,15 +350,20 @@ public final class BillingPolicyApplier {
             JsonNode params = policy.path("params");
             List<PieceTierDiscount> tiers = parsePieceTierDiscounts(params);
             String label = policy.path("name").asText("客户折扣");
-            labels.add(label);
-            if (policy.has("policyId")) {
-                lastPolicyId = policy.path("policyId").asLong();
-            }
             if (!tiers.isEmpty()) {
+                PieceTierDiscount matched = findMatchedPieceTier(tiers, billingPieces, price);
+                if (matched == null) {
+                    // 无匹配分段（如附一九九九折仅 billingPieces<3）时跳过，避免备注仍写命中
+                    continue;
+                }
                 double before = price;
                 price = applyPieceTierRate(price, billingPieces, tiers);
-                note.append(label).append("：").append(fmt(before)).append(" 元 → ")
-                        .append(fmt(price)).append(" 元；");
+                labels.add(label);
+                if (policy.has("policyId")) {
+                    lastPolicyId = policy.path("policyId").asLong();
+                }
+                note.append(label).append("：").append(fmt(before)).append(" 元 × ")
+                        .append(matched.rate()).append(" = ").append(fmt(price)).append(" 元；");
                 continue;
             }
             double rate = params.path("rate").asDouble(1.0);
@@ -346,6 +372,10 @@ public final class BillingPolicyApplier {
             }
             double before = price;
             price = round(before * rate);
+            labels.add(label);
+            if (policy.has("policyId")) {
+                lastPolicyId = policy.path("policyId").asLong();
+            }
             note.append(label).append("：").append(fmt(before)).append(" 元 × ")
                     .append(rate).append(" = ").append(fmt(price)).append(" 元；");
         }
@@ -415,6 +445,9 @@ public final class BillingPolicyApplier {
         }
         if (Math.abs(rate - 0.5) < 0.001) {
             return "五折优惠";
+        }
+        if (Math.abs(rate - 0.9) < 0.001) {
+            return "九折优惠";
         }
         int pct = (int) Math.round(rate * 100);
         if (pct > 0 && pct < 100) {

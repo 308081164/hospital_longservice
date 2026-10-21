@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generated_at": "2026-10-21T03:32:41Z",
+  "generated_at": "2026-10-21T08:51:12Z",
   "manifest_hash": "a663f7a4b93c28ef913bd40fcb953e19b688cff2c0becc0f625c41ab2b8a6f71",
   "billing_enabled_count": 42,
   "active_billing_enabled_count": 42,
@@ -4606,11 +4606,18 @@
             "temperature": "ANY"
           },
           "params": {
-            "rate": 0.999,
             "applyStage": "bill_detail",
-            "skipWhenFixedPrice": false
+            "skipWhenFixedPrice": false,
+            "pieceTierDiscounts": [
+              {
+                "minPieces": 1,
+                "maxPieces": 2,
+                "rate": 0.999,
+                "decimalPlaces": 2
+              }
+            ]
           },
-          "sourceRef": "wechat:2026-10-21"
+          "sourceRef": "excel:内勤规则行13#器械数量;wechat:2026-10-21"
         }
       ],
       "productRules": [

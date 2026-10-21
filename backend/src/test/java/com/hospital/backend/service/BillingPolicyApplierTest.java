@@ -106,27 +106,8 @@ class BillingPolicyApplierTest {
 
     @Test
     void stackedBillDetailDiscountsRoundAtEachStep() {
-        ObjectNode rules = mapper.createObjectNode();
-        ArrayNode policies = rules.putArray("billingPolicies");
-        ObjectNode first = policies.addObject();
-        first.put("policyType", "DISCOUNT");
-        first.put("name", "附一对账八折");
-        first.put("priority", 10);
-        first.putObject("scope").put("temperature", "ANY");
-        ObjectNode firstParams = first.putObject("params");
-        firstParams.put("applyStage", "bill_detail");
-        firstParams.put("rate", 0.8);
-        firstParams.put("skipWhenFixedPrice", false);
-
-        ObjectNode second = policies.addObject();
-        second.put("policyType", "DISCOUNT");
-        second.put("name", "附一对账九九九折");
-        second.put("priority", 20);
-        second.putObject("scope").put("temperature", "ANY");
-        ObjectNode secondParams = second.putObject("params");
-        secondParams.put("applyStage", "bill_detail");
-        secondParams.put("rate", 0.999);
-        secondParams.put("skipWhenFixedPrice", false);
+        // billingPieces=单包器械数（PricingEngine.materialBillingCount），与 Excel「器械数量」对齐
+        ObjectNode rules = fuyiPieceConditionalDiscountRules();
 
         BillingPolicyApplier.BillDetailDiscount discount = BillingPolicyApplier.applyBillDetailDiscounts(
                 rules, "器械包", "测试", "纸塑袋 10cm", "中医附一", 8.0, 1, false, false);
@@ -137,35 +118,38 @@ class BillingPolicyApplierTest {
     }
 
     @Test
-    void fuyiElevenYuanStacksToEightPointSevenNine() {
-        ObjectNode rules = mapper.createObjectNode();
-        ArrayNode policies = rules.putArray("billingPolicies");
-        ObjectNode first = policies.addObject();
-        first.put("policyType", "DISCOUNT");
-        first.put("name", "附一对账八折");
-        first.put("priority", 10);
-        first.putObject("scope").put("temperature", "ANY");
-        ObjectNode firstParams = first.putObject("params");
-        firstParams.put("applyStage", "bill_detail");
-        firstParams.put("rate", 0.8);
-        firstParams.put("skipWhenFixedPrice", false);
+    void fuyiElevenYuanBelowThreePiecesStacksToEightPointSevenNine() {
+        // 器械数 1 或 2（<3）：11×0.8×0.999 → 8.79；billingPieces=单包件数
+        ObjectNode rules = fuyiPieceConditionalDiscountRules();
 
-        ObjectNode second = policies.addObject();
-        second.put("policyType", "DISCOUNT");
-        second.put("name", "附一对账九九九折");
-        second.put("priority", 20);
-        second.putObject("scope").put("temperature", "ANY");
-        ObjectNode secondParams = second.putObject("params");
-        secondParams.put("applyStage", "bill_detail");
-        secondParams.put("rate", 0.999);
-        secondParams.put("skipWhenFixedPrice", false);
-
-        BillingPolicyApplier.BillDetailDiscount discount = BillingPolicyApplier.applyBillDetailDiscounts(
+        BillingPolicyApplier.BillDetailDiscount onePiece = BillingPolicyApplier.applyBillDetailDiscounts(
                 rules, "器械包", "测试", "纸塑袋", "中医附一", 11.0, 1, false, false);
+        BillingPolicyApplier.BillDetailDiscount twoPieces = BillingPolicyApplier.applyBillDetailDiscounts(
+                rules, "器械包", "测试", "纸塑袋", "中医附一", 11.0, 2, false, false);
 
-        assertThat(discount).isNotNull();
-        assertThat(discount.price()).isEqualTo(8.79);
-        assertThat(discount.note()).contains("8.80").contains("0.999").contains("8.79");
+        assertThat(onePiece).isNotNull();
+        assertThat(onePiece.price()).isEqualTo(8.79);
+        assertThat(onePiece.note()).contains("8.80").contains("0.999").contains("8.79");
+        assertThat(twoPieces).isNotNull();
+        assertThat(twoPieces.price()).isEqualTo(8.79);
+    }
+
+    @Test
+    void fuyiElevenYuanAtLeastThreePiecesOnlyEightFold() {
+        // 器械数 >=3：11×0.8 → 8.80，不再乘 0.999；billingPieces=单包件数
+        ObjectNode rules = fuyiPieceConditionalDiscountRules();
+
+        BillingPolicyApplier.BillDetailDiscount threePieces = BillingPolicyApplier.applyBillDetailDiscounts(
+                rules, "器械包", "测试", "纸塑袋", "中医附一", 11.0, 3, false, false);
+        BillingPolicyApplier.BillDetailDiscount fourPieces = BillingPolicyApplier.applyBillDetailDiscounts(
+                rules, "器械包", "测试", "纸塑袋", "中医附一", 11.0, 4, false, false);
+
+        assertThat(threePieces).isNotNull();
+        assertThat(threePieces.price()).isEqualTo(8.80);
+        assertThat(threePieces.note()).contains("0.8").contains("8.80");
+        assertThat(threePieces.note()).doesNotContain("0.999");
+        assertThat(fourPieces).isNotNull();
+        assertThat(fourPieces.price()).isEqualTo(8.80);
     }
 
     @Test
@@ -179,14 +163,50 @@ class BillingPolicyApplierTest {
         policy.putObject("scope").put("temperature", "ANY");
         ObjectNode params = policy.putObject("params");
         params.put("applyStage", "bill_detail");
-        params.put("rate", 0.999);
         params.put("skipWhenFixedPrice", false);
+        ArrayNode tiers = params.putArray("pieceTierDiscounts");
+        ObjectNode tier = tiers.addObject();
+        tier.put("minPieces", 1);
+        tier.put("maxPieces", 2);
+        tier.put("rate", 0.999);
+        tier.put("decimalPlaces", 2);
 
         BillingPolicyApplier.BillDetailDiscount discount = BillingPolicyApplier.applyBillDetailDiscounts(
                 rules, "器械包", "测试", "纸塑袋", "中医附一", 6.4, 1, false, false);
 
         assertThat(discount).isNotNull();
         assertThat(discount.price()).isEqualTo(6.39);
+    }
+
+    /** 与 ZYY-D1 baseline 一致：八折始终；九九九折 pieceTier maxPieces=2。 */
+    private ObjectNode fuyiPieceConditionalDiscountRules() {
+        ObjectNode rules = mapper.createObjectNode();
+        ArrayNode policies = rules.putArray("billingPolicies");
+        ObjectNode first = policies.addObject();
+        first.put("policyType", "DISCOUNT");
+        first.put("name", "附一对账八折");
+        first.put("priority", 10);
+        first.putObject("scope").put("temperature", "ANY");
+        ObjectNode firstParams = first.putObject("params");
+        firstParams.put("applyStage", "bill_detail");
+        firstParams.put("rate", 0.8);
+        firstParams.put("skipWhenFixedPrice", false);
+
+        ObjectNode second = policies.addObject();
+        second.put("policyType", "DISCOUNT");
+        second.put("name", "附一对账九九九折");
+        second.put("priority", 20);
+        second.putObject("scope").put("temperature", "ANY");
+        ObjectNode secondParams = second.putObject("params");
+        secondParams.put("applyStage", "bill_detail");
+        secondParams.put("skipWhenFixedPrice", false);
+        ArrayNode tiers = secondParams.putArray("pieceTierDiscounts");
+        ObjectNode tier = tiers.addObject();
+        tier.put("minPieces", 1);
+        tier.put("maxPieces", 2);
+        tier.put("rate", 0.999);
+        tier.put("decimalPlaces", 2);
+        return rules;
     }
 
     private ObjectNode rulesWithDiscount(String applyStage, double rate, String temperature) {
