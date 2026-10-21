@@ -398,10 +398,11 @@ class RuleFidelityRegressionTest {
                 "unitPrice", 5.06,
                 "totalPrice", 5.06
         ));
-        assertThat(result.expectedUnitPrice).isEqualTo(5.06);
-        assertThat(result.status).isEqualTo("unchanged");
+        assertThat(result.expectedUnitPrice).isEqualTo(5.10);
+        assertThat(result.status).isEqualTo("warning");
         assertThat(result.notes).anyMatch(note -> note.contains("附一对账八折"));
-        assertThat(result.notes).anyMatch(note -> note.contains("附一对账九九折"));
+        assertThat(result.notes).anyMatch(note -> note.contains("附一对账九九九折"));
+        assertThat(result.notes).anyMatch(note -> note.contains("0.999"));
         assertThat(result.pricingRule).doesNotContain("30°腹腔镜");
     }
 }

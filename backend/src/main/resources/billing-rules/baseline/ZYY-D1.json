@@ -4,7 +4,7 @@
   "billingEnabled": true,
   "billingPricingMode": "hybrid",
   "sourceVersion": "docs/source/附一收费标准.xlsx",
-  "notes": "中医附一独立价表 · 2026-09-23 电话确认：对账试用改为标准计价×0.8×0.99（逐步四舍五入）；原 productRules 封存保留。",
+  "notes": "中医附一独立价表 · 2026-10-21 客户确认：对账叠折为标准计价×0.8×0.999（逐步四舍五入）。此前第二段为 0.99。",
   "billingPolicies": [
     {
       "policyType": "DISCOUNT",
@@ -22,17 +22,17 @@
     },
     {
       "policyType": "DISCOUNT",
-      "name": "附一对账九九折",
+      "name": "附一对账九九九折",
       "priority": 20,
       "scope": {
         "temperature": "ANY"
       },
       "params": {
-        "rate": 0.99,
+        "rate": 0.999,
         "applyStage": "bill_detail",
         "skipWhenFixedPrice": false
       },
-      "sourceRef": "phone:2026-09-23"
+      "sourceRef": "wechat:2026-10-21"
     }
   ],
   "archivedProductRulesNote": "2026-09-23 封存：类型特色规则暂停，对账改走标准价叠折试用",
