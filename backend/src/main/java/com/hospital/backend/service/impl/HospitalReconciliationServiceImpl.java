@@ -41,6 +41,7 @@ import com.hospital.backend.export.D8DisplayNameResolver;
 import com.hospital.backend.export.ExportEngineService;
 import com.hospital.backend.export.ExportTemplateResolver;
 import com.hospital.backend.export.ReconciliationLegacyExportBridge;
+import com.hospital.backend.export.SettlementLetterTail;
 import com.hospital.backend.export.SettlementPeriodFormatter;
 import com.hospital.backend.export.ExportType;
 import com.hospital.backend.export.model.ColumnMappingConfig;
@@ -4579,12 +4580,18 @@ public class HospitalReconciliationServiceImpl implements HospitalReconciliation
         // ===== 合计行 =====
         setCellValue(sheet, newTotalRow, 4, "合　　计");
         setCellValue(sheet, newTotalRow, 6, cleanExcelNumber(request.getTotalAmount()));
-        setCellValue(sheet, newTotalRow, 8, null);
+        String totalRemark = request.getTotalRemark();
+        setCellValue(sheet, newTotalRow, 8,
+                totalRemark == null || totalRemark.isBlank() ? null : cleanExcelText(totalRemark));
 
         // ===== 大写合计行 =====
         setCellValue(sheet, uppercaseRow, 4, "合计大写");
         setCellValue(sheet, uppercaseRow, 6, cleanExcelText(request.getUppercaseTotal()));
         setCellValue(sheet, uppercaseRow, 8, null);
+
+        if (diff < 0) {
+            SettlementLetterTail.relocateWhenCompacted(sheet, contentRow, saluteRow, closingRow);
+        }
 
         // ===== 落款：账期最后一天（覆盖模板硬编码日期） =====
         String closing = null;

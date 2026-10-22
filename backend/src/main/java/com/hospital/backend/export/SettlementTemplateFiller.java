@@ -150,7 +150,7 @@ public class SettlementTemplateFiller {
         appendUrgentSettlementRows(rowsOut, job, compiledRules, hospitalName);
         appendSettlementExtraRows(rowsOut, job, compiledRules);
 
-        if (!BillingPolicyInspector.settlementOmitMinChargeRow(compiledRules)) {
+        if (shouldAppendMinChargeRow(compiledRules)) {
             parseMonthlyBreakdown(job).ifPresent(breakdown -> {
                 if (breakdown.adjustment() != null && Math.abs(breakdown.adjustment()) >= 0.01) {
                     String label = breakdown.adjustment() > 0 ? "低消补差" : "封顶调减";
@@ -509,7 +509,7 @@ public class SettlementTemplateFiller {
                     .amount(adjustment)
                     .remark("")
                     .build());
-        } else if (!BillingPolicyInspector.settlementOmitMinChargeRow(compiledRules)) {
+        } else if (shouldAppendMinChargeRow(compiledRules)) {
             parseMonthlyBreakdown(job).ifPresent(breakdown -> {
                 double adjustment = breakdown.adjustment() != null ? breakdown.adjustment() : 0;
                 rowsOut.add(SettlementFeeRow.builder()
@@ -520,7 +520,8 @@ public class SettlementTemplateFiller {
                                 .map(m -> "低消 " + m).orElse(""))
                         .build());
             });
-        } else if (job.getSettlementAdjustment() != null) {
+        } else if (job.getSettlementAdjustment() != null
+                && !BillingPolicyInspector.settlementEmbedMinCharge(compiledRules)) {
             double adjustment = job.getSettlementAdjustment();
             rowsOut.add(SettlementFeeRow.builder()
                     .sequence(rowsOut.size() + 1)
@@ -941,6 +942,42 @@ public class SettlementTemplateFiller {
         private Double unitPrice() {
             return unitPrice;
         }
+    }
+
+    /**
+     * 低消写成合计备注时，差额不在费用行里，合计仍要加上这笔。
+     */
+    public double embeddedMinChargeAdjustment(HospitalReconciliationJob job, JsonNode compiledRules) {
+        if (!BillingPolicyInspector.settlementEmbedMinCharge(compiledRules)) {
+            return 0;
+        }
+        return parseMonthlyBreakdown(job).map(MonthlyBreakdown::adjustment).orElse(0.0);
+    }
+
+    public String embeddedMinChargeRemark(HospitalReconciliationJob job, JsonNode compiledRules) {
+        if (!BillingPolicyInspector.settlementEmbedMinCharge(compiledRules)) {
+            return null;
+        }
+        return parseMonthlyBreakdown(job)
+                .filter(breakdown -> breakdown.adjustment() != null && breakdown.adjustment() > 0.009)
+                .map(breakdown -> formatEmbeddedMinChargeRemark(breakdown.minCharge()))
+                .orElse(null);
+    }
+
+    private static boolean shouldAppendMinChargeRow(JsonNode compiledRules) {
+        return !BillingPolicyInspector.settlementOmitMinChargeRow(compiledRules)
+                && !BillingPolicyInspector.settlementEmbedMinCharge(compiledRules);
+    }
+
+    private static String formatEmbeddedMinChargeRemark(Double minCharge) {
+        if (minCharge == null) {
+            return "执行低消";
+        }
+        double rounded = Math.rint(minCharge);
+        if (Math.abs(minCharge - rounded) < 0.001) {
+            return "执行低消" + (long) rounded + "元";
+        }
+        return "执行低消" + minCharge + "元";
     }
 
     public double computeTotalAmount(List<SettlementFeeRow> feeRows) {

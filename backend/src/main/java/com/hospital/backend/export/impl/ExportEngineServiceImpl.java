@@ -27,6 +27,8 @@ import com.hospital.backend.export.model.ResolvedExportTemplate;
 import com.hospital.backend.export.strategy.ExportStrategy;
 import com.hospital.backend.export.strategy.ExportStrategyRegistry;
 import com.hospital.backend.export.SettlementPeriodFormatter;
+import com.hospital.backend.service.BillingPolicyApplier;
+import com.hospital.backend.service.ClerkExportLayoutMerger;
 import com.hospital.backend.service.PreciseLineAmount;
 import com.hospital.backend.export.SettlementPeriodResolver;
 import com.hospital.backend.export.SettlementTemplateFiller;
@@ -67,6 +69,8 @@ public class ExportEngineServiceImpl implements ExportEngineService {
     private final ClerkSettlementRequestEnricher clerkSettlementRequestEnricher;
 
     private final BillExportLayoutResolver billExportLayoutResolver;
+
+    private final ClerkExportLayoutMerger clerkExportLayoutMerger;
 
     @Lazy
     @org.springframework.beans.factory.annotation.Autowired
@@ -232,6 +236,16 @@ public class ExportEngineServiceImpl implements ExportEngineService {
         var mapping = context.getTemplate().getColumnMapping();
         String billLayout = billExportLayoutResolver.resolveBillLayout(mapping);
         String d8DisplaySource = billExportLayoutResolver.resolveD8DisplaySource(mapping);
+        // 与真实导出路径一致：clerk EXPORT_LAYOUT 覆盖模板缺省，避免附一预览仍显示 auto
+        // 进而在行数>1000 时被误判成合计单表。
+        ClerkExportLayoutMerger.LayoutSettings clerk = clerkExportLayoutMerger.merge(
+                context.getHospitalName(),
+                new ClerkExportLayoutMerger.LayoutSettings(
+                        billLayout,
+                        d8DisplaySource,
+                        billExportLayoutResolver.resolveBillColumnLayout(mapping)));
+        billLayout = clerk.billLayout();
+        d8DisplaySource = clerk.d8DisplaySource();
         boolean billingEnabled = customerResolver.resolveByName(context.getHospitalName())
                 .map(c -> Boolean.TRUE.equals(c.getBillingEnabled()))
                 .orElse(false);
@@ -467,8 +481,10 @@ public class ExportEngineServiceImpl implements ExportEngineService {
                 compiledRules,
                 context.getRows());
         request.setFeeRows(fillerRows.stream().map(this::toSettlementFeeRow).toList());
-        double total = settlementTemplateFiller.computeTotalAmount(fillerRows);
+        double total = BillingPolicyApplier.round(settlementTemplateFiller.computeTotalAmount(fillerRows)
+                + settlementTemplateFiller.embeddedMinChargeAdjustment(job, compiledRules));
         request.setTotalAmount(total);
+        request.setTotalRemark(settlementTemplateFiller.embeddedMinChargeRemark(job, compiledRules));
         return request;
     }
 

@@ -67,7 +67,10 @@ public class ClerkSettlementRequestEnricher {
             double sterilizeTotal = settlementTemplateFiller.resolveSterilizeInputTotal(job, compiled, rows);
             var fillerRows = settlementTemplateFiller.buildFeeRows(job, sterilizeTotal, compiled, rows);
             request.setFeeRows(fillerRows.stream().map(this::toDto).toList());
-            request.setTotalAmount(settlementTemplateFiller.computeTotalAmount(fillerRows));
+            request.setTotalAmount(BillingPolicyApplier.round(
+                    settlementTemplateFiller.computeTotalAmount(fillerRows)
+                            + settlementTemplateFiller.embeddedMinChargeAdjustment(job, compiled)));
+            request.setTotalRemark(settlementTemplateFiller.embeddedMinChargeRemark(job, compiled));
         } catch (NumberFormatException ignored) {
             // templateId 非 jobId 时跳过
         }

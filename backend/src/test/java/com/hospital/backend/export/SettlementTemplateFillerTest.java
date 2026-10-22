@@ -35,6 +35,32 @@ class SettlementTemplateFillerTest {
     }
 
     @Test
+    void yuemeiEmbedsMinChargeIntoTotalRemark() throws Exception {
+        HospitalReconciliationJob job = new HospitalReconciliationJob();
+        job.setHospitalName("悦美芳华医疗门诊医院");
+        job.setLogisticsFee(150.0);
+        job.setMonthlyBreakdown("{\"adjustment\":14,\"minCharge\":1000,\"rawSterilizeTotal\":836}");
+
+        JsonNode compiledRules = JsonUtils.getObjectMapper().readTree("""
+                {"billingPolicies":[
+                  {"policyType":"LOGISTICS","name":"物流50","params":{"feePerTrip":50}},
+                  {"policyType":"MONTHLY_SETTLEMENT","name":"低消",
+                   "params":{"minCharge":1000,"settlementDisplayMode":"embed",
+                             "baseComponents":["sterilize","logistics"]}}
+                ]}
+                """);
+
+        List<SettlementTemplateFiller.SettlementFeeRow> rows = filler.buildFeeRows(job, 836, compiledRules);
+
+        assertThat(rows).extracting(SettlementTemplateFiller.SettlementFeeRow::getItemName)
+                .contains("灭菌费用", "物流费用")
+                .doesNotContain("低消补差");
+        assertThat(filler.computeTotalAmount(rows) + filler.embeddedMinChargeAdjustment(job, compiledRules))
+                .isEqualTo(1000.0);
+        assertThat(filler.embeddedMinChargeRemark(job, compiledRules)).isEqualTo("执行低消1000元");
+    }
+
+    @Test
     void logisticsRemarkShowsUnitPriceWithoutTripCount() throws Exception {
         HospitalReconciliationJob job = new HospitalReconciliationJob();
         job.setLogisticsFee(1550.0);

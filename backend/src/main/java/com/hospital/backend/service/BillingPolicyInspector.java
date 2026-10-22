@@ -56,10 +56,16 @@ public final class BillingPolicyInspector {
             return false;
         }
         JsonNode params = policy.path("params");
-        if (params.path("settlementOmitMinChargeRow").asBoolean(false)) {
-            return true;
+        return params.path("settlementOmitMinChargeRow").asBoolean(false);
+    }
+
+    /** 低消差额并进合计，不单独成行，备注写在合计上。 */
+    public static boolean settlementEmbedMinCharge(JsonNode compiledRules) {
+        JsonNode policy = findMonthlyPolicy(compiledRules);
+        if (policy == null) {
+            return false;
         }
-        return "embed".equalsIgnoreCase(params.path("settlementDisplayMode").asText(""));
+        return "embed".equalsIgnoreCase(policy.path("params").path("settlementDisplayMode").asText(""));
     }
 
     public static boolean settlementOmitZeroRows(JsonNode compiledRules) {

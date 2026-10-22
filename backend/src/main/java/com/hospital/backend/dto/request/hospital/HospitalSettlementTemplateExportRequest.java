@@ -29,5 +29,8 @@ public class HospitalSettlementTemplateExportRequest {
 
     private String uppercaseTotal;
 
+    /** 合计行备注。低消并进合计时写「执行低消1000元」。 */
+    private String totalRemark;
+
     private String closingText;
 }
