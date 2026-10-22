@@ -17,11 +17,14 @@ MANIFEST = ROOT / "测试用例/billing_rules_manifest.json"
 DEFAULT_TEMPLATE_JAVA = ROOT / "backend/src/main/java/com/hospital/backend/service/DefaultPricingTemplate.java"
 OUTPUT = ROOT / "测试用例" / f"客户收费规则与系统规则对比分析-{date.today().strftime('%Y%m%d')}.md"
 
-STANDARD_XLSX = Path(
-    "/Users/yangxinghui/Library/Containers/com.tencent.xinWeChat/Data/Documents/"
-    "xwechat_files/wxid_7qwn4vnuj7xo22_508c/temp/drag/标准收费部分(1).xlsx"
-)
-SPECIAL_XLSX = ROOT / "铂康" / "特殊收费(13).xlsx"
+STANDARD_XLSX = ROOT / "docs/source/标准收费部分(1).xlsx"
+if not STANDARD_XLSX.is_file():
+    STANDARD_XLSX = Path(
+        "/Users/yangxinghui/Library/Containers/com.tencent.xinWeChat/Data/Documents/"
+        "xwechat_files/wxid_7qwn4vnuj7xo22_508c/temp/drag/标准收费部分(1).xlsx"
+    )
+# 2026-10-22 起特殊计价权威源
+SPECIAL_XLSX = ROOT / "docs/source/特殊收费(3)-20261022.xlsx"
 UNIFIED_SHEET = "通用特殊收费"
 LT_GENERAL_SHEET = "环氧与低温通用收费"
 

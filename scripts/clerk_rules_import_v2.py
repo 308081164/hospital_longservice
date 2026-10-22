@@ -13,7 +13,10 @@ from pathlib import Path
 import openpyxl
 
 ROOT = Path(__file__).resolve().parents[1]
-XLSX = ROOT / "铂康/内勤要求/医院内勤规则-20260924.xlsx"
+# 云端以 docs/source 为准；本地旧目录保留兼容回退
+XLSX = ROOT / "docs/source/医院内勤规则-20260924.xlsx"
+if not XLSX.is_file():
+    XLSX = ROOT / "铂康/内勤要求/医院内勤规则-20260924.xlsx"
 CLERK_DIR = ROOT / "backend/src/main/resources/clerk-rules"
 BASELINE_DIR = CLERK_DIR / "baseline"
 ATTACH_DST = CLERK_DIR / "attachments"
