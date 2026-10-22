@@ -66,6 +66,10 @@ public class BillingSeedMigrationRunner implements CommandLineRunner {
      */
     private static final String CLERK_SETTLEMENT_CUSTOMERS_MARKER =
             "billing_seed_clerk_settlement_customers_20261020_v1";
+    /** 账单表头写成「哈尔滨(工程)大学医院」，半角/全角括号都要对上工程大学。 */
+    private static final String HEU_PAREN_ALIAS_MARKER = "billing_seed_heu_paren_alias_20261021_v1";
+    /** 官方全称带「省」，档案规范名无「省」时仍要落到 ZYY-D1（否则 clerk dept_split 合并不生效）。 */
+    private static final String ZYY_D1_PROVINCE_ALIAS_MARKER = "billing_seed_zyy_d1_province_alias_20261022_v1";
     private static final String CLERK_SETTLEMENT_CUSTOMERS_FILE =
             "billing-seeds/clerk-settlement-customers-20261020.json";
     /** 不放进 STRICT_KEEP_CODES，避免 enableStrictCustomers 把结款函客户当成特殊计价。 */
@@ -321,6 +325,19 @@ public class BillingSeedMigrationRunner implements CommandLineRunner {
                         "结款函客户档案：山河屯/新中新/黎增亮，及缺档的悦美芳华/工程大学/东大肛肠");
                 log.info("Clerk settlement customers ensured.");
             }
+        }
+        if (sysSettingMapper.countByKey(HEU_PAREN_ALIAS_MARKER) == 0) {
+            ensureAliasForExistingCustomer("HRB-HEU", "哈尔滨(工程)大学医院", 40);
+            ensureAliasForExistingCustomer("HRB-HEU", "哈尔滨（工程）大学医院", 50);
+            insertMarker(HEU_PAREN_ALIAS_MARKER, "工程大学账单表头带括号的写法落到 HRB-HEU");
+            log.info("HRB-HEU parenthetical aliases applied.");
+        }
+        if (sysSettingMapper.countByKey(ZYY_D1_PROVINCE_ALIAS_MARKER) == 0) {
+            ensureAliasForCustomer("ZYY-D1", "黑龙江省中医药大学附属第一医院", "exact");
+            ensureAliasForCustomer("ZYY-D1", "中医附一", "contains");
+            ensureAliasForCustomer("ZYY-D1", "附一", "exact");
+            insertMarker(ZYY_D1_PROVINCE_ALIAS_MARKER, "附一官方全称/简称落到 ZYY-D1 以挂上 dept_split");
+            log.info("ZYY-D1 province/short aliases applied.");
         }
     }
 
@@ -1483,8 +1500,11 @@ public class BillingSeedMigrationRunner implements CommandLineRunner {
         if (exists) {
             return;
         }
-        if (isAliasOwnedElsewhere(alias, customerId)) {
-            log.debug("Skip exact alias (already bound elsewhere): {}", alias);
+        CustomerAlias global = customerAliasMapper.selectByAlias(alias);
+        if (global != null) {
+            if (!global.getCustomerId().equals(customerId)) {
+                log.debug("Skip exact alias (already bound elsewhere): {}", alias);
+            }
             return;
         }
         CustomerAlias entity = new CustomerAlias();

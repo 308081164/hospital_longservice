@@ -60,7 +60,8 @@ public final class BillingPolicyApplier {
         JsonNode billingPolicies = rules.path("billingPolicies");
         if (billingPolicies.isArray()) {
             String rowTemp = BillingConditionEvaluator.resolveRowTemperature(type + packName + packageMaterial);
-            JsonNode matched = findScopedDiscountPolicy(billingPolicies, rowTemp, false, STAGE_BILL_DETAIL);
+            JsonNode matched = findScopedDiscountPolicy(
+                    billingPolicies, type, rowTemp, false, STAGE_BILL_DETAIL);
             if (matched != null) {
                 double rate = matched.path("params").path("rate").asDouble(1.0);
                 String label = matched.path("name").asText("客户折扣");
@@ -127,7 +128,7 @@ public final class BillingPolicyApplier {
             String rowTemp = BillingConditionEvaluator.resolveRowTemperature(
                     type + packName + packageMaterial);
             List<JsonNode> matchedPolicies = findScopedDiscountPolicies(
-                    billingPolicies, rowTemp, hitFixedPrice, targetStage);
+                    billingPolicies, type, rowTemp, hitFixedPrice, targetStage);
             if (!matchedPolicies.isEmpty()) {
                 if (matchedPolicies.size() == 1) {
                     return toBillDetailDiscount(
@@ -258,10 +259,12 @@ public final class BillingPolicyApplier {
 
     private static JsonNode findScopedDiscountPolicy(
             JsonNode policies,
+            String type,
             String rowTemp,
             boolean hitFixedPrice,
             String targetStage) {
-        List<JsonNode> matched = findScopedDiscountPolicies(policies, rowTemp, hitFixedPrice, targetStage);
+        List<JsonNode> matched = findScopedDiscountPolicies(
+                policies, type, rowTemp, hitFixedPrice, targetStage);
         if (matched.isEmpty()) {
             return null;
         }
@@ -277,9 +280,11 @@ public final class BillingPolicyApplier {
     /**
      * 返回同一 targetStage 下所有可叠加的折扣策略（按 priority 升序）。
      * 若存在分温策略则仅返回分温命中项；否则返回全部 ANY 策略以便逐步叠乘（如附一 0.8×0.999）。
+     * 包类型门控读 {@code scope.acceptedTypes} / 根级 {@code acceptedTypes}。
      */
     private static List<JsonNode> findScopedDiscountPolicies(
             JsonNode policies,
+            String type,
             String rowTemp,
             boolean hitFixedPrice,
             String targetStage) {
@@ -296,6 +301,9 @@ public final class BillingPolicyApplier {
         for (JsonNode policy : discounts) {
             String scopeTemp = policy.path("scope").path("temperature").asText("ANY");
             if (!BillingConditionEvaluator.temperatureScopeMatches(scopeTemp, rowTemp)) {
+                continue;
+            }
+            if (!BillingConditionEvaluator.packTypeMatches(policy, type)) {
                 continue;
             }
             if (hitFixedPrice && policy.path("params").path("skipWhenFixedPrice").asBoolean(true)) {
@@ -362,6 +370,11 @@ public final class BillingPolicyApplier {
                 if (policy.has("policyId")) {
                     lastPolicyId = policy.path("policyId").asLong();
                 }
+                if (matched.fixedUnitPrice() != null) {
+                    // 固定单价一口价，不再叠乘后续折扣（如附一无纺布额外包<3 → 13.2）
+                    note.append(label).append("：固定单价 ").append(fmt(price)).append(" 元；");
+                    break;
+                }
                 note.append(label).append("：").append(fmt(before)).append(" 元 × ")
                         .append(matched.rate()).append(" = ").append(fmt(price)).append(" 元；");
                 continue;
@@ -406,8 +419,16 @@ public final class BillingPolicyApplier {
         double price;
         String tierNote = "";
         if (!tiers.isEmpty()) {
+            PieceTierDiscount matched = findMatchedPieceTier(tiers, billingPieces, baseUnitPrice);
+            if (matched == null) {
+                return null;
+            }
             price = applyPieceTierRate(baseUnitPrice, billingPieces, tiers);
-            tierNote = "（按 " + billingPieces + " 把分段折扣）";
+            if (matched.fixedUnitPrice() != null) {
+                tierNote = "（按 " + billingPieces + " 把固定单价）";
+            } else {
+                tierNote = "（按 " + billingPieces + " 把分段折扣）";
+            }
         } else {
             double rate = params.path("rate").asDouble(1.0);
             if (rate <= 0 || rate >= 1.0) {

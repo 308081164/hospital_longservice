@@ -733,9 +733,13 @@ public final class BillingConditionEvaluator {
 
     /**
      * Excel「类型/包装材料」列门控：无 acceptedTypes / type 条件时不过滤（向后兼容）。
+     * billingPolicies 的 DISCOUNT 把类型写在 {@code scope.acceptedTypes}，一并识别。
      */
     public static boolean packTypeMatches(JsonNode rule, String rowType) {
         JsonNode acceptedTypes = rule.path("acceptedTypes");
+        if (!acceptedTypes.isArray() || acceptedTypes.isEmpty()) {
+            acceptedTypes = rule.path("scope").path("acceptedTypes");
+        }
         if (acceptedTypes.isArray() && !acceptedTypes.isEmpty()) {
             return matchesAcceptedPackTypeList(acceptedTypes, rowType);
         }

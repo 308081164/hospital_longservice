@@ -13,8 +13,20 @@ class BillExportLayoutResolverTest {
     @Test
     void deptSplit_overridesOomThreshold() {
         long threshold = HospitalReconciliationServiceImpl.BILL_EXPORT_COMBINED_MODE_ROW_THRESHOLD;
+        // 附一单月常 >1000 行：显式 dept_split 不得退回合计单表
         assertTrue(resolver.useDeptSplitWorkbook(
                 BillExportLayoutResolver.LAYOUT_DEPT_SPLIT, 30, threshold + 500));
+        assertTrue(resolver.useDeptSplitWorkbook(
+                BillExportLayoutResolver.LAYOUT_DEPT_SPLIT, 45, 2200));
+    }
+
+    @Test
+    void auto_aboveThresholdStillCombined_butDeptSplitDoesNot() {
+        long threshold = HospitalReconciliationServiceImpl.BILL_EXPORT_COMBINED_MODE_ROW_THRESHOLD;
+        assertFalse(resolver.useDeptSplitWorkbook(
+                BillExportLayoutResolver.LAYOUT_AUTO, 40, threshold + 200));
+        assertTrue(resolver.useDeptSplitWorkbook(
+                BillExportLayoutResolver.LAYOUT_DEPT_SPLIT, 40, threshold + 200));
     }
 
     @Test
