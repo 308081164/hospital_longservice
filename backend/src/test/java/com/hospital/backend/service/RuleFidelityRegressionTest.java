@@ -401,7 +401,8 @@ class RuleFidelityRegressionTest {
         assertThat(result.expectedUnitPrice).isEqualTo(5.10);
         assertThat(result.status).isEqualTo("warning");
         assertThat(result.notes).anyMatch(note -> note.contains("附一对账八折"));
-        assertThat(result.notes).anyMatch(note -> note.contains("附一对账九九九折"));
+        // 规则名已按包类型拆分为「附一九九九折·件数<3 / ·件数无关」，不再用「附一对账九九九折」
+        assertThat(result.notes).anyMatch(note -> note.contains("附一九九九折"));
         assertThat(result.notes).anyMatch(note -> note.contains("0.999"));
         assertThat(result.pricingRule).doesNotContain("30°腹腔镜");
     }
