@@ -132,6 +132,11 @@ public class ExportStageDiscountApplier {
                     row.setUnroundedUnitPrice(null);
                 }
             }
+            double capped = BillingPolicyApplier.capUnitPrice(discounted, params, row.getType());
+            if (capped + 0.001 < discounted) {
+                discounted = capped;
+                row.setUnroundedUnitPrice(null);
+            }
 
             row.setUnitPrice(discounted);
             row.setExpectedUnitPrice(discounted);

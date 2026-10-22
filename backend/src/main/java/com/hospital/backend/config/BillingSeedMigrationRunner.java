@@ -70,6 +70,8 @@ public class BillingSeedMigrationRunner implements CommandLineRunner {
     private static final String HEU_PAREN_ALIAS_MARKER = "billing_seed_heu_paren_alias_20261021_v1";
     /** 官方全称带「省」，档案规范名无「省」时仍要落到 ZYY-D1（否则 clerk dept_split 合并不生效）。 */
     private static final String ZYY_D1_PROVINCE_ALIAS_MARKER = "billing_seed_zyy_d1_province_alias_20261022_v1";
+    /** 2026-10-22 特殊收费表序号 42。历史清理曾删掉该档案，启动时补回以便 manifest reconcile 挂规则。 */
+    private static final String HRB_GUSHANG_CUSTOMER_MARKER = "billing_seed_hrb_gushang_customer_20261023_v1";
     private static final String CLERK_SETTLEMENT_CUSTOMERS_FILE =
             "billing-seeds/clerk-settlement-customers-20261020.json";
     /** 不放进 STRICT_KEEP_CODES，避免 enableStrictCustomers 把结款函客户当成特殊计价。 */
@@ -86,7 +88,7 @@ public class BillingSeedMigrationRunner implements CommandLineRunner {
             "AOLAN-YY", "HRB-XK-YY", "SENHAI-YY",
             "ZY3-DIANLI", "QILUNJI-YY", "XIEDA-YL",
             "ERYY-SB", "SHENG-YY-NG", "SHENG-YY-XF", "HRB-HIT",
-            "DIANJI-YY", "WUCHANG-RM", "JINGHUA-SD", "HRB-HSZ", "HRB-2ND");
+            "DIANJI-YY", "WUCHANG-RM", "JINGHUA-SD", "HRB-HSZ", "HRB-2ND", "HRB-GUSHANG");
 
     private record IncrementalSeed(String markerKey, String classpathFile) {}
 
@@ -339,6 +341,11 @@ public class BillingSeedMigrationRunner implements CommandLineRunner {
             insertMarker(ZYY_D1_PROVINCE_ALIAS_MARKER, "附一官方全称/简称落到 ZYY-D1 以挂上 dept_split");
             log.info("ZYY-D1 province/short aliases applied.");
         }
+        if (sysSettingMapper.countByKey(HRB_GUSHANG_CUSTOMER_MARKER) == 0) {
+            ensureHrbGushangCustomer();
+            insertMarker(HRB_GUSHANG_CUSTOMER_MARKER, "哈尔滨市骨伤科医院档案，供特殊收费规则挂载");
+            log.info("HRB-GUSHANG customer ensured.");
+        }
     }
 
     private void ensureEreryyFilenameAliases() {
@@ -352,6 +359,41 @@ public class BillingSeedMigrationRunner implements CommandLineRunner {
      * 档案里没有「红十字妇产」时，账单全称对不上 HRB-HSZ，特色价不会套上。
      * 规范名用种子档案的「哈尔滨市红十字妇产医院」，不改计费基线 customerName。
      */
+    private void ensureHrbGushangCustomer() {
+        Customer existing = customerMapper.selectByCode("HRB-GUSHANG");
+        if (existing == null) {
+            Customer customer = new Customer();
+            customer.setCode("HRB-GUSHANG");
+            customer.setCanonicalName("哈尔滨市骨伤科医院");
+            customer.setStatus("active");
+            customer.setBillingEnabled(true);
+            customer.setBillingPricingMode("hybrid");
+            customer.setNotes("特殊收费(3)-20261022 序号42");
+            customerMapper.insert(customer);
+            existing = customer;
+            log.info("Seeded customer: HRB-GUSHANG");
+        } else {
+            boolean changed = false;
+            if (!Boolean.TRUE.equals(existing.getBillingEnabled())) {
+                existing.setBillingEnabled(true);
+                changed = true;
+            }
+            if (!"hybrid".equals(existing.getBillingPricingMode())) {
+                existing.setBillingPricingMode("hybrid");
+                changed = true;
+            }
+            if (existing.getCanonicalName() == null || existing.getCanonicalName().isBlank()) {
+                existing.setCanonicalName("哈尔滨市骨伤科医院");
+                changed = true;
+            }
+            if (changed) {
+                customerMapper.updateById(existing);
+            }
+        }
+        ensureCustomerAliasExact(existing.getId(), "哈尔滨市骨伤科医院", "exact", "gushang_v1", 10);
+        ensureCustomerAliasExact(existing.getId(), "骨伤科医院", "contains", "gushang_v1", 50);
+    }
+
     private void ensureHrbHszBillAliases() {
         Customer customer = customerMapper.selectByCode("HRB-HSZ");
         if (customer == null) {

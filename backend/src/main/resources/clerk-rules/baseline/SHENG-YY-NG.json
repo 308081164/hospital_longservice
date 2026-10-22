@@ -11,7 +11,16 @@
       "stage": "bill_export",
       "isActive": true,
       "params": {
-        "rate": 0.6
+        "rate": 0.6,
+        "maxUnitPrice": 180,
+        "maxUnitPriceTypes": [
+          "器械包（低温等离子）",
+          "器械包（ETO)",
+          "单包装包(老肯等温）",
+          "单包装包（EO）",
+          "额外包（低温等离子）",
+          "额外包（ETO)"
+        ]
       },
       "sourceText": "标准价格六折，低温器械（器械包（低温等离子）、器械包（ETO)、单包装包(老肯等温）、单包装包（EO）、额外包（低温等离子）、额外包（ETO)）最高收费180元，超过180元，统一收费180元",
       "sourceRef": "excel:账单规则#黑龙江省医院（南岗/香坊）#1",
