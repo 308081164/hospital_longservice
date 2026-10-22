@@ -1,0 +1,45 @@
+# Cursor 索引排除：减轻 Project 模式 / 本地索引负担
+# 说明：已 git 跟踪的大二进制仍可拉取，但不必进 Cursor 语义索引。
+
+# 依赖与构建
+**/node_modules/
+**/target/
+**/dist/
+**/.pnpm-store/
+**/.venv*/
+**/__pycache__/
+.git/
+
+# 本地密钥与环境（索引无意义）
+.env
+.env.*
+!**/.env.example
+deploy/server.env
+deploy/backups/
+
+# 临时 OCR / 聊天切片 / 探测脚本 / 导出快照
+docs/.tmp_*/
+docs/.tmp_ocr/
+docs/.tmp_chat_slices/
+scripts/tmp_*.py
+测试用例/.tmp_*/
+测试用例/.clerk_exports/
+测试用例/.s8_exports/
+
+# 大型测试二进制与报告（保留 git 跟踪，排除索引）
+测试用例/**/*.xlsx
+测试用例/**/*.xls
+测试用例/**/*.pdf
+测试用例/**/*严格*报告*.json
+测试用例/**/billing_rules_*_report.json
+测试用例/**/excel_baseline_parity_report.json
+测试用例/**/clerk_export_verify_report.json
+测试用例/**/*对账报告*.json
+
+# 铂康大体积遗留
+铂康/
+
+# IDE / OS
+.idea/
+.vscode/
+.DS_Store
