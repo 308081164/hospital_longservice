@@ -15,7 +15,8 @@
         "baseComponents": [
           "sterilize",
           "logistics"
-        ]
+        ],
+        "settlementDisplayMode": "embed"
       },
       "sourceText": "当输出账单金额里灭菌费和物流费合计低于1000元时，结款函执行低消1000元；超过则正常收费，不更改结款函收费",
       "sourceRef": "excel:结款函#YUEMEI-FH|excel:低消#悦美芳华医疗门诊医院",
