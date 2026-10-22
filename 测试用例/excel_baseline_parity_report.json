@@ -1,8 +1,31 @@
 {
   "source_excel": "docs/source/特殊收费(1).xlsx",
-  "ok": true,
-  "unmapped_hospitals": [],
-  "errors": [],
+  "ok": false,
+  "unmapped_hospitals": [
+    "row 174: 五常市人民医院",
+    "row 175: 五常市人民医院",
+    "row 176: 黑龙江菁华上德生殖妇产医院",
+    "row 177: 黑龙江菁华上德生殖妇产医院",
+    "row 178: 哈尔滨红十字医院",
+    "row 179: 哈尔滨红十字医院",
+    "row 180: 哈尔滨红十字医院",
+    "row 181: 哈尔滨红十字医院",
+    "row 182: 哈尔滨红十字医院",
+    "row 183: 哈尔滨红十字医院",
+    "row 184: 哈尔滨红十字医院",
+    "row 185: 哈尔滨市第二医院",
+    "row 186: 哈尔滨市第二医院"
+  ],
+  "errors": [
+    "ERYY-SB: 缺失覆盖 — row148 [③] 小腔包 | 件数*5.5＋5元",
+    "SHENG-YY-NG: 缺失覆盖 — row157 [⑦] 和名字无关（根据包类型） | 纸塑袋：件数*5.5＋标准包材费用（不超过16.5元）",
+    "SHENG-YY-NG: 缺失覆盖 — row158 [⑦] 和名字无关（根据包类型） | 无纺布：16.5元",
+    "SHENG-YY-NG: 缺失覆盖 — row159 [⑦] 和名字无关（根据包类型） | 件数*5.5",
+    "SHENG-YY-XF: 缺失覆盖 — row167 [⑦] 和名字无关（根据包类型） | 纸塑袋：件数*5.5＋标准包材费用（不超过16.5元）",
+    "SHENG-YY-XF: 缺失覆盖 — row168 [⑦] 和名字无关（根据包类型） | 无纺布：16.5元",
+    "SHENG-YY-XF: 缺失覆盖 — row169 [⑦] 和名字无关（根据包类型） | 件数*5.5",
+    "SHENG-YY-XF: 缺失覆盖 — row170 [⑧] 硬质容器盒-1 | 固定16.5元"
+  ],
   "hospitals": [
     {
       "code": "BINGCHENG-YM",
@@ -232,7 +255,7 @@
       "code": "SENHAI-YY",
       "name": "森海医院",
       "excel_rows": 4,
-      "baseline_rules": 5,
+      "baseline_rules": 4,
       "ok": true,
       "missing": []
     },
@@ -263,40 +286,51 @@
     {
       "code": "ERYY-SB",
       "name": "省二松北",
-      "excel_rows": 3,
+      "excel_rows": 4,
       "baseline_rules": 3,
-      "ok": true,
-      "missing": []
+      "ok": false,
+      "missing": [
+        "row148 [③] 小腔包 | 件数*5.5＋5元"
+      ]
     },
     {
       "code": "SHENG-YY-NG",
       "name": "省医院南岗",
-      "excel_rows": 8,
+      "excel_rows": 11,
       "baseline_rules": 12,
-      "ok": true,
-      "missing": []
+      "ok": false,
+      "missing": [
+        "row157 [⑦] 和名字无关（根据包类型） | 纸塑袋：件数*5.5＋标准包材费用（不超过16.5元）",
+        "row158 [⑦] 和名字无关（根据包类型） | 无纺布：16.5元",
+        "row159 [⑦] 和名字无关（根据包类型） | 件数*5.5"
+      ]
     },
     {
       "code": "SHENG-YY-XF",
       "name": "省医院香坊",
-      "excel_rows": 7,
+      "excel_rows": 11,
       "baseline_rules": 8,
-      "ok": true,
-      "missing": []
+      "ok": false,
+      "missing": [
+        "row167 [⑦] 和名字无关（根据包类型） | 纸塑袋：件数*5.5＋标准包材费用（不超过16.5元）",
+        "row168 [⑦] 和名字无关（根据包类型） | 无纺布：16.5元",
+        "row169 [⑦] 和名字无关（根据包类型） | 件数*5.5",
+        "row170 [⑧] 硬质容器盒-1 | 固定16.5元"
+      ]
     },
     {
       "code": "HRB-HIT",
       "name": "哈工大",
       "excel_rows": 3,
-      "baseline_rules": 3,
+      "baseline_rules": 8,
       "ok": true,
       "missing": []
     }
   ],
   "summary": {
     "total": 36,
-    "pass": 36,
-    "fail": 0,
-    "excel_rows": 170
+    "pass": 33,
+    "fail": 3,
+    "excel_rows": 191
   }
 }

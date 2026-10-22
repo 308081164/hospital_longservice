@@ -1,0 +1,1096 @@
+{
+  "results": [
+    {
+      "code": "BOSHANG-YY",
+      "hospital": "博尚医院",
+      "rule_name": "博尚旋切器44",
+      "price": 44.0,
+      "keywords": [
+        "旋切器1胶帽4/Z2045",
+        "旋切器1胶帽4"
+      ],
+      "g4_claim": "A-G4PASS",
+      "match": {
+        "level": "EXACT",
+        "sheet": "各医院特殊收费",
+        "section": "博尚医院",
+        "row": 34,
+        "excel_text": "旋切器1胶帽4/Z2045｜固定收44元",
+        "note": ""
+      }
+    },
+    {
+      "code": "BOSHANG-YY",
+      "hospital": "博尚医院",
+      "rule_name": "博尚旋切器戳卡66",
+      "price": 66.0,
+      "keywords": [
+        "旋切器1戳卡1胶帽4/Z2045",
+        "旋切器1戳卡1胶帽4"
+      ],
+      "g4_claim": "A-G4PASS",
+      "match": {
+        "level": "EXACT",
+        "sheet": "各医院特殊收费",
+        "section": "博尚医院",
+        "row": 33,
+        "excel_text": "旋切器1戳卡1胶帽4/Z2045｜固定收66元",
+        "note": ""
+      }
+    },
+    {
+      "code": "BOSHANG-YY",
+      "hospital": "博尚医院",
+      "rule_name": "博尚旋切器线66",
+      "price": 66.0,
+      "keywords": [
+        "旋切器1线1胶帽4/Z2045",
+        "旋切器1线1胶帽4"
+      ],
+      "g4_claim": "A-G4PASS",
+      "match": {
+        "level": "EXACT",
+        "sheet": "各医院特殊收费",
+        "section": "博尚医院",
+        "row": 35,
+        "excel_text": "旋切器1线1胶帽4/Z2045｜固定收66元",
+        "note": ""
+      }
+    },
+    {
+      "code": "GUOYAO-2",
+      "hospital": "国药总医院第二院区",
+      "rule_name": "电机厂包名带双",
+      "price": 8.0,
+      "keywords": [
+        "双"
+      ],
+      "g4_claim": "A-G4PASS",
+      "match": {
+        "level": "PARTIAL",
+        "sheet": "各医院特殊收费",
+        "section": "电机厂医院",
+        "row": 5,
+        "excel_text": "包名称带“双”｜5.5*件数＋标准包材价格",
+        "note": ""
+      }
+    },
+    {
+      "code": "GUOYAO-2",
+      "hospital": "国药总医院第二院区",
+      "rule_name": "电机厂敷料W120150固定35棉球_W12050",
+      "price": 35.0,
+      "keywords": [
+        "棉球/W12050",
+        "棉球-W12050"
+      ],
+      "g4_claim": "A-G4PASS",
+      "match": {
+        "level": "EXACT",
+        "sheet": "各医院特殊收费",
+        "section": "电机厂医院",
+        "row": 9,
+        "excel_text": "包名称带“棉球”｜包名称带W60/W70固定收费25元，W90收费30元，W120/W150收费35元",
+        "note": ""
+      }
+    },
+    {
+      "code": "GUOYAO-2",
+      "hospital": "国药总医院第二院区",
+      "rule_name": "电机厂敷料W120150固定35棉球_W15050",
+      "price": 35.0,
+      "keywords": [
+        "棉球/W15050",
+        "棉球-W15050"
+      ],
+      "g4_claim": "A-G4PASS",
+      "match": {
+        "level": "EXACT",
+        "sheet": "各医院特殊收费",
+        "section": "电机厂医院",
+        "row": 9,
+        "excel_text": "包名称带“棉球”｜包名称带W60/W70固定收费25元，W90收费30元，W120/W150收费35元",
+        "note": ""
+      }
+    },
+    {
+      "code": "GUOYAO-2",
+      "hospital": "国药总医院第二院区",
+      "rule_name": "电机厂敷料W120150固定35纱布_W12050",
+      "price": 35.0,
+      "keywords": [
+        "纱布/W12050",
+        "纱布-W12050"
+      ],
+      "g4_claim": "A-G4PASS",
+      "match": {
+        "level": "EXACT",
+        "sheet": "各医院特殊收费",
+        "section": "电机厂医院",
+        "row": 10,
+        "excel_text": "包名称带“纱布”｜包名称带W60/W70固定收费25元，W90收费30元，W120/W150收费35元",
+        "note": ""
+      }
+    },
+    {
+      "code": "GUOYAO-2",
+      "hospital": "国药总医院第二院区",
+      "rule_name": "电机厂敷料W120150固定35纱布_W15050",
+      "price": 35.0,
+      "keywords": [
+        "纱布/W15050",
+        "纱布-W15050"
+      ],
+      "g4_claim": "A-G4PASS",
+      "match": {
+        "level": "EXACT",
+        "sheet": "各医院特殊收费",
+        "section": "电机厂医院",
+        "row": 10,
+        "excel_text": "包名称带“纱布”｜包名称带W60/W70固定收费25元，W90收费30元，W120/W150收费35元",
+        "note": ""
+      }
+    },
+    {
+      "code": "GUOYAO-2",
+      "hospital": "国药总医院第二院区",
+      "rule_name": "电机厂敷料W605070固定25棉球_W6050",
+      "price": 25.0,
+      "keywords": [
+        "棉球/W6050",
+        "棉球-W6050"
+      ],
+      "g4_claim": "A-G4PASS",
+      "match": {
+        "level": "EXACT",
+        "sheet": "各医院特殊收费",
+        "section": "电机厂医院",
+        "row": 9,
+        "excel_text": "包名称带“棉球”｜包名称带W60/W70固定收费25元，W90收费30元，W120/W150收费35元",
+        "note": ""
+      }
+    },
+    {
+      "code": "GUOYAO-2",
+      "hospital": "国药总医院第二院区",
+      "rule_name": "电机厂敷料W605070固定25棉球_W6070",
+      "price": 25.0,
+      "keywords": [
+        "棉球/W6070",
+        "棉球-W6070"
+      ],
+      "g4_claim": "A-G4PASS",
+      "match": {
+        "level": "EXACT",
+        "sheet": "各医院特殊收费",
+        "section": "电机厂医院",
+        "row": 9,
+        "excel_text": "包名称带“棉球”｜包名称带W60/W70固定收费25元，W90收费30元，W120/W150收费35元",
+        "note": ""
+      }
+    },
+    {
+      "code": "GUOYAO-2",
+      "hospital": "国药总医院第二院区",
+      "rule_name": "电机厂敷料W605070固定25棉球_W7060",
+      "price": 25.0,
+      "keywords": [
+        "棉球/W7060",
+        "棉球-W7060"
+      ],
+      "g4_claim": "A-G4PASS",
+      "match": {
+        "level": "EXACT",
+        "sheet": "各医院特殊收费",
+        "section": "电机厂医院",
+        "row": 9,
+        "excel_text": "包名称带“棉球”｜包名称带W60/W70固定收费25元，W90收费30元，W120/W150收费35元",
+        "note": ""
+      }
+    },
+    {
+      "code": "GUOYAO-2",
+      "hospital": "国药总医院第二院区",
+      "rule_name": "电机厂敷料W605070固定25棉球_W7070",
+      "price": 25.0,
+      "keywords": [
+        "棉球/W7070",
+        "棉球-W7070"
+      ],
+      "g4_claim": "A-G4PASS",
+      "match": {
+        "level": "EXACT",
+        "sheet": "各医院特殊收费",
+        "section": "电机厂医院",
+        "row": 9,
+        "excel_text": "包名称带“棉球”｜包名称带W60/W70固定收费25元，W90收费30元，W120/W150收费35元",
+        "note": ""
+      }
+    },
+    {
+      "code": "GUOYAO-2",
+      "hospital": "国药总医院第二院区",
+      "rule_name": "电机厂敷料W605070固定25纱布_W6050",
+      "price": 25.0,
+      "keywords": [
+        "纱布/W6050",
+        "纱布-W6050"
+      ],
+      "g4_claim": "A-G4PASS",
+      "match": {
+        "level": "EXACT",
+        "sheet": "各医院特殊收费",
+        "section": "电机厂医院",
+        "row": 10,
+        "excel_text": "包名称带“纱布”｜包名称带W60/W70固定收费25元，W90收费30元，W120/W150收费35元",
+        "note": ""
+      }
+    },
+    {
+      "code": "GUOYAO-2",
+      "hospital": "国药总医院第二院区",
+      "rule_name": "电机厂敷料W605070固定25纱布_W6070",
+      "price": 25.0,
+      "keywords": [
+        "纱布/W6070",
+        "纱布-W6070"
+      ],
+      "g4_claim": "A-G4PASS",
+      "match": {
+        "level": "EXACT",
+        "sheet": "各医院特殊收费",
+        "section": "电机厂医院",
+        "row": 10,
+        "excel_text": "包名称带“纱布”｜包名称带W60/W70固定收费25元，W90收费30元，W120/W150收费35元",
+        "note": ""
+      }
+    },
+    {
+      "code": "GUOYAO-2",
+      "hospital": "国药总医院第二院区",
+      "rule_name": "电机厂敷料W605070固定25纱布_W7060",
+      "price": 25.0,
+      "keywords": [
+        "纱布/W7060",
+        "纱布-W7060"
+      ],
+      "g4_claim": "A-G4PASS",
+      "match": {
+        "level": "EXACT",
+        "sheet": "各医院特殊收费",
+        "section": "电机厂医院",
+        "row": 10,
+        "excel_text": "包名称带“纱布”｜包名称带W60/W70固定收费25元，W90收费30元，W120/W150收费35元",
+        "note": ""
+      }
+    },
+    {
+      "code": "GUOYAO-2",
+      "hospital": "国药总医院第二院区",
+      "rule_name": "电机厂敷料W605070固定25纱布_W7070",
+      "price": 25.0,
+      "keywords": [
+        "纱布/W7070",
+        "纱布-W7070"
+      ],
+      "g4_claim": "A-G4PASS",
+      "match": {
+        "level": "EXACT",
+        "sheet": "各医院特殊收费",
+        "section": "电机厂医院",
+        "row": 10,
+        "excel_text": "包名称带“纱布”｜包名称带W60/W70固定收费25元，W90收费30元，W120/W150收费35元",
+        "note": ""
+      }
+    },
+    {
+      "code": "GUOYAO-2",
+      "hospital": "国药总医院第二院区",
+      "rule_name": "电机厂敷料W9050固定30棉球_W9050",
+      "price": 30.0,
+      "keywords": [
+        "棉球/W9050",
+        "棉球-W9050"
+      ],
+      "g4_claim": "A-G4PASS",
+      "match": {
+        "level": "EXACT",
+        "sheet": "各医院特殊收费",
+        "section": "电机厂医院",
+        "row": 9,
+        "excel_text": "包名称带“棉球”｜包名称带W60/W70固定收费25元，W90收费30元，W120/W150收费35元",
+        "note": ""
+      }
+    },
+    {
+      "code": "GUOYAO-2",
+      "hospital": "国药总医院第二院区",
+      "rule_name": "电机厂敷料W9050固定30棉球_W9060",
+      "price": 30.0,
+      "keywords": [
+        "棉球/W9060",
+        "棉球-W9060"
+      ],
+      "g4_claim": "A-G4PASS",
+      "match": {
+        "level": "EXACT",
+        "sheet": "各医院特殊收费",
+        "section": "电机厂医院",
+        "row": 9,
+        "excel_text": "包名称带“棉球”｜包名称带W60/W70固定收费25元，W90收费30元，W120/W150收费35元",
+        "note": ""
+      }
+    },
+    {
+      "code": "GUOYAO-2",
+      "hospital": "国药总医院第二院区",
+      "rule_name": "电机厂敷料W9050固定30纱布_W9050",
+      "price": 30.0,
+      "keywords": [
+        "纱布/W9050",
+        "纱布-W9050"
+      ],
+      "g4_claim": "A-G4PASS",
+      "match": {
+        "level": "EXACT",
+        "sheet": "各医院特殊收费",
+        "section": "电机厂医院",
+        "row": 10,
+        "excel_text": "包名称带“纱布”｜包名称带W60/W70固定收费25元，W90收费30元，W120/W150收费35元",
+        "note": ""
+      }
+    },
+    {
+      "code": "GUOYAO-2",
+      "hospital": "国药总医院第二院区",
+      "rule_name": "电机厂敷料W9050固定30纱布_W9060",
+      "price": 30.0,
+      "keywords": [
+        "纱布/W9060",
+        "纱布-W9060"
+      ],
+      "g4_claim": "A-G4PASS",
+      "match": {
+        "level": "EXACT",
+        "sheet": "各医院特殊收费",
+        "section": "电机厂医院",
+        "row": 10,
+        "excel_text": "包名称带“纱布”｜包名称带W60/W70固定收费25元，W90收费30元，W120/W150收费35元",
+        "note": ""
+      }
+    },
+    {
+      "code": "GUOYAO-2",
+      "hospital": "国药总医院第二院区",
+      "rule_name": "电机厂棉球W120150固定35",
+      "price": 35.0,
+      "keywords": [
+        "棉球/W12050",
+        "棉球/W15050",
+        "棉球-W12050",
+        "棉球-W15050"
+      ],
+      "g4_claim": "A-G4PASS",
+      "match": {
+        "level": "EXACT",
+        "sheet": "各医院特殊收费",
+        "section": "电机厂医院",
+        "row": 9,
+        "excel_text": "包名称带“棉球”｜包名称带W60/W70固定收费25元，W90收费30元，W120/W150收费35元",
+        "note": ""
+      }
+    },
+    {
+      "code": "GUOYAO-2",
+      "hospital": "国药总医院第二院区",
+      "rule_name": "电机厂棉球W605070固定25",
+      "price": 25.0,
+      "keywords": [
+        "棉球/W6050",
+        "棉球/W6070",
+        "棉球/W7060",
+        "棉球/W7070",
+        "棉球-W6050",
+        "棉球-W6070",
+        "棉球-W7060",
+        "棉球-W7070"
+      ],
+      "g4_claim": "A-G4PASS",
+      "match": {
+        "level": "EXACT",
+        "sheet": "各医院特殊收费",
+        "section": "电机厂医院",
+        "row": 9,
+        "excel_text": "包名称带“棉球”｜包名称带W60/W70固定收费25元，W90收费30元，W120/W150收费35元",
+        "note": ""
+      }
+    },
+    {
+      "code": "GUOYAO-2",
+      "hospital": "国药总医院第二院区",
+      "rule_name": "电机厂棉球W9050固定30",
+      "price": 30.0,
+      "keywords": [
+        "棉球/W9050",
+        "棉球/W9060",
+        "棉球-W9050",
+        "棉球-W9060"
+      ],
+      "g4_claim": "A-G4PASS",
+      "match": {
+        "level": "EXACT",
+        "sheet": "各医院特殊收费",
+        "section": "电机厂医院",
+        "row": 9,
+        "excel_text": "包名称带“棉球”｜包名称带W60/W70固定收费25元，W90收费30元，W120/W150收费35元",
+        "note": ""
+      }
+    },
+    {
+      "code": "GUOYAO-2",
+      "hospital": "国药总医院第二院区",
+      "rule_name": "电机厂纱布W120150固定35",
+      "price": 35.0,
+      "keywords": [
+        "纱布/W12050",
+        "纱布/W15050",
+        "纱布-W12050",
+        "纱布-W15050"
+      ],
+      "g4_claim": "A-G4PASS",
+      "match": {
+        "level": "EXACT",
+        "sheet": "各医院特殊收费",
+        "section": "电机厂医院",
+        "row": 10,
+        "excel_text": "包名称带“纱布”｜包名称带W60/W70固定收费25元，W90收费30元，W120/W150收费35元",
+        "note": ""
+      }
+    },
+    {
+      "code": "GUOYAO-2",
+      "hospital": "国药总医院第二院区",
+      "rule_name": "电机厂纱布W605070固定25",
+      "price": 25.0,
+      "keywords": [
+        "纱布/W6050",
+        "纱布/W6070",
+        "纱布/W7060",
+        "纱布/W7070",
+        "纱布-W6050",
+        "纱布-W6070",
+        "纱布-W7060",
+        "纱布-W7070"
+      ],
+      "g4_claim": "A-G4PASS",
+      "match": {
+        "level": "EXACT",
+        "sheet": "各医院特殊收费",
+        "section": "电机厂医院",
+        "row": 10,
+        "excel_text": "包名称带“纱布”｜包名称带W60/W70固定收费25元，W90收费30元，W120/W150收费35元",
+        "note": ""
+      }
+    },
+    {
+      "code": "GUOYAO-2",
+      "hospital": "国药总医院第二院区",
+      "rule_name": "电机厂纱布W9050固定30",
+      "price": 30.0,
+      "keywords": [
+        "纱布/W9050",
+        "纱布/W9060",
+        "纱布-W9050",
+        "纱布-W9060"
+      ],
+      "g4_claim": "A-G4PASS",
+      "match": {
+        "level": "EXACT",
+        "sheet": "各医院特殊收费",
+        "section": "电机厂医院",
+        "row": 10,
+        "excel_text": "包名称带“纱布”｜包名称带W60/W70固定收费25元，W90收费30元，W120/W150收费35元",
+        "note": ""
+      }
+    },
+    {
+      "code": "HRB-WY-EM",
+      "hospital": "哈尔滨市第五医院（二门诊）",
+      "rule_name": "市五二门诊驱血带W120150固定35",
+      "price": 35.0,
+      "keywords": [
+        "驱血带/W12050",
+        "驱血带/W15050",
+        "驱血带/W120",
+        "驱血带/W150"
+      ],
+      "g4_claim": "A-G4PASS",
+      "match": {
+        "level": "EXACT",
+        "sheet": "各医院特殊收费",
+        "section": "市五院（二门诊）",
+        "row": 31,
+        "excel_text": "包名称带“驱血带”｜包名称带W50/W60/W70固定收费25元，W90收费30元，W120/W150收费35元",
+        "note": ""
+      }
+    },
+    {
+      "code": "HRB-WY-EM",
+      "hospital": "哈尔滨市第五医院（二门诊）",
+      "rule_name": "市五二门诊驱血带W605070固定25",
+      "price": 25.0,
+      "keywords": [
+        "驱血带/W6050",
+        "驱血带/W6070",
+        "驱血带/W7060",
+        "驱血带/W7070",
+        "驱血带/W50",
+        "驱血带/W60",
+        "驱血带/W70"
+      ],
+      "g4_claim": "A-G4PASS",
+      "match": {
+        "level": "EXACT",
+        "sheet": "各医院特殊收费",
+        "section": "市五院（二门诊）",
+        "row": 31,
+        "excel_text": "包名称带“驱血带”｜包名称带W50/W60/W70固定收费25元，W90收费30元，W120/W150收费35元",
+        "note": ""
+      }
+    },
+    {
+      "code": "HRB-WY-EM",
+      "hospital": "哈尔滨市第五医院（二门诊）",
+      "rule_name": "市五二门诊驱血带W9050固定30",
+      "price": 30.0,
+      "keywords": [
+        "驱血带/W9050",
+        "驱血带/W9060",
+        "驱血带/W90"
+      ],
+      "g4_claim": "A-G4PASS",
+      "match": {
+        "level": "EXACT",
+        "sheet": "各医院特殊收费",
+        "section": "市五院（二门诊）",
+        "row": 31,
+        "excel_text": "包名称带“驱血带”｜包名称带W50/W60/W70固定收费25元，W90收费30元，W120/W150收费35元",
+        "note": ""
+      }
+    },
+    {
+      "code": "HRB-WY",
+      "hospital": "哈尔滨市第五医院",
+      "rule_name": "市五院上肢止血带15",
+      "price": 15.0,
+      "keywords": [
+        "上肢止血带"
+      ],
+      "g4_claim": "A-G4PASS",
+      "match": {
+        "level": "EXACT",
+        "sheet": "各医院特殊收费",
+        "section": "哈尔滨市第五医院",
+        "row": 109,
+        "excel_text": "包名称带“上肢止血带”｜固定15元",
+        "note": ""
+      }
+    },
+    {
+      "code": "HRB-WY",
+      "hospital": "哈尔滨市第五医院",
+      "rule_name": "市五院下肢止血带15",
+      "price": 15.0,
+      "keywords": [
+        "下肢止血带"
+      ],
+      "g4_claim": "A-G4PASS",
+      "match": {
+        "level": "EXACT",
+        "sheet": "各医院特殊收费",
+        "section": "哈尔滨市第五医院",
+        "row": 110,
+        "excel_text": "包名称带“下肢止血带”｜固定15元",
+        "note": ""
+      }
+    },
+    {
+      "code": "HRB-WY",
+      "hospital": "哈尔滨市第五医院",
+      "rule_name": "市五院妇产科布袋15",
+      "price": 15.0,
+      "keywords": [
+        "妇产科布袋"
+      ],
+      "g4_claim": "A-G4PASS",
+      "match": {
+        "level": "EXACT",
+        "sheet": "各医院特殊收费",
+        "section": "哈尔滨市第五医院",
+        "row": 105,
+        "excel_text": "包名称带“妇产科布袋”｜固定15元",
+        "note": ""
+      }
+    },
+    {
+      "code": "HRB-WY",
+      "hospital": "哈尔滨市第五医院",
+      "rule_name": "市五院妇产科纱条15",
+      "price": 15.0,
+      "keywords": [
+        "妇产科纱条"
+      ],
+      "g4_claim": "A-G4PASS",
+      "match": {
+        "level": "EXACT",
+        "sheet": "各医院特殊收费",
+        "section": "哈尔滨市第五医院",
+        "row": 106,
+        "excel_text": "包名称带“妇产科纱条”｜固定15元",
+        "note": ""
+      }
+    },
+    {
+      "code": "HRB-WY",
+      "hospital": "哈尔滨市第五医院",
+      "rule_name": "市五院小布袋15",
+      "price": 15.0,
+      "keywords": [
+        "小布袋"
+      ],
+      "g4_claim": "A-G4PASS",
+      "match": {
+        "level": "EXACT",
+        "sheet": "各医院特殊收费",
+        "section": "哈尔滨市第五医院",
+        "row": 107,
+        "excel_text": "包名称带“小布袋”｜固定15元",
+        "note": ""
+      }
+    },
+    {
+      "code": "HRB-WY",
+      "hospital": "哈尔滨市第五医院",
+      "rule_name": "市五院手套2.5",
+      "price": 2.5,
+      "keywords": [
+        "手套"
+      ],
+      "g4_claim": "A-G4PASS",
+      "match": {
+        "level": "EXACT",
+        "sheet": "各医院特殊收费",
+        "section": "哈尔滨市第五医院",
+        "row": 112,
+        "excel_text": "包名称带“手套”｜固定2.5元",
+        "note": ""
+      }
+    },
+    {
+      "code": "HRB-WY",
+      "hospital": "哈尔滨市第五医院",
+      "rule_name": "市五院纱布15",
+      "price": 15.0,
+      "keywords": [
+        "纱布"
+      ],
+      "g4_claim": "A-G4PASS",
+      "match": {
+        "level": "EXACT",
+        "sheet": "各医院特殊收费",
+        "section": "哈尔滨市第五医院",
+        "row": 108,
+        "excel_text": "包名称带“纱布”｜固定15元",
+        "note": ""
+      }
+    },
+    {
+      "code": "HRB-WY",
+      "hospital": "哈尔滨市第五医院",
+      "rule_name": "市五院驱血带4",
+      "price": 4.0,
+      "keywords": [
+        "驱血带"
+      ],
+      "g4_claim": "A-G4PASS",
+      "match": {
+        "level": "EXACT",
+        "sheet": "各医院特殊收费",
+        "section": "哈尔滨市第五医院",
+        "row": 111,
+        "excel_text": "包名称带“驱血带”｜固定4元",
+        "note": ""
+      }
+    },
+    {
+      "code": "HRB-XK-YY",
+      "hospital": "哈尔滨市胸科医院",
+      "rule_name": "胸科小件ETO固定25",
+      "price": 25.0,
+      "keywords": [
+        "小件"
+      ],
+      "g4_claim": "A-G4PASS",
+      "match": {
+        "level": "EXACT",
+        "sheet": "各医院特殊收费",
+        "section": "哈尔滨市胸科医院",
+        "row": 125,
+        "excel_text": "包名称带“小件-多少件”｜固定25元",
+        "note": ""
+      }
+    },
+    {
+      "code": "HRB-XK-YY",
+      "hospital": "哈尔滨市胸科医院",
+      "rule_name": "胸科手术衣W9050固定20",
+      "price": 20.0,
+      "keywords": [
+        "手术衣（打包好的）/W9050"
+      ],
+      "g4_claim": "A-G4PASS",
+      "match": {
+        "level": "EXACT",
+        "sheet": "各医院特殊收费",
+        "section": "哈尔滨市胸科医院",
+        "row": 124,
+        "excel_text": "手术衣（打包好的）/W9050｜固定20元",
+        "note": ""
+      }
+    },
+    {
+      "code": "JIUZHOU-FK",
+      "hospital": "黑龙江九洲妇科医院",
+      "rule_name": "方盘5.5",
+      "price": 5.5,
+      "keywords": [
+        "方盘"
+      ],
+      "g4_claim": "A-G4PASS",
+      "match": {
+        "level": "EXACT",
+        "sheet": "各医院特殊收费",
+        "section": "九州医院",
+        "row": 32,
+        "excel_text": "包名称带“方盘”｜固定收费5.5元",
+        "note": ""
+      }
+    },
+    {
+      "code": "JZSW-BIO",
+      "hospital": "哈尔滨基准生物科技有限公司",
+      "rule_name": "氩氦刀（EO）150元",
+      "price": 150.0,
+      "keywords": [
+        "氩氦刀"
+      ],
+      "g4_claim": "A-G4PASS",
+      "match": {
+        "level": "EXACT",
+        "sheet": "各医院特殊收费",
+        "section": "哈尔滨基准生物有限公司",
+        "row": 93,
+        "excel_text": "包名称带“氩氦刀”｜固定150元一包。",
+        "note": ""
+      }
+    },
+    {
+      "code": "QILUNJI-YY",
+      "hospital": "哈尔滨汽轮机医院",
+      "rule_name": "汽轮机10mm30度镜固定价",
+      "price": 28.0,
+      "keywords": [
+        "30度镜",
+        "10mm",
+        "10毫米30度镜"
+      ],
+      "g4_claim": "B-待审阅",
+      "match": {
+        "level": "EXACT",
+        "sheet": "各医院特殊收费",
+        "section": "哈尔滨汽轮机医院",
+        "row": 136,
+        "excel_text": "10毫米30度镜-1件/（高温！）Z2060｜固定28元",
+        "note": "人工校对行号"
+      }
+    },
+    {
+      "code": "SHKF-YY",
+      "hospital": "黑龙江省社会康复医院",
+      "rule_name": "社会康复ITI种植盒32件指定44",
+      "price": 44.0,
+      "keywords": [
+        "ITI种植盒-32件盒1/W12050"
+      ],
+      "g4_claim": "A-G4PASS",
+      "match": {
+        "level": "EXACT",
+        "sheet": "各医院特殊收费",
+        "section": "黑龙江省社会康复医院",
+        "row": 79,
+        "excel_text": "ITI种植盒-32件盒1/W12050｜44",
+        "note": ""
+      }
+    },
+    {
+      "code": "SHKF-YY",
+      "hospital": "黑龙江省社会康复医院",
+      "rule_name": "社会康复内提工具盒10件指定44",
+      "price": 44.0,
+      "keywords": [
+        "内提工具盒10件盒1/W6050"
+      ],
+      "g4_claim": "A-G4PASS",
+      "match": {
+        "level": "EXACT",
+        "sheet": "各医院特殊收费",
+        "section": "黑龙江省社会康复医院",
+        "row": 77,
+        "excel_text": "内提工具盒10件盒1/W6050｜44",
+        "note": ""
+      }
+    },
+    {
+      "code": "SHKF-YY",
+      "hospital": "黑龙江省社会康复医院",
+      "rule_name": "社会康复大车针盒1件指定22",
+      "price": 22.0,
+      "keywords": [
+        "大车针盒-1/Z1526"
+      ],
+      "g4_claim": "A-G4PASS",
+      "match": {
+        "level": "EXACT",
+        "sheet": "各医院特殊收费",
+        "section": "黑龙江省社会康复医院",
+        "row": 76,
+        "excel_text": "大车针盒-1/Z1526｜22",
+        "note": ""
+      }
+    },
+    {
+      "code": "SHKF-YY",
+      "hospital": "黑龙江省社会康复医院",
+      "rule_name": "社会康复抛光车针盒6件盒1指定16.5",
+      "price": 16.5,
+      "keywords": [
+        "抛光车针盒6件盒1/Z1026"
+      ],
+      "g4_claim": "A-G4PASS",
+      "match": {
+        "level": "EXACT",
+        "sheet": "各医院特殊收费",
+        "section": "黑龙江省社会康复医院",
+        "row": 68,
+        "excel_text": "抛光车针盒6件盒1/Z1026｜16.5",
+        "note": ""
+      }
+    },
+    {
+      "code": "SHKF-YY",
+      "hospital": "黑龙江省社会康复医院",
+      "rule_name": "社会康复梁光强器械盒21件指定22",
+      "price": 22.0,
+      "keywords": [
+        "梁光强器械盒-21件盒1/W6050"
+      ],
+      "g4_claim": "A-G4PASS",
+      "match": {
+        "level": "EXACT",
+        "sheet": "各医院特殊收费",
+        "section": "黑龙江省社会康复医院",
+        "row": 75,
+        "excel_text": "梁光强器械盒-21件盒1/W6050｜22",
+        "note": ""
+      }
+    },
+    {
+      "code": "SHKF-YY",
+      "hospital": "黑龙江省社会康复医院",
+      "rule_name": "社会康复梁光强器械盒粉10件指定16.5",
+      "price": 16.5,
+      "keywords": [
+        "梁光强器械盒（粉）10件盒1/Z2030"
+      ],
+      "g4_claim": "A-G4PASS",
+      "match": {
+        "level": "EXACT",
+        "sheet": "各医院特殊收费",
+        "section": "黑龙江省社会康复医院",
+        "row": 74,
+        "excel_text": "梁光强器械盒（粉）10件盒1/Z2030｜16.5",
+        "note": ""
+      }
+    },
+    {
+      "code": "SHKF-YY",
+      "hospital": "黑龙江省社会康复医院",
+      "rule_name": "社会康复环切器械盒14件指定16.5",
+      "price": 16.5,
+      "keywords": [
+        "环切器械盒-14件盒1/Z2032"
+      ],
+      "g4_claim": "A-G4PASS",
+      "match": {
+        "level": "EXACT",
+        "sheet": "各医院特殊收费",
+        "section": "黑龙江省社会康复医院",
+        "row": 69,
+        "excel_text": "环切器械盒-14件盒1/Z2032｜16.5",
+        "note": ""
+      }
+    },
+    {
+      "code": "SHKF-YY",
+      "hospital": "黑龙江省社会康复医院",
+      "rule_name": "社会康复登腾种植盒34件指定44",
+      "price": 44.0,
+      "keywords": [
+        "登腾种植盒-34件盒1/W6050"
+      ],
+      "g4_claim": "A-G4PASS",
+      "match": {
+        "level": "EXACT",
+        "sheet": "各医院特殊收费",
+        "section": "黑龙江省社会康复医院",
+        "row": 77,
+        "excel_text": "内提工具盒10件盒1/W6050｜44",
+        "note": ""
+      }
+    },
+    {
+      "code": "SHKF-YY",
+      "hospital": "黑龙江省社会康复医院",
+      "rule_name": "社会康复登腾种植盒36件指定44",
+      "price": 44.0,
+      "keywords": [
+        "登腾种植盒-36件盒1/W6050"
+      ],
+      "g4_claim": "A-G4PASS",
+      "match": {
+        "level": "EXACT",
+        "sheet": "各医院特殊收费",
+        "section": "黑龙江省社会康复医院",
+        "row": 77,
+        "excel_text": "内提工具盒10件盒1/W6050｜44",
+        "note": ""
+      }
+    },
+    {
+      "code": "SHKF-YY",
+      "hospital": "黑龙江省社会康复医院",
+      "rule_name": "社会康复百诺工具盒19件指定44",
+      "price": 44.0,
+      "keywords": [
+        "百诺工具盒-19件盒1/W6050"
+      ],
+      "g4_claim": "A-G4PASS",
+      "match": {
+        "level": "EXACT",
+        "sheet": "各医院特殊收费",
+        "section": "黑龙江省社会康复医院",
+        "row": 77,
+        "excel_text": "内提工具盒10件盒1/W6050｜44",
+        "note": ""
+      }
+    },
+    {
+      "code": "SHKF-YY",
+      "hospital": "黑龙江省社会康复医院",
+      "rule_name": "社会康复种植盒14件W6050指定16.5",
+      "price": 16.5,
+      "keywords": [
+        "种植盒-14件盒1/W6050"
+      ],
+      "g4_claim": "A-G4PASS",
+      "match": {
+        "level": "EXACT",
+        "sheet": "各医院特殊收费",
+        "section": "黑龙江省社会康复医院",
+        "row": 73,
+        "excel_text": "种植盒-14件盒1/W6050｜16.5",
+        "note": ""
+      }
+    },
+    {
+      "code": "SHKF-YY",
+      "hospital": "黑龙江省社会康复医院",
+      "rule_name": "社会康复种植盒蓝白12件指定16.5",
+      "price": 16.5,
+      "keywords": [
+        "种植盒（蓝白）12件 盒1/Z2032",
+        "种植盒（蓝白）12件盒1/Z2032"
+      ],
+      "g4_claim": "A-G4PASS",
+      "match": {
+        "level": "EXACT",
+        "sheet": "各医院特殊收费",
+        "section": "黑龙江省社会康复医院",
+        "row": 72,
+        "excel_text": "种植盒（蓝白）12件 盒1/Z2032｜16.5",
+        "note": ""
+      }
+    },
+    {
+      "code": "SHKF-YY",
+      "hospital": "黑龙江省社会康复医院",
+      "rule_name": "社会康复种植盒金属12件指定16.5",
+      "price": 16.5,
+      "keywords": [
+        "种植盒（金属）12件盒1/Z2032",
+        "种植盒（金属）12件 盒1/Z2032"
+      ],
+      "g4_claim": "A-G4PASS",
+      "match": {
+        "level": "EXACT",
+        "sheet": "各医院特殊收费",
+        "section": "黑龙江省社会康复医院",
+        "row": 71,
+        "excel_text": "种植盒（金属）12件盒1/Z2032｜16.5",
+        "note": ""
+      }
+    },
+    {
+      "code": "SHKF-YY",
+      "hospital": "黑龙江省社会康复医院",
+      "rule_name": "社会康复种植盒黄绿8件指定16.5",
+      "price": 16.5,
+      "keywords": [
+        "种植盒（黄绿）8件盒1/Z2032",
+        "种植盒（黄绿）8件 盒1/Z2032"
+      ],
+      "g4_claim": "A-G4PASS",
+      "match": {
+        "level": "EXACT",
+        "sheet": "各医院特殊收费",
+        "section": "黑龙江省社会康复医院",
+        "row": 70,
+        "excel_text": "种植盒（黄绿）8件盒1/Z2032｜16.5",
+        "note": ""
+      }
+    },
+    {
+      "code": "ZUYAN-SF",
+      "hospital": "祖研-黑龙江省中医医院（三辅院区）",
+      "rule_name": "祖研三辅美容科排针≤20固定16.5",
+      "price": 16.5,
+      "keywords": [
+        "美容科排针"
+      ],
+      "g4_claim": "A-G4PASS",
+      "match": {
+        "level": "EXACT",
+        "sheet": "各医院特殊收费",
+        "section": "祖研-黑龙江省中医医院（三辅院区）",
+        "row": 113,
+        "excel_text": "包名称带\"美容科排针-多少件（盘1）\"｜固定收费16.5元",
+        "note": "人工校对行号"
+      }
+    }
+  ],
+  "stats": {
+    "repo_exact": 56,
+    "repo_partial": 1,
+    "repo_none": 0
+  }
+}
