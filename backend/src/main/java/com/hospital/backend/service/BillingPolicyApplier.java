@@ -132,10 +132,10 @@ public final class BillingPolicyApplier {
             if (!matchedPolicies.isEmpty()) {
                 if (matchedPolicies.size() == 1) {
                     return toBillDetailDiscount(
-                            matchedPolicies.get(0), hospitalName, baseUnitPrice, billingPieces);
+                            matchedPolicies.get(0), hospitalName, baseUnitPrice, billingPieces, type);
                 }
                 return toStackedBillDetailDiscount(
-                        matchedPolicies, hospitalName, baseUnitPrice, billingPieces, targetStage);
+                        matchedPolicies, hospitalName, baseUnitPrice, billingPieces, targetStage, type);
             }
             if (STAGE_BILL_DETAIL.equals(targetStage)) {
                 return null;
@@ -349,7 +349,8 @@ public final class BillingPolicyApplier {
             String hospitalName,
             double baseUnitPrice,
             int billingPieces,
-            String targetStage) {
+            String targetStage,
+            String rowType) {
         double price = baseUnitPrice;
         StringBuilder note = new StringBuilder();
         List<String> labels = new ArrayList<>();
@@ -380,17 +381,27 @@ public final class BillingPolicyApplier {
                 continue;
             }
             double rate = params.path("rate").asDouble(1.0);
-            if (rate <= 0 || rate >= 1.0) {
-                continue;
+            if (rate > 0 && rate < 1.0) {
+                double before = price;
+                price = round(before * rate);
+                labels.add(label);
+                if (policy.has("policyId")) {
+                    lastPolicyId = policy.path("policyId").asLong();
+                }
+                note.append(label).append("：").append(fmt(before)).append(" 元 × ")
+                        .append(rate).append(" = ").append(fmt(price)).append(" 元；");
             }
-            double before = price;
-            price = round(before * rate);
-            labels.add(label);
-            if (policy.has("policyId")) {
-                lastPolicyId = policy.path("policyId").asLong();
+            double capped = capUnitPrice(price, params, rowType);
+            if (capped + 0.001 < price) {
+                note.append(label).append("：封顶 ").append(fmt(capped)).append(" 元；");
+                price = capped;
+                if (!labels.contains(label)) {
+                    labels.add(label);
+                }
+                if (policy.has("policyId")) {
+                    lastPolicyId = policy.path("policyId").asLong();
+                }
             }
-            note.append(label).append("：").append(fmt(before)).append(" 元 × ")
-                    .append(rate).append(" = ").append(fmt(price)).append(" 元；");
         }
         if (note.isEmpty()) {
             return null;
@@ -413,7 +424,8 @@ public final class BillingPolicyApplier {
             JsonNode policy,
             String hospitalName,
             double baseUnitPrice,
-            int billingPieces) {
+            int billingPieces,
+            String rowType) {
         JsonNode params = policy.path("params");
         List<PieceTierDiscount> tiers = parsePieceTierDiscounts(params);
         double price;
@@ -436,6 +448,9 @@ public final class BillingPolicyApplier {
             }
             price = round(baseUnitPrice * rate);
         }
+        double uncapped = price;
+        price = capUnitPrice(price, params, rowType);
+        boolean capped = price + 0.001 < uncapped;
         String label = policy.path("name").asText("客户折扣");
         String tempScope = policy.path("scope").path("temperature").asText("ANY");
         String tempNote = "ANY".equalsIgnoreCase(tempScope) ? "" : "（" + tempScope + "）";
@@ -447,7 +462,8 @@ public final class BillingPolicyApplier {
             note = formatSettlementDiscountRemark(label, rate);
         } else {
             note = "命中" + label + tempNote + tierNote + "，基础规则单价 "
-                    + fmt(baseUnitPrice) + " 元 → " + fmt(price) + " 元。";
+                    + fmt(baseUnitPrice) + " 元 → " + fmt(price) + " 元"
+                    + (capped ? "，封顶 " + fmt(price) + " 元" : "") + "。";
         }
         return new BillDetailDiscount(
                 price,
@@ -478,6 +494,27 @@ public final class BillingPolicyApplier {
             return label.replace("结款", "").replace("结算", "").trim();
         }
         return "";
+    }
+
+    /**
+     * 低温等指定包类型在折扣后封顶。未配置 {@code maxUnitPriceTypes} 时不封顶，避免六折误伤普通包。
+     */
+    public static double capUnitPrice(double price, JsonNode params, String rowType) {
+        if (params == null || params.isMissingNode() || !params.has("maxUnitPrice")) {
+            return price;
+        }
+        double cap = params.path("maxUnitPrice").asDouble(Double.NaN);
+        if (Double.isNaN(cap) || cap <= 0 || price <= cap) {
+            return price;
+        }
+        JsonNode types = params.path("maxUnitPriceTypes");
+        if (!types.isArray() || types.isEmpty()) {
+            return price;
+        }
+        if (!BillingConditionEvaluator.matchesAcceptedPackTypeList(types, rowType)) {
+            return price;
+        }
+        return round(cap);
     }
 
     public static double round(double value) {

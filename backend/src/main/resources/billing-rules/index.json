@@ -1,8 +1,8 @@
 {
-  "baseline_hash": "81964077c41f16bf0760162dc56a2420ae63f5f8daab1a54121f7348d7d5f4d0",
-  "generated_at": "2026-10-22T03:55:40Z",
-  "source": "billing-rules-manifest@01836c66115726ff7229db58f16020cb6e65f7069beee13551669c1031fd7764",
-  "customer_count": 42,
+  "baseline_hash": "243f1472788a1eb0071174f9d074d61bef736a015f948f422707d30c94d9520d",
+  "generated_at": "2026-10-22T16:59:47Z",
+  "source": "billing-rules-manifest@6a4ec3fbe7896cc575c6c8eabecd644fea23f11dd22afa4c970f9dc07d36c4a4",
+  "customer_count": 43,
   "customers": [
     {
       "code": "BINGCHENG-YM",
@@ -247,8 +247,14 @@
     {
       "code": "HRB-2ND",
       "file": "baseline/HRB-2ND.json",
-      "ruleCount": 2,
-      "fileHash": "ca04969127e7bcb4c67d02049d49b8318dec1aad763f5ec11f5baec58d54121e"
+      "ruleCount": 9,
+      "fileHash": "c5fc9acb48f72ea4a959efd78c14720d33df88030bb4fc671878b4c5752934b4"
+    },
+    {
+      "code": "HRB-GUSHANG",
+      "file": "baseline/HRB-GUSHANG.json",
+      "ruleCount": 9,
+      "fileHash": "0381bbd6882f25d20e65b5eafc6401c9c9fc6975992821aadc115b2395381861"
     },
     {
       "code": "ZYY-D1",

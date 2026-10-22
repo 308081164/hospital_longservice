@@ -4,5 +4,18 @@
   "sourceVersion": "医院内勤规则-20260924",
   "notes": "医院内勤规则 v2 · Excel行 呼兰区第一人民医院",
   "attachmentRefs": [],
-  "rules": []
+  "rules": [
+    {
+      "ruleType": "DISCOUNT_OVERLAY",
+      "name": "标准价七折",
+      "stage": "bill_export",
+      "isActive": true,
+      "params": {
+        "rate": 0.7
+      },
+      "sourceText": "标准价格七折",
+      "sourceRef": "excel:账单规则#呼兰区第一人民医院#1",
+      "priority": 10
+    }
+  ]
 }

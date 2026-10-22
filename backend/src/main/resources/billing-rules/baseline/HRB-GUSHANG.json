@@ -1,0 +1,191 @@
+{
+  "customerCode": "HRB-GUSHANG",
+  "customerName": "哈尔滨市骨伤科医院",
+  "billingEnabled": true,
+  "billingPricingMode": "hybrid",
+  "productRules": [
+    {
+      "ruleType": "FIXED_PRICE",
+      "name": "骨伤科钉≥10固定50",
+      "priority": 4,
+      "price": 50.0,
+      "keywords": [
+        "钉@contains"
+      ],
+      "excludeKeywords": [
+        "钉盒",
+        "头钉",
+        "拉力钉",
+        "空心钉",
+        "髓内钉",
+        "固定钉"
+      ],
+      "minInstrumentCount": 10,
+      "skipPackaging": true,
+      "skipDiscount": true,
+      "isActive": true,
+      "matchMode": "first",
+      "keywordMatchMode": "contains",
+      "acceptedTypes": [
+        "额外包（纸塑袋）"
+      ]
+    },
+    {
+      "ruleType": "FIXED_PRICE",
+      "name": "骨伤科钻钥匙0元",
+      "priority": 5,
+      "price": 0.0,
+      "keywords": [
+        "钻钥匙@contains"
+      ],
+      "skipPackaging": true,
+      "skipDiscount": true,
+      "isActive": true,
+      "matchMode": "first",
+      "keywordMatchMode": "contains",
+      "acceptedTypes": [
+        "额外包（纸塑袋）"
+      ]
+    },
+    {
+      "ruleType": "FIXED_PRICE",
+      "name": "骨伤科克氏针细号≤6固定5.5",
+      "priority": 6,
+      "price": 5.5,
+      "maxInstrumentCount": 6,
+      "keywords": [
+        "克氏针（0.8）@contains",
+        "克氏针（1.0）@contains",
+        "克氏针（1.2）@contains"
+      ],
+      "skipPackaging": true,
+      "skipDiscount": true,
+      "isActive": true,
+      "matchMode": "first",
+      "keywordMatchMode": "contains",
+      "acceptedTypes": [
+        "额外包（纸塑袋）"
+      ]
+    },
+    {
+      "ruleType": "FIXED_PRICE",
+      "name": "骨伤科克氏针粗号≤6固定8",
+      "priority": 7,
+      "price": 8.0,
+      "maxInstrumentCount": 6,
+      "keywords": [
+        "克氏针（1.5）@contains",
+        "克氏针（2.0）@contains",
+        "克氏针（2.5）@contains",
+        "克氏针（3.0）@contains",
+        "克氏针（3.5）@contains",
+        "克氏针（4.0）@contains"
+      ],
+      "skipPackaging": true,
+      "skipDiscount": true,
+      "isActive": true,
+      "matchMode": "first",
+      "keywordMatchMode": "contains",
+      "acceptedTypes": [
+        "额外包（纸塑袋）"
+      ]
+    },
+    {
+      "ruleType": "FIXED_PRICE",
+      "name": "骨伤科外架钢针≤6固定8.3",
+      "priority": 8,
+      "price": 8.3,
+      "maxInstrumentCount": 6,
+      "keywords": [
+        "外架钢针@contains"
+      ],
+      "skipPackaging": true,
+      "skipDiscount": true,
+      "isActive": true,
+      "matchMode": "first",
+      "keywordMatchMode": "contains",
+      "acceptedTypes": [
+        "额外包（纸塑袋）"
+      ]
+    },
+    {
+      "ruleType": "FIXED_PRICE",
+      "name": "骨伤科长钻头≤3固定5.8",
+      "priority": 9,
+      "price": 5.8,
+      "maxInstrumentCount": 3,
+      "keywords": [
+        "长钻头@contains"
+      ],
+      "skipPackaging": true,
+      "skipDiscount": true,
+      "isActive": true,
+      "matchMode": "first",
+      "keywordMatchMode": "contains",
+      "acceptedTypes": [
+        "额外包（纸塑袋）"
+      ]
+    },
+    {
+      "ruleType": "FIXED_PRICE",
+      "name": "骨伤科指定钻头固定5.8",
+      "priority": 10,
+      "price": 5.8,
+      "keywords": [
+        "钻头-2件/双/z7526",
+        "钻头-2件/双/Z7526",
+        "钻头4.0-1件/双/z7537",
+        "钻头4.0-1件/双/Z7537"
+      ],
+      "skipPackaging": true,
+      "skipDiscount": true,
+      "isActive": true,
+      "matchMode": "first",
+      "acceptedTypes": [
+        "额外包（纸塑袋）"
+      ]
+    },
+    {
+      "ruleType": "PRICE_PER_INSTRUMENT",
+      "name": "骨伤科双<3按件5.5加内层袋和0.3",
+      "priority": 20,
+      "price": 5.5,
+      "maxInstrumentCount": 2,
+      "conditionsJson": "[{\"field\": \"bagAddon\", \"value\": \"inner\"}, {\"field\": \"flatAddon\", \"value\": 0.3}]",
+      "keywords": [
+        "/双@contains",
+        "/(双)@contains",
+        "/（双）@contains"
+      ],
+      "skipPackaging": false,
+      "skipDiscount": true,
+      "isActive": true,
+      "matchMode": "first",
+      "keywordMatchMode": "contains",
+      "acceptedTypes": [
+        "额外包（纸塑袋）"
+      ]
+    },
+    {
+      "ruleType": "PRICE_PER_INSTRUMENT",
+      "name": "骨伤科双≥3按件5.5加0.3",
+      "priority": 21,
+      "price": 5.5,
+      "minInstrumentCount": 3,
+      "conditionsJson": "[{\"field\": \"bagAddon\", \"value\": \"none\"}, {\"field\": \"flatAddon\", \"value\": 0.3}]",
+      "keywords": [
+        "/双@contains",
+        "/(双)@contains",
+        "/（双）@contains"
+      ],
+      "skipPackaging": false,
+      "skipDiscount": true,
+      "isActive": true,
+      "matchMode": "first",
+      "keywordMatchMode": "contains",
+      "acceptedTypes": [
+        "额外包（纸塑袋）"
+      ]
+    }
+  ]
+}

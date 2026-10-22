@@ -35,6 +35,162 @@
       "acceptedTypes": [
         "额外包（仅消毒）"
       ]
+    },
+    {
+      "ruleType": "FIXED_PRICE",
+      "name": "市二院止血带固定8",
+      "priority": 12,
+      "price": 8.0,
+      "keywords": [
+        "止血带-@contains"
+      ],
+      "skipPackaging": true,
+      "skipDiscount": true,
+      "isActive": true,
+      "matchMode": "first",
+      "keywordMatchMode": "contains",
+      "acceptedTypes": [
+        "额外包（仅消毒）"
+      ]
+    },
+    {
+      "ruleType": "PRICE_PER_INSTRUMENT",
+      "name": "市二院剖宫产按件5.5加8",
+      "priority": 13,
+      "price": 5.5,
+      "keywords": [
+        "剖宫产-3/W120509060"
+      ],
+      "conditionsJson": "[{\"field\": \"flatAddon\", \"value\": 8}]",
+      "skipPackaging": true,
+      "skipDiscount": true,
+      "isActive": true,
+      "matchMode": "first",
+      "acceptedTypes": [
+        "额外包（无纺布）"
+      ]
+    },
+    {
+      "ruleType": "PRICE_PER_INSTRUMENT",
+      "name": "市二院手术室器械包按件5.5加8",
+      "priority": 14,
+      "price": 5.5,
+      "keywords": [
+        "手术室-缝合包",
+        "手术室-腹腔镜包",
+        "手术室-骨科急诊包",
+        "手术室-刮宫包-10件",
+        "手术室-器械包-43件",
+        "手术室-器械包-47件",
+        "手术室-器械包-62件",
+        "手术室-肠钳包",
+        "手术室-电切包",
+        "手术室-动静脉瘘包二",
+        "手术室-骨科包",
+        "手术室-关节镜",
+        "手术室-脑科包",
+        "手术室-上肢包",
+        "手术室-探查包一（1/2）",
+        "手术室-探查包一(2/2)",
+        "手术室-下肢包",
+        "手术室-腰椎包",
+        "手术室-植骨包",
+        "手术室-体外支架-8件",
+        "手术室-血管器械-12件",
+        "手术室-痔疮包"
+      ],
+      "conditionsJson": "[{\"field\": \"flatAddon\", \"value\": 8}]",
+      "skipPackaging": true,
+      "skipDiscount": true,
+      "isActive": true,
+      "matchMode": "first",
+      "acceptedTypes": [
+        "器械包（ZSD）",
+        "器械包"
+      ]
+    },
+    {
+      "ruleType": "PRICE_PER_INSTRUMENT",
+      "name": "市二院双<3按件5.5加列出的袋封顶16.5",
+      "priority": 20,
+      "price": 5.5,
+      "maxInstrumentCount": 2,
+      "conditionsJson": "[{\"field\": \"bagAddon\", \"value\": \"all\"}, {\"field\": \"capDoubleBag\", \"value\": true}]",
+      "keywords": [
+        "/双@contains",
+        "/(双)@contains",
+        "/（双）@contains"
+      ],
+      "skipPackaging": false,
+      "skipDiscount": true,
+      "isActive": true,
+      "matchMode": "first",
+      "keywordMatchMode": "contains",
+      "acceptedTypes": [
+        "额外包（纸塑袋）"
+      ]
+    },
+    {
+      "ruleType": "PRICE_PER_INSTRUMENT",
+      "name": "市二院双≥3按件5.5不加袋",
+      "priority": 21,
+      "price": 5.5,
+      "minInstrumentCount": 3,
+      "conditionsJson": "[{\"field\": \"bagAddon\", \"value\": \"none\"}]",
+      "keywords": [
+        "/双@contains",
+        "/(双)@contains",
+        "/（双）@contains"
+      ],
+      "skipPackaging": false,
+      "skipDiscount": true,
+      "isActive": true,
+      "matchMode": "first",
+      "keywordMatchMode": "contains",
+      "acceptedTypes": [
+        "额外包（纸塑袋）"
+      ]
+    },
+    {
+      "ruleType": "FIXED_PRICE",
+      "name": "市二院手机固定5.5",
+      "priority": 22,
+      "price": 5.5,
+      "keywords": [
+        "手机-@contains"
+      ],
+      "skipPackaging": true,
+      "skipDiscount": true,
+      "isActive": true,
+      "matchMode": "first",
+      "keywordMatchMode": "contains",
+      "acceptedTypes": [
+        "额外包（纸塑袋）"
+      ]
+    },
+    {
+      "ruleType": "FOLD",
+      "name": "市二院小件5合1免包材",
+      "priority": 30,
+      "keywords": [
+        "车针@contains",
+        "拔髓针@contains",
+        "扩大针@contains",
+        "根扩针@contains",
+        "测压器@contains",
+        "成型片@contains",
+        "豆瓣@contains"
+      ],
+      "threshold": 5,
+      "foldRatio": 5,
+      "skipPackaging": true,
+      "skipDiscount": true,
+      "isActive": true,
+      "matchMode": "first",
+      "keywordMatchMode": "contains",
+      "acceptedTypes": [
+        "额外包（纸塑袋）"
+      ]
     }
   ]
 }

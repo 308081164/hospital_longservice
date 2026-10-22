@@ -9,7 +9,7 @@
       "ruleType": "BILL_EXPORT_PRICE_RULE",
       "name": "导入的账单不是分科室账单",
       "stage": "bill_export",
-      "isActive": true,
+      "isActive": false,
       "params": {
         "acceptedTypes": [
           "导入的账单不是分科室账单",

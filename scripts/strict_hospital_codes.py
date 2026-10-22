@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""41 家特殊计价医院权威清单（路径 A / manifest / Java STRICT_KEEP_CODES 须一致）。
+"""42 家特殊计价医院权威清单（路径 A / manifest / Java STRICT_KEEP_CODES 须一致）。
 
 国药总医院第二院区（GUOYAO-2）不在 2026-10-12 特殊收费表内，保留客户、规则已清空，电机厂见 DIANJI-YY。
 """
@@ -61,6 +61,7 @@ STRICT_KEEP_CODES: list[str] = [
     "JINGHUA-SD",
     "HRB-HSZ",
     "HRB-2ND",
+    "HRB-GUSHANG",
 ]
 
 # 中医附一：独立价表 docs/source/附一收费标准.xlsx（非特殊收费 Excel 32 家）
@@ -111,6 +112,7 @@ STRICT_HOSPITALS: list[StrictHospital] = [
     StrictHospital("JINGHUA-SD", "菁华上德", "黑龙江菁华上德生殖妇产医院", False, "新表引入，测试材料待补"),
     StrictHospital("HRB-HSZ", "哈尔滨红十字医院", "哈尔滨红十字医院", False, "新表引入，测试材料待补"),
     StrictHospital("HRB-2ND", "哈尔滨市第二医院", "哈尔滨市第二医院", False, "新表引入，测试材料待补"),
+    StrictHospital("HRB-GUSHANG", "骨伤科", "哈尔滨市骨伤科医院", False, "新表引入，测试材料待补"),
 ]
 
 STRICT_BY_CODE = {h.code: h for h in STRICT_HOSPITALS}
