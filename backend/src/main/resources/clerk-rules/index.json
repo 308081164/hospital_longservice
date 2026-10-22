@@ -1,8 +1,8 @@
 {
   "baseline_hash": "412844e7e3dab5c92e9559b74d7b75cfbe6f00d78740724778007f2a763e00ea",
-  "generated_at": "2026-10-21T01:58:41Z",
-  "source": "铂康/内勤要求/医院内勤规则-20260924.xlsx",
-  "customer_count": 42,
+  "generated_at": "2026-10-22T10:11:09Z",
+  "source": "docs/source/附一收费标准.xlsx + 铂康/内勤要求/医院内勤规则-20260924.xlsx",
+  "customer_count": 43,
   "customers": [
     {
       "code": "AOLAN-YY",
@@ -203,6 +203,11 @@
       "code": "ZY3-DIANLI",
       "file": "baseline/ZY3-DIANLI.json",
       "ruleCount": 4
+    },
+    {
+      "code": "ZYY-D1",
+      "file": "baseline/ZYY-D1.json",
+      "ruleCount": 9
     },
     {
       "code": "ZYY-D2-HN",
