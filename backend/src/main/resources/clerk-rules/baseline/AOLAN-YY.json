@@ -1,8 +1,8 @@
 {
   "customerCode": "AOLAN-YY",
   "customerName": "黑龙江奥兰医院",
-  "sourceVersion": "医院内勤规则9.29",
-  "notes": "医院内勤规则 v2 · Excel行 奥兰医院 · 仅按包名匹配",
+  "sourceVersion": "医院内勤规则10.20(1)",
+  "notes": "医院内勤规则 v2 · 奥兰医院规则表为该院完整包名价。2026-10-20 权威表改名并删除小镊子；舌钳备注为包含关系。",
   "attachmentRefs": [],
   "rules": [
     {
@@ -565,19 +565,19 @@
     },
     {
       "ruleType": "PACK_NAME_PRICE",
-      "name": "大镊子",
+      "name": "镊子（大）",
       "stage": "bill_export",
       "isActive": true,
       "params": {
         "packNameKeywords": [
-          "大镊子"
+          "镊子（大）"
         ],
-        "instrumentCountRange": "N<2",
+        "instrumentCountRange": null,
         "unitPrice": 5.0,
         "unitPriceMode": "FIXED",
         "systemPriceMode": "IGNORE"
       },
-      "sourceText": "大镊子 ≤1 5",
+      "sourceText": "镊子（大） None 5",
       "sourceRef": "excel:奥兰医院规则#31",
       "priority": 41
     },
@@ -1681,19 +1681,19 @@
     },
     {
       "ruleType": "PACK_NAME_PRICE",
-      "name": "小缝合包",
+      "name": "缝合包",
       "stage": "bill_export",
       "isActive": true,
       "params": {
         "packNameKeywords": [
-          "小缝合包"
+          "缝合包"
         ],
         "instrumentCountRange": "N<9",
         "unitPrice": 24.0,
         "unitPriceMode": "FIXED",
         "systemPriceMode": "IGNORE"
       },
-      "sourceText": "小缝合包 ≤8 24",
+      "sourceText": "缝合包 ≤8 24",
       "sourceRef": "excel:奥兰医院规则#93",
       "priority": 103
     },
@@ -2213,9 +2213,10 @@
         "instrumentCountRange": null,
         "unitPrice": 5.0,
         "unitPriceMode": "FIXED",
-        "systemPriceMode": "IGNORE"
+        "systemPriceMode": "IGNORE",
+        "packNameMatchMode": "contains"
       },
-      "sourceText": "舌钳 None 5",
+      "sourceText": "舌钳 None 5 包含关系",
       "sourceRef": "excel:奥兰医院规则#122",
       "priority": 132
     },
@@ -2257,37 +2258,37 @@
     },
     {
       "ruleType": "PACK_NAME_PRICE",
-      "name": "扩棒10#",
+      "name": "10号扩棒",
       "stage": "bill_export",
       "isActive": true,
       "params": {
         "packNameKeywords": [
-          "扩棒10#"
+          "10号扩棒"
         ],
         "instrumentCountRange": null,
         "unitPrice": 5.0,
         "unitPriceMode": "FIXED",
         "systemPriceMode": "IGNORE"
       },
-      "sourceText": "扩棒10# None 5",
+      "sourceText": "10号扩棒 None 5",
       "sourceRef": "excel:奥兰医院规则#125",
       "priority": 135
     },
     {
       "ruleType": "PACK_NAME_PRICE",
-      "name": "扩棒9#",
+      "name": "9号扩棒",
       "stage": "bill_export",
       "isActive": true,
       "params": {
         "packNameKeywords": [
-          "扩棒9#"
+          "9号扩棒"
         ],
         "instrumentCountRange": null,
         "unitPrice": 5.0,
         "unitPriceMode": "FIXED",
         "systemPriceMode": "IGNORE"
       },
-      "sourceText": "扩棒9# None 5",
+      "sourceText": "9号扩棒 None 5",
       "sourceRef": "excel:奥兰医院规则#126",
       "priority": 136
     },
@@ -2869,24 +2870,6 @@
     },
     {
       "ruleType": "PACK_NAME_PRICE",
-      "name": "小镊子",
-      "stage": "bill_export",
-      "isActive": true,
-      "params": {
-        "packNameKeywords": [
-          "小镊子"
-        ],
-        "instrumentCountRange": null,
-        "unitPrice": 5.0,
-        "unitPriceMode": "FIXED",
-        "systemPriceMode": "IGNORE"
-      },
-      "sourceText": "小镊子 None 5",
-      "sourceRef": "excel:奥兰医院规则#159",
-      "priority": 169
-    },
-    {
-      "ruleType": "PACK_NAME_PRICE",
       "name": "荷花钳",
       "stage": "bill_export",
       "isActive": true,
@@ -3139,19 +3122,19 @@
     },
     {
       "ruleType": "PACK_NAME_PRICE",
-      "name": "宫腔镜查镜(内镜1内鞘1外鞘1)",
+      "name": "宫腔镜-3件",
       "stage": "bill_export",
       "isActive": true,
       "params": {
         "packNameKeywords": [
-          "宫腔镜查镜(内镜1内鞘1外鞘1)"
+          "宫腔镜-3件"
         ],
-        "instrumentCountRange": "N<4",
+        "instrumentCountRange": null,
         "unitPrice": 44.0,
         "unitPriceMode": "FIXED",
         "systemPriceMode": "IGNORE"
       },
-      "sourceText": "宫腔镜查镜(内镜1内鞘1外鞘1) ≤3 44",
+      "sourceText": "宫腔镜-3件 None 44",
       "sourceRef": "excel:奥兰医院规则#174",
       "priority": 184
     },

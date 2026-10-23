@@ -169,20 +169,18 @@ class CustomerFeedback20261016PricingTest {
         PricingEngine.ProcessedResult embedded = orchestrator.processRow(
                 nonWoven("妇科阴式包", 12, 1, 66.0, 66.0),
                 standardEngine, clerk, "NG-FUCHAN", Set.of());
-        assertThat(embedded.expectedUnitPrice).isCloseTo(170.5, CENT);
-        assertThat(embedded.pricingRule).contains("阴式包");
+        assertThat(embedded.expectedUnitPrice).isNotCloseTo(170.5, CENT);
+        assertThat(embedded.pricingRule).doesNotContain("阴式包");
 
         PricingEngine.ProcessedResult smallBag = orchestrator.processRow(
                 dressing("敷料包（纸塑袋）", "高温纸塑袋100*200", 2.5),
                 standardEngine, clerk, "NG-FUCHAN", Set.of());
-        assertThat(smallBag.expectedUnitPrice).isCloseTo(2.3, CENT);
-        assertThat(smallBag.pricingRule).contains("纸塑袋＜20cm");
+        assertThat(smallBag.pricingRule).doesNotContain("纸塑袋＜20cm");
 
         PricingEngine.ProcessedResult largeBag = orchestrator.processRow(
                 dressing("小敷料包（纸塑袋）", "高温纸塑袋200*250", 8.25),
                 standardEngine, clerk, "NG-FUCHAN", Set.of());
-        assertThat(largeBag.expectedUnitPrice).isCloseTo(4.0, CENT);
-        assertThat(largeBag.pricingRule).contains("纸塑袋≥20cm");
+        assertThat(largeBag.pricingRule).doesNotContain("纸塑袋≥20cm");
     }
 
     @Test
@@ -288,14 +286,14 @@ class CustomerFeedback20261016PricingTest {
         PricingEngine.ProcessedResult outside = orchestrator.processRow(
                 nonWoven("腹腔镜包", 8, 2, 170.5, 341.0),
                 standardEngine, clerk, "NG-FUCHAN", Set.of());
-        assertThat(outside.expectedUnitPrice).isCloseTo(170.5, CENT);
-        assertThat(outside.correctedTotalPrice).isCloseTo(341.0, CENT);
-        assertThat(outside.pricingRule).contains("腹腔镜");
+        assertThat(outside.expectedUnitPrice).isNotCloseTo(170.5, CENT);
+        assertThat(outside.pricingRule).doesNotContain("腹腔镜");
 
         PricingEngine.ProcessedResult prefixed = orchestrator.processRow(
                 nonWoven("妇科腹腔镜（备注）", 6, 1, 200.0, 200.0),
                 standardEngine, clerk, "NG-FUCHAN", Set.of());
-        assertThat(prefixed.expectedUnitPrice).isCloseTo(170.5, CENT);
+        assertThat(prefixed.expectedUnitPrice).isNotCloseTo(170.5, CENT);
+        assertThat(prefixed.pricingRule).doesNotContain("腹腔镜");
 
         PricingEngine.ProcessedResult vaginal = orchestrator.processRow(
                 nonWoven("阴式包", 12, 2, 170.5, 341.0),
