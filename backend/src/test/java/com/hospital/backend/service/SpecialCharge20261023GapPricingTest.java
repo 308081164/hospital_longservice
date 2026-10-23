@@ -127,6 +127,17 @@ class SpecialCharge20261023GapPricingTest {
                 .isCloseTo(5.8, CENT);
         assertThat(price(engine, hospital, "额外包（纸塑袋）", "普通器械/双", 4))
                 .isCloseTo(22.3, CENT);
+
+        Map<String, Object> kept = PricingEngineTestSupport.row(
+                hospital, "额外包（无纺布）", "普通无纺布包", "无纺布", 2, 1, 18.8, 18.8);
+        PricingEngine.ProcessedResult review = engine.processRow(kept);
+        assertThat(review.expectedUnitPrice).isCloseTo(18.8, CENT);
+        assertThat(review.pricingRule).contains("人工核对");
+        assertThat(review.pricingPath).isEqualTo("preserve");
+
+        PricingEngine.ProcessedResult three = priced(
+                engine, hospital, "额外包（无纺布）", "普通无纺布包", 3);
+        assertThat(three.pricingRule).doesNotContain("人工核对");
     }
 
     @Test

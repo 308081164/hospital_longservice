@@ -1,7 +1,7 @@
 {
   "version": 1,
-  "generated_at": "2026-10-23T04:11:41Z",
-  "manifest_hash": "4fbf193fef3d8db047dbd1014aa9791b6abe9af0cf02437bff04498fd2823b67",
+  "generated_at": "2026-10-23T05:33:58Z",
+  "manifest_hash": "441926bb69c643f0eba254e1255e7a3de36b48200883591a9e69dab9df2e3685",
   "billing_enabled_count": 43,
   "active_billing_enabled_count": 43,
   "customers": {
@@ -4955,10 +4955,26 @@
           "acceptedTypes": [
             "额外包（纸塑袋）"
           ]
+        },
+        {
+          "ruleType": "PRICE_PER_INSTRUMENT",
+          "name": "骨伤科无纺布小于3件人工核对",
+          "priority": 80,
+          "price": 0,
+          "maxInstrumentCount": 2,
+          "keywords": [],
+          "conditionsJson": "[{\"field\":\"manualReview\",\"value\":true}]",
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": true,
+          "matchMode": "first",
+          "acceptedTypes": [
+            "额外包（无纺布）"
+          ]
         }
       ],
-      "rule_count": 9,
-      "active_rule_count": 9
+      "rule_count": 10,
+      "active_rule_count": 10
     },
     "ZYY-D1": {
       "code": "ZYY-D1",

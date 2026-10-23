@@ -186,6 +186,22 @@
       "acceptedTypes": [
         "额外包（纸塑袋）"
       ]
+    },
+    {
+      "ruleType": "PRICE_PER_INSTRUMENT",
+      "name": "骨伤科无纺布小于3件人工核对",
+      "priority": 80,
+      "price": 0,
+      "maxInstrumentCount": 2,
+      "keywords": [],
+      "conditionsJson": "[{\"field\":\"manualReview\",\"value\":true}]",
+      "skipPackaging": true,
+      "skipDiscount": true,
+      "isActive": true,
+      "matchMode": "first",
+      "acceptedTypes": [
+        "额外包（无纺布）"
+      ]
     }
   ]
 }
