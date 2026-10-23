@@ -1,6 +1,6 @@
 {
-  "baseline_hash": "687281111977b7e8cadef292da1a4299886bfab20832a74ddf35e6d24cd14f0a",
-  "generated_at": "2026-10-23T04:11:41Z",
+  "baseline_hash": "6d5c5a6e89290031ef40fbdc676af88bd1d11a0e8514d65259c29ff87dfa4a84",
+  "generated_at": "2026-10-23T05:33:58Z",
   "source": "billing-rules-manifest@6a4ec3fbe7896cc575c6c8eabecd644fea23f11dd22afa4c970f9dc07d36c4a4",
   "customer_count": 43,
   "customers": [
@@ -253,8 +253,8 @@
     {
       "code": "HRB-GUSHANG",
       "file": "baseline/HRB-GUSHANG.json",
-      "ruleCount": 9,
-      "fileHash": "0381bbd6882f25d20e65b5eafc6401c9c9fc6975992821aadc115b2395381861"
+      "ruleCount": 10,
+      "fileHash": "7ee89268903e4e1350d119982807fdf0bffb40025001ff937f488318455767d1"
     },
     {
       "code": "ZYY-D1",
