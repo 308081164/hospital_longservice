@@ -79,6 +79,14 @@ class SpecialCharge20261023GapPricingTest {
                 .isCloseTo(16.5, CENT);
         assertThat(price(engine, "哈尔滨市第二医院", "额外包（纸塑袋）", "车针-6", 6))
                 .isCloseTo(11.0, CENT);
+        assertThat(price(engine, "哈尔滨市第二医院", "额外包（纸塑袋）", "针线盒（3根针）", 1))
+                .isCloseTo(5.5, CENT);
+        assertThat(price(engine, "哈尔滨市第二医院", "额外包（纸塑袋）", "缝合针-3件", 3))
+                .isCloseTo(5.5, CENT);
+        assertThat(priced(engine, "哈尔滨市第二医院", "额外包（纸塑袋）", "内热针-12件", 12).pricingRule)
+                .contains("通用小件");
+        assertThat(price(engine, "哈尔滨市第二医院", "额外包（纸塑袋）", "内热针-12件", 12))
+                .isCloseTo(16.5, CENT);
     }
 
     @Test
@@ -121,6 +129,32 @@ class SpecialCharge20261023GapPricingTest {
                 .isCloseTo(22.3, CENT);
     }
 
+    @Test
+    void octoberSheetGapsFollowWrittenFormulas() throws Exception {
+        PricingEngine renkou = PricingEngineTestSupport.engineForCustomerCode("HLJ-FY-RK");
+        String renkouName = "黑龙江省妇幼保健院（人口）";
+        assertThat(priced(renkou, renkouName, "额外包低温等离子", "英姿低温组件-3件", 3).pricingRule)
+                .contains("英姿低温组件");
+        assertThat(price(renkou, renkouName, "额外包低温等离子", "英姿低温组件-8件", 8))
+                .isEqualTo(price(renkou, renkouName, "额外包低温等离子", "密封胶圈-8件", 8));
+
+        PricingEngine wuchang = PricingEngineTestSupport.engineForCustomerCode("WUCHANG-RM");
+        assertThat(price(wuchang, "五常市人民医院", "额外包（纸塑袋）", "测试包/双", 4))
+                .isCloseTo(22.0, CENT);
+        assertThat(price(wuchang, "五常市人民医院", "额外包（纸塑袋）", "拉力螺钉-12件", 12))
+                .isCloseTo(50.0, CENT);
+        assertThat(priced(wuchang, "五常市人民医院", "额外包（纸塑袋）", "骨元针-6件", 6).pricingRule)
+                .contains("骨元针");
+
+        PricingEngine hsz = PricingEngineTestSupport.engineForCustomerCode("HRB-HSZ");
+        PricingEngine.ProcessedResult needle = priced(
+                hsz, "哈尔滨红十字医院", "额外包（纸塑袋）", "针类组件-12件", 12);
+        assertThat(needle.pricingRule).contains("针类组件");
+        assertThat(needle.expectedUnitPrice).isCloseTo(16.5, CENT);
+        assertThat(priced(hsz, "哈尔滨红十字医院", "敷料包（无纺布）", "针盒-1/W6050", 1).expectedUnitPrice)
+                .isCloseTo(16.5, CENT);
+    }
+
     private static BillRowItem pricedRow(String type, String packName, double unitPrice) {
         BillRowItem row = new BillRowItem();
         row.setType(type);
@@ -135,11 +169,16 @@ class SpecialCharge20261023GapPricingTest {
     }
 
     private static double price(PricingEngine engine, String hospital, String type, String packName, int count) {
+        return priced(engine, hospital, type, packName, count).expectedUnitPrice;
+    }
+
+    private static PricingEngine.ProcessedResult priced(
+            PricingEngine engine, String hospital, String type, String packName, int count) {
         Map<String, Object> row = PricingEngineTestSupport.row(
                 hospital, type, packName, "高温纸塑袋100*200", count, 1, 1.0, 1.0);
         PricingEngine.ProcessedResult result = engine.processRow(row);
         assertThat(result.expectedUnitPrice).as(packName).isNotNull();
-        return result.expectedUnitPrice;
+        return result;
     }
 
     private static String joined(PricingEngine.ProcessedResult result) {

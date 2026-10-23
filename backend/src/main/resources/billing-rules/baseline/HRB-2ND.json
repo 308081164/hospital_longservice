@@ -169,6 +169,41 @@
       ]
     },
     {
+      "ruleType": "FIXED_PRICE",
+      "name": "市二院针线盒固定5.5",
+      "priority": 23,
+      "price": 5.5,
+      "keywords": [
+        "针线盒（@contains",
+        "针线盒(@contains"
+      ],
+      "skipPackaging": true,
+      "skipDiscount": true,
+      "isActive": true,
+      "matchMode": "first",
+      "keywordMatchMode": "contains",
+      "acceptedTypes": [
+        "额外包（纸塑袋）"
+      ]
+    },
+    {
+      "ruleType": "FIXED_PRICE",
+      "name": "市二院缝合针固定5.5",
+      "priority": 24,
+      "price": 5.5,
+      "keywords": [
+        "缝合针-@contains"
+      ],
+      "skipPackaging": true,
+      "skipDiscount": true,
+      "isActive": true,
+      "matchMode": "first",
+      "keywordMatchMode": "contains",
+      "acceptedTypes": [
+        "额外包（纸塑袋）"
+      ]
+    },
+    {
       "ruleType": "FOLD",
       "name": "市二院小件5合1免包材",
       "priority": 30,
