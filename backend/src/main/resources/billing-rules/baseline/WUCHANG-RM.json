@@ -43,6 +43,66 @@
       "acceptedTypes": [
         "额外包（纸塑袋）"
       ]
+    },
+    {
+      "ruleType": "PRICE_PER_INSTRUMENT",
+      "name": "五常双<3按件5.5加列出的袋封顶16.5",
+      "priority": 20,
+      "price": 5.5,
+      "maxInstrumentCount": 2,
+      "conditionsJson": "[{\"field\": \"bagAddon\", \"value\": \"all\"}, {\"field\": \"capDoubleBag\", \"value\": true}]",
+      "keywords": [
+        "/双@contains",
+        "/(双)@contains",
+        "/（双）@contains"
+      ],
+      "skipPackaging": false,
+      "skipDiscount": true,
+      "isActive": true,
+      "matchMode": "first",
+      "keywordMatchMode": "contains",
+      "acceptedTypes": [
+        "额外包（纸塑袋）"
+      ]
+    },
+    {
+      "ruleType": "PRICE_PER_INSTRUMENT",
+      "name": "五常双≥3按件5.5不加袋",
+      "priority": 21,
+      "price": 5.5,
+      "minInstrumentCount": 3,
+      "conditionsJson": "[{\"field\": \"bagAddon\", \"value\": \"none\"}]",
+      "keywords": [
+        "/双@contains",
+        "/(双)@contains",
+        "/（双）@contains"
+      ],
+      "skipPackaging": false,
+      "skipDiscount": true,
+      "isActive": true,
+      "matchMode": "first",
+      "keywordMatchMode": "contains",
+      "acceptedTypes": [
+        "额外包（纸塑袋）"
+      ]
+    },
+    {
+      "ruleType": "FIXED_PRICE",
+      "name": "五常钉≥10固定50",
+      "priority": 16,
+      "price": 50.0,
+      "minInstrumentCount": 10,
+      "keywords": [
+        "钉@contains"
+      ],
+      "skipPackaging": true,
+      "skipDiscount": true,
+      "isActive": true,
+      "matchMode": "first",
+      "keywordMatchMode": "contains",
+      "acceptedTypes": [
+        "额外包（纸塑袋）"
+      ]
     }
   ]
 }

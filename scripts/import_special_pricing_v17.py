@@ -59,6 +59,7 @@ HOSPITAL_TO_CODE: dict[str, str] = {
     "黑龙江菁华上德生殖妇产医院": "JINGHUA-SD",
     "哈尔滨红十字医院": "HRB-HSZ",
     "哈尔滨市第二医院": "HRB-2ND",
+    "哈尔滨市骨伤科医院\n（低温费用有内勤规则）": "HRB-GUSHANG",
 }
 
 

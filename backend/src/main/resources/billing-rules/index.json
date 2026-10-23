@@ -1,6 +1,6 @@
 {
-  "baseline_hash": "243f1472788a1eb0071174f9d074d61bef736a015f948f422707d30c94d9520d",
-  "generated_at": "2026-10-22T16:59:47Z",
+  "baseline_hash": "687281111977b7e8cadef292da1a4299886bfab20832a74ddf35e6d24cd14f0a",
+  "generated_at": "2026-10-23T04:11:41Z",
   "source": "billing-rules-manifest@6a4ec3fbe7896cc575c6c8eabecd644fea23f11dd22afa4c970f9dc07d36c4a4",
   "customer_count": 43,
   "customers": [
@@ -73,8 +73,8 @@
     {
       "code": "HLJ-FY-RK",
       "file": "baseline/HLJ-FY-RK.json",
-      "ruleCount": 34,
-      "fileHash": "2a2792199c5c0e022b1f3ad8a80d50526d75b501ff322c36daba409a66214ba0"
+      "ruleCount": 36,
+      "fileHash": "0947d96b42c70e2c74bdcae838cbae2c05a09013f2f5e6355ad65813842e3ff9"
     },
     {
       "code": "ZUYAN-NG",
@@ -229,8 +229,8 @@
     {
       "code": "WUCHANG-RM",
       "file": "baseline/WUCHANG-RM.json",
-      "ruleCount": 2,
-      "fileHash": "6d4e122c22958a3aab38020f9e4cd9b6438cb80e08e551fba06dde85a0ed9d63"
+      "ruleCount": 5,
+      "fileHash": "029a41767cf275ad35e43b9e5d3801b2ab69e5f4a1f9bab7b3864c01ba6e7fec"
     },
     {
       "code": "JINGHUA-SD",
@@ -241,14 +241,14 @@
     {
       "code": "HRB-HSZ",
       "file": "baseline/HRB-HSZ.json",
-      "ruleCount": 4,
-      "fileHash": "98949e820c1ca805b1a942863e151e561bceaa35c560538f3d544f473e101a37"
+      "ruleCount": 6,
+      "fileHash": "2f71798adf4ad8a2f734fc3acc5d07bfa8d52996ada014c4ccf89cafc3aa9ea8"
     },
     {
       "code": "HRB-2ND",
       "file": "baseline/HRB-2ND.json",
-      "ruleCount": 9,
-      "fileHash": "c5fc9acb48f72ea4a959efd78c14720d33df88030bb4fc671878b4c5752934b4"
+      "ruleCount": 11,
+      "fileHash": "c27ec604d61397c73708324014ae5ef508051a36da7076e8c4d60f58786d112d"
     },
     {
       "code": "HRB-GUSHANG",
