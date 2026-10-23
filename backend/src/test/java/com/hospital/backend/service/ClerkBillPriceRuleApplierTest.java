@@ -195,6 +195,49 @@ class ClerkBillPriceRuleApplierTest {
     }
 
     @Test
+    void aolanOctober20SheetRenamesAndDropsSmallForceps() {
+        ObjectNode compiled = compiler.compileForCustomer("AOLAN-YY");
+
+        BillRowItem forceps = new BillRowItem();
+        forceps.setType("器械包");
+        forceps.setPackName("镊子（大）");
+        forceps.setInstrumentCount(3);
+        forceps.setPackCount(1);
+        forceps.setTotalPrice(99.0);
+        assertThat(applier.apply(compiled, List.of(forceps)).rows().get(0).getTotalPrice()).isEqualTo(5.0);
+
+        BillRowItem suture = new BillRowItem();
+        suture.setType("器械包");
+        suture.setPackName("缝合包");
+        suture.setInstrumentCount(8);
+        suture.setPackCount(1);
+        suture.setTotalPrice(99.0);
+        assertThat(applier.apply(compiled, List.of(suture)).rows().get(0).getTotalPrice()).isEqualTo(24.0);
+
+        BillRowItem scope = new BillRowItem();
+        scope.setType("器械包");
+        scope.setPackName("宫腔镜-3件");
+        scope.setInstrumentCount(1);
+        scope.setPackCount(1);
+        scope.setTotalPrice(99.0);
+        assertThat(applier.apply(compiled, List.of(scope)).rows().get(0).getTotalPrice()).isEqualTo(44.0);
+
+        BillRowItem tongue = new BillRowItem();
+        tongue.setType("器械包");
+        tongue.setPackName("弯舌钳");
+        tongue.setPackCount(1);
+        tongue.setTotalPrice(99.0);
+        assertThat(applier.apply(compiled, List.of(tongue)).rows().get(0).getTotalPrice()).isEqualTo(5.0);
+
+        BillRowItem removed = new BillRowItem();
+        removed.setType("器械包");
+        removed.setPackName("小镊子");
+        removed.setPackCount(1);
+        removed.setTotalPrice(99.0);
+        assertThat(applier.apply(compiled, List.of(removed)).rows().get(0).getTotalPrice()).isEqualTo(99.0);
+    }
+
+    @Test
     void packNameKeywordsUseExactTokenByDefault() {
         ObjectNode compiled = compiledWithPackNameRule("小缝合包", 157.0);
         BillRowItem embedded = new BillRowItem();

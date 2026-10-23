@@ -1,5 +1,9 @@
 #!/usr/bin/env python3
-"""从 医院内勤规则-20260924.xlsx 生成 clerk-rules v2 baseline。"""
+"""从 医院内勤规则10.20(1).xlsx 生成 clerk-rules v2 baseline。
+
+亮黄填充 FFFFFF00 是未定稿，不得当成已确认规则覆盖 baseline。
+本脚本只声明权威路径。整本重写会冲掉表外手改，运行前必须先对照差异。
+"""
 from __future__ import annotations
 
 import hashlib
@@ -14,15 +18,15 @@ import openpyxl
 
 ROOT = Path(__file__).resolve().parents[1]
 # 云端以 docs/source 为准；本地旧目录保留兼容回退
-XLSX = ROOT / "docs/source/医院内勤规则-20260924.xlsx"
+XLSX = ROOT / "docs/source/医院内勤规则10.20(1).xlsx"
 if not XLSX.is_file():
-    XLSX = ROOT / "铂康/内勤要求/医院内勤规则-20260924.xlsx"
+    XLSX = ROOT / "docs/source/医院内勤规则-20260924.xlsx"
 CLERK_DIR = ROOT / "backend/src/main/resources/clerk-rules"
 BASELINE_DIR = CLERK_DIR / "baseline"
 ATTACH_DST = CLERK_DIR / "attachments"
 MAPPING_OUT = ROOT / "docs/clerk-rules-excel-mapping.json"
 HOSPITAL_LIST_OUT = ROOT / "docs/内勤规则医院清单.md"
-SOURCE_VERSION = "医院内勤规则-20260924"
+SOURCE_VERSION = "医院内勤规则10.20(1)"
 
 CODE_NAMES = {
     "DAOWAI-RM": "哈尔滨市道外区人民医院",
@@ -211,6 +215,18 @@ def _parse_system_price(raw) -> tuple[float | None, str]:
         return None, "IGNORE"
 
 
+def _match_mode_from_note(note) -> str | None:
+    """Excel 措辞：精准匹配=词边界，包含/包含关系=子串。"""
+    if note is None:
+        return None
+    text = str(note)
+    if "精准匹配" in text:
+        return "exact_token"
+    if "包含" in text:
+        return "contains"
+    return None
+
+
 def _pack_name_keywords(pack_name) -> list[str] | None:
     if pack_name is None or str(pack_name).strip() == "":
         return None
@@ -344,8 +360,14 @@ def parse_bill_row(row: tuple, hospital: str, idx: int) -> list[dict]:
         if mat:
             pack_params["packagingMaterial"] = str(mat).strip()
         rule_name = str(mat).strip() if mat else (kw[0] if kw else "按包名")
+        match_mode = _match_mode_from_note(note)
+        if match_mode:
+            pack_params["packNameMatchMode"] = match_mode
+        source = f"{pack_name} {mat or ''} {unit_p}".strip()
+        if note:
+            source = f"{source} {note}".strip()
         rules.append(_rule(rule_name, "PACK_NAME_PRICE", "bill_export", pack_params,
-                           f"{pack_name} {mat or ''} {unit_p}".strip(), ref, priority=10 + idx))
+                           source, ref, priority=10 + idx))
         return rules
 
     types = _split_types(pack_type)
@@ -527,11 +549,12 @@ def _parse_aolan_instrument_range(raw) -> str | None:
 
 
 def parse_aolan_row(row: tuple, idx: int) -> dict | None:
-    """奥兰医院规则 sheet：序号, 器械包类型(参考), 包名, 器械件数, 价格。
+    """奥兰医院规则 sheet：序号, 器械包类型(参考), 包名, 器械件数, 价格, 备注。
 
     2026-09-29 起奥兰改为仅按包名匹配，不再用 acceptedTypes 门控 Excel「类型」列。
+    备注「包含关系」按子串匹配。
     """
-    seq, _pack_type_hint, pack_name, inst, price = (row + (None,) * 6)[:5]
+    seq, _pack_type_hint, pack_name, inst, price, note = (row + (None,) * 6)[:6]
     if not pack_name or str(pack_name).strip() in ("包名", "附件二：消毒灭菌服务价格表"):
         return None
     try:
@@ -547,7 +570,13 @@ def parse_aolan_row(row: tuple, idx: int) -> dict | None:
         "unitPriceMode": "FIXED",
         "systemPriceMode": "IGNORE",
     }
-    return _rule(name, "PACK_NAME_PRICE", "bill_export", params, f"{name} {inst} {price}", ref, priority=10 + idx)
+    match_mode = _match_mode_from_note(note)
+    if match_mode:
+        params["packNameMatchMode"] = match_mode
+    source = f"{name} {inst} {price}"
+    if note:
+        source = f"{source} {note}".strip()
+    return _rule(name, "PACK_NAME_PRICE", "bill_export", params, source, ref, priority=10 + idx)
 
 
 def load_excel_data():

@@ -1,13 +1,13 @@
 {
-  "baseline_hash": "412844e7e3dab5c92e9559b74d7b75cfbe6f00d78740724778007f2a763e00ea",
-  "generated_at": "2026-10-22T10:11:09Z",
-  "source": "docs/source/附一收费标准.xlsx + 铂康/内勤要求/医院内勤规则-20260924.xlsx",
+  "baseline_hash": "eafdec7260a97e1b5fe02a454842a406b6aa4f4bce010dadc8081ccb6a1288a4",
+  "generated_at": "2026-10-23T06:21:45Z",
+  "source": "docs/source/医院内勤规则10.20(1).xlsx + docs/source/附一收费标准.xlsx",
   "customer_count": 43,
   "customers": [
     {
       "code": "AOLAN-YY",
       "file": "baseline/AOLAN-YY.json",
-      "ruleCount": 196
+      "ruleCount": 195
     },
     {
       "code": "DAOWAI-RM",
@@ -92,7 +92,7 @@
     {
       "code": "HULAN-RM",
       "file": "baseline/HULAN-RM.json",
-      "ruleCount": 0
+      "ruleCount": 1
     },
     {
       "code": "HULAN-TCM",
@@ -112,7 +112,7 @@
     {
       "code": "NG-FUCHAN",
       "file": "baseline/NG-FUCHAN.json",
-      "ruleCount": 23
+      "ruleCount": 21
     },
     {
       "code": "RENSHENG",
