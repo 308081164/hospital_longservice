@@ -58,10 +58,33 @@ public class FuyiSupplementExportSupport {
     }
 
     public Double resolveLogisticsFee(HospitalReconciliationJob job) {
-        if (job == null || job.getLogisticsFee() == null) {
+        return resolveLogisticsFee(job, List.of());
+    }
+
+    public Double resolveLogisticsFee(HospitalReconciliationJob job, List<HospitalReconciliationRow> rows) {
+        if (job != null && job.getLogisticsFee() != null && job.getLogisticsFee() > 0.005) {
+            return roundCurrency(job.getLogisticsFee());
+        }
+        if (job == null) {
             return null;
         }
-        return roundCurrency(job.getLogisticsFee());
+        try {
+            JsonNode baseRules = loadRulesForJob(job);
+            JsonNode compiled = clerkCompiledRulesResolver.resolve(job, baseRules);
+            Long customerId = customerResolver.resolveByName(job.getHospitalName())
+                    .map(c -> c.getId())
+                    .orElse(null);
+            String billingMonth = BillingMonthResolver.resolve(job);
+            Map<String, Object> breakdown = logisticsPipelineService.buildBreakdownForJob(
+                    customerId, job.getId(), billingMonth, compiled, toRowMaps(rows), false);
+            Object payable = breakdown.getOrDefault("payableFee", breakdown.get("total"));
+            if (payable instanceof Number number && number.doubleValue() > 0.005) {
+                return roundCurrency(number.doubleValue());
+            }
+        } catch (RuntimeException ignored) {
+            return null;
+        }
+        return null;
     }
 
     public Map<String, Double> aggregateDeptTotals(List<HospitalReconciliationRow> rows) {
@@ -138,6 +161,8 @@ public class FuyiSupplementExportSupport {
             map.put("totalPrice", exportTotal);
             map.put("packCount", row.getPackCount());
             map.put("isUrgent", row.getIsUrgent());
+            map.put("deliveryDate", row.getDeliveryDate());
+            map.put("orderNo", row.getOrderNo());
             rowMaps.add(map);
         }
         return rowMaps;

@@ -8,6 +8,7 @@ import com.hospital.backend.export.ExportStageDiscountApplier;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Set;
@@ -80,6 +81,52 @@ class ReconciliationPricingOrchestratorTest {
         assertThat(result.correctedTotalPrice).isEqualTo(10.0);
         assertThat(result.difference).isEqualTo(2.0);
         assertThat(result.status).isEqualTo("warning");
+    }
+
+    @Test
+    void zyyDressingUsesEngineDiscountInsteadOfPreservingBillPrice() {
+        PricingEngine spyEngine = new PricingEngine(JsonUtils.getObjectMapper().createObjectNode()) {
+            @Override
+            public ProcessedResult processRow(Map<String, Object> row) {
+                ProcessedResult pr = new ProcessedResult();
+                pr.expectedUnitPrice = 3.2;
+                pr.pricingRule = "敷料包(纸塑袋)——32cm + 黑龙江中医药大学附属第一医院 折扣";
+                pr.pricingPath = "standard";
+                pr.notes = new ArrayList<>(java.util.List.of(
+                        "命中附一对账八折，基础规则单价 4.00 元 → 3.20 元。"));
+                return pr;
+            }
+        };
+        Map<String, Object> row = baseRow("纱布/Z3032", "敷料包(纸塑袋)", 0);
+        row.put("unitPrice", 3.2);
+        row.put("totalPrice", 3.2);
+
+        PricingEngine.ProcessedResult result = orchestrator.processRow(
+                row, spyEngine, null, "ZYY-D1", Set.of());
+
+        assertThat(result.pricingRule).doesNotContain("保留睿思原价");
+        assertThat(result.expectedUnitPrice).isEqualTo(3.2);
+        assertThat(result.notes).anyMatch(note -> note.contains("附一对账八折"));
+    }
+
+    @Test
+    void otherHospitalDressingStillKeepsRuisiPrice() {
+        PricingEngine spyEngine = new PricingEngine(JsonUtils.getObjectMapper().createObjectNode()) {
+            @Override
+            public ProcessedResult processRow(Map<String, Object> row) {
+                throw new AssertionError("非附一敷料包不应进入计价引擎");
+            }
+        };
+        Map<String, Object> row = baseRow("纱布", "敷料包(纸塑袋)", 0);
+        row.put("unitPrice", 3.2);
+        row.put("totalPrice", 3.2);
+
+        PricingEngine.ProcessedResult result = orchestrator.processRow(
+                row, spyEngine, null, "ERYY-NG", Set.of());
+
+        assertThat(result.pricingRule).contains("保留睿思原价");
+        assertThat(result.expectedUnitPrice).isEqualTo(3.2);
+        assertThat(result.skipHospitalDiscount).isTrue();
     }
 
     @Test
