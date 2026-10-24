@@ -346,6 +346,56 @@ class ClerkRuleCompilerTest {
                 .isNull();
     }
 
+    @Test
+    void zyyD1October20FormulasStayVisibleAndDoNotStackExportDiscount() {
+        JsonNode baseline = new ClerkRuleIndex().baselineForCustomer("ZYY-D1");
+        assertThat(baseline.path("rules")).hasSize(15);
+        List<String> formulaRefs = new java.util.ArrayList<>();
+        int sealed = 0;
+        for (JsonNode rule : baseline.path("rules")) {
+            if ("BILL_FORMULA".equals(rule.path("ruleType").asText())) {
+                assertThat(rule.path("isActive").asBoolean()).isTrue();
+                formulaRefs.add(rule.path("sourceRef").asText());
+            }
+            if (Boolean.FALSE.equals(rule.path("isActive").asBoolean(true))) {
+                sealed++;
+            }
+        }
+        assertThat(formulaRefs).containsExactly(
+                "excel:医院内勤规则10.20(1).xlsx#账单规则#103",
+                "excel:医院内勤规则10.20(1).xlsx#账单规则#104",
+                "excel:医院内勤规则10.20(1).xlsx#账单规则#105",
+                "excel:医院内勤规则10.20(1).xlsx#账单规则#106",
+                "excel:医院内勤规则10.20(1).xlsx#账单规则#107",
+                "excel:医院内勤规则10.20(1).xlsx#账单规则#108");
+        assertThat(sealed).isEqualTo(2);
+
+        ObjectNode compiled = compiler.compileForCustomer("ZYY-D1");
+        assertThat(compiled).isNotNull();
+        List<String> compiledFormulas = new java.util.ArrayList<>();
+        for (JsonNode rule : compiled.path("clerkRules")) {
+            if ("BILL_FORMULA".equals(rule.path("ruleType").asText())) {
+                compiledFormulas.add(rule.path("name").asText());
+            }
+            assertThat(rule.path("name").asText()).doesNotContain("封存");
+        }
+        assertThat(compiledFormulas).containsExactly(
+                "附一≥3件标准价八折",
+                "附一敷料纸塑标准价八折",
+                "附一＜3件标准价八折再乘0.999",
+                "附一额外无纺布＜3固定13.2",
+                "附一低温件数无关八折再乘0.999",
+                "附一敷料无纺布件数无关八折再乘0.999");
+        for (JsonNode policy : compiled.path("billingPolicies")) {
+            assertThat(policy.path("name").asText()).doesNotContain("标准价八折");
+            assertThat(policy.path("name").asText()).doesNotContain("13.2");
+            assertThat(policy.path("name").asText()).doesNotContain("0.999");
+            if ("DISCOUNT".equals(policy.path("policyType").asText())) {
+                assertThat(policy.path("params").path("applyStage").asText()).isNotEqualTo("export_only");
+            }
+        }
+    }
+
     private void assertSettlementSterilizeRate(String code, String hospitalName, double rate, double discounted) {
         ObjectNode compiled = compiler.compileForCustomer(code);
         assertThat(compiled).isNotNull();

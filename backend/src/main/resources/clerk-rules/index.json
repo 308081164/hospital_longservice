@@ -1,6 +1,6 @@
 {
-  "baseline_hash": "eafdec7260a97e1b5fe02a454842a406b6aa4f4bce010dadc8081ccb6a1288a4",
-  "generated_at": "2026-10-23T06:21:45Z",
+  "baseline_hash": "4098a5b5e8e79c6f0d21dc534b17644085791dc5150ba2fefe1da7807507ab14",
+  "generated_at": "2026-10-24T05:05:19Z",
   "source": "docs/source/医院内勤规则10.20(1).xlsx + docs/source/附一收费标准.xlsx",
   "customer_count": 43,
   "customers": [
@@ -207,7 +207,7 @@
     {
       "code": "ZYY-D1",
       "file": "baseline/ZYY-D1.json",
-      "ruleCount": 9
+      "ruleCount": 15
     },
     {
       "code": "ZYY-D2-HN",

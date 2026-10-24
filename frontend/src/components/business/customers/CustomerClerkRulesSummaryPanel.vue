@@ -115,6 +115,7 @@
 
   const RULE_TYPE_I18N: Record<string, string> = {
     BILL_EXPORT_PRICE_RULE: 'menus.masterData.customerClerkRules.typeBillExportPrice',
+    BILL_FORMULA: 'menus.masterData.customerClerkRules.typeBillFormula',
     SETTLEMENT_DISCOUNT: 'menus.masterData.customerClerkRules.typeSettlementDiscount',
     SETTLEMENT_MIN_CHARGE: 'menus.masterData.customerClerkRules.typeSettlementMinCharge',
     LOGISTICS_FEE: 'menus.masterData.customerClerkRules.typeLogisticsFee',
