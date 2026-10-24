@@ -70,7 +70,7 @@
             </ElTag>
           </div>
           <div class="text-sm text-gray-600">
-            <div>{{ rule.ruleType }} · {{ rule.stage }}</div>
+            <div>{{ ruleTypeLabel(rule.ruleType) }} · {{ rule.stage }}</div>
             <div v-if="rule.params" class="mt-1 text-xs font-mono text-gray-500">
               {{ formatParams(rule.params) }}
             </div>
@@ -138,6 +138,11 @@ async function load() {
   } finally {
     loading.value = false
   }
+}
+
+function ruleTypeLabel(ruleType?: string) {
+  if (ruleType === 'BILL_FORMULA') return t('menus.billingConfig.clerkRuleTypeBillFormula')
+  return ruleType || ''
 }
 
 function formatParams(params: unknown) {
