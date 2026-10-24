@@ -52,7 +52,8 @@ public class ReconciliationPricingOrchestrator {
             clerkPrice = clerkBillPriceRuleApplier.findMatchingPriceRule(
                     clerkCompiled, clerkRow, customerCode, Set.of());
         }
-        if (clerkPrice.isEmpty() && isDressingPack(stringVal(rowMap, "type"))) {
+        if (clerkPrice.isEmpty() && isDressingPack(stringVal(rowMap, "type"))
+                && !fuyiDressingUsesStandardDiscount(customerCode)) {
             return preserveDressingOriginal(rowMap, calculationSteps);
         }
 
@@ -254,6 +255,14 @@ public class ReconciliationPricingOrchestrator {
 
     private static boolean isDressingPack(String type) {
         return type != null && type.contains("敷料包");
+    }
+
+    /**
+     * 中医附一 10.20 账单规则：敷料纸塑按标准价×0.8，敷料无纺布按标准价×0.8×0.999。
+     * 其他医院仍保留睿思原价、不再打折。
+     */
+    private static boolean fuyiDressingUsesStandardDiscount(String customerCode) {
+        return "ZYY-D1".equals(customerCode);
     }
 
     private PricingEngine.ProcessedResult preserveDressingOriginal(

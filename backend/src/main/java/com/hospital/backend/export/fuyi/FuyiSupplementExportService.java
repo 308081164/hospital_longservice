@@ -24,7 +24,7 @@ public class FuyiSupplementExportService {
                 job,
                 FuyiSupplementWorkbookBuilder.aggregateDeptTotals(rows),
                 exportSupport.resolveWashFee(job),
-                exportSupport.resolveLogisticsFee(job));
+                exportSupport.resolveLogisticsFee(job, rows));
     }
 
     public byte[] exportLogisticsAllocation(HospitalReconciliationJob job, List<HospitalReconciliationRow> rows)
