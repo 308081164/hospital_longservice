@@ -1,6 +1,6 @@
 {
-  "baseline_hash": "25b1ff96d7fe90fddf546fb0c4d4065e8530a39bc3b779ff3e3925e754da68cb",
-  "generated_at": "2026-10-26T02:06:00Z",
+  "baseline_hash": "a99448f35aa9f3e56540e14829451e954f8bb18acf725d744fca9840da3afd1c",
+  "generated_at": "2026-10-26T06:42:21Z",
   "source": "billing-rules-manifest@6a4ec3fbe7896cc575c6c8eabecd644fea23f11dd22afa4c970f9dc07d36c4a4",
   "customer_count": 43,
   "customers": [
@@ -211,8 +211,8 @@
     {
       "code": "SHENG-YY-XF",
       "file": "baseline/SHENG-YY-XF.json",
-      "ruleCount": 12,
-      "fileHash": "ce6432234548b3c7f95ce6bdcc3dd0b8941e80cb8f46f83af61d4cdf92616de8"
+      "ruleCount": 11,
+      "fileHash": "f62744fcd49c17553939e34f692112d804d32e4138f594de15e0326addf5fdee"
     },
     {
       "code": "HRB-HIT",

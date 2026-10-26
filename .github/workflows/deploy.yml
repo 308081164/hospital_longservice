@@ -63,7 +63,7 @@ jobs:
 
       - name: Run backend unit tests (golden rows + pricing)
         working-directory: backend
-        run: mvn -q test -Dtest=PricingEngineTest#goldenRowsRegression,PricingRuleCompilerIntegrationTest,CustomerServiceImplTest,RuleEntrySemanticsTest,PricingRuleCompilerSemanticTest,SpecialCharge11CoverageTest,PricingEngineSpecialRulesTest,PricingEngineStandardPathTest,PricingEngineBillingModeTest,RuleTypeCoverageGateTest,RuleFidelityRegressionTest,PricingEngineTestSupportFidelityTest,RuleQuarantineServiceTest,SpecialCharge20261023GapPricingTest
+        run: mvn -q test -Dtest=PricingEngineTest#goldenRowsRegression,PricingRuleCompilerIntegrationTest,CustomerServiceImplTest,RuleEntrySemanticsTest,PricingRuleCompilerSemanticTest,SpecialCharge11CoverageTest,PricingEngineSpecialRulesTest,PricingEngineStandardPathTest,PricingEngineBillingModeTest,RuleTypeCoverageGateTest,RuleFidelityRegressionTest,PricingEngineTestSupportFidelityTest,RuleQuarantineServiceTest,SpecialCharge20261023GapPricingTest,XiangfangW12050FangliaoPricingTest
 
       - name: Set up pnpm
         uses: pnpm/action-setup@v4

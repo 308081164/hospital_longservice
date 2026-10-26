@@ -72,11 +72,11 @@
     },
     {
       "ruleType": "PRICE_PER_INSTRUMENT",
-      "name": "省医院香坊120无纺布器械包按件5.5",
+      "name": "省医院香坊放疗科W12050按件5.5加5",
       "priority": 10,
       "price": 5.5,
       "keywords": [
-        "器械包-\\d+件（用120无纺布包装）@regex"
+        "器械包-\\d+件/W12050@regex"
       ],
       "skipPackaging": true,
       "skipDiscount": true,
@@ -84,23 +84,8 @@
       "matchMode": "first",
       "acceptedTypes": [
         "额外包（无纺布）"
-      ]
-    },
-    {
-      "ruleType": "EXTRA_FEE",
-      "name": "省医院香坊120无纺布器械包加价5",
-      "priority": 11,
-      "fee": 5.0,
-      "keywords": [
-        "器械包-\\d+件（用120无纺布包装）@regex"
       ],
-      "skipPackaging": true,
-      "skipDiscount": true,
-      "isActive": true,
-      "matchMode": "first",
-      "acceptedTypes": [
-        "额外包（无纺布）"
-      ]
+      "conditionsJson": "[{\"field\": \"department\", \"value\": \"放疗科\"}, {\"field\": \"flatAddon\", \"value\": 5}]"
     },
     {
       "ruleType": "FIXED_PRICE",
