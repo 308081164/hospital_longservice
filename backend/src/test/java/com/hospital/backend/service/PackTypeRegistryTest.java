@@ -7,8 +7,23 @@ import static org.assertj.core.api.Assertions.assertThat;
 class PackTypeRegistryTest {
 
     @Test
-    void loadsSixteenPackTypes() {
-        assertThat(PackTypeRegistry.allDefinitions()).hasSize(16);
+    void loadsDeclaredPackTypeCount() {
+        assertThat(PackTypeRegistry.allDefinitions()).hasSize(PackTypeRegistry.PACK_TYPE_COUNT);
+    }
+
+    @Test
+    void cottonExtraPackMatchesEitherBracketAndAllowsNonWoven() {
+        assertThat(PackTypeRegistry.match("额外包（棉布包装）"))
+                .map(PackTypeRegistry.PackTypeDefinition::canonical)
+                .contains("额外包（棉布包装）");
+        var def = PackTypeRegistry.match("额外包(棉布包装)").orElseThrow();
+        assertThat(def.canonical()).isEqualTo("额外包（棉布包装）");
+        assertThat(PackTypeRegistry.materialAllowed(def, "无纺布-60×60-50g")).isTrue();
+        assertThat(PackTypeRegistry.materialAllowed(def, "无纺布-90×90-50g")).isTrue();
+        assertThat(PackTypeRegistry.materialAllowed(def, "布-120×120-50g")).isFalse();
+        assertThat(PackTypeRegistry.classifyMaterial("无纺布-60×60-50g"))
+                .isEqualTo(PackTypeRegistry.MaterialFamily.NON_WOVEN);
+        assertThat(PackTypeRegistry.isLowTempPackType("额外包(棉布包装)")).isFalse();
     }
 
     @Test

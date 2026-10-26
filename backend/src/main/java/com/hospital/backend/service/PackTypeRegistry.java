@@ -15,7 +15,7 @@ import java.util.Set;
 
 /**
  * 包类型与包材对照表（{@code pack-type-material-map.json}）权威注册表。
- * <p>系统仅识别表内 16 种包类型；灭菌方式由包类型锁定，不再从包名/包材推断低温。
+ * <p>系统仅识别表内 {@link #PACK_TYPE_COUNT} 种包类型；灭菌方式由包类型锁定，不再从包名/包材推断低温。
  */
 public final class PackTypeRegistry {
 
@@ -39,6 +39,9 @@ public final class PackTypeRegistry {
             String canonical,
             Set<MaterialFamily> allowedMaterials,
             SterilizationMode sterilization) {}
+
+    /** 与 pack-type-material-map.json 的 packTypes 条数保持一致。 */
+    public static final int PACK_TYPE_COUNT = 17;
 
     private static final List<PackTypeDefinition> DEFINITIONS = loadDefinitions();
 
@@ -199,8 +202,9 @@ public final class PackTypeRegistry {
                         node.path("sterilization").asText("HIGH_TEMP"));
                 defs.add(new PackTypeDefinition(canonical, Set.copyOf(materials), mode));
             }
-            if (defs.size() != 16) {
-                throw new IllegalStateException("包类型对照表必须为 16 种，实际 " + defs.size());
+            if (defs.size() != PACK_TYPE_COUNT) {
+                throw new IllegalStateException(
+                        "包类型对照表必须为 " + PACK_TYPE_COUNT + " 种，实际 " + defs.size());
             }
             return defs;
         } catch (Exception e) {

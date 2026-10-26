@@ -11,7 +11,7 @@ import java.util.Optional;
 
 /**
  * 账单行字段校验（error 级）：单价为 0 时所有包类型均记异常；
- * 包类型须在对照表 16 种之内；包材须与包类型允许列表一致（尺寸/克重后缀忽略）；
+ * 包类型须在对照表之内；包材须与包类型允许列表一致（尺寸/克重后缀忽略）；
  * 敷料包类型豁免器械数为 0；允许「无包材」的敷料包豁免包装材料为空。
  */
 public final class BillRowBillingValidator {
@@ -51,7 +51,8 @@ public final class BillRowBillingValidator {
             fields.put("type", type == null ? "" : type);
             violations.add(new Violation(
                     CODE_UNKNOWN_PACK_TYPE,
-                    "包类型不在对照表 16 种之内，请按《包类型与包材对照表》填写",
+                    "包类型不在对照表 " + PackTypeRegistry.PACK_TYPE_COUNT
+                            + " 种之内，请按《包类型与包材对照表》填写",
                     SEVERITY_ERROR,
                     fields));
             return violations;

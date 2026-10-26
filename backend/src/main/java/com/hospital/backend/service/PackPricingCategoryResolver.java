@@ -23,7 +23,9 @@ public final class PackPricingCategoryResolver {
             int packCount) {
         Optional<PackTypeDefinition> def = PackTypeRegistry.match(type);
         if (def.isEmpty()) {
-            return new Resolution(PackPricingCategory.UNKNOWN, "包类型不在对照表 16 种之内");
+            return new Resolution(
+                    PackPricingCategory.UNKNOWN,
+                    "包类型不在对照表 " + PackTypeRegistry.PACK_TYPE_COUNT + " 种之内");
         }
         MaterialFamily materialFamily = PackTypeRegistry.classifyMaterial(packageMaterial);
         if (!PackTypeRegistry.materialAllowed(def.get(), packageMaterial)) {
