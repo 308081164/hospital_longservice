@@ -280,6 +280,31 @@ class SpecialCharge20261023GapPricingTest {
     }
 
     @Test
+    void fuyiRinseHeadUsesTheSameLowTempFoldAsOliveHead() throws Exception {
+        PricingEngine engine = PricingEngineTestSupport.engineForCustomerCode("ZYY-D1");
+        String hospital = "黑龙江中医药大学附属第一医院";
+        String type = "额外包低温等离子";
+        String material = "低温纸塑袋75*200";
+
+        PricingEngine.ProcessedResult olive4 = engine.processRow(PricingEngineTestSupport.row(
+                hospital, type, "橄榄头-4", material, 4, 1, 99, 99));
+        PricingEngine.ProcessedResult rinse4 = engine.processRow(PricingEngineTestSupport.row(
+                hospital, type, "冲洗头-4", material, 4, 1, 99, 99));
+        assertThat(rinse4.pricingRule).contains("冲洗头≤5按1件");
+        assertThat(joined(rinse4)).contains("折算为 1 件");
+        assertThat(rinse4.expectedUnitPrice).isCloseTo(olive4.expectedUnitPrice, CENT);
+
+        PricingEngine.ProcessedResult olive6 = engine.processRow(PricingEngineTestSupport.row(
+                hospital, type, "橄榄头-6", material, 6, 1, 99, 99));
+        PricingEngine.ProcessedResult rinse6 = engine.processRow(PricingEngineTestSupport.row(
+                hospital, type, "冲洗头-6", material, 6, 1, 99, 99));
+        assertThat(rinse6.pricingRule).contains("冲洗头>5折算22");
+        assertThat(joined(rinse6)).contains("折算为 2 件");
+        assertThat(rinse6.expectedUnitPrice).isCloseTo(olive6.expectedUnitPrice, CENT);
+        assertThat(rinse6.expectedUnitPrice).isCloseTo(35.16, CENT);
+    }
+
+    @Test
     void octoberSheetGapsFollowWrittenFormulas() throws Exception {
         PricingEngine renkou = PricingEngineTestSupport.engineForCustomerCode("HLJ-FY-RK");
         String renkouName = "黑龙江省妇幼保健院（人口）";

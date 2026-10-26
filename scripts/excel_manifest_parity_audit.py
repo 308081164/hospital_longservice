@@ -203,6 +203,22 @@ def template_fold_scoped_to_paper() -> bool:
     return all(k in body or k in text for k in GLOBAL_FOLD_KEYWORDS)
 
 
+QUOTE_RE = re.compile(r'[“"]([^”"]+)[”"]')
+
+
+def quoted_keywords(text: str) -> list[str]:
+    return [q.strip() for q in QUOTE_RE.findall(text or "") if q.strip()]
+
+
+def keyword_or_global(rules: list[dict], mode: str, keyword: str, pack_type: str) -> bool:
+    if keyword_covered(rules, mode, keyword):
+        return True
+    # 通用 8 词只在纸塑袋上由模板承接（市二内热针等院表重复声明）。
+    if mode == "contains" and global_fold_covers(keyword) and "纸塑" in pack_type:
+        return template_fold_scoped_to_paper()
+    return False
+
+
 def row_covered(row: dict) -> bool:
     code = HOSPITAL_TO_CODE.get(row["hospital"])
     rules = active_rules(code)
@@ -213,12 +229,11 @@ def row_covered(row: dict) -> bool:
         return irrelevant_covered(rules, pack_type)
     if mode == "generic":
         return True
-    if keyword_covered(rules, mode, keyword):
-        return True
-    # 通用 8 词只在纸塑袋上由模板承接（市二内热针等院表重复声明）。
-    if mode == "contains" and global_fold_covers(keyword) and "纸塑" in pack_type:
-        return template_fold_scoped_to_paper()
-    return False
+    # 「包名称带“橄榄头”/“冲洗头”」要两个词都有规则，不能只盖住引号里的第一个。
+    quotes = quoted_keywords(row.get("pack_name") or "")
+    if mode == "contains" and len(quotes) > 1:
+        return all(keyword_or_global(rules, mode, q, pack_type) for q in quotes)
+    return keyword_or_global(rules, mode, keyword, pack_type)
 
 
 def check_authority() -> list[str]:
