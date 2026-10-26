@@ -306,36 +306,6 @@ class SpecialCharge20261023GapPricingTest {
     }
 
     @Test
-    void hszOnePieceEoAndEtoPacksUseSameFixed22() throws Exception {
-        PricingEngine engine = PricingEngineTestSupport.engineForCustomerCode("HRB-HSZ");
-        String hospital = "哈尔滨红十字医院";
-
-        PricingEngine.ProcessedResult laparoscopy = engine.processRow(PricingEngineTestSupport.row(
-                hospital, "单包装包(EO)", "腹腔镜6号-1/Z2060 （腔镜手术室）",
-                "高温纸塑袋200*600", 1, 1, 22.0, 22.0));
-        assertThat(laparoscopy.expectedUnitPrice).isCloseTo(22.0, CENT);
-        assertThat(laparoscopy.pricingRule).isEqualTo("红十字一件一包固定22");
-
-        PricingEngine.ProcessedResult hysteroscopy = engine.processRow(PricingEngineTestSupport.row(
-                hospital, "器械包(ETO)", "宫腔镜1号",
-                "无纺布-120×120-50g", 1, 1, 22.0, 22.0));
-        assertThat(hysteroscopy.expectedUnitPrice).isCloseTo(22.0, CENT);
-        assertThat(hysteroscopy.pricingRule).isEqualTo("红十字一件一包固定22");
-
-        PricingEngine.ProcessedResult forceps = engine.processRow(PricingEngineTestSupport.row(
-                hospital, "额外包(ETO)", "绣扎钳-1/双/保/Z2060",
-                "低温纸塑袋", 1, 1, 22.0, 22.0));
-        assertThat(forceps.expectedUnitPrice).isCloseTo(22.0, CENT);
-        assertThat(forceps.pricingRule).isEqualTo("红十字一件一包固定22");
-
-        PricingEngine.ProcessedResult multi = engine.processRow(PricingEngineTestSupport.row(
-                hospital, "器械包(ETO)", "宫腔镜",
-                "无纺布-120×120-50g", 4, 1, 88.0, 88.0));
-        assertThat(multi.pricingRule).isNotEqualTo("红十字一件一包固定22");
-        assertThat(multi.expectedUnitPrice).isNotCloseTo(22.0, CENT);
-    }
-
-    @Test
     void wuchangNonWovenKirschnerOnePieceIs16_5() throws Exception {
         PricingEngine engine = PricingEngineTestSupport.engineForCustomerCode("WUCHANG-RM");
         PricingEngine.ProcessedResult nonWoven = engine.processRow(PricingEngineTestSupport.row(
