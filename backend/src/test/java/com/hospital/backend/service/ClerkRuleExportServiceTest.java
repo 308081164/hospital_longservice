@@ -68,6 +68,24 @@ class ClerkRuleExportServiceTest {
     }
 
     @Test
+    void renshengWithoutCustomerArchiveStillShowsEightFoldRemark() {
+        when(customerResolver.resolveByName("哈尔滨仁胜医院")).thenReturn(Optional.empty());
+        when(customerResolver.resolveByName("黑龙江维多利亚妇产医院")).thenReturn(Optional.empty());
+
+        JsonNode rensheng = service.mergeCompiledForSettlement(
+                "哈尔滨仁胜医院", JsonUtils.getObjectMapper().createObjectNode());
+        BillingPolicyApplier.BillDetailDiscount discount = BillingPolicyApplier.applySettlementDiscount(
+                rensheng, "", "", "", "哈尔滨仁胜医院", 4368);
+        assertThat(discount.price()).isEqualTo(3494.4);
+        assertThat(discount.note()).isEqualTo("8折优惠");
+
+        JsonNode victoria = service.mergeCompiledForSettlement(
+                "黑龙江维多利亚妇产医院", JsonUtils.getObjectMapper().createObjectNode());
+        assertThat(BillingPolicyApplier.applySettlementDiscount(
+                victoria, "", "", "", "黑龙江维多利亚妇产医院", 1000)).isNull();
+    }
+
+    @Test
     void legacyDongdaCodeStillAppliesClerkSettlementDiscount() {
         when(customerResolver.resolveByName("黑龙江东大肛肠医院"))
                 .thenReturn(Optional.of(customer("DD-DC", "黑龙江东大肛肠")));
