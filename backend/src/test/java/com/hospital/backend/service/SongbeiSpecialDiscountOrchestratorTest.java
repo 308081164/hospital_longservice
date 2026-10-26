@@ -56,7 +56,8 @@ class SongbeiSpecialDiscountOrchestratorTest {
         assertThat(result.billingNotes.get("clerkDiscountRuleName")).isEqualTo("标准价七折");
         assertThat(((Number) result.billingNotes.get("priceBeforeDiscount")).doubleValue())
                 .isCloseTo(8.00, within(0.001));
-        assertThat(result.notes).anyMatch(note -> note.contains("导出阶段折扣：标准价七折，单价 5.60"));
+        assertThat(result.notes).anyMatch(note -> note.contains("导出阶段折扣：标准价七折，折前 8.00，标准价七折 8.00×0.7=5.60"));
+        assertThat(result.notes).noneMatch(note -> note.contains("封顶"));
     }
 
     @Test
@@ -77,7 +78,7 @@ class SongbeiSpecialDiscountOrchestratorTest {
         assertThat(result.pricingRule).contains("小腔包");
         assertThat(result.difference).isCloseTo(0.0, within(0.001));
         assertThat(result.status).isEqualTo("unchanged");
-        assertThat(result.notes).anyMatch(note -> note.contains("导出阶段折扣：标准价七折，单价 53.55"));
+        assertThat(result.notes).anyMatch(note -> note.contains("导出阶段折扣：标准价七折，折前 76.50，标准价七折 76.50×0.7=53.55"));
     }
 
     @Test
@@ -150,7 +151,7 @@ class SongbeiSpecialDiscountOrchestratorTest {
 
         PricingEngine.ProcessedResult result = price(row);
         assertThat(result.expectedUnitPrice).isCloseTo(7.35, within(0.001));
-        assertThat(result.notes).anyMatch(note -> note.contains("导出阶段折扣：标准价七折，单价 7.35"));
+        assertThat(result.notes).anyMatch(note -> note.contains("导出阶段折扣：标准价七折，折前 10.50，标准价七折 10.50×0.7=7.35"));
         assertThat(((Number) result.billingNotes.get("priceBeforeDiscount")).doubleValue())
                 .isCloseTo(10.50, within(0.001));
     }
@@ -190,7 +191,7 @@ class SongbeiSpecialDiscountOrchestratorTest {
         assertThat(result.expectedUnitPrice).isCloseTo(35.0, within(0.001));
         assertThat(((Number) result.billingNotes.get("priceBeforeDiscount")).doubleValue())
                 .isCloseTo(50.0, within(0.001));
-        assertThat(result.notes).anyMatch(note -> note.contains("导出阶段折扣：标准价七折，单价 35.00"));
+        assertThat(result.notes).anyMatch(note -> note.contains("导出阶段折扣：标准价七折，折前 50.00，标准价七折 50.00×0.7=35.00"));
         assertThat(result.status).isEqualTo("unchanged");
     }
 
