@@ -165,6 +165,7 @@ public final class DefaultPricingTemplate {
         withBag.put("unitPrice", 5.5);
         // 权威表「通用特殊收费」这 8 个词只写了额外包（纸塑袋）。
         // 不限类型时，五常无纺布「克氏针-1捆」会被 unitPrice 5.5 盖住，到不了高温无纺布一件 16.5。
+        // 已落库的标准规则靠 BillingSeedMigrationRunner 补同一限制，改这里不会回写旧 JSON。
         withBag.put("acceptedTypes", List.of("额外包（纸塑袋）"));
 
         Map<String, Object> noBag = new LinkedHashMap<>();

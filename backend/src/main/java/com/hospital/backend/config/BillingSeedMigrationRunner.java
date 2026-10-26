@@ -1,6 +1,7 @@
 package com.hospital.backend.config;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.hospital.backend.common.JsonUtils;
 import com.hospital.backend.entity.*;
@@ -84,6 +85,13 @@ public class BillingSeedMigrationRunner implements CommandLineRunner {
      */
     private static final String RENSHENG_SETTLEMENT_CUSTOMER_MARKER =
             "billing_seed_clerk_settlement_customer_rensheng_20261026_v1";
+    /**
+     * 标准灭菌计费规则落在 hospital_pricing_rule 后，改 DefaultPricingTemplate 不会回写已有 JSON。
+     * 通用小件 5合1 只覆盖权威表「额外包（纸塑袋）」；无纺布克氏针否则一直按 5.5。
+     */
+    private static final String GENERIC_FOLD_PAPER_MARKER =
+            "billing_seed_generic_fold_paper_plastic_20261026_v1";
+    static final String GENERIC_SMALL_ITEM_FOLD_PAPER_TYPE = "额外包（纸塑袋）";
     private static final String RENSHENG_SETTLEMENT_CUSTOMER_FILE =
             "billing-seeds/clerk-settlement-customer-rensheng-20261026.json";
     /**
@@ -377,6 +385,13 @@ public class BillingSeedMigrationRunner implements CommandLineRunner {
                 insertMarker(RENSHENG_SETTLEMENT_CUSTOMER_MARKER,
                         "补回哈尔滨仁胜医院结款函档案 RENSHENG；已有档案只补别名");
                 log.info("RENSHENG clerk settlement customer ensured.");
+            }
+        }
+        if (sysSettingMapper.countByKey(GENERIC_FOLD_PAPER_MARKER) == 0) {
+            if (scopeStoredGenericSmallItemFolds()) {
+                insertMarker(GENERIC_FOLD_PAPER_MARKER,
+                        "通用小件5合1只作用于额外包（纸塑袋），无纺布克氏针走高温无纺布一件16.5");
+                log.info("Generic small-item folds scoped to paper-plastic extra packs.");
             }
         }
     }
@@ -1509,6 +1524,71 @@ public class BillingSeedMigrationRunner implements CommandLineRunner {
         } catch (Exception e) {
             return new ArrayList<>();
         }
+    }
+
+    /**
+     * 给已落库的「通用小件5合1含包材 / 免包材」补上纸塑袋类型。缝合针折算不动。
+     * 库里还没有标准规则时返回 false，下次启动再试，避免空跑后打上标记。
+     */
+    private boolean scopeStoredGenericSmallItemFolds() {
+        List<HospitalPricingRule> rules = pricingRuleMapper.selectAll();
+        if (rules.isEmpty()) {
+            log.warn("No hospital_pricing_rule yet; defer generic fold paper scope");
+            return false;
+        }
+        for (HospitalPricingRule rule : rules) {
+            if (rule.getRulesJson() == null || rule.getRulesJson().isBlank()) {
+                continue;
+            }
+            try {
+                JsonNode parsed = JsonUtils.getObjectMapper().readTree(rule.getRulesJson());
+                if (!(parsed instanceof ObjectNode rulesNode)) {
+                    continue;
+                }
+                if (!scopeGenericSmallItemFoldsToPaperPlastic(rulesNode)) {
+                    continue;
+                }
+                rule.setRulesJson(JsonUtils.toJson(rulesNode));
+                pricingRuleMapper.updateById(rule);
+                log.info("Scoped generic small-item folds to {} on pricing rule id={}",
+                        GENERIC_SMALL_ITEM_FOLD_PAPER_TYPE, rule.getId());
+            } catch (Exception e) {
+                log.error("Failed to scope generic folds on pricing rule id={}: {}",
+                        rule.getId(), e.getMessage(), e);
+                throw new IllegalStateException(
+                        "generic fold scope failed for rule " + rule.getId(), e);
+            }
+        }
+        return true;
+    }
+
+    /**
+     * @return 是否改写了 JSON。已经只限纸塑袋时返回 false。
+     */
+    static boolean scopeGenericSmallItemFoldsToPaperPlastic(ObjectNode rules) {
+        JsonNode folds = rules.path("specialRules").path("foldRules");
+        if (!folds.isArray()) {
+            return false;
+        }
+        boolean changed = false;
+        for (JsonNode rule : folds) {
+            if (!(rule instanceof ObjectNode node)) {
+                continue;
+            }
+            String name = node.path("name").asText("");
+            if (!"通用小件5合1含包材".equals(name) && !"通用小件5合1免包材".equals(name)) {
+                continue;
+            }
+            JsonNode types = node.path("acceptedTypes");
+            if (types.isArray() && types.size() == 1
+                    && GENERIC_SMALL_ITEM_FOLD_PAPER_TYPE.equals(types.get(0).asText())) {
+                continue;
+            }
+            ArrayNode accepted = node.putArray("acceptedTypes");
+            accepted.add(GENERIC_SMALL_ITEM_FOLD_PAPER_TYPE);
+            changed = true;
+        }
+        return changed;
     }
 
     private void insertMarker(String key, String description) {
