@@ -305,6 +305,55 @@ class SpecialCharge20261023GapPricingTest {
                 .isCloseTo(16.5, CENT);
     }
 
+    /**
+     * 权威表红十字①：一件一包，和包名称无关，件数 1 固定 22。
+     * 账单类型是系统名「单包装包(EO)」「器械包(ETO)」，不是表上的简写。
+     * 宫腔镜、腹腔镜写在包名上（括号外），表上没有另价，仍走这一条，不按通用袋宽改成 28/35。
+     * 括号里才出现的腔镜词不参与名称包含；多件器械包（ETO）仍走阶梯。
+     */
+    @Test
+    void hszOnePieceEoAndEtoPacksUseSameFixed22() throws Exception {
+        PricingEngine engine = PricingEngineTestSupport.engineForCustomerCode("HRB-HSZ");
+        String hospital = "哈尔滨红十字医院";
+
+        PricingEngine.ProcessedResult laparoscopy = engine.processRow(PricingEngineTestSupport.row(
+                hospital, "单包装包(EO)", "腹腔镜6号-1/Z2060 （腔镜手术室）",
+                "高温纸塑袋200*600", 1, 1, 22.0, 22.0));
+        assertThat(laparoscopy.expectedUnitPrice).isCloseTo(22.0, CENT);
+        assertThat(laparoscopy.difference).isCloseTo(0.0, CENT);
+        assertThat(laparoscopy.pricingRule).isEqualTo("红十字一件一包固定22");
+
+        PricingEngine.ProcessedResult hysteroscopy = engine.processRow(PricingEngineTestSupport.row(
+                hospital, "器械包(ETO)", "宫腔镜1号",
+                "无纺布-120×120-50g", 1, 1, 22.0, 22.0));
+        assertThat(hysteroscopy.expectedUnitPrice).isCloseTo(22.0, CENT);
+        assertThat(hysteroscopy.difference).isCloseTo(0.0, CENT);
+        assertThat(hysteroscopy.pricingRule).isEqualTo("红十字一件一包固定22");
+
+        PricingEngine.ProcessedResult parenOnly = engine.processRow(PricingEngineTestSupport.row(
+                hospital, "额外包(ETO)", "湿化瓶-1/Z3032(宫腔镜)",
+                "高温纸塑袋300*320", 1, 1, 22.0, 22.0));
+        assertThat(parenOnly.expectedUnitPrice).isCloseTo(22.0, CENT);
+        assertThat(parenOnly.pricingRule).isEqualTo("红十字一件一包固定22");
+
+        PricingEngine.ProcessedResult forceps = engine.processRow(PricingEngineTestSupport.row(
+                hospital, "额外包(ETO)", "绣扎钳-1/双/保/Z2060",
+                "低温纸塑袋", 1, 1, 22.0, 22.0));
+        assertThat(forceps.expectedUnitPrice).isCloseTo(22.0, CENT);
+        assertThat(forceps.pricingRule).isEqualTo("红十字一件一包固定22");
+
+        PricingEngine.ProcessedResult multi = engine.processRow(PricingEngineTestSupport.row(
+                hospital, "器械包(ETO)", "宫腔镜",
+                "无纺布-120×120-50g", 4, 1, 88.0, 88.0));
+        assertThat(multi.pricingRule).isNotEqualTo("红十字一件一包固定22");
+        assertThat(multi.expectedUnitPrice).isNotCloseTo(22.0, CENT);
+
+        PricingEngine.ProcessedResult paper = engine.processRow(PricingEngineTestSupport.row(
+                hospital, "额外包（纸塑袋）", "宫腔镜1号",
+                "高温纸塑袋200*600", 1, 1, 8.0, 8.0));
+        assertThat(paper.pricingRule).isNotEqualTo("红十字一件一包固定22");
+    }
+
     @Test
     void wuchangNonWovenKirschnerOnePieceIs16_5() throws Exception {
         PricingEngine engine = PricingEngineTestSupport.engineForCustomerCode("WUCHANG-RM");

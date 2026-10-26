@@ -166,4 +166,31 @@ class KeywordMatchModeTest {
         // 折算规则缺省 exact_token（0827 基线）：克氏针折弯钳（克氏针后紧跟「折」）不命中通用小件5合1
         assertThat(result.notes).noneMatch(n -> n.contains("通用小件5合1"));
     }
+
+    @Test
+    void containsIgnoresTextThatSitsEntirelyInsideParentheses() {
+        JsonNode keywords = MAPPER.valueToTree(new String[]{"腹腔镜"});
+        assertThat(BillingConditionEvaluator.matchesKeywordsByMode(
+                "盆2盘1杯1(腹腔镜里的)/w9050", keywords, BillingConditionEvaluator.KEYWORD_MATCH_CONTAINS))
+                .isFalse();
+        assertThat(BillingConditionEvaluator.matchesKeywordsByMode(
+                "盆2盘1杯1（腹腔镜里的）/w9050", keywords, BillingConditionEvaluator.KEYWORD_MATCH_CONTAINS))
+                .isFalse();
+        assertThat(BillingConditionEvaluator.matchesKeywordsByMode(
+                "腹腔镜6号-1/Z2060 （腔镜手术室）", keywords, BillingConditionEvaluator.KEYWORD_MATCH_CONTAINS))
+                .isTrue();
+        JsonNode hysteroscopy = MAPPER.valueToTree(new String[]{"宫腔镜"});
+        assertThat(BillingConditionEvaluator.matchesKeywordsByMode(
+                "宫腔镜1号", hysteroscopy, BillingConditionEvaluator.KEYWORD_MATCH_CONTAINS))
+                .isTrue();
+        assertThat(BillingConditionEvaluator.matchesKeywordsByMode(
+                "湿化瓶-1/Z3032(宫腔镜)", hysteroscopy, BillingConditionEvaluator.KEYWORD_MATCH_CONTAINS))
+                .isFalse();
+        assertThat(BillingConditionEvaluator.matchesKeywordsByMode(
+                "腹腔镜", keywords, BillingConditionEvaluator.KEYWORD_MATCH_EXACT_TOKEN))
+                .isTrue();
+        assertThat(BillingConditionEvaluator.matchesKeywordsByMode(
+                "盆2盘1杯1(腹腔镜里的)/w9050", keywords, BillingConditionEvaluator.KEYWORD_MATCH_EXACT_TOKEN))
+                .isFalse();
+    }
 }
