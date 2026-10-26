@@ -1,7 +1,7 @@
 {
   "version": 1,
-  "generated_at": "2026-10-26T08:11:46Z",
-  "manifest_hash": "403e7794d3657af098677434947e7821892ddef05b47255531367fe1c52f6424",
+  "generated_at": "2026-10-26T08:32:03Z",
+  "manifest_hash": "9850c5b76e32862dbb1ac243a8d549ba57af5b0ea41eff4e44f7662b2dd5f977",
   "billing_enabled_count": 45,
   "active_billing_enabled_count": 45,
   "customers": {
@@ -4409,9 +4409,7 @@
             "额外包低温等离子",
             "额外包（ETO）",
             "单包装（低温老肯）",
-            "单包装（EO）",
-            "单包装包（EO）",
-            "器械包（ETO）"
+            "单包装（EO）"
           ],
           "maxInstrumentCount": 1
         },
