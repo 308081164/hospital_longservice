@@ -97,6 +97,25 @@ class BillRowBillingValidatorTest {
 
         assertThat(violations).extracting(BillRowBillingValidator.Violation::code)
                 .containsExactly(BillRowBillingValidator.CODE_UNKNOWN_PACK_TYPE);
+        assertThat(violations.get(0).message())
+                .contains("对照表 " + PackTypeRegistry.PACK_TYPE_COUNT + " 种");
+    }
+
+    @Test
+    void cottonExtraPackWithNonWovenIsClean() {
+        List<BillRowBillingValidator.Violation> violations =
+                BillRowBillingValidator.validate("额外包(棉布包装)", "无纺布-60×60-50g", 6, 9.9);
+
+        assertThat(violations).isEmpty();
+    }
+
+    @Test
+    void cottonExtraPackWithBareClothIsMaterialMismatchNotUnknownType() {
+        List<BillRowBillingValidator.Violation> violations =
+                BillRowBillingValidator.validate("额外包（棉布包装）", "布-120×120-50g", 3, 9.9);
+
+        assertThat(violations).extracting(BillRowBillingValidator.Violation::code)
+                .containsExactly(BillRowBillingValidator.CODE_PACK_TYPE_MATERIAL_MISMATCH);
     }
 
     @Test

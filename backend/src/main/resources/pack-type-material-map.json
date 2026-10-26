@@ -82,6 +82,12 @@
       "sterilization": "HIGH_TEMP"
     },
     {
+      "canonical": "额外包（棉布包装）",
+      "aliases": ["额外包(棉布包装)", "额外包（棉布包装）"],
+      "allowedMaterials": ["NON_WOVEN"],
+      "sterilization": "HIGH_TEMP"
+    },
+    {
       "canonical": "敷料包",
       "aliases": ["敷料包"],
       "allowedMaterials": ["NONE"],
