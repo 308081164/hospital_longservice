@@ -1,6 +1,6 @@
 {
-  "baseline_hash": "757a3174d4d5ea6005ad15add1a0aecb7b6aa7bdea7130c3aac1f9ad863ab1f4",
-  "generated_at": "2026-10-26T08:32:03Z",
+  "baseline_hash": "e5b97686fbccbfb7c5277488b18ff61b4f6e7d3d9b3d55a0d3e1e4400b060f93",
+  "generated_at": "2026-10-26T08:40:32Z",
   "source": "billing-rules-manifest@6a4ec3fbe7896cc575c6c8eabecd644fea23f11dd22afa4c970f9dc07d36c4a4",
   "customer_count": 45,
   "customers": [
@@ -242,7 +242,7 @@
       "code": "HRB-HSZ",
       "file": "baseline/HRB-HSZ.json",
       "ruleCount": 6,
-      "fileHash": "2f71798adf4ad8a2f734fc3acc5d07bfa8d52996ada014c4ccf89cafc3aa9ea8"
+      "fileHash": "abd65d1a8f51af6f470c618b5be4043bc5af58c20f4abd33bc3c0b075787ac9d"
     },
     {
       "code": "HRB-2ND",
