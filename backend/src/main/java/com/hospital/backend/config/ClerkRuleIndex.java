@@ -87,7 +87,10 @@ public class ClerkRuleIndex {
             "省二松北", "ERYY-SB",
             "省医院南岗", "SHENG-YY-NG",
             "省医院香坊", "SHENG-YY-XF",
-            "南岗区妇产医院", "NG-FUCHAN");
+            "南岗区妇产医院", "NG-FUCHAN",
+            "道外区人民医院", "DAOWAI-RM",
+            "太平人民医院", "TAIPING-RM",
+            "三精肾病医院", "SANJING-SB");
 
     /**
      * 当 {@link com.hospital.backend.service.CustomerResolver} 未命中时，用内勤 baseline 的 customerName 回退解析。
