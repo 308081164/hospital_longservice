@@ -1,6 +1,8 @@
 package com.hospital.backend.config;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.node.ArrayNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.hospital.backend.common.JsonUtils;
 import org.junit.jupiter.api.Test;
 import org.springframework.core.io.ClassPathResource;
@@ -60,6 +62,28 @@ class BillingSeedMigrationRunnerTest {
         Field field = BillingSeedMigrationRunner.class.getDeclaredField(fieldName);
         field.setAccessible(true);
         return (List<String>) field.get(null);
+    }
+
+    @Test
+    void genericSmallItemFoldsInStoredRuleAreLimitedToPaperPlastic() {
+        ObjectNode rules = JsonUtils.getObjectMapper().createObjectNode();
+        ArrayNode folds = rules.putObject("specialRules").putArray("foldRules");
+        ObjectNode withBag = folds.addObject();
+        withBag.put("name", "通用小件5合1含包材");
+        withBag.putArray("keywords").add("克氏针");
+        ObjectNode noBag = folds.addObject();
+        noBag.put("name", "通用小件5合1免包材");
+        ObjectNode suture = folds.addObject();
+        suture.put("name", "通用缝合针按1件含包材");
+
+        assertThat(BillingSeedMigrationRunner.scopeGenericSmallItemFoldsToPaperPlastic(rules)).isTrue();
+        assertThat(withBag.path("acceptedTypes")).extracting(JsonNode::asText)
+                .containsExactly("额外包（纸塑袋）");
+        assertThat(noBag.path("acceptedTypes")).extracting(JsonNode::asText)
+                .containsExactly("额外包（纸塑袋）");
+        assertThat(suture.has("acceptedTypes")).isFalse();
+        assertThat(withBag.path("keywords").get(0).asText()).isEqualTo("克氏针");
+        assertThat(BillingSeedMigrationRunner.scopeGenericSmallItemFoldsToPaperPlastic(rules)).isFalse();
     }
 
     @Test
