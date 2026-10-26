@@ -1,7 +1,7 @@
 {
   "version": 1,
-  "generated_at": "2026-10-26T08:40:53Z",
-  "manifest_hash": "403e7794d3657af098677434947e7821892ddef05b47255531367fe1c52f6424",
+  "generated_at": "2026-10-26T09:33:29Z",
+  "manifest_hash": "d037cd8b9611058442529b551f0d145ff22be12afff12997a7398f4adf8b4daa",
   "billing_enabled_count": 45,
   "active_billing_enabled_count": 45,
   "customers": {
@@ -5776,10 +5776,51 @@
             "额外包低温等离子"
           ],
           "sourceRef": "excel:特殊收费(13)#各医院"
+        },
+        {
+          "ruleType": "FOLD",
+          "name": "附一特殊收费冲洗头≤5按1件含包材",
+          "priority": 96,
+          "keywords": [
+            "冲洗头@contains"
+          ],
+          "threshold": 5,
+          "foldRatio": 5,
+          "maxInstrumentCount": 5,
+          "skipPackaging": false,
+          "temperature": "LT",
+          "isActive": true,
+          "matchMode": "first",
+          "skipDiscount": false,
+          "acceptedTypes": [
+            "额外包低温等离子"
+          ],
+          "sourceRef": "excel:特殊收费(4)-20261023#各医院 r143"
+        },
+        {
+          "ruleType": "FOLD",
+          "name": "附一特殊收费冲洗头>5折算22",
+          "priority": 97,
+          "keywords": [
+            "冲洗头@contains"
+          ],
+          "threshold": 5,
+          "foldRatio": 5,
+          "minInstrumentCount": 6,
+          "price": 22.0,
+          "skipPackaging": true,
+          "temperature": "LT",
+          "isActive": true,
+          "matchMode": "first",
+          "skipDiscount": false,
+          "acceptedTypes": [
+            "额外包低温等离子"
+          ],
+          "sourceRef": "excel:特殊收费(4)-20261023#各医院 r144"
         }
       ],
-      "rule_count": 32,
-      "active_rule_count": 6
+      "rule_count": 34,
+      "active_rule_count": 8
     }
   }
 }
