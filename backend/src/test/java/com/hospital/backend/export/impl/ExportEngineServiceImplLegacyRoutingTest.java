@@ -74,6 +74,8 @@ class ExportEngineServiceImplLegacyRoutingTest {
     @Mock
     private ClerkExportLayoutMerger clerkExportLayoutMerger;
     @Mock
+    private com.hospital.backend.export.ClerkSheetStyleExport clerkSheetStyleExport;
+    @Mock
     private ReconciliationLegacyExportBridge legacyExportBridge;
 
     private ExportEngineServiceImpl service;
@@ -95,7 +97,8 @@ class ExportEngineServiceImplLegacyRoutingTest {
                 settlementJobEnricher,
                 clerkSettlementRequestEnricher,
                 billExportLayoutResolver,
-                clerkExportLayoutMerger);
+                clerkExportLayoutMerger,
+                clerkSheetStyleExport);
         ReflectionTestUtils.setField(service, "legacyExportBridge", legacyExportBridge);
     }
 

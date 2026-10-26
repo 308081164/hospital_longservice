@@ -138,6 +138,12 @@ public class ClerkRuleExportService {
         if (clerkCompiled.has("exportLayouts")) {
             merged.set("exportLayouts", clerkCompiled.get("exportLayouts"));
         }
+        if (clerkCompiled.has("mergedSettlement")) {
+            merged.set("mergedSettlement", clerkCompiled.get("mergedSettlement"));
+        }
+        if (clerkCompiled.has("guoyaoSettlement")) {
+            merged.set("guoyaoSettlement", clerkCompiled.get("guoyaoSettlement"));
+        }
         if (clerkCompiled.has("attachmentRefs")) {
             merged.set("attachmentRefs", clerkCompiled.get("attachmentRefs"));
         }
@@ -240,8 +246,19 @@ public class ClerkRuleExportService {
     /**
      * 结款合并先认客户档案编码。档案在、但编码不是内勤 baseline（如东大肛肠历史编码 DD-DC）时，
      * 再用 baseline 医院名对齐到已有编码。没有客户档案则不挂规则。
-     * 仁胜是例外：生产档案里没有这家，结款函仍按内勤全称挂已有的八折和物流卡，不新写价格。
+     * 仁胜，以及 10.20 样式表对应的三辅、香坊、国药、祖研南岗、附三，没有档案时仍按医院名挂已有规则，
+     * 不新写折扣、物流单价或低消，也不开放其他缺档案医院。
      */
+    private static final Set<String> SETTLEMENT_STYLE_WITHOUT_ARCHIVE = Set.of(
+            "RENSHENG",
+            "SANFU-SQ",
+            "XIANGFANG-ZY",
+            "GUOYAO-MAIN",
+            "GUOYAO-2",
+            "GUOYAO-3",
+            "ZUYAN-NG",
+            "ZY3-DIANLI");
+
     private String resolveCustomerCode(String hospitalName) {
         if (hospitalName == null || hospitalName.isBlank()) {
             return null;
@@ -249,7 +266,12 @@ public class ClerkRuleExportService {
         Optional<Customer> customer = customerResolver.resolveByName(hospitalName);
         if (customer.isEmpty()) {
             String fromBaseline = clerkRuleIndex.resolveCustomerCodeByHospitalName(hospitalName);
-            return "RENSHENG".equals(fromBaseline) ? fromBaseline : null;
+            if (fromBaseline == null) {
+                fromBaseline = settlementStyleCode(hospitalName);
+            }
+            return fromBaseline != null && SETTLEMENT_STYLE_WITHOUT_ARCHIVE.contains(fromBaseline)
+                    ? fromBaseline
+                    : null;
         }
         String code = customer.get().getCode();
         if (clerkRuleIndex.baselineForCustomer(code) != null) {
@@ -257,6 +279,38 @@ public class ClerkRuleExportService {
         }
         String aligned = alignClerkBaselineCode(hospitalName);
         return aligned != null ? aligned : code;
+    }
+
+    public static String settlementStyleCode(String hospitalName) {
+        if (hospitalName == null || hospitalName.isBlank()) {
+            return null;
+        }
+        String name = hospitalName.trim();
+        if (name.contains("祖研") && name.contains("南岗")) {
+            return "ZUYAN-NG";
+        }
+        if (name.contains("祖研")) {
+            return null;
+        }
+        if (name.contains("三辅")) {
+            return "SANFU-SQ";
+        }
+        if (name.contains("香坊") && name.contains("中医") && !name.contains("黑龙江省医院")) {
+            return "XIANGFANG-ZY";
+        }
+        if (name.contains("国药") && (name.contains("第三") || name.contains("三院"))) {
+            return "GUOYAO-3";
+        }
+        if (name.contains("国药") && (name.contains("第二") || name.contains("二院"))) {
+            return "GUOYAO-2";
+        }
+        if (name.contains("国药")) {
+            return "GUOYAO-MAIN";
+        }
+        if (name.contains("附属第三医院")) {
+            return "ZY3-DIANLI";
+        }
+        return null;
     }
 
     private String alignClerkBaselineCode(String hospitalName) {
