@@ -27,9 +27,10 @@
         "baseComponents": [
           "sterilize",
           "logistics"
-        ]
+        ],
+        "settlementDisplayMode": "embed"
       },
-      "sourceText": "低于10000元",
+      "sourceText": "低于10000元。合计备注写法参考悦美芳华：差额写在合计备注「执行低消10000元」，不另起低消补差行。低消金额和物流单价不改。",
       "sourceRef": "excel:结款函#HULAN-TCM|excel:低消#呼兰中医院",
       "priority": 110
     },
@@ -41,7 +42,7 @@
       "params": {
         "deptKeyword": "手术室（备包）"
       },
-      "sourceText": "备包",
+      "sourceText": "备包。行次参考本医院6月结款函样张：灭菌费用、物流费用，其后按手术室（备包）里已有的外科包、阑尾包各一行，备注为单价元*个数。样式表没有写出更多包名，不新增包名和单价。",
       "sourceRef": "excel:结款函#HULAN-TCM",
       "priority": 120
     }

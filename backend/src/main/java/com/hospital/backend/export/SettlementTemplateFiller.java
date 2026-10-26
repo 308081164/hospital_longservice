@@ -793,16 +793,37 @@ public class SettlementTemplateFiller {
             if (!temperature.equalsIgnoreCase(scopeTemp)) {
                 continue;
             }
+            double rate = policy.path("params").path("rate").asDouble(1.0);
+            String foldRemark = temperatureFoldRemark(temperature, rate);
+            if (foldRemark != null) {
+                return foldRemark;
+            }
             String name = policy.path("name").asText("");
             if (!name.isBlank()) {
                 return name.contains("优惠") ? name : name + "优惠";
             }
-            double rate = policy.path("params").path("rate").asDouble(1.0);
-            if (rate > 0 && rate < 1.0) {
-                return String.format("%.0f折优惠", rate * 10);
-            }
         }
         return fallback;
+    }
+
+    /**
+     * 维多利亚、九洲样张备注是「高温5折优惠 / 低温7折优惠」。
+     * 编译后的策略名是「高温五折低温七折-HT」，不能直接拿来当备注。
+     */
+    private static String temperatureFoldRemark(String temperature, double rate) {
+        if (!(rate > 0 && rate < 1.0)) {
+            return null;
+        }
+        int tenth = (int) Math.round(rate * 10);
+        if (Math.abs(rate * 10 - tenth) >= 0.05 || tenth <= 0 || tenth >= 10) {
+            return null;
+        }
+        String prefix = "HT".equalsIgnoreCase(temperature) ? "高温"
+                : "LT".equalsIgnoreCase(temperature) ? "低温" : "";
+        if (prefix.isEmpty()) {
+            return null;
+        }
+        return prefix + tenth + "折优惠";
     }
 
     private double sumRowsByTemperature(List<HospitalReconciliationRow> rows, String targetTemp) {

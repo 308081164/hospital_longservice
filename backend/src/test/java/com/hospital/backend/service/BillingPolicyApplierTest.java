@@ -34,6 +34,8 @@ class BillingPolicyApplierTest {
     void formatSettlementDiscountRemarkUsesSevenFoldLabel() {
         assertThat(BillingPolicyApplier.formatSettlementDiscountRemark("结款七折", 0.7))
                 .isEqualTo("七折优惠");
+        assertThat(BillingPolicyApplier.formatSettlementDiscountRemark("结款八折", 0.8))
+                .isEqualTo("8折优惠");
     }
 
     @Test
