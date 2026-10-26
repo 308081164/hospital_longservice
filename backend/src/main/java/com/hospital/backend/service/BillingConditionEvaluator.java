@@ -83,7 +83,8 @@ public final class BillingConditionEvaluator {
 
     /**
      * @param countParentheticalContains {@code contains} 命中整段落在一对圆括号内时是否算命中。
-     *        全局特色规则和内勤排除词保持 {@code true}；内勤正向包名传 {@code false}。
+     *        全局特色规则保持 {@code true}；内勤正向包名传 {@code false}。
+     *        内勤排除词走 exact_token，不靠这段括号包含开关。
      */
     public static boolean matchesKeywordsByMode(
             String text, JsonNode keywords, String defaultMode, boolean countParentheticalContains) {
