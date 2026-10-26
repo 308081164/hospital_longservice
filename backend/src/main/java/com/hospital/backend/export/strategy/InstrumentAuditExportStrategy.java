@@ -1,6 +1,8 @@
 package com.hospital.backend.export.strategy;
 
 import com.hospital.backend.entity.HospitalReconciliationRow;
+import com.hospital.backend.export.ClerkSheetStyle;
+import com.hospital.backend.export.ClerkSheetStyleWorkbook;
 import com.hospital.backend.export.ExportContext;
 import com.hospital.backend.export.ExportResult;
 import org.apache.poi.ss.usermodel.CellStyle;
@@ -29,7 +31,9 @@ public class InstrumentAuditExportStrategy implements ExportStrategy {
 
     @Override
     public ExportResult export(ExportContext context) throws Exception {
-        byte[] content = buildWorkbook(context);
+        byte[] content = ClerkSheetStyle.isZy3(context.getHospitalName())
+                ? ClerkSheetStyleWorkbook.zy3DeptPieces(context.getJob(), context.getRows())
+                : buildWorkbook(context);
         String fileName = safeName(context.getHospitalName()) + "_instrument_audit_v2_"
                 + LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmmss")) + ".xlsx";
         return ExportResult.builder()

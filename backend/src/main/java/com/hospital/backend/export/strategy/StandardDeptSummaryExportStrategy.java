@@ -1,5 +1,7 @@
 package com.hospital.backend.export.strategy;
 
+import com.hospital.backend.export.ClerkSheetStyle;
+import com.hospital.backend.export.ClerkSheetStyleWorkbook;
 import com.hospital.backend.export.ExportContext;
 import com.hospital.backend.export.ExportResult;
 import com.hospital.backend.export.fuyi.FuyiSupplementExportService;
@@ -25,8 +27,9 @@ public class StandardDeptSummaryExportStrategy implements ExportStrategy {
 
     @Override
     public ExportResult export(ExportContext context) throws Exception {
-        byte[] content = supplementExportService.exportDeptSummary(
-                context.getJob(), context.getRows());
+        byte[] content = ClerkSheetStyle.isZuyanNangang(context.getHospitalName())
+                ? ClerkSheetStyleWorkbook.zuyanDeptPrice(context.getJob(), context.getRows())
+                : supplementExportService.exportDeptSummary(context.getJob(), context.getRows());
         String fileName = safeName(context.getHospitalName()) + "_dept_summary_"
                 + LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmmss")) + ".xlsx";
         return ExportResult.builder()

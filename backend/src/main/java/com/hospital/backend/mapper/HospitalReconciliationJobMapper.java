@@ -16,6 +16,9 @@ public interface HospitalReconciliationJobMapper {
 
     List<HospitalReconciliationJob> selectByHospitalNameOrderByCreatedAtDesc(String hospitalName);
 
+    List<HospitalReconciliationJob> selectRecentByHospitalNameContaining(
+            @org.apache.ibatis.annotations.Param("token") String token);
+
     List<HospitalReconciliationJob> selectAllOrderByCreatedAtDesc();
 
     Integer selectMaxVersionNoByHospitalName(String hospitalName);

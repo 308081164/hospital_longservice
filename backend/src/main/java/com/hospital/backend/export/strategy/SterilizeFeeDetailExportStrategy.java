@@ -68,26 +68,34 @@ public class SterilizeFeeDetailExportStrategy implements ExportStrategy {
             CellStyle headerStyle = createHeaderStyle(workbook);
             Sheet sheet = workbook.createSheet("消毒灭菌费明细");
             int rowIdx = 0;
+            String hospital = context.getHospitalName() != null ? context.getHospitalName() : "";
+            Row title = sheet.createRow(rowIdx++);
+            title.createCell(0).setCellValue(hospital + "消毒灭菌费明细");
             Row header = sheet.createRow(rowIdx++);
-            String[] cols = {"消毒方式", "包装材料", "包数", "把数", "标准单价", "折扣单价", "金额"};
+            String[] cols = {"日期", "消毒方式", "包材尺寸", "包数", "把数", "单价", "金额"};
             for (int i = 0; i < cols.length; i++) {
                 var cell = header.createCell(i);
                 cell.setCellValue(cols[i]);
                 cell.setCellStyle(headerStyle);
             }
+            double amountTotal = 0;
             for (FeeAggregate agg : aggregates.values()) {
                 double standardUnit = agg.standardUnitPrice();
                 double discountedUnit = round2(standardUnit * discountRate);
                 double amount = round2(discountedUnit * Math.max(1, agg.packCount));
+                amountTotal += amount;
                 Row row = sheet.createRow(rowIdx++);
-                row.createCell(0).setCellValue(agg.sterilizeMethod);
-                row.createCell(1).setCellValue(agg.packagingMaterial);
-                row.createCell(2).setCellValue(agg.packCount);
-                row.createCell(3).setCellValue(agg.instrumentCount);
-                row.createCell(4).setCellValue(standardUnit);
+                row.createCell(0).setCellValue("");
+                row.createCell(1).setCellValue(agg.sterilizeMethod);
+                row.createCell(2).setCellValue(agg.packagingMaterial);
+                row.createCell(3).setCellValue(agg.packCount);
+                row.createCell(4).setCellValue(agg.instrumentCount);
                 row.createCell(5).setCellValue(discountedUnit);
                 row.createCell(6).setCellValue(amount);
             }
+            Row total = sheet.createRow(rowIdx++);
+            total.createCell(1).setCellValue("合计");
+            total.createCell(6).setCellValue(round2(amountTotal));
             for (int i = 0; i < cols.length; i++) {
                 sheet.autoSizeColumn(i);
             }

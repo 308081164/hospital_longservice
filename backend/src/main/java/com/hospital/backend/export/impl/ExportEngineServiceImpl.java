@@ -31,6 +31,7 @@ import com.hospital.backend.service.BillingPolicyApplier;
 import com.hospital.backend.service.ClerkExportLayoutMerger;
 import com.hospital.backend.service.PreciseLineAmount;
 import com.hospital.backend.export.SettlementPeriodResolver;
+import com.hospital.backend.export.ClerkSheetStyleExport;
 import com.hospital.backend.export.SettlementTemplateFiller;
 import com.hospital.backend.mapper.HospitalReconciliationExportLogMapper;
 import com.hospital.backend.mapper.HospitalPricingRuleMapper;
@@ -71,6 +72,8 @@ public class ExportEngineServiceImpl implements ExportEngineService {
     private final BillExportLayoutResolver billExportLayoutResolver;
 
     private final ClerkExportLayoutMerger clerkExportLayoutMerger;
+
+    private final ClerkSheetStyleExport clerkSheetStyleExport;
 
     @Lazy
     @org.springframework.beans.factory.annotation.Autowired
@@ -120,11 +123,18 @@ public class ExportEngineServiceImpl implements ExportEngineService {
     @Override
     public ResponseEntity<byte[]> exportSettlement(HospitalSettlementTemplateExportRequest request) {
         try {
-            if (request.getFeeRows() == null || request.getFeeRows().isEmpty()) {
-                clerkSettlementRequestEnricher.enrich(request);
+            byte[] styled = clerkSettlementRequestEnricher.renderSheetStyleIfAny(request);
+            byte[] content;
+            if (styled != null) {
+                content = styled;
+            } else {
+                if (request.getFeeRows() == null || request.getFeeRows().isEmpty()) {
+                    clerkSettlementRequestEnricher.enrich(request);
+                }
+                content = legacyExportBridge.generateSettlementExportBytes(request);
+                content = applyTemplateTransforms(
+                        request.getTemplateId(), request.getHospitalName(), content, ExportType.SETTLEMENT);
             }
-            byte[] content = legacyExportBridge.generateSettlementExportBytes(request);
-            content = applyTemplateTransforms(request.getTemplateId(), request.getHospitalName(), content, ExportType.SETTLEMENT);
             String filename = safeName(request.getHospitalName()) + "_settlement_"
                     + LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmmss")) + ".xlsx";
             return legacyExportBridge.buildExcelDownloadResponse(content, filename);
@@ -439,12 +449,17 @@ public class ExportEngineServiceImpl implements ExportEngineService {
         }
         if (exportType == ExportType.SETTLEMENT) {
             HospitalSettlementTemplateExportRequest settlementRequest = buildSettlementExportRequest(context);
-            byte[] content = legacyExportBridge.generateSettlementExportBytes(settlementRequest);
-            content = applyTemplateTransforms(
-                    settlementRequest.getTemplateId(),
-                    settlementRequest.getHospitalName(),
-                    content,
-                    ExportType.SETTLEMENT);
+            byte[] styled = clerkSheetStyleExport.render(
+                    context.getJob(),
+                    context.getRows(),
+                    resolveCompiledRulesFromContext(context));
+            byte[] content = styled != null
+                    ? styled
+                    : applyTemplateTransforms(
+                            settlementRequest.getTemplateId(),
+                            settlementRequest.getHospitalName(),
+                            legacyExportBridge.generateSettlementExportBytes(settlementRequest),
+                            ExportType.SETTLEMENT);
             String filename = safeName(context.getHospitalName()) + "_settlement_"
                     + LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmmss")) + ".xlsx";
             logExport(jobId, exportType.code(), filename, context.getJob());

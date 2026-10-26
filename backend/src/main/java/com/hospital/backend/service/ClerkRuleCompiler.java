@@ -118,6 +118,14 @@ public class ClerkRuleCompiler {
                             settlementPackSplit = (ObjectNode) rule.path("params").deepCopy();
                         }
                         break;
+                    case "MERGED_SETTLEMENT":
+                        compiled.set("mergedSettlement", normalizeMergedSettlement(rule, customerCode));
+                        break;
+                    case "GUOYAO_SETTLEMENT_FORMULA":
+                        if (rule.path("params").isObject()) {
+                            compiled.set("guoyaoSettlement", rule.path("params").deepCopy());
+                        }
+                        break;
                     default:
                         break;
                 }
@@ -407,6 +415,26 @@ public class ClerkRuleCompiler {
             }
         }
         return fixed;
+    }
+
+    private ObjectNode normalizeMergedSettlement(JsonNode rule, String customerCode) {
+        ObjectNode node = MAPPER.createObjectNode();
+        JsonNode params = rule.path("params");
+        if (params.isObject()) {
+            node.setAll((ObjectNode) params.deepCopy());
+        }
+        if ("XIANGFANG-ZY".equals(customerCode)) {
+            node.put("selfSide", "xiangfang");
+            if (node.path("mergeWith").asText("").isBlank()) {
+                node.put("mergeWith", "SANFU-SQ");
+            }
+        } else if ("SANFU-SQ".equals(customerCode)) {
+            node.put("selfSide", "sanfu");
+            if (node.path("mergeWith").asText("").isBlank()) {
+                node.put("mergeWith", "XIANGFANG-ZY");
+            }
+        }
+        return node;
     }
 
     private static String sanitizeReportType(String reportType) {

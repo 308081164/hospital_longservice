@@ -7,6 +7,8 @@ import com.hospital.backend.dto.request.hospital.SettlementFeeRow;
 import com.hospital.backend.entity.HospitalPricingRule;
 import com.hospital.backend.entity.HospitalReconciliationJob;
 import com.hospital.backend.entity.HospitalReconciliationRow;
+import com.hospital.backend.export.ClerkSheetStyle;
+import com.hospital.backend.export.ClerkSheetStyleExport;
 import com.hospital.backend.export.SettlementJobEnricher;
 import com.hospital.backend.export.SettlementPeriodFormatter;
 import com.hospital.backend.export.SettlementPeriodResolver;
@@ -32,6 +34,35 @@ public class ClerkSettlementRequestEnricher {
     private final ClerkCompiledRulesResolver clerkCompiledRulesResolver;
     private final SettlementJobEnricher settlementJobEnricher;
     private final SettlementTemplateFiller settlementTemplateFiller;
+    private final ClerkSheetStyleExport clerkSheetStyleExport;
+
+    /**
+     * 样式表医院在充实物流之后直接出专用工作簿。其他医院返回 null。
+     */
+    public byte[] renderSheetStyleIfAny(HospitalSettlementTemplateExportRequest request) {
+        if (request == null || request.getTemplateId() == null || request.getTemplateId().isBlank()) {
+            return null;
+        }
+        try {
+            Long jobId = Long.parseLong(request.getTemplateId());
+            HospitalReconciliationJob job = jobMapper.selectById(jobId);
+            if (job == null) {
+                return null;
+            }
+            List<HospitalReconciliationRow> rows =
+                    rowMapper.selectByJobIdOrderBySheetNameAscRowNumberAsc(jobId);
+            JsonNode compiled = clerkCompiledRulesResolver.resolve(job, loadRulesForJob(job));
+            if (!ClerkSheetStyle.applies(compiled)) {
+                return null;
+            }
+            settlementJobEnricher.enrichForExport(job, compiled, rows);
+            return clerkSheetStyleExport.render(job, rows, compiled);
+        } catch (NumberFormatException ignored) {
+            return null;
+        } catch (Exception e) {
+            return null;
+        }
+    }
 
     public void enrich(HospitalSettlementTemplateExportRequest request) {
         if (request == null || request.getTemplateId() == null || request.getTemplateId().isBlank()) {
