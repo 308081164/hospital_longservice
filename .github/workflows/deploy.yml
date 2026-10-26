@@ -48,6 +48,9 @@ jobs:
       - name: G2 keyword gap scan (non-blocking findings)
         run: python3 scripts/run_keyword_gap_gate.py || true
 
+      - name: G4 Excel to manifest row parity
+        run: python3 scripts/excel_manifest_parity_audit.py
+
       - name: G5 strict hospital list alignment
         run: python3 scripts/check_strict_hospital_alignment.py
 

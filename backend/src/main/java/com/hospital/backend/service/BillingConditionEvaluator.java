@@ -78,12 +78,14 @@ public final class BillingConditionEvaluator {
      * {@code 车针@exact}（或 @exact_token）强制精确 token 边界；不带后缀沿用 defaultMode。
      */
     public static boolean matchesKeywordsByMode(String text, JsonNode keywords, String defaultMode) {
-        return matchesKeywordsByMode(text, keywords, defaultMode, true);
+        // 括号里的字不参与「包含」。exact_token 不走这个开关。
+        // 南岗妇产「盆2盘1杯1(腹腔镜里的)」的 8 元/把是 exact_token 一口价 + exact_token 排除词，不受影响。
+        return matchesKeywordsByMode(text, keywords, defaultMode, false);
     }
 
     /**
      * @param countParentheticalContains {@code contains} 命中整段落在一对圆括号内时是否算命中。
-     *        全局特色规则保持 {@code true}；内勤正向包名传 {@code false}。
+     *        三参重载默认 {@code false}（括号内整段不算包名包含）。
      *        内勤排除词走 exact_token，不靠这段括号包含开关。
      */
     public static boolean matchesKeywordsByMode(
@@ -145,7 +147,10 @@ public final class BillingConditionEvaluator {
             } else if (KEYWORD_MATCH_CONTAINS.equalsIgnoreCase(mode)) {
                 int idx = 0;
                 while ((idx = compactLower.indexOf(kwLower, idx)) != -1) {
-                    if (!isAngleKeywordLeadingDigitBlocked(compact, idx, pk.keyword())) {
+                    boolean parentheticalOnly = isEntirelyInsideParentheses(
+                            compactLower, idx, idx + kwLower.length());
+                    if (!parentheticalOnly
+                            && !isAngleKeywordLeadingDigitBlocked(compact, idx, pk.keyword())) {
                         return new ExactTokenKeywordMatch(
                                 compact.substring(idx, idx + kwLower.length()), idx, compact);
                     }
@@ -343,7 +348,7 @@ public final class BillingConditionEvaluator {
     }
 
     private static boolean matchesKeywordContains(String text, String keyword) {
-        return matchesKeywordContains(text, keyword, true);
+        return matchesKeywordContains(text, keyword, false);
     }
 
     /**

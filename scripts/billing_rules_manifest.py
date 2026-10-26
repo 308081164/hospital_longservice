@@ -90,6 +90,8 @@ STRICT_KEEP_CODES = [
     "HRB-HSZ",
     "HRB-2ND",
     "HRB-GUSHANG",
+    "XIUYAN-YL",
+    "XZX-YY",
 ]
 
 # 种子文件仅以 code 引用客户、未携带规范名时，回退到此映射。
@@ -108,6 +110,8 @@ CUSTOMER_CANONICAL_NAMES = {
     "JINGHUA-SD": "黑龙江菁华上德生殖妇产医院",
     "HRB-HSZ": "哈尔滨红十字医院",
     "HRB-2ND": "哈尔滨市第二医院",
+    "XIUYAN-YL": "秀妍汇医疗美容（香坊区）",
+    "XZX-YY": "新中新医院",
 }
 
 # HardcodedRulesMigrationRunner.seedEngineProductRules 直接 seed 的规则（非 seed 文件）。

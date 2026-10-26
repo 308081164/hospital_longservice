@@ -1,0 +1,44 @@
+{
+  "customerCode": "XZX-YY",
+  "customerName": "新中新医院",
+  "billingEnabled": true,
+  "billingPricingMode": "hybrid",
+  "productRules": [
+    {
+      "ruleType": "FIXED_PRICE",
+      "name": "新中新手机固定8",
+      "priority": 10,
+      "price": 8.0,
+      "maxInstrumentCount": 1,
+      "keywords": [
+        "手机-@contains"
+      ],
+      "skipPackaging": true,
+      "skipDiscount": true,
+      "isActive": true,
+      "matchMode": "first",
+      "keywordMatchMode": "contains",
+      "acceptedTypes": [
+        "额外包（纸塑袋）"
+      ]
+    },
+    {
+      "ruleType": "PRICE_PER_INSTRUMENT",
+      "name": "新中新开腹包按件5.5加8",
+      "priority": 11,
+      "price": 5.5,
+      "keywords": [
+        "开腹包"
+      ],
+      "conditionsJson": "[{\"field\": \"flatAddon\", \"value\": 8}]",
+      "skipPackaging": true,
+      "skipDiscount": true,
+      "isActive": true,
+      "matchMode": "first",
+      "keywordMatchMode": "exact_token",
+      "acceptedTypes": [
+        "器械包"
+      ]
+    }
+  ]
+}

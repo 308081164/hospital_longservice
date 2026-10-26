@@ -1,9 +1,9 @@
 {
   "version": 1,
-  "generated_at": "2026-10-26T06:42:21Z",
-  "manifest_hash": "2fd5f6bde9b58bdfee6d4e3149b8f992fa4823dba004b9b85768367d33b12e2d",
-  "billing_enabled_count": 43,
-  "active_billing_enabled_count": 43,
+  "generated_at": "2026-10-26T08:11:46Z",
+  "manifest_hash": "403e7794d3657af098677434947e7821892ddef05b47255531367fe1c52f6424",
+  "billing_enabled_count": 45,
+  "active_billing_enabled_count": 45,
   "customers": {
     "BINGCHENG-YM": {
       "code": "BINGCHENG-YM",
@@ -4409,7 +4409,9 @@
             "额外包低温等离子",
             "额外包（ETO）",
             "单包装（低温老肯）",
-            "单包装（EO）"
+            "单包装（EO）",
+            "单包装包（EO）",
+            "器械包（ETO）"
           ],
           "maxInstrumentCount": 1
         },
@@ -4960,6 +4962,86 @@
       ],
       "rule_count": 10,
       "active_rule_count": 10
+    },
+    "XIUYAN-YL": {
+      "code": "XIUYAN-YL",
+      "name": "秀妍汇医疗美容（香坊区）",
+      "status": null,
+      "billingPricingMode": "hybrid",
+      "standardPricingOverride": null,
+      "billingEnabled": true,
+      "billingPolicies": null,
+      "productRules": [
+        {
+          "ruleType": "PRICE_PER_INSTRUMENT",
+          "name": "秀妍汇胸包按件5.5加8",
+          "priority": 10,
+          "price": 5.5,
+          "keywords": [
+            "胸包"
+          ],
+          "conditionsJson": "[{\"field\": \"flatAddon\", \"value\": 8}]",
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": true,
+          "matchMode": "first",
+          "keywordMatchMode": "exact_token",
+          "acceptedTypes": [
+            "器械包"
+          ]
+        }
+      ],
+      "rule_count": 1,
+      "active_rule_count": 1
+    },
+    "XZX-YY": {
+      "code": "XZX-YY",
+      "name": "新中新医院",
+      "status": null,
+      "billingPricingMode": "hybrid",
+      "standardPricingOverride": null,
+      "billingEnabled": true,
+      "billingPolicies": null,
+      "productRules": [
+        {
+          "ruleType": "FIXED_PRICE",
+          "name": "新中新手机固定8",
+          "priority": 10,
+          "price": 8.0,
+          "maxInstrumentCount": 1,
+          "keywords": [
+            "手机-@contains"
+          ],
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": true,
+          "matchMode": "first",
+          "keywordMatchMode": "contains",
+          "acceptedTypes": [
+            "额外包（纸塑袋）"
+          ]
+        },
+        {
+          "ruleType": "PRICE_PER_INSTRUMENT",
+          "name": "新中新开腹包按件5.5加8",
+          "priority": 11,
+          "price": 5.5,
+          "keywords": [
+            "开腹包"
+          ],
+          "conditionsJson": "[{\"field\": \"flatAddon\", \"value\": 8}]",
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": true,
+          "matchMode": "first",
+          "keywordMatchMode": "exact_token",
+          "acceptedTypes": [
+            "器械包"
+          ]
+        }
+      ],
+      "rule_count": 2,
+      "active_rule_count": 2
     },
     "ZYY-D1": {
       "code": "ZYY-D1",
