@@ -47,6 +47,7 @@ class SterilizeFeeDetailExportStrategyTest {
             assertEquals("包材尺寸", sheet.getRow(1).getCell(2).getStringCellValue());
             assertEquals("单价", sheet.getRow(1).getCell(5).getStringCellValue());
             var dataRow = sheet.getRow(2);
+            assertEquals("高温", dataRow.getCell(1).getStringCellValue());
             assertEquals(2.0, dataRow.getCell(3).getNumericCellValue());
             assertEquals(10.0, dataRow.getCell(4).getNumericCellValue());
             assertEquals(7.0, dataRow.getCell(5).getNumericCellValue());

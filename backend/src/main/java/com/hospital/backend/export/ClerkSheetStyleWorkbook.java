@@ -187,7 +187,13 @@ public final class ClerkSheetStyleWorkbook {
 
     public static byte[] zuyanDeptPrice(HospitalReconciliationJob job, List<HospitalReconciliationRow> rows)
             throws Exception {
-        double logistics = job != null && job.getLogisticsFee() != null ? job.getLogisticsFee() : 0;
+        return zuyanDeptPrice(job, rows, job != null && job.getLogisticsFee() != null ? job.getLogisticsFee() : 0);
+    }
+
+    public static byte[] zuyanDeptPrice(
+            HospitalReconciliationJob job,
+            List<HospitalReconciliationRow> rows,
+            double logistics) throws Exception {
         List<ClerkSheetStyle.DeptPriceLine> lines = ClerkSheetStyle.zuyanDeptLines(rows, logistics);
         double baseTotal = 0;
         double logisticsTotal = 0;

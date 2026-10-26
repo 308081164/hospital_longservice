@@ -2,6 +2,7 @@ package com.hospital.backend.export.strategy;
 
 import com.hospital.backend.entity.HospitalReconciliationRow;
 import com.hospital.backend.export.ExportContext;
+import com.hospital.backend.service.BillingMonthResolver;
 import com.hospital.backend.export.ExportResult;
 import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.Font;
@@ -70,7 +71,7 @@ public class SterilizeFeeDetailExportStrategy implements ExportStrategy {
             int rowIdx = 0;
             String hospital = context.getHospitalName() != null ? context.getHospitalName() : "";
             Row title = sheet.createRow(rowIdx++);
-            title.createCell(0).setCellValue(hospital + "消毒灭菌费明细");
+            title.createCell(0).setCellValue(hospital + detailPeriod(context.getJob()) + "消毒灭菌费明细");
             Row header = sheet.createRow(rowIdx++);
             String[] cols = {"日期", "消毒方式", "包材尺寸", "包数", "把数", "单价", "金额"};
             for (int i = 0; i < cols.length; i++) {
@@ -85,8 +86,8 @@ public class SterilizeFeeDetailExportStrategy implements ExportStrategy {
                 double amount = round2(discountedUnit * Math.max(1, agg.packCount));
                 amountTotal += amount;
                 Row row = sheet.createRow(rowIdx++);
-                row.createCell(0).setCellValue("");
-                row.createCell(1).setCellValue(agg.sterilizeMethod);
+                row.createCell(0).setCellValue(detailPeriod(context.getJob()));
+                row.createCell(1).setCellValue(sterilizeBand(agg.sterilizeMethod));
                 row.createCell(2).setCellValue(agg.packagingMaterial);
                 row.createCell(3).setCellValue(agg.packCount);
                 row.createCell(4).setCellValue(agg.instrumentCount);
@@ -102,6 +103,30 @@ public class SterilizeFeeDetailExportStrategy implements ExportStrategy {
             workbook.write(out);
             return out.toByteArray();
         }
+    }
+
+    private static String detailPeriod(com.hospital.backend.entity.HospitalReconciliationJob job) {
+        String month = BillingMonthResolver.resolve(job);
+        if (month != null && month.length() >= 7) {
+            return Integer.parseInt(month.substring(0, 4)) + "年"
+                    + Integer.parseInt(month.substring(5, 7)) + "月";
+        }
+        return "";
+    }
+
+    /** 样式表按高温、低温、敷料、外来器械分栏，金额仍用原行单价乘已有折扣。 */
+    static String sterilizeBand(String type) {
+        String text = type == null ? "" : type;
+        if (text.contains("外来")) {
+            return "外来器械";
+        }
+        if (text.contains("敷料")) {
+            return "敷料";
+        }
+        if (text.contains("低温")) {
+            return "低温";
+        }
+        return "高温";
     }
 
     private static String aggregateKey(HospitalReconciliationRow row) {

@@ -191,7 +191,7 @@ public final class ClerkSheetStyle {
             return "其他科室敷料包";
         }
         if ("器械".equals(kind)) {
-            return side + "器械包";
+            return operatingRoom ? "手术室器械包" : "其余科室器械";
         }
         return side + kind;
     }

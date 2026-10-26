@@ -87,7 +87,13 @@ class ClerkSheetStyleTest {
         assertThat(extraLine.handles()).isNull();
         assertThat(extraLine.accounted()).isEqualTo(25);
         assertThat(extraLine.billedAmount()).isEqualTo(399.0);
-        assertThat(lines).extracting(ClerkSheetStyle.GuoyaoLine::category).contains("手术室器械包", "其他科室敷料包");
+        ClerkSheetStyle.GuoyaoLine otherLine = line(lines, "其余科室器械");
+        assertThat(otherLine.handles()).isEqualTo(151);
+        assertThat(otherLine.accounted()).isEqualTo(101);
+        assertThat(otherLine.billedAmount()).isEqualTo(555.5);
+        assertThat(lines).extracting(ClerkSheetStyle.GuoyaoLine::category)
+                .contains("手术室器械包", "其他科室敷料包")
+                .doesNotContain("其余科室器械包");
 
         HospitalReconciliationRow campus3Or = row("手术室", "器械包", "手术包", 115 * 5.5, 0);
         List<ClerkSheetStyle.GuoyaoLine> campus3 = ClerkSheetStyle.guoyaoLines(third, List.of(campus3Or));
