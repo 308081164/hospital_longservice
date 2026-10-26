@@ -2687,7 +2687,31 @@ public class HospitalReconciliationServiceImpl implements HospitalReconciliation
         if (!doublesEqual(safeGetDoubleObj(left, "expectedUnitPrice"), safeGetDoubleObj(right, "expectedUnitPrice"))) {
             return false;
         }
-        return doublesEqual(safeGetDoubleObj(left, "totalPrice"), safeGetDoubleObj(right, "totalPrice"));
+        if (!doublesEqual(safeGetDoubleObj(left, "totalPrice"), safeGetDoubleObj(right, "totalPrice"))) {
+            return false;
+        }
+        // 单价和状态不变时，字段核对备注仍可能被重算清掉。不比这条，保存会当成无变化，仅异常去不掉。
+        if (!Objects.equals(valueToString(left.get("pricingRule"), ""), valueToString(right.get("pricingRule"), ""))) {
+            return false;
+        }
+        return Objects.equals(notesSignature(left.get("notes")), notesSignature(right.get("notes")));
+    }
+
+    private static String notesSignature(Object notes) {
+        if (notes == null) {
+            return "";
+        }
+        if (notes instanceof List<?> list) {
+            StringBuilder builder = new StringBuilder();
+            for (Object item : list) {
+                if (builder.length() > 0) {
+                    builder.append('\n');
+                }
+                builder.append(item == null ? "" : String.valueOf(item));
+            }
+            return builder.toString();
+        }
+        return String.valueOf(notes);
     }
 
     private boolean doublesEqual(Double left, Double right) {
