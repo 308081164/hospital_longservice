@@ -240,6 +240,7 @@ public class ClerkRuleExportService {
     /**
      * 结款合并先认客户档案编码。档案在、但编码不是内勤 baseline（如东大肛肠历史编码 DD-DC）时，
      * 再用 baseline 医院名对齐到已有编码。没有客户档案则不挂规则。
+     * 仁胜是例外：生产档案里没有这家，结款函仍按内勤全称挂已有的八折和物流卡，不新写价格。
      */
     private String resolveCustomerCode(String hospitalName) {
         if (hospitalName == null || hospitalName.isBlank()) {
@@ -247,7 +248,8 @@ public class ClerkRuleExportService {
         }
         Optional<Customer> customer = customerResolver.resolveByName(hospitalName);
         if (customer.isEmpty()) {
-            return null;
+            String fromBaseline = clerkRuleIndex.resolveCustomerCodeByHospitalName(hospitalName);
+            return "RENSHENG".equals(fromBaseline) ? fromBaseline : null;
         }
         String code = customer.get().getCode();
         if (clerkRuleIndex.baselineForCustomer(code) != null) {
