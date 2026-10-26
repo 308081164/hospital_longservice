@@ -163,6 +163,9 @@ public final class DefaultPricingTemplate {
         withBag.put("maxInstrumentCount", 10);
         withBag.put("skipPackaging", false);
         withBag.put("unitPrice", 5.5);
+        // 权威表「通用特殊收费」这 8 个词只写了额外包（纸塑袋）。
+        // 不限类型时，五常无纺布「克氏针-1捆」会被 unitPrice 5.5 盖住，到不了高温无纺布一件 16.5。
+        withBag.put("acceptedTypes", List.of("额外包（纸塑袋）"));
 
         Map<String, Object> noBag = new LinkedHashMap<>();
         noBag.put("name", "通用小件5合1免包材");
@@ -173,6 +176,7 @@ public final class DefaultPricingTemplate {
         noBag.put("minInstrumentCount", 11);
         noBag.put("skipPackaging", true);
         noBag.put("unitPrice", 5.5);
+        noBag.put("acceptedTypes", List.of("额外包（纸塑袋）"));
 
         return List.of(withBag, noBag);
     }

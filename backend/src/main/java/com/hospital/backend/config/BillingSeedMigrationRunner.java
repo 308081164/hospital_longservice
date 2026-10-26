@@ -72,6 +72,10 @@ public class BillingSeedMigrationRunner implements CommandLineRunner {
     private static final String ZYY_D1_PROVINCE_ALIAS_MARKER = "billing_seed_zyy_d1_province_alias_20261022_v1";
     /** 2026-10-22 特殊收费表序号 42。历史清理曾删掉该档案，启动时补回以便 manifest reconcile 挂规则。 */
     private static final String HRB_GUSHANG_CUSTOMER_MARKER = "billing_seed_hrb_gushang_customer_20261023_v1";
+    /** 2026-10-23 特殊收费表序号 43。导入器医院表没有这家，启动时补档案和别名。 */
+    private static final String XIUYAN_CUSTOMER_MARKER = "billing_seed_xiuyan_customer_20261026_v1";
+    /** 序号 44 产品规则挂在已有结款客户 XZX-YY 上，补短别名并打开 hybrid。 */
+    private static final String XZX_SPECIAL_ALIAS_MARKER = "billing_seed_xzx_special_alias_20261026_v1";
     private static final String CLERK_SETTLEMENT_CUSTOMERS_FILE =
             "billing-seeds/clerk-settlement-customers-20261020.json";
     /**
@@ -82,7 +86,10 @@ public class BillingSeedMigrationRunner implements CommandLineRunner {
             "billing_seed_clerk_settlement_customer_rensheng_20261026_v1";
     private static final String RENSHENG_SETTLEMENT_CUSTOMER_FILE =
             "billing-seeds/clerk-settlement-customer-rensheng-20261026.json";
-    /** 不放进 STRICT_KEEP_CODES，避免 enableStrictCustomers 把结款函客户当成特殊计价。 */
+    /**
+     * 结款函客户。XZX-YY 同时在 STRICT_KEEP_CODES：20261023 序号 44 有产品计价，
+     * 物流七五折仍留在 clerk baseline，清非清单客户时两份名单都要留。
+     */
     private static final java.util.List<String> CLERK_SETTLEMENT_CUSTOMER_CODES = java.util.List.of(
             "SHANTUN-RM", "XZX-YY", "LZL-KQ", "YUEMEI-FH", "HRB-HEU", "DONGDA-GC", "RENSHENG");
 
@@ -96,7 +103,8 @@ public class BillingSeedMigrationRunner implements CommandLineRunner {
             "AOLAN-YY", "HRB-XK-YY", "SENHAI-YY",
             "ZY3-DIANLI", "QILUNJI-YY", "XIEDA-YL",
             "ERYY-SB", "SHENG-YY-NG", "SHENG-YY-XF", "HRB-HIT",
-            "DIANJI-YY", "WUCHANG-RM", "JINGHUA-SD", "HRB-HSZ", "HRB-2ND", "HRB-GUSHANG");
+            "DIANJI-YY", "WUCHANG-RM", "JINGHUA-SD", "HRB-HSZ", "HRB-2ND", "HRB-GUSHANG",
+            "XIUYAN-YL", "XZX-YY");
 
     private record IncrementalSeed(String markerKey, String classpathFile) {}
 
@@ -354,6 +362,16 @@ public class BillingSeedMigrationRunner implements CommandLineRunner {
             insertMarker(HRB_GUSHANG_CUSTOMER_MARKER, "哈尔滨市骨伤科医院档案，供特殊收费规则挂载");
             log.info("HRB-GUSHANG customer ensured.");
         }
+        if (sysSettingMapper.countByKey(XIUYAN_CUSTOMER_MARKER) == 0) {
+            ensureXiuyanCustomer();
+            insertMarker(XIUYAN_CUSTOMER_MARKER, "秀妍汇医疗美容（香坊区）档案，供特殊收费序号43挂载");
+            log.info("XIUYAN-YL customer ensured.");
+        }
+        if (sysSettingMapper.countByKey(XZX_SPECIAL_ALIAS_MARKER) == 0) {
+            ensureXzxSpecialPricingCustomer();
+            insertMarker(XZX_SPECIAL_ALIAS_MARKER, "新中新医院打开特殊计价并补短别名，序号44");
+            log.info("XZX-YY special pricing customer ensured.");
+        }
         if (sysSettingMapper.countByKey(RENSHENG_SETTLEMENT_CUSTOMER_MARKER) == 0) {
             if (ensureRenshengSettlementCustomer()) {
                 insertMarker(RENSHENG_SETTLEMENT_CUSTOMER_MARKER,
@@ -407,6 +425,81 @@ public class BillingSeedMigrationRunner implements CommandLineRunner {
         }
         ensureCustomerAliasExact(existing.getId(), "哈尔滨市骨伤科医院", "exact", "gushang_v1", 10);
         ensureCustomerAliasExact(existing.getId(), "骨伤科医院", "contains", "gushang_v1", 50);
+    }
+
+    /** 序号 43。账单表头有全角/半角括号两种写法，短称「秀妍汇」能含在两种里面。 */
+    private void ensureXiuyanCustomer() {
+        Customer existing = customerMapper.selectByCode("XIUYAN-YL");
+        if (existing == null) {
+            Customer customer = new Customer();
+            customer.setCode("XIUYAN-YL");
+            customer.setCanonicalName("秀妍汇医疗美容（香坊区）");
+            customer.setStatus("active");
+            customer.setBillingEnabled(true);
+            customer.setBillingPricingMode("hybrid");
+            customer.setNotes("特殊收费(4)-20261023 序号43");
+            customerMapper.insert(customer);
+            existing = customer;
+            log.info("Seeded customer: XIUYAN-YL");
+        } else {
+            boolean changed = false;
+            if (!Boolean.TRUE.equals(existing.getBillingEnabled())) {
+                existing.setBillingEnabled(true);
+                changed = true;
+            }
+            if (!"hybrid".equals(existing.getBillingPricingMode())) {
+                existing.setBillingPricingMode("hybrid");
+                changed = true;
+            }
+            if (existing.getCanonicalName() == null || existing.getCanonicalName().isBlank()) {
+                existing.setCanonicalName("秀妍汇医疗美容（香坊区）");
+                changed = true;
+            }
+            if (changed) {
+                customerMapper.updateById(existing);
+            }
+        }
+        Long customerId = existing.getId();
+        ensureCustomerAliasExact(customerId, "秀妍汇医疗美容（香坊区）", "exact", "xiuyan_v1", 10);
+        ensureCustomerAliasExact(customerId, "秀妍汇医疗美容(香坊区)", "exact", "xiuyan_v1", 20);
+        ensureCustomerAliasExact(customerId, "秀妍汇医疗美容", "contains", "xiuyan_v1", 40);
+        ensureCustomerAliasExact(customerId, "秀妍汇", "contains", "xiuyan_v1", 80);
+    }
+
+    /** 序号 44 挂在结款客户上。已有档案只补别名并打开 hybrid，不改物流规则。 */
+    private void ensureXzxSpecialPricingCustomer() {
+        Customer existing = customerMapper.selectByCode("XZX-YY");
+        if (existing == null) {
+            Customer customer = new Customer();
+            customer.setCode("XZX-YY");
+            customer.setCanonicalName("新中新医院");
+            customer.setStatus("active");
+            customer.setBillingEnabled(true);
+            customer.setBillingPricingMode("hybrid");
+            customer.setNotes("特殊收费(4)-20261023 序号44");
+            customerMapper.insert(customer);
+            existing = customer;
+            log.info("Seeded customer: XZX-YY");
+        } else {
+            boolean changed = false;
+            if (!Boolean.TRUE.equals(existing.getBillingEnabled())) {
+                existing.setBillingEnabled(true);
+                changed = true;
+            }
+            if (!"hybrid".equals(existing.getBillingPricingMode())) {
+                existing.setBillingPricingMode("hybrid");
+                changed = true;
+            }
+            if (existing.getCanonicalName() == null || existing.getCanonicalName().isBlank()) {
+                existing.setCanonicalName("新中新医院");
+                changed = true;
+            }
+            if (changed) {
+                customerMapper.updateById(existing);
+            }
+        }
+        ensureCustomerAliasExact(existing.getId(), "新中新医院", "exact", "xzx_special_v1", 10);
+        ensureCustomerAliasExact(existing.getId(), "新中新", "contains", "xzx_special_v1", 50);
     }
 
     private void ensureHrbHszBillAliases() {

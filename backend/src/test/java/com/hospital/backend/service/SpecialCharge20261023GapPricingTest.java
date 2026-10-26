@@ -306,6 +306,81 @@ class SpecialCharge20261023GapPricingTest {
     }
 
     @Test
+    void hszOnePieceEoAndEtoPacksUseSameFixed22() throws Exception {
+        PricingEngine engine = PricingEngineTestSupport.engineForCustomerCode("HRB-HSZ");
+        String hospital = "哈尔滨红十字医院";
+
+        PricingEngine.ProcessedResult laparoscopy = engine.processRow(PricingEngineTestSupport.row(
+                hospital, "单包装包(EO)", "腹腔镜6号-1/Z2060 （腔镜手术室）",
+                "高温纸塑袋200*600", 1, 1, 22.0, 22.0));
+        assertThat(laparoscopy.expectedUnitPrice).isCloseTo(22.0, CENT);
+        assertThat(laparoscopy.pricingRule).isEqualTo("红十字一件一包固定22");
+
+        PricingEngine.ProcessedResult hysteroscopy = engine.processRow(PricingEngineTestSupport.row(
+                hospital, "器械包(ETO)", "宫腔镜1号",
+                "无纺布-120×120-50g", 1, 1, 22.0, 22.0));
+        assertThat(hysteroscopy.expectedUnitPrice).isCloseTo(22.0, CENT);
+        assertThat(hysteroscopy.pricingRule).isEqualTo("红十字一件一包固定22");
+
+        PricingEngine.ProcessedResult forceps = engine.processRow(PricingEngineTestSupport.row(
+                hospital, "额外包(ETO)", "绣扎钳-1/双/保/Z2060",
+                "低温纸塑袋", 1, 1, 22.0, 22.0));
+        assertThat(forceps.expectedUnitPrice).isCloseTo(22.0, CENT);
+        assertThat(forceps.pricingRule).isEqualTo("红十字一件一包固定22");
+
+        PricingEngine.ProcessedResult multi = engine.processRow(PricingEngineTestSupport.row(
+                hospital, "器械包(ETO)", "宫腔镜",
+                "无纺布-120×120-50g", 4, 1, 88.0, 88.0));
+        assertThat(multi.pricingRule).isNotEqualTo("红十字一件一包固定22");
+        assertThat(multi.expectedUnitPrice).isNotCloseTo(22.0, CENT);
+    }
+
+    @Test
+    void wuchangNonWovenKirschnerOnePieceIs16_5() throws Exception {
+        PricingEngine engine = PricingEngineTestSupport.engineForCustomerCode("WUCHANG-RM");
+        PricingEngine.ProcessedResult nonWoven = engine.processRow(PricingEngineTestSupport.row(
+                "五常市人民医院", "额外包(无纺布)", "克氏针-1捆/w6050",
+                "无纺布-60×60-50g", 6, 6, 16.5, 99.0));
+        assertThat(nonWoven.expectedUnitPrice).isCloseTo(16.50, CENT);
+        assertThat(nonWoven.pricingRule).contains("高温无纺布");
+        assertThat(nonWoven.pricingRule).doesNotContain("通用小件");
+
+        PricingEngine.ProcessedResult paper = engine.processRow(PricingEngineTestSupport.row(
+                "五常市人民医院", "额外包（纸塑袋）", "克氏针-6/Z7530",
+                "高温纸塑袋75*370", 6, 1, 13.5, 13.5));
+        assertThat(paper.pricingRule).contains("通用小件5合1含包材");
+        assertThat(paper.expectedUnitPrice).isCloseTo(13.5, CENT);
+    }
+
+    @Test
+    void xiuyanChestPackAndXinzhongxinOctoberRows() throws Exception {
+        PricingEngine xiuyan = PricingEngineTestSupport.engineForCustomerCode("XIUYAN-YL");
+        PricingEngine.ProcessedResult chest = xiuyan.processRow(PricingEngineTestSupport.row(
+                "秀妍汇医疗美容（香坊区）", "器械包", "胸包",
+                "无纺布-80×80-50g", 60, 1, 55.0, 3300.0));
+        assertThat(chest.pricingRule).contains("秀妍汇胸包");
+        assertThat(chest.expectedUnitPrice).isCloseTo(338.0, CENT);
+
+        PricingEngine.ProcessedResult two = xiuyan.processRow(PricingEngineTestSupport.row(
+                "秀妍汇医疗美容（香坊区）", "器械包", "胸包",
+                "无纺布", 2, 1, 19.0, 19.0));
+        assertThat(two.expectedUnitPrice).isCloseTo(19.0, CENT);
+
+        PricingEngine xzx = PricingEngineTestSupport.engineForCustomerCode("XZX-YY");
+        PricingEngine.ProcessedResult phone = xzx.processRow(PricingEngineTestSupport.row(
+                "新中新医院", "额外包（纸塑袋）", "手机-1",
+                "高温纸塑袋75*200", 1, 1, 8.0, 8.0));
+        assertThat(phone.expectedUnitPrice).isCloseTo(8.0, CENT);
+        assertThat(phone.pricingRule).contains("新中新手机");
+
+        PricingEngine.ProcessedResult abdomen = xzx.processRow(PricingEngineTestSupport.row(
+                "新中新医院", "器械包", "开腹包",
+                "无纺布", 2, 1, 19.0, 19.0));
+        assertThat(abdomen.expectedUnitPrice).isCloseTo(19.0, CENT);
+        assertThat(abdomen.pricingRule).contains("新中新开腹包");
+    }
+
+    @Test
     void xiangfangDiscountStepWritesRateBeforeCapAndOmitsCapWhenNotApplied() throws Exception {
         ObjectNode compiled = clerkCompiler.compileForCustomer("SHENG-YY-XF");
         ReconciliationPricingOrchestrator orchestrator = new ReconciliationPricingOrchestrator(

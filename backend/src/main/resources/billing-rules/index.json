@@ -1,8 +1,8 @@
 {
-  "baseline_hash": "a99448f35aa9f3e56540e14829451e954f8bb18acf725d744fca9840da3afd1c",
-  "generated_at": "2026-10-26T06:42:21Z",
+  "baseline_hash": "e5b97686fbccbfb7c5277488b18ff61b4f6e7d3d9b3d55a0d3e1e4400b060f93",
+  "generated_at": "2026-10-26T08:11:46Z",
   "source": "billing-rules-manifest@6a4ec3fbe7896cc575c6c8eabecd644fea23f11dd22afa4c970f9dc07d36c4a4",
-  "customer_count": 43,
+  "customer_count": 45,
   "customers": [
     {
       "code": "BINGCHENG-YM",
@@ -242,7 +242,7 @@
       "code": "HRB-HSZ",
       "file": "baseline/HRB-HSZ.json",
       "ruleCount": 6,
-      "fileHash": "2f71798adf4ad8a2f734fc3acc5d07bfa8d52996ada014c4ccf89cafc3aa9ea8"
+      "fileHash": "abd65d1a8f51af6f470c618b5be4043bc5af58c20f4abd33bc3c0b075787ac9d"
     },
     {
       "code": "HRB-2ND",
@@ -255,6 +255,18 @@
       "file": "baseline/HRB-GUSHANG.json",
       "ruleCount": 10,
       "fileHash": "7ee89268903e4e1350d119982807fdf0bffb40025001ff937f488318455767d1"
+    },
+    {
+      "code": "XIUYAN-YL",
+      "file": "baseline/XIUYAN-YL.json",
+      "ruleCount": 1,
+      "fileHash": "118fc174c4d11dc96c9bdb2eb5124f2ea8eb17ce0546547d9e3cef338fa9562a"
+    },
+    {
+      "code": "XZX-YY",
+      "file": "baseline/XZX-YY.json",
+      "ruleCount": 2,
+      "fileHash": "664d33ffeb86aec9ec07a3fb61456b25f2d9ee340aede15e172d8ce4771c30cf"
     },
     {
       "code": "ZYY-D1",

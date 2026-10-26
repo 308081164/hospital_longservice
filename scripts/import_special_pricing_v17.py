@@ -16,7 +16,7 @@ from pathlib import Path
 import openpyxl
 
 ROOT = Path(__file__).resolve().parents[1]
-DEFAULT_XLSX = ROOT / "docs/source/特殊收费(17).xlsx"
+DEFAULT_XLSX = ROOT / "docs/source/特殊收费(4)-20261023.xlsx"
 DEFAULT_OUT = ROOT / "测试用例/.special_pricing_v17_extract.json"
 
 HOSPITAL_TO_CODE: dict[str, str] = {
@@ -60,6 +60,15 @@ HOSPITAL_TO_CODE: dict[str, str] = {
     "哈尔滨红十字医院": "HRB-HSZ",
     "哈尔滨市第二医院": "HRB-2ND",
     "哈尔滨市骨伤科医院\n（低温费用有内勤规则）": "HRB-GUSHANG",
+    "哈尔滨市骨伤科医院": "HRB-GUSHANG",
+    "奥兰医院": "AOLAN-YY",
+    "哈尔滨市胸科医院": "HRB-XK-YY",
+    "哈尔滨胸科医院": "HRB-XK-YY",
+    "森海医院": "SENHAI-YY",
+    "哈尔滨森海医院": "SENHAI-YY",
+    "秀妍汇医疗美容（香坊区）": "XIUYAN-YL",
+    "秀妍汇医疗美容(香坊区)": "XIUYAN-YL",
+    "新中新医院": "XZX-YY",
 }
 
 
@@ -84,15 +93,21 @@ def norm(value: object) -> str:
 
 
 def parse_pack_name(text: str) -> tuple[str, str | None]:
-    """Return (match_mode, keyword)."""
+    """Return (match_mode, keyword).
+
+    「包名称带」和「包名带」都是包含语义。旧解析器只认「包名称带」，
+    市二止血带、骨伤/双层会被整句当成精确名，生产对不上账单。
+    """
     text = norm(text)
     if not text:
         return "unknown", None
-    m = re.search(r'包名称带[“"](.+?)[”"]', text)
+    m = re.search(r'包名(?:称)?带[“"](.+?)[”"]', text)
     if m:
         return "contains", m.group(1)
     if "通用" in text:
         return "generic", None
+    if "无关" in text:
+        return "irrelevant", text
     return "exact", text
 
 
