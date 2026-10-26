@@ -88,6 +88,12 @@
       "sterilization": "HIGH_TEMP"
     },
     {
+      "canonical": "额外包（仅消毒）",
+      "aliases": ["额外包(仅消毒)", "额外包（仅消毒）"],
+      "allowedMaterials": ["NONE", "HIGH_TEMP_PAPER"],
+      "sterilization": "HIGH_TEMP"
+    },
+    {
       "canonical": "敷料包",
       "aliases": ["敷料包"],
       "allowedMaterials": ["NONE"],

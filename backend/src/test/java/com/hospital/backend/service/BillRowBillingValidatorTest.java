@@ -119,6 +119,38 @@ class BillRowBillingValidatorTest {
     }
 
     @Test
+    void disinfectOnlyExtraPackWithBlankMaterialIsCleanWhenPricePresent() {
+        assertThat(BillRowBillingValidator.validate("额外包(仅消毒)", "", 333, 9.9)).isEmpty();
+        assertThat(BillRowBillingValidator.validate("额外包（仅消毒）", null, 2, 9.9)).isEmpty();
+    }
+
+    @Test
+    void disinfectOnlyExtraPackWithHighTempPaperIsCleanWhenPricePresent() {
+        List<BillRowBillingValidator.Violation> violations = BillRowBillingValidator.validate(
+                "额外包(仅消毒)", "高温纸塑袋150*260", 12, 8.0);
+
+        assertThat(violations).isEmpty();
+    }
+
+    @Test
+    void disinfectOnlyExtraPackWithNonWovenIsMaterialMismatchNotUnknownType() {
+        List<BillRowBillingValidator.Violation> violations = BillRowBillingValidator.validate(
+                "额外包（仅消毒）", "无纺布-60×60-50g", 2, 8.0);
+
+        assertThat(violations).extracting(BillRowBillingValidator.Violation::code)
+                .containsExactly(BillRowBillingValidator.CODE_PACK_TYPE_MATERIAL_MISMATCH);
+    }
+
+    @Test
+    void disinfectOnlyExtraPackStillFlagsZeroUnitPriceBeforeRuleMatch() {
+        List<BillRowBillingValidator.Violation> violations =
+                BillRowBillingValidator.validate("额外包(仅消毒)", "", 333, 0.0);
+
+        assertThat(violations).extracting(BillRowBillingValidator.Violation::code)
+                .containsExactly(BillRowBillingValidator.CODE_ZERO_UNIT_PRICE);
+    }
+
+    @Test
     void zeroUnitPriceOnNonDressingPackReportsViolation() {
         List<BillRowBillingValidator.Violation> violations =
                 BillRowBillingValidator.validate("额外包(纸塑袋)", "高温纸塑袋75*200", 3, 0.0);

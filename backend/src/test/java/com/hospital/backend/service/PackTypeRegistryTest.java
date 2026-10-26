@@ -27,6 +27,21 @@ class PackTypeRegistryTest {
     }
 
     @Test
+    void disinfectOnlyExtraPackMatchesEitherBracketAndAllowsBlankOrHighTempPaper() {
+        assertThat(PackTypeRegistry.match("额外包（仅消毒）"))
+                .map(PackTypeRegistry.PackTypeDefinition::canonical)
+                .contains("额外包（仅消毒）");
+        var def = PackTypeRegistry.match("额外包(仅消毒)").orElseThrow();
+        assertThat(def.canonical()).isEqualTo("额外包（仅消毒）");
+        assertThat(PackTypeRegistry.materialAllowed(def, "")).isTrue();
+        assertThat(PackTypeRegistry.materialAllowed(def, "无")).isTrue();
+        assertThat(PackTypeRegistry.materialAllowed(def, "高温纸塑袋150*260")).isTrue();
+        assertThat(PackTypeRegistry.materialAllowed(def, "高温纸塑袋100*290")).isTrue();
+        assertThat(PackTypeRegistry.materialAllowed(def, "无纺布-60×60-50g")).isFalse();
+        assertThat(PackTypeRegistry.isLowTempPackType("额外包(仅消毒)")).isFalse();
+    }
+
+    @Test
     void matchesZsdAlias() {
         assertThat(PackTypeRegistry.match("器械包(ZSD)"))
                 .map(PackTypeRegistry.PackTypeDefinition::canonical)

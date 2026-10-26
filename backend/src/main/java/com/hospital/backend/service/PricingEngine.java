@@ -679,6 +679,12 @@ public class PricingEngine {
             notes.add("规则建议单价为 " + fmt(expectedUnitPrice) + " 元，但当前配置保留原总价不自动重算，如需同步更新总价请手动调整。");
         }
 
+        // 已命中明确 0 元特殊规则、且原单价也是 0：去掉「单价为 0」这条异常。
+        // 未命中规则的 0 元、以及原价和规则价不一致的，仍保留。
+        waiveMatchedZeroPriceAnomaly(billingViolations, notes, unitPrice, expectedUnitPrice, specialPrice);
+        billingValidationNotes = BillRowBillingValidator.toBillingNotes(billingViolations);
+        forceBillingValidationWarning = !billingViolations.isEmpty();
+
         // 最终状态判定：有差额的行统一标为 warning（人工复核），用户点"一键修正"后才变为 corrected
         boolean anyPriceAccepted = false;
         if (specialPrice != null && specialPrice.anyPriceMode) {
@@ -2773,6 +2779,35 @@ public class PricingEngine {
         String keyword;
         int position;
         String compactText;
+    }
+
+    /**
+     * 已命中明确 0 元特殊规则、且账单原单价、最终规则单价都是 0 时，取消「单价为 0」异常。
+     * 规则价不是 0，或没有命中特殊规则时，不在这里放行。
+     */
+    private static void waiveMatchedZeroPriceAnomaly(
+            List<BillRowBillingValidator.Violation> billingViolations,
+            List<String> notes,
+            Double unitPrice,
+            Double expectedUnitPrice,
+            SpecialPriceResult specialPrice) {
+        if (billingViolations == null || billingViolations.isEmpty() || specialPrice == null) {
+            return;
+        }
+        if (unitPrice == null || expectedUnitPrice == null) {
+            return;
+        }
+        if (Math.abs(unitPrice) > 0.001
+                || Math.abs(expectedUnitPrice) > 0.001
+                || Math.abs(specialPrice.price) > 0.001) {
+            return;
+        }
+        boolean removed = billingViolations.removeIf(
+                violation -> BillRowBillingValidator.CODE_ZERO_UNIT_PRICE.equals(violation.code()));
+        if (!removed || notes == null) {
+            return;
+        }
+        notes.removeIf(note -> note != null && note.startsWith("【字段核对错误】单价为 0"));
     }
 
     /**
