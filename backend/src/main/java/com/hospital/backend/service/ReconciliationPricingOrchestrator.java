@@ -31,7 +31,7 @@ public class ReconciliationPricingOrchestrator {
     public static final String CATEGORY_CLERK_DISCOUNT = "clerk_discount";
 
     private static final Pattern DISCOUNT_NOTE_PATTERN =
-            Pattern.compile("^导出阶段折扣：(.+?)，单价");
+            Pattern.compile("^导出阶段折扣：(.+?)，");
 
     private final ClerkBillPriceRuleApplier clerkBillPriceRuleApplier;
     private final ExportStageDiscountApplier exportStageDiscountApplier;
@@ -110,15 +110,20 @@ public class ReconciliationPricingOrchestrator {
                 priceAfterDiscount = applied.unitPriceAfter();
                 result.expectedUnitPrice = priceAfterDiscount;
                 result.unroundedUnitPrice = applied.unroundedUnitPrice();
-                calculationSteps.add("内勤折扣："
-                        + (clerkDiscountRuleName != null ? clerkDiscountRuleName : "已应用"));
+                String ruleLabel = clerkDiscountRuleName != null ? clerkDiscountRuleName : "客户折扣";
+                String stepNote = applied.stepNote();
+                if (stepNote == null || stepNote.isBlank()) {
+                    stepNote = String.format(
+                            "导出阶段折扣：%s，折前 %.2f，%s 单价 %.2f",
+                            ruleLabel, preDiscountUnit, ruleLabel, priceAfterDiscount);
+                }
+                calculationSteps.add(stepNote.startsWith("导出阶段折扣：")
+                        ? "内勤折扣：" + stepNote.substring("导出阶段折扣：".length())
+                        : "内勤折扣：" + stepNote);
                 if (result.notes == null) {
                     result.notes = new ArrayList<>();
                 }
-                result.notes.add(String.format(
-                        "导出阶段折扣：%s，单价 %.2f",
-                        clerkDiscountRuleName != null ? clerkDiscountRuleName : "客户折扣",
-                        priceAfterDiscount));
+                result.notes.add(stepNote);
                 syncCorrectionTotals(result, rowMap);
             }
         }

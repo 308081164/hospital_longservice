@@ -1,13 +1,17 @@
 package com.hospital.backend.service;
 
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.hospital.backend.common.JsonUtils;
 import com.hospital.backend.config.ClerkRuleIndex;
 import com.hospital.backend.dto.request.hospital.BillRowItem;
 import com.hospital.backend.export.ExportStageDiscountApplier;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.data.Offset.offset;
@@ -185,6 +189,74 @@ class SpecialCharge20261023GapPricingTest {
         assertThat(needle.expectedUnitPrice).isCloseTo(16.5, CENT);
         assertThat(priced(hsz, "哈尔滨红十字医院", "敷料包（无纺布）", "针盒-1/W6050", 1).expectedUnitPrice)
                 .isCloseTo(16.5, CENT);
+    }
+
+    @Test
+    void xiangfangDiscountStepWritesRateBeforeCapAndOmitsCapWhenNotApplied() throws Exception {
+        ObjectNode compiled = clerkCompiler.compileForCustomer("SHENG-YY-XF");
+        ReconciliationPricingOrchestrator orchestrator = new ReconciliationPricingOrchestrator(
+                new ClerkBillPriceRuleApplier(), exportDiscount);
+        PricingEngine engine = echoingEngine();
+
+        PricingEngine.ProcessedResult twentyFour = orchestrator.processRow(
+                seedRow("器械包（低温等离子）", "外三-24件（盒1）/W12050", 388.0),
+                engine, compiled, "SHENG-YY-XF", Set.of());
+        assertThat(twentyFour.expectedUnitPrice).isCloseTo(180.0, CENT);
+        assertThat(joined(twentyFour)).contains("标准价六折 388.00×0.6=232.80");
+        assertThat(joined(twentyFour)).contains("封顶 180.00");
+        assertThat(joined(twentyFour)).contains("232.80 超过封顶，单价取 180.00");
+        assertThat(twentyFour.billingNotes.get("calculationSteps").toString())
+                .contains("388.00×0.6=232.80")
+                .contains("封顶 180.00");
+
+        PricingEngine.ProcessedResult twentyTwo = orchestrator.processRow(
+                seedRow("器械包（低温等离子）", "普镜-22件（盒1）/W12050", 344.0),
+                engine, compiled, "SHENG-YY-XF", Set.of());
+        assertThat(twentyTwo.expectedUnitPrice).isCloseTo(180.0, CENT);
+        assertThat(joined(twentyTwo)).contains("344.00×0.6=206.40");
+        assertThat(joined(twentyTwo)).contains("206.40 超过封顶，单价取 180.00");
+
+        PricingEngine.ProcessedResult ureter = orchestrator.processRow(
+                seedRow("器械包（低温等离子）", "输尿管镜-1/Z1570", 35.0),
+                engine, compiled, "SHENG-YY-XF", Set.of());
+        assertThat(ureter.expectedUnitPrice).isCloseTo(21.0, CENT);
+        assertThat(joined(ureter)).contains("35.00×0.6=21.00");
+        assertThat(joined(ureter)).doesNotContain("封顶");
+        assertThat(joined(ureter)).doesNotContain("180");
+
+        PricingEngine.ProcessedResult clothExtra = orchestrator.processRow(
+                seedRow("额外包（棉布包装）", "棉布额外包", 400.0),
+                engine, compiled, "SHENG-YY-XF", Set.of());
+        assertThat(clothExtra.expectedUnitPrice).isCloseTo(240.0, CENT);
+        assertThat(joined(clothExtra)).contains("400.00×0.6=240.00");
+        assertThat(joined(clothExtra)).doesNotContain("封顶");
+    }
+
+    private static PricingEngine echoingEngine() {
+        return new PricingEngine(JsonUtils.getObjectMapper().createObjectNode()) {
+            @Override
+            public ProcessedResult processRow(Map<String, Object> row) {
+                ProcessedResult result = new ProcessedResult();
+                result.expectedUnitPrice = ((Number) row.get("unitPrice")).doubleValue();
+                result.pricingRule = "低温无纺布阶梯计费";
+                result.pricingPath = "standard";
+                result.notes = new ArrayList<>();
+                return result;
+            }
+        };
+    }
+
+    private static Map<String, Object> seedRow(String type, String packName, double unitPrice) {
+        Map<String, Object> row = new HashMap<>();
+        row.put("hospitalName", "黑龙江省医院（香坊院区）");
+        row.put("type", type);
+        row.put("packName", packName);
+        row.put("packageMaterial", "无纺布");
+        row.put("instrumentCount", 1);
+        row.put("packCount", 1);
+        row.put("unitPrice", unitPrice);
+        row.put("totalPrice", unitPrice);
+        return row;
     }
 
     private static BillRowItem pricedRow(String type, String packName, double unitPrice) {

@@ -236,7 +236,7 @@ public final class BillingPolicyApplier {
         return tiers;
     }
 
-    static PieceTierDiscount findMatchedPieceTier(
+    public static PieceTierDiscount findMatchedPieceTier(
             List<PieceTierDiscount> tiers, int billingPieces, double basePrice) {
         if (tiers == null || tiers.isEmpty()) {
             return null;
@@ -373,11 +373,12 @@ public final class BillingPolicyApplier {
                 }
                 if (matched.fixedUnitPrice() != null) {
                     // 固定单价一口价，不再叠乘后续折扣（如附一无纺布额外包<3 → 13.2）
-                    note.append(label).append("：固定单价 ").append(fmt(price)).append(" 元；");
+                    note.append(formatAdjustmentBody(
+                            before, label + " 固定单价 " + fmt(price), null, price)).append("；");
                     break;
                 }
-                note.append(label).append("：").append(fmt(before)).append(" 元 × ")
-                        .append(matched.rate()).append(" = ").append(fmt(price)).append(" 元；");
+                note.append(formatAdjustmentBody(
+                        before, rateFormula(label, before, matched.rate(), price), null, price)).append("；");
                 continue;
             }
             double rate = params.path("rate").asDouble(1.0);
@@ -388,12 +389,14 @@ public final class BillingPolicyApplier {
                 if (policy.has("policyId")) {
                     lastPolicyId = policy.path("policyId").asLong();
                 }
-                note.append(label).append("：").append(fmt(before)).append(" 元 × ")
-                        .append(rate).append(" = ").append(fmt(price)).append(" 元；");
+                note.append(formatAdjustmentBody(
+                        before, rateFormula(label, before, rate, price), null, price)).append("；");
             }
             double capped = capUnitPrice(price, params, rowType);
             if (capped + 0.001 < price) {
-                note.append(label).append("：封顶 ").append(fmt(capped)).append(" 元；");
+                double capAmount = params.path("maxUnitPrice").asDouble(capped);
+                note.append("封顶 ").append(fmt(capAmount)).append("，")
+                        .append(fmt(price)).append(" 超过封顶，单价取 ").append(fmt(capped)).append("；");
                 price = capped;
                 if (!labels.contains(label)) {
                     labels.add(label);
@@ -409,9 +412,7 @@ public final class BillingPolicyApplier {
         String joinedLabels = String.join(" + ", labels);
         String summary = STAGE_SETTLEMENT_ONLY.equals(targetStage)
                 ? note.toString()
-                : "命中" + joinedLabels + "，基础规则单价 "
-                        + fmt(baseUnitPrice) + " 元 → " + fmt(price) + " 元（"
-                        + note.substring(0, note.length() - 1) + "）。";
+                : "命中" + joinedLabels + "，" + note.substring(0, note.length() - 1) + "。";
         return new BillDetailDiscount(
                 price,
                 " + " + hospitalName + " 折扣",
@@ -429,7 +430,8 @@ public final class BillingPolicyApplier {
         JsonNode params = policy.path("params");
         List<PieceTierDiscount> tiers = parsePieceTierDiscounts(params);
         double price;
-        String tierNote = "";
+        String formulaClause;
+        String label = policy.path("name").asText("客户折扣");
         if (!tiers.isEmpty()) {
             PieceTierDiscount matched = findMatchedPieceTier(tiers, billingPieces, baseUnitPrice);
             if (matched == null) {
@@ -437,9 +439,9 @@ public final class BillingPolicyApplier {
             }
             price = applyPieceTierRate(baseUnitPrice, billingPieces, tiers);
             if (matched.fixedUnitPrice() != null) {
-                tierNote = "（按 " + billingPieces + " 把固定单价）";
+                formulaClause = label + " 固定单价 " + fmt(price);
             } else {
-                tierNote = "（按 " + billingPieces + " 把分段折扣）";
+                formulaClause = rateFormula(label, baseUnitPrice, matched.rate(), price);
             }
         } else {
             double rate = params.path("rate").asDouble(1.0);
@@ -447,11 +449,11 @@ public final class BillingPolicyApplier {
                 return null;
             }
             price = round(baseUnitPrice * rate);
+            formulaClause = rateFormula(label, baseUnitPrice, rate, price);
         }
         double uncapped = price;
         price = capUnitPrice(price, params, rowType);
         boolean capped = price + 0.001 < uncapped;
-        String label = policy.path("name").asText("客户折扣");
         String tempScope = policy.path("scope").path("temperature").asText("ANY");
         String tempNote = "ANY".equalsIgnoreCase(tempScope) ? "" : "（" + tempScope + "）";
         Long policyId = policy.has("policyId") ? policy.path("policyId").asLong() : null;
@@ -461,9 +463,9 @@ public final class BillingPolicyApplier {
             double rate = params.path("rate").asDouble(1.0);
             note = formatSettlementDiscountRemark(label, rate);
         } else {
-            note = "命中" + label + tempNote + tierNote + "，基础规则单价 "
-                    + fmt(baseUnitPrice) + " 元 → " + fmt(price) + " 元"
-                    + (capped ? "，封顶 " + fmt(price) + " 元" : "") + "。";
+            Double capShown = capped ? params.path("maxUnitPrice").asDouble(price) : null;
+            note = "命中" + label + tempNote + "，"
+                    + formatAdjustmentBody(baseUnitPrice, formulaClause, capShown, uncapped) + "。";
         }
         return new BillDetailDiscount(
                 price,
@@ -518,6 +520,39 @@ public final class BillingPolicyApplier {
             return price;
         }
         return round(cap);
+    }
+
+    /**
+     * 折扣或封顶改变单价时的步骤正文。未把单价压到封顶时不写封顶。
+     * 低消若把单价抬高，调用方把低消算式放进 {@code formulaClause}，未触发则不要放进去。
+     */
+    public static String formatAdjustmentBody(
+            double before, String formulaClause, Double cap, double priceBeforeCap) {
+        StringBuilder text = new StringBuilder();
+        text.append("折前 ").append(fmt(before)).append("，").append(formulaClause);
+        if (cap != null && priceBeforeCap > cap + 0.001) {
+            text.append("，封顶 ").append(fmt(cap))
+                    .append("，").append(fmt(priceBeforeCap))
+                    .append(" 超过封顶，单价取 ").append(fmt(cap));
+        }
+        return text.toString();
+    }
+
+    public static String formatExportDiscountNote(
+            String ruleName, double before, String formulaClause, Double cap, double priceBeforeCap) {
+        String name = ruleName == null || ruleName.isBlank() ? "客户折扣" : ruleName;
+        return "导出阶段折扣：" + name + "，"
+                + formatAdjustmentBody(before, formulaClause, cap, priceBeforeCap);
+    }
+
+    public static String rateFormula(String ruleName, double before, double rate, double after) {
+        return ruleName + " " + fmt(before) + "×" + fmtRate(rate) + "=" + fmt(after);
+    }
+
+    public static String fmtRate(double rate) {
+        String text = String.format(java.util.Locale.ROOT, "%.4f", rate);
+        text = text.replaceAll("0+$", "").replaceAll("\\.$", "");
+        return text.isEmpty() ? "0" : text;
     }
 
     public static double round(double value) {

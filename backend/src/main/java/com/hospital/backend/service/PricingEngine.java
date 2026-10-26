@@ -609,8 +609,8 @@ public class PricingEngine {
             if (specialPrice.capDoubleBag && expectedUnitPrice != null) {
                 double capPrice = rules.path("highTemperature").path("paperPlastic").path("minCharge").asDouble(16.5);
                 if (expectedUnitPrice > capPrice) {
-                    notes.add("双层纸塑袋按件计价含包材，封顶 " + fmt(capPrice) + " 元（原计 "
-                            + fmt(expectedUnitPrice) + " 元）。");
+                    notes.add("双层纸塑袋按件计价含包材，封顶 " + fmt(capPrice) + "，"
+                            + fmt(expectedUnitPrice) + " 超过封顶，单价取 " + fmt(capPrice) + "。");
                     expectedUnitPrice = round(capPrice);
                 }
             }
@@ -625,8 +625,8 @@ public class PricingEngine {
             if (isDouble && perPackRawInstrumentCount > 0 && perPackRawInstrumentCount < 3) {
                 double capPrice = rules.path("highTemperature").path("paperPlastic").path("minCharge").asDouble(16.5);
                 if (expectedUnitPrice > capPrice) {
-                    notes.add("双层纸塑袋按件计价含包材，封顶 " + fmt(capPrice) + " 元（原计 "
-                            + fmt(expectedUnitPrice) + " 元）。");
+                    notes.add("双层纸塑袋按件计价含包材，封顶 " + fmt(capPrice) + "，"
+                            + fmt(expectedUnitPrice) + " 超过封顶，单价取 " + fmt(capPrice) + "。");
                     expectedUnitPrice = round(capPrice);
                 }
             }
@@ -1933,8 +1933,14 @@ public class PricingEngine {
         String doubleNote = isDouble && bagFee2 > 0
             ? "，含双袋费(" + zBagSize + "cm) " + fmt(bagFee2) + " 元"
             : "";
-        notes.add("高温纸塑袋件数 " + instrumentCount + " 件，含袋费 " + fmt(totalWithBag) +
-                " 元" + doubleNote + "，封顶 " + fmt(capPrice) + " 元。");
+        String pieceFormula = "高温纸塑袋 " + instrumentCount + " 件，件费 " + fmt(packageFee)
+                + " + 袋费 " + fmt(bagFee1 + bagFee2) + " = " + fmt(totalWithBag) + " 元" + doubleNote;
+        if (totalWithBag > capPrice + 0.001) {
+            notes.add(pieceFormula + "，封顶 " + fmt(capPrice) + "，" + fmt(totalWithBag)
+                    + " 超过封顶，单价取 " + fmt(capPrice) + "。");
+        } else {
+            notes.add(pieceFormula + "。");
+        }
         return Math.min(totalWithBag, capPrice);
     }
 

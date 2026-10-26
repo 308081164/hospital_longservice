@@ -126,7 +126,7 @@ class CustomerFeedback20261012Test {
         Map<String, Object> row = bill("普通包", "额外包(纸塑袋)", "高温纸塑袋75*200", 1, 1, 10.0);
         PricingEngine.ProcessedResult special = orchestrator.processRow(row, skipEngine, clerk, "AOLAN-YY", Set.of());
         assertThat(special.expectedUnitPrice).isCloseTo(5.0, within(0.001));
-        assertThat(special.notes).anyMatch(note -> note.contains("导出阶段折扣：五折，单价 5.00"));
+        assertThat(special.notes).anyMatch(note -> note.contains("导出阶段折扣：五折，折前 10.00，五折 10.00×0.5=5.00"));
 
         ObjectNode clerkFixed = clerkPrice("普通包", 8.0);
         clerkFixed.putArray("billingPolicies").add(discount("五折", 0.5));

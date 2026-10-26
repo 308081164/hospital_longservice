@@ -26,7 +26,8 @@ public class ExportStageDiscountApplier {
             double unitPriceBefore,
             double unitPriceAfter,
             Double unroundedUnitPrice,
-            JsonNode policy) {}
+            JsonNode policy,
+            String stepNote) {}
 
     public List<BillRowItem> apply(JsonNode compiledRules, List<BillRowItem> rows) {
         if (compiledRules == null || rows == null || rows.isEmpty()) {
@@ -98,12 +99,12 @@ public class ExportStageDiscountApplier {
                 }
                 if (originalImport != null && originalImport > 0) {
                     if (importUnit > originalImport + 0.02) {
-                        applyExportPrice(row, originalImport, policy);
+                        applyExportPrice(row, originalImport, importPriceNote(policy, baseUnit, originalImport));
                         break;
                     }
                     if (importUnit < originalImport - 0.02
                             && Math.abs(originalImport - expectedDiscounted) <= 0.02) {
-                        applyExportPrice(row, originalImport, policy);
+                        applyExportPrice(row, originalImport, importPriceNote(policy, baseUnit, originalImport));
                         break;
                     }
                 }
@@ -111,10 +112,15 @@ public class ExportStageDiscountApplier {
             List<BillingPolicyApplier.PieceTierDiscount> tiers =
                     BillingPolicyApplier.parsePieceTierDiscounts(params);
             double discounted;
+            String ruleName = policy.path("name").asText("客户折扣");
+            String formulaClause;
             int packCount = row.getPackCount() != null ? Math.max(1, row.getPackCount()) : 1;
             row.setUnroundedUnitPrice(null);
             if (!tiers.isEmpty()) {
+                BillingPolicyApplier.PieceTierDiscount matched =
+                        BillingPolicyApplier.findMatchedPieceTier(tiers, billingPieces, baseUnit);
                 discounted = BillingPolicyApplier.applyPieceTierRate(baseUnit, billingPieces, tiers);
+                formulaClause = tierFormula(ruleName, baseUnit, matched, discounted);
             } else {
                 double rate = params.path("rate").asDouble(Double.NaN);
                 if (Double.isNaN(rate) || rate <= 0 || rate >= 1.0) {
@@ -123,6 +129,7 @@ public class ExportStageDiscountApplier {
                 BigDecimal precise = PreciseLineAmount.multiplyRate(baseUnit, rate);
                 discounted = PreciseLineAmount.round2(precise);
                 row.setUnroundedUnitPrice(PreciseLineAmount.keepIfTotalDiffers(precise, packCount));
+                formulaClause = BillingPolicyApplier.rateFormula(ruleName, baseUnit, rate, discounted);
             }
 
             if (billingPieces > 1) {
@@ -130,23 +137,46 @@ public class ExportStageDiscountApplier {
                 if (overridePrice != null) {
                     discounted = overridePrice;
                     row.setUnroundedUnitPrice(null);
+                    formulaClause = ruleName + " 固定单价 " + String.format("%.2f", discounted);
                 }
             }
-            double capped = BillingPolicyApplier.capUnitPrice(discounted, params, row.getType());
-            if (capped + 0.001 < discounted) {
+            double afterFormula = discounted;
+            double capped = BillingPolicyApplier.capUnitPrice(afterFormula, params, row.getType());
+            Double capShown = null;
+            if (capped + 0.001 < afterFormula) {
                 discounted = capped;
                 row.setUnroundedUnitPrice(null);
+                capShown = params.path("maxUnitPrice").asDouble(capped);
             }
 
             row.setUnitPrice(discounted);
             row.setExpectedUnitPrice(discounted);
-            applyExportPrice(row, discounted, policy);
+            applyExportPrice(row, discounted, BillingPolicyApplier.formatExportDiscountNote(
+                    ruleName, baseUnit, formulaClause, capShown, afterFormula));
             break;
         }
         return row;
     }
 
-    private void applyExportPrice(BillRowItem row, double discounted, JsonNode policy) {
+    private static String tierFormula(
+            String ruleName,
+            double before,
+            BillingPolicyApplier.PieceTierDiscount matched,
+            double after) {
+        if (matched != null && matched.fixedUnitPrice() != null) {
+            return ruleName + " 固定单价 " + String.format("%.2f", after);
+        }
+        double rate = matched == null ? 1.0 : matched.rate();
+        return BillingPolicyApplier.rateFormula(ruleName, before, rate, after);
+    }
+
+    private static String importPriceNote(JsonNode policy, double before, double importPrice) {
+        String ruleName = policy.path("name").asText("客户折扣");
+        return "导出阶段折扣：" + ruleName + "，折前 " + String.format("%.2f", before)
+                + "，" + ruleName + " 按导入原价 " + String.format("%.2f", importPrice);
+    }
+
+    private void applyExportPrice(BillRowItem row, double discounted, String stepNote) {
         int packCount = row.getPackCount() != null ? Math.max(1, row.getPackCount()) : 1;
         double total = PreciseLineAmount.correctedTotal(discounted, row.getUnroundedUnitPrice(), packCount);
         row.setTotalPrice(total);
@@ -154,8 +184,7 @@ public class ExportStageDiscountApplier {
         row.setDifference(0.0);
 
         List<String> notes = row.getNotes() != null ? new ArrayList<>(row.getNotes()) : new ArrayList<>();
-        notes.add("导出阶段折扣：" + policy.path("name").asText("客户折扣")
-                + "，单价 " + String.format("%.2f", discounted));
+        notes.add(stepNote);
         row.setNotes(notes);
     }
 
@@ -270,10 +299,24 @@ public class ExportStageDiscountApplier {
                     : discounted.getUnitPrice() != null ? discounted.getUnitPrice() : before;
             if (Math.abs(after - before) > 0.001) {
                 return Optional.of(new ClerkDiscountHit(
-                        policyName, before, after, discounted.getUnroundedUnitPrice(), policy));
+                        policyName, before, after, discounted.getUnroundedUnitPrice(), policy,
+                        exportDiscountNote(discounted, policyName)));
             }
         }
         return Optional.empty();
+    }
+
+    private static String exportDiscountNote(BillRowItem row, String ruleName) {
+        if (row.getNotes() != null) {
+            String marker = "导出阶段折扣：" + (ruleName == null ? "" : ruleName);
+            for (int i = row.getNotes().size() - 1; i >= 0; i--) {
+                String note = row.getNotes().get(i);
+                if (note != null && note.startsWith(marker)) {
+                    return note;
+                }
+            }
+        }
+        return "导出阶段折扣：" + (ruleName == null || ruleName.isBlank() ? "客户折扣" : ruleName);
     }
 
     private static BillRowItem copyRow(BillRowItem source) {
