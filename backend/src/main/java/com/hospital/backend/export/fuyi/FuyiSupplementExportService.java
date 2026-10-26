@@ -27,6 +27,10 @@ public class FuyiSupplementExportService {
                 exportSupport.resolveLogisticsFee(job, rows));
     }
 
+    public Double resolveLogisticsFee(HospitalReconciliationJob job, List<HospitalReconciliationRow> rows) {
+        return exportSupport.resolveLogisticsFee(job, rows);
+    }
+
     public byte[] exportLogisticsAllocation(HospitalReconciliationJob job, List<HospitalReconciliationRow> rows)
             throws IOException {
         LogisticsAllocationService.AllocationResult allocation =

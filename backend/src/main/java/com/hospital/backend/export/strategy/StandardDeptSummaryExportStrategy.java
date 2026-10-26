@@ -27,9 +27,14 @@ public class StandardDeptSummaryExportStrategy implements ExportStrategy {
 
     @Override
     public ExportResult export(ExportContext context) throws Exception {
-        byte[] content = ClerkSheetStyle.isZuyanNangang(context.getHospitalName())
-                ? ClerkSheetStyleWorkbook.zuyanDeptPrice(context.getJob(), context.getRows())
-                : supplementExportService.exportDeptSummary(context.getJob(), context.getRows());
+        byte[] content;
+        if (ClerkSheetStyle.isZuyanNangang(context.getHospitalName())) {
+            Double logistics = supplementExportService.resolveLogisticsFee(context.getJob(), context.getRows());
+            content = ClerkSheetStyleWorkbook.zuyanDeptPrice(
+                    context.getJob(), context.getRows(), logistics != null ? logistics : 0);
+        } else {
+            content = supplementExportService.exportDeptSummary(context.getJob(), context.getRows());
+        }
         String fileName = safeName(context.getHospitalName()) + "_dept_summary_"
                 + LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmmss")) + ".xlsx";
         return ExportResult.builder()

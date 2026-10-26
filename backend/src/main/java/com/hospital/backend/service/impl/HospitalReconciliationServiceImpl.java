@@ -1811,9 +1811,14 @@ public class HospitalReconciliationServiceImpl implements HospitalReconciliation
                 return ResponseEntity.badRequest().body("该任务没有可汇总的数据".getBytes());
             }
 
-            byte[] content = com.hospital.backend.export.ClerkSheetStyle.isZuyanNangang(job.getHospitalName())
-                    ? com.hospital.backend.export.ClerkSheetStyleWorkbook.zuyanDeptPrice(job, rows)
-                    : fuyiSupplementExportService.exportDeptSummary(job, rows);
+            byte[] content;
+            if (com.hospital.backend.export.ClerkSheetStyle.isZuyanNangang(job.getHospitalName())) {
+                Double logistics = fuyiSupplementExportService.resolveLogisticsFee(job, rows);
+                content = com.hospital.backend.export.ClerkSheetStyleWorkbook.zuyanDeptPrice(
+                        job, rows, logistics != null ? logistics : 0);
+            } else {
+                content = fuyiSupplementExportService.exportDeptSummary(job, rows);
+            }
 
             // 记录导出日志
             String filename = asciiDownloadName(
