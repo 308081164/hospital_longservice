@@ -1,6 +1,6 @@
 {
-  "baseline_hash": "4098a5b5e8e79c6f0d21dc534b17644085791dc5150ba2fefe1da7807507ab14",
-  "generated_at": "2026-10-24T05:05:19Z",
+  "baseline_hash": "2f6696903ef26a2c6e325eb279e4130c98a8f797008867be19fd9bbb3fed0251",
+  "generated_at": "2026-10-26T03:46:12Z",
   "source": "docs/source/医院内勤规则10.20(1).xlsx + docs/source/附一收费标准.xlsx",
   "customer_count": 43,
   "customers": [
@@ -27,7 +27,7 @@
     {
       "code": "ERYY-SB",
       "file": "baseline/ERYY-SB.json",
-      "ruleCount": 4
+      "ruleCount": 5
     },
     {
       "code": "GONGAN-YY",

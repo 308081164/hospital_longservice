@@ -486,6 +486,9 @@ public final class BillingPolicyApplier {
         if (Math.abs(rate - 0.9) < 0.001) {
             return "九折优惠";
         }
+        if (Math.abs(rate - 0.8) < 0.001) {
+            return "8折优惠";
+        }
         int pct = (int) Math.round(rate * 100);
         if (pct > 0 && pct < 100) {
             return pct + "折优惠";

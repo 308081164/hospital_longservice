@@ -3,6 +3,9 @@ package com.hospital.backend.service;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.hospital.backend.config.ClerkRuleIndex;
+import com.hospital.backend.entity.HospitalReconciliationJob;
+import com.hospital.backend.entity.HospitalReconciliationRow;
+import com.hospital.backend.export.SettlementTemplateFiller;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
@@ -394,6 +397,139 @@ class ClerkRuleCompilerTest {
                 assertThat(policy.path("params").path("applyStage").asText()).isNotEqualTo("export_only");
             }
         }
+    }
+
+    @Test
+    void songbeiCopiesFuyiDeptSplitWithoutChangingDiscountOrLogistics() {
+        JsonNode baseline = new ClerkRuleIndex().baselineForCustomer("ERYY-SB");
+        assertThat(baseline.path("rules")).hasSize(5);
+        assertThat(ruleParam(baseline, "DISCOUNT_OVERLAY", "rate")).isEqualTo(0.7);
+        assertThat(ruleParam(baseline, "LOGISTICS_FEE", "feePerTrip")).isEqualTo(98.0);
+
+        ObjectNode compiled = compiler.compileForCustomer("ERYY-SB");
+        assertThat(compiled).isNotNull();
+        boolean hasLayout = false;
+        for (JsonNode layout : compiled.path("exportLayouts")) {
+            JsonNode params = layout.path("params");
+            if ("dept_split".equals(params.path("billLayout").asText())
+                    && "fuyi_extended_11col".equals(params.path("billColumnLayout").asText())
+                    && "hospitalName".equals(params.path("d8DisplaySource").asText())) {
+                hasLayout = true;
+            }
+        }
+        assertThat(hasLayout).isTrue();
+        boolean hasSevenFold = false;
+        for (JsonNode policy : compiled.path("billingPolicies")) {
+            if ("DISCOUNT".equals(policy.path("policyType").asText())
+                    && policy.path("params").path("rate").asDouble() == 0.7) {
+                hasSevenFold = true;
+                assertThat(policy.path("params").path("applyStage").asText()).isEqualTo("export_only");
+            }
+        }
+        assertThat(hasSevenFold).isTrue();
+        assertThat(logisticsNumbers(compiled)).contains(98.0, 80.5);
+    }
+
+    @Test
+    void hulanJiuzhouRenshengStylesFollowExistingLettersWithoutNewPrices() {
+        ObjectNode hulan = compiler.compileForCustomer("HULAN-TCM");
+        JsonNode hulanMin = monthlyPolicy(hulan);
+        assertThat(hulanMin.path("params").path("minCharge").asDouble()).isEqualTo(10000.0);
+        assertThat(hulanMin.path("params").path("settlementDisplayMode").asText()).isEqualTo("embed");
+        assertThat(logisticsParam(hulan, "feePerTrip")).isEqualTo(185.0);
+        assertThat(hulan.path("settlementPackSplit").path("deptKeyword").asText()).isEqualTo("手术室（备包）");
+
+        HospitalReconciliationJob hulanJob = new HospitalReconciliationJob();
+        hulanJob.setHospitalName("呼兰中医院");
+        hulanJob.setLogisticsFee(2405.0);
+        hulanJob.setMonthlyBreakdown("{\"adjustment\":764,\"minCharge\":10000,\"rawSterilizeTotal\":6831}");
+        SettlementTemplateFiller filler = new SettlementTemplateFiller();
+        List<SettlementTemplateFiller.SettlementFeeRow> hulanRows =
+                filler.buildFeeRows(hulanJob, 5429.5, hulan, List.of());
+        assertThat(hulanRows).extracting(SettlementTemplateFiller.SettlementFeeRow::getItemName)
+                .contains("灭菌费用", "物流费用")
+                .doesNotContain("低消补差");
+        assertThat(filler.embeddedMinChargeRemark(hulanJob, hulan)).isEqualTo("执行低消10000元");
+
+        ObjectNode jiuzhou = compiler.compileForCustomer("JIUZHOU-FK");
+        assertThat(monthlyPolicy(jiuzhou).path("params").path("minCharge").asDouble()).isEqualTo(3000.0);
+        assertThat(logisticsParam(jiuzhou, "freeCountPerMonth")).isEqualTo(4.0);
+        assertThat(BillingPolicyInspector.settlementOmitZeroRows(jiuzhou)).isTrue();
+        HospitalReconciliationJob jiuzhouJob = new HospitalReconciliationJob();
+        jiuzhouJob.setHospitalName("黑龙江九洲妇科医院");
+        jiuzhouJob.setLogisticsFee(0.0);
+        HospitalReconciliationRow ht = new HospitalReconciliationRow();
+        ht.setType("器械包");
+        ht.setPackName("高温包");
+        ht.setCorrectedTotalPrice(1000.0);
+        HospitalReconciliationRow lt = new HospitalReconciliationRow();
+        lt.setType("器械包（低温等离子）");
+        lt.setPackName("低温包");
+        lt.setCorrectedTotalPrice(200.0);
+        List<SettlementTemplateFiller.SettlementFeeRow> jiuzhouRows =
+                filler.buildFeeRows(jiuzhouJob, 1200.0, jiuzhou, List.of(ht, lt));
+        assertThat(jiuzhouRows).extracting(SettlementTemplateFiller.SettlementFeeRow::getItemName)
+                .contains("高温灭菌费用", "低温灭菌费用")
+                .doesNotContain("敷料");
+        assertThat(amountOf(jiuzhouRows, "高温灭菌费用")).isEqualTo(500.0);
+        assertThat(amountOf(jiuzhouRows, "低温灭菌费用")).isEqualTo(140.0);
+        assertThat(remarkOf(jiuzhouRows, "高温灭菌费用")).isEqualTo("高温5折优惠");
+        assertThat(remarkOf(jiuzhouRows, "低温灭菌费用")).isEqualTo("低温7折优惠");
+
+        ObjectNode rensheng = compiler.compileForCustomer("RENSHENG");
+        BillingPolicyApplier.BillDetailDiscount discount = BillingPolicyApplier.applySettlementDiscount(
+                rensheng, "", "", "", "哈尔滨仁胜医院", 784.0);
+        assertThat(discount.price()).isEqualTo(627.2);
+        assertThat(discount.note()).isEqualTo("8折优惠");
+        boolean hasCard = false;
+        for (JsonNode policy : rensheng.path("billingPolicies")) {
+            if ("LOGISTICS".equals(policy.path("policyType").asText())
+                    && policy.path("params").path("useLogisticsCard").asBoolean()) {
+                hasCard = true;
+            }
+        }
+        assertThat(hasCard).isTrue();
+    }
+
+    private static double ruleParam(JsonNode baseline, String ruleType, String field) {
+        for (JsonNode rule : baseline.path("rules")) {
+            if (ruleType.equals(rule.path("ruleType").asText()) && rule.path("params").has(field)) {
+                return rule.path("params").path(field).asDouble();
+            }
+        }
+        throw new AssertionError("missing " + ruleType + " " + field);
+    }
+
+    private static List<Double> logisticsNumbers(ObjectNode compiled) {
+        List<Double> numbers = new java.util.ArrayList<>();
+        for (JsonNode policy : compiled.path("billingPolicies")) {
+            if (!"LOGISTICS".equals(policy.path("policyType").asText())) {
+                continue;
+            }
+            if (policy.path("params").has("feePerTrip")) {
+                numbers.add(policy.path("params").path("feePerTrip").asDouble());
+            }
+            if (policy.path("params").has("urgentAmount")) {
+                numbers.add(policy.path("params").path("urgentAmount").asDouble());
+            }
+        }
+        return numbers;
+    }
+
+    private static double amountOf(List<SettlementTemplateFiller.SettlementFeeRow> rows, String name) {
+        return rows.stream()
+                .filter(row -> name.equals(row.getItemName()))
+                .mapToDouble(SettlementTemplateFiller.SettlementFeeRow::getAmount)
+                .findFirst()
+                .orElseThrow();
+    }
+
+    private static String remarkOf(List<SettlementTemplateFiller.SettlementFeeRow> rows, String name) {
+        return rows.stream()
+                .filter(row -> name.equals(row.getItemName()))
+                .map(SettlementTemplateFiller.SettlementFeeRow::getRemark)
+                .findFirst()
+                .orElseThrow();
     }
 
     private void assertSettlementSterilizeRate(String code, String hospitalName, double rate, double discounted) {

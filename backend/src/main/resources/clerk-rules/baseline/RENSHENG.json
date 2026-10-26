@@ -26,7 +26,7 @@
         "rate": 0.8,
         "target": "sterilize"
       },
-      "sourceText": "8折",
+      "sourceText": "8折。灭菌费用备注「8折优惠」，备注写法对齐工程大学结款九折的短备注（九折优惠），不用「80折优惠」。折率不改。物流卡规则不改。",
       "sourceRef": "excel:结款函#RENSHENG",
       "priority": 110
     }

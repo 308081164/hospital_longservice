@@ -52,6 +52,20 @@
       "sourceText": "加急物流费98元/次",
       "sourceRef": "excel:结款函#ERYY-SB",
       "priority": 120
+    },
+    {
+      "ruleType": "EXPORT_LAYOUT",
+      "name": "松北11列分科室账单",
+      "stage": "bill_export",
+      "isActive": true,
+      "params": {
+        "billLayout": "dept_split",
+        "billColumnLayout": "fuyi_extended_11col",
+        "d8DisplaySource": "hospitalName"
+      },
+      "sourceText": "分科室版式参考黑龙江中医药大学附属第一医院 ZYY-D1「附一11列分科室账单」。只复用分科室多表和11列，不复用附一折扣、物流和洗涤费。单价（把）由导出行金额除以把数得出。",
+      "sourceRef": "layout:ZYY-D1#附一11列分科室账单",
+      "priority": 100
     }
   ]
 }
