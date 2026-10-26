@@ -1,5 +1,6 @@
 package com.hospital.backend.service;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.hospital.backend.common.JsonUtils;
 import com.hospital.backend.config.ClerkRuleIndex;
@@ -10,6 +11,7 @@ import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -61,6 +63,59 @@ class SpecialCharge20261023GapPricingTest {
         var xf = exportDiscount.tryApplyDiscount(xiangfang, xiangfangRow, java.util.Set.of(), "SHENG-YY-XF");
         assertThat(xf).isPresent();
         assertThat(xf.get().unitPriceAfter()).isCloseTo(180.0, CENT);
+    }
+
+    /**
+     * 权威表「账单规则」第 96 行把老肯等温改成系统包类型「单包装包（老肯低温）」。
+     * 全角括号与半角账单写法都要在六折后封顶 180；打字错误「等温」不封顶。
+     */
+    @Test
+    void laokenLowTempTypeNameCapsAt180AfterSixtyPercent() {
+        String source = "标准价格六折，低温器械（器械包（低温等离子）、器械包（ETO)、单包装包（老肯低温）、"
+                + "单包装包（EO）、额外包（低温等离子）、额外包（ETO)）最高收费180元，超过180元，统一收费180元";
+        List<String> types = List.of(
+                "器械包（低温等离子）",
+                "器械包（ETO)",
+                "单包装包（老肯低温）",
+                "单包装包（EO）",
+                "额外包（低温等离子）",
+                "额外包（ETO)");
+        ClerkRuleIndex index = new ClerkRuleIndex();
+        for (String code : List.of("SHENG-YY-NG", "SHENG-YY-XF")) {
+            JsonNode rule = index.baselineForCustomer(code).path("rules").get(0);
+            assertThat(rule.path("name").asText()).isEqualTo("标准价六折");
+            assertThat(rule.path("sourceText").asText()).isEqualTo(source);
+            assertThat(rule.path("sourceText").asText()).doesNotContain("等温");
+            assertThat(rule.path("params").path("rate").asDouble()).isEqualTo(0.6);
+            assertThat(rule.path("params").path("maxUnitPrice").asDouble()).isEqualTo(180.0);
+            List<String> actualTypes = new ArrayList<>();
+            rule.path("params").path("maxUnitPriceTypes").forEach(node -> actualTypes.add(node.asText()));
+            assertThat(actualTypes).containsExactlyElementsOf(types);
+
+            ObjectNode compiled = clerkCompiler.compileForCustomer(code);
+            assertLaokenCap(compiled, code, "单包装包（老肯低温）", 180.0);
+            assertLaokenCap(compiled, code, "单包装包(老肯低温)", 180.0);
+            assertLaokenCap(compiled, code, "单包装包(老肯等温）", 240.0);
+        }
+    }
+
+    private void assertLaokenCap(ObjectNode compiled, String code, String type, double expected) {
+        BillRowItem row = pricedRow(type, "30度镜头-1", 400.0);
+        var hit = exportDiscount.tryApplyDiscount(compiled, row, Set.of(), code);
+        assertThat(hit).as(code + " " + type).isPresent();
+        assertThat(hit.get().unitPriceAfter()).as(code + " " + type).isCloseTo(expected, CENT);
+
+        BillRowItem applied = exportDiscount.apply(compiled, List.of(pricedRow(type, "30度镜头-1", 400.0))).get(0);
+        assertThat(applied.getUnitPrice()).isCloseTo(expected, CENT);
+        String note = String.join("\n", applied.getNotes());
+        assertThat(note).contains("折前 400.00");
+        assertThat(note).contains("标准价六折 400.00×0.6=240.00");
+        if (expected <= 180.0) {
+            assertThat(note).contains("封顶 180.00");
+            assertThat(note).contains("240.00 超过封顶，单价取 180.00");
+        } else {
+            assertThat(note).doesNotContain("封顶");
+        }
     }
 
     @Test
