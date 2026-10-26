@@ -5,6 +5,7 @@ import com.hospital.backend.common.JsonUtils;
 import org.junit.jupiter.api.Test;
 import org.springframework.core.io.ClassPathResource;
 
+import java.lang.reflect.Field;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -35,6 +36,30 @@ class BillingSeedMigrationRunnerTest {
             }
         }
         throw new AssertionError("missing profile " + code);
+    }
+
+    @Test
+    void renshengSettlementCustomerIsIdentityOnlyAndKeptOutOfStrictList() throws Exception {
+        JsonNode root = JsonUtils.getObjectMapper().readTree(
+                new ClassPathResource("billing-seeds/clerk-settlement-customer-rensheng-20261026.json")
+                        .getInputStream());
+        assertThat(root.path("profiles")).hasSize(1);
+        assertThat(root.toString()).doesNotContain(
+                "feePerTrip", "minCharge", "rate", "productRules", "policies", "billingEnabled");
+        JsonNode profile = profile(root, "RENSHENG");
+        assertThat(profile.path("name").asText()).isEqualTo("哈尔滨仁胜医院");
+        assertThat(profile.path("aliases")).extracting(JsonNode::asText)
+                .contains("哈尔滨仁胜医院", "仁胜");
+
+        assertThat(stringList("CLERK_SETTLEMENT_CUSTOMER_CODES")).contains("RENSHENG");
+        assertThat(stringList("STRICT_KEEP_CODES")).doesNotContain("RENSHENG");
+    }
+
+    @SuppressWarnings("unchecked")
+    private static List<String> stringList(String fieldName) throws Exception {
+        Field field = BillingSeedMigrationRunner.class.getDeclaredField(fieldName);
+        field.setAccessible(true);
+        return (List<String>) field.get(null);
     }
 
     @Test
