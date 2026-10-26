@@ -147,6 +147,9 @@ class CustomerFeedback20261016PricingTest {
         ClerkRuleIndex index = new ClerkRuleIndex();
         assertThat(index.resolveCustomerCodeByHospitalName("南岗区妇产医院")).isEqualTo("NG-FUCHAN");
         assertThat(index.resolveCustomerCodeByHospitalName("哈尔滨市南岗区妇产医院")).isEqualTo("NG-FUCHAN");
+        assertThat(index.resolveCustomerCodeByHospitalName("道外区人民医院")).isEqualTo("DAOWAI-RM");
+        assertThat(index.resolveCustomerCodeByHospitalName("太平人民医院")).isEqualTo("TAIPING-RM");
+        assertThat(index.resolveCustomerCodeByHospitalName("三精肾病医院")).isEqualTo("SANJING-SB");
 
         ObjectNode clerk = compiler.compileForCustomer("NG-FUCHAN");
 
@@ -233,6 +236,37 @@ class CustomerFeedback20261016PricingTest {
         assertThat(scatter.expectedUnitPrice).isCloseTo(8.0, CENT);
         assertThat(scatter.correctedTotalPrice).isCloseTo(8.0, CENT);
         assertThat(scatter.pricingRule).contains("散包按把");
+    }
+
+    @Test
+    void shortBillNamesUseExistingClerkPriceTables() {
+        ObjectNode daowai = compiler.compileForCustomer("DAOWAI-RM");
+        Map<String, Object> extra = nangangRow("持针器-1/z1029", "高温纸塑袋", 1, 1, 8.0, 8.0);
+        extra.put("hospitalName", "道外区人民医院");
+        extra.put("type", "额外包(纸塑袋)");
+        PricingEngine.ProcessedResult piece = orchestrator.processRow(
+                extra, standardEngine, daowai, "DAOWAI-RM", Set.of());
+        assertThat(piece.expectedUnitPrice).isCloseTo(3.0, CENT);
+        assertThat(piece.pricingRule).contains("额外包(纸塑袋)");
+        assertThat(piece.billingNotes.get("pricingLayer")).isEqualTo("clerk");
+
+        ObjectNode sanjing = compiler.compileForCustomer("SANJING-SB");
+        Map<String, Object> three = nangangRow("普通器械", "高温纸塑袋", 3, 1, 16.5, 16.5);
+        three.put("hospitalName", "三精肾病医院");
+        three.put("type", "额外包(纸塑袋)");
+        PricingEngine.ProcessedResult perPiece = orchestrator.processRow(
+                three, standardEngine, sanjing, "SANJING-SB", Set.of());
+        assertThat(perPiece.expectedUnitPrice).isCloseTo(9.0, CENT);
+        assertThat(perPiece.billingNotes.get("pricingLayer")).isEqualTo("clerk");
+
+        ObjectNode taiping = compiler.compileForCustomer("TAIPING-RM");
+        Map<String, Object> paper = nangangRow("剪刀-1", "高温纸塑袋", 1, 1, 8.0, 8.0);
+        paper.put("hospitalName", "太平人民医院");
+        paper.put("type", "额外包(纸塑袋)");
+        PricingEngine.ProcessedResult fixed = orchestrator.processRow(
+                paper, standardEngine, taiping, "TAIPING-RM", Set.of());
+        assertThat(fixed.billingNotes.get("pricingLayer")).isEqualTo("clerk");
+        assertThat(fixed.pricingRule).contains("额外包(纸塑袋)");
     }
 
     @Test
