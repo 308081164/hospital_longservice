@@ -74,9 +74,17 @@ public class BillingSeedMigrationRunner implements CommandLineRunner {
     private static final String HRB_GUSHANG_CUSTOMER_MARKER = "billing_seed_hrb_gushang_customer_20261023_v1";
     private static final String CLERK_SETTLEMENT_CUSTOMERS_FILE =
             "billing-seeds/clerk-settlement-customers-20261020.json";
+    /**
+     * 10 月 20 日结款补档标记在生产上可能已经打过，改那份 JSON 不会再执行。
+     * 仁胜用单独标记补回：8 月 27 日清理把它删了，且不在那份名单里。
+     */
+    private static final String RENSHENG_SETTLEMENT_CUSTOMER_MARKER =
+            "billing_seed_clerk_settlement_customer_rensheng_20261026_v1";
+    private static final String RENSHENG_SETTLEMENT_CUSTOMER_FILE =
+            "billing-seeds/clerk-settlement-customer-rensheng-20261026.json";
     /** 不放进 STRICT_KEEP_CODES，避免 enableStrictCustomers 把结款函客户当成特殊计价。 */
     private static final java.util.List<String> CLERK_SETTLEMENT_CUSTOMER_CODES = java.util.List.of(
-            "SHANTUN-RM", "XZX-YY", "LZL-KQ", "YUEMEI-FH", "HRB-HEU", "DONGDA-GC");
+            "SHANTUN-RM", "XZX-YY", "LZL-KQ", "YUEMEI-FH", "HRB-HEU", "DONGDA-GC", "RENSHENG");
 
     /** 最终保留的特殊计价客户 code（与 scripts/strict_hospital_codes.py STRICT_KEEP_CODES 一致） */
     private static final java.util.List<String> STRICT_KEEP_CODES = java.util.List.of(
@@ -346,6 +354,13 @@ public class BillingSeedMigrationRunner implements CommandLineRunner {
             insertMarker(HRB_GUSHANG_CUSTOMER_MARKER, "哈尔滨市骨伤科医院档案，供特殊收费规则挂载");
             log.info("HRB-GUSHANG customer ensured.");
         }
+        if (sysSettingMapper.countByKey(RENSHENG_SETTLEMENT_CUSTOMER_MARKER) == 0) {
+            if (ensureRenshengSettlementCustomer()) {
+                insertMarker(RENSHENG_SETTLEMENT_CUSTOMER_MARKER,
+                        "补回哈尔滨仁胜医院结款函档案 RENSHENG；已有档案只补别名");
+                log.info("RENSHENG clerk settlement customer ensured.");
+            }
+        }
     }
 
     private void ensureEreryyFilenameAliases() {
@@ -492,6 +507,32 @@ public class BillingSeedMigrationRunner implements CommandLineRunner {
             return true;
         } catch (Exception e) {
             log.error("Failed to ensure clerk settlement customers: {}", e.getMessage(), e);
+            return false;
+        }
+    }
+
+    /**
+     * 幂等补仁胜档案。没有档案时新建且 billingEnabled 关闭、计价模式 standard。
+     * 已有同编码时只补别名，不改计费开关、折扣和物流。
+     */
+    private boolean ensureRenshengSettlementCustomer() {
+        try {
+            ClassPathResource resource = new ClassPathResource(RENSHENG_SETTLEMENT_CUSTOMER_FILE);
+            if (!resource.exists()) {
+                log.warn("Rensheng settlement customer seed missing: {}", RENSHENG_SETTLEMENT_CUSTOMER_FILE);
+                return false;
+            }
+            JsonNode root = JsonUtils.getObjectMapper().readTree(resource.getInputStream());
+            JsonNode profiles = root.path("profiles");
+            if (!profiles.isArray() || profiles.isEmpty()) {
+                return false;
+            }
+            for (JsonNode profile : profiles) {
+                ensureSettlementCustomerIdentity(profile);
+            }
+            return true;
+        } catch (Exception e) {
+            log.error("Failed to ensure Rensheng settlement customer: {}", e.getMessage(), e);
             return false;
         }
     }

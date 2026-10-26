@@ -1,0 +1,12 @@
+{
+  "version": "1",
+  "description": "补回哈尔滨仁胜医院结款函档案。2026-08-27 严格口径清理曾删掉 RENSHENG。只建客户和别名，不写折扣或物流；八折和物流卡仍在 clerk-rules/baseline/RENSHENG.json。已有同编码档案时只补别名。",
+  "profiles": [
+    {
+      "code": "RENSHENG",
+      "name": "哈尔滨仁胜医院",
+      "notes": "内勤结款函客户。八折和物流卡见 clerk-rules/baseline/RENSHENG.json，本档案不写折率和物流。",
+      "aliases": ["哈尔滨仁胜医院", "仁胜"]
+    }
+  ]
+}
