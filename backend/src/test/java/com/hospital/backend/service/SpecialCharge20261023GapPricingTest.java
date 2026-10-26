@@ -141,6 +141,27 @@ class SpecialCharge20261023GapPricingTest {
     }
 
     @Test
+    void fuyiDressing120ClothIsPieceTimesFivePointFivePlusFivePointFiveThenGeneralDiscount() throws Exception {
+        PricingEngine engine = PricingEngineTestSupport.engineForCustomerCode("ZYY-D1");
+        String hospital = "黑龙江中医药大学附属第一医院";
+
+        PricingEngine.ProcessedResult four = priced(
+                engine, hospital, "器械包（ZSD）", "换药包(120布)", 4);
+        assertThat(four.expectedUnitPrice).isCloseTo(22.00, CENT);
+        String notes = joined(four);
+        assertThat(notes).contains("5.5");
+        assertThat(notes).contains("附一对账八折");
+        assertThat(notes).doesNotContain("6.25");
+        assertThat(notes).doesNotContain("28.25");
+        assertThat(four.pricingRule).doesNotContain("6.25");
+
+        PricingEngine.ProcessedResult two = priced(
+                engine, hospital, "器械包（ZSD）", "换药包(120布)", 2);
+        assertThat(two.expectedUnitPrice).isCloseTo(13.19, CENT);
+        assertThat(joined(two)).contains("附一九九九折");
+    }
+
+    @Test
     void octoberSheetGapsFollowWrittenFormulas() throws Exception {
         PricingEngine renkou = PricingEngineTestSupport.engineForCustomerCode("HLJ-FY-RK");
         String renkouName = "黑龙江省妇幼保健院（人口）";

@@ -256,21 +256,22 @@ class CustomerFeedback20261016PricingTest {
     }
 
     @Test
-    void nangangParentheticalLaparoscopyDoesNotTakeTheFixedPrice() {
+    void nangangParentheticalLaparoscopyUsesPerPiecePrice() {
         ObjectNode clerk = compiler.compileForCustomer("NG-FUCHAN");
         PricingEngine.ProcessedResult inside = orchestrator.processRow(
                 nonWoven("盆2盘1杯1(腹腔镜里的)/w9050", 4, 1, 22.0, 22.0),
                 standardEngine, clerk, "NG-FUCHAN", Set.of());
-        assertThat(inside.expectedUnitPrice).isNotCloseTo(170.5, CENT);
+        assertThat(inside.expectedUnitPrice).isCloseTo(32.0, CENT);
+        assertThat(inside.pricingRule).contains("散包按把");
         assertThat(inside.pricingRule).doesNotContain("腹腔镜");
-        assertThat(inside.billingNotes.get("pricingLayer")).isNotEqualTo("clerk");
+        assertThat(inside.billingNotes.get("pricingLayer")).isEqualTo("clerk");
 
         PricingEngine.ProcessedResult fullWidth = orchestrator.processRow(
                 nonWoven("盆2盘1杯1（腹腔镜里的）/w9050", 4, 1, 22.0, 22.0),
                 standardEngine, clerk, "NG-FUCHAN", Set.of());
-        assertThat(fullWidth.expectedUnitPrice).isNotCloseTo(170.5, CENT);
-        assertThat(fullWidth.pricingRule).doesNotContain("腹腔镜");
-        assertThat(fullWidth.billingNotes.get("pricingLayer")).isNotEqualTo("clerk");
+        assertThat(fullWidth.expectedUnitPrice).isCloseTo(32.0, CENT);
+        assertThat(fullWidth.pricingRule).contains("散包按把");
+        assertThat(fullWidth.billingNotes.get("pricingLayer")).isEqualTo("clerk");
     }
 
     @Test
@@ -286,13 +287,15 @@ class CustomerFeedback20261016PricingTest {
         PricingEngine.ProcessedResult outside = orchestrator.processRow(
                 nonWoven("腹腔镜包", 8, 2, 170.5, 341.0),
                 standardEngine, clerk, "NG-FUCHAN", Set.of());
-        assertThat(outside.expectedUnitPrice).isNotCloseTo(170.5, CENT);
+        assertThat(outside.expectedUnitPrice).isCloseTo(32.0, CENT);
+        assertThat(outside.pricingRule).contains("散包按把");
         assertThat(outside.pricingRule).doesNotContain("腹腔镜");
 
         PricingEngine.ProcessedResult prefixed = orchestrator.processRow(
                 nonWoven("妇科腹腔镜（备注）", 6, 1, 200.0, 200.0),
                 standardEngine, clerk, "NG-FUCHAN", Set.of());
-        assertThat(prefixed.expectedUnitPrice).isNotCloseTo(170.5, CENT);
+        assertThat(prefixed.expectedUnitPrice).isCloseTo(48.0, CENT);
+        assertThat(prefixed.pricingRule).contains("散包按把");
         assertThat(prefixed.pricingRule).doesNotContain("腹腔镜");
 
         PricingEngine.ProcessedResult vaginal = orchestrator.processRow(

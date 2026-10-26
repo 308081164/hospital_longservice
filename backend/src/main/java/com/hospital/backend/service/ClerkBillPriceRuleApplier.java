@@ -139,8 +139,9 @@ public class ClerkBillPriceRuleApplier {
         String text = packName != null ? packName : "";
         JsonNode exclude = params.path("excludePackNameKeywords");
         if (exclude.isArray() && !exclude.isEmpty()) {
+            // 排除词按独立词，避免「盆2盘1杯1(腹腔镜里的)」被「腹腔镜」整段包含挡掉散包按把。
             if (BillingConditionEvaluator.matchesKeywordsByMode(
-                    text, exclude, BillingConditionEvaluator.KEYWORD_MATCH_CONTAINS)) {
+                    text, exclude, BillingConditionEvaluator.KEYWORD_MATCH_EXACT_TOKEN)) {
                 return false;
             }
         }
@@ -150,7 +151,7 @@ public class ClerkBillPriceRuleApplier {
         }
         String matchMode = params.path("packNameMatchMode").asText(
                 BillingConditionEvaluator.KEYWORD_MATCH_EXACT_TOKEN);
-        // 正向包含：整段只出现在圆括号里的不算命中。排除词仍走上面的子串包含。
+        // 正向包含：整段只出现在圆括号里的不算命中。
         return BillingConditionEvaluator.matchesKeywordsByMode(text, keywords, matchMode, false);
     }
 
