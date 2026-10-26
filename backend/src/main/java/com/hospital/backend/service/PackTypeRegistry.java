@@ -41,7 +41,7 @@ public final class PackTypeRegistry {
             SterilizationMode sterilization) {}
 
     /** 与 pack-type-material-map.json 的 packTypes 条数保持一致。 */
-    public static final int PACK_TYPE_COUNT = 17;
+    public static final int PACK_TYPE_COUNT = 18;
 
     private static final List<PackTypeDefinition> DEFINITIONS = loadDefinitions();
 

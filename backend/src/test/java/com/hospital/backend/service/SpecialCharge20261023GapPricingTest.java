@@ -149,6 +149,65 @@ class SpecialCharge20261023GapPricingTest {
     }
 
     @Test
+    void hrb2ndMatchedZeroDisinfectPriceDropsZeroUnitPriceAnomaly() throws Exception {
+        PricingEngine engine = PricingEngineTestSupport.engineForCustomerCode("HRB-2ND");
+
+        PricingEngine.ProcessedResult matched = engine.processRow(PricingEngineTestSupport.row(
+                "哈尔滨市第二医院",
+                "额外包(仅消毒)",
+                "市二院外来333（只消毒）",
+                "",
+                333,
+                1,
+                0.0,
+                0.0));
+        assertThat(matched.expectedUnitPrice).isCloseTo(0.0, CENT);
+        assertThat(matched.difference).isCloseTo(0.0, CENT);
+        assertThat(matched.status).isEqualTo("unchanged");
+        assertThat(matched.pricingRule).contains("市二院外来仅消毒0元");
+        assertThat(joined(matched)).doesNotContain("字段核对错误");
+
+        PricingEngine.ProcessedResult paper = engine.processRow(PricingEngineTestSupport.row(
+                "哈尔滨市第二医院",
+                "额外包(仅消毒)",
+                "止血带-12（只消毒不灭菌）",
+                "高温纸塑袋150*260",
+                12,
+                1,
+                8.0,
+                8.0));
+        assertThat(paper.expectedUnitPrice).isCloseTo(8.0, CENT);
+        assertThat(paper.status).isEqualTo("unchanged");
+        assertThat(paper.pricingRule).contains("市二院止血带固定8");
+        assertThat(joined(paper)).doesNotContain("字段核对错误");
+
+        PricingEngine.ProcessedResult unmatched = engine.processRow(PricingEngineTestSupport.row(
+                "哈尔滨市第二医院",
+                "额外包(仅消毒)",
+                "市二院止血带14个（只消毒）",
+                "",
+                14,
+                1,
+                0.0,
+                0.0));
+        assertThat(unmatched.status).isEqualTo("warning");
+        assertThat(joined(unmatched)).contains("单价为 0");
+
+        PricingEngine.ProcessedResult mismatch = engine.processRow(PricingEngineTestSupport.row(
+                "哈尔滨市第二医院",
+                "额外包(仅消毒)",
+                "止血带-2件",
+                "",
+                2,
+                1,
+                0.0,
+                0.0));
+        assertThat(mismatch.expectedUnitPrice).isCloseTo(8.0, CENT);
+        assertThat(mismatch.status).isEqualTo("warning");
+        assertThat(joined(mismatch)).contains("单价为 0");
+    }
+
+    @Test
     void hrb2ndSingleLowTempDoubleBagDoesNotCharge35() {
         PricingEngine engine = new PricingEngine(PricingEngineTestSupport.defaultRules());
         Map<String, Object> row = PricingEngineTestSupport.row(
