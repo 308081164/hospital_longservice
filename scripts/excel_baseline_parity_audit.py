@@ -17,6 +17,7 @@ import openpyxl
 
 ROOT = Path(__file__).resolve().parents[1]
 BASELINE_DIR = ROOT / "backend/src/main/resources/billing-rules/baseline"
+DEFAULT_ALLOW = ROOT / "scripts/known_rule_gaps.json"
 
 sys.path.insert(0, str(ROOT / "scripts"))
 from import_special_pricing_v17 import build_merged_map, cell, norm, parse_pack_name  # noqa: E402
@@ -199,7 +200,16 @@ def parse_excel_rows(xlsx: Path) -> list[dict]:
     return rows
 
 
-def audit(xlsx: Path) -> dict:
+def load_known_gaps(path: Path) -> set[tuple[str, int]]:
+    """已登记的历史欠账 (customer, excel_row)。缺失条目须写明原因，CI 只对白名单外的新缺口失败。"""
+    if not path.is_file():
+        return set()
+    data = json.loads(path.read_text(encoding="utf-8"))
+    return {(str(g["customer"]), int(g["row"])) for g in data.get("gaps") or []}
+
+
+def audit(xlsx: Path, known_gaps: set[tuple[str, int]] | None = None) -> dict:
+    known_gaps = known_gaps or set()
     excel_rows = parse_excel_rows(xlsx)
     by_code: dict[str, list[dict]] = {}
     unmapped: list[str] = []
@@ -218,15 +228,18 @@ def audit(xlsx: Path) -> dict:
         rules = baseline.get("productRules") or []
         excel_for = by_code.get(code, [])
         missing: list[str] = []
+        known: list[str] = []
         for er in excel_for:
-            kw = er.get("keyword") or er.get("pack_name")
             mode = er.get("match_mode") or "exact"
             if mode == "generic":
                 continue
-            if not find_coverage(rules, er.get("keyword"), mode, er.get("pack_name") or ""):
-                missing.append(
-                    f"row{er['row']} [{er.get('item')}] {er.get('pack_name')} | {er.get('rule')[:60]}"
-                )
+            if find_coverage(rules, er.get("keyword"), mode, er.get("pack_name") or ""):
+                continue
+            msg = f"row{er['row']} [{er.get('item')}] {er.get('pack_name')} | {er.get('rule')[:60]}"
+            if (code, int(er["row"])) in known_gaps:
+                known.append(msg)
+            else:
+                missing.append(msg)
         ok = not missing and (code in by_code or code in OUTSIDE_SHEET_CODES)
         if code not in by_code and code not in OUTSIDE_SHEET_CODES:
             errors.append(f"{code}: Excel 无对应段落")
@@ -240,6 +253,7 @@ def audit(xlsx: Path) -> dict:
                 "baseline_rules": len([r for r in rules if r.get("isActive") is not False]),
                 "ok": code in OUTSIDE_SHEET_CODES or (ok and bool(excel_for)),
                 "missing": missing,
+                "known_gaps": known,
             }
         )
 
@@ -254,6 +268,7 @@ def audit(xlsx: Path) -> dict:
             "pass": sum(1 for r in results if r["ok"]),
             "fail": sum(1 for r in results if not r["ok"]),
             "excel_rows": len(excel_rows),
+            "known_gaps": sum(len(r["known_gaps"]) for r in results),
         },
     }
 
@@ -262,11 +277,13 @@ def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--excel", type=Path, required=True)
     parser.add_argument("--out", type=Path, default=ROOT / "测试用例/excel_baseline_parity_report.json")
+    parser.add_argument("--allow", type=Path, default=DEFAULT_ALLOW,
+                        help="已知缺口白名单（默认 scripts/known_rule_gaps.json）；仅白名单外的新缺口会失败")
     args = parser.parse_args()
     if not args.excel.is_file():
         print(f"ERROR: Excel 不存在: {args.excel}", file=sys.stderr)
         return 1
-    report = audit(args.excel)
+    report = audit(args.excel, load_known_gaps(args.allow))
     args.out.parent.mkdir(parents=True, exist_ok=True)
     args.out.write_text(json.dumps(report, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
     s = report["summary"]
@@ -282,7 +299,13 @@ def main() -> int:
         if len(report["errors"]) > 30:
             print(f"  ... 另有 {len(report['errors']) - 30} 条，见 {args.out}")
         return 1
-    print(f"OK: 全部 {s['total']} 家 Excel 规则在 baseline 中有覆盖")
+    if s.get("known_gaps"):
+        print(f"已知欠账（白名单，不阻塞）{s['known_gaps']} 条：")
+        for r in report["hospitals"]:
+            for k in r["known_gaps"]:
+                print(f"  {r['code']}: {k}")
+        print("  ↑ 见 scripts/known_rule_gaps.json，需财务/引擎确认后建模")
+    print(f"OK: 全部 {s['total']} 家 Excel 规则在 baseline 中有覆盖（无新增缺口）")
     print(f"报告: {args.out}")
     return 0
 

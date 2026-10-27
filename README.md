@@ -25,7 +25,7 @@
   - [2.1 规则同步流水线](#21-规则同步流水线)
   - [2.2 根因分类（R1-R5 + 引擎/解析器）](#22-根因分类)
   - [2.3 事故台账](#23-事故台账)
-  - [2.4 现行验收闸门（G0-G5）](#24-现行验收闸门g0-g5)
+  - [2.4 现行验收闸门（G0-G7）](#24-现行验收闸门g0-g7)
   - [2.5 如何验证规则正确](#25-如何验证规则正确)
   - [2.6 如何安全新增/修改规则](#26-如何安全新增修改规则)
   - [2.7 测试清单与两条测试路径](#27-测试清单与两条测试路径)
@@ -292,10 +292,11 @@ curl -s http://39.102.213.51:8853/api/v1/base/version
 | 10 | 09-03 | `37050295` | a31323b6 跳过 packaging 时未排除方南南等 `skipPackaging=false` 的院级 FOLD，含包材小批与免包材同价 13.5 | E1（修复引入回归） | 保留院级 FOLD 含包材规则的 packaging 模块；市五院 Job #807 重算为 #809 验证 |
 | 11 | 09-04 | `5cabd96a` | 全冠套装（针-8盒-1）计数返回 null 跳过核对（应为 9）；针7（盒1）双重计数为 9（应为 8） | P1 | 括号内 -N 参与计数；紧凑复合不再叠加括号容器；新增 11 条单测（含市五院/平房区/妇幼人口生产样本） |
 | 12 | 09-03 | `1d3098ca` | 多数字包名计数丢失（针拆分块双缺陷） | P1 | 解析修复并随 `00d3bd4a` 上线 |
+| 13 | 10-27 | 回退 `f6318b32` → 恢复现场 | 客户反复反馈「新增特殊计价规则生产不生效」 | **R2 + 闸门缺失**：44 家医院 baseline 均在、但 4 条 Excel 规则从未建模；且 Excel↔baseline 覆盖审计**未进 CI**，回归无人拦截 | 补 G7 闸门（44 家全覆盖，白名单外的缺口直接失败）；4 条历史欠账登记 `scripts/known_rule_gaps.json`；见 §2.4 |
 
 **规律**：E1 类事故（8/9/10）显示引擎路径修复极易引入相邻路径回归——每次引擎改动必须跑全量 pricing 单测 + 受影响医院路径 A 严格对账。
 
-### 2.4 现行验收闸门（G0-G5）
+### 2.4 现行验收闸门（G0-G7）
 
 任何计费规则增删改（种子、关键词、匹配模式、价格参数）必须通过全部适用闸门（定义见 `docs/计费规则迁移与验收规范.md`）：
 
@@ -307,6 +308,27 @@ curl -s http://39.102.213.51:8853/api/v1/base/version
 | G3 清单对账 | `./bin/hospital-cli rules compare --all` | 0 漂移（含 extra 规则硬失败） | 任何规则增删改 |
 | G4 Excel↔manifest 逐条对账 | openpyxl 解析合并单元格 → 逐院逐条比对（方法见 `测试用例/excel-manifest-parity-audit-20260902.md`） | 29 家逐条 PASS 或每项差异有用户书面确认 | 每次 Excel 版本更新后 |
 | G5 基线回归 | 路径 A 严格对账（受影响医院账期） | 无新增差异 | 引擎/规则行为变更 |
+| G6 acceptedTypes 运行时类型 | python3 scripts/check_accepted_types_runtime.py | 零非法类型 | 任何规则增删改（CI 已强制） |
+| **G7 Excel→baseline 全覆盖** | python3 scripts/excel_baseline_parity_audit.py --excel docs/source/特殊收费20261026.xlsx | 44 家逐条有覆盖；白名单外零缺口 | **每次更换 Excel 权威源 / 任何规则增删改（CI 已强制）** |
+
+**G7 是 10-27 事故后新增的硬闸门。** 此前 excel_baseline_parity_audit.py 虽已覆盖 44 家，但**从未接入 CI**，只在人工想起时跑，导致「Excel 加了规则、baseline 没建」可以一路合入并部署，客户端表现为规则不生效。现在 CI 的 `G7 Excel authority coverage` 步骤会阻塞构建。
+
+历史欠账集中登记在 [scripts/known_rule_gaps.json](scripts/known_rule_gaps.json)，每条必须写明**客户/行号/原因/状态**：
+
+| 客户 | 行 | 规则 | 状态 |
+|---|---|---|---|
+| HRB-2ND 市二院 | 215/216 | 内热针「件数/5 进一 ×5.5 ± 包材」 | 待财务确认口径 |
+| HRB-GUSHANG 骨伤科 | 243 | 钢针「(件数-1)/6 进一 ×5.5 +5.5 + 袋费 +0.3」 | 待引擎能力评估 |
+| HRB-GUSHANG 骨伤科 | 251 | ⑾ 无纺布特殊件数 | 原文即「AI出不了，人工核对」 |
+
+> 原则：**宁可显式欠账，不可静默缺失**。白名单外的任何新缺口都会让 CI 失败；补白名单必须像改代码一样评审。
+
+**关于「新增医院没建 baseline」的核查结论（2026-10-27）**：逐项比对 44 家 Excel 医院与 billing-rules/index.json / baseline/*.json，**不存在缺 baseline 的医院**（索引与文件双向一致，0 孤儿、0 未映射）；13 家内勤医院同样齐备。真实缺陷是**规则级**的 4 条缺口，以及上述闸门缺失。核查命令：
+
+~~~bash
+# 索引 ↔ baseline 文件双向一致（孤儿/缺失均应为空数组）
+python3 scripts/check_strict_hospital_alignment.py
+~~~
 
 **关键词匹配模式判定**（严格按 Excel 措辞，禁止自行发挥）：「包名称带X」→ 词级 `@contains`；完整包名 → exact_token；「针多少盒1」模式词 → exact_token + 模式词（不得改 contains，0831 报告⑦过匹配先例）；非 FOLD 规则缺省 contains。**FIXED_PRICE 强制 `skipPackaging=true` + `skipDiscount=true`**。
 

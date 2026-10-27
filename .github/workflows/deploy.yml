@@ -60,6 +60,12 @@ jobs:
       - name: G6 acceptedTypes runtime type gate
         run: python3 scripts/check_accepted_types_runtime.py
 
+      # G7：Excel 权威表 → baseline 的逐院规则覆盖闸门（全部 44 家）。
+      # 历史欠账登记在 scripts/known_rule_gaps.json；白名单外的新缺口直接失败，
+      # 防止「Excel 加了规则、baseline 没建」导致客户反馈生产不生效。
+      - name: G7 Excel authority coverage (44 hospitals)
+        run: python3 scripts/excel_baseline_parity_audit.py --excel docs/source/特殊收费20261026.xlsx
+
       - name: Set up JDK 17
         uses: actions/setup-java@v4
         with:
