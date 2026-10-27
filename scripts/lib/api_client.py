@@ -344,6 +344,14 @@ class ApiClient:
                 return row
         return None
 
+    def customer_detail(self, customer_id: int, *, token: str | None = None) -> dict[str, Any] | None:
+        """单个客户明细（含 standardPricingOverride 等列表接口可能不返回的字段）。"""
+        tok = token or self._token or self.login()
+        data = self.request_json("GET", f"/api/v1/customers/{customer_id}", token=tok)
+        assert_api_ok(data, context="customer-detail")
+        row = data.get("data")
+        return row if isinstance(row, dict) else None
+
     def product_rules(self, customer_id: int, *, token: str | None = None) -> list[dict[str, Any]]:
         tok = token or self._token or self.login()
         data = self.request_json("GET", f"/api/v1/customers/{customer_id}/product-rules", token=tok)

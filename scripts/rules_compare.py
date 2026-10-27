@@ -367,6 +367,17 @@ def run_rules_compare(
         prod_override = customer.get("standardPricingOverride") or customer.get(
             "standard_pricing_override"
         )
+        # 列表接口可能不返回 standardPricingOverride（曾导致 override 永久误报 null）。
+        # 缺失时回退到明细接口；仍拿不到则视为「不可用」，不把「查不到」当成「漂移」。
+        override_unavailable = False
+        if prod_override is None and customer_id:
+            detail = client.customer_detail(customer_id)
+            if detail:
+                prod_override = detail.get("standardPricingOverride") or detail.get(
+                    "standard_pricing_override"
+                )
+            if prod_override is None and entry.get("standardPricingOverride") is not None:
+                override_unavailable = True
         prod_billing_enabled = customer.get("billingEnabled")
         if prod_billing_enabled is None:
             prod_billing_enabled = customer.get("billing_enabled")
@@ -380,7 +391,7 @@ def run_rules_compare(
                 prod_rules=prod_rules,
                 expected_mode=entry.get("billingPricingMode"),
                 prod_mode=str(prod_mode),
-                expected_override=entry.get("standardPricingOverride"),
+                expected_override=None if override_unavailable else entry.get("standardPricingOverride"),
                 prod_override=prod_override,
                 expected_billing_enabled=expected_billing_enabled,
                 prod_billing_enabled=prod_billing_enabled,
