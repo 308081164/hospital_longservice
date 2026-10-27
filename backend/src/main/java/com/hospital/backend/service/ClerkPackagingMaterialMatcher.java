@@ -47,10 +47,6 @@ final class ClerkPackagingMaterialMatcher {
             if (tier > 0 && tier == expectedCm) {
                 return true;
             }
-            // 标准档最高 25cm，300 毫米会落到 25cm 档。规则若单独写了 30cm，仍按实际宽度认。
-            if (expectedCm == 30 && rawWidthCm(actual) == 30) {
-                return true;
-            }
         }
         return false;
     }

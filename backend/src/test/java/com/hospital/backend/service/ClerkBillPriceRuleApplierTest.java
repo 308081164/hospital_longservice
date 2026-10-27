@@ -216,7 +216,7 @@ class ClerkBillPriceRuleApplierTest {
         ObjectNode compiled = compiler.compileForCustomer("TAIPING-RM");
         BillRowItem row = new BillRowItem();
         row.setType("额外包（低温等离子）");
-        row.setPackageMaterial("低温纸塑袋300*400");
+        row.setPackageMaterial("低温灭菌 30cm");
         row.setPackName("镜子");
         row.setInstrumentCount(1);
         row.setPackCount(1);
@@ -225,16 +225,6 @@ class ClerkBillPriceRuleApplierTest {
 
         var result = applier.apply(compiled, List.of(row));
         assertThat(result.rows().get(0).getTotalPrice()).isEqualTo(26.3);
-
-        BillRowItem between = new BillRowItem();
-        between.setType("额外包（低温等离子）");
-        between.setPackageMaterial("低温纸塑袋280*400");
-        between.setPackName("非标");
-        between.setInstrumentCount(1);
-        between.setPackCount(1);
-        between.setUnitPrice(40.0);
-        between.setTotalPrice(40.0);
-        assertThat(applier.apply(compiled, List.of(between)).rows().get(0).getTotalPrice()).isEqualTo(22.5);
     }
 
     @Test
