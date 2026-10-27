@@ -24,7 +24,7 @@
         "packagingMaterial": null,
         "instrumentCountRange": null,
         "unitPrice": 8.91,
-        "unitPriceMode": "FIXED",
+        "unitPriceMode": "PER_PACK",
         "systemPrice": 16.5,
         "systemPriceMode": "MATCH",
         "packTypeMatch": "equivalent"
@@ -46,7 +46,7 @@
         "packagingMaterial": "25cm",
         "instrumentCountRange": "N=1",
         "unitPrice": 12,
-        "unitPriceMode": "FIXED",
+        "unitPriceMode": "PER_PACK",
         "systemPrice": null,
         "systemPriceMode": "IGNORE",
         "packTypeMatch": "equivalent"
@@ -68,7 +68,7 @@
         "packagingMaterial": "20cm",
         "instrumentCountRange": "N=1",
         "unitPrice": 9.8,
-        "unitPriceMode": "FIXED",
+        "unitPriceMode": "PER_PACK",
         "systemPrice": null,
         "systemPriceMode": "IGNORE",
         "packTypeMatch": "equivalent"
@@ -90,7 +90,7 @@
         "packagingMaterial": "15cm",
         "instrumentCountRange": "N=1",
         "unitPrice": 8.3,
-        "unitPriceMode": "FIXED",
+        "unitPriceMode": "PER_PACK",
         "systemPrice": null,
         "systemPriceMode": "IGNORE",
         "packTypeMatch": "equivalent"
@@ -112,7 +112,7 @@
         "packagingMaterial": "30cm",
         "instrumentCountRange": "N=1",
         "unitPrice": 26.3,
-        "unitPriceMode": "FIXED",
+        "unitPriceMode": "PER_PACK",
         "systemPrice": null,
         "systemPriceMode": "IGNORE",
         "packTypeMatch": "equivalent"
@@ -134,7 +134,7 @@
         "packagingMaterial": "25cm",
         "instrumentCountRange": "N=1",
         "unitPrice": 22.5,
-        "unitPriceMode": "FIXED",
+        "unitPriceMode": "PER_PACK",
         "systemPrice": null,
         "systemPriceMode": "IGNORE",
         "packTypeMatch": "equivalent"
@@ -156,7 +156,7 @@
         "packagingMaterial": "20cm",
         "instrumentCountRange": "N=1",
         "unitPrice": 21,
-        "unitPriceMode": "FIXED",
+        "unitPriceMode": "PER_PACK",
         "systemPrice": null,
         "systemPriceMode": "IGNORE",
         "packTypeMatch": "equivalent"
@@ -178,7 +178,7 @@
         "packagingMaterial": "15cm",
         "instrumentCountRange": "N=1",
         "unitPrice": 18.8,
-        "unitPriceMode": "FIXED",
+        "unitPriceMode": "PER_PACK",
         "systemPrice": null,
         "systemPriceMode": "IGNORE",
         "packTypeMatch": "equivalent"
@@ -200,7 +200,7 @@
         "packagingMaterial": "10cm",
         "instrumentCountRange": "N=1",
         "unitPrice": 16.5,
-        "unitPriceMode": "FIXED",
+        "unitPriceMode": "PER_PACK",
         "systemPrice": null,
         "systemPriceMode": "IGNORE",
         "packTypeMatch": "equivalent"
@@ -227,7 +227,7 @@
         "packagingMaterial": null,
         "instrumentCountRange": "10≤N<20",
         "unitPrice": 225,
-        "unitPriceMode": "FIXED",
+        "unitPriceMode": "PER_PACK",
         "systemPrice": null,
         "systemPriceMode": "IGNORE",
         "packTypeMatch": "equivalent"
@@ -254,7 +254,7 @@
         "packagingMaterial": null,
         "instrumentCountRange": "5≤N<10",
         "unitPrice": 123.8,
-        "unitPriceMode": "FIXED",
+        "unitPriceMode": "PER_PACK",
         "systemPrice": null,
         "systemPriceMode": "IGNORE",
         "packTypeMatch": "equivalent"
@@ -281,7 +281,7 @@
         "packagingMaterial": null,
         "instrumentCountRange": "1≤N<5",
         "unitPrice": 66,
-        "unitPriceMode": "FIXED",
+        "unitPriceMode": "PER_PACK",
         "systemPrice": null,
         "systemPriceMode": "IGNORE",
         "packTypeMatch": "equivalent"
