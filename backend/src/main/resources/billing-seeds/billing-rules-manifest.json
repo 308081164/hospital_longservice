@@ -1,7 +1,7 @@
 {
   "version": 1,
-  "generated_at": "2026-10-27T03:16:03Z",
-  "manifest_hash": "a9cd364d942a644425b3d206a378ddf157849ec66015aa8bfb12710a18d1b655",
+  "generated_at": "2026-10-27T13:18:08Z",
+  "manifest_hash": "355b57d6569cfbb529f1640dd28822666ad7d771f84baef303274c69d9253a4d",
   "billing_enabled_count": 45,
   "active_billing_enabled_count": 45,
   "customers": {
@@ -4748,10 +4748,50 @@
           "acceptedTypes": [
             "额外包（纸塑袋）"
           ]
+        },
+        {
+          "ruleType": "FOLD",
+          "name": "市二院内热针≤10按5折算计包材",
+          "priority": 25,
+          "keywords": [
+            "内热针@contains"
+          ],
+          "threshold": 5,
+          "foldRatio": 5,
+          "unitPrice": 5.5,
+          "maxInstrumentCount": 10,
+          "skipPackaging": false,
+          "skipDiscount": true,
+          "isActive": true,
+          "matchMode": "first",
+          "keywordMatchMode": "contains",
+          "acceptedTypes": [
+            "额外包（纸塑袋）"
+          ]
+        },
+        {
+          "ruleType": "FOLD",
+          "name": "市二院内热针>10按5折算免包材",
+          "priority": 26,
+          "keywords": [
+            "内热针@contains"
+          ],
+          "threshold": 5,
+          "foldRatio": 5,
+          "unitPrice": 5.5,
+          "minInstrumentCount": 11,
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": true,
+          "matchMode": "first",
+          "keywordMatchMode": "contains",
+          "acceptedTypes": [
+            "额外包（纸塑袋）"
+          ]
         }
       ],
-      "rule_count": 11,
-      "active_rule_count": 11
+      "rule_count": 13,
+      "active_rule_count": 13
     },
     "HRB-GUSHANG": {
       "code": "HRB-GUSHANG",

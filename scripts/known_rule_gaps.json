@@ -4,22 +4,6 @@
   "source_excel": "docs/source/特殊收费20261026.xlsx",
   "gaps": [
     {
-      "customer": "HRB-2ND",
-      "row": 215,
-      "item": "⑦",
-      "pack_name": "包名称带“内热针”",
-      "reason": "需『件数/5 进一 ×5.5』（≤10 再加标准包材）。引擎 FOLD 支持 unitPrice，但 customer_product_rule 实体无 unit_price 字段，baseline 的 unitPrice 落库即丢（有规则无价格）；扩建列或扩展等价表达前禁止入库",
-      "status": "待引擎/表结构扩展"
-    },
-    {
-      "customer": "HRB-2ND",
-      "row": 216,
-      "item": "⑦",
-      "pack_name": "包名称带“内热针”（＞10）",
-      "reason": "同上，>10 档不收包材，需与 ≤10 档成对建模",
-      "status": "待引擎/表结构扩展"
-    },
-    {
       "customer": "HRB-GUSHANG",
       "row": 243,
       "item": "⑤",

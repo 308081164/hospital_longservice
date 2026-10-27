@@ -318,11 +318,11 @@ curl -s http://39.102.213.51:8853/api/v1/base/version
 
 | 客户 | 行 | 规则 | 状态 |
 |---|---|---|---|
-| HRB-2ND 市二院 | 215/216 | 内热针「件数/5 进一 ×5.5 ± 包材」（财务口径已确认） | **缺 `unit_price` 落库通道**——见下方说明 |
+| HRB-2ND 市二院 | 215/216 | 内热针「件数/5 进一 ×5.5 ± 包材」 | ✅ 已建模（2026-10-27，`unit_price` 落库后，单测钉住 11/12 件→16.5） |
 | HRB-GUSHANG 骨伤科 | 243 | 钢针「(件数-1)/6 进一 ×5.5 +5.5 + 袋费 +0.3」（口径已确认） | FOLD 只能加计件数、无法先减一件 |
 | HRB-GUSHANG 骨伤科 | 251 | ⑾ 无纺布特殊件数 | 原文即「AI出不了，人工核对」 |
 
-> **2026-10-27 新发现（阻断性）：`unitPrice` 无法落库。** `PricingEngine` 的 FOLD 分支支持 `unitPrice`（按折算后件数×单价），但 `customer_product_rule` 实体/表**没有 unit_price 字段**，`BaselineRuleSyncServiceImpl.upsertProductRule` 也不会写它。因此 baseline 里写 `unitPrice` 会变成「有规则、无价格」。内热针必须等表结构或等价表达扩展后才能入库，**禁止绕过**。
+> **2026-10-27 已修复：`unitPrice` 落库链路。** 此前 `PricingEngine` 的 FOLD 分支支持 `unitPrice`，但 `customer_product_rule` 无 `unit_price` 列，baseline 写 `unitPrice` 会被静默丢弃（有规则无价格）。现已补：迁移 `schema_012_migration_product_rule_unit_price.sql`、实体/映射/`upsertProductRule`/编译器全链路，并由 `FoldUnitPricePricingTest` 钉住「12 件 → 3×5.5=16.5」。**任何涉及 FOLD 折算单价的规则，必须带此单测。**
 
 > 原则：**宁可显式欠账，不可静默缺失**。白名单外的任何新缺口都会让 CI 失败；补白名单必须像改代码一样评审。
 

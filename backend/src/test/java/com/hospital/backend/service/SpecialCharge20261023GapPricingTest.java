@@ -144,8 +144,9 @@ class SpecialCharge20261023GapPricingTest {
                 .isCloseTo(5.5, CENT);
         assertThat(price(engine, "哈尔滨市第二医院", "额外包（纸塑袋）", "缝合针-3件", 3))
                 .isCloseTo(5.5, CENT);
+        // 2026-10-27：内热针有专属规则（件数/5 进一 ×5.5），优先于通用小件 5 合 1，价格同为 16.5
         assertThat(priced(engine, "哈尔滨市第二医院", "额外包（纸塑袋）", "内热针-12件", 12).pricingRule)
-                .contains("通用小件");
+                .contains("内热针");
         assertThat(price(engine, "哈尔滨市第二医院", "额外包（纸塑袋）", "内热针-12件", 12))
                 .isCloseTo(16.5, CENT);
     }

@@ -245,6 +245,9 @@ public final class PricingEngineTestSupport {
             if (ruleNode.hasNonNull("price")) {
                 rule.setPrice(BigDecimal.valueOf(ruleNode.path("price").asDouble()));
             }
+            if (ruleNode.hasNonNull("unitPrice")) {
+                rule.setUnitPrice(BigDecimal.valueOf(ruleNode.path("unitPrice").asDouble()));
+            }
             if (ruleNode.hasNonNull("fee")) {
                 rule.setFee(BigDecimal.valueOf(ruleNode.path("fee").asDouble()));
             }

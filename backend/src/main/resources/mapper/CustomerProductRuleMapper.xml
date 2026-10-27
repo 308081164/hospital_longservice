@@ -22,6 +22,7 @@
         <result property="minInstrumentCount" column="min_instrument_count"/>
         <result property="maxInstrumentCount" column="max_instrument_count"/>
         <result property="price" column="price"/>
+        <result property="unitPrice" column="unit_price"/>
         <result property="originalUnitPrice" column="original_unit_price"/>
         <result property="billingMode" column="billing_mode"/>
         <result property="pieceCountSource" column="piece_count_source"/>
@@ -42,12 +43,12 @@
     <insert id="insert" parameterType="com.hospital.backend.entity.CustomerProductRule" useGeneratedKeys="true" keyProperty="id">
         INSERT INTO customer_product_rule (customer_id, rule_type, billing_mode, piece_count_source, match_mode, name, priority, product_id, variant_id, keywords,
                                            exclude_keywords, materials, conditions_json, temperature, bag_size_equals, min_bag_size_inclusive, max_bag_size_exclusive,
-                                           min_instrument_count, max_instrument_count, price, original_unit_price, accepted_prices, fee,
+                                           min_instrument_count, max_instrument_count, price, unit_price, original_unit_price, accepted_prices, fee,
                                            multiplier, threshold, fold_ratio, keyword_match_mode, extra_count, skip_packaging, skip_discount, is_active,
                                            created_at, updated_at)
         VALUES (#{customerId}, #{ruleType}, #{billingMode}, #{pieceCountSource}, #{matchMode}, #{name}, #{priority}, #{productId}, #{variantId}, #{keywords},
                 #{excludeKeywords}, #{materials}, #{conditionsJson}, #{temperature}, #{bagSizeEquals}, #{minBagSizeInclusive}, #{maxBagSizeExclusive},
-                #{minInstrumentCount}, #{maxInstrumentCount}, #{price}, #{originalUnitPrice}, #{acceptedPrices}, #{fee},
+                #{minInstrumentCount}, #{maxInstrumentCount}, #{price}, #{unitPrice}, #{originalUnitPrice}, #{acceptedPrices}, #{fee},
                 #{multiplier}, #{threshold}, #{foldRatio}, #{keywordMatchMode}, #{extraCount}, #{skipPackaging}, #{skipDiscount}, #{isActive},
                 NOW(), NOW())
     </insert>
@@ -91,6 +92,7 @@
             min_instrument_count = #{minInstrumentCount},
             max_instrument_count = #{maxInstrumentCount},
             price = #{price},
+            unit_price = #{unitPrice},
             original_unit_price = #{originalUnitPrice},
             accepted_prices = #{acceptedPrices},
             fee = #{fee},

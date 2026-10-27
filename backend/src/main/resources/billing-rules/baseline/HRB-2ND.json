@@ -228,6 +228,46 @@
       "acceptedTypes": [
         "额外包（纸塑袋）"
       ]
+    },
+    {
+      "ruleType": "FOLD",
+      "name": "市二院内热针≤10按5折算计包材",
+      "priority": 25,
+      "keywords": [
+        "内热针@contains"
+      ],
+      "threshold": 5,
+      "foldRatio": 5,
+      "unitPrice": 5.5,
+      "maxInstrumentCount": 10,
+      "skipPackaging": false,
+      "skipDiscount": true,
+      "isActive": true,
+      "matchMode": "first",
+      "keywordMatchMode": "contains",
+      "acceptedTypes": [
+        "额外包（纸塑袋）"
+      ]
+    },
+    {
+      "ruleType": "FOLD",
+      "name": "市二院内热针>10按5折算免包材",
+      "priority": 26,
+      "keywords": [
+        "内热针@contains"
+      ],
+      "threshold": 5,
+      "foldRatio": 5,
+      "unitPrice": 5.5,
+      "minInstrumentCount": 11,
+      "skipPackaging": true,
+      "skipDiscount": true,
+      "isActive": true,
+      "matchMode": "first",
+      "keywordMatchMode": "contains",
+      "acceptedTypes": [
+        "额外包（纸塑袋）"
+      ]
     }
   ]
 }

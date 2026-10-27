@@ -16,7 +16,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 class PricingEngineTestSupportFidelityTest {
 
     private static final Set<String> MAPPED_FIELDS = Set.of(
-            "id", "customerId", "ruleType", "name", "priority", "price", "fee", "multiplier",
+            "id", "customerId", "ruleType", "name", "priority", "price", "unitPrice", "fee", "multiplier",
             "threshold", "foldRatio", "minInstrumentCount", "maxInstrumentCount", "temperature",
             "matchMode", "keywordMatchMode", "billingMode", "pieceCountSource", "extraCount",
             "originalUnitPrice", "skipPackaging", "skipDiscount", "minBagSizeInclusive",

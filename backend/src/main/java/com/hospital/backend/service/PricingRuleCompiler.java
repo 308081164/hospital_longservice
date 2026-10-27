@@ -438,6 +438,9 @@ public class PricingRuleCompiler {
         if (rule.getPrice() != null) {
             node.put("price", rule.getPrice().doubleValue());
         }
+        if (rule.getUnitPrice() != null) {
+            node.put("unitPrice", rule.getUnitPrice().doubleValue());
+        }
         BillingMode billingMode = BillingModeInference.inferFromRule(rule);
         node.put("billingMode", billingMode.name());
         if (billingMode != BillingMode.PER_PACK) {

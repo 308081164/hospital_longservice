@@ -47,6 +47,9 @@ public class CustomerProductRule {
 
     private BigDecimal price;
 
+    /** FOLD 折算后单价（按折算件数计价），对应引擎 rule.unitPrice */
+    private BigDecimal unitPrice;
+
     private String acceptedPrices;
 
     private BigDecimal fee;
