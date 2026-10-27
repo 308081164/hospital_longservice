@@ -70,18 +70,9 @@ public class ExportStageDiscountApplier {
             if (!BillingConditionEvaluator.temperatureScopeMatches(scopeTemp, rowTemp)) {
                 continue;
             }
-            if (!discountTypeAllowed(policy, row.getType())) {
-                continue;
-            }
             JsonNode params = policy.path("params");
             if (params.path("validateOnly").asBoolean(false)) {
                 continue;
-            }
-            if (params.path("skipWhenClerkFixedPrice").asBoolean(false)) {
-                String pricingRule = row.getPricingRule();
-                if (pricingRule != null && pricingRule.startsWith("内勤计价")) {
-                    continue;
-                }
             }
             if (discountAlreadyApplied(row, policy)) {
                 continue;
@@ -117,10 +108,6 @@ public class ExportStageDiscountApplier {
                         break;
                     }
                 }
-            }
-            double skipWhenUnit = params.path("skipWhenUnitPriceEquals").asDouble(Double.NaN);
-            if (!Double.isNaN(skipWhenUnit) && Math.abs(baseUnit - skipWhenUnit) <= 0.02) {
-                continue;
             }
             List<BillingPolicyApplier.PieceTierDiscount> tiers =
                     BillingPolicyApplier.parsePieceTierDiscounts(params);
@@ -273,21 +260,6 @@ public class ExportStageDiscountApplier {
 
     private String safe(String value) {
         return value == null ? "" : value;
-    }
-
-    /** 折扣可以写在策略根、scope 或 params.acceptedTypes。没写类型则不过滤。 */
-    private static boolean discountTypeAllowed(JsonNode policy, String rowType) {
-        JsonNode params = policy.path("params");
-        if (params.path("acceptedTypes").isArray() && !params.path("acceptedTypes").isEmpty()) {
-            return BillingConditionEvaluator.packTypeMatches(params, rowType);
-        }
-        boolean policyTyped = (policy.path("acceptedTypes").isArray() && !policy.path("acceptedTypes").isEmpty())
-                || (policy.path("scope").path("acceptedTypes").isArray()
-                && !policy.path("scope").path("acceptedTypes").isEmpty());
-        if (policyTyped) {
-            return BillingConditionEvaluator.packTypeMatches(policy, rowType);
-        }
-        return true;
     }
 
     /**

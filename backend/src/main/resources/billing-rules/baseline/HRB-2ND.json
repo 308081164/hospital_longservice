@@ -76,7 +76,6 @@
       "priority": 14,
       "price": 5.5,
       "keywords": [
-        "产包（6件）",
         "手术室-缝合包",
         "手术室-腹腔镜包",
         "手术室-骨科急诊包",
@@ -108,8 +107,7 @@
       "acceptedTypes": [
         "器械包（ZSD）",
         "器械包"
-      ],
-      "sourceRef": "excel:特殊收费20261026#各医院特殊收费#产包（6件）"
+      ]
     },
     {
       "ruleType": "PRICE_PER_INSTRUMENT",

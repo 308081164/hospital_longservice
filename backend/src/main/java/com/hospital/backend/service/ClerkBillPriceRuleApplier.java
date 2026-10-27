@@ -20,7 +20,6 @@ public class ClerkBillPriceRuleApplier {
 
     private static final Pattern RANGE_PATTERN = Pattern.compile(
             "^(?:(\\d+)\\s*≤\\s*)?N\\s*(?:[>＞]\\s*(\\d+)|<\\s*(\\d+))?$", Pattern.CASE_INSENSITIVE);
-    private static final Pattern EXACT_COUNT_PATTERN = Pattern.compile("^N=(\\d+)$");
 
     public record ApplyResult(List<BillRowItem> rows, List<String> validationWarnings) {}
 
@@ -72,7 +71,6 @@ public class ClerkBillPriceRuleApplier {
                         } else {
                             row.setUnitPrice(exportTotal);
                         }
-                        row.setPricingRule("内勤计价：" + matched.path("name").asText(""));
                     }
                     maybeValidateSystemPrice(row, params, warnings);
                 }
@@ -109,7 +107,7 @@ public class ClerkBillPriceRuleApplier {
     }
 
     private boolean matches(JsonNode params, BillRowItem row) {
-        if (!matchesTypes(params, row.getType())) {
+        if (!matchesTypes(params.path("acceptedTypes"), row.getType())) {
             return false;
         }
         if (!matchesPackName(params, row.getPackName())) {
@@ -121,52 +119,20 @@ public class ClerkBillPriceRuleApplier {
         if (!matchesInstrumentRange(params.path("instrumentCountRange").asText(null), row)) {
             return false;
         }
-        if (!matchesSystemUnitPrice(params, row)) {
-            return false;
-        }
         return true;
     }
 
-    private boolean matchesTypes(JsonNode params, String rowType) {
-        JsonNode acceptedTypes = params.path("acceptedTypes");
+    private boolean matchesTypes(JsonNode acceptedTypes, String rowType) {
         if (!acceptedTypes.isArray() || acceptedTypes.isEmpty()) {
             return true;
         }
-        boolean equivalent = "equivalent".equalsIgnoreCase(params.path("packTypeMatch").asText(""));
         String normalized = normalize(rowType);
         for (JsonNode t : acceptedTypes) {
-            String expected = t.asText();
-            if (equivalent) {
-                if (PackTypeRegistry.packTypeEquivalent(expected, rowType)) {
-                    return true;
-                }
-            } else if (normalized.contains(normalize(expected))) {
+            if (normalized.contains(normalize(t.asText()))) {
                 return true;
             }
         }
         return false;
-    }
-
-    /** systemPriceMode=MATCH 时，账单单价必须等于表里的系统价格。 */
-    private boolean matchesSystemUnitPrice(JsonNode params, BillRowItem row) {
-        if (!"MATCH".equalsIgnoreCase(params.path("systemPriceMode").asText(""))) {
-            return true;
-        }
-        if (!params.has("systemPrice") || params.path("systemPrice").isNull()) {
-            return true;
-        }
-        Double actual = quotedUnitPrice(row);
-        return actual != null && Math.abs(actual - params.path("systemPrice").asDouble()) <= 0.02;
-    }
-
-    private static Double quotedUnitPrice(BillRowItem row) {
-        if (row.getUnitPrice() != null && row.getUnitPrice() > 0) {
-            return row.getUnitPrice();
-        }
-        if (row.getTotalPrice() != null && row.getTotalPrice() > 0) {
-            return row.getTotalPrice() / packCount(row);
-        }
-        return null;
     }
 
     private boolean matchesPackName(JsonNode params, String packName) {
@@ -208,10 +174,6 @@ public class ClerkBillPriceRuleApplier {
         int count = perPackInstrumentCount(row);
         String normalized = rangeExpr.replace(" ", "").replace("＞", ">").replace("＜", "<");
         normalized = normalizeInstrumentRangeExpr(normalized);
-        Matcher exactCount = EXACT_COUNT_PATTERN.matcher(normalized);
-        if (exactCount.matches()) {
-            return count == Integer.parseInt(exactCount.group(1));
-        }
         Matcher m = RANGE_PATTERN.matcher(normalized);
         if (!m.matches()) {
             return true;

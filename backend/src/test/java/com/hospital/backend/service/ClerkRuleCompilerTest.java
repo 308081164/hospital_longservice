@@ -120,7 +120,7 @@ class ClerkRuleCompilerTest {
                 billPriceRules++;
             }
         }
-        assertThat(billPriceRules).isGreaterThanOrEqualTo(12);
+        assertThat(billPriceRules).isGreaterThanOrEqualTo(20);
         boolean hasPieceTier = false;
         for (JsonNode policy : compiled.path("billingPolicies")) {
             if (policy.path("params").path("pieceTierDiscounts").isArray()) {
@@ -365,12 +365,12 @@ class ClerkRuleCompilerTest {
             }
         }
         assertThat(formulaRefs).containsExactly(
-                "excel:医院内勤规则10.27.xlsx#账单规则#91",
-                "excel:医院内勤规则10.27.xlsx#账单规则#92",
-                "excel:医院内勤规则10.27.xlsx#账单规则#93",
-                "excel:医院内勤规则10.27.xlsx#账单规则#94",
-                "excel:医院内勤规则10.27.xlsx#账单规则#95",
-                "excel:医院内勤规则10.27.xlsx#账单规则#96");
+                "excel:医院内勤规则10.20(1).xlsx#账单规则#103",
+                "excel:医院内勤规则10.20(1).xlsx#账单规则#104",
+                "excel:医院内勤规则10.20(1).xlsx#账单规则#105",
+                "excel:医院内勤规则10.20(1).xlsx#账单规则#106",
+                "excel:医院内勤规则10.20(1).xlsx#账单规则#107",
+                "excel:医院内勤规则10.20(1).xlsx#账单规则#108");
         assertThat(sealed).isEqualTo(2);
 
         ObjectNode compiled = compiler.compileForCustomer("ZYY-D1");
@@ -385,10 +385,10 @@ class ClerkRuleCompilerTest {
         assertThat(compiledFormulas).containsExactly(
                 "附一≥3件标准价八折",
                 "附一敷料纸塑标准价八折",
-                "附一＜3件系统价七五折",
+                "附一＜3件标准价八折再乘0.999",
                 "附一额外无纺布＜3固定13.2",
                 "附一低温件数无关八折再乘0.999",
-                "附一敷料无纺布系统价九九九折");
+                "附一敷料无纺布件数无关八折再乘0.999");
         for (JsonNode policy : compiled.path("billingPolicies")) {
             assertThat(policy.path("name").asText()).doesNotContain("标准价八折");
             assertThat(policy.path("name").asText()).doesNotContain("13.2");
