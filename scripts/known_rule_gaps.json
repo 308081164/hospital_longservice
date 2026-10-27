@@ -1,5 +1,5 @@
 {
-  "_comment": "Excel 权威源中尚未在 baseline 建模的规则（历史欠账）。新增条目必须写明原因与责任，CI 只对『白名单之外的新缺口』报错。",
+  "_comment": "Excel 权威源中尚未在 baseline 建模的规则（历史欠账）。新增条目必须写明原因与状态，CI 只对『白名单之外的新缺口』报错。",
   "updated_at": "2026-10-27",
   "source_excel": "docs/source/特殊收费20261026.xlsx",
   "gaps": [
@@ -8,24 +8,24 @@
       "row": 215,
       "item": "⑦",
       "pack_name": "包名称带“内热针”",
-      "reason": "需『件数/5 进一 ×5.5 + 标准包材』且 ≤10/>10 两档包材口径，属财务口径确认项，未敢按猜测建模",
-      "status": "待财务确认"
+      "reason": "需『件数/5 进一 ×5.5』（≤10 再加标准包材）。引擎 FOLD 支持 unitPrice，但 customer_product_rule 实体无 unit_price 字段，baseline 的 unitPrice 落库即丢（有规则无价格）；扩建列或扩展等价表达前禁止入库",
+      "status": "待引擎/表结构扩展"
     },
     {
       "customer": "HRB-2ND",
       "row": 216,
       "item": "⑦",
       "pack_name": "包名称带“内热针”（＞10）",
-      "reason": "同上，>10 档不收包材，需与 ≤10 档成对实现",
-      "status": "待财务确认"
+      "reason": "同上，>10 档不收包材，需与 ≤10 档成对建模",
+      "status": "待引擎/表结构扩展"
     },
     {
       "customer": "HRB-GUSHANG",
       "row": 243,
       "item": "⑤",
       "pack_name": "钢针-几件 扳手1",
-      "reason": "（件数-1)/6 进一 ×5.5 +5.5 + 内层纸塑袋费用 +0.3，含减免一件与固定加价，现有 FOLD/FIXED_PRICE 无法无损表达",
-      "status": "待引擎能力评估"
+      "reason": "客户已确认口径：(件数-1)/6 进一 ×5.5 +5.5 +内层纸塑袋费用 +0.3。FOLD 的 extraCount 只能『折算后加计固定件数』，无法表达『先减一件再折算』（1 件时引擎给 11.0，应为 5.5）",
+      "status": "待引擎能力扩展"
     },
     {
       "customer": "HRB-GUSHANG",
