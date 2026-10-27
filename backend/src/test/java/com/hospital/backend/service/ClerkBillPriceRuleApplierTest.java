@@ -177,6 +177,41 @@ class ClerkBillPriceRuleApplierTest {
     }
 
     @Test
+    void taipingFixedUnitPriceIsPerPackWhenSeveralPacksShareTheRow() {
+        ObjectNode compiled = compiler.compileForCustomer("TAIPING-RM");
+        BillRowItem row = new BillRowItem();
+        row.setType("器械包");
+        row.setPackName("普通器械");
+        row.setInstrumentCount(24);
+        row.setPackCount(6);
+        row.setUnitPrice(16.5);
+        row.setTotalPrice(99.0);
+
+        var result = applier.apply(compiled, List.of(row));
+        assertThat(result.rows().get(0).getUnitPrice()).isEqualTo(8.91);
+        assertThat(result.rows().get(0).getTotalPrice()).isEqualTo(53.46);
+    }
+
+    @Test
+    void taipingLowTempCountBandsUseTheMatchingRange() {
+        ObjectNode compiled = compiler.compileForCustomer("TAIPING-RM");
+        assertThat(bandPrice(compiled, 3)).isEqualTo(66.0);
+        assertThat(bandPrice(compiled, 8)).isEqualTo(123.8);
+        assertThat(bandPrice(compiled, 12)).isEqualTo(225.0);
+    }
+
+    private double bandPrice(ObjectNode compiled, int instruments) {
+        BillRowItem row = new BillRowItem();
+        row.setType("单包装包（老肯低温）");
+        row.setPackName("低温包");
+        row.setInstrumentCount(instruments);
+        row.setPackCount(1);
+        row.setUnitPrice(80.0);
+        row.setTotalPrice(80.0);
+        return applier.apply(compiled, List.of(row)).rows().get(0).getTotalPrice();
+    }
+
+    @Test
     void taipingOnePieceLowTempWidthUsesNewFixedPrice() {
         ObjectNode compiled = compiler.compileForCustomer("TAIPING-RM");
         BillRowItem row = new BillRowItem();
