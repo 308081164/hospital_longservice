@@ -1079,18 +1079,29 @@ public class PricingEngine {
             double foldRatio = rule.path("foldRatio").asDouble(5.0);
             // 折算后额外加计件数（如"针N盒1"的盒固定计 1 件，不参与 5 合 1 折算）
             int extraCount = rule.path("extraCount").asInt(0);
-            int foldInput = effectiveCount;
-            if (extraCount > 0 && effectiveCount > extraCount) {
-                // 器械总数含盒时，仅针对针数做 5 合 1 折算，盒以 extraCount 固定追加
-                foldInput = effectiveCount - extraCount;
-            }
-            int result = foldCount(foldInput, threshold, foldRatio);
-            if (extraCount > 0) {
-                result += extraCount;
+            // 折算前先扣除的固定件数（如"钢针-7件 扳手1"里那 1 把扳手）：
+            // 被扣除件数按 1 件计入结果，剩余件数再按 foldRatio 折算。
+            // 与 extraCount 的区别：总件数恰好等于 offset 时结果为 offset（而非 offset+1）。
+            int foldOffset = rule.path("foldOffset").asInt(0);
+            int result;
+            if (foldOffset > 0) {
+                int rest = Math.max(0, effectiveCount - foldOffset);
+                result = (rest == 0 ? 0 : foldCount(rest, threshold, foldRatio)) + foldOffset;
+            } else {
+                int foldInput = effectiveCount;
+                if (extraCount > 0 && effectiveCount > extraCount) {
+                    // 器械总数含盒时，仅针对针数做 5 合 1 折算，盒以 extraCount 固定追加
+                    foldInput = effectiveCount - extraCount;
+                }
+                result = foldCount(foldInput, threshold, foldRatio);
+                if (extraCount > 0) {
+                    result += extraCount;
+                }
             }
             String name = rule.path("name").asText("特殊小件折算");
             notes.add(name + "，原器械数 " + effectiveCount + " 件，折算为 " + result + " 件"
-                    + (extraCount > 0 ? "（含额外 " + extraCount + " 件）" : "") + "。");
+                    + (extraCount > 0 ? "（含额外 " + extraCount + " 件）" : "")
+                    + (foldOffset > 0 ? "（先扣除 " + foldOffset + " 件）" : "") + "。");
             boolean skipPackaging = rule.path("skipPackaging").asBoolean(false);
             Double unitPriceOverride = rule.has("unitPrice")
                     ? rule.path("unitPrice").asDouble(Double.NaN)

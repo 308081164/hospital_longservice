@@ -17,7 +17,7 @@ class PricingEngineTestSupportFidelityTest {
 
     private static final Set<String> MAPPED_FIELDS = Set.of(
             "id", "customerId", "ruleType", "name", "priority", "price", "unitPrice", "fee", "multiplier",
-            "threshold", "foldRatio", "minInstrumentCount", "maxInstrumentCount", "temperature",
+            "threshold", "foldRatio", "foldOffset", "minInstrumentCount", "maxInstrumentCount", "temperature",
             "matchMode", "keywordMatchMode", "billingMode", "pieceCountSource", "extraCount",
             "originalUnitPrice", "skipPackaging", "skipDiscount", "minBagSizeInclusive",
             "maxBagSizeExclusive", "keywords", "excludeKeywords", "conditionsJson", "acceptedPrices",

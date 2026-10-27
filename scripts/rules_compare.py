@@ -364,17 +364,27 @@ def run_rules_compare(
             or customer.get("billing_pricing_mode")
             or "standard"
         )
-        prod_override = customer.get("standardPricingOverride") or customer.get(
-            "standard_pricing_override"
-        )
         # 列表接口可能不返回 standardPricingOverride（曾导致 override 永久误报 null）。
+        # 注意：API 有时返回空串/空对象而非 null，必须按「缺失」归一，否则回退逻辑不会触发。
+        def _norm_override(value):
+            if value is None:
+                return None
+            if isinstance(value, str) and not value.strip():
+                return None
+            if isinstance(value, (dict, list)) and not value:
+                return None
+            return value
+
+        prod_override = _norm_override(customer.get("standardPricingOverride")) or _norm_override(
+            customer.get("standard_pricing_override")
+        )
         # 缺失时回退到明细接口；仍拿不到则视为「不可用」，不把「查不到」当成「漂移」。
         override_unavailable = False
         if prod_override is None and customer_id:
             detail = client.customer_detail(customer_id)
             if detail:
-                prod_override = detail.get("standardPricingOverride") or detail.get(
-                    "standard_pricing_override"
+                prod_override = _norm_override(detail.get("standardPricingOverride")) or _norm_override(
+                    detail.get("standard_pricing_override")
                 )
             if prod_override is None and entry.get("standardPricingOverride") is not None:
                 override_unavailable = True

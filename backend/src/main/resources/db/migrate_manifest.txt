@@ -12,3 +12,4 @@ schema_008_migration_dept_physician.sql
 schema_009_migration_min_bag_size.sql
 schema_010_migration_rule_quarantine.sql
 schema_012_migration_product_rule_unit_price.sql
+schema_013_migration_product_rule_fold_offset.sql

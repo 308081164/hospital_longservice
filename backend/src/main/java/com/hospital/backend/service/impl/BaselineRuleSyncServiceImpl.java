@@ -329,6 +329,7 @@ public class BaselineRuleSyncServiceImpl implements BaselineRuleSyncService {
         rule.setPrice(ruleNode.hasNonNull("price") ? decimal(ruleNode, "price") : null);
         // FOLD 折算后单价：此前实体/表无该列，baseline 的 unitPrice 会被静默丢弃（有规则无价格）。
         rule.setUnitPrice(ruleNode.hasNonNull("unitPrice") ? decimal(ruleNode, "unitPrice") : null);
+        rule.setFoldOffset(ruleNode.hasNonNull("foldOffset") ? intVal(ruleNode, "foldOffset", null) : null);
         rule.setFee(ruleNode.hasNonNull("fee") ? decimal(ruleNode, "fee") : null);
         if (ruleNode.has("materials")) {
             rule.setMaterials(toJsonArray(ruleNode.get("materials")));

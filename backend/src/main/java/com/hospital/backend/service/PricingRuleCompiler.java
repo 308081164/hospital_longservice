@@ -441,6 +441,9 @@ public class PricingRuleCompiler {
         if (rule.getUnitPrice() != null) {
             node.put("unitPrice", rule.getUnitPrice().doubleValue());
         }
+        if (rule.getFoldOffset() != null) {
+            node.put("foldOffset", rule.getFoldOffset());
+        }
         BillingMode billingMode = BillingModeInference.inferFromRule(rule);
         node.put("billingMode", billingMode.name());
         if (billingMode != BillingMode.PER_PACK) {
@@ -671,8 +674,14 @@ public class PricingRuleCompiler {
         if (rule.getExtraCount() != null && rule.getExtraCount() > 0) {
             node.put("extraCount", rule.getExtraCount());
         }
-        if (rule.getPrice() != null) {
+        if (rule.getUnitPrice() != null) {
+            node.put("unitPrice", rule.getUnitPrice().doubleValue());
+        } else if (rule.getPrice() != null) {
+            // 历史：FOLD 规则曾用 price 承载「折算后单价」
             node.put("unitPrice", rule.getPrice().doubleValue());
+        }
+        if (rule.getFoldOffset() != null && rule.getFoldOffset() > 0) {
+            node.put("foldOffset", rule.getFoldOffset());
         }
         if (rule.getTemperature() != null && !rule.getTemperature().isBlank()) {
             node.put("temperature", rule.getTemperature().trim().toUpperCase());

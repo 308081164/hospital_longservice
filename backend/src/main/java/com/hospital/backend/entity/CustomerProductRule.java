@@ -60,6 +60,9 @@ public class CustomerProductRule {
 
     private BigDecimal foldRatio;
 
+    /** FOLD 折算前先扣除的固定件数（扣除部分按 1 件计），对应引擎 rule.foldOffset */
+    private Integer foldOffset;
+
     /** 关键词匹配模式：exact_token（严格对齐，默认）/ contains（含关键词即触发） */
     private String keywordMatchMode = "exact_token";
 

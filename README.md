@@ -319,7 +319,7 @@ curl -s http://39.102.213.51:8853/api/v1/base/version
 | 客户 | 行 | 规则 | 状态 |
 |---|---|---|---|
 | HRB-2ND 市二院 | 215/216 | 内热针「件数/5 进一 ×5.5 ± 包材」 | ✅ 已建模（2026-10-27，`unit_price` 落库后，单测钉住 11/12 件→16.5） |
-| HRB-GUSHANG 骨伤科 | 243 | 钢针「(件数-1)/6 进一 ×5.5 +5.5 + 袋费 +0.3」（口径已确认） | FOLD 只能加计件数、无法先减一件 |
+| HRB-GUSHANG 骨伤科 | 243 | 钢针「(件数-1)/6 进一 ×5.5 +5.5 + 袋费 +0.3」（口径已确认） | 引擎能力已补齐（`foldOffset`），**待确认真实包名关键词** |
 | HRB-GUSHANG 骨伤科 | 251 | ⑾ 无纺布特殊件数 | 原文即「AI出不了，人工核对」 |
 
 > **2026-10-27 已修复：`unitPrice` 落库链路。** 此前 `PricingEngine` 的 FOLD 分支支持 `unitPrice`，但 `customer_product_rule` 无 `unit_price` 列，baseline 写 `unitPrice` 会被静默丢弃（有规则无价格）。现已补：迁移 `schema_012_migration_product_rule_unit_price.sql`、实体/映射/`upsertProductRule`/编译器全链路，并由 `FoldUnitPricePricingTest` 钉住「12 件 → 3×5.5=16.5」。**任何涉及 FOLD 折算单价的规则，必须带此单测。**

@@ -260,6 +260,9 @@ public final class PricingEngineTestSupport {
             if (ruleNode.hasNonNull("foldRatio")) {
                 rule.setFoldRatio(BigDecimal.valueOf(ruleNode.path("foldRatio").asDouble()));
             }
+            if (ruleNode.hasNonNull("foldOffset")) {
+                rule.setFoldOffset(ruleNode.path("foldOffset").asInt());
+            }
             if (ruleNode.hasNonNull("minInstrumentCount")) {
                 rule.setMinInstrumentCount(ruleNode.path("minInstrumentCount").asInt());
             }
