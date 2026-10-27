@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.hospital.backend.common.JsonUtils;
 import com.hospital.backend.config.ClerkRuleIndex;
 import com.hospital.backend.dto.request.hospital.BillRowItem;
+import com.hospital.backend.export.ExportStageDiscountApplier;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
@@ -114,7 +115,7 @@ class ClerkBillPriceRuleApplierTest {
     }
 
     @Test
-    void appliesTaipingDressingPriceRule() {
+    void taipingDressingPackKeepsBillPriceAfter1027RemovedFixedRows() {
         ObjectNode compiled = compiler.compileForCustomer("TAIPING-RM");
         BillRowItem row = new BillRowItem();
         row.setType("敷料包");
@@ -122,7 +123,8 @@ class ClerkBillPriceRuleApplierTest {
         row.setTotalPrice(30.0);
 
         var result = applier.apply(compiled, List.of(row));
-        assertThat(result.rows().get(0).getTotalPrice()).isEqualTo(18.6);
+        assertThat(result.rows().get(0).getTotalPrice()).isEqualTo(30.0);
+        assertThat(result.rows().get(0).getPricingRule()).isNull();
     }
 
     @Test
@@ -132,10 +134,62 @@ class ClerkBillPriceRuleApplierTest {
         row.setType("额外包(纸塑袋)");
         row.setPackageMaterial("纸塑袋20cm");
         row.setPackName("测试");
-        row.setTotalPrice(20.0);
+        row.setInstrumentCount(1);
+        row.setPackCount(1);
+        row.setUnitPrice(8.0);
+        row.setTotalPrice(8.0);
 
         var result = applier.apply(compiled, List.of(row));
-        assertThat(result.rows().get(0).getTotalPrice()).isEqualTo(6.83);
+        assertThat(result.rows().get(0).getTotalPrice()).isEqualTo(9.8);
+    }
+
+    @Test
+    void taipingRewritesSystemPriceSixteenPointFiveToEightPointNineOne() {
+        ObjectNode compiled = compiler.compileForCustomer("TAIPING-RM");
+        BillRowItem row = new BillRowItem();
+        row.setType("器械包");
+        row.setPackName("普通器械");
+        row.setInstrumentCount(4);
+        row.setPackCount(1);
+        row.setUnitPrice(16.5);
+        row.setTotalPrice(16.5);
+
+        var result = applier.apply(compiled, List.of(row));
+        assertThat(result.rows().get(0).getTotalPrice()).isEqualTo(8.91);
+        assertThat(result.rows().get(0).getPricingRule()).contains("8.91");
+    }
+
+    @Test
+    void taipingMoreThanTwoPiecesAtNonSixteenPointFiveTakesSeventyFivePercent() {
+        ObjectNode compiled = compiler.compileForCustomer("TAIPING-RM");
+        BillRowItem row = new BillRowItem();
+        row.setType("额外包(纸塑袋)");
+        row.setPackName("普通");
+        row.setInstrumentCount(4);
+        row.setPackCount(1);
+        row.setUnitPrice(20.0);
+        row.setExpectedUnitPrice(20.0);
+        row.setTotalPrice(20.0);
+
+        var hit = new ExportStageDiscountApplier().tryApplyDiscount(compiled, row, java.util.Set.of(), "TAIPING-RM");
+        assertThat(hit).isPresent();
+        assertThat(hit.get().unitPriceAfter()).isEqualTo(15.0);
+    }
+
+    @Test
+    void taipingOnePieceLowTempWidthUsesNewFixedPrice() {
+        ObjectNode compiled = compiler.compileForCustomer("TAIPING-RM");
+        BillRowItem row = new BillRowItem();
+        row.setType("额外包（低温等离子）");
+        row.setPackageMaterial("低温灭菌 30cm");
+        row.setPackName("镜子");
+        row.setInstrumentCount(1);
+        row.setPackCount(1);
+        row.setUnitPrice(40.0);
+        row.setTotalPrice(40.0);
+
+        var result = applier.apply(compiled, List.of(row));
+        assertThat(result.rows().get(0).getTotalPrice()).isEqualTo(26.3);
     }
 
     @Test

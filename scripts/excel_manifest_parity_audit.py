@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """G4：权威 Excel ↔ baseline/manifest 逐条对账。缺可表达规则即失败。
 
-权威文件固定为 docs/source/特殊收费(4)-20261023.xlsx，并校验 SHA-256。
+权威文件固定为 docs/source/特殊收费20261026.xlsx，并校验 SHA-256。
 表里有、baseline 没有（或关键词/类型对不上）的行不能再静默漏掉。
 引擎表达不了的行在 ENGINE_UNEXPRESSIBLE 里点名，打印后不失败，也不算已上线。
 """
@@ -22,8 +22,8 @@ BASELINE_DIR = ROOT / "backend/src/main/resources/billing-rules/baseline"
 TEMPLATE_JAVA = (
     ROOT / "backend/src/main/java/com/hospital/backend/service/DefaultPricingTemplate.java"
 )
-AUTHORITY_XLSX = ROOT / "docs/source/特殊收费(4)-20261023.xlsx"
-AUTHORITY_SHA256 = "a7f64fc3fea363857265a68e7d293d1f1504545aacbb67e970fe444793b4547e"
+AUTHORITY_XLSX = ROOT / "docs/source/特殊收费20261026.xlsx"
+AUTHORITY_SHA256 = "90daf08012c9da0ca9d27105eaf8a9a89d36588ca372fd1516218348874fc8de"
 
 sys.path.insert(0, str(ROOT / "scripts"))
 from import_special_pricing_v17 import (  # noqa: E402
@@ -38,17 +38,17 @@ from strict_hospital_codes import FUYI_BASELINE_CODES, STRICT_KEEP_CODES  # noqa
 
 # 引擎没有对应公式，不能写进 manifest 假装上线。键是 (医院序号, Excel 行号)。
 ENGINE_UNEXPRESSIBLE: dict[tuple[str, int], str] = {
-    ("42", 241): "外架钢针＞6：件数/6进位×5.5＋内层纸塑袋＋0.3，没有「折算后再加袋和固定加价」",
-    ("42", 242): "钢针减扳手：(件数-1)/6进位×5.5＋5.5＋内层袋＋0.3",
-    ("42", 247): "钉盒按组件拆分：只有植入物-钉收 50，有其他组件再加件数×5.5",
+    ("42", 242): "外架钢针＞6：件数/6进位×5.5＋内层纸塑袋＋0.3，没有「折算后再加袋和固定加价」",
+    ("42", 243): "钢针减扳手：(件数-1)/6进位×5.5＋5.5＋内层袋＋0.3",
     ("42", 248): "钉盒按组件拆分：只有植入物-钉收 50，有其他组件再加件数×5.5",
     ("42", 249): "钉盒按组件拆分：只有植入物-钉收 50，有其他组件再加件数×5.5",
+    ("42", 250): "钉盒按组件拆分：只有植入物-钉收 50，有其他组件再加件数×5.5",
 }
 
 # 底价已经在 baseline，双层袋再加 0.3 要和包名同时成立，引擎做不到这句「再加」。
 PARTIAL_RESIDUAL: dict[tuple[str, int], str] = {
     ("42", row): "克氏针≤6 的 5.5/8 元已上线；「双层袋再加 0.3」无法和该固定价同时成立"
-    for row in range(230, 239)
+    for row in range(231, 240)
 }
 
 # 通用表里不是产品规则、由标准计价表达的行（通用 sheet 行号）。
@@ -64,7 +64,7 @@ GENERIC_UNEXPRESSIBLE = {
 
 # 市二「/双 低温不多收、一件一包不收 35」写在 PricingEngine.isHrb2ndHospital，不是产品规则。
 ENGINE_BEHAVIOR_ROWS = {
-    ("41", 213): "市二低温 /双 按纸塑宽度收、双层不多收、一件一包不收 35（isHrb2ndHospital）",
+    ("41", 214): "市二低温 /双 按纸塑宽度收、双层不多收、一件一包不收 35（isHrb2ndHospital）",
 }
 
 GLOBAL_FOLD_KEYWORDS = (

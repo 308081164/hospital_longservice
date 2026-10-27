@@ -4,7 +4,7 @@
   "billingEnabled": true,
   "billingPricingMode": "hybrid",
   "sourceVersion": "docs/source/附一收费标准.xlsx",
-  "notes": "中医附一独立价表 · 2026-10-22：对账折扣按包类型门控（内勤规则行13）。额外包(无纺布)<3 固定13.2；敷料纸塑只×0.8；纸塑额外/器械/单包装 ≥3×0.8、<3×0.8×0.999；低温等离子/EO/ETO/敷料无纺布件数无关×0.8×0.999。件数口径 billingPieces（单包）。",
+  "notes": "中医附一独立价表 · 2026-10-27：对账折扣按包类型门控（内勤规则10.27）。额外包(无纺布)<3 固定13.2；敷料纸塑只×0.8；纸塑额外/器械/单包装 ≥3×0.8、<3 系统价×0.75；低温等离子/EO/ETO 件数无关×0.8×0.999；敷料无纺布只×0.999。件数口径 billingPieces（单包）。",
   "billingPolicies": [
     {
       "policyType": "DISCOUNT",
@@ -37,13 +37,8 @@
       "scope": {
         "temperature": "ANY",
         "acceptedTypes": [
-          "额外包（纸塑袋）",
           "额外包（无纺布）",
-          "器械包（ZSD）",
-          "器械包",
-          "单包装包",
           "敷料包（纸塑袋）",
-          "敷料包（无纺布）",
           "单包装包（等离子）",
           "单包装包（EO）",
           "额外包（低温等离子）",
@@ -55,11 +50,11 @@
         "applyStage": "bill_detail",
         "skipWhenFixedPrice": false
       },
-      "sourceRef": "excel:内勤规则行13#对账八折"
+      "sourceRef": "excel:医院内勤规则10.27.xlsx#账单规则#91-92,95"
     },
     {
       "policyType": "DISCOUNT",
-      "name": "附一九九九折·件数<3",
+      "name": "附一＜3件系统价七五折",
       "priority": 20,
       "scope": {
         "temperature": "ANY",
@@ -77,12 +72,38 @@
           {
             "minPieces": 1,
             "maxPieces": 2,
-            "rate": 0.999,
+            "rate": 0.75,
             "decimalPlaces": 2
           }
         ]
       },
-      "sourceRef": "excel:内勤规则行13#器械数量<3叠0.999"
+      "sourceRef": "excel:医院内勤规则10.27.xlsx#账单规则#93"
+    },
+    {
+      "policyType": "DISCOUNT",
+      "name": "附一对账八折·件数≥3",
+      "priority": 10,
+      "scope": {
+        "temperature": "ANY",
+        "acceptedTypes": [
+          "额外包（纸塑袋）",
+          "器械包（ZSD）",
+          "器械包",
+          "单包装包"
+        ]
+      },
+      "params": {
+        "applyStage": "bill_detail",
+        "skipWhenFixedPrice": false,
+        "pieceTierDiscounts": [
+          {
+            "minPieces": 3,
+            "rate": 0.8,
+            "decimalPlaces": 2
+          }
+        ]
+      },
+      "sourceRef": "excel:医院内勤规则10.27.xlsx#账单规则#91"
     },
     {
       "policyType": "DISCOUNT",
@@ -94,7 +115,23 @@
           "单包装包（等离子）",
           "单包装包（EO）",
           "额外包（低温等离子）",
-          "额外包（ETO）",
+          "额外包（ETO）"
+        ]
+      },
+      "params": {
+        "rate": 0.999,
+        "applyStage": "bill_detail",
+        "skipWhenFixedPrice": false
+      },
+      "sourceRef": "excel:医院内勤规则10.27.xlsx#账单规则#95"
+    },
+    {
+      "policyType": "DISCOUNT",
+      "name": "附一敷料无纺布系统价九九九折",
+      "priority": 20,
+      "scope": {
+        "temperature": "ANY",
+        "acceptedTypes": [
           "敷料包（无纺布）"
         ]
       },
@@ -103,7 +140,7 @@
         "applyStage": "bill_detail",
         "skipWhenFixedPrice": false
       },
-      "sourceRef": "excel:内勤规则行13#低温/EO/敷料无纺布件数无关叠0.999"
+      "sourceRef": "excel:医院内勤规则10.27.xlsx#账单规则#96"
     }
   ],
   "archivedProductRulesNote": "2026-09-23 封存：类型特色规则暂停，对账改走标准价叠折试用",
@@ -629,13 +666,13 @@
       "acceptedTypes": [
         "器械包（ZSD）"
       ],
-      "sourceRef": "excel:特殊收费(4)-20261023#各医院特殊收费#换药包(120布)"
+      "sourceRef": "excel:特殊收费20261026#各医院特殊收费#换药包(120布)"
     },
     {
       "ruleType": "EXTRA_FEE",
-      "name": "附一特殊收费换药包120布加价5.5",
+      "name": "附一特殊收费换药包120布加价5.49",
       "priority": 91,
-      "fee": 5.5,
+      "fee": 5.49,
       "keywords": [
         "换药包(120布)"
       ],
@@ -646,7 +683,7 @@
       "acceptedTypes": [
         "器械包（ZSD）"
       ],
-      "sourceRef": "excel:特殊收费(4)-20261023#各医院特殊收费#换药包(120布)"
+      "sourceRef": "excel:特殊收费20261026#各医院特殊收费#换药包(120布)"
     },
     {
       "ruleType": "FOLD",
@@ -752,7 +789,7 @@
       "acceptedTypes": [
         "额外包低温等离子"
       ],
-      "sourceRef": "excel:特殊收费(4)-20261023#各医院 r143"
+      "sourceRef": "excel:特殊收费20261026#各医院 r143"
     },
     {
       "ruleType": "FOLD",
@@ -773,7 +810,7 @@
       "acceptedTypes": [
         "额外包低温等离子"
       ],
-      "sourceRef": "excel:特殊收费(4)-20261023#各医院 r144"
+      "sourceRef": "excel:特殊收费20261026#各医院 r144"
     }
   ]
 }
