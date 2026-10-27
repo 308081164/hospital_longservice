@@ -203,6 +203,16 @@ public class BaselineRuleSyncServiceImpl implements BaselineRuleSyncService {
                 changed = true;
             }
         }
+        // 标准价覆盖（如附一 hybrid + 纸塑袋阶梯）此前只由 manifest reconciler 落库，
+        // 而生产默认 billing.seed.reconcile-enabled=false，导致 override 永远为 null、
+        // 客户反馈「规则不生效」（2026-10-27 排查）。baseline sync 默认开启，这里补齐。
+        if (baselineNode.has("standardPricingOverride") && !baselineNode.get("standardPricingOverride").isNull()) {
+            String override = baselineNode.get("standardPricingOverride").toString();
+            if (!override.equals(customer.getStandardPricingOverride())) {
+                customer.setStandardPricingOverride(override);
+                changed = true;
+            }
+        }
         if (changed) {
             customerMapper.updateById(customer);
         }

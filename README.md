@@ -293,6 +293,7 @@ curl -s http://39.102.213.51:8853/api/v1/base/version
 | 11 | 09-04 | `5cabd96a` | 全冠套装（针-8盒-1）计数返回 null 跳过核对（应为 9）；针7（盒1）双重计数为 9（应为 8） | P1 | 括号内 -N 参与计数；紧凑复合不再叠加括号容器；新增 11 条单测（含市五院/平房区/妇幼人口生产样本） |
 | 12 | 09-03 | `1d3098ca` | 多数字包名计数丢失（针拆分块双缺陷） | P1 | 解析修复并随 `00d3bd4a` 上线 |
 | 13 | 10-27 | 回退 `f6318b32` → 恢复现场 | 客户反复反馈「新增特殊计价规则生产不生效」 | **R2 + 闸门缺失**：44 家医院 baseline 均在、但 4 条 Excel 规则从未建模；且 Excel↔baseline 覆盖审计**未进 CI**，回归无人拦截 | 补 G7 闸门（44 家全覆盖，白名单外的缺口直接失败）；4 条历史欠账登记 `scripts/known_rule_gaps.json`；见 §2.4 |
+| 14 | 10-27 | 本次修复 | 附一（ZYY-D1）`standardPricingOverride` 生产为 `null`，纸塑袋阶梯/13.2 封顶等标准价覆盖长期未生效 | **E3 同步通道缺口**：只有 manifest reconciler 写 override，而生产 `billing.seed.reconcile-enabled` 默认 false；baseline sync 虽默认开启却只同步 mode/enabled | `BaselineRuleSyncServiceImpl` 补齐 override 同步；部署后 `billing_rules_parity_report` 的 `override_drift` 应为 0 |
 
 **规律**：E1 类事故（8/9/10）显示引擎路径修复极易引入相邻路径回归——每次引擎改动必须跑全量 pricing 单测 + 受影响医院路径 A 严格对账。
 
