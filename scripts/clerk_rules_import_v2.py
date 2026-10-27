@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""从 医院内勤规则10.20(1).xlsx 生成 clerk-rules v2 baseline。
+"""从 医院内勤规则10.27.xlsx 生成 clerk-rules v2 baseline。
 
 亮黄填充 FFFFFF00 是未定稿，不得当成已确认规则覆盖 baseline。
 本脚本只声明权威路径。整本重写会冲掉表外手改，运行前必须先对照差异。
@@ -18,15 +18,13 @@ import openpyxl
 
 ROOT = Path(__file__).resolve().parents[1]
 # 云端以 docs/source 为准；本地旧目录保留兼容回退
-XLSX = ROOT / "docs/source/医院内勤规则10.20(1).xlsx"
-if not XLSX.is_file():
-    XLSX = ROOT / "docs/source/医院内勤规则-20260924.xlsx"
+XLSX = ROOT / "docs/source/医院内勤规则10.27.xlsx"
 CLERK_DIR = ROOT / "backend/src/main/resources/clerk-rules"
 BASELINE_DIR = CLERK_DIR / "baseline"
 ATTACH_DST = CLERK_DIR / "attachments"
 MAPPING_OUT = ROOT / "docs/clerk-rules-excel-mapping.json"
 HOSPITAL_LIST_OUT = ROOT / "docs/内勤规则医院清单.md"
-SOURCE_VERSION = "医院内勤规则10.20(1)"
+SOURCE_VERSION = "医院内勤规则10.27"
 
 CODE_NAMES = {
     "DAOWAI-RM": "哈尔滨市道外区人民医院",

@@ -128,6 +128,8 @@ class SpecialCharge20261023GapPricingTest {
                 .isCloseTo(30.0, CENT);
         assertThat(price(engine, "哈尔滨市第二医院", "器械包（ZSD）", "手术室-缝合包", 2))
                 .isCloseTo(19.0, CENT);
+        assertThat(price(engine, "哈尔滨市第二医院", "器械包（ZSD）", "产包（6件）", 6))
+                .isCloseTo(41.0, CENT);
         assertThat(price(engine, "哈尔滨市第二医院", "器械包", "手术室-骨科包", 3))
                 .isCloseTo(24.5, CENT);
         assertThat(price(engine, "哈尔滨市第二医院", "额外包（纸塑袋）", "手机-1", 1))
@@ -265,7 +267,7 @@ class SpecialCharge20261023GapPricingTest {
 
         PricingEngine.ProcessedResult four = priced(
                 engine, hospital, "器械包（ZSD）", "换药包(120布)", 4);
-        assertThat(four.expectedUnitPrice).isCloseTo(22.00, CENT);
+        assertThat(four.expectedUnitPrice).isCloseTo(21.99, CENT);
         String notes = joined(four);
         assertThat(notes).contains("5.5");
         assertThat(notes).contains("附一对账八折");
@@ -275,8 +277,8 @@ class SpecialCharge20261023GapPricingTest {
 
         PricingEngine.ProcessedResult two = priced(
                 engine, hospital, "器械包（ZSD）", "换药包(120布)", 2);
-        assertThat(two.expectedUnitPrice).isCloseTo(13.19, CENT);
-        assertThat(joined(two)).contains("附一九九九折");
+        assertThat(two.expectedUnitPrice).isCloseTo(12.37, CENT);
+        assertThat(joined(two)).contains("系统价七五折");
     }
 
     @Test

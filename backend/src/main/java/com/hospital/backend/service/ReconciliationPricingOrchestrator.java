@@ -263,7 +263,7 @@ public class ReconciliationPricingOrchestrator {
     }
 
     /**
-     * 中医附一 10.20 账单规则：敷料纸塑按标准价×0.8，敷料无纺布按标准价×0.8×0.999。
+     * 中医附一 10.27 账单规则：敷料纸塑按标准价×0.8，敷料无纺布按系统价×0.999。
      * 其他医院仍保留睿思原价、不再打折。
      */
     private static boolean fuyiDressingUsesStandardDiscount(String customerCode) {

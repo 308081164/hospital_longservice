@@ -16,7 +16,7 @@ from pathlib import Path
 import openpyxl
 
 ROOT = Path(__file__).resolve().parents[1]
-DEFAULT_XLSX = ROOT / "docs/source/特殊收费(4)-20261023.xlsx"
+DEFAULT_XLSX = ROOT / "docs/source/特殊收费20261026.xlsx"
 DEFAULT_OUT = ROOT / "测试用例/.special_pricing_v17_extract.json"
 
 HOSPITAL_TO_CODE: dict[str, str] = {

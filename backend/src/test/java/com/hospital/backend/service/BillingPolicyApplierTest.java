@@ -115,13 +115,14 @@ class BillingPolicyApplierTest {
                 rules, "器械包", "测试", "纸塑袋 10cm", "中医附一", 8.0, 1, false, false);
 
         assertThat(discount).isNotNull();
-        assertThat(discount.price()).isEqualTo(6.39);
-        assertThat(discount.note()).contains("0.8").contains("0.999");
+        assertThat(discount.price()).isEqualTo(6.00);
+        assertThat(discount.note()).contains("0.75");
+        assertThat(discount.note()).doesNotContain("0.999");
     }
 
     @Test
     void fuyiElevenYuanBelowThreePiecesStacksToEightPointSevenNine() {
-        // 器械数 1 或 2（<3）：11×0.8×0.999 → 8.79；billingPieces=单包件数
+        // 器械数 1 或 2（<3）：11×0.75 → 8.25；billingPieces=单包件数
         ObjectNode rules = fuyiPieceConditionalDiscountRules();
 
         BillingPolicyApplier.BillDetailDiscount onePiece = BillingPolicyApplier.applyBillDetailDiscounts(
@@ -130,10 +131,11 @@ class BillingPolicyApplierTest {
                 rules, "器械包", "测试", "纸塑袋", "中医附一", 11.0, 2, false, false);
 
         assertThat(onePiece).isNotNull();
-        assertThat(onePiece.price()).isEqualTo(8.79);
-        assertThat(onePiece.note()).contains("8.80").contains("0.999").contains("8.79");
+        assertThat(onePiece.price()).isEqualTo(8.25);
+        assertThat(onePiece.note()).contains("0.75").contains("8.25");
+        assertThat(onePiece.note()).doesNotContain("0.999");
         assertThat(twoPieces).isNotNull();
-        assertThat(twoPieces.price()).isEqualTo(8.79);
+        assertThat(twoPieces.price()).isEqualTo(8.25);
     }
 
     @Test
@@ -228,7 +230,9 @@ class BillingPolicyApplierTest {
                 rules, "敷料包（无纺布）", "测试", "无纺布", "中医附一", 11.0, 5, false, false);
         assertThat(plasma.price()).isEqualTo(8.79);
         assertThat(eto.price()).isEqualTo(8.79);
-        assertThat(dressingNw.price()).isEqualTo(8.79);
+        assertThat(dressingNw.price()).isEqualTo(10.99);
+        assertThat(dressingNw.note()).contains("0.999");
+        assertThat(dressingNw.note()).doesNotContain("0.8");
     }
 
     @Test
@@ -238,10 +242,11 @@ class BillingPolicyApplierTest {
                 rules, "额外包（纸塑袋）", "测试", "纸塑袋", "中医附一", 11.0, 1, false, false);
         BillingPolicyApplier.BillDetailDiscount three = BillingPolicyApplier.applyBillDetailDiscounts(
                 rules, "额外包(纸塑袋)", "测试", "纸塑袋", "中医附一", 11.0, 3, false, false);
-        assertThat(one.price()).isEqualTo(8.79);
-        assertThat(one.note()).contains("0.999");
+        assertThat(one.price()).isEqualTo(8.25);
+        assertThat(one.note()).contains("0.75");
         assertThat(three.price()).isEqualTo(8.80);
         assertThat(three.note()).doesNotContain("0.999");
+        assertThat(three.note()).doesNotContain("0.75");
     }
 
     /** 与旧版全局叠折兼容的精简样例（无类型门控）。 */
@@ -278,8 +283,7 @@ class BillingPolicyApplierTest {
         eightScope.put("temperature", "ANY");
         ArrayNode eightTypes = eightScope.putArray("acceptedTypes");
         for (String t : new String[] {
-                "额外包（纸塑袋）", "额外包（无纺布）", "器械包（ZSD）", "器械包", "单包装包",
-                "敷料包（纸塑袋）", "敷料包（无纺布）", "单包装包（等离子）", "单包装包（EO）",
+                "额外包（无纺布）", "敷料包（纸塑袋）", "单包装包（等离子）", "单包装包（EO）",
                 "额外包（低温等离子）", "额外包（ETO）"
         }) {
             eightTypes.add(t);
@@ -289,24 +293,42 @@ class BillingPolicyApplierTest {
         eightParams.put("rate", 0.8);
         eightParams.put("skipWhenFixedPrice", false);
 
-        ObjectNode ninePiece = policies.addObject();
-        ninePiece.put("policyType", "DISCOUNT");
-        ninePiece.put("name", "附一九九九折·件数<3");
-        ninePiece.put("priority", 20);
-        ObjectNode ninePieceScope = ninePiece.putObject("scope");
-        ninePieceScope.put("temperature", "ANY");
-        ArrayNode ninePieceTypes = ninePieceScope.putArray("acceptedTypes");
+        ObjectNode seventyFive = policies.addObject();
+        seventyFive.put("policyType", "DISCOUNT");
+        seventyFive.put("name", "附一＜3件系统价七五折");
+        seventyFive.put("priority", 20);
+        ObjectNode seventyFiveScope = seventyFive.putObject("scope");
+        seventyFiveScope.put("temperature", "ANY");
+        ArrayNode seventyFiveTypes = seventyFiveScope.putArray("acceptedTypes");
         for (String t : new String[] {"额外包（纸塑袋）", "器械包（ZSD）", "器械包", "单包装包"}) {
-            ninePieceTypes.add(t);
+            seventyFiveTypes.add(t);
         }
-        ObjectNode ninePieceParams = ninePiece.putObject("params");
-        ninePieceParams.put("applyStage", "bill_detail");
-        ninePieceParams.put("skipWhenFixedPrice", false);
-        ObjectNode tier = ninePieceParams.putArray("pieceTierDiscounts").addObject();
-        tier.put("minPieces", 1);
-        tier.put("maxPieces", 2);
-        tier.put("rate", 0.999);
-        tier.put("decimalPlaces", 2);
+        ObjectNode seventyFiveParams = seventyFive.putObject("params");
+        seventyFiveParams.put("applyStage", "bill_detail");
+        seventyFiveParams.put("skipWhenFixedPrice", false);
+        ObjectNode lowTier = seventyFiveParams.putArray("pieceTierDiscounts").addObject();
+        lowTier.put("minPieces", 1);
+        lowTier.put("maxPieces", 2);
+        lowTier.put("rate", 0.75);
+        lowTier.put("decimalPlaces", 2);
+
+        ObjectNode eightHigh = policies.addObject();
+        eightHigh.put("policyType", "DISCOUNT");
+        eightHigh.put("name", "附一对账八折·件数≥3");
+        eightHigh.put("priority", 10);
+        ObjectNode eightHighScope = eightHigh.putObject("scope");
+        eightHighScope.put("temperature", "ANY");
+        ArrayNode eightHighTypes = eightHighScope.putArray("acceptedTypes");
+        for (String t : new String[] {"额外包（纸塑袋）", "器械包（ZSD）", "器械包", "单包装包"}) {
+            eightHighTypes.add(t);
+        }
+        ObjectNode eightHighParams = eightHigh.putObject("params");
+        eightHighParams.put("applyStage", "bill_detail");
+        eightHighParams.put("skipWhenFixedPrice", false);
+        ObjectNode highTier = eightHighParams.putArray("pieceTierDiscounts").addObject();
+        highTier.put("minPieces", 3);
+        highTier.put("rate", 0.8);
+        highTier.put("decimalPlaces", 2);
 
         ObjectNode nineAny = policies.addObject();
         nineAny.put("policyType", "DISCOUNT");
@@ -316,7 +338,7 @@ class BillingPolicyApplierTest {
         nineAnyScope.put("temperature", "ANY");
         ArrayNode nineAnyTypes = nineAnyScope.putArray("acceptedTypes");
         for (String t : new String[] {
-                "单包装包（等离子）", "单包装包（EO）", "额外包（低温等离子）", "额外包（ETO）", "敷料包（无纺布）"
+                "单包装包（等离子）", "单包装包（EO）", "额外包（低温等离子）", "额外包（ETO）"
         }) {
             nineAnyTypes.add(t);
         }
@@ -324,6 +346,18 @@ class BillingPolicyApplierTest {
         nineAnyParams.put("applyStage", "bill_detail");
         nineAnyParams.put("rate", 0.999);
         nineAnyParams.put("skipWhenFixedPrice", false);
+
+        ObjectNode dressing = policies.addObject();
+        dressing.put("policyType", "DISCOUNT");
+        dressing.put("name", "附一敷料无纺布系统价九九九折");
+        dressing.put("priority", 20);
+        ObjectNode dressingScope = dressing.putObject("scope");
+        dressingScope.put("temperature", "ANY");
+        dressingScope.putArray("acceptedTypes").add("敷料包（无纺布）");
+        ObjectNode dressingParams = dressing.putObject("params");
+        dressingParams.put("applyStage", "bill_detail");
+        dressingParams.put("rate", 0.999);
+        dressingParams.put("skipWhenFixedPrice", false);
         return rules;
     }
 
