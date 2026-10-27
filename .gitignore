@@ -51,3 +51,4 @@ docs/.tmp_ocr/
 docs/.tmp_chat_slices/
 测试用例/.tmp_*/
 测试用例/.clerk_exports/
+测试用例/billing_rules_parity_report.json

@@ -148,6 +148,27 @@ if grep -q '"ok": false' /tmp/parity_smoke.json 2>/dev/null; then
   exit 1
 fi
 
+echo ">> rules compare (--all, 生成 parity 报告产物)"
+# 2026-10-28：产物此前是 2026-09-23 提交进仓库的陈旧文件，导致每次部署都上传同一份 ok:false，
+# 与生产实况无关（override 早已落库）。这里每次现场生成；失败只告警，不阻塞部署。
+if ./bin/hospital-cli rules compare --all --profile prod --json \
+    --json-output "测试用例/billing_rules_parity_report.json" \
+    --api "$API_BASE" > /tmp/parity_compare.out 2>&1; then
+  python3 - <<'PY'
+import json
+from pathlib import Path
+p = Path("测试用例/billing_rules_parity_report.json")
+try:
+    d = json.loads(p.read_text(encoding="utf-8"))
+    print("parity compare summary:", json.dumps(d.get("summary") or {}, ensure_ascii=False))
+except Exception as exc:
+    print(f"WARN: parity 报告解析失败: {exc}")
+PY
+else
+  echo "WARN: rules compare 生成失败（不阻塞部署）" >&2
+  tail -20 /tmp/parity_compare.out >&2 || true
+fi
+
 echo ">> rules verify (--all, baseline vs prod API)"
 ./bin/hospital-cli rules verify --all --profile prod --fail-on-drift \
   --api "$API_BASE" || {
