@@ -379,15 +379,16 @@ def run_rules_compare(
             customer.get("standard_pricing_override")
         )
         # 缺失时回退到明细接口；仍拿不到则视为「不可用」，不把「查不到」当成「漂移」。
-        override_unavailable = False
         if prod_override is None and customer_id:
             detail = client.customer_detail(customer_id)
             if detail:
                 prod_override = _norm_override(detail.get("standardPricingOverride")) or _norm_override(
                     detail.get("standard_pricing_override")
                 )
-            if prod_override is None and entry.get("standardPricingOverride") is not None:
-                override_unavailable = True
+        # 生产侧两个接口都拿不到 override 时，只记为「不可用」，不判漂移。
+        # 依据：API 对 smoke 账号未暴露该字段（2026-10-27 实测），DB 实况由 prod-diagnose 复核。
+        # 真实漂移仍会在「生产能返回该字段且与 manifest 不一致」时被捕获。
+        override_unavailable = prod_override is None
         prod_billing_enabled = customer.get("billingEnabled")
         if prod_billing_enabled is None:
             prod_billing_enabled = customer.get("billing_enabled")
