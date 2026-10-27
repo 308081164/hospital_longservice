@@ -19,7 +19,8 @@ import java.util.regex.Pattern;
 public class ClerkBillPriceRuleApplier {
 
     private static final Pattern RANGE_PATTERN = Pattern.compile(
-            "^(?:(\\d+)\\s*≤\\s*)?N\\s*(?:[>＞]\\s*(\\d+)|<\\s*(\\d+))?$", Pattern.CASE_INSENSITIVE);
+            "^(?:(\\d+)\\s*(?:<=|≤)\\s*)?N\\s*(?:(?:>=|≥|[>＞])\\s*(\\d+)|<\\s*(\\d+))?$",
+            Pattern.CASE_INSENSITIVE);
     private static final Pattern EXACT_COUNT_PATTERN = Pattern.compile("^N=(\\d+)$");
 
     public record ApplyResult(List<BillRowItem> rows, List<String> validationWarnings) {}
