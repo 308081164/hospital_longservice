@@ -23,9 +23,9 @@ jobs:
             DBNAME="${MYSQL_DATABASE:-hospital}"
             set -a; source .env; set +a
             echo "== A. ZYY-D1 override =="
-            docker exec hospital-mysql mysql -uroot -p"$MYSQL_ROOT_PASSWORD" -N -e "SELECT code, IF(standard_pricing_override IS NULL,'NULL','SET') FROM $DBNAME.customer WHERE code IN ('ZYY-D1','HRB-2ND');" 2>/dev/null || true
+            docker exec hospital-mysql mysql --default-character-set=utf8mb4 -uroot -p"$MYSQL_ROOT_PASSWORD" -N -e "SELECT code, IF(standard_pricing_override IS NULL,'NULL','SET') FROM $DBNAME.customer WHERE code IN ('ZYY-D1','HRB-2ND');" 2>/dev/null || true
             echo "== B. not-null count in whole customer table =="
-            docker exec hospital-mysql mysql -uroot -p"$MYSQL_ROOT_PASSWORD" -N -e "SELECT COUNT(*) FROM $DBNAME.customer WHERE standard_pricing_override IS NOT NULL;" 2>/dev/null || true
+            docker exec hospital-mysql mysql --default-character-set=utf8mb4 -uroot -p"$MYSQL_ROOT_PASSWORD" -N -e "SELECT COUNT(*) FROM $DBNAME.customer WHERE standard_pricing_override IS NOT NULL;" 2>/dev/null || true
             echo "== C. billing env of backend container =="
             docker inspect hospital-backend --format '{{range .Config.Env}}{{println .}}{{end}}' 2>/dev/null | grep -i billing || echo "(no billing env)"
             echo "== D. baseline sync log lines =="
@@ -33,7 +33,10 @@ jobs:
             echo "== E. deploy .env billing flags =="
             grep -iE "BILLING_" .env || echo "(no BILLING_ keys in .env)"
             echo "== F. unit_price column + HRB-2ND 内热针 rows =="
-            docker exec hospital-mysql mysql -uroot -p"$MYSQL_ROOT_PASSWORD" -N -e "SELECT COUNT(*) FROM information_schema.COLUMNS WHERE TABLE_SCHEMA='$DBNAME' AND TABLE_NAME='customer_product_rule' AND COLUMN_NAME='unit_price';" 2>/dev/null || true
-            docker exec hospital-mysql mysql -uroot -p"$MYSQL_ROOT_PASSWORD" -N -e "SELECT r.name, r.price, r.unit_price, r.is_active, r.min_instrument_count, r.max_instrument_count FROM $DBNAME.customer_product_rule r JOIN $DBNAME.customer c ON c.id=r.customer_id WHERE c.code='HRB-2ND' AND r.name LIKE '%内热针%';" 2>/dev/null || true
+            docker exec hospital-mysql mysql --default-character-set=utf8mb4 -uroot -p"$MYSQL_ROOT_PASSWORD" -N -e "SELECT COUNT(*) FROM information_schema.COLUMNS WHERE TABLE_SCHEMA='$DBNAME' AND TABLE_NAME='customer_product_rule' AND COLUMN_NAME='unit_price';" 2>/dev/null || true
+            docker exec hospital-mysql mysql --default-character-set=utf8mb4 -uroot -p"$MYSQL_ROOT_PASSWORD" -N -e "SELECT r.name, r.price, r.unit_price, r.is_active, r.min_instrument_count, r.max_instrument_count FROM $DBNAME.customer_product_rule r JOIN $DBNAME.customer c ON c.id=r.customer_id WHERE c.code='HRB-2ND' AND r.name LIKE '%内热针%';" 2>/dev/null || true
+            echo "== F2. ASCII-only: HRB-2ND fold rules with unit_price =="
+            docker exec hospital-mysql mysql --default-character-set=utf8mb4 -uroot -p"$MYSQL_ROOT_PASSWORD" -N -e "SELECT COUNT(*) FROM $DBNAME.customer_product_rule r JOIN $DBNAME.customer c ON c.id=r.customer_id WHERE c.code='HRB-2ND' AND r.rule_type='FOLD' AND r.unit_price IS NOT NULL;" 2>/dev/null || true
+            docker exec hospital-mysql mysql --default-character-set=utf8mb4 -uroot -p"$MYSQL_ROOT_PASSWORD" -N -e "SELECT r.priority, r.fold_ratio, r.unit_price, r.min_instrument_count, r.max_instrument_count, r.skip_packaging FROM $DBNAME.customer_product_rule r JOIN $DBNAME.customer c ON c.id=r.customer_id WHERE c.code='HRB-2ND' AND r.unit_price IS NOT NULL ORDER BY r.priority;" 2>/dev/null || true
             echo "== G. baseline hash marker vs classpath =="
-            docker exec hospital-mysql mysql -uroot -p"$MYSQL_ROOT_PASSWORD" -N -e "SELECT setting_key, LEFT(setting_value,20) FROM $DBNAME.sys_setting WHERE setting_key LIKE '%baseline%' OR setting_key LIKE '%manifest%';" 2>/dev/null || true
+            docker exec hospital-mysql mysql --default-character-set=utf8mb4 -uroot -p"$MYSQL_ROOT_PASSWORD" -N -e "SELECT setting_key, LEFT(setting_value,20) FROM $DBNAME.sys_setting WHERE setting_key LIKE '%baseline%' OR setting_key LIKE '%manifest%';" 2>/dev/null || true
