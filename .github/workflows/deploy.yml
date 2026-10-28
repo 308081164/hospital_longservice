@@ -277,6 +277,10 @@ jobs:
             DEPLOY_PATH="$DPATH" bash deploy/docker-login-ghcr.sh
             CI_IMAGE_BACKEND="${IMAGE_BACKEND}"
             CI_IMAGE_FRONTEND="${IMAGE_FRONTEND}"
+            if [ -z "$CI_IMAGE_BACKEND" ] || [ -z "$CI_IMAGE_FRONTEND" ]; then
+              echo "错误: CI 未传入不可变镜像标签，拒绝部署以免回退到 :latest" >&2
+              exit 1
+            fi
             set -a && source .env && set +a
             export IMAGE_BACKEND="${CI_IMAGE_BACKEND}"
             export IMAGE_FRONTEND="${CI_IMAGE_FRONTEND}"
@@ -432,6 +436,10 @@ jobs:
             if [ ! -f deploy/nginx-frontend-shared-net.conf ]; then
               echo "错误: deploy/nginx-frontend-shared-net.conf 不存在（SCP 路径错误或未同步）"
               ls -la deploy/ 2>/dev/null || true
+              exit 1
+            fi
+            if [ -z "$IMAGE_FRONTEND" ]; then
+              echo "错误: CI 未传入 frontend 镜像标签，拒绝重建以免回退到 :latest" >&2
               exit 1
             fi
             # 此刻才替换 frontend（backend 已通过版本 parity 硬闸门）

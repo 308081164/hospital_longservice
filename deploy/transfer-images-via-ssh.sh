@@ -28,4 +28,9 @@ echo "==> transfer images to ${SSH_USER}@${SSH_HOST} via docker save/load"
 docker save "$IMAGE_BACKEND" "$IMAGE_FRONTEND" | \
   "${SSH_BASE[@]}" "${SSH_USER}@${SSH_HOST}" docker load
 
+echo "==> verify images exist on server"
+"${SSH_BASE[@]}" "${SSH_USER}@${SSH_HOST}" \
+  "docker image inspect '$IMAGE_BACKEND' >/dev/null && docker image inspect '$IMAGE_FRONTEND' >/dev/null" \
+  || { echo "错误: 服务器缺少本次镜像（$IMAGE_BACKEND / $IMAGE_FRONTEND），中止部署" >&2; exit 1; }
+
 echo "==> image transfer OK"
