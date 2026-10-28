@@ -66,6 +66,11 @@ jobs:
       - name: G7 Excel authority coverage (44 hospitals)
         run: python3 scripts/excel_baseline_parity_audit.py --excel docs/source/特殊收费20261026.xlsx
 
+      # G8：内勤 Excel 映射表 ↔ clerk-rules index 覆盖率（此脚本此前实际退出码为 1，
+      # 因映射表少登记 4 家却未进 CI，长期无人发现；现已补齐并纳入闸门）。
+      - name: G8 clerk mapping alignment
+        run: python3 scripts/check_clerk_rules_alignment.py
+
       - name: Set up JDK 17
         uses: actions/setup-java@v4
         with:

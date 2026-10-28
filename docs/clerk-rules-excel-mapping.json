@@ -1,7 +1,7 @@
 {
-  "generated_at": "2026-10-27T03:08:20Z",
+  "generated_at": "2026-10-28",
   "source": "docs/source/医院内勤规则10.27.xlsx",
-  "hospital_count": 39,
+  "hospital_count": 43,
   "hospitals": [
     {
       "code": "AOLAN-YY",
@@ -245,6 +245,16 @@
       ]
     },
     {
+      "code": "LZL-KQ",
+      "name": "哈尔滨市南岗区黎增亮口腔科诊所",
+      "excelRowName": "黎增亮口腔",
+      "rules": [
+        {
+          "ruleType": "PACK_NAME_PRICE"
+        }
+      ]
+    },
+    {
       "code": "NG-FUCHAN",
       "name": "哈尔滨市南岗区妇产医院",
       "excelRowName": "哈尔滨市南岗妇产医院",
@@ -296,6 +306,16 @@
         },
         {
           "ruleType": "EXPORT_LAYOUT"
+        }
+      ]
+    },
+    {
+      "code": "SHANTUN-RM",
+      "name": "黑龙江省山河屯林区人民医院",
+      "excelRowName": "山河屯林区人民医院",
+      "rules": [
+        {
+          "ruleType": "PACK_NAME_PRICE"
         }
       ]
     },
@@ -401,6 +421,16 @@
       ]
     },
     {
+      "code": "XZX-YY",
+      "name": "新中新医院",
+      "excelRowName": "新中新医院",
+      "rules": [
+        {
+          "ruleType": "PACK_NAME_PRICE"
+        }
+      ]
+    },
+    {
       "code": "YUEMEI-FH",
       "name": "悦美芳华医疗门诊医院",
       "excelRowName": "悦美芳华医疗门诊医院",
@@ -459,6 +489,16 @@
         },
         {
           "ruleType": "MONTHLY_SUPPLEMENT_REPORT"
+        }
+      ]
+    },
+    {
+      "code": "ZYY-D1",
+      "name": "黑龙江中医药大学附属第一医院",
+      "excelRowName": "黑龙江中医药大学附属第一医院",
+      "rules": [
+        {
+          "ruleType": "PACK_NAME_PRICE"
         }
       ]
     },
