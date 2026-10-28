@@ -76,6 +76,11 @@ jobs:
       - name: G8 clerk mapping alignment
         run: python3 scripts/check_clerk_rules_alignment.py
 
+      # G9：通用特殊收费（全医院适用）覆盖闸门。此前两张通用表从未被审计，
+      # 导致「骨科租赁器械包」「包名称带双」未实现却无人发现。
+      - name: G9 generic rule coverage
+        run: python3 scripts/generic_rule_coverage_audit.py
+
       - name: Set up JDK 17
         uses: actions/setup-java@v4
         with:

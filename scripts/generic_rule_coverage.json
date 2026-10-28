@@ -1,0 +1,20 @@
+{
+  "_comment": "通用特殊收费（全医院适用）逐条覆盖登记。G9 闸门要求 Excel 中每个通用条目都必须在此登记，新增条目未登记即失败。",
+  "updated_at": "2026-10-28",
+  "source_excel": "docs/source/特殊收费20261026.xlsx",
+  "items": {
+    "包名称带“克氏针”": {"status": "implemented", "evidence": "DefaultPricingTemplate 小件关键词（5合1折算）"},
+    "包名称带“银质针”": {"status": "implemented", "evidence": "DefaultPricingTemplate 小件关键词"},
+    "包名称带“内热针”": {"status": "implemented", "evidence": "DefaultPricingTemplate 小件关键词 + HRB-2ND 专项两档规则"},
+    "包名称带“车针”": {"status": "implemented", "evidence": "DefaultPricingTemplate 小件关键词"},
+    "包名称带“拔髓针”": {"status": "implemented", "evidence": "DefaultPricingTemplate 小件关键词"},
+    "包名称带“扩大针”": {"status": "implemented", "evidence": "DefaultPricingTemplate 小件关键词"},
+    "包名称带“根扩针”": {"status": "implemented", "evidence": "DefaultPricingTemplate 小件关键词"},
+    "包名称带“缝合针”": {"status": "implemented", "evidence": "DefaultPricingTemplate 缝合针按1件5.5"},
+    "包名称带“卷棉子”": {"status": "implemented", "evidence": "DefaultPricingTemplate 小件关键词"},
+    "包名称带“双”": {"status": "gap", "evidence": "仅市二/骨伤有院级规则；其他医院无通用规则 —— 等待客户反馈 #4 补充项", "pending_ref": "docs/pending-customer-feedback-20261028.md"},
+    "包名称带“软镜”": {"status": "implemented", "evidence": "DefaultPricingTemplate 软镜固定300元"},
+    "通用（特殊的我单独标注）": {"status": "implemented", "evidence": "敷料包标准价（DRESSING_PAPER / DRESSING_NONWOVEN）"},
+    "通用外来器械收费": {"status": "gap", "evidence": "骨科租赁器械包（带/不带植入物）未实现 —— 等待客户反馈 #4", "pending_ref": "docs/pending-customer-feedback-20261028.md"}
+  }
+}

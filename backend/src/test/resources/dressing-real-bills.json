@@ -1,0 +1,402 @@
+[
+  {
+    "hospitalName": "哈尔滨红十字妇产医院",
+    "type": "敷料包(纸塑袋)",
+    "packName": "棉球/Z1526",
+    "packageMaterial": "高温纸塑袋150*260",
+    "instrumentCount": 0,
+    "packCount": 6,
+    "unitPrice": 2.5,
+    "totalPrice": 15.0
+  },
+  {
+    "hospitalName": "哈尔滨红十字妇产医院",
+    "type": "敷料包(纸塑袋)",
+    "packName": "棉球/Z1526",
+    "packageMaterial": "高温纸塑袋150*260",
+    "instrumentCount": 0,
+    "packCount": 1,
+    "unitPrice": 2.5,
+    "totalPrice": 2.5
+  },
+  {
+    "hospitalName": "哈尔滨红十字妇产医院",
+    "type": "敷料包",
+    "packName": "擦手巾（棉布）",
+    "packageMaterial": "",
+    "instrumentCount": 0,
+    "packCount": 2,
+    "unitPrice": 15.0,
+    "totalPrice": 30.0
+  },
+  {
+    "hospitalName": "哈尔滨红十字妇产医院",
+    "type": "敷料包",
+    "packName": "擦手巾（棉布）",
+    "packageMaterial": "",
+    "instrumentCount": 0,
+    "packCount": 1,
+    "unitPrice": 15.0,
+    "totalPrice": 15.0
+  },
+  {
+    "hospitalName": "哈尔滨红十字妇产医院",
+    "type": "敷料包",
+    "packName": "擦手巾（棉布）",
+    "packageMaterial": "",
+    "instrumentCount": 0,
+    "packCount": 3,
+    "unitPrice": 15.0,
+    "totalPrice": 45.0
+  },
+  {
+    "hospitalName": "哈尔滨红十字妇产医院",
+    "type": "敷料包(纸塑袋)",
+    "packName": "棉球/Z1526",
+    "packageMaterial": "高温纸塑袋150*260",
+    "instrumentCount": 0,
+    "packCount": 2,
+    "unitPrice": 2.5,
+    "totalPrice": 5.0
+  },
+  {
+    "hospitalName": "哈尔滨红十字妇产医院",
+    "type": "敷料包(纸塑袋)",
+    "packName": "纱布/Z1535",
+    "packageMaterial": "高温纸塑袋150*350",
+    "instrumentCount": 0,
+    "packCount": 1,
+    "unitPrice": 2.5,
+    "totalPrice": 2.5
+  },
+  {
+    "hospitalName": "哈尔滨红十字妇产医院",
+    "type": "敷料包(纸塑袋)",
+    "packName": "纱布/Z1535",
+    "packageMaterial": "高温纸塑袋150*350",
+    "instrumentCount": 0,
+    "packCount": 2,
+    "unitPrice": 2.5,
+    "totalPrice": 5.0
+  },
+  {
+    "hospitalName": "哈尔滨红十字妇产医院",
+    "type": "敷料包(纸塑袋)",
+    "packName": "棉球/Z2530",
+    "packageMaterial": "高温纸塑袋250*300",
+    "instrumentCount": 0,
+    "packCount": 4,
+    "unitPrice": 4.0,
+    "totalPrice": 16.0
+  },
+  {
+    "hospitalName": "哈尔滨红十字妇产医院",
+    "type": "敷料包(纸塑袋)",
+    "packName": "棉球/Z2032",
+    "packageMaterial": "高温纸塑袋200*320",
+    "instrumentCount": 0,
+    "packCount": 4,
+    "unitPrice": 4.0,
+    "totalPrice": 16.0
+  },
+  {
+    "hospitalName": "哈尔滨红十字妇产医院",
+    "type": "敷料包(纸塑袋)",
+    "packName": "棉球/Z2530",
+    "packageMaterial": "高温纸塑袋250*300",
+    "instrumentCount": 0,
+    "packCount": 2,
+    "unitPrice": 4.0,
+    "totalPrice": 8.0
+  },
+  {
+    "hospitalName": "哈尔滨红十字妇产医院",
+    "type": "敷料包(纸塑袋)",
+    "packName": "棉球/Z2032",
+    "packageMaterial": "高温纸塑袋200*320",
+    "instrumentCount": 0,
+    "packCount": 2,
+    "unitPrice": 4.0,
+    "totalPrice": 8.0
+  },
+  {
+    "hospitalName": "哈尔滨红十字妇产医院",
+    "type": "敷料包(纸塑袋)",
+    "packName": "病号服/Z3032",
+    "packageMaterial": "高温纸塑袋300*320",
+    "instrumentCount": 0,
+    "packCount": 2,
+    "unitPrice": 4.0,
+    "totalPrice": 8.0
+  },
+  {
+    "hospitalName": "哈尔滨红十字妇产医院",
+    "type": "敷料包(无纺布包)",
+    "packName": "擦手巾/W6050",
+    "packageMaterial": "无纺布-60×60-50g",
+    "instrumentCount": 0,
+    "packCount": 1,
+    "unitPrice": 25.0,
+    "totalPrice": 25.0
+  },
+  {
+    "hospitalName": "哈尔滨红十字妇产医院",
+    "type": "敷料包(无纺布包)",
+    "packName": "宫纱/W6050",
+    "packageMaterial": "无纺布-60×60-50g",
+    "instrumentCount": 0,
+    "packCount": 2,
+    "unitPrice": 25.0,
+    "totalPrice": 50.0
+  },
+  {
+    "hospitalName": "哈尔滨红十字妇产医院",
+    "type": "敷料包(纸塑袋)",
+    "packName": "棉球/Z1526",
+    "packageMaterial": "高温纸塑袋150*260",
+    "instrumentCount": 0,
+    "packCount": 15,
+    "unitPrice": 2.5,
+    "totalPrice": 37.5
+  },
+  {
+    "hospitalName": "哈尔滨红十字妇产医院",
+    "type": "敷料包(纸塑袋)",
+    "packName": "棉球/Z1535",
+    "packageMaterial": "高温纸塑袋150*350",
+    "instrumentCount": 0,
+    "packCount": 15,
+    "unitPrice": 2.5,
+    "totalPrice": 37.5
+  },
+  {
+    "hospitalName": "哈尔滨红十字妇产医院",
+    "type": "敷料包(纸塑袋)",
+    "packName": "棉球/Z1526",
+    "packageMaterial": "高温纸塑袋150*260",
+    "instrumentCount": 0,
+    "packCount": 30,
+    "unitPrice": 2.5,
+    "totalPrice": 75.0
+  },
+  {
+    "hospitalName": "哈尔滨红十字妇产医院",
+    "type": "敷料包(纸塑袋)",
+    "packName": "纱布/Z1535",
+    "packageMaterial": "高温纸塑袋150*350",
+    "instrumentCount": 0,
+    "packCount": 8,
+    "unitPrice": 2.5,
+    "totalPrice": 20.0
+  },
+  {
+    "hospitalName": "哈尔滨红十字妇产医院",
+    "type": "敷料包(纸塑袋)",
+    "packName": "大外纱布/Z3032",
+    "packageMaterial": "高温纸塑袋300*320",
+    "instrumentCount": 0,
+    "packCount": 32,
+    "unitPrice": 4.0,
+    "totalPrice": 128.0
+  },
+  {
+    "hospitalName": "哈尔滨红十字妇产医院",
+    "type": "敷料包(纸塑袋)",
+    "packName": "棉球/Z1526",
+    "packageMaterial": "高温纸塑袋150*260",
+    "instrumentCount": 0,
+    "packCount": 16,
+    "unitPrice": 2.5,
+    "totalPrice": 40.0
+  },
+  {
+    "hospitalName": "哈尔滨红十字妇产医院",
+    "type": "敷料包(纸塑袋)",
+    "packName": "棉球/Z2032",
+    "packageMaterial": "高温纸塑袋200*320",
+    "instrumentCount": 0,
+    "packCount": 15,
+    "unitPrice": 4.0,
+    "totalPrice": 60.0
+  },
+  {
+    "hospitalName": "哈尔滨红十字妇产医院",
+    "type": "敷料包(纸塑袋)",
+    "packName": "棉球/Z2032",
+    "packageMaterial": "高温纸塑袋200*320",
+    "instrumentCount": 0,
+    "packCount": 25,
+    "unitPrice": 4.0,
+    "totalPrice": 100.0
+  },
+  {
+    "hospitalName": "哈尔滨红十字妇产医院",
+    "type": "敷料包(纸塑袋)",
+    "packName": "棉球/Z1526",
+    "packageMaterial": "高温纸塑袋150*260",
+    "instrumentCount": 0,
+    "packCount": 9,
+    "unitPrice": 2.5,
+    "totalPrice": 22.5
+  },
+  {
+    "hospitalName": "哈尔滨红十字妇产医院",
+    "type": "敷料包(纸塑袋)",
+    "packName": "棉球/Z1526",
+    "packageMaterial": "高温纸塑袋150*260",
+    "instrumentCount": 0,
+    "packCount": 25,
+    "unitPrice": 2.5,
+    "totalPrice": 62.5
+  },
+  {
+    "hospitalName": "哈尔滨红十字妇产医院",
+    "type": "敷料包(纸塑袋)",
+    "packName": "棉球/Z1526",
+    "packageMaterial": "高温纸塑袋150*260",
+    "instrumentCount": 0,
+    "packCount": 24,
+    "unitPrice": 2.5,
+    "totalPrice": 60.0
+  },
+  {
+    "hospitalName": "哈尔滨红十字妇产医院",
+    "type": "敷料包(纸塑袋)",
+    "packName": "纱布/Z1526",
+    "packageMaterial": "高温纸塑袋150*260*",
+    "instrumentCount": 0,
+    "packCount": 8,
+    "unitPrice": 2.5,
+    "totalPrice": 20.0
+  },
+  {
+    "hospitalName": "哈尔滨红十字妇产医院",
+    "type": "敷料包(纸塑袋)",
+    "packName": "棉球/Z2032",
+    "packageMaterial": "高温纸塑袋200*320",
+    "instrumentCount": 0,
+    "packCount": 30,
+    "unitPrice": 4.0,
+    "totalPrice": 120.0
+  },
+  {
+    "hospitalName": "哈尔滨红十字妇产医院",
+    "type": "敷料包(纸塑袋)",
+    "packName": "棉球/Z2032",
+    "packageMaterial": "高温纸塑袋200*320",
+    "instrumentCount": 0,
+    "packCount": 10,
+    "unitPrice": 4.0,
+    "totalPrice": 40.0
+  },
+  {
+    "hospitalName": "哈尔滨红十字妇产医院",
+    "type": "敷料包",
+    "packName": "孔巾",
+    "packageMaterial": "",
+    "instrumentCount": 0,
+    "packCount": 6,
+    "unitPrice": 15.0,
+    "totalPrice": 90.0
+  },
+  {
+    "hospitalName": "哈尔滨红十字妇产医院",
+    "type": "敷料包",
+    "packName": "孔巾",
+    "packageMaterial": "",
+    "instrumentCount": 0,
+    "packCount": 4,
+    "unitPrice": 15.0,
+    "totalPrice": 60.0
+  },
+  {
+    "hospitalName": "哈尔滨红十字妇产医院",
+    "type": "敷料包",
+    "packName": "孔巾",
+    "packageMaterial": "",
+    "instrumentCount": 0,
+    "packCount": 2,
+    "unitPrice": 15.0,
+    "totalPrice": 30.0
+  },
+  {
+    "hospitalName": "哈尔滨红十字妇产医院",
+    "type": "敷料包",
+    "packName": "孔巾",
+    "packageMaterial": "",
+    "instrumentCount": 0,
+    "packCount": 1,
+    "unitPrice": 15.0,
+    "totalPrice": 15.0
+  },
+  {
+    "hospitalName": "哈尔滨红十字妇产医院",
+    "type": "敷料包",
+    "packName": "孔巾",
+    "packageMaterial": "",
+    "instrumentCount": 0,
+    "packCount": 3,
+    "unitPrice": 15.0,
+    "totalPrice": 45.0
+  },
+  {
+    "hospitalName": "哈尔滨红十字妇产医院",
+    "type": "敷料包(纸塑袋)",
+    "packName": "棉球（大）/Z3032",
+    "packageMaterial": "高温纸塑袋300*320",
+    "instrumentCount": 0,
+    "packCount": 20,
+    "unitPrice": 4.0,
+    "totalPrice": 80.0
+  },
+  {
+    "hospitalName": "哈尔滨红十字妇产医院",
+    "type": "敷料包(纸塑袋)",
+    "packName": "棉球/Z1526",
+    "packageMaterial": "高温纸塑袋150*260",
+    "instrumentCount": 0,
+    "packCount": 20,
+    "unitPrice": 2.5,
+    "totalPrice": 50.0
+  },
+  {
+    "hospitalName": "哈尔滨红十字妇产医院",
+    "type": "敷料包",
+    "packName": "孔巾",
+    "packageMaterial": "",
+    "instrumentCount": 0,
+    "packCount": 5,
+    "unitPrice": 15.0,
+    "totalPrice": 75.0
+  },
+  {
+    "hospitalName": "哈尔滨红十字妇产医院",
+    "type": "敷料包(纸塑袋)",
+    "packName": "棉球（大）/Z3032",
+    "packageMaterial": "高温纸塑袋300*320",
+    "instrumentCount": 0,
+    "packCount": 30,
+    "unitPrice": 4.0,
+    "totalPrice": 120.0
+  },
+  {
+    "hospitalName": "哈尔滨红十字妇产医院",
+    "type": "敷料包(纸塑袋)",
+    "packName": "棉球（小）/z2032",
+    "packageMaterial": "高温纸塑袋200*320",
+    "instrumentCount": 0,
+    "packCount": 20,
+    "unitPrice": 4.0,
+    "totalPrice": 80.0
+  },
+  {
+    "hospitalName": "哈尔滨红十字妇产医院",
+    "type": "敷料包(纸塑袋)",
+    "packName": "棉球（小）/z2032",
+    "packageMaterial": "高温纸塑袋200*320",
+    "instrumentCount": 0,
+    "packCount": 30,
+    "unitPrice": 4.0,
+    "totalPrice": 120.0
+  }
+]
