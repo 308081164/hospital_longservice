@@ -1,0 +1,49 @@
+name: Prod Recover (manual)
+
+on:
+  workflow_dispatch:
+    inputs:
+      mode:
+        description: "diagnose | rollback"
+        required: true
+        default: "diagnose"
+      stamp:
+        description: "archive stamp (empty = latest)"
+        required: false
+        default: ""
+
+jobs:
+  recover:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Diagnose / rollback on server
+        uses: appleboy/ssh-action@v1.2.5
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          port: ${{ secrets.SSH_PORT || 22 }}
+          command_timeout: 15m
+          script: |
+            DPATH="${{ secrets.DEPLOY_PATH || '/mnt/newdisk/app/Hospital' }}"
+            cd "$DPATH"
+            echo "== docker ps =="
+            docker ps -a --format '{{.Names}} | {{.Status}} | {{.Image}}' | head -10
+            echo "== disk =="
+            df -h / /mnt /var 2>/dev/null | tail -4
+            echo "== archives =="
+            ls -1 releases/archive 2>/dev/null | tail -5
+            cat releases/archive/latest-stamp.txt 2>/dev/null || true
+            echo "== version =="
+            curl -sS -m 5 http://127.0.0.1:8853/api/v1/base/version || true
+            echo
+            if [ "${{ inputs.mode }}" = "rollback" ]; then
+              STAMP="${{ inputs.stamp }}"
+              if [ -z "$STAMP" ]; then STAMP="$(cat releases/archive/latest-stamp.txt)"; fi
+              echo "== rolling back to $STAMP =="
+              CONFIRM_ROLLBACK=YES bash deploy/rollback-prod-to-archive.sh "$STAMP"
+              sleep 10
+              echo "== version after rollback =="
+              curl -sS -m 5 http://127.0.0.1:8853/api/v1/base/version || true
+            fi
