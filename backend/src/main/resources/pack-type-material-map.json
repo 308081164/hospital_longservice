@@ -1,6 +1,6 @@
 {
   "source": "docs/包类型与包材对照表.xlsx",
-  "version": "2026-09-08",
+  "version": "2026-10-28",
   "packTypes": [
     {
       "canonical": "器械包",
@@ -196,16 +196,26 @@
       "canonical": "敷料包（纸塑袋）",
       "aliases": [
         "敷料包(纸塑袋)",
-        "敷料包（纸塑袋）",
+        "敷料包（纸塑袋）"
+      ],
+      "allowedMaterials": [
+        "HIGH_TEMP_PAPER"
+      ],
+      "sterilization": "HIGH_TEMP"
+    },
+    {
+      "canonical": "敷料包（低温等离子）",
+      "aliases": [
         "敷料包(低温等离子)",
         "敷料包（低温等离子）",
         "敷料包(低温EO)",
         "敷料包（低温EO）"
       ],
       "allowedMaterials": [
-        "HIGH_TEMP_PAPER"
+        "LOW_TEMP_PAPER",
+        "NON_WOVEN"
       ],
-      "sterilization": "HIGH_TEMP"
+      "sterilization": "LOW_TEMP_EO"
     },
     {
       "canonical": "骨科租赁器械包-带植入物",
