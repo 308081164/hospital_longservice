@@ -202,6 +202,49 @@
       "acceptedTypes": [
         "额外包（无纺布）"
       ]
+    },
+    {
+      "ruleType": "FOLD",
+      "name": "骨伤科钢针先扣扳手按6折算",
+      "priority": 12,
+      "keywords": [
+        "钢针-@contains"
+      ],
+      "excludeKeywords": [
+        "外架钢针@contains"
+      ],
+      "threshold": 6,
+      "foldRatio": 6,
+      "foldOffset": 1,
+      "unitPrice": 5.5,
+      "skipPackaging": false,
+      "skipDiscount": true,
+      "isActive": true,
+      "matchMode": "first",
+      "keywordMatchMode": "contains",
+      "acceptedTypes": [
+        "额外包（纸塑袋）"
+      ]
+    },
+    {
+      "ruleType": "EXTRA_FEE",
+      "name": "骨伤科钢针加收0.3",
+      "priority": 13,
+      "keywords": [
+        "钢针-@contains"
+      ],
+      "excludeKeywords": [
+        "外架钢针@contains"
+      ],
+      "fee": 0.3,
+      "skipPackaging": true,
+      "skipDiscount": true,
+      "isActive": true,
+      "matchMode": "first",
+      "keywordMatchMode": "contains",
+      "acceptedTypes": [
+        "额外包（纸塑袋）"
+      ]
     }
   ]
 }

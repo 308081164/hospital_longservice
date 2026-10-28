@@ -52,11 +52,6 @@ public class ReconciliationPricingOrchestrator {
             clerkPrice = clerkBillPriceRuleApplier.findMatchingPriceRule(
                     clerkCompiled, clerkRow, customerCode, Set.of());
         }
-        if (clerkPrice.isEmpty() && isDressingPack(stringVal(rowMap, "type"))
-                && !fuyiDressingUsesStandardDiscount(customerCode)) {
-            return preserveDressingOriginal(rowMap, calculationSteps);
-        }
-
         PricingEngine.ProcessedResult result;
         String pricingLayer;
         String clerkRuleName = null;
@@ -256,43 +251,6 @@ public class ReconciliationPricingOrchestrator {
             }
         }
         return null;
-    }
-
-    private static boolean isDressingPack(String type) {
-        return type != null && type.contains("敷料包");
-    }
-
-    /**
-     * 中医附一 10.27 账单规则：敷料纸塑按标准价×0.8，敷料无纺布按系统价×0.999。
-     * 其他医院仍保留睿思原价、不再打折。
-     */
-    private static boolean fuyiDressingUsesStandardDiscount(String customerCode) {
-        return "ZYY-D1".equals(customerCode);
-    }
-
-    private PricingEngine.ProcessedResult preserveDressingOriginal(
-            Map<String, Object> rowMap, List<String> calculationSteps) {
-        PricingEngine.ProcessedResult result = new PricingEngine.ProcessedResult();
-        Double bill = doubleVal(rowMap, "unitPrice");
-        result.expectedUnitPrice = bill;
-        result.pricingRule = "敷料包保留睿思原价";
-        result.pricingPath = "preserve";
-        result.status = "unchanged";
-        result.skipHospitalDiscount = true;
-        result.notes = new ArrayList<>();
-        result.notes.add("敷料包不做包材核对，规则单价保持账单原价，不再打折。");
-        int packs = Math.max(1, packCount(rowMap));
-        if (bill != null) {
-            result.correctedTotalPrice = round2(bill * packs);
-            Double total = doubleVal(rowMap, "totalPrice");
-            result.difference = total == null ? null : round2(result.correctedTotalPrice - total);
-        }
-        calculationSteps.add("敷料包：保留原价");
-        Map<String, Object> billingNotes = new LinkedHashMap<>();
-        billingNotes.put("pricingLayer", "preserve");
-        billingNotes.put("calculationSteps", calculationSteps);
-        result.billingNotes = billingNotes;
-        return result;
     }
 
     private static void attachFieldValidation(PricingEngine.ProcessedResult result, Map<String, Object> rowMap) {

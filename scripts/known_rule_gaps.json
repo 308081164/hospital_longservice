@@ -1,16 +1,8 @@
 {
   "_comment": "Excel 权威源中尚未在 baseline 建模的规则（历史欠账）。新增条目必须写明原因与状态，CI 只对『白名单之外的新缺口』报错。",
-  "updated_at": "2026-10-27",
+  "updated_at": "2026-10-28",
   "source_excel": "docs/source/特殊收费20261026.xlsx",
   "gaps": [
-    {
-      "customer": "HRB-GUSHANG",
-      "row": 243,
-      "item": "⑤",
-      "pack_name": "钢针-几件 扳手1",
-      "reason": "口径已确认：(件数-1)/6 进一 ×5.5 +5.5 +内层纸塑袋费用 +0.3。引擎能力已补齐（FOLD.foldOffset + unitPrice，单测 FoldOffsetPricingTest 钉住 12→16.5 / 7→11.0 / 1→5.5）。**仍缺的是真实包名关键词**：Excel 该行是描述性写法，直接当 exact 关键词永不命中，需客户给出真实包名样例后再入库",
-      "status": "待确认包名关键词"
-    },
     {
       "customer": "HRB-GUSHANG",
       "row": 251,

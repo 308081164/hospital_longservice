@@ -110,11 +110,17 @@ class ReconciliationPricingOrchestratorTest {
     }
 
     @Test
-    void otherHospitalDressingStillKeepsRuisiPrice() {
+    void otherHospitalDressingNowUsesStandardPricing() {
+        // 2026-10-28：按用户拍板，非附一敷料包不再「保留睿思原价」，改走标准计价。
         PricingEngine spyEngine = new PricingEngine(JsonUtils.getObjectMapper().createObjectNode()) {
             @Override
             public ProcessedResult processRow(Map<String, Object> row) {
-                throw new AssertionError("非附一敷料包不应进入计价引擎");
+                ProcessedResult pr = new ProcessedResult();
+                pr.expectedUnitPrice = 2.5;
+                pr.pricingRule = "敷料包标准价";
+                pr.pricingPath = "standard";
+                pr.notes = new ArrayList<>();
+                return pr;
             }
         };
         Map<String, Object> row = baseRow("纱布", "敷料包(纸塑袋)", 0);
@@ -124,9 +130,9 @@ class ReconciliationPricingOrchestratorTest {
         PricingEngine.ProcessedResult result = orchestrator.processRow(
                 row, spyEngine, null, "ERYY-NG", Set.of());
 
-        assertThat(result.pricingRule).contains("保留睿思原价");
-        assertThat(result.expectedUnitPrice).isEqualTo(3.2);
-        assertThat(result.skipHospitalDiscount).isTrue();
+        assertThat(result.pricingRule).doesNotContain("保留睿思原价");
+        assertThat(result.expectedUnitPrice).isEqualTo(2.5);
+        assertThat(result.pricingPath).isEqualTo("standard");
     }
 
     @Test

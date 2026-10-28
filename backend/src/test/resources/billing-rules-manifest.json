@@ -1,7 +1,7 @@
 {
   "version": 1,
-  "generated_at": "2026-10-27T13:18:08Z",
-  "manifest_hash": "355b57d6569cfbb529f1640dd28822666ad7d771f84baef303274c69d9253a4d",
+  "generated_at": "2026-10-28T04:41:03Z",
+  "manifest_hash": "11bc1f5f16552a0fa99c415b5ab2125315ca78d4f04ee2320149d00e89337992",
   "billing_enabled_count": 45,
   "active_billing_enabled_count": 45,
   "customers": {
@@ -5000,10 +5000,53 @@
           "acceptedTypes": [
             "额外包（无纺布）"
           ]
+        },
+        {
+          "ruleType": "FOLD",
+          "name": "骨伤科钢针先扣扳手按6折算",
+          "priority": 12,
+          "keywords": [
+            "钢针-@contains"
+          ],
+          "excludeKeywords": [
+            "外架钢针@contains"
+          ],
+          "threshold": 6,
+          "foldRatio": 6,
+          "foldOffset": 1,
+          "unitPrice": 5.5,
+          "skipPackaging": false,
+          "skipDiscount": true,
+          "isActive": true,
+          "matchMode": "first",
+          "keywordMatchMode": "contains",
+          "acceptedTypes": [
+            "额外包（纸塑袋）"
+          ]
+        },
+        {
+          "ruleType": "EXTRA_FEE",
+          "name": "骨伤科钢针加收0.3",
+          "priority": 13,
+          "keywords": [
+            "钢针-@contains"
+          ],
+          "excludeKeywords": [
+            "外架钢针@contains"
+          ],
+          "fee": 0.3,
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": true,
+          "matchMode": "first",
+          "keywordMatchMode": "contains",
+          "acceptedTypes": [
+            "额外包（纸塑袋）"
+          ]
         }
       ],
-      "rule_count": 10,
-      "active_rule_count": 10
+      "rule_count": 12,
+      "active_rule_count": 12
     },
     "XIUYAN-YL": {
       "code": "XIUYAN-YL",
