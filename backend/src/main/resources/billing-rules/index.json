@@ -1,6 +1,6 @@
 {
-  "baseline_hash": "4e82862f4fe72bfa2d5332f67685700558b76a8652cb97b673da18d95229d8cc",
-  "generated_at": "2026-10-28T04:41:03Z",
+  "baseline_hash": "2f5e720e6252f50de51ec4043a0518bd89e223f27d8b7915a4e3e51907174b6b",
+  "generated_at": "2026-10-28T09:50:40Z",
   "source": "billing-rules-manifest@6a4ec3fbe7896cc575c6c8eabecd644fea23f11dd22afa4c970f9dc07d36c4a4",
   "customer_count": 45,
   "customers": [
@@ -253,8 +253,8 @@
     {
       "code": "HRB-GUSHANG",
       "file": "baseline/HRB-GUSHANG.json",
-      "ruleCount": 12,
-      "fileHash": "5ca12b79ebb333db67d2f1ee704c95fa8f419feb4a9c1bb0daba4f1dce2b14f5"
+      "ruleCount": 15,
+      "fileHash": "07b497766e649a23443e631af0973c0324b48d0b0a92bd889fde8d105cdafa47"
     },
     {
       "code": "XIUYAN-YL",

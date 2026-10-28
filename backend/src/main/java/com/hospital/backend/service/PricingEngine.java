@@ -230,6 +230,8 @@ public class PricingEngine {
         int foldMinInstrumentCount = 0;
         Long foldMatchedRuleId = null;
         String foldMatchedRuleName = null;
+        String foldBagAddon = null;
+        Double foldFlatAddon = null;
         if (preMatchedSpecialPrice == null && !isZsdInstrumentPack) {
             int countBeforeSpecialFold = effectiveCount;
             FoldApplyResult foldResult = applySpecialFoldRules(row, bagSize, effectiveCount, notes);
@@ -242,6 +244,8 @@ public class PricingEngine {
             foldMinInstrumentCount = foldResult.minInstrumentCount();
             foldMatchedRuleId = foldResult.ruleId();
             foldMatchedRuleName = foldResult.ruleName();
+            foldBagAddon = foldResult.bagAddon();
+            foldFlatAddon = foldResult.flatAddon();
         }
         if (foldUnitPriceOverride != null && !Double.isNaN(foldUnitPriceOverride)) {
             forceHighTempPerItem = foldUnitPriceOverride;
@@ -552,6 +556,20 @@ public class PricingEngine {
         }
         if (appliedSpecialFoldRule && foldFlatPackPrice != null) {
             expectedUnitPrice = foldFlatPackPrice;
+        }
+        // FOLD 叠加：内层袋费（bagAddon=inner 取较小宽度袋价）与固定加价（如 +0.3）
+        if (appliedSpecialFoldRule && expectedUnitPrice != null) {
+            if (foldBagAddon != null && !foldBagAddon.isBlank()) {
+                Double addon = configuredBagAddon(foldBagAddon, bagSize, zBagSize);
+                if (addon != null && addon > 0) {
+                    expectedUnitPrice = round(expectedUnitPrice + addon);
+                    notes.add("折算规则叠加内层袋费 " + fmt(addon) + " 元。");
+                }
+            }
+            if (foldFlatAddon != null) {
+                expectedUnitPrice = round(expectedUnitPrice + foldFlatAddon);
+                notes.add("折算规则叠加固定加价 " + fmt(foldFlatAddon) + " 元。");
+            }
         }
 
         if (specialPrice == null && expectedUnitPrice != null) {
@@ -1049,7 +1067,7 @@ public class PricingEngine {
     private FoldApplyResult applyFoldRuleList(Map<String, Object> row, JsonNode foldRules, String combined, int bagSize,
                                               int effectiveCount, List<String> notes) {
         if (!foldRules.isArray()) {
-            return new FoldApplyResult(effectiveCount, false, false, null, null, null, false, 0, null);
+            return new FoldApplyResult(effectiveCount, false, false, null, null, null, false, 0, null, null, null);
         }
         BillingConditionEvaluator.RowContext ctx = new BillingConditionEvaluator.RowContext(
                 str(row, "type"),
@@ -1118,16 +1136,20 @@ public class PricingEngine {
                     flatPackPrice = packPrice;
                 }
             }
+            // FOLD 也可叠加「内层袋费」与固定加价（如外架钢针 >6：内层纸塑袋 + 0.3）
+            String bagAddon = conditionText(rule, "bagAddon");
+            Double flatAddon = conditionNumber(rule, "flatAddon");
             return new FoldApplyResult(
                     result, skipPackaging, true, unitPriceOverride, ruleId, name, extraCount > 0,
-                    minInstrumentCount, flatPackPrice);
+                    minInstrumentCount, flatPackPrice, bagAddon, flatAddon);
         }
-        return new FoldApplyResult(effectiveCount, false, false, null, null, null, false, 0, null);
+        return new FoldApplyResult(effectiveCount, false, false, null, null, null, false, 0, null, null, null);
     }
 
     private record FoldApplyResult(int effectiveCount, boolean skipPackaging, boolean matched,
                                    Double unitPriceOverride, Long ruleId, String ruleName,
-                                   boolean hasExtraCount, int minInstrumentCount, Double flatPackPrice) {}
+                                   boolean hasExtraCount, int minInstrumentCount, Double flatPackPrice,
+                                   String bagAddon, Double flatAddon) {}
 
     /**
      * 关键词只有 /双、/(双)、/（双）的规则。这类规则改用折算后的件数，不在折算前独占本行。
