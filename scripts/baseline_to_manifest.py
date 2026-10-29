@@ -50,7 +50,13 @@ def build_manifest(existing: dict | None = None) -> dict:
             "billingPricingMode": baseline.get("billingPricingMode") or prev.get("billingPricingMode"),
             "standardPricingOverride": override,
             "billingEnabled": billing_enabled,
-            "billingPolicies": baseline.get("billingPolicies") or prev.get("billingPolicies"),
+            # 注意：不能用 or 回退——baseline 里显式清空（[]）时会被 prev 覆盖，
+            # 导致「删除折扣策略」永远进不了 manifest（2026-10-29 附一重复八折排查）。
+            "billingPolicies": (
+                baseline["billingPolicies"]
+                if "billingPolicies" in baseline
+                else prev.get("billingPolicies")
+            ),
             "productRules": rules,
             "rule_count": len(rules),
             "active_rule_count": len([r for r in rules if r.get("isActive", True)]),
