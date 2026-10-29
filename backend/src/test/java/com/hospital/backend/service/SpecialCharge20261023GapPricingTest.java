@@ -306,8 +306,8 @@ class SpecialCharge20261023GapPricingTest {
         assertThat(rinse6.pricingRule).contains("冲洗头>5折算22");
         assertThat(joined(rinse6)).contains("折算为 2 件");
         assertThat(rinse6.expectedUnitPrice).isCloseTo(olive6.expectedUnitPrice, CENT);
-        // 2026-10-29：附一 override 已含合同折扣，不再叠 0.8×0.999；折算 2 件 × 22 = 44.00
-        assertThat(rinse6.expectedUnitPrice).isCloseTo(44.00, CENT);
+        // 低温类型仍需 0.8×0.999：2 件 × 22 = 44 → 35.16
+        assertThat(rinse6.expectedUnitPrice).isCloseTo(35.16, CENT);
     }
 
     @Test

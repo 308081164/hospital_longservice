@@ -5,7 +5,135 @@
   "billingPricingMode": "hybrid",
   "sourceVersion": "docs/source/附一收费标准.xlsx",
   "notes": "中医附一独立价表 · 2026-10-27：对账折扣按包类型门控（内勤规则10.27）。额外包(无纺布)<3 固定13.2；敷料纸塑只×0.8；纸塑额外/器械/单包装 ≥3×0.8、<3 系统价×0.75；低温等离子/EO/ETO 件数无关×0.8×0.999；敷料无纺布只×0.999。件数口径 billingPieces（单包）。",
-  "billingPolicies": [],
+  "billingPolicies": [
+    {
+      "policyType": "DISCOUNT",
+      "name": "附一额外无纺布<3固定价",
+      "priority": 5,
+      "scope": {
+        "temperature": "ANY",
+        "acceptedTypes": [
+          "额外包（无纺布）"
+        ]
+      },
+      "params": {
+        "applyStage": "bill_detail",
+        "skipWhenFixedPrice": false,
+        "pieceTierDiscounts": [
+          {
+            "minPieces": 1,
+            "maxPieces": 2,
+            "fixedUnitPrice": 13.2,
+            "decimalPlaces": 2
+          }
+        ]
+      },
+      "sourceRef": "excel:医院内勤规则10.27.xlsx#账单规则#94"
+    },
+    {
+      "policyType": "DISCOUNT",
+      "name": "附一＜3件标准价八折",
+      "priority": 20,
+      "scope": {
+        "temperature": "ANY",
+        "acceptedTypes": [
+          "单包装包（EO）",
+          "单包装包(EO)",
+          "单包装包（等离子）",
+          "单包装包(等离子)",
+          "单包装包（老肯低温）",
+          "单包装包(老肯低温)",
+          "单包装包（老肯等温）",
+          "单包装包(老肯等温)",
+          "额外包（ETO）",
+          "额外包(ETO)",
+          "额外包（低温等离子）",
+          "额外包(低温等离子)",
+          "敷料包",
+          "敷料包（纸塑袋）",
+          "敷料包(纸塑袋)"
+        ]
+      },
+      "params": {
+        "applyStage": "bill_detail",
+        "skipWhenFixedPrice": false,
+        "pieceTierDiscounts": [
+          {
+            "minPieces": 1,
+            "maxPieces": 2,
+            "rate": 0.8,
+            "decimalPlaces": 2
+          }
+        ]
+      },
+      "sourceRef": "excel:医院内勤规则10.27.xlsx#账单规则#92,93"
+    },
+    {
+      "policyType": "DISCOUNT",
+      "name": "附一对账八折·件数≥3",
+      "priority": 10,
+      "scope": {
+        "temperature": "ANY",
+        "acceptedTypes": [
+          "单包装包（EO）",
+          "单包装包(EO)",
+          "单包装包（等离子）",
+          "单包装包(等离子)",
+          "单包装包（老肯低温）",
+          "单包装包(老肯低温)",
+          "单包装包（老肯等温）",
+          "单包装包(老肯等温)",
+          "额外包（ETO）",
+          "额外包(ETO)",
+          "额外包（低温等离子）",
+          "额外包(低温等离子)",
+          "敷料包",
+          "敷料包（纸塑袋）",
+          "敷料包(纸塑袋)"
+        ]
+      },
+      "params": {
+        "applyStage": "bill_detail",
+        "skipWhenFixedPrice": false,
+        "pieceTierDiscounts": [
+          {
+            "minPieces": 3,
+            "rate": 0.8,
+            "decimalPlaces": 2
+          }
+        ]
+      },
+      "sourceRef": "excel:医院内勤规则10.27.xlsx#账单规则#91,92"
+    },
+    {
+      "policyType": "DISCOUNT",
+      "name": "附一九九九折·件数无关",
+      "priority": 20,
+      "scope": {
+        "temperature": "ANY",
+        "acceptedTypes": [
+          "单包装包（EO）",
+          "单包装包(EO)",
+          "单包装包（等离子）",
+          "单包装包(等离子)",
+          "单包装包（老肯低温）",
+          "单包装包(老肯低温)",
+          "单包装包（老肯等温）",
+          "单包装包(老肯等温)",
+          "额外包（ETO）",
+          "额外包(ETO)",
+          "额外包（低温等离子）",
+          "额外包(低温等离子)"
+        ]
+      },
+      "params": {
+        "rate": 0.999,
+        "applyStage": "bill_detail",
+        "skipWhenFixedPrice": false
+      },
+      "sourceRef": "excel:医院内勤规则10.27.xlsx#账单规则#95"
+    }
+  ],
   "archivedProductRulesNote": "2026-09-23 封存：类型特色规则暂停，对账改走标准价叠折试用",
   "standardPricingOverride": {
     "highTemperature": {

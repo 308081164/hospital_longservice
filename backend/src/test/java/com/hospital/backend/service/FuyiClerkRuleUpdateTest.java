@@ -3,25 +3,23 @@ package com.hospital.backend.service;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.hospital.backend.common.JsonUtils;
-import com.hospital.backend.entity.Customer;
-import com.hospital.backend.mapper.CustomerBillingPolicyMapper;
 import org.junit.jupiter.api.Test;
 
 import java.io.InputStream;
-import java.util.List;
-import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.within;
 
 /**
- * 附一折扣口径（2026-10-29 客户连续反馈「重复八折」后确认）：
+ * 附一折扣口径（2026-10-29 客户多轮反馈后的最终形态）：
  *
- * 附一的 standardPricingOverride 已经把合同价算好：
- *  - 高温纸塑阶梯 6.39/8.79/10.39/12.79（= 原价 × 0.8 × 0.999）
- *  - 高温无纺布 4.4/件、13.2 封顶（剖宫包 15 件 = 66.00）
- *  - 低温纸塑阶梯 17.58~27.97、敷料无纺布 19.98/23.98/27.97
- *
- * 因此**任何折扣策略再叠一次都是重复**。此测试用附一真实账单价格验证策略层不再扣减。
+ *  不打折（override 阶梯价已是成交价）：
+ *    额外包（纸塑袋）6.39、器械包/器械包（ZSD）66.00（15 件高温无纺布）
+ *  8 折：
+ *    敷料包、敷料包（纸塑袋）
+ *  8 折再 999 折：
+ *    单包装包（EO/等离子）、额外包（ETO/低温等离子）
+ *  额外包（无纺布）<3：固定 13.2
  */
 class FuyiClerkRuleUpdateTest {
 
@@ -34,50 +32,32 @@ class FuyiClerkRuleUpdateTest {
         }
     }
 
-    private Map<?, ?> fixture() throws Exception {
-        try (InputStream in = getClass().getResourceAsStream("/fuyi-real-bill-june.json")) {
-            assertThat(in).as("附一真实账单夹具缺失").isNotNull();
-            return MAPPER.readValue(in, Map.class);
-        }
+    private BillingPolicyApplier.BillDetailDiscount apply(String type, double price, int pieces) throws Exception {
+        return BillingPolicyApplier.applyBillDetailDiscounts(
+                zyyBaseline(), type, "测试包", "高温纸塑袋10cm", "中医附一", price, pieces, false, false);
     }
 
     @Test
-    void noDiscountPolicyForAnyFuyiType() throws Exception {
-        JsonNode policies = zyyBaseline().path("billingPolicies");
-        assertThat(policies.isArray()).isTrue();
-        for (JsonNode policy : policies) {
-            assertThat(policy.path("policyType").asText())
-                    .as("附一不应再有 DISCOUNT 策略（override 已含折扣）")
-                    .isNotEqualTo("DISCOUNT");
-        }
+    void paperPlasticExtraPackAndInstrumentPackKeepContractPrice() throws Exception {
+        // 客户：6.39 已对，不能再八折；器械包 66.00 同理
+        assertThat(apply("额外包（纸塑袋）", 6.39, 1)).isNull();
+        assertThat(apply("器械包", 66.00, 15)).isNull();
+        assertThat(apply("器械包（ZSD）", 66.00, 15)).isNull();
     }
 
     @Test
-    void realBillRowsAreNotDiscountedAgain() throws Exception {
-        JsonNode rules = zyyBaseline();
-        Map<?, ?> fx = fixture();
-        for (String key : List.of("low", "nonwoven")) {
-            List<Map<String, Object>> rows = (List<Map<String, Object>>) fx.get(key);
-            for (Map<String, Object> row : rows) {
-                var discount = BillingPolicyApplier.applyBillDetailDiscounts(
-                        rules,
-                        (String) row.get("type"),
-                        (String) row.get("packName"),
-                        (String) row.get("material"),
-                        "中医附一",
-                        ((Number) row.get("price")).doubleValue(),
-                        ((Number) row.get("count")).intValue(),
-                        false, false);
-                assertThat(discount).as("真实账单行不应再叠折扣: " + row.get("packName")).isNull();
-            }
-        }
+    void dressingPackUsesEightyPercent() throws Exception {
+        var d = apply("敷料包（纸塑袋）", 10.0, 1);
+        assertThat(d).isNotNull();
+        assertThat(d.price()).isCloseTo(8.0, within(0.02));
     }
 
     @Test
-    void instrumentPackKeepsContractPrice() throws Exception {
-        // 剖宫包 15 件：override 高温无纺布 4.4/件 = 66.00，不应变成 52.80
-        var discount = BillingPolicyApplier.applyBillDetailDiscounts(
-                zyyBaseline(), "器械包", "剖宫包（产科）", "无纺布-90×90-50", "中医附一", 66.0, 15, false, false);
-        assertThat(discount).as("剖宫包 66.00 不应再打八折").isNull();
+    void lowTempPackUsesEightyPercentThenNineNineNine() throws Exception {
+        var d = apply("单包装包（EO）", 44.0, 6);
+        assertThat(d).isNotNull();
+        // 44×0.8=35.2；再×0.999=35.16
+        assertThat(d.price()).isCloseTo(35.16, within(0.02));
+        assertThat(d.note()).contains("0.999");
     }
 }
