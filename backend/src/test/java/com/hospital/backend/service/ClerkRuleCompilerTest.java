@@ -385,12 +385,12 @@ class ClerkRuleCompilerTest {
         assertThat(compiledFormulas).containsExactly(
                 "附一≥3件标准价八折",
                 "附一敷料纸塑标准价八折",
-                "附一＜3件系统价七五折",
+                "附一＜3件标准价八折",
                 "附一额外无纺布＜3固定13.2",
                 "附一低温件数无关八折再乘0.999",
-                "附一敷料无纺布系统价九九九折");
+                "附一敷料无纺布八折再九九九折");
         for (JsonNode policy : compiled.path("billingPolicies")) {
-            assertThat(policy.path("name").asText()).doesNotContain("标准价八折");
+            assertThat(policy.path("name").asText()).doesNotContain("系统价七五折");
             assertThat(policy.path("name").asText()).doesNotContain("13.2");
             assertThat(policy.path("name").asText()).doesNotContain("0.999");
             if ("DISCOUNT".equals(policy.path("policyType").asText())) {

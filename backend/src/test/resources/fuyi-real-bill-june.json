@@ -1,0 +1,90 @@
+{
+  "low": [
+    {
+      "type": "额外包(纸塑袋)",
+      "packName": "大镊子-1/Z7534",
+      "material": "高温纸塑袋75*340",
+      "count": 2,
+      "price": 6.4
+    },
+    {
+      "type": "额外包(纸塑袋)",
+      "packName": "宫颈钳-1/Z1535",
+      "material": "高温纸塑袋150*350*",
+      "count": 2,
+      "price": 8.8
+    },
+    {
+      "type": "额外包(纸塑袋)",
+      "packName": "剪刀-1/Z1029",
+      "material": "高温纸塑袋100*290",
+      "count": 1,
+      "price": 6.4
+    },
+    {
+      "type": "额外包(纸塑袋)",
+      "packName": "棉球缸-1/z2530",
+      "material": "高温纸塑袋250*300",
+      "count": 1,
+      "price": 12.8
+    },
+    {
+      "type": "额外包(纸塑袋)",
+      "packName": "特殊取环器-1/Z1535",
+      "material": "高温纸塑袋150*350",
+      "count": 1,
+      "price": 8.8
+    },
+    {
+      "type": "额外包(纸塑袋)",
+      "packName": "止血钳-1/Z1029",
+      "material": "高温纸塑袋100*290",
+      "count": 1,
+      "price": 6.4
+    }
+  ],
+  "nonwoven": [
+    {
+      "type": "敷料包(无纺布包)",
+      "packName": "洗手服（L号）/W15050",
+      "material": "无纺布-150×150-50g",
+      "count": 0,
+      "price": 28.0
+    },
+    {
+      "type": "敷料包(无纺布包)",
+      "packName": "洗手服（XL号）/W15050",
+      "material": "无纺布-150×150-50g",
+      "count": 0,
+      "price": 28.0
+    },
+    {
+      "type": "敷料包(无纺布包)",
+      "packName": "洗手服（XXXL号）/W15050",
+      "material": "无纺布-150×150-50g",
+      "count": 0,
+      "price": 28.0
+    },
+    {
+      "type": "敷料包(无纺布包)",
+      "packName": "洗手服（混号）/W15050",
+      "material": "无纺布-150×150-50g",
+      "count": 0,
+      "price": 28.0
+    },
+    {
+      "type": "敷料包(无纺布包)",
+      "packName": "洗手服（XL号）/W15050",
+      "material": "无纺布-150×150-50g",
+      "count": 0,
+      "price": 28.0
+    },
+    {
+      "type": "敷料包(无纺布包)",
+      "packName": "洗手服（XXXL号）/W15050",
+      "material": "无纺布-150×150-50g",
+      "count": 0,
+      "price": 28.0
+    }
+  ]
+}

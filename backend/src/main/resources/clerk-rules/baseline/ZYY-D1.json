@@ -45,11 +45,11 @@
     },
     {
       "ruleType": "BILL_FORMULA",
-      "name": "附一＜3件系统价七五折",
+      "name": "附一＜3件标准价八折",
       "stage": "bill_export",
       "isActive": true,
       "params": {
-        "formula": "系统价格*0.75",
+        "formula": "标准价格*0.8",
         "instrumentCount": "＜3",
         "acceptedTypes": [
           "额外包（纸塑袋）",
@@ -57,9 +57,9 @@
           "器械包",
           "单包装包"
         ],
-        "executedBy": "billingPolicies:附一＜3件系统价七五折"
+        "executedBy": "billingPolicies:附一对账八折"
       },
-      "sourceText": "额外包(纸塑袋)、器械包（ZSD）、器械包、单包装包；件数＜3；系统价格75折。对账由计价策略执行，导出不再叠一次。",
+      "sourceText": "额外包(纸塑袋)、器械包（ZSD）、器械包、单包装包；件数＜3；标准价格*0.8。对账由计价策略「附一对账八折」执行，导出不再叠一次。",
       "sourceRef": "excel:医院内勤规则10.27.xlsx#账单规则#93",
       "priority": 15
     },
@@ -104,18 +104,18 @@
     },
     {
       "ruleType": "BILL_FORMULA",
-      "name": "附一敷料无纺布系统价九九九折",
+      "name": "附一敷料无纺布八折再九九九折",
       "stage": "bill_export",
       "isActive": true,
       "params": {
-        "formula": "系统价格*0.999",
+        "formula": "标准价格*0.8*0.999",
         "instrumentCount": "跟器械数量无关",
         "acceptedTypes": [
           "敷料包（无纺布）"
         ],
-        "executedBy": "billingPolicies:附一敷料无纺布系统价九九九折"
+        "executedBy": "billingPolicies:附一对账八折+附一九九九折·敷料无纺布"
       },
-      "sourceText": "敷料包(无纺布)；系统价格*0.999。对账由计价策略执行，导出不再叠一次。不再叠八折。",
+      "sourceText": "敷料包(无纺布)；跟器械数量无关；标准价格*0.8*0.999。对账由计价策略执行，导出不再叠一次。",
       "sourceRef": "excel:医院内勤规则10.27.xlsx#账单规则#96",
       "priority": 18
     },

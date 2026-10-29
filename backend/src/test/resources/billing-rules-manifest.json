@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generated_at": "2026-10-28T09:50:40Z",
+  "generated_at": "2026-10-29T02:14:28Z",
   "manifest_hash": "0c59783705082ae4b926d1f6db7fe0c497dc2bd0b2fd5cbfc6e3eb4d630cc558",
   "billing_enabled_count": 45,
   "active_billing_enabled_count": 45,
@@ -5369,7 +5369,8 @@
               "单包装包（等离子）",
               "单包装包（EO）",
               "额外包（低温等离子）",
-              "额外包（ETO）"
+              "额外包（ETO）",
+              "敷料包（无纺布）"
             ]
           },
           "params": {
@@ -5377,11 +5378,11 @@
             "applyStage": "bill_detail",
             "skipWhenFixedPrice": false
           },
-          "sourceRef": "excel:医院内勤规则10.27.xlsx#账单规则#91-92,95"
+          "sourceRef": "excel:医院内勤规则10.27.xlsx#账单规则#91-92,95-96"
         },
         {
           "policyType": "DISCOUNT",
-          "name": "附一＜3件系统价七五折",
+          "name": "附一＜3件标准价八折",
           "priority": 20,
           "scope": {
             "temperature": "ANY",
@@ -5399,7 +5400,7 @@
               {
                 "minPieces": 1,
                 "maxPieces": 2,
-                "rate": 0.75,
+                "rate": 0.8,
                 "decimalPlaces": 2
               }
             ]
@@ -5454,7 +5455,7 @@
         },
         {
           "policyType": "DISCOUNT",
-          "name": "附一敷料无纺布系统价九九九折",
+          "name": "附一敷料无纺布九九九折（八折后）",
           "priority": 20,
           "scope": {
             "temperature": "ANY",

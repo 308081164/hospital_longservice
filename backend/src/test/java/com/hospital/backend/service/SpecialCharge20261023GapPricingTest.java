@@ -278,8 +278,9 @@ class SpecialCharge20261023GapPricingTest {
 
         PricingEngine.ProcessedResult two = priced(
                 engine, hospital, "器械包（ZSD）", "换药包(120布)", 2);
-        assertThat(two.expectedUnitPrice).isCloseTo(12.37, CENT);
-        assertThat(joined(two)).contains("系统价七五折");
+        // 2026-10-29 客户更正：＜3 件按标准价×0.8
+        assertThat(two.expectedUnitPrice).isCloseTo(13.19, CENT);
+        assertThat(joined(two)).contains("标准价八折");
     }
 
     @Test
