@@ -4262,7 +4262,14 @@ public class HospitalReconciliationServiceImpl implements HospitalReconciliation
                 setCellValue(sheet, r, packageMaterialCol + 1, cleanExcelText(row.getPackageMaterial()));
             }
             if (instCountCol != null) {
-                setCellValue(sheet, r, instCountCol + 1, row.getInstrumentCount());
+                // K 列语义是「单包内器械数量/把」：多包行不能写整行合计，
+                // 否则 L「单价（把）」会按错误件数摊分（客户 2026-10-29 反馈）。
+                Integer instCount = row.getInstrumentCount();
+                Integer packs = row.getPackCount();
+                if (instCount != null && packs != null && packs > 1) {
+                    instCount = (int) Math.ceil((double) instCount / packs);
+                }
+                setCellValue(sheet, r, instCountCol + 1, instCount);
             }
             if (perPiecePriceCol != null) {
                 Double price = BillExportPriceResolver.resolvePerPiecePrice(row);

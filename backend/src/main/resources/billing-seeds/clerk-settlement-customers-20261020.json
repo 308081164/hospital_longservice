@@ -6,37 +6,71 @@
       "code": "SHANTUN-RM",
       "name": "黑龙江省山河屯林区人民医院",
       "notes": "内勤结款函：物流费免收。规则见 clerk-rules/baseline/SHANTUN-RM.json",
-      "aliases": ["黑龙江省山河屯林区人民医院", "山河屯林区人民医院", "山河屯"]
+      "aliases": [
+        "黑龙江省山河屯林区人民医院",
+        "山河屯林区人民医院",
+        "山河屯"
+      ]
     },
     {
       "code": "XZX-YY",
       "name": "新中新医院",
       "notes": "内勤结款函：物流费 37.5 元/次。规则见 clerk-rules/baseline/XZX-YY.json",
-      "aliases": ["新中新医院", "新中新"]
+      "aliases": [
+        "新中新医院",
+        "新中新"
+      ]
     },
     {
       "code": "LZL-KQ",
       "name": "哈尔滨市南岗区黎增亮口腔科诊所",
       "notes": "内勤结款函：有发货日时物流费 350 元。规则见 clerk-rules/baseline/LZL-KQ.json",
-      "aliases": ["哈尔滨市南岗区黎增亮口腔科诊所", "南岗区黎增亮口腔科诊所", "黎增亮口腔"]
+      "aliases": [
+        "哈尔滨市南岗区黎增亮口腔科诊所",
+        "南岗区黎增亮口腔科诊所",
+        "黎增亮口腔"
+      ]
     },
     {
       "code": "YUEMEI-FH",
       "name": "悦美芳华医疗门诊医院",
       "notes": "内勤结款函：灭菌费加物流费低于 1000 时低消。规则见 clerk-rules/baseline/YUEMEI-FH.json",
-      "aliases": ["悦美芳华医疗门诊医院", "悦美芳华"]
+      "aliases": [
+        "悦美芳华医疗门诊医院",
+        "悦美芳华"
+      ]
     },
     {
       "code": "HRB-HEU",
       "name": "哈尔滨工程大学医院",
       "notes": "内勤结款函：灭菌费九折。规则见 clerk-rules/baseline/HRB-HEU.json",
-      "aliases": ["哈尔滨工程大学医院", "哈尔滨工程大学", "工程大学医院", "哈尔滨(工程)大学医院", "哈尔滨（工程）大学医院"]
+      "aliases": [
+        "哈尔滨工程大学医院",
+        "哈尔滨工程大学",
+        "工程大学医院",
+        "哈尔滨(工程)大学医院",
+        "哈尔滨（工程）大学医院"
+      ]
     },
     {
       "code": "DONGDA-GC",
       "name": "黑龙江东大肛肠医院",
       "notes": "内勤结款函：灭菌费七五折。规则见 clerk-rules/baseline/DONGDA-GC.json。历史档案编码 DD-DC 会对齐到此编码。",
-      "aliases": ["黑龙江东大肛肠医院", "黑龙江东大肛肠", "东大肛肠"]
+      "aliases": [
+        "黑龙江东大肛肠医院",
+        "黑龙江东大肛肠",
+        "东大肛肠"
+      ]
+    },
+    {
+      "code": "TAIPING-RM",
+      "name": "哈尔滨市道外区太平人民医院",
+      "notes": "内勤规则：太平账单价/低温把数/七五折。规则见 clerk-rules/baseline/TAIPING-RM.json",
+      "aliases": [
+        "哈尔滨市道外区太平人民医院",
+        "道外区太平人民医院",
+        "太平人民医院"
+      ]
     }
   ]
 }

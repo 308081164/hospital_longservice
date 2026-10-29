@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generated_at": "2026-10-29T02:14:28Z",
+  "generated_at": "2026-10-29T05:35:59Z",
   "manifest_hash": "0c59783705082ae4b926d1f6db7fe0c497dc2bd0b2fd5cbfc6e3eb4d630cc558",
   "billing_enabled_count": 45,
   "active_billing_enabled_count": 45,
@@ -5355,7 +5355,8 @@
               }
             ]
           },
-          "sourceRef": "excel:内勤规则行13#额外包无纺布<3固定13.2"
+          "sourceRef": "excel:内勤规则行13#额外包无纺布<3固定13.2",
+          "isActive": true
         },
         {
           "policyType": "DISCOUNT",
@@ -5364,13 +5365,7 @@
           "scope": {
             "temperature": "ANY",
             "acceptedTypes": [
-              "额外包（无纺布）",
-              "敷料包（纸塑袋）",
-              "单包装包（等离子）",
-              "单包装包（EO）",
-              "额外包（低温等离子）",
-              "额外包（ETO）",
-              "敷料包（无纺布）"
+              "额外包（无纺布）"
             ]
           },
           "params": {
@@ -5378,7 +5373,8 @@
             "applyStage": "bill_detail",
             "skipWhenFixedPrice": false
           },
-          "sourceRef": "excel:医院内勤规则10.27.xlsx#账单规则#91-92,95-96"
+          "sourceRef": "excel:医院内勤规则10.27.xlsx#账单规则#91-92,95-96",
+          "isActive": true
         },
         {
           "policyType": "DISCOUNT",
@@ -5387,7 +5383,6 @@
           "scope": {
             "temperature": "ANY",
             "acceptedTypes": [
-              "额外包（纸塑袋）",
               "器械包（ZSD）",
               "器械包",
               "单包装包"
@@ -5414,7 +5409,6 @@
           "scope": {
             "temperature": "ANY",
             "acceptedTypes": [
-              "额外包（纸塑袋）",
               "器械包（ZSD）",
               "器械包",
               "单包装包"
@@ -5432,43 +5426,6 @@
             ]
           },
           "sourceRef": "excel:医院内勤规则10.27.xlsx#账单规则#91"
-        },
-        {
-          "policyType": "DISCOUNT",
-          "name": "附一九九九折·件数无关",
-          "priority": 20,
-          "scope": {
-            "temperature": "ANY",
-            "acceptedTypes": [
-              "单包装包（等离子）",
-              "单包装包（EO）",
-              "额外包（低温等离子）",
-              "额外包（ETO）"
-            ]
-          },
-          "params": {
-            "rate": 0.999,
-            "applyStage": "bill_detail",
-            "skipWhenFixedPrice": false
-          },
-          "sourceRef": "excel:医院内勤规则10.27.xlsx#账单规则#95"
-        },
-        {
-          "policyType": "DISCOUNT",
-          "name": "附一敷料无纺布九九九折（八折后）",
-          "priority": 20,
-          "scope": {
-            "temperature": "ANY",
-            "acceptedTypes": [
-              "敷料包（无纺布）"
-            ]
-          },
-          "params": {
-            "rate": 0.999,
-            "applyStage": "bill_detail",
-            "skipWhenFixedPrice": false
-          },
-          "sourceRef": "excel:医院内勤规则10.27.xlsx#账单规则#96"
         }
       ],
       "productRules": [

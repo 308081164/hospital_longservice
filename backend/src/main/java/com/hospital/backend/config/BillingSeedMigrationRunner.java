@@ -67,6 +67,9 @@ public class BillingSeedMigrationRunner implements CommandLineRunner {
      */
     private static final String CLERK_SETTLEMENT_CUSTOMERS_MARKER =
             "billing_seed_clerk_settlement_customers_20261020_v1";
+    /** 2026-10-29：道外太平缺客户档案，导致导出阶段内勤规则被跳过（客户反馈「太平内勤规则没做」）。 */
+    private static final String TAIPING_SETTLEMENT_CUSTOMER_MARKER =
+            "billing_seed_taiping_settlement_customer_20261029_v1";
     /** 账单表头写成「哈尔滨(工程)大学医院」，半角/全角括号都要对上工程大学。 */
     private static final String HEU_PAREN_ALIAS_MARKER = "billing_seed_heu_paren_alias_20261021_v1";
     /** 官方全称带「省」，档案规范名无「省」时仍要落到 ZYY-D1（否则 clerk dept_split 合并不生效）。 */
@@ -350,6 +353,14 @@ public class BillingSeedMigrationRunner implements CommandLineRunner {
                 insertMarker(CLERK_SETTLEMENT_CUSTOMERS_MARKER,
                         "结款函客户档案：山河屯/新中新/黎增亮，及缺档的悦美芳华/工程大学/东大肛肠");
                 log.info("Clerk settlement customers ensured.");
+            }
+        }
+        if (sysSettingMapper.countByKey(TAIPING_SETTLEMENT_CUSTOMER_MARKER) == 0) {
+            // 复用同一份结款函客户种子（幂等）：已有档案只补别名，不改计费开关。
+            if (ensureClerkSettlementCustomers()) {
+                insertMarker(TAIPING_SETTLEMENT_CUSTOMER_MARKER,
+                        "结款函客户档案补充：道外太平（否则导出阶段内勤规则不挂载）");
+                log.info("Taiping settlement customer ensured.");
             }
         }
         if (sysSettingMapper.countByKey(HEU_PAREN_ALIAS_MARKER) == 0) {

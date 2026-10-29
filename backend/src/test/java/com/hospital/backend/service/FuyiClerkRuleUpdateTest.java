@@ -15,11 +15,11 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.within;
 
 /**
- * 2026-10-29 客户更正「字错」后的附一内勤规则：
- *  - ＜3 件：标准价格*0.8（原「系统价格 75 折」作废）
- *  - 敷料包(无纺布)：标准价格*0.8*0.999（原「系统价格*0.999」作废）
- *
- * 用附一 2026-06 真实账单抽样的价格作为输入，验证策略层按新比例出数。
+ * 附一内勤规则（2026-10-29 客户两轮反馈后）：
+ *  - 附一的 standardPricingOverride 阶梯价本身已是「0.8×0.999」后的成交价（如 10cm=6.39、敷料无纺布=27.97），
+ *    因此这些类型**不得再叠折扣**，否则就是客户反馈的「重复八折」。
+ *  - 仅未被 override 覆盖的类型（器械包/ZSD/单包装包）走 0.8 分段折扣。
+ *  - 额外包（无纺布）保留 13.2 固定价与八折（override 不覆盖该类型）。
  */
 class FuyiClerkRuleUpdateTest {
 
@@ -44,47 +44,53 @@ class FuyiClerkRuleUpdateTest {
     }
 
     @Test
-    void belowThreePiecesUsesEightyPercentOnRealBillRows() throws Exception {
+    void paperPlasticExtraPackDoesNotStackAnotherDiscountOnRealRows() throws Exception {
         JsonNode rules = zyyBaseline();
         List<Map<String, Object>> rows = (List<Map<String, Object>>) fixture().get("low");
         assertThat(rows).isNotEmpty();
 
         for (Map<String, Object> row : rows) {
-            String type = (String) row.get("type");
-            String name = (String) row.get("packName");
-            String material = (String) row.get("material");
-            int count = ((Number) row.get("count")).intValue();
-            double base = ((Number) row.get("price")).doubleValue();
-
             var discount = BillingPolicyApplier.applyBillDetailDiscounts(
-                    rules, type, name, material, "中医附一", base, count, false, false);
-
-            assertThat(discount).as("应命中附一＜3件八折: " + name).isNotNull();
-            assertThat(discount.price()).as("＜3 件应为 0.8 折: " + name)
-                    .isCloseTo(round2(base * 0.8), within(0.02));
+                    rules,
+                    (String) row.get("type"),
+                    (String) row.get("packName"),
+                    (String) row.get("material"),
+                    "中医附一",
+                    ((Number) row.get("price")).doubleValue(),
+                    ((Number) row.get("count")).intValue(),
+                    false, false);
+            // 6.39 等阶梯价已是成交价，客户明确「没有再八折了」
+            assertThat(discount).as("额外包(纸塑袋) 不应再叠折扣: " + row.get("packName")).isNull();
         }
     }
 
     @Test
-    void nonWovenDressingStacksEightyPercentThenNineNineNine() throws Exception {
+    void nonWovenDressingDoesNotStackAnotherDiscountOnRealRows() throws Exception {
         JsonNode rules = zyyBaseline();
         List<Map<String, Object>> rows = (List<Map<String, Object>>) fixture().get("nonwoven");
         assertThat(rows).isNotEmpty();
 
         for (Map<String, Object> row : rows) {
-            String type = (String) row.get("type");
-            String name = (String) row.get("packName");
-            String material = (String) row.get("material");
-            int count = ((Number) row.get("count")).intValue();
-            double base = ((Number) row.get("price")).doubleValue();
-
             var discount = BillingPolicyApplier.applyBillDetailDiscounts(
-                    rules, type, name, material, "中医附一", base, count, false, false);
-
-            assertThat(discount).as("敷料无纺布应命中八折+九九九折: " + name).isNotNull();
-            double expected = round2(round2(base * 0.8) * 0.999);
-            assertThat(discount.price()).as("敷料无纺布应为 标准价*0.8*0.999: " + name)
-                    .isCloseTo(expected, within(0.02));
+                    rules,
+                    (String) row.get("type"),
+                    (String) row.get("packName"),
+                    (String) row.get("material"),
+                    "中医附一",
+                    ((Number) row.get("price")).doubleValue(),
+                    ((Number) row.get("count")).intValue(),
+                    false, false);
+            // 敷料无纺布阶梯 27.97 已含 0.8×0.999
+            assertThat(discount).as("敷料无纺布不应再叠折扣: " + row.get("packName")).isNull();
         }
+    }
+
+    @Test
+    void instrumentPacksBelowThreeStillUseEightyPercent() throws Exception {
+        JsonNode rules = zyyBaseline();
+        var discount = BillingPolicyApplier.applyBillDetailDiscounts(
+                rules, "器械包（ZSD）", "换药包(120布)", "高温纸塑袋75*200", "中医附一", 10.0, 2, false, false);
+        assertThat(discount).isNotNull();
+        assertThat(discount.price()).isCloseTo(8.0, within(0.02));
     }
 }
