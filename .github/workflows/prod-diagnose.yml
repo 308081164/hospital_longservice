@@ -41,5 +41,10 @@ jobs:
             echo "== H. fold_offset column + 骨伤钢针 rows =="
             docker exec hospital-mysql mysql --default-character-set=utf8mb4 -uroot -p"$MYSQL_ROOT_PASSWORD" -N -e "SELECT COUNT(*) FROM information_schema.COLUMNS WHERE TABLE_SCHEMA='$DBNAME' AND TABLE_NAME='customer_product_rule' AND COLUMN_NAME='fold_offset';" 2>/dev/null || true
             docker exec hospital-mysql mysql --default-character-set=utf8mb4 -uroot -p"$MYSQL_ROOT_PASSWORD" -N -e "SELECT r.priority, r.rule_type, r.fold_ratio, r.fold_offset, r.unit_price, r.fee, r.is_active FROM $DBNAME.customer_product_rule r JOIN $DBNAME.customer c ON c.id=r.customer_id WHERE c.code='HRB-GUSHANG' AND r.fold_offset IS NOT NULL ORDER BY r.priority;" 2>/dev/null || true
+            echo "== I. ZYY-D1 billing policies（附一折扣策略）=="
+            docker exec hospital-mysql mysql --default-character-set=utf8mb4 -uroot -p"$MYSQL_ROOT_PASSWORD" -N -e "SELECT p.priority, p.policy_type, p.name, p.is_active FROM $DBNAME.customer_billing_policy p JOIN $DBNAME.customer c ON c.id=p.customer_id WHERE c.code='ZYY-D1' ORDER BY p.priority;" 2>/dev/null || true
+            echo "== I2. ＜3件档 rate 与 无纺布是否纳入八折 =="
+            docker exec hospital-mysql mysql --default-character-set=utf8mb4 -uroot -p"$MYSQL_ROOT_PASSWORD" -N -e "SELECT name, params FROM $DBNAME.customer_billing_policy p JOIN $DBNAME.customer c ON c.id=p.customer_id WHERE c.code='ZYY-D1' AND p.name='附一＜3件标准价八折';" 2>/dev/null || true
+            docker exec hospital-mysql mysql --default-character-set=utf8mb4 -uroot -p"$MYSQL_ROOT_PASSWORD" -N -e "SELECT name, scope FROM $DBNAME.customer_billing_policy p JOIN $DBNAME.customer c ON c.id=p.customer_id WHERE c.code='ZYY-D1' AND p.name='附一对账八折';" 2>/dev/null || true
             echo "== G. baseline hash marker vs classpath =="
             docker exec hospital-mysql mysql --default-character-set=utf8mb4 -uroot -p"$MYSQL_ROOT_PASSWORD" -N -e "SELECT setting_key, LEFT(setting_value,20) FROM $DBNAME.sys_setting WHERE setting_key LIKE '%baseline%' OR setting_key LIKE '%manifest%';" 2>/dev/null || true
