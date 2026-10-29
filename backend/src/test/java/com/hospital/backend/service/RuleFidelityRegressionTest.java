@@ -398,11 +398,9 @@ class RuleFidelityRegressionTest {
                 "unitPrice", 5.06,
                 "totalPrice", 5.06
         ));
-        // 2026-10-29 客户更正：＜3 件按标准价×0.8（原 0.75 作废）
-        assertThat(result.expectedUnitPrice).isEqualTo(5.11);
-        assertThat(result.status).isEqualTo("warning");
-        assertThat(result.notes).anyMatch(note -> note.contains("标准价八折"));
-        assertThat(result.notes).anyMatch(note -> note.contains("0.8"));
+        // 2026-10-29 客户反馈：附一纸塑袋阶梯价（10cm=6.39）已是成交价，不得再叠八折
+        assertThat(result.expectedUnitPrice).isEqualTo(6.39);
+        assertThat(result.notes).noneMatch(note -> note != null && note.contains("标准价八折"));
         assertThat(result.notes).noneMatch(note -> note != null && note.contains("0.999"));
         assertThat(result.pricingRule).doesNotContain("30°腹腔镜");
     }

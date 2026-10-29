@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generated_at": "2026-10-29T05:35:59Z",
+  "generated_at": "2026-10-29T05:51:49Z",
   "manifest_hash": "0c59783705082ae4b926d1f6db7fe0c497dc2bd0b2fd5cbfc6e3eb4d630cc558",
   "billing_enabled_count": 45,
   "active_billing_enabled_count": 45,
@@ -5385,7 +5385,11 @@
             "acceptedTypes": [
               "器械包（ZSD）",
               "器械包",
-              "单包装包"
+              "单包装包",
+              "单包装包（等离子）",
+              "单包装包（EO）",
+              "额外包（低温等离子）",
+              "额外包（ETO）"
             ]
           },
           "params": {
@@ -5411,7 +5415,11 @@
             "acceptedTypes": [
               "器械包（ZSD）",
               "器械包",
-              "单包装包"
+              "单包装包",
+              "单包装包（等离子）",
+              "单包装包（EO）",
+              "额外包（低温等离子）",
+              "额外包（ETO）"
             ]
           },
           "params": {
@@ -5426,6 +5434,26 @@
             ]
           },
           "sourceRef": "excel:医院内勤规则10.27.xlsx#账单规则#91"
+        },
+        {
+          "policyType": "DISCOUNT",
+          "name": "附一九九九折·件数无关",
+          "priority": 20,
+          "scope": {
+            "temperature": "ANY",
+            "acceptedTypes": [
+              "单包装包（等离子）",
+              "单包装包（EO）",
+              "额外包（低温等离子）",
+              "额外包（ETO）"
+            ]
+          },
+          "params": {
+            "rate": 0.999,
+            "applyStage": "bill_detail",
+            "skipWhenFixedPrice": false
+          },
+          "sourceRef": "excel:医院内勤规则10.27.xlsx#账单规则#95"
         }
       ],
       "productRules": [
