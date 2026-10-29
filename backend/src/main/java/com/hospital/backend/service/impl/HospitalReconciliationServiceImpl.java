@@ -4266,8 +4266,8 @@ public class HospitalReconciliationServiceImpl implements HospitalReconciliation
                 // 否则 L「单价（把）」会按错误件数摊分（客户 2026-10-29 反馈）。
                 Integer instCount = row.getInstrumentCount();
                 Integer packs = row.getPackCount();
-                if (instCount != null && packs != null && packs > 1) {
-                    instCount = (int) Math.ceil((double) instCount / packs);
+                if (instCount != null && packs != null && packs > 1 && instCount % packs == 0) {
+                    instCount = instCount / packs;
                 }
                 setCellValue(sheet, r, instCountCol + 1, instCount);
             }
