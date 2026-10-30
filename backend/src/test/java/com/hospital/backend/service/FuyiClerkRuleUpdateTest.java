@@ -53,21 +53,12 @@ class FuyiClerkRuleUpdateTest {
     }
 
     @Test
-    void eoAndEtoPacksUseEightyPercentThenNineNineNine() throws Exception {
-        for (String type : new String[]{"单包装包（EO）", "额外包（ETO）"}) {
-            var d = apply(type, 44.0, 6);
-            assertThat(d).as(type + " 应命中 8 折 + 999 折").isNotNull();
-            // 44×0.8=35.2；再×0.999=35.16
-            assertThat(d.price()).isCloseTo(35.16, within(0.02));
-            assertThat(d.note()).contains("0.999");
+    void lowTempTypesAlreadyDiscountedByOverride() throws Exception {
+        // 客户 2026-10-30：低温阶梯价（含 EO/ETO）本身已含 0.8×0.999，不能再折
+        for (String type : new String[]{
+                "单包装包（EO）", "单包装包(EO)", "额外包（ETO）", "额外包(ETO)",
+                "单包装包（等离子）", "额外包（低温等离子）", "单包装包（老肯低温）"}) {
+            assertThat(apply(type, 22.38, 1)).as(type + " 不应再叠折").isNull();
         }
-    }
-
-    @Test
-    void plasmaTypesAlreadyDiscountedByOverride() throws Exception {
-        // 低温纸塑袋阶梯（22.38 等）本身已含 0.8×0.999，不能再折（客户 2026-10-30 截图）
-        assertThat(apply("单包装包（等离子）", 22.38, 1)).isNull();
-        assertThat(apply("额外包（低温等离子）", 22.38, 1)).isNull();
-        assertThat(apply("单包装包（老肯低温）", 22.38, 1)).isNull();
     }
 }

@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generated_at": "2026-10-30T01:19:23Z",
+  "generated_at": "2026-10-30T02:36:58Z",
   "manifest_hash": "0c59783705082ae4b926d1f6db7fe0c497dc2bd0b2fd5cbfc6e3eb4d630cc558",
   "billing_enabled_count": 45,
   "active_billing_enabled_count": 45,
@@ -5364,10 +5364,6 @@
           "scope": {
             "temperature": "ANY",
             "acceptedTypes": [
-              "单包装包（EO）",
-              "单包装包(EO)",
-              "额外包（ETO）",
-              "额外包(ETO)",
               "敷料包",
               "敷料包（纸塑袋）",
               "敷料包(纸塑袋)"
@@ -5385,7 +5381,7 @@
               }
             ]
           },
-          "sourceRef": "excel:医院内勤规则10.27.xlsx#账单规则#92,93"
+          "sourceRef": "excel:医院内勤规则10.27.xlsx#账单规则#92"
         },
         {
           "policyType": "DISCOUNT",
@@ -5394,10 +5390,6 @@
           "scope": {
             "temperature": "ANY",
             "acceptedTypes": [
-              "单包装包（EO）",
-              "单包装包(EO)",
-              "额外包（ETO）",
-              "额外包(ETO)",
               "敷料包",
               "敷料包（纸塑袋）",
               "敷料包(纸塑袋)"
@@ -5414,27 +5406,7 @@
               }
             ]
           },
-          "sourceRef": "excel:医院内勤规则10.27.xlsx#账单规则#91,92"
-        },
-        {
-          "policyType": "DISCOUNT",
-          "name": "附一九九九折·件数无关",
-          "priority": 20,
-          "scope": {
-            "temperature": "ANY",
-            "acceptedTypes": [
-              "单包装包（EO）",
-              "单包装包(EO)",
-              "额外包（ETO）",
-              "额外包(ETO)"
-            ]
-          },
-          "params": {
-            "rate": 0.999,
-            "applyStage": "bill_detail",
-            "skipWhenFixedPrice": false
-          },
-          "sourceRef": "excel:医院内勤规则10.27.xlsx#账单规则#95"
+          "sourceRef": "excel:医院内勤规则10.27.xlsx#账单规则#92"
         }
       ],
       "productRules": [

@@ -37,10 +37,6 @@
       "scope": {
         "temperature": "ANY",
         "acceptedTypes": [
-          "单包装包（EO）",
-          "单包装包(EO)",
-          "额外包（ETO）",
-          "额外包(ETO)",
           "敷料包",
           "敷料包（纸塑袋）",
           "敷料包(纸塑袋)"
@@ -58,7 +54,7 @@
           }
         ]
       },
-      "sourceRef": "excel:医院内勤规则10.27.xlsx#账单规则#92,93"
+      "sourceRef": "excel:医院内勤规则10.27.xlsx#账单规则#92"
     },
     {
       "policyType": "DISCOUNT",
@@ -67,10 +63,6 @@
       "scope": {
         "temperature": "ANY",
         "acceptedTypes": [
-          "单包装包（EO）",
-          "单包装包(EO)",
-          "额外包（ETO）",
-          "额外包(ETO)",
           "敷料包",
           "敷料包（纸塑袋）",
           "敷料包(纸塑袋)"
@@ -87,27 +79,7 @@
           }
         ]
       },
-      "sourceRef": "excel:医院内勤规则10.27.xlsx#账单规则#91,92"
-    },
-    {
-      "policyType": "DISCOUNT",
-      "name": "附一九九九折·件数无关",
-      "priority": 20,
-      "scope": {
-        "temperature": "ANY",
-        "acceptedTypes": [
-          "单包装包（EO）",
-          "单包装包(EO)",
-          "额外包（ETO）",
-          "额外包(ETO)"
-        ]
-      },
-      "params": {
-        "rate": 0.999,
-        "applyStage": "bill_detail",
-        "skipWhenFixedPrice": false
-      },
-      "sourceRef": "excel:医院内勤规则10.27.xlsx#账单规则#95"
+      "sourceRef": "excel:医院内勤规则10.27.xlsx#账单规则#92"
     }
   ],
   "archivedProductRulesNote": "2026-09-23 封存：类型特色规则暂停，对账改走标准价叠折试用",
