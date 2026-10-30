@@ -306,8 +306,8 @@ class SpecialCharge20261023GapPricingTest {
         assertThat(rinse6.pricingRule).contains("冲洗头>5折算22");
         assertThat(joined(rinse6)).contains("折算为 2 件");
         assertThat(rinse6.expectedUnitPrice).isCloseTo(olive6.expectedUnitPrice, CENT);
-        // 低温类型仍需 0.8×0.999：2 件 × 22 = 44 → 35.16
-        assertThat(rinse6.expectedUnitPrice).isCloseTo(35.16, CENT);
+        // 低温纸塑袋阶梯价已是成交价（含 0.8×0.999），不再叠折：2 件 × 22 = 44
+        assertThat(rinse6.expectedUnitPrice).isCloseTo(44.00, CENT);
     }
 
     @Test
