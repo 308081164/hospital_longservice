@@ -11,15 +11,10 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.within;
 
 /**
- * 附一折扣口径（2026-10-29 客户多轮反馈后的最终形态）：
- *
- *  不打折（override 阶梯价已是成交价）：
- *    额外包（纸塑袋）6.39、器械包/器械包（ZSD）66.00（15 件高温无纺布）
- *  8 折：
- *    敷料包、敷料包（纸塑袋）
- *  8 折再 999 折：
- *    单包装包（EO/等离子）、额外包（ETO/低温等离子）
- *  额外包（无纺布）<3：固定 13.2
+ * 中医附一计价口径（2026-10-30 客户确认）：
+ *  - 《附一收费标准.xlsx》作废封存，override 与 supplement 规则全部移除；
+ *  - 只有两个权威来源：特殊收费20261026.xlsx 序号33（8 条）、内勤规则 91-96（6 条折扣）。
+ *  - 标准价走通用引擎，再按内勤六条打折。
  */
 class FuyiClerkRuleUpdateTest {
 
@@ -38,27 +33,47 @@ class FuyiClerkRuleUpdateTest {
     }
 
     @Test
-    void paperPlasticExtraPackAndInstrumentPackKeepContractPrice() throws Exception {
-        // 客户：6.39 已对，不能再八折；器械包 66.00 同理
-        assertThat(apply("额外包（纸塑袋）", 6.39, 1)).isNull();
-        assertThat(apply("器械包", 66.00, 15)).isNull();
-        assertThat(apply("器械包（ZSD）", 66.00, 15)).isNull();
+    void onlyAuthoritativeRulesRemain() throws Exception {
+        JsonNode baseline = zyyBaseline();
+        assertThat(baseline.hasNonNull("standardPricingOverride"))
+                .as("作废价表的 override 必须移除（显式 null 用于清库）")
+                .isFalse();
+        assertThat(baseline.path("productRules"))
+                .as("只保留特殊收费 Excel 的规则")
+                .hasSize(8);
+        for (JsonNode rule : baseline.path("productRules")) {
+            assertThat(rule.path("sourceRef").asText())
+                    .as("规则必须能追溯到特殊收费 20261026")
+                    .contains("特殊收费20261026");
+        }
+    }
+
+    @Test
+    void paperPlasticBelowThreeUsesEightyPercent() throws Exception {
+        var d = apply("额外包（纸塑袋）", 8.00, 1);
+        assertThat(d).isNotNull();
+        assertThat(d.price()).isCloseTo(6.40, within(0.02));
+    }
+
+    @Test
+    void instrumentPackUsesEightyPercent() throws Exception {
+        var d = apply("器械包", 66.00, 15);
+        assertThat(d).isNotNull();
+        assertThat(d.price()).isCloseTo(52.80, within(0.02));
     }
 
     @Test
     void dressingPackUsesEightyPercent() throws Exception {
-        var d = apply("敷料包（纸塑袋）", 10.0, 1);
+        var d = apply("敷料包（纸塑袋）", 10.00, 1);
         assertThat(d).isNotNull();
-        assertThat(d.price()).isCloseTo(8.0, within(0.02));
+        assertThat(d.price()).isCloseTo(8.00, within(0.02));
     }
 
     @Test
-    void lowTempTypesAlreadyDiscountedByOverride() throws Exception {
-        // 客户 2026-10-30：低温阶梯价（含 EO/ETO）本身已含 0.8×0.999，不能再折
-        for (String type : new String[]{
-                "单包装包（EO）", "单包装包(EO)", "额外包（ETO）", "额外包(ETO)",
-                "单包装包（等离子）", "额外包（低温等离子）", "单包装包（老肯低温）"}) {
-            assertThat(apply(type, 22.38, 1)).as(type + " 不应再叠折").isNull();
-        }
+    void lowTempUsesEightyPercentThenNineNineNine() throws Exception {
+        var d = apply("单包装包（等离子）", 28.00, 1);
+        assertThat(d).isNotNull();
+        // 28×0.8=22.40；再×0.999=22.38
+        assertThat(d.price()).isCloseTo(22.38, within(0.02));
     }
 }

@@ -40,9 +40,9 @@ def build_manifest(existing: dict | None = None) -> dict:
         if billing_enabled:
             enabled += 1
         prev = (existing.get("customers") or {}).get(code) or {}
+        # 与 billingPolicies 同理：baseline 里没有该键就不能回退到旧 manifest，
+        # 否则「删除 override」（附一 2026-10-30 作废价表）永远不生效。
         override = baseline.get("standardPricingOverride")
-        if override is None:
-            override = prev.get("standardPricingOverride")
         customers[code] = {
             "code": code,
             "name": baseline.get("customerName") or prev.get("name") or code,

@@ -10,6 +10,14 @@
       <section class="mb-4 rounded-lg bg-gray-50 p-3">
         <div class="mb-2 text-sm font-medium text-gray-800">{{ packTitle }}</div>
         <div class="grid grid-cols-2 gap-2 text-xs">
+          <div class="col-span-2">
+            <span class="text-gray-500">{{ t('reconciliation.columns.type') }}：</span>
+            <span class="font-medium">{{ packType }}</span>
+          </div>
+          <div class="col-span-2">
+            <span class="text-gray-500">{{ t('reconciliation.columns.packageMaterial') }}：</span>
+            <span class="font-medium">{{ packageMaterial }}</span>
+          </div>
           <div>
             <span class="text-gray-500">{{ t('reconciliation.detail.billPrice') }}：</span>
             <span class="font-medium">{{ formatCurrency(billUnitPrice) }}</span>
@@ -168,6 +176,19 @@
     const packName = String(props.row.packName ?? props.row.pack_name ?? '—')
     const sheet = props.row.sheetName ?? props.row.sheet_name
     return sheet ? `${packName}（${sheet}）` : packName
+  })
+
+  /** 计价回顾时最需要先看到的两项：包类型与包装材料（2026-10-30 客户反馈）。 */
+  const packType = computed(() => {
+    const raw = props.row?.type
+    if (raw == null || String(raw).trim() === '') return '—'
+    return localizeReconciliationDisplayText(String(raw))
+  })
+
+  const packageMaterial = computed(() => {
+    const raw = props.row?.packageMaterial ?? props.row?.package_material
+    if (raw == null || String(raw).trim() === '') return '—'
+    return localizeReconciliationDisplayText(String(raw))
   })
 
   const billUnitPrice = computed(() => {

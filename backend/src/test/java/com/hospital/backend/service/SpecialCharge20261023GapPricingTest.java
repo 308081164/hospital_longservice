@@ -268,20 +268,19 @@ class SpecialCharge20261023GapPricingTest {
 
         PricingEngine.ProcessedResult four = priced(
                 engine, hospital, "器械包（ZSD）", "换药包(120布)", 4);
-        // 2026-10-29：附一不再叠八折，4×5.5 + 5.49 = 27.49
-        assertThat(four.expectedUnitPrice).isCloseTo(27.49, CENT);
+        // 2026-10-30：4×5.5+5.49 = 27.49，≥3 件再八折 = 21.99
+        assertThat(four.expectedUnitPrice).isCloseTo(21.99, CENT);
         String notes = joined(four);
         assertThat(notes).contains("5.5");
-        assertThat(notes).doesNotContain("附一对账八折");
         assertThat(notes).doesNotContain("6.25");
         assertThat(notes).doesNotContain("28.25");
         assertThat(four.pricingRule).doesNotContain("6.25");
 
         PricingEngine.ProcessedResult two = priced(
                 engine, hospital, "器械包（ZSD）", "换药包(120布)", 2);
-        // 2×5.5 + 5.49 = 16.49，不再叠八折
-        assertThat(two.expectedUnitPrice).isCloseTo(16.49, CENT);
-        assertThat(joined(two)).doesNotContain("标准价八折");
+        // 2×5.5 + 5.49 = 16.49，＜3 件再八折 = 13.19
+        assertThat(two.expectedUnitPrice).isCloseTo(13.19, CENT);
+        assertThat(joined(two)).contains("标准价八折");
     }
 
     @Test
@@ -306,8 +305,8 @@ class SpecialCharge20261023GapPricingTest {
         assertThat(rinse6.pricingRule).contains("冲洗头>5折算22");
         assertThat(joined(rinse6)).contains("折算为 2 件");
         assertThat(rinse6.expectedUnitPrice).isCloseTo(olive6.expectedUnitPrice, CENT);
-        // 低温纸塑袋阶梯价已是成交价（含 0.8×0.999），不再叠折：2 件 × 22 = 44
-        assertThat(rinse6.expectedUnitPrice).isCloseTo(44.00, CENT);
+        // 2 件 × 22 = 44，低温再 0.8×0.999 = 35.16
+        assertThat(rinse6.expectedUnitPrice).isCloseTo(35.16, CENT);
     }
 
     @Test

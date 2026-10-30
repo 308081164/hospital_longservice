@@ -219,11 +219,19 @@ public class BillingRulesManifestReconciler implements CommandLineRunner {
                 changed = true;
             }
         }
-        if (node.has("standardPricingOverride") && !node.get("standardPricingOverride").isNull()) {
-            String override = node.get("standardPricingOverride").toString();
-            if (!override.equals(customer.getStandardPricingOverride())) {
-                customer.setStandardPricingOverride(override);
-                changed = true;
+        if (node.has("standardPricingOverride")) {
+            JsonNode overrideNode = node.get("standardPricingOverride");
+            if (overrideNode.isNull()) {
+                if (customer.getStandardPricingOverride() != null) {
+                    customer.setStandardPricingOverride(null);
+                    changed = true;
+                }
+            } else {
+                String override = overrideNode.toString();
+                if (!override.equals(customer.getStandardPricingOverride())) {
+                    customer.setStandardPricingOverride(override);
+                    changed = true;
+                }
             }
         }
         if (node.has("billingEnabled") && !node.get("billingEnabled").isNull()) {
