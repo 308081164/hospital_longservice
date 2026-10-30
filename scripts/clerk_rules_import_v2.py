@@ -18,7 +18,7 @@ import openpyxl
 
 ROOT = Path(__file__).resolve().parents[1]
 # 云端以 docs/source 为准；本地旧目录保留兼容回退
-XLSX = ROOT / "docs/source/医院内勤规则10.27.xlsx"
+XLSX = ROOT / "docs/source/医院内勤规则10.30(1).xlsx"
 CLERK_DIR = ROOT / "backend/src/main/resources/clerk-rules"
 BASELINE_DIR = CLERK_DIR / "baseline"
 ATTACH_DST = CLERK_DIR / "attachments"

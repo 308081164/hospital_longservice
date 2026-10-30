@@ -1,8 +1,8 @@
 {
   "customerCode": "ZYY-D1",
   "customerName": "黑龙江中医药大学附属第一医院",
-  "sourceVersion": "docs/source/附一收费标准.xlsx",
-  "notes": "中医附一内勤规则 · 布局、物流、加急、附表来自附一收费标准。2026-10-27 账单规则第91–96行已列入本档并启用；算价仍由 billing-rules 同名计价策略执行，避免导出再叠一次。＜3 件纸塑额外/器械/单包装改为系统价七五折；敷料无纺布改为系统价×0.999。整院八折与旧 0.792 校对保持封存。",
+  "sourceVersion": "docs/source/医院内勤规则10.30(1).xlsx#账单规则#91-97",
+  "notes": "中医附一：2026-10-30 以《医院内勤规则10.30(1).xlsx》账单规则 91-97 为唯一口径（7 条）。",
   "attachmentRefs": [],
   "rules": [
     {
@@ -19,48 +19,43 @@
           "器械包（ZSD）",
           "器械包",
           "单包装包"
-        ],
-        "executedBy": "billingPolicies:附一对账八折"
+        ]
       },
-      "sourceText": "额外包(纸塑袋)、额外包（无纺布）、器械包（ZSD）、器械包、单包装包；件数≥3；标准价格*0.8。对账由计价策略「附一对账八折」执行，导出不再叠一次。",
-      "sourceRef": "excel:医院内勤规则10.27.xlsx#账单规则#91",
+      "sourceRef": "excel:医院内勤规则10.30(1).xlsx#账单规则#91",
       "priority": 13
     },
     {
       "ruleType": "BILL_FORMULA",
-      "name": "附一敷料纸塑标准价八折",
+      "name": "附一敷料纸塑及敷料包八折",
       "stage": "bill_export",
       "isActive": true,
       "params": {
         "formula": "标准价格*0.8",
         "instrumentCount": "器械数量无关",
         "acceptedTypes": [
-          "敷料包（纸塑袋）"
-        ],
-        "executedBy": "billingPolicies:附一对账八折"
+          "敷料包（纸塑袋）",
+          "敷料包"
+        ]
       },
-      "sourceText": "敷料包(纸塑袋)；器械数量无关；标准价格*0.8。对账由计价策略「附一对账八折」执行，导出不再叠一次。",
-      "sourceRef": "excel:医院内勤规则10.27.xlsx#账单规则#92",
+      "sourceRef": "excel:医院内勤规则10.30(1).xlsx#账单规则#92",
       "priority": 14
     },
     {
       "ruleType": "BILL_FORMULA",
-      "name": "附一＜3件标准价八折",
+      "name": "附一＜3件标准价八折再999折",
       "stage": "bill_export",
       "isActive": true,
       "params": {
-        "formula": "标准价格*0.8",
+        "formula": "标准价格*0.8*0.999",
         "instrumentCount": "＜3",
         "acceptedTypes": [
           "额外包（纸塑袋）",
           "器械包（ZSD）",
           "器械包",
           "单包装包"
-        ],
-        "executedBy": "billingPolicies:附一对账八折"
+        ]
       },
-      "sourceText": "额外包(纸塑袋)、器械包（ZSD）、器械包、单包装包；件数＜3；标准价格*0.8。对账由计价策略「附一对账八折」执行，导出不再叠一次。",
-      "sourceRef": "excel:医院内勤规则10.27.xlsx#账单规则#93",
+      "sourceRef": "excel:医院内勤规则10.30(1).xlsx#账单规则#93",
       "priority": 15
     },
     {
@@ -71,40 +66,51 @@
       "params": {
         "formula": "13.2",
         "instrumentCount": "＜3",
-        "fixedUnitPrice": 13.2,
         "acceptedTypes": [
           "额外包（无纺布）"
         ],
-        "executedBy": "billingPolicies:附一额外无纺布<3固定价"
+        "fixedUnitPrice": 13.2
       },
-      "sourceText": "额外包（无纺布）；件数＜3；固定价格13.2。对账由计价策略「附一额外无纺布<3固定价」执行，导出不再叠一次。",
-      "sourceRef": "excel:医院内勤规则10.27.xlsx#账单规则#94",
+      "sourceRef": "excel:医院内勤规则10.30(1).xlsx#账单规则#94",
       "priority": 16
     },
     {
       "ruleType": "BILL_FORMULA",
-      "name": "附一低温件数无关八折再乘0.999",
+      "name": "附一换药包120布固定21.99",
+      "stage": "bill_export",
+      "isActive": true,
+      "params": {
+        "formula": "21.99",
+        "instrumentCount": "器械数量无关",
+        "acceptedTypes": [
+          "换药包（120布）"
+        ],
+        "fixedUnitPrice": 21.99
+      },
+      "sourceRef": "excel:医院内勤规则10.30(1).xlsx#账单规则#95",
+      "priority": 17
+    },
+    {
+      "ruleType": "BILL_FORMULA",
+      "name": "附一低温八折再999折",
       "stage": "bill_export",
       "isActive": true,
       "params": {
         "formula": "标准价格*0.8*0.999",
         "instrumentCount": "跟器械数量无关",
         "acceptedTypes": [
-          "单包装包（等离子）",
+          "单包装包（低温等离子）",
           "单包装包（EO）",
           "额外包（低温等离子）",
           "额外包（ETO）"
-        ],
-        "excelTypes": "单包装包(老肯等温）、单包装包（EO）、额外包（低温等离子）、额外包（ETO)",
-        "executedBy": "billingPolicies:附一对账八折+附一九九九折·件数无关"
+        ]
       },
-      "sourceText": "单包装包(老肯等温）、单包装包（EO）、额外包（低温等离子）、额外包（ETO)；跟器械数量无关；标准价格*0.8*0.999。系统包类型用单包装包（等离子）。对账由计价策略执行，导出不再叠一次。",
-      "sourceRef": "excel:医院内勤规则10.27.xlsx#账单规则#95",
-      "priority": 17
+      "sourceRef": "excel:医院内勤规则10.30(1).xlsx#账单规则#96",
+      "priority": 18
     },
     {
       "ruleType": "BILL_FORMULA",
-      "name": "附一敷料无纺布八折再九九九折",
+      "name": "附一敷料无纺布八折再999折",
       "stage": "bill_export",
       "isActive": true,
       "params": {
@@ -112,12 +118,10 @@
         "instrumentCount": "跟器械数量无关",
         "acceptedTypes": [
           "敷料包（无纺布）"
-        ],
-        "executedBy": "billingPolicies:附一对账八折+附一九九九折·敷料无纺布"
+        ]
       },
-      "sourceText": "敷料包(无纺布)；跟器械数量无关；标准价格*0.8*0.999。对账由计价策略执行，导出不再叠一次。",
-      "sourceRef": "excel:医院内勤规则10.27.xlsx#账单规则#96",
-      "priority": 18
+      "sourceRef": "excel:医院内勤规则10.30(1).xlsx#账单规则#97",
+      "priority": 19
     },
     {
       "ruleType": "EXPORT_LAYOUT",

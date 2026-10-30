@@ -281,7 +281,7 @@
         "acceptedTypes": [
           "器械包（低温等离子）",
           "器械包（ETO)",
-          "单包装包(老肯等温）",
+          "单包装包(老肯低温）",
           "单包装包（EO）",
           "额外包（低温等离子）",
           "额外包（ETO)"
@@ -294,7 +294,7 @@
         "systemPrice": null,
         "systemPriceMode": "IGNORE"
       },
-      "sourceText": "器械包（低温等离子）、器械包（ETO)、单包装包(老肯等温）、单包装包（EO）、额外包（低温等离子）、额外包（ETO) | 10≤N<20 | 不读取。根据器械把数选择价格区间。 | 225",
+      "sourceText": "器械包（低温等离子）、器械包（ETO)、单包装包(老肯低温）、单包装包（EO）、额外包（低温等离子）、额外包（ETO) | 10≤N<20 | 不读取。根据器械把数选择价格区间。 | 225",
       "sourceRef": "excel:账单规则#道外区人民医院#13",
       "priority": 23
     },
@@ -307,7 +307,7 @@
         "acceptedTypes": [
           "器械包（低温等离子）",
           "器械包（ETO)",
-          "单包装包(老肯等温）",
+          "单包装包(老肯低温）",
           "单包装包（EO）",
           "额外包（低温等离子）",
           "额外包（ETO)"
@@ -320,7 +320,7 @@
         "systemPrice": null,
         "systemPriceMode": "IGNORE"
       },
-      "sourceText": "器械包（低温等离子）、器械包（ETO)、单包装包(老肯等温）、单包装包（EO）、额外包（低温等离子）、额外包（ETO) | 5≤N<10 | 不读取。根据器械把数选择价格区间。 | 124",
+      "sourceText": "器械包（低温等离子）、器械包（ETO)、单包装包(老肯低温）、单包装包（EO）、额外包（低温等离子）、额外包（ETO) | 5≤N<10 | 不读取。根据器械把数选择价格区间。 | 124",
       "sourceRef": "excel:账单规则#道外区人民医院#14",
       "priority": 24
     },
@@ -333,7 +333,7 @@
         "acceptedTypes": [
           "器械包（低温等离子）",
           "器械包（ETO)",
-          "单包装包(老肯等温）",
+          "单包装包(老肯低温）",
           "单包装包（EO）",
           "额外包（低温等离子）",
           "额外包（ETO)"
@@ -346,18 +346,18 @@
         "systemPrice": null,
         "systemPriceMode": "IGNORE"
       },
-      "sourceText": "器械包（低温等离子）、器械包（ETO)、单包装包(老肯等温）、单包装包（EO）、额外包（低温等离子）、额外包（ETO) | 1≤N<5 | 不读取。根据器械把数选择价格区间。 | 66",
+      "sourceText": "器械包（低温等离子）、器械包（ETO)、单包装包(老肯低温）、单包装包（EO）、额外包（低温等离子）、额外包（ETO) | 1≤N<5 | 不读取。根据器械把数选择价格区间。 | 66",
       "sourceRef": "excel:账单规则#道外区人民医院#15",
       "priority": 25
     },
     {
       "ruleType": "BILL_EXPORT_PRICE_RULE",
-      "name": "单包装包(老肯等温）",
+      "name": "单包装包(老肯低温）",
       "stage": "bill_export",
       "isActive": true,
       "params": {
         "acceptedTypes": [
-          "单包装包(老肯等温）",
+          "单包装包(老肯低温）",
           "单包装包（EO）",
           "额外包（低温等离子）",
           "额外包（ETO)"
@@ -370,18 +370,18 @@
         "systemPrice": null,
         "systemPriceMode": "IGNORE"
       },
-      "sourceText": "单包装包(老肯等温）、单包装包（EO）、额外包（低温等离子）、额外包（ETO) | 30cm | 26.5 | 一件一包，以纸塑袋大小判断",
+      "sourceText": "单包装包(老肯低温）、单包装包（EO）、额外包（低温等离子）、额外包（ETO) | 30cm | 26.5 | 一件一包，以纸塑袋大小判断",
       "sourceRef": "excel:账单规则#道外区人民医院#16",
       "priority": 26
     },
     {
       "ruleType": "BILL_EXPORT_PRICE_RULE",
-      "name": "单包装包(老肯等温）",
+      "name": "单包装包(老肯低温）",
       "stage": "bill_export",
       "isActive": true,
       "params": {
         "acceptedTypes": [
-          "单包装包(老肯等温）",
+          "单包装包(老肯低温）",
           "单包装包（EO）",
           "额外包（低温等离子）",
           "额外包（ETO)"
@@ -394,18 +394,18 @@
         "systemPrice": null,
         "systemPriceMode": "IGNORE"
       },
-      "sourceText": "单包装包(老肯等温）、单包装包（EO）、额外包（低温等离子）、额外包（ETO) | 25cm | 22.5",
+      "sourceText": "单包装包(老肯低温）、单包装包（EO）、额外包（低温等离子）、额外包（ETO) | 25cm | 22.5",
       "sourceRef": "excel:账单规则#道外区人民医院#17",
       "priority": 27
     },
     {
       "ruleType": "BILL_EXPORT_PRICE_RULE",
-      "name": "单包装包(老肯等温）",
+      "name": "单包装包(老肯低温）",
       "stage": "bill_export",
       "isActive": true,
       "params": {
         "acceptedTypes": [
-          "单包装包(老肯等温）",
+          "单包装包(老肯低温）",
           "单包装包（EO）",
           "额外包（低温等离子）",
           "额外包（ETO)"
@@ -418,18 +418,18 @@
         "systemPrice": null,
         "systemPriceMode": "IGNORE"
       },
-      "sourceText": "单包装包(老肯等温）、单包装包（EO）、额外包（低温等离子）、额外包（ETO) | 20cm | 21",
+      "sourceText": "单包装包(老肯低温）、单包装包（EO）、额外包（低温等离子）、额外包（ETO) | 20cm | 21",
       "sourceRef": "excel:账单规则#道外区人民医院#18",
       "priority": 28
     },
     {
       "ruleType": "BILL_EXPORT_PRICE_RULE",
-      "name": "单包装包(老肯等温）",
+      "name": "单包装包(老肯低温）",
       "stage": "bill_export",
       "isActive": true,
       "params": {
         "acceptedTypes": [
-          "单包装包(老肯等温）",
+          "单包装包(老肯低温）",
           "单包装包（EO）",
           "额外包（低温等离子）",
           "额外包（ETO)"
@@ -442,18 +442,18 @@
         "systemPrice": null,
         "systemPriceMode": "IGNORE"
       },
-      "sourceText": "单包装包(老肯等温）、单包装包（EO）、额外包（低温等离子）、额外包（ETO) | 15cm | 19",
+      "sourceText": "单包装包(老肯低温）、单包装包（EO）、额外包（低温等离子）、额外包（ETO) | 15cm | 19",
       "sourceRef": "excel:账单规则#道外区人民医院#19",
       "priority": 29
     },
     {
       "ruleType": "BILL_EXPORT_PRICE_RULE",
-      "name": "单包装包(老肯等温）",
+      "name": "单包装包(老肯低温）",
       "stage": "bill_export",
       "isActive": true,
       "params": {
         "acceptedTypes": [
-          "单包装包(老肯等温）",
+          "单包装包(老肯低温）",
           "单包装包（EO）",
           "额外包（低温等离子）",
           "额外包（ETO)"
@@ -466,7 +466,7 @@
         "systemPrice": null,
         "systemPriceMode": "IGNORE"
       },
-      "sourceText": "单包装包(老肯等温）、单包装包（EO）、额外包（低温等离子）、额外包（ETO) | 10cm | 16.5",
+      "sourceText": "单包装包(老肯低温）、单包装包（EO）、额外包（低温等离子）、额外包（ETO) | 10cm | 16.5",
       "sourceRef": "excel:账单规则#道外区人民医院#20",
       "priority": 30
     },

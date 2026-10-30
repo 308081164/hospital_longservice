@@ -352,7 +352,8 @@ class ClerkRuleCompilerTest {
     @Test
     void zyyD1October20FormulasStayVisibleAndDoNotStackExportDiscount() {
         JsonNode baseline = new ClerkRuleIndex().baselineForCustomer("ZYY-D1");
-        assertThat(baseline.path("rules")).hasSize(15);
+        // 2026-10-30 新表：账单规则 91-97 共 7 条公式（原 6 条）
+        assertThat(baseline.path("rules")).hasSize(16);
         List<String> formulaRefs = new java.util.ArrayList<>();
         int sealed = 0;
         for (JsonNode rule : baseline.path("rules")) {
@@ -365,12 +366,13 @@ class ClerkRuleCompilerTest {
             }
         }
         assertThat(formulaRefs).containsExactly(
-                "excel:医院内勤规则10.27.xlsx#账单规则#91",
-                "excel:医院内勤规则10.27.xlsx#账单规则#92",
-                "excel:医院内勤规则10.27.xlsx#账单规则#93",
-                "excel:医院内勤规则10.27.xlsx#账单规则#94",
-                "excel:医院内勤规则10.27.xlsx#账单规则#95",
-                "excel:医院内勤规则10.27.xlsx#账单规则#96");
+                "excel:医院内勤规则10.30(1).xlsx#账单规则#91",
+                "excel:医院内勤规则10.30(1).xlsx#账单规则#92",
+                "excel:医院内勤规则10.30(1).xlsx#账单规则#93",
+                "excel:医院内勤规则10.30(1).xlsx#账单规则#94",
+                "excel:医院内勤规则10.30(1).xlsx#账单规则#95",
+                "excel:医院内勤规则10.30(1).xlsx#账单规则#96",
+                "excel:医院内勤规则10.30(1).xlsx#账单规则#97");
         assertThat(sealed).isEqualTo(2);
 
         ObjectNode compiled = compiler.compileForCustomer("ZYY-D1");
@@ -384,15 +386,14 @@ class ClerkRuleCompilerTest {
         }
         assertThat(compiledFormulas).containsExactly(
                 "附一≥3件标准价八折",
-                "附一敷料纸塑标准价八折",
-                "附一＜3件标准价八折",
+                "附一敷料纸塑及敷料包八折",
+                "附一＜3件标准价八折再999折",
                 "附一额外无纺布＜3固定13.2",
-                "附一低温件数无关八折再乘0.999",
-                "附一敷料无纺布八折再九九九折");
+                "附一换药包120布固定21.99",
+                "附一低温八折再999折",
+                "附一敷料无纺布八折再999折");
         for (JsonNode policy : compiled.path("billingPolicies")) {
             assertThat(policy.path("name").asText()).doesNotContain("系统价七五折");
-            assertThat(policy.path("name").asText()).doesNotContain("13.2");
-            assertThat(policy.path("name").asText()).doesNotContain("0.999");
             if ("DISCOUNT".equals(policy.path("policyType").asText())) {
                 assertThat(policy.path("params").path("applyStage").asText()).isNotEqualTo("export_only");
             }

@@ -39,20 +39,46 @@ class FuyiClerkRuleUpdateTest {
                 .as("作废价表的 override 必须移除（显式 null 用于清库）")
                 .isFalse();
         assertThat(baseline.path("productRules"))
-                .as("只保留特殊收费 Excel 的规则")
-                .hasSize(8);
+                .as("只保留权威来源：特殊收费 20261026 + 内勤 10.30 的换药包固定价")
+                .hasSize(7);
         for (JsonNode rule : baseline.path("productRules")) {
-            assertThat(rule.path("sourceRef").asText())
-                    .as("规则必须能追溯到特殊收费 20261026")
-                    .contains("特殊收费20261026");
+            String ref = rule.path("sourceRef").asText();
+            assertThat(ref.contains("特殊收费20261026") || ref.contains("医院内勤规则10.30"))
+                    .as("规则必须能追溯到权威表: " + ref)
+                    .isTrue();
         }
     }
 
     @Test
-    void paperPlasticBelowThreeUsesEightyPercent() throws Exception {
+    void paperPlasticBelowThreeUsesEightyPercentThenNineNineNine() throws Exception {
+        // 10.30 新表：＜3 件 = 标准价*0.8*0.999 → 8.00 × 0.8 × 0.999 = 6.39
         var d = apply("额外包（纸塑袋）", 8.00, 1);
         assertThat(d).isNotNull();
-        assertThat(d.price()).isCloseTo(6.40, within(0.02));
+        assertThat(d.price()).isCloseTo(6.39, within(0.02));
+    }
+
+    @Test
+    void dressing120ClothHasFixedPrice2199() throws Exception {
+        // 10.30 新表：换药包(120布) 器械数量无关，固定 21.99（按包名匹配的固定价规则，且跳过折扣）
+        JsonNode baseline = zyyBaseline();
+        JsonNode rule = null;
+        for (JsonNode r : baseline.path("productRules")) {
+            if ("附一换药包120布固定21.99".equals(r.path("name").asText())) {
+                rule = r;
+            }
+        }
+        assertThat(rule).as("换药包 21.99 固定价规则缺失").isNotNull();
+        assertThat(rule.path("price").asDouble()).isEqualTo(21.99);
+        assertThat(rule.path("skipDiscount").asBoolean()).as("固定价不能再被打折").isTrue();
+        assertThat(rule.path("skipPackaging").asBoolean()).as("21.99 为含包材的最终价").isTrue();
+    }
+
+    @Test
+    void nonWovenDressingUsesEightyPercentThenNineNineNine() throws Exception {
+        var d = apply("敷料包（无纺布）", 35.00, 5);
+        assertThat(d).isNotNull();
+        // 35 × 0.8 × 0.999 = 27.97
+        assertThat(d.price()).isCloseTo(27.97, within(0.02));
     }
 
     @Test

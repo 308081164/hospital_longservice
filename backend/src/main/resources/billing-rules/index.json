@@ -1,6 +1,6 @@
 {
-  "baseline_hash": "106036b1641d5b57ac49600a46210d80d33d2c6f68fc042675fcc2ad9c7dddb0",
-  "generated_at": "2026-10-30T05:37:19Z",
+  "baseline_hash": "bc597196f8cddb9cb6cefc30215304edd01fe4c841b212b9c798f7b67fe8ab91",
+  "generated_at": "2026-10-30T08:38:54Z",
   "source": "billing-rules-manifest@6a4ec3fbe7896cc575c6c8eabecd644fea23f11dd22afa4c970f9dc07d36c4a4",
   "customer_count": 45,
   "customers": [
@@ -271,8 +271,8 @@
     {
       "code": "ZYY-D1",
       "file": "baseline/ZYY-D1.json",
-      "ruleCount": 8,
-      "fileHash": "9198c86b694aa1dc6f09b2d8ca06dfdc6bcf208a342d5409b4f0a3866228f423"
+      "ruleCount": 7,
+      "fileHash": "b398a598dc75dba096acdaf62b856fae98ae639865f62cf3721092267447e0e5"
     }
   ]
 }

@@ -1,7 +1,7 @@
 {
   "version": 1,
-  "generated_at": "2026-10-30T05:37:19Z",
-  "manifest_hash": "edeccc21effa2978c5e8d4905f50c5ee54ef7ef5b81a9cf182ae5314d10ddf80",
+  "generated_at": "2026-10-30T08:38:54Z",
+  "manifest_hash": "9ccf2e7dc158bf66d2dde8eb1fc6f036f97e599174d8686e199254820cf5c895",
   "billing_enabled_count": 45,
   "active_billing_enabled_count": 45,
   "customers": {
@@ -5219,7 +5219,26 @@
             "applyStage": "bill_detail",
             "skipWhenFixedPrice": false
           },
-          "sourceRef": "excel:医院内勤规则10.27.xlsx#账单规则#91"
+          "sourceRef": "excel:医院内勤规则10.30(1).xlsx#账单规则#91"
+        },
+        {
+          "policyType": "DISCOUNT",
+          "name": "附一敷料纸塑及敷料包八折",
+          "priority": 10,
+          "scope": {
+            "temperature": "ANY",
+            "acceptedTypes": [
+              "敷料包（纸塑袋）",
+              "敷料包(纸塑袋)",
+              "敷料包"
+            ]
+          },
+          "params": {
+            "rate": 0.8,
+            "applyStage": "bill_detail",
+            "skipWhenFixedPrice": false
+          },
+          "sourceRef": "excel:医院内勤规则10.30(1).xlsx#账单规则#92"
         },
         {
           "policyType": "DISCOUNT",
@@ -5248,7 +5267,36 @@
             "applyStage": "bill_detail",
             "skipWhenFixedPrice": false
           },
-          "sourceRef": "excel:医院内勤规则10.27.xlsx#账单规则#93"
+          "sourceRef": "excel:医院内勤规则10.30(1).xlsx#账单规则#93"
+        },
+        {
+          "policyType": "DISCOUNT",
+          "name": "附一＜3件再九九九折",
+          "priority": 25,
+          "scope": {
+            "temperature": "ANY",
+            "acceptedTypes": [
+              "额外包（纸塑袋）",
+              "额外包(纸塑袋)",
+              "器械包（ZSD）",
+              "器械包(ZSD)",
+              "器械包",
+              "单包装包"
+            ]
+          },
+          "params": {
+            "pieceTierDiscounts": [
+              {
+                "minPieces": 1,
+                "maxPieces": 2,
+                "rate": 0.999,
+                "decimalPlaces": 2
+              }
+            ],
+            "applyStage": "bill_detail",
+            "skipWhenFixedPrice": false
+          },
+          "sourceRef": "excel:医院内勤规则10.30(1).xlsx#账单规则#93"
         },
         {
           "policyType": "DISCOUNT",
@@ -5273,25 +5321,7 @@
             "applyStage": "bill_detail",
             "skipWhenFixedPrice": false
           },
-          "sourceRef": "excel:医院内勤规则10.27.xlsx#账单规则#94"
-        },
-        {
-          "policyType": "DISCOUNT",
-          "name": "附一敷料纸塑标准价八折",
-          "priority": 10,
-          "scope": {
-            "temperature": "ANY",
-            "acceptedTypes": [
-              "敷料包（纸塑袋）",
-              "敷料包(纸塑袋)"
-            ]
-          },
-          "params": {
-            "rate": 0.8,
-            "applyStage": "bill_detail",
-            "skipWhenFixedPrice": false
-          },
-          "sourceRef": "excel:医院内勤规则10.27.xlsx#账单规则#92"
+          "sourceRef": "excel:医院内勤规则10.30(1).xlsx#账单规则#94"
         },
         {
           "policyType": "DISCOUNT",
@@ -5300,8 +5330,8 @@
           "scope": {
             "temperature": "ANY",
             "acceptedTypes": [
-              "单包装包（等离子）",
-              "单包装包(等离子)",
+              "单包装包（低温等离子）",
+              "单包装包(低温等离子)",
               "单包装包（EO）",
               "单包装包(EO)",
               "额外包（低温等离子）",
@@ -5315,7 +5345,7 @@
             "applyStage": "bill_detail",
             "skipWhenFixedPrice": false
           },
-          "sourceRef": "excel:医院内勤规则10.27.xlsx#账单规则#95"
+          "sourceRef": "excel:医院内勤规则10.30(1).xlsx#账单规则#96"
         },
         {
           "policyType": "DISCOUNT",
@@ -5324,8 +5354,8 @@
           "scope": {
             "temperature": "ANY",
             "acceptedTypes": [
-              "单包装包（等离子）",
-              "单包装包(等离子)",
+              "单包装包（低温等离子）",
+              "单包装包(低温等离子)",
               "单包装包（EO）",
               "单包装包(EO)",
               "额外包（低温等离子）",
@@ -5339,7 +5369,7 @@
             "applyStage": "bill_detail",
             "skipWhenFixedPrice": false
           },
-          "sourceRef": "excel:医院内勤规则10.27.xlsx#账单规则#95"
+          "sourceRef": "excel:医院内勤规则10.30(1).xlsx#账单规则#96"
         },
         {
           "policyType": "DISCOUNT",
@@ -5357,7 +5387,7 @@
             "applyStage": "bill_detail",
             "skipWhenFixedPrice": false
           },
-          "sourceRef": "excel:医院内勤规则10.27.xlsx#账单规则#96"
+          "sourceRef": "excel:医院内勤规则10.30(1).xlsx#账单规则#97"
         },
         {
           "policyType": "DISCOUNT",
@@ -5375,43 +5405,21 @@
             "applyStage": "bill_detail",
             "skipWhenFixedPrice": false
           },
-          "sourceRef": "excel:医院内勤规则10.27.xlsx#账单规则#96"
+          "sourceRef": "excel:医院内勤规则10.30(1).xlsx#账单规则#97"
         }
       ],
       "productRules": [
         {
-          "ruleType": "PRICE_PER_INSTRUMENT",
-          "name": "附一特殊收费换药包120布按件5.5",
-          "priority": 90,
-          "price": 5.5,
+          "ruleType": "FIXED_PRICE",
+          "name": "附一换药包120布固定21.99",
+          "priority": 1,
+          "price": 21.99,
           "keywords": [
-            "换药包(120布)"
+            "换药包(120布)@contains"
           ],
           "skipPackaging": true,
-          "skipDiscount": false,
-          "isActive": true,
-          "matchMode": "first",
-          "acceptedTypes": [
-            "器械包（ZSD）"
-          ],
-          "sourceRef": "excel:特殊收费20261026#各医院特殊收费#序号33① r140"
-        },
-        {
-          "ruleType": "EXTRA_FEE",
-          "name": "附一特殊收费换药包120布加价5.49",
-          "priority": 91,
-          "fee": 5.49,
-          "keywords": [
-            "换药包(120布)"
-          ],
-          "skipPackaging": true,
-          "skipDiscount": false,
-          "isActive": true,
-          "matchMode": "first",
-          "acceptedTypes": [
-            "器械包（ZSD）"
-          ],
-          "sourceRef": "excel:特殊收费20261026#各医院特殊收费#序号33① r140"
+          "skipDiscount": true,
+          "sourceRef": "excel:医院内勤规则10.30(1).xlsx#账单规则#95"
         },
         {
           "ruleType": "FOLD",
@@ -5541,8 +5549,8 @@
           "sourceRef": "excel:特殊收费20261026#各医院特殊收费#序号33③ r143-144"
         }
       ],
-      "rule_count": 8,
-      "active_rule_count": 8
+      "rule_count": 7,
+      "active_rule_count": 7
     }
   }
 }

@@ -398,10 +398,10 @@ class RuleFidelityRegressionTest {
                 "unitPrice", 5.06,
                 "totalPrice", 5.06
         ));
-        // 2026-10-30 客户作废旧价表：标准价 8.00 × 内勤八折 = 6.40
-        assertThat(result.expectedUnitPrice).isEqualTo(6.40);
+        // 10.30 新表：标准价 8.00 × 0.8 × 0.999 = 6.39
+        assertThat(result.expectedUnitPrice).isEqualTo(6.39);
         assertThat(result.notes).anyMatch(note -> note != null && note.contains("附一＜3件标准价八折"));
-        assertThat(result.notes).noneMatch(note -> note != null && note.contains("0.999"));
+        assertThat(result.notes).anyMatch(note -> note != null && note.contains("0.999"));
         assertThat(result.pricingRule).doesNotContain("30°腹腔镜");
     }
 }

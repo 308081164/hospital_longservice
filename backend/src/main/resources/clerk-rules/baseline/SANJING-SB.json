@@ -365,7 +365,7 @@
         "acceptedTypes": [
           "器械包（低温等离子）",
           "器械包（ETO)",
-          "单包装包(老肯等温）",
+          "单包装包(老肯低温）",
           "单包装包（EO）",
           "额外包（低温等离子）",
           "额外包（ETO)"
@@ -378,7 +378,7 @@
         "systemPrice": null,
         "systemPriceMode": "IGNORE"
       },
-      "sourceText": "器械包（低温等离子）、器械包（ETO)、单包装包(老肯等温）、单包装包（EO）、额外包（低温等离子）、额外包（ETO) | 10≤N<20 | 不读取。根据器械把数选择价格区间。 | 240",
+      "sourceText": "器械包（低温等离子）、器械包（ETO)、单包装包(老肯低温）、单包装包（EO）、额外包（低温等离子）、额外包（ETO) | 10≤N<20 | 不读取。根据器械把数选择价格区间。 | 240",
       "sourceRef": "excel:账单规则#三精肾病医院#17",
       "priority": 27
     },
@@ -391,7 +391,7 @@
         "acceptedTypes": [
           "器械包（低温等离子）",
           "器械包（ETO)",
-          "单包装包(老肯等温）",
+          "单包装包(老肯低温）",
           "单包装包（EO）",
           "额外包（低温等离子）",
           "额外包（ETO)"
@@ -404,7 +404,7 @@
         "systemPrice": null,
         "systemPriceMode": "IGNORE"
       },
-      "sourceText": "器械包（低温等离子）、器械包（ETO)、单包装包(老肯等温）、单包装包（EO）、额外包（低温等离子）、额外包（ETO) | 5≤N<10 | 不读取。根据器械把数选择价格区间。 | 132",
+      "sourceText": "器械包（低温等离子）、器械包（ETO)、单包装包(老肯低温）、单包装包（EO）、额外包（低温等离子）、额外包（ETO) | 5≤N<10 | 不读取。根据器械把数选择价格区间。 | 132",
       "sourceRef": "excel:账单规则#三精肾病医院#18",
       "priority": 28
     },
@@ -417,7 +417,7 @@
         "acceptedTypes": [
           "器械包（低温等离子）",
           "器械包（ETO)",
-          "单包装包(老肯等温）",
+          "单包装包(老肯低温）",
           "单包装包（EO）",
           "额外包（低温等离子）",
           "额外包（ETO)"
@@ -430,18 +430,18 @@
         "systemPrice": null,
         "systemPriceMode": "IGNORE"
       },
-      "sourceText": "器械包（低温等离子）、器械包（ETO)、单包装包(老肯等温）、单包装包（EO）、额外包（低温等离子）、额外包（ETO) | 1≤N<5 | 不读取。根据器械把数选择价格区间。 | 70.4",
+      "sourceText": "器械包（低温等离子）、器械包（ETO)、单包装包(老肯低温）、单包装包（EO）、额外包（低温等离子）、额外包（ETO) | 1≤N<5 | 不读取。根据器械把数选择价格区间。 | 70.4",
       "sourceRef": "excel:账单规则#三精肾病医院#19",
       "priority": 29
     },
     {
       "ruleType": "BILL_EXPORT_PRICE_RULE",
-      "name": "单包装包(老肯等温）",
+      "name": "单包装包(老肯低温）",
       "stage": "bill_export",
       "isActive": true,
       "params": {
         "acceptedTypes": [
-          "单包装包(老肯等温）",
+          "单包装包(老肯低温）",
           "单包装包（EO）",
           "额外包（低温等离子）",
           "额外包（ETO)"
@@ -454,18 +454,18 @@
         "systemPrice": null,
         "systemPriceMode": "IGNORE"
       },
-      "sourceText": "单包装包(老肯等温）、单包装包（EO）、额外包（低温等离子）、额外包（ETO) | 30cm | 28 | 一件一包，以纸塑袋大小判断",
+      "sourceText": "单包装包(老肯低温）、单包装包（EO）、额外包（低温等离子）、额外包（ETO) | 30cm | 28 | 一件一包，以纸塑袋大小判断",
       "sourceRef": "excel:账单规则#三精肾病医院#20",
       "priority": 30
     },
     {
       "ruleType": "BILL_EXPORT_PRICE_RULE",
-      "name": "单包装包(老肯等温）",
+      "name": "单包装包(老肯低温）",
       "stage": "bill_export",
       "isActive": true,
       "params": {
         "acceptedTypes": [
-          "单包装包(老肯等温）",
+          "单包装包(老肯低温）",
           "单包装包（EO）",
           "额外包（低温等离子）",
           "额外包（ETO)"
@@ -478,18 +478,18 @@
         "systemPrice": null,
         "systemPriceMode": "IGNORE"
       },
-      "sourceText": "单包装包(老肯等温）、单包装包（EO）、额外包（低温等离子）、额外包（ETO) | 25cm | 24",
+      "sourceText": "单包装包(老肯低温）、单包装包（EO）、额外包（低温等离子）、额外包（ETO) | 25cm | 24",
       "sourceRef": "excel:账单规则#三精肾病医院#21",
       "priority": 31
     },
     {
       "ruleType": "BILL_EXPORT_PRICE_RULE",
-      "name": "单包装包(老肯等温）",
+      "name": "单包装包(老肯低温）",
       "stage": "bill_export",
       "isActive": true,
       "params": {
         "acceptedTypes": [
-          "单包装包(老肯等温）",
+          "单包装包(老肯低温）",
           "单包装包（EO）",
           "额外包（低温等离子）",
           "额外包（ETO)"
@@ -502,18 +502,18 @@
         "systemPrice": null,
         "systemPriceMode": "IGNORE"
       },
-      "sourceText": "单包装包(老肯等温）、单包装包（EO）、额外包（低温等离子）、额外包（ETO) | 20cm | 22.4",
+      "sourceText": "单包装包(老肯低温）、单包装包（EO）、额外包（低温等离子）、额外包（ETO) | 20cm | 22.4",
       "sourceRef": "excel:账单规则#三精肾病医院#22",
       "priority": 32
     },
     {
       "ruleType": "BILL_EXPORT_PRICE_RULE",
-      "name": "单包装包(老肯等温）",
+      "name": "单包装包(老肯低温）",
       "stage": "bill_export",
       "isActive": true,
       "params": {
         "acceptedTypes": [
-          "单包装包(老肯等温）",
+          "单包装包(老肯低温）",
           "单包装包（EO）",
           "额外包（低温等离子）",
           "额外包（ETO)"
@@ -526,18 +526,18 @@
         "systemPrice": null,
         "systemPriceMode": "IGNORE"
       },
-      "sourceText": "单包装包(老肯等温）、单包装包（EO）、额外包（低温等离子）、额外包（ETO) | 15cm | 20",
+      "sourceText": "单包装包(老肯低温）、单包装包（EO）、额外包（低温等离子）、额外包（ETO) | 15cm | 20",
       "sourceRef": "excel:账单规则#三精肾病医院#23",
       "priority": 33
     },
     {
       "ruleType": "BILL_EXPORT_PRICE_RULE",
-      "name": "单包装包(老肯等温）",
+      "name": "单包装包(老肯低温）",
       "stage": "bill_export",
       "isActive": true,
       "params": {
         "acceptedTypes": [
-          "单包装包(老肯等温）",
+          "单包装包(老肯低温）",
           "单包装包（EO）",
           "额外包（低温等离子）",
           "额外包（ETO)"
@@ -550,7 +550,7 @@
         "systemPrice": null,
         "systemPriceMode": "IGNORE"
       },
-      "sourceText": "单包装包(老肯等温）、单包装包（EO）、额外包（低温等离子）、额外包（ETO) | 10cm | 17.6",
+      "sourceText": "单包装包(老肯低温）、单包装包（EO）、额外包（低温等离子）、额外包（ETO) | 10cm | 17.6",
       "sourceRef": "excel:账单规则#三精肾病医院#24",
       "priority": 34
     },

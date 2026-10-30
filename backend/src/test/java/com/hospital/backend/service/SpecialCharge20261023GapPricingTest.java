@@ -268,19 +268,18 @@ class SpecialCharge20261023GapPricingTest {
 
         PricingEngine.ProcessedResult four = priced(
                 engine, hospital, "器械包（ZSD）", "换药包(120布)", 4);
-        // 2026-10-30：4×5.5+5.49 = 27.49，≥3 件再八折 = 21.99
+        // 10.30 新表：换药包(120布) 固定 21.99（器械数量无关）
         assertThat(four.expectedUnitPrice).isCloseTo(21.99, CENT);
         String notes = joined(four);
-        assertThat(notes).contains("5.5");
+        assertThat(notes).contains("附一换药包120布固定21.99");
         assertThat(notes).doesNotContain("6.25");
         assertThat(notes).doesNotContain("28.25");
         assertThat(four.pricingRule).doesNotContain("6.25");
 
         PricingEngine.ProcessedResult two = priced(
                 engine, hospital, "器械包（ZSD）", "换药包(120布)", 2);
-        // 2×5.5 + 5.49 = 16.49，＜3 件再八折 = 13.19
-        assertThat(two.expectedUnitPrice).isCloseTo(13.19, CENT);
-        assertThat(joined(two)).contains("标准价八折");
+        // 10.30 新表：换药包(120布) 器械数量无关，固定 21.99
+        assertThat(two.expectedUnitPrice).isCloseTo(21.99, CENT);
     }
 
     @Test
