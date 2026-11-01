@@ -33,6 +33,13 @@ jobs:
             echo "== 0e. mysql processlist / uptime =="
             docker exec hospital-mysql mysql --default-character-set=utf8mb4 -uroot -p"$MYSQL_ROOT_PASSWORD" -N -e "SELECT VERSION(); SHOW GLOBAL STATUS LIKE 'Threads_connected'; SHOW GLOBAL STATUS LIKE 'Uptime';" 2>/dev/null || echo "(mysql unreachable)"
             docker exec hospital-mysql mysql --default-character-set=utf8mb4 -uroot -p"$MYSQL_ROOT_PASSWORD" -e "SHOW PROCESSLIST;" 2>/dev/null | head -12 || true
+            echo "== 0g. top / io =="
+            top -bn1 | head -14 || true
+            (iostat -x 1 2 2>/dev/null | tail -20) || echo "(no iostat)"
+            cat /proc/pressure/io 2>/dev/null || true
+            echo "== 0h. innodb trx =="
+            docker exec hospital-mysql mysql --default-character-set=utf8mb4 -uroot -p"$MYSQL_ROOT_PASSWORD" -e "SELECT trx_id, trx_state, trx_started, TIMESTAMPDIFF(SECOND,trx_started,NOW()) secs, trx_mysql_thread_id, LEFT(trx_query,120) q FROM information_schema.innodb_trx ORDER BY secs DESC LIMIT 10;" 2>/dev/null || true
+            docker exec hospital-mysql mysql --default-character-set=utf8mb4 -uroot -p"$MYSQL_ROOT_PASSWORD" -N -e "SHOW ENGINE INNODB STATUS\G" 2>/dev/null | grep -aE "Pending|History list|Log sequence|fsync|spin|TRANSACTIONS|Trx id|ACTIVE" | head -20 || true
             echo "== 0f. recent reconciliation jobs =="
             docker exec hospital-mysql mysql --default-character-set=utf8mb4 -uroot -p"$MYSQL_ROOT_PASSWORD" -N -e "SELECT id, hospital_name, total_rows, review_status, created_at FROM $DBNAME.hospital_reconciliation_job ORDER BY id DESC LIMIT 6;" 2>/dev/null || true
             echo "== A. ZYY-D1 override =="
