@@ -40,5 +40,6 @@ jobs:
             echo "== after =="
             df -h "$DATA_MOUNT" | tail -1
             echo "== service check =="
-            curl -s -o /dev/null -w "version_http=%{http_code}\n" -m 5 http://127.0.0.1:8088/api/v1/base/version || true
+            port=$(docker port hospital-backend 8000/tcp 2>/dev/null | head -1 | awk -F: '{print $NF}')
+            curl -s -o /dev/null -w "version_http=%{http_code}\n" -m 5 "http://127.0.0.1:${port:-8853}/api/v1/base/version" || true
             docker ps --format '{{.Names}}	{{.Status}}' | grep -E 'hospital-(backend|frontend|mysql)' || true
