@@ -22,6 +22,19 @@ jobs:
             cd "$DPATH"
             DBNAME="${MYSQL_DATABASE:-hospital}"
             set -a; source .env; set +a
+            echo "== 0. host health =="
+            date; uptime; df -h / /mnt 2>/dev/null | head -6; df -i / | tail -2; free -m | head -3
+            echo "== 0b. containers =="
+            docker ps -a --format '{{.Names}}	{{.Status}}	{{.Image}}' | head -12
+            echo "== 0c. backend recent errors =="
+            docker logs hospital-backend --since 12h 2>&1 | grep -aE "ERROR|Exception|OutOfMemory|No space left|Connection refused|Too many connections|Deadlock" | tail -25 || echo "(no error lines)"
+            echo "== 0d. backend last 15 log lines =="
+            docker logs hospital-backend --tail 15 2>&1 | tail -15 || true
+            echo "== 0e. mysql processlist / uptime =="
+            docker exec hospital-mysql mysql --default-character-set=utf8mb4 -uroot -p"$MYSQL_ROOT_PASSWORD" -N -e "SELECT VERSION(); SHOW GLOBAL STATUS LIKE 'Threads_connected'; SHOW GLOBAL STATUS LIKE 'Uptime';" 2>/dev/null || echo "(mysql unreachable)"
+            docker exec hospital-mysql mysql --default-character-set=utf8mb4 -uroot -p"$MYSQL_ROOT_PASSWORD" -e "SHOW PROCESSLIST;" 2>/dev/null | head -12 || true
+            echo "== 0f. recent reconciliation jobs =="
+            docker exec hospital-mysql mysql --default-character-set=utf8mb4 -uroot -p"$MYSQL_ROOT_PASSWORD" -N -e "SELECT id, hospital_name, total_rows, review_status, created_at FROM $DBNAME.hospital_reconciliation_job ORDER BY id DESC LIMIT 6;" 2>/dev/null || true
             echo "== A. ZYY-D1 override =="
             docker exec hospital-mysql mysql --default-character-set=utf8mb4 -uroot -p"$MYSQL_ROOT_PASSWORD" -N -e "SELECT code, IF(standard_pricing_override IS NULL,'NULL','SET') FROM $DBNAME.customer WHERE code IN ('ZYY-D1','HRB-2ND');" 2>/dev/null || true
             echo "== B. not-null count in whole customer table =="
