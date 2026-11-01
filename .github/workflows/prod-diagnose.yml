@@ -37,6 +37,12 @@ jobs:
             top -bn1 | head -14 || true
             (iostat -x 1 2 2>/dev/null | tail -20) || echo "(no iostat)"
             cat /proc/pressure/io 2>/dev/null || true
+            echo "== 0i. zombies by parent =="
+            ps -eo stat,ppid,comm | awk '$1 ~ /^Z/ {print $2}' | sort | uniq -c | sort -rn | head -8 || true
+            ps -eo stat,ppid,comm | awk '$1 ~ /^Z/' | wc -l || true
+            for p in $(ps -eo stat,ppid | awk '$1 ~ /^Z/ {print $2}' | sort | uniq -c | sort -rn | head -3 | awk '{print $2}'); do echo "-- parent $p:"; ps -o pid,ppid,stat,etime,cmd -p $p 2>/dev/null | tail -2; done
+            echo "== 0j. pid pressure =="
+            cat /proc/sys/kernel/pid_max; ps -e | wc -l
             echo "== 0h. innodb trx =="
             docker exec hospital-mysql mysql --default-character-set=utf8mb4 -uroot -p"$MYSQL_ROOT_PASSWORD" -e "SELECT trx_id, trx_state, trx_started, TIMESTAMPDIFF(SECOND,trx_started,NOW()) secs, trx_mysql_thread_id, LEFT(trx_query,120) q FROM information_schema.innodb_trx ORDER BY secs DESC LIMIT 10;" 2>/dev/null || true
             docker exec hospital-mysql mysql --default-character-set=utf8mb4 -uroot -p"$MYSQL_ROOT_PASSWORD" -N -e "SHOW ENGINE INNODB STATUS\G" 2>/dev/null | grep -aE "Pending|History list|Log sequence|fsync|spin|TRANSACTIONS|Trx id|ACTIVE" | head -20 || true
