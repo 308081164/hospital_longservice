@@ -1,0 +1,46 @@
+name: Prod Restart (P0 手动)
+
+on:
+  workflow_dispatch:
+
+jobs:
+  restart:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Restart mysql / cleanup zombies / restart backend
+        uses: appleboy/ssh-action@v1.2.5
+        with:
+          host: ${{ secrets.DEPLOY_HOST }}
+          username: ${{ secrets.DEPLOY_USER }}
+          key: ${{ secrets.DEPLOY_SSH_KEY }}
+          port: ${{ secrets.DEPLOY_PORT || 22 }}
+          command_timeout: 5m
+          script: |
+            set -e
+            DPATH="${{ secrets.DEPLOY_PATH || '/mnt/newdisk/app/Hospital' }}"
+            cd "$DPATH"
+            set -a; source .env; set +a
+            echo "== zombies before =="
+            ps -eo stat | awk '$1 ~ /^Z/' | wc -l
+            echo "== restart mysql =="
+            docker restart hospital-mysql
+            for i in $(seq 1 60); do
+              if docker exec hospital-mysql mysqladmin ping -h 127.0.0.1 -uroot -p"$MYSQL_ROOT_PASSWORD" --silent >/dev/null 2>&1; then echo "mysql ready after ${i}0s"; break; fi
+              sleep 10
+            done
+            echo "== restart zombie source (autoattend-backend) =="
+            docker restart autoattend-backend || echo "(autoattend restart skipped)"
+            sleep 10
+            echo "== zombies after =="
+            ps -eo stat | awk '$1 ~ /^Z/' | wc -l
+            echo "== restart hospital-backend =="
+            docker restart hospital-backend
+            for i in $(seq 1 40); do
+              code=$(curl -s -o /dev/null -w '%{http_code}' -m 3 http://127.0.0.1:8088/api/v1/base/version || true)
+              [ "$code" = "200" ] && { echo "backend ready after ${i}0s"; break; }
+              sleep 10
+            done
+            echo "== containers =="
+            docker ps --format '{{.Names}}	{{.Status}}' | head -8
+            echo "== load =="
+            uptime
