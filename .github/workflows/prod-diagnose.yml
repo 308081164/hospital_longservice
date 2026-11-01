@@ -79,19 +79,24 @@ jobs:
             docker exec hospital-mysql mysql --default-character-set=utf8mb4 -uroot -p"$MYSQL_ROOT_PASSWORD" -N -e "SELECT name, scope FROM $DBNAME.customer_billing_policy p JOIN $DBNAME.customer c ON c.id=p.customer_id WHERE c.code='ZYY-D1' AND p.name='附一对账八折';" 2>/dev/null || true
             echo "== G. baseline hash marker vs classpath =="
             docker exec hospital-mysql mysql --default-character-set=utf8mb4 -uroot -p"$MYSQL_ROOT_PASSWORD" -N -e "SELECT setting_key, LEFT(setting_value,20) FROM $DBNAME.sys_setting WHERE setting_key LIKE '%baseline%' OR setting_key LIKE '%manifest%';" 2>/dev/null || true
-            echo "== Z. DISK (P0 2026-11-01) =="
-            date; uptime
-            df -h | head -15
-            echo "-- docker root --"
-            droot=$(docker info -f "{{.DockerRootDir}}" 2>/dev/null || echo /var/lib/docker)
-            echo "root=$droot"
-            df -h "$droot" 2>/dev/null | tail -2
-            df -i "$droot" 2>/dev/null | tail -2
-            echo "-- biggest under docker root --"
-            du -sh "$droot"/* 2>/dev/null | sort -h | tail -8 || true
-            echo "-- deploy path biggest --"
-            du -sh "$DPATH"/* 2>/dev/null | sort -h | tail -8 || true
-            echo "-- mysql mounts --"
-            docker inspect hospital-mysql -f "{{range .Mounts}}{{.Source}} -> {{.Destination}}{{println}}{{end}}" 2>/dev/null || true
-            echo "-- containers --"
-            docker ps -a --format "{{.Names}}	{{.Status}}" | head -10
+            echo "== Z. EMERGENCY DISK FREE + START MYSQL =="
+            set +e
+            df -h | head -12
+            docker system df || true
+            echo "-- prune dangling images --"
+            docker image prune -f || true
+            echo "-- prune build cache --"
+            docker builder prune -f || true
+            echo "-- old archives --"
+            ls -1dt "$DPATH"/archive* "$DPATH"/backup* 2>/dev/null | tail -n +4 | while read -r d; do echo "rm $d"; rm -rf "$d"; done || true
+            df -h | head -12
+            echo "-- start mysql --"
+            docker start hospital-mysql || true
+            for i in $(seq 1 12); do
+              docker exec hospital-mysql mysqladmin ping -h 127.0.0.1 -uroot -p"$MYSQL_ROOT_PASSWORD" --silent >/dev/null 2>&1 && { echo "mysql ready after ${i}0s"; break; }
+              sleep 10
+            done
+            docker ps --format "{{.Names}}	{{.Status}}" | head -8
+            df -h | head -12
+            echo "== Z2. mysql log tail =="
+            docker logs hospital-mysql --tail 12 2>&1 | tail -12 || true
