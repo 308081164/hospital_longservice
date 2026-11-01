@@ -35,12 +35,15 @@ class BillExportRowGrouperTest {
         HospitalReconciliationRow partRow = row("1612746", "组件-1/Z3040", 24.5);
         HospitalReconciliationRow instrumentPart = row("1612746", "持针器-1/Z1026", 23.1);
         HospitalReconciliationRow strozScope = row("1615345", "STROZ腹腔镜-1（30度）/Z2060", 19.6);
+        // 2026-11-01 客户反馈：无 -N 序号的正常包名不能被当成 kit 汇总行删掉
+        HospitalReconciliationRow breathingKit = row("1639976", "简易呼吸器一套/Z3060", 49.0);
 
-        List<HospitalReconciliationRow> filtered =
-                grouper.excludeKitComponentRows(List.of(kit, component, partRow, instrumentPart, strozScope));
+        List<HospitalReconciliationRow> filtered = grouper.excludeKitComponentRows(
+                List.of(kit, component, partRow, instrumentPart, strozScope, breathingKit));
 
         assertThat(filtered).extracting(HospitalReconciliationRow::getPackName)
-                .containsExactly("宫腔镜包", "组件-1/Z3040", "持针器-1/Z1026", "STROZ腹腔镜-1（30度）/Z2060");
+                .containsExactly("宫腔镜包", "组件-1/Z3040", "持针器-1/Z1026",
+                        "STROZ腹腔镜-1（30度）/Z2060", "简易呼吸器一套/Z3060");
     }
 
     @Test

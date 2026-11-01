@@ -121,8 +121,10 @@ public class BillExportRowGrouper {
             return false;
         }
         String beforeSlash = packName.substring(0, slash).trim();
-        // 裸「电切镜/电切环」汇总行（无 -N 组件序号）
-        return !beforeSlash.matches(".*-\\d+.*");
+        // 仅排除「电切镜/电切环」这类裸 kit 汇总行。
+        // 2026-11-01 客户反馈：省二松北「简易呼吸器一套/Z3060」被误删（源 5 行、导出 4 行），
+        // 旧规则「只要 / 前没有 -N 就删」过宽，会误伤正常包名。
+        return beforeSlash.startsWith("电切镜") || beforeSlash.startsWith("电切环");
     }
 
     List<HospitalReconciliationRow> aggregateByOrderAndPackName(List<HospitalReconciliationRow> rows) {
