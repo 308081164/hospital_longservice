@@ -79,24 +79,18 @@ jobs:
             docker exec hospital-mysql mysql --default-character-set=utf8mb4 -uroot -p"$MYSQL_ROOT_PASSWORD" -N -e "SELECT name, scope FROM $DBNAME.customer_billing_policy p JOIN $DBNAME.customer c ON c.id=p.customer_id WHERE c.code='ZYY-D1' AND p.name='附一对账八折';" 2>/dev/null || true
             echo "== G. baseline hash marker vs classpath =="
             docker exec hospital-mysql mysql --default-character-set=utf8mb4 -uroot -p"$MYSQL_ROOT_PASSWORD" -N -e "SELECT setting_key, LEFT(setting_value,20) FROM $DBNAME.sys_setting WHERE setting_key LIKE '%baseline%' OR setting_key LIKE '%manifest%';" 2>/dev/null || true
-            echo "== Z. EMERGENCY DISK FREE + START MYSQL =="
+            echo "== Z. START BACKEND (P0) =="
             set +e
-            df -h | head -12
-            docker system df || true
-            echo "-- prune dangling images --"
-            docker image prune -f || true
-            echo "-- prune build cache --"
-            docker builder prune -f || true
-            echo "-- old archives --"
-            ls -1dt "$DPATH"/archive* "$DPATH"/backup* 2>/dev/null | tail -n +4 | while read -r d; do echo "rm $d"; rm -rf "$d"; done || true
-            df -h | head -12
-            echo "-- start mysql --"
-            docker start hospital-mysql || true
-            for i in $(seq 1 12); do
-              docker exec hospital-mysql mysqladmin ping -h 127.0.0.1 -uroot -p"$MYSQL_ROOT_PASSWORD" --silent >/dev/null 2>&1 && { echo "mysql ready after ${i}0s"; break; }
+            docker ps --format "{{.Names}}	{{.Status}}" | head -8
+            echo "-- backend log before restart --"
+            docker logs hospital-backend --tail 25 2>&1 | tail -25
+            docker restart hospital-backend
+            for i in $(seq 1 16); do
+              code=$(curl -s -o /dev/null -w "%{http_code}" -m 3 http://127.0.0.1:8088/api/v1/base/version)
+              echo "local_version_http=$code (i=$i)"
+              [ "$code" = "200" ] && break
               sleep 10
             done
             docker ps --format "{{.Names}}	{{.Status}}" | head -8
-            df -h | head -12
-            echo "== Z2. mysql log tail =="
-            docker logs hospital-mysql --tail 12 2>&1 | tail -12 || true
+            echo "-- backend log after restart --"
+            docker logs hospital-backend --tail 30 2>&1 | tail -30
