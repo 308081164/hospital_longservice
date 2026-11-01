@@ -79,21 +79,11 @@ jobs:
             docker exec hospital-mysql mysql --default-character-set=utf8mb4 -uroot -p"$MYSQL_ROOT_PASSWORD" -N -e "SELECT name, scope FROM $DBNAME.customer_billing_policy p JOIN $DBNAME.customer c ON c.id=p.customer_id WHERE c.code='ZYY-D1' AND p.name='附一对账八折';" 2>/dev/null || true
             echo "== G. baseline hash marker vs classpath =="
             docker exec hospital-mysql mysql --default-character-set=utf8mb4 -uroot -p"$MYSQL_ROOT_PASSWORD" -N -e "SELECT setting_key, LEFT(setting_value,20) FROM $DBNAME.sys_setting WHERE setting_key LIKE '%baseline%' OR setting_key LIKE '%manifest%';" 2>/dev/null || true
-            echo "== Z. DISK CLEANUP (P0 follow-up) =="
+            echo "== Z. STOP autoattend-backend =="
             set +e
+            docker stop autoattend-backend && echo STOPPED || echo "STOP_FAILED"
+            sleep 5
+            echo "zombies_after=$(ps -eo stat | awk '$1 ~ /^Z/' | wc -l)"
+            uptime
             df -h /mnt/newdisk | tail -1
-            echo "-- mysql datadir size --"
-            docker exec hospital-mysql du -sh /var/lib/mysql 2>/dev/null | tail -1
-            echo "-- binlogs --"
-            docker exec hospital-mysql sh -c "ls -1 /var/lib/mysql/*.binlog 2>/dev/null | wc -l; du -ch /var/lib/mysql/*.binlog 2>/dev/null | tail -1"
-            echo "-- purge binlogs older than 3 days --"
-            docker exec hospital-mysql mysql -uroot -p"$MYSQL_ROOT_PASSWORD" -e "PURGE BINARY LOGS BEFORE DATE_SUB(NOW(), INTERVAL 3 DAY);" 2>&1 | tail -3
-            echo "-- docker system df --"
-            docker system df
-            echo "-- prune images unused > 720h --"
-            docker image prune -a -f --filter "until=720h" 2>&1 | tail -2
-            docker builder prune -f 2>&1 | tail -1
-            echo "-- deploy dir top --"
-            du -sh "$DPATH"/* 2>/dev/null | sort -h | tail -6
-            echo "-- final disk --"
-            df -h /mnt/newdisk | tail -1
+            docker ps --format "{{.Names}}	{{.Status}}" | head -8
