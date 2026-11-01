@@ -1,0 +1,44 @@
+name: Disk Cleanup (每日自动 + 手动)
+
+on:
+  schedule:
+    # 每天 04:00 北京时间（UTC 20:00）
+    - cron: "0 20 * * *"
+  workflow_dispatch:
+
+concurrency:
+  group: disk-cleanup
+  cancel-in-progress: false
+
+jobs:
+  cleanup:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Prune images / build cache / binlogs
+        uses: appleboy/ssh-action@v1.2.5
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          port: ${{ secrets.SSH_PORT || 22 }}
+          command_timeout: 10m
+          script: |
+            set -e
+            DPATH="${{ secrets.DEPLOY_PATH || '/mnt/newdisk/app/Hospital' }}"
+            cd "$DPATH"
+            set -a; source .env; set +a
+            DATA_MOUNT=$(df --output=target "$DPATH" | tail -1)
+            echo "== before =="
+            df -h "$DATA_MOUNT" | tail -1
+            echo "== prune unused images (>=30d) =="
+            docker image prune -a -f --filter "until=720h" 2>&1 | tail -1 || true
+            echo "== prune build cache =="
+            docker builder prune -f 2>&1 | tail -1 || true
+            echo "== purge mysql binlogs older than 7 days =="
+            docker exec hospital-mysql mysql -uroot -p"$MYSQL_ROOT_PASSWORD" \
+              -e "SET GLOBAL binlog_expire_logs_seconds=604800; PURGE BINARY LOGS BEFORE DATE_SUB(NOW(), INTERVAL 7 DAY);" 2>&1 | tail -2 || echo "(binlog purge skipped)"
+            echo "== after =="
+            df -h "$DATA_MOUNT" | tail -1
+            echo "== service check =="
+            curl -s -o /dev/null -w "version_http=%{http_code}\n" -m 5 http://127.0.0.1:8088/api/v1/base/version || true
+            docker ps --format '{{.Names}}	{{.Status}}' | grep -E 'hospital-(backend|frontend|mysql)' || true
