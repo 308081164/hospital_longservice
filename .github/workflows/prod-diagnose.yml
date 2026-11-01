@@ -79,18 +79,21 @@ jobs:
             docker exec hospital-mysql mysql --default-character-set=utf8mb4 -uroot -p"$MYSQL_ROOT_PASSWORD" -N -e "SELECT name, scope FROM $DBNAME.customer_billing_policy p JOIN $DBNAME.customer c ON c.id=p.customer_id WHERE c.code='ZYY-D1' AND p.name='附一对账八折';" 2>/dev/null || true
             echo "== G. baseline hash marker vs classpath =="
             docker exec hospital-mysql mysql --default-character-set=utf8mb4 -uroot -p"$MYSQL_ROOT_PASSWORD" -N -e "SELECT setting_key, LEFT(setting_value,20) FROM $DBNAME.sys_setting WHERE setting_key LIKE '%baseline%' OR setting_key LIKE '%manifest%';" 2>/dev/null || true
-            echo "== Z. START BACKEND (P0) =="
+            echo "== Z. DISK CLEANUP (P0 follow-up) =="
             set +e
-            docker ps --format "{{.Names}}	{{.Status}}" | head -8
-            echo "-- backend log before restart --"
-            docker logs hospital-backend --tail 25 2>&1 | tail -25
-            docker restart hospital-backend
-            for i in $(seq 1 16); do
-              code=$(curl -s -o /dev/null -w "%{http_code}" -m 3 http://127.0.0.1:8088/api/v1/base/version)
-              echo "local_version_http=$code (i=$i)"
-              [ "$code" = "200" ] && break
-              sleep 10
-            done
-            docker ps --format "{{.Names}}	{{.Status}}" | head -8
-            echo "-- backend log after restart --"
-            docker logs hospital-backend --tail 30 2>&1 | tail -30
+            df -h /mnt/newdisk | tail -1
+            echo "-- mysql datadir size --"
+            docker exec hospital-mysql du -sh /var/lib/mysql 2>/dev/null | tail -1
+            echo "-- binlogs --"
+            docker exec hospital-mysql sh -c "ls -1 /var/lib/mysql/*.binlog 2>/dev/null | wc -l; du -ch /var/lib/mysql/*.binlog 2>/dev/null | tail -1"
+            echo "-- purge binlogs older than 3 days --"
+            docker exec hospital-mysql mysql -uroot -p"$MYSQL_ROOT_PASSWORD" -e "PURGE BINARY LOGS BEFORE DATE_SUB(NOW(), INTERVAL 3 DAY);" 2>&1 | tail -3
+            echo "-- docker system df --"
+            docker system df
+            echo "-- prune images unused > 720h --"
+            docker image prune -a -f --filter "until=720h" 2>&1 | tail -2
+            docker builder prune -f 2>&1 | tail -1
+            echo "-- deploy dir top --"
+            du -sh "$DPATH"/* 2>/dev/null | sort -h | tail -6
+            echo "-- final disk --"
+            df -h /mnt/newdisk | tail -1
