@@ -41,6 +41,11 @@ jobs:
             ps -eo stat,ppid,comm | awk '$1 ~ /^Z/ {print $2}' | sort | uniq -c | sort -rn | head -8 || true
             ps -eo stat,ppid,comm | awk '$1 ~ /^Z/' | wc -l || true
             for p in $(ps -eo stat,ppid | awk '$1 ~ /^Z/ {print $2}' | sort | uniq -c | sort -rn | head -3 | awk '{print $2}'); do echo "-- parent $p:"; ps -o pid,ppid,stat,etime,cmd -p $p 2>/dev/null | tail -2; done
+            echo "== 0i2. which container owns 3963 =="
+            for c in $(docker ps --format '{{.Names}}'); do p=$(docker inspect -f '{{.State.Pid}}' "$c" 2>/dev/null); [ "$p" = "3963" ] && echo "OWNER=$c"; done
+            docker inspect -f '{{.Name}} restart={{.HostConfig.RestartPolicy.Name}} started={{.State.StartedAt}}' $(docker ps -q) 2>/dev/null | head -12
+            echo "== 0i3. zombie growth (10s) =="
+            a=$(ps -eo stat | awk '$1 ~ /^Z/' | wc -l); sleep 10; b=$(ps -eo stat | awk '$1 ~ /^Z/' | wc -l); echo "zombies $a -> $b"
             echo "== 0j. pid pressure =="
             cat /proc/sys/kernel/pid_max; ps -e | wc -l
             echo "== 0h. innodb trx =="
