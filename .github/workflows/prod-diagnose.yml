@@ -79,22 +79,16 @@ jobs:
             docker exec hospital-mysql mysql --default-character-set=utf8mb4 -uroot -p"$MYSQL_ROOT_PASSWORD" -N -e "SELECT name, scope FROM $DBNAME.customer_billing_policy p JOIN $DBNAME.customer c ON c.id=p.customer_id WHERE c.code='ZYY-D1' AND p.name='附一对账八折';" 2>/dev/null || true
             echo "== G. baseline hash marker vs classpath =="
             docker exec hospital-mysql mysql --default-character-set=utf8mb4 -uroot -p"$MYSQL_ROOT_PASSWORD" -N -e "SELECT setting_key, LEFT(setting_value,20) FROM $DBNAME.sys_setting WHERE setting_key LIKE '%baseline%' OR setting_key LIKE '%manifest%';" 2>/dev/null || true
-            echo "== Z. RECOVERY (P0 2026-11-01) =="
-            echo "zombies_before=$(ps -eo stat | awk '$1 ~ /^Z/' | wc -l)"
-            docker restart hospital-mysql || echo "(mysql restart failed)"
-            for i in $(seq 1 36); do
-              docker exec hospital-mysql mysqladmin ping -h 127.0.0.1 -uroot -p"$MYSQL_ROOT_PASSWORD" --silent >/dev/null 2>&1 && { echo "mysql ready after ${i}0s"; break; }
-              sleep 10
-            done
-            docker restart autoattend-backend || echo "(autoattend restart skipped)"
-            sleep 10
-            echo "zombies_after=$(ps -eo stat | awk '$1 ~ /^Z/' | wc -l)"
-            docker restart hospital-backend || echo "(backend restart failed)"
-            for i in $(seq 1 36); do
-              code=$(curl -s -o /dev/null -w '%{http_code}' -m 3 http://127.0.0.1:8088/api/v1/base/version || true)
-              [ "$code" = "200" ] && { echo "backend ready after ${i}0s"; break; }
-              sleep 10
-            done
-            echo "== Z2. after =="
-            docker ps --format '{{.Names}}	{{.Status}}' | head -8
-            uptime
+            echo "== Z. STATE (P0 2026-11-01) =="
+            date; uptime
+            df -h / /mnt 2>/dev/null | head -6
+            docker ps -a --format '{{.Names}}	{{.Status}}' | head -12
+            echo "-- mysql ping --"
+            docker exec hospital-mysql mysqladmin ping -h 127.0.0.1 -uroot -p"$MYSQL_ROOT_PASSWORD" --silent 2>&1 || echo "MYSQL_DOWN"
+            echo "-- backend log tail --"
+            docker logs hospital-backend --tail 20 2>&1 | tail -20 || true
+            echo "-- mysql log tail --"
+            docker logs hospital-mysql --tail 15 2>&1 | tail -15 || true
+            echo "-- job table size --"
+            docker exec hospital-mysql mysql --default-character-set=utf8mb4 -uroot -p"$MYSQL_ROOT_PASSWORD" -N -e "SELECT table_name, ROUND(data_length/1024/1024) mb, ROUND(index_length/1024/1024) idx_mb, table_rows FROM information_schema.tables WHERE table_schema='$DBNAME' AND table_name IN ('hospital_reconciliation_job','hospital_reconciliation_row') ORDER BY data_length DESC;" 2>/dev/null || true
+            docker exec hospital-mysql mysql --default-character-set=utf8mb4 -uroot -p"$MYSQL_ROOT_PASSWORD" -N -e "SELECT @@innodb_data_file_path, @@innodb_file_per_table, @@innodb_temp_data_file_path, @@max_allowed_packet;" 2>/dev/null || true
