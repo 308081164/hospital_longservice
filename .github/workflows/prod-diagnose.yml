@@ -79,16 +79,19 @@ jobs:
             docker exec hospital-mysql mysql --default-character-set=utf8mb4 -uroot -p"$MYSQL_ROOT_PASSWORD" -N -e "SELECT name, scope FROM $DBNAME.customer_billing_policy p JOIN $DBNAME.customer c ON c.id=p.customer_id WHERE c.code='ZYY-D1' AND p.name='附一对账八折';" 2>/dev/null || true
             echo "== G. baseline hash marker vs classpath =="
             docker exec hospital-mysql mysql --default-character-set=utf8mb4 -uroot -p"$MYSQL_ROOT_PASSWORD" -N -e "SELECT setting_key, LEFT(setting_value,20) FROM $DBNAME.sys_setting WHERE setting_key LIKE '%baseline%' OR setting_key LIKE '%manifest%';" 2>/dev/null || true
-            echo "== Z. STATE (P0 2026-11-01) =="
+            echo "== Z. DISK (P0 2026-11-01) =="
             date; uptime
-            df -h / /mnt 2>/dev/null | head -6
-            docker ps -a --format '{{.Names}}	{{.Status}}' | head -12
-            echo "-- mysql ping --"
-            docker exec hospital-mysql mysqladmin ping -h 127.0.0.1 -uroot -p"$MYSQL_ROOT_PASSWORD" --silent 2>&1 || echo "MYSQL_DOWN"
-            echo "-- backend log tail --"
-            docker logs hospital-backend --tail 20 2>&1 | tail -20 || true
-            echo "-- mysql log tail --"
-            docker logs hospital-mysql --tail 15 2>&1 | tail -15 || true
-            echo "-- job table size --"
-            docker exec hospital-mysql mysql --default-character-set=utf8mb4 -uroot -p"$MYSQL_ROOT_PASSWORD" -N -e "SELECT table_name, ROUND(data_length/1024/1024) mb, ROUND(index_length/1024/1024) idx_mb, table_rows FROM information_schema.tables WHERE table_schema='$DBNAME' AND table_name IN ('hospital_reconciliation_job','hospital_reconciliation_row') ORDER BY data_length DESC;" 2>/dev/null || true
-            docker exec hospital-mysql mysql --default-character-set=utf8mb4 -uroot -p"$MYSQL_ROOT_PASSWORD" -N -e "SELECT @@innodb_data_file_path, @@innodb_file_per_table, @@innodb_temp_data_file_path, @@max_allowed_packet;" 2>/dev/null || true
+            df -h | head -15
+            echo "-- docker root --"
+            droot=$(docker info -f "{{.DockerRootDir}}" 2>/dev/null || echo /var/lib/docker)
+            echo "root=$droot"
+            df -h "$droot" 2>/dev/null | tail -2
+            df -i "$droot" 2>/dev/null | tail -2
+            echo "-- biggest under docker root --"
+            du -sh "$droot"/* 2>/dev/null | sort -h | tail -8 || true
+            echo "-- deploy path biggest --"
+            du -sh "$DPATH"/* 2>/dev/null | sort -h | tail -8 || true
+            echo "-- mysql mounts --"
+            docker inspect hospital-mysql -f "{{range .Mounts}}{{.Source}} -> {{.Destination}}{{println}}{{end}}" 2>/dev/null || true
+            echo "-- containers --"
+            docker ps -a --format "{{.Names}}	{{.Status}}" | head -10
