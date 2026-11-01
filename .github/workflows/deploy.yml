@@ -175,14 +175,20 @@ jobs:
           printf '%s\n' "$SSH_KEY" > ~/.ssh/deploy_key
           chmod 600 ~/.ssh/deploy_key
           ssh-keyscan -p "$PORT" -H "$SSH_HOST" >> ~/.ssh/known_hosts 2>/dev/null || true
+          # 远程脚本走 stdin，避免多层引号导致变量为空（2026-11-01 首次上线即踩到）
           ssh -i ~/.ssh/deploy_key -o StrictHostKeyChecking=no -o ConnectTimeout=30 -p "$PORT" \
-            "${SSH_USER}@${SSH_HOST}" "set -e; DP='${DPATH}'; \
-              use=\$(df --output=pcent \"$DP\" | tail -1 | tr -dc '0-9'); \
-              avail=\$(df -BG --output=avail \"$DP\" | tail -1 | tr -dc '0-9'); \
-              echo \"数据盘使用率=\${use}% 可用=\${avail}G\"; \
-              if [ \"\${use:-100}\" -gt 85 ] || [ \"\${avail:-0}\" -lt 8 ]; then \
-                echo '::error::数据盘空间不足（>85% 或 <8G），已中止部署。请先执行 Disk Cleanup 工作流或手工清理。'; exit 1; \
-              fi"
+            "${SSH_USER}@${SSH_HOST}" "bash -s -- '${DPATH}'" <<'REMOTE'
+          set -e
+          DP="$1"
+          use=$(df -P "$DP" | awk 'NR==2 {gsub("%","",$5); print $5}')
+          avail_kb=$(df -Pk "$DP" | awk 'NR==2 {print $4}')
+          avail=$((avail_kb/1024/1024))
+          echo "数据盘 $DP 使用率=${use}% 可用=${avail}G"
+          if [ "${use:-100}" -gt 85 ] || [ "${avail:-0}" -lt 8 ]; then
+            echo "::error::数据盘空间不足（>85% 或 <8G），已中止部署。请先运行 Disk Cleanup 工作流或手工清理。"
+            exit 1
+          fi
+          REMOTE
       - name: Deploy to server
         env:
           SSH_HOST: ${{ secrets.SSH_HOST }}
