@@ -1,7 +1,7 @@
 {
   "version": 1,
-  "generated_at": "2026-10-30T08:38:54Z",
-  "manifest_hash": "9ccf2e7dc158bf66d2dde8eb1fc6f036f97e599174d8686e199254820cf5c895",
+  "generated_at": "2026-11-02T03:23:53Z",
+  "manifest_hash": "4023d5f769e50a841c56de35fec0eeac7df6decde9963e484fc8859b77785988",
   "billing_enabled_count": 45,
   "active_billing_enabled_count": 45,
   "customers": {
@@ -819,7 +819,7 @@
           "matchMode": "first",
           "keywordMatchMode": "contains",
           "acceptedTypes": [
-            "额外包"
+            "额外包（无纺布）"
           ]
         }
       ],

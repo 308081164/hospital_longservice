@@ -1,6 +1,6 @@
 {
-  "baseline_hash": "bc597196f8cddb9cb6cefc30215304edd01fe4c841b212b9c798f7b67fe8ab91",
-  "generated_at": "2026-10-30T08:38:54Z",
+  "baseline_hash": "45d05aa845f87ae53d8913bf9fbff612d377b6782d541dc26a772330b7793fb0",
+  "generated_at": "2026-11-02T03:23:53Z",
   "source": "billing-rules-manifest@6a4ec3fbe7896cc575c6c8eabecd644fea23f11dd22afa4c970f9dc07d36c4a4",
   "customer_count": 45,
   "customers": [
@@ -56,7 +56,7 @@
       "code": "JIUZHOU-FK",
       "file": "baseline/JIUZHOU-FK.json",
       "ruleCount": 1,
-      "fileHash": "511610aa59959ec51276b5f204a3a9690f775ebb02833ff1b78d81a746f73916"
+      "fileHash": "e7b53076d28c9e72eb5e388cd5cd7da812c7fd105829603ca936e5807dfed2c6"
     },
     {
       "code": "BOSHANG-YY",
