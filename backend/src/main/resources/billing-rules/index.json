@@ -1,6 +1,6 @@
 {
-  "baseline_hash": "45d05aa845f87ae53d8913bf9fbff612d377b6782d541dc26a772330b7793fb0",
-  "generated_at": "2026-11-02T03:23:53Z",
+  "baseline_hash": "d22bbdcf8fab96e86ed9794481b06a8dd2a7fc6e8c675b8210fe287f33325ed7",
+  "generated_at": "2026-11-03T08:50:36Z",
   "source": "billing-rules-manifest@6a4ec3fbe7896cc575c6c8eabecd644fea23f11dd22afa4c970f9dc07d36c4a4",
   "customer_count": 45,
   "customers": [
@@ -247,8 +247,8 @@
     {
       "code": "HRB-2ND",
       "file": "baseline/HRB-2ND.json",
-      "ruleCount": 13,
-      "fileHash": "aa477c7ad948ed83a55bc0e9b05d6d97cace7d89e677dbd3cdadafaf46e1239b"
+      "ruleCount": 14,
+      "fileHash": "dfc8ce6673a94c344f86f5f05c3378594ca6cb91bc1662a6731ac382e65e143b"
     },
     {
       "code": "HRB-GUSHANG",
