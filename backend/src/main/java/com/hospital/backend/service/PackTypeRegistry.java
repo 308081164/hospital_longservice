@@ -96,6 +96,12 @@ public final class PackTypeRegistry {
             return MaterialFamily.NONE;
         }
         String normalized = normalizeMaterialText(trimmed);
+        // 2026-11-04 客户反馈：市二院低温双层袋的「铝箔袋200*600」未被识别成纸塑袋，
+        // 被当成无纺布按 35 元计，而应走低温纸塑 20cm=28 元。
+        // 铝箔袋是低温/ETO 专用袋，直接归入低温纸塑。
+        if (normalized.contains("铝箔")) {
+            return MaterialFamily.LOW_TEMP_PAPER;
+        }
         boolean hasPaper = normalized.contains("纸塑袋") || normalized.contains("纸塑");
         boolean hasNonWoven = normalized.contains("无纺布");
         boolean hasLowTemp = normalized.contains("低温");

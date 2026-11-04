@@ -67,14 +67,6 @@
       "keywords": [
         "钉@contains"
       ],
-      "excludeKeywords": [
-        "钉盒",
-        "头钉",
-        "拉力钉",
-        "空心钉",
-        "髓内钉",
-        "固定钉"
-      ],
       "minInstrumentCount": 10,
       "skipPackaging": true,
       "skipDiscount": true,
@@ -289,7 +281,10 @@
         "钢针-@contains"
       ],
       "excludeKeywords": [
-        "外架钢针@contains"
+        "外架钢针@contains",
+        "/双@contains",
+        "/(双)@contains",
+        "/（双）@contains"
       ],
       "fee": 0.3,
       "skipPackaging": true,

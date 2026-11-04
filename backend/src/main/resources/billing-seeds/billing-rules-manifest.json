@@ -1,7 +1,7 @@
 {
   "version": 1,
-  "generated_at": "2026-11-04T06:25:22Z",
-  "manifest_hash": "f3ba80c3eaa1988353827a1530bdd2e24fa859133447c1e8e5d9be285ea8bd9f",
+  "generated_at": "2026-11-04T09:02:53Z",
+  "manifest_hash": "e23e97311531e83844f20e92fc794632e88e6e8c9269ef8d3b499ee8fe544813",
   "billing_enabled_count": 45,
   "active_billing_enabled_count": 45,
   "customers": {
@@ -4906,14 +4906,6 @@
           "keywords": [
             "钉@contains"
           ],
-          "excludeKeywords": [
-            "钉盒",
-            "头钉",
-            "拉力钉",
-            "空心钉",
-            "髓内钉",
-            "固定钉"
-          ],
           "minInstrumentCount": 10,
           "skipPackaging": true,
           "skipDiscount": true,
@@ -5128,7 +5120,10 @@
             "钢针-@contains"
           ],
           "excludeKeywords": [
-            "外架钢针@contains"
+            "外架钢针@contains",
+            "/双@contains",
+            "/(双)@contains",
+            "/（双）@contains"
           ],
           "fee": 0.3,
           "skipPackaging": true,
