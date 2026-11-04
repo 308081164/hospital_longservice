@@ -72,9 +72,11 @@ ensure_prod_credentials() {
 
   local remote_lines ssh_err
   ssh_err=""
-  if ! remote_lines="$(ssh -i ~/.ssh/parity_gate_key \
+  if ! remote_lines="$(timeout 60 ssh -i ~/.ssh/parity_gate_key \
     -o StrictHostKeyChecking=no \
     -o ConnectTimeout=15 \
+    -o ServerAliveInterval=15 \
+    -o ServerAliveCountMax=4 \
     -p "$port" \
     "${SSH_USER}@${SSH_HOST}" \
     "set -a; [ -f '${dpath}/.env' ] && . '${dpath}/.env'; set +a; \
@@ -116,13 +118,13 @@ echo "== prod parity gate API=$API_BASE =="
 
 deadline=$((SECONDS + HEALTH_WAIT_SEC))
 while [ "$SECONDS" -lt "$deadline" ]; do
-  if curl -sf --connect-timeout 4 "${API_BASE}/api/v1/base/health" >/dev/null 2>&1; then
+  if curl -sf --connect-timeout 4 --max-time 15 "${API_BASE}/api/v1/base/health" >/dev/null 2>&1; then
     echo "health OK"
     break
   fi
   sleep 5
 done
-if ! curl -sf --connect-timeout 4 "${API_BASE}/api/v1/base/health" >/dev/null 2>&1; then
+if ! curl -sf --connect-timeout 4 --max-time 15 "${API_BASE}/api/v1/base/health" >/dev/null 2>&1; then
   echo "health 超时" >&2
   exit 1
 fi

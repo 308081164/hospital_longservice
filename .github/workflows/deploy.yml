@@ -596,6 +596,8 @@ jobs:
           python-version: "3.11"
 
       - name: Prod parity gate (read-only)
+        # 2026-11-04：该步骤曾卡死 35 分钟并占住 deploy 并发锁，加双保险超时
+        timeout-minutes: 10
         env:
           PROD_HOST: ${{ secrets.SSH_HOST }}
           SSH_HOST: ${{ secrets.SSH_HOST }}
@@ -608,7 +610,8 @@ jobs:
           SMOKE_EXPECT_SHA: ${{ github.sha }}
         run: |
           chmod +x bin/hospital-cli scripts/run_prod_parity_gate.sh
-          bash scripts/run_prod_parity_gate.sh
+          # 硬超时：8 分钟未完成则 SIGTERM，30 秒后再 SIGKILL，确保释放并发锁
+          timeout --signal=TERM --kill-after=30 480 bash scripts/run_prod_parity_gate.sh
 
       - name: Upload calibration artifact
         uses: actions/upload-artifact@v4
