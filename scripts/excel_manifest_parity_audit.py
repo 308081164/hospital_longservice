@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """G4：权威 Excel ↔ baseline/manifest 逐条对账。缺可表达规则即失败。
 
-权威文件固定为 docs/source/特殊收费20261026.xlsx，并校验 SHA-256。
+权威文件固定为 docs/source/特殊收费20261104.xlsx，并校验 SHA-256。
 表里有、baseline 没有（或关键词/类型对不上）的行不能再静默漏掉。
 引擎表达不了的行在 ENGINE_UNEXPRESSIBLE 里点名，打印后不失败，也不算已上线。
 """
@@ -22,8 +22,8 @@ BASELINE_DIR = ROOT / "backend/src/main/resources/billing-rules/baseline"
 TEMPLATE_JAVA = (
     ROOT / "backend/src/main/java/com/hospital/backend/service/DefaultPricingTemplate.java"
 )
-AUTHORITY_XLSX = ROOT / "docs/source/特殊收费20261026.xlsx"
-AUTHORITY_SHA256 = "90daf08012c9da0ca9d27105eaf8a9a89d36588ca372fd1516218348874fc8de"
+AUTHORITY_XLSX = ROOT / "docs/source/特殊收费20261104.xlsx"
+AUTHORITY_SHA256 = "0dbf6d8218579dff13f8d37332800edbfd04153ad667b16de199d3595c7d6960"
 
 sys.path.insert(0, str(ROOT / "scripts"))
 from import_special_pricing_v17 import (  # noqa: E402

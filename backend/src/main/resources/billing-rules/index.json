@@ -1,6 +1,6 @@
 {
-  "baseline_hash": "45d05aa845f87ae53d8913bf9fbff612d377b6782d541dc26a772330b7793fb0",
-  "generated_at": "2026-11-02T03:23:53Z",
+  "baseline_hash": "c654c25f0e407d3defd283e9edd973ed01c9fdbacfa56548eeb8d6f7015e4040",
+  "generated_at": "2026-11-04T06:25:23Z",
   "source": "billing-rules-manifest@6a4ec3fbe7896cc575c6c8eabecd644fea23f11dd22afa4c970f9dc07d36c4a4",
   "customer_count": 45,
   "customers": [
@@ -199,8 +199,8 @@
     {
       "code": "ERYY-SB",
       "file": "baseline/ERYY-SB.json",
-      "ruleCount": 4,
-      "fileHash": "33374e8ae265d7febf5ce31d1d87d89b3470d0577bb69f5fae59a686d8c1010e"
+      "ruleCount": 6,
+      "fileHash": "f95dd2c74ad46a2a3311a11790e8cd2318ff8a374ea3b1c3147c867bc1727fec"
     },
     {
       "code": "SHENG-YY-NG",
@@ -271,8 +271,8 @@
     {
       "code": "ZYY-D1",
       "file": "baseline/ZYY-D1.json",
-      "ruleCount": 7,
-      "fileHash": "b398a598dc75dba096acdaf62b856fae98ae639865f62cf3721092267447e0e5"
+      "ruleCount": 8,
+      "fileHash": "5812f72d4a11d89d54a51fbbe145282909bebbe435dae8d156f09d0ed3f7e916"
     }
   ]
 }

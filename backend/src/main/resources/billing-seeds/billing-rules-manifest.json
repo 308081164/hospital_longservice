@@ -1,7 +1,7 @@
 {
   "version": 1,
-  "generated_at": "2026-11-02T03:23:53Z",
-  "manifest_hash": "4023d5f769e50a841c56de35fec0eeac7df6decde9963e484fc8859b77785988",
+  "generated_at": "2026-11-04T06:25:22Z",
+  "manifest_hash": "f3ba80c3eaa1988353827a1530bdd2e24fa859133447c1e8e5d9be285ea8bd9f",
   "billing_enabled_count": 45,
   "active_billing_enabled_count": 45,
   "customers": {
@@ -3340,10 +3340,51 @@
           "acceptedTypes": [
             "器械包"
           ]
+        },
+        {
+          "ruleType": "FOLD",
+          "priority": 95,
+          "keywords": [
+            "止血带@contains"
+          ],
+          "threshold": 5,
+          "foldRatio": 5,
+          "temperature": "LT",
+          "isActive": true,
+          "matchMode": "first",
+          "skipDiscount": false,
+          "acceptedTypes": [
+            "额外包低温等离子"
+          ],
+          "sourceRef": "excel:特殊收费20261104#各医院特殊收费#序号34① r149-150",
+          "name": "省二松北止血带≤5按1件含包材",
+          "maxInstrumentCount": 5,
+          "skipPackaging": false
+        },
+        {
+          "ruleType": "FOLD",
+          "priority": 95,
+          "keywords": [
+            "止血带@contains"
+          ],
+          "threshold": 5,
+          "foldRatio": 5,
+          "temperature": "LT",
+          "isActive": true,
+          "matchMode": "first",
+          "skipDiscount": false,
+          "acceptedTypes": [
+            "额外包低温等离子"
+          ],
+          "sourceRef": "excel:特殊收费20261104#各医院特殊收费#序号34① r149-150",
+          "name": "省二松北止血带>5折算22",
+          "minInstrumentCount": 6,
+          "skipPackaging": true,
+          "price": 22.0
         }
       ],
-      "rule_count": 4,
-      "active_rule_count": 4
+      "rule_count": 6,
+      "active_rule_count": 6
     },
     "SHENG-YY-NG": {
       "code": "SHENG-YY-NG",
@@ -5410,6 +5451,24 @@
       ],
       "productRules": [
         {
+          "ruleType": "PRICE_PER_INSTRUMENT",
+          "name": "附一特殊收费换药包-4件W12050按件5.5加5.49",
+          "priority": 2,
+          "price": 5.5,
+          "conditionsJson": "[{\"field\": \"flatAddon\", \"value\": 5.49}]",
+          "keywords": [
+            "换药包-4件/W12050"
+          ],
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": true,
+          "matchMode": "first",
+          "acceptedTypes": [
+            "器械包（ZSD）"
+          ],
+          "sourceRef": "excel:特殊收费20261104#各医院特殊收费#序号33① r140"
+        },
+        {
           "ruleType": "FIXED_PRICE",
           "name": "附一换药包120布固定21.99",
           "priority": 1,
@@ -5549,8 +5608,8 @@
           "sourceRef": "excel:特殊收费20261026#各医院特殊收费#序号33③ r143-144"
         }
       ],
-      "rule_count": 7,
-      "active_rule_count": 7
+      "rule_count": 8,
+      "active_rule_count": 8
     }
   }
 }

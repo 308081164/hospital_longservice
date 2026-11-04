@@ -39,11 +39,11 @@ class FuyiClerkRuleUpdateTest {
                 .as("作废价表的 override 必须移除（显式 null 用于清库）")
                 .isFalse();
         assertThat(baseline.path("productRules"))
-                .as("只保留权威来源：特殊收费 20261026 + 内勤 10.30 的换药包固定价")
-                .hasSize(7);
+                .as("只保留权威来源：特殊收费（当前 20261104）+ 内勤 10.30 的换药包固定价")
+                .hasSize(8);
         for (JsonNode rule : baseline.path("productRules")) {
             String ref = rule.path("sourceRef").asText();
-            assertThat(ref.contains("特殊收费20261026") || ref.contains("医院内勤规则10.30"))
+            assertThat(ref.contains("特殊收费2026") || ref.contains("医院内勤规则10.30"))
                     .as("规则必须能追溯到权威表: " + ref)
                     .isTrue();
         }

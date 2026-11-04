@@ -226,6 +226,24 @@
   "archivedProductRulesNote": "2026-09-23 封存：类型特色规则暂停，对账改走标准价叠折试用",
   "productRules": [
     {
+      "ruleType": "PRICE_PER_INSTRUMENT",
+      "name": "附一特殊收费换药包-4件W12050按件5.5加5.49",
+      "priority": 2,
+      "price": 5.5,
+      "conditionsJson": "[{\"field\": \"flatAddon\", \"value\": 5.49}]",
+      "keywords": [
+        "换药包-4件/W12050"
+      ],
+      "skipPackaging": true,
+      "skipDiscount": true,
+      "isActive": true,
+      "matchMode": "first",
+      "acceptedTypes": [
+        "器械包（ZSD）"
+      ],
+      "sourceRef": "excel:特殊收费20261104#各医院特殊收费#序号33① r140"
+    },
+    {
       "ruleType": "FIXED_PRICE",
       "name": "附一换药包120布固定21.99",
       "priority": 1,

@@ -19,7 +19,7 @@ from pathlib import Path
 import openpyxl
 
 ROOT = Path(__file__).resolve().parents[1]
-DEFAULT_XLSX = ROOT / "docs/source/特殊收费20261026.xlsx"
+DEFAULT_XLSX = ROOT / "docs/source/特殊收费20261104.xlsx"
 COVERAGE = ROOT / "scripts/generic_rule_coverage.json"
 
 
