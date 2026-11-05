@@ -393,10 +393,19 @@ public class PricingEngine {
                         notes.add("含包材规则，叠加标准包材费 " + fmt(bagFee) + " 元。");
                     }
                 } else {
+                    // 2026-11-05 客户反馈：市二院低温双层袋（如 200*600 + 250*650）应只收一层，
+                    // 且按「内层（较小宽度）」收费，而不是外层 250cm。
+                    int ltBagSize = bagSize;
+                    if (isDouble && isHrb2ndHospital(hospitalName)) {
+                        int paperSize = lowestPaperBagSize(packageMaterial);
+                        if (paperSize > 0) {
+                            ltBagSize = paperSize;
+                        }
+                    }
                     String ltPrefix = isDouble ? "低温纸塑袋(双)" : "低温纸塑袋";
-                    pricingRule = ltPrefix + (bagSize > 0 ? bagSize + "cm" : "") + "阶梯计费";
+                    pricingRule = ltPrefix + (ltBagSize > 0 ? ltBagSize + "cm" : "") + "阶梯计费";
                     expectedUnitPrice = computeLowTempPaperPlastic(
-                            materialBillingCount, bagSize, zBagSize, notes, isDouble, hospitalName);
+                            materialBillingCount, ltBagSize, zBagSize, notes, isDouble, hospitalName);
                 }
             } else {
                 Double forcedPrice = computeForceHighTempUnitPrice(forceHighTempPerItem, materialBillingCount);
@@ -1755,6 +1764,25 @@ public class PricingEngine {
         }
         int outerWidthMm = materialListsBag ? DoubleBagWidths.widthMm(segments.get(0)) : 0;
         return new DoubleBagSizes(outer, inner, outerWidthMm, 0);
+    }
+
+    /**
+     * 市二院低温双层袋：只按「纸塑袋/铝箔袋」那一层的宽度收费。
+     * 两层都是纸塑（如 200*600 + 250*650）取较小（内层）；一层纸塑 + 一层无纺布取纸塑层。
+     */
+    private int lowestPaperBagSize(String packageMaterial) {
+        int best = 0;
+        for (String segment : splitPackageMaterialSegments(packageMaterial)) {
+            String text = segment.replaceAll("\s+", "");
+            if (!text.contains("纸塑") && !text.contains("铝箔")) {
+                continue;
+            }
+            int size = detectBagSize(segment);
+            if (size > 0 && (best == 0 || size < best)) {
+                best = size;
+            }
+        }
+        return best;
     }
 
     private static List<String> splitPackageMaterialSegments(String packageMaterial) {

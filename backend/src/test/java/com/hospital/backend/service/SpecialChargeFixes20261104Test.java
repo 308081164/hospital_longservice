@@ -22,6 +22,13 @@ class SpecialChargeFixes20261104Test {
         assertThat(one.expectedUnitPrice).isCloseTo(28.00, within(0.02));
         assertThat(one.pricingRule).contains("低温纸塑袋");
 
+        // 2026-11-05：双层纸塑袋（200*600 + 250*650）只按内层 200cm=28 元，而不是外层 250cm=30 元
+        var twoBags = engine.processRow(PricingEngineTestSupport.row(
+                "哈尔滨市第二医院", "额外包(低温等离子)", "可吸收硬脑膜-1件/Z3060",
+                "低温纸塑袋200*600，低温纸塑袋250*650", 1, 1, 28.00, 28.00));
+        assertThat(twoBags.expectedUnitPrice).isCloseTo(28.00, within(0.02));
+        assertThat(twoBags.pricingRule).contains("20cm");
+
         var four = engine.processRow(PricingEngineTestSupport.row(
                 "哈尔滨市第二医院", "额外包低温等离子", "手术室-球内注药-2件/2",
                 "无纺布-120*220-60g，铝箔袋200*600，无纺布-120*220-60g", 4, 1, 25.00, 25.00));
