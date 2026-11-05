@@ -244,6 +244,16 @@ public final class BillingConditionEvaluator {
     }
 
     public static boolean hospitalMatches(JsonNode rule, String hospitalName) {
+        // 2026-11-05：支持「通用规则 + 少数医院豁免」（如外来器械 +150 豁免市二院/市五院/骨伤科）
+        JsonNode excludeHospitals = rule.path("excludeHospitals");
+        if (excludeHospitals.isArray() && !excludeHospitals.isEmpty()
+                && hospitalName != null && !hospitalName.isBlank()) {
+            for (JsonNode h : excludeHospitals) {
+                if (hospitalName.contains(h.asText())) {
+                    return false;
+                }
+            }
+        }
         JsonNode hospitals = rule.path("hospitals");
         if (!hospitals.isArray() || hospitals.isEmpty()) {
             return true;

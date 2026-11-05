@@ -1,7 +1,7 @@
 {
   "version": 1,
-  "generated_at": "2026-11-05T03:31:57Z",
-  "manifest_hash": "2898ae3e334e00686105f7d29fd2b6c948ae18f8fea206f9c81b2e7a4700b133",
+  "generated_at": "2026-11-05T04:47:18Z",
+  "manifest_hash": "e50f9238b217df91051fd888146fbc8a33966e5adca212aa13d3404dea427c6e",
   "billing_enabled_count": 45,
   "active_billing_enabled_count": 45,
   "customers": {
@@ -4843,6 +4843,28 @@
       "billingPolicies": null,
       "productRules": [
         {
+          "ruleType": "FIXED_PRICE",
+          "name": "骨伤科钉盒固定50",
+          "priority": 3,
+          "price": 50.0,
+          "keywords": [
+            "钉盒@contains"
+          ],
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": true,
+          "matchMode": "first",
+          "keywordMatchMode": "contains",
+          "acceptedTypes": [
+            "骨科租赁器械包-带植入物",
+            "骨科租赁器械包—带植入物",
+            "骨科租赁器械包（带植入物）",
+            "骨科器械包",
+            "骨科临时绑定器械包"
+          ],
+          "sourceRef": "excel:特殊收费20261105#各医院特殊收费#序号42 ⑩ 钉盒"
+        },
+        {
           "ruleType": "PRICE_PER_INSTRUMENT",
           "name": "骨伤科骨科包等按件5.5加5",
           "priority": 6,
@@ -5174,8 +5196,8 @@
           ]
         }
       ],
-      "rule_count": 16,
-      "active_rule_count": 16
+      "rule_count": 17,
+      "active_rule_count": 17
     },
     "XIUYAN-YL": {
       "code": "XIUYAN-YL",

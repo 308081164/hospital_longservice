@@ -336,6 +336,26 @@ public class PricingEngine {
                 skipPackaging = true;
                 skipHospitalDiscount = true;
             }
+        } else if (isExternalRentalPack(type)) {
+            // 通用外来器械收费（特殊收费20261105 通用特殊收费 第24行 / 序号13）
+            // 不带植入物：包内所有器械件数（含篮筐）×5.5；带植入物：再 +150 元
+            // 豁免：市二院、市五院、骨伤科不带 +150
+            double base = round(5.5 * effectiveCount);
+            // 注意「不带植入物」也包含「带植入物」子串，必须先排除
+            boolean noImplant = type.contains("不带植入物");
+            boolean implant = !noImplant && type.contains("带植入物");
+            boolean exempt = isExternalImplantAddonExempt(hospitalName);
+            double addon = implant && !exempt ? 150.0 : 0.0;
+            expectedUnitPrice = round(base + addon);
+            pricingRule = "通用外来器械收费：" + effectiveCount + "件×5.5"
+                    + (addon > 0 ? " + 植入物150" : "");
+            notes.add("外来器械（" + type + "）：" + effectiveCount + " 件 × 5.5 = " + fmt(base)
+                    + (addon > 0
+                        ? "，整体带植入物 +150 元，合计 " + fmt(expectedUnitPrice) + " 元。"
+                        : (implant
+                            ? "，本医院豁免植入物 +150。"
+                            : "（不含植入物）。")));
+            skipPackaging = true;
         } else if (preserveOriginalOnMiss) {
             Double forcedPrice = computeForceHighTempUnitPrice(forceHighTempPerItem, materialBillingCount);
             if (forcedPrice != null) {
@@ -2026,6 +2046,25 @@ public class PricingEngine {
     // ================================================================
     //  低温纸塑袋
     // ================================================================
+
+    /** 通用外来器械：骨科租赁器械包（带/不带植入物）。 */
+    private boolean isExternalRentalPack(String type) {
+        if (type == null) {
+            return false;
+        }
+        String normalized = type.replaceAll("\\s+", "");
+        return normalized.contains("骨科租赁器械包");
+    }
+
+    /** Excel 明确豁免：市二院、市五院、骨伤科不带植入物 +150。 */
+    private boolean isExternalImplantAddonExempt(String hospitalName) {
+        if (hospitalName == null) {
+            return false;
+        }
+        return hospitalName.contains("第二医院")
+                || hospitalName.contains("第五医院")
+                || hospitalName.contains("骨伤科");
+    }
 
     private Double computeLowTempPaperPlastic(int instrumentCount, int bagSize, int zBagSize, List<String> notes,
                                               boolean isDouble, String hospitalName) {

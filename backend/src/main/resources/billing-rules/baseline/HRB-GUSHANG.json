@@ -5,6 +5,28 @@
   "billingPricingMode": "hybrid",
   "productRules": [
     {
+      "ruleType": "FIXED_PRICE",
+      "name": "骨伤科钉盒固定50",
+      "priority": 3,
+      "price": 50.0,
+      "keywords": [
+        "钉盒@contains"
+      ],
+      "skipPackaging": true,
+      "skipDiscount": true,
+      "isActive": true,
+      "matchMode": "first",
+      "keywordMatchMode": "contains",
+      "acceptedTypes": [
+        "骨科租赁器械包-带植入物",
+        "骨科租赁器械包—带植入物",
+        "骨科租赁器械包（带植入物）",
+        "骨科器械包",
+        "骨科临时绑定器械包"
+      ],
+      "sourceRef": "excel:特殊收费20261105#各医院特殊收费#序号42 ⑩ 钉盒"
+    },
+    {
       "ruleType": "PRICE_PER_INSTRUMENT",
       "name": "骨伤科骨科包等按件5.5加5",
       "priority": 6,
