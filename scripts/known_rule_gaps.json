@@ -1,7 +1,7 @@
 {
   "_comment": "Excel 权威源中尚未在 baseline 建模的规则（历史欠账）。新增条目必须写明原因与状态，CI 只对『白名单之外的新缺口』报错。",
   "updated_at": "2026-11-04",
-  "source_excel": "docs/source/特殊收费20261104.xlsx",
+  "source_excel": "docs/source/特殊收费20261105.xlsx",
   "gaps": [
     {
       "customer": "HRB-GUSHANG",

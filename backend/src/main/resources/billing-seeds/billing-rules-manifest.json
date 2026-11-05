@@ -1,7 +1,7 @@
 {
   "version": 1,
-  "generated_at": "2026-11-04T09:02:53Z",
-  "manifest_hash": "e23e97311531e83844f20e92fc794632e88e6e8c9269ef8d3b499ee8fe544813",
+  "generated_at": "2026-11-05T03:31:57Z",
+  "manifest_hash": "2898ae3e334e00686105f7d29fd2b6c948ae18f8fea206f9c81b2e7a4700b133",
   "billing_enabled_count": 45,
   "active_billing_enabled_count": 45,
   "customers": {
@@ -4737,8 +4737,7 @@
           "priority": 23,
           "price": 5.5,
           "keywords": [
-            "针线盒（@contains",
-            "针线盒(@contains"
+            "针线盒@contains"
           ],
           "skipPackaging": true,
           "skipDiscount": true,
@@ -4755,7 +4754,7 @@
           "priority": 24,
           "price": 5.5,
           "keywords": [
-            "缝合针-@contains"
+            "缝合针@contains"
           ],
           "skipPackaging": true,
           "skipDiscount": true,
@@ -4843,6 +4842,45 @@
       "billingEnabled": true,
       "billingPolicies": null,
       "productRules": [
+        {
+          "ruleType": "PRICE_PER_INSTRUMENT",
+          "name": "骨伤科骨科包等按件5.5加5",
+          "priority": 6,
+          "price": 5.5,
+          "conditionsJson": "[{\"field\": \"flatAddon\", \"value\": 5}]",
+          "keywords": [
+            "骨科包@contains",
+            "髌骨包@contains",
+            "缝合包@contains",
+            "股骨干@contains",
+            "骨折取出包@contains",
+            "手外清创包@contains",
+            "手足部骨折包@contains",
+            "锁骨踝关节包@contains",
+            "手科（腱鞘炎、肿物）@contains",
+            "腰椎包-23件@contains",
+            "空心钉1/2@contains",
+            "空心钉（取）@contains",
+            "关节镜器械(一号)19件@contains",
+            "关节镜器械(二号)19件@contains",
+            "关节镜器械(三号)19件@contains",
+            "股骨髓针1号做@contains",
+            "股骨髓针-50件@contains",
+            "股骨倒打髓针器械（一）19件@contains",
+            "股骨倒打髓针器械（二）12件@contains",
+            "股骨倒打髓针器械（三）11件@contains",
+            "股骨倒打髓针器械（四）25件@contains"
+          ],
+          "skipPackaging": true,
+          "skipDiscount": true,
+          "isActive": true,
+          "matchMode": "first",
+          "keywordMatchMode": "contains",
+          "acceptedTypes": [
+            "器械包"
+          ],
+          "sourceRef": "excel:特殊收费20261105#各医院特殊收费#序号42 12"
+        },
         {
           "ruleType": "FOLD",
           "name": "骨伤科外架钢针>6按6折算加内层袋和0.3",
@@ -5136,8 +5174,8 @@
           ]
         }
       ],
-      "rule_count": 15,
-      "active_rule_count": 15
+      "rule_count": 16,
+      "active_rule_count": 16
     },
     "XIUYAN-YL": {
       "code": "XIUYAN-YL",

@@ -1,6 +1,6 @@
 {
-  "source": "docs/包类型与包材对照表.xlsx",
-  "version": "2026-10-28",
+  "source": "docs/source/包类型与包材对照表20261105.xlsx",
+  "version": "2026-11-05",
   "packTypes": [
     {
       "canonical": "器械包",
@@ -165,6 +165,7 @@
       ],
       "allowedMaterials": [
         "NONE",
+        "NON_WOVEN",
         "HIGH_TEMP_PAPER"
       ],
       "sterilization": "HIGH_TEMP"
@@ -234,6 +235,17 @@
       "aliases": [
         "骨科租赁器械包-不带植入物",
         "骨科租赁器械包—不带植入物"
+      ],
+      "allowedMaterials": [
+        "NON_WOVEN",
+        "HIGH_TEMP_PAPER"
+      ],
+      "sterilization": "HIGH_TEMP"
+    },
+    {
+      "canonical": "骨科器械包",
+      "aliases": [
+        "骨科器械包"
       ],
       "allowedMaterials": [
         "NON_WOVEN",

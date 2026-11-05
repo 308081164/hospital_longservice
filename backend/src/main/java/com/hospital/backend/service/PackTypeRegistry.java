@@ -41,7 +41,11 @@ public final class PackTypeRegistry {
             SterilizationMode sterilization) {}
 
     /** 与 pack-type-material-map.json 的 packTypes 条数保持一致。 */
-    public static final int PACK_TYPE_COUNT = 19;
+    /**
+     * 权威对照表 2026-11-05 为 19 种；系统保留历史类型「敷料包（低温等离子）」，
+     * 实际登记 20 种（新增「骨科器械包」）。
+     */
+    public static final int PACK_TYPE_COUNT = 20;
 
     private static final List<PackTypeDefinition> DEFINITIONS = loadDefinitions();
 

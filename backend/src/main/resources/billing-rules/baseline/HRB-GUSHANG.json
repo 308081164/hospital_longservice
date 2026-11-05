@@ -5,6 +5,45 @@
   "billingPricingMode": "hybrid",
   "productRules": [
     {
+      "ruleType": "PRICE_PER_INSTRUMENT",
+      "name": "骨伤科骨科包等按件5.5加5",
+      "priority": 6,
+      "price": 5.5,
+      "conditionsJson": "[{\"field\": \"flatAddon\", \"value\": 5}]",
+      "keywords": [
+        "骨科包@contains",
+        "髌骨包@contains",
+        "缝合包@contains",
+        "股骨干@contains",
+        "骨折取出包@contains",
+        "手外清创包@contains",
+        "手足部骨折包@contains",
+        "锁骨踝关节包@contains",
+        "手科（腱鞘炎、肿物）@contains",
+        "腰椎包-23件@contains",
+        "空心钉1/2@contains",
+        "空心钉（取）@contains",
+        "关节镜器械(一号)19件@contains",
+        "关节镜器械(二号)19件@contains",
+        "关节镜器械(三号)19件@contains",
+        "股骨髓针1号做@contains",
+        "股骨髓针-50件@contains",
+        "股骨倒打髓针器械（一）19件@contains",
+        "股骨倒打髓针器械（二）12件@contains",
+        "股骨倒打髓针器械（三）11件@contains",
+        "股骨倒打髓针器械（四）25件@contains"
+      ],
+      "skipPackaging": true,
+      "skipDiscount": true,
+      "isActive": true,
+      "matchMode": "first",
+      "keywordMatchMode": "contains",
+      "acceptedTypes": [
+        "器械包"
+      ],
+      "sourceRef": "excel:特殊收费20261105#各医院特殊收费#序号42 12"
+    },
+    {
       "ruleType": "FOLD",
       "name": "骨伤科外架钢针>6按6折算加内层袋和0.3",
       "priority": 8,
