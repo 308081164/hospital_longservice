@@ -1805,16 +1805,40 @@ public class PricingEngine {
         return best;
     }
 
+    /** 材料名关键词：用于把「低温纸塑袋250*650 低温纸塑袋200*600」这类无分隔写法切开。 */
+    private static final java.util.regex.Pattern MATERIAL_NAME_PATTERN =
+            java.util.regex.Pattern.compile("(低温纸塑袋|高温纸塑袋|纸塑袋|铝箔袋|无纺布|低温灭菌)");
+
     private static List<String> splitPackageMaterialSegments(String packageMaterial) {
         if (packageMaterial == null || packageMaterial.isBlank()) {
             return List.of();
         }
-        String[] parts = packageMaterial.split("[,，;；]");
+        // 2026-11-06 客户反馈：分隔符可能是「、」「/」或空格，旧实现只认 , ;，
+        // 导致双层袋被当成一层、取到较大尺寸（250 而非 200）。
+        String[] parts = packageMaterial.split("[,，;；、/\n\r]+");
         List<String> segments = new ArrayList<>();
         for (String part : parts) {
             String trimmed = part.trim();
-            if (!trimmed.isEmpty()) {
+            if (trimmed.isEmpty()) {
+                continue;
+            }
+            // 段内若出现两个及以上材料名（如空格分隔），从第二个材料名处再切开
+            java.util.regex.Matcher m = MATERIAL_NAME_PATTERN.matcher(trimmed);
+            List<Integer> starts = new ArrayList<>();
+            while (m.find()) {
+                starts.add(m.start());
+            }
+            if (starts.size() <= 1) {
                 segments.add(trimmed);
+                continue;
+            }
+            for (int i = 0; i < starts.size(); i++) {
+                int from = starts.get(i);
+                int to = i + 1 < starts.size() ? starts.get(i + 1) : trimmed.length();
+                String sub = trimmed.substring(from, to).trim();
+                if (!sub.isEmpty()) {
+                    segments.add(sub);
+                }
             }
         }
         return segments;
