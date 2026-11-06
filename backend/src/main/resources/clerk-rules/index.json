@@ -1,5 +1,5 @@
 {
-  "baseline_hash": "ac7a8cabd8f55f708cf688d59ba3683d2965ececca07aa128ce15c8132e17d28",
+  "baseline_hash": "2342c88373dbe0a8bb4ba06005f536aebd1b768c3834d634a3d67d9ecc9fd32e",
   "generated_at": "2026-10-29T02:20:00Z",
   "source": "docs/source/医院内勤规则10.27.xlsx + docs/source/附一收费标准.xlsx",
   "customer_count": 43,
@@ -57,7 +57,7 @@
     {
       "code": "HRB-2ND",
       "file": "baseline/HRB-2ND.json",
-      "ruleCount": 4
+      "ruleCount": 5
     },
     {
       "code": "HRB-HEU",

@@ -52,6 +52,17 @@
       "sourceText": "按包类型统计（无金额）",
       "sourceRef": "excel:结款函#HRB-2ND",
       "priority": 112
+    },
+    {
+      "ruleType": "EXPORT_LAYOUT",
+      "name": "市二院分科室账单",
+      "stage": "bill_export",
+      "isActive": true,
+      "params": {
+        "billLayout": "dept_split"
+      },
+      "sourceRef": "customer:2026-11-06#导出需按科室拆分成多个 Sheet",
+      "priority": 100
     }
   ]
 }
