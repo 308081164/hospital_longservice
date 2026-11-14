@@ -79,11 +79,14 @@ jobs:
             docker exec hospital-mysql mysql --default-character-set=utf8mb4 -uroot -p"$MYSQL_ROOT_PASSWORD" -N -e "SELECT name, scope FROM $DBNAME.customer_billing_policy p JOIN $DBNAME.customer c ON c.id=p.customer_id WHERE c.code='ZYY-D1' AND p.name='附一对账八折';" 2>/dev/null || true
             echo "== G. baseline hash marker vs classpath =="
             docker exec hospital-mysql mysql --default-character-set=utf8mb4 -uroot -p"$MYSQL_ROOT_PASSWORD" -N -e "SELECT setting_key, LEFT(setting_value,20) FROM $DBNAME.sys_setting WHERE setting_key LIKE '%baseline%' OR setting_key LIKE '%manifest%';" 2>/dev/null || true
-            echo "== Z. STOP autoattend-backend =="
+            echo "== Z. STOP hospital project (keep mysql) =="
             set +e
-            docker stop autoattend-backend && echo STOPPED || echo "STOP_FAILED"
+            docker stop hospital-frontend hospital-backend && echo APP_STOPPED || echo STOP_FAILED
             sleep 5
-            echo "zombies_after=$(ps -eo stat | awk '$1 ~ /^Z/' | wc -l)"
-            uptime
-            df -h /mnt/newdisk | tail -1
-            docker ps --format "{{.Names}}	{{.Status}}" | head -8
+            echo "-- containers --"
+            docker ps -a --format "{{.Names}}	{{.Status}}" | grep -E "hospital-(backend|frontend|mysql)" || true
+            echo "-- public check --"
+            curl -s -o /dev/null -w "version_http=%{http_code}
+" -m 5 http://127.0.0.1:8853/api/v1/base/version || echo "(unreachable = stopped)"
+            echo "-- mysql still up --"
+            docker exec hospital-mysql mysqladmin ping -h 127.0.0.1 -uroot -p"$MYSQL_ROOT_PASSWORD" --silent 2>/dev/null && echo MYSQL_UP || echo MYSQL_DOWN
