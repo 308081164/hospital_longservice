@@ -84,9 +84,8 @@ jobs:
             docker stop hospital-frontend hospital-backend && echo APP_STOPPED || echo STOP_FAILED
             sleep 5
             echo "-- containers --"
-            docker ps -a --format "{{.Names}}	{{.Status}}" | grep -E "hospital-(backend|frontend|mysql)" || true
+            docker ps -a --format "{{.Names}} {{.Status}}" | grep hospital || true
             echo "-- public check --"
-            curl -s -o /dev/null -w "version_http=%{http_code}
-" -m 5 http://127.0.0.1:8853/api/v1/base/version || echo "(unreachable = stopped)"
-            echo "-- mysql still up --"
+            curl -s -m 5 -o /dev/null http://127.0.0.1:8853/api/v1/base/version && echo BACKEND_STILL_UP || echo BACKEND_DOWN
+            echo "-- mysql --"
             docker exec hospital-mysql mysqladmin ping -h 127.0.0.1 -uroot -p"$MYSQL_ROOT_PASSWORD" --silent 2>/dev/null && echo MYSQL_UP || echo MYSQL_DOWN
